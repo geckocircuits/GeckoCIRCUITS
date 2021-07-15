@@ -10,7 +10,7 @@ See the [FAQ](FAQ.md) section
 
 This is the "official" new GeckoCIRCUITS Github repository, created and maintained by one of the original software authors.
 GeckoCIRCUITS was hosted on Sourceforge before [GeckoCircuits](https://sourceforge.net/projects/geckocircuits/).
-My friends at Technokrat [https://github.com/technokrat/gecko] did do some improvements (e.g. support of HiDPI Monitors) to the software, this changes are included in this repo, thanks for this contribution!
+My friends at [Technokrat](https://github.com/technokrat/gecko) did do some improvements (e.g. support of HiDPI Monitors) to the software, this changes are included in this repo, thanks for this contribution!
 
 ## Prerequisites
 
