@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inductor>
+    <core name="E55">
+        <coreType name="EE 3 air gaps">
+            <dimensions>
+                <h fixed="yes">0.027800000000000002</h>
+                <w fixed="yes">0.055</w>
+                <wi fixed="yes">0.0375</wi>
+                <wm fixed="yes">0.0172</wm>
+                <l fixed="yes">0.021</l>
+                <gap fixed="yes">0.0012</gap>
+                <hw fixed="yes">0.0185</hw>
+            </dimensions>
+        </coreType>
+        <stackedCores fixed="yes">1</stackedCores>
+        <coreMaterial>N87+</coreMaterial>
+    </core>
+    <winding name="AWG10">
+        <turns fixed="yes">36</turns>
+        <bobbin>
+            <wb fixed="yes">0.001015</wb>
+            <hb fixed="yes">0.033299999999999996</hb>
+        </bobbin>
+        <windingType name="Solid Round" split="no">
+            <dimensions>
+                <d fixed="yes">0.0025882</d>
+                <s fixed="yes">4.44E-5</s>
+                <yd fixed="yes">0.0</yd>
+            </dimensions>
+        </windingType>
+        <pattern align="square" distribute="continuous" start="bottom"/>
+        <windingMaterial>Copper (drawn wire)</windingMaterial>
+    </winding>
+</inductor>

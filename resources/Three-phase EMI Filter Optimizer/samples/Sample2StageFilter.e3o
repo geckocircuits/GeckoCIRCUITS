@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EMIFilterOptimizer>
+    <ModelSetup>
+        <StagesModelled>4</StagesModelled>
+        <DMmodels>
+            <Stage1>%modelpath%DMFilter1Stage.ipes</Stage1>
+            <Stage2>%modelpath%DMFilter2Stage.ipes</Stage2>
+            <Stage3>%modelpath%DMFilter3Stage.ipes</Stage3>
+            <Stage4>%modelpath%DMFilter4Stage.ipes</Stage4>
+        </DMmodels>
+        <CMmodels>
+            <Stage1>%modelpath%CMFilter1Stage.ipes</Stage1>
+            <Stage2>%modelpath%CMFilter2Stage.ipes</Stage2>
+            <Stage3>%modelpath%CMFilter3Stage.ipes</Stage3>
+            <Stage4>%modelpath%CMFilter4Stage.ipes</Stage4>
+        </CMmodels>
+        <AdditionalNames>
+            <DMfixed/>
+            <DMstage/>
+            <CMfixed/>
+            <CMstage/>
+        </AdditionalNames>
+    </ModelSetup>
+    <GlobalParameters>
+        <stages fixed="yes">
+            <min>2</min>
+        </stages>
+        <AmbientTemperature>25</AmbientTemperature>
+        <frequency fsw="yes">36</frequency>
+        <attenuation given="yes">
+            <attDM>78</attDM>
+            <attCM>88</attCM>
+        </attenuation>
+        <noise given="no"/>
+        <Vmains>230.0</Vmains>
+        <Fmains>50</Fmains>
+        <kLout>152.5</kLout>
+    </GlobalParameters>
+    <DMFilter>
+        <CdmTot>13</CdmTot>
+        <LDM1Range fixed="no">
+            <min>5</min>
+            <max>15</max>
+            <delta>5</delta>
+        </LDM1Range>
+        <Cdm1 fixed="yes">2.5</Cdm1>
+        <att1 fixed="no"/>
+        <AllRangesEqualTo1>yes</AllRangesEqualTo1>
+        <attDist equal="yes"/>
+        <AllDesignSpacesEqualTo1>yes</AllDesignSpacesEqualTo1>
+        <CDMSpace stage="1">
+            <Custom defined="no"/>
+            <Series given="yes">
+                <name>X1 B32911-6</name>
+                <name>X2 B32921-8</name>
+                <name>X2 B81130</name>
+            </Series>
+        </CDMSpace>
+        <LDMSpace stage="1">
+            <CoreType>TOROIDAL</CoreType>
+            <CoreMaterial>Micrometals -14</CoreMaterial>
+            <WireType>LITZROUND</WireType>
+            <WireMaterial>Annealed Copper</WireMaterial>
+            <VolumeMax>0.001</VolumeMax>
+            <TemperatureMax>150.0</TemperatureMax>
+            <CM choke="no"/>
+            <DesignApproach>PARAMETER_VARIATION</DesignApproach>
+            <HFIgnored>yes</HFIgnored>
+            <ProximityIgnored>yes</ProximityIgnored>
+            <CoreStack>
+                <name>Number of Stacked Inductor Cores</name>
+                <fixed>no</fixed>
+                <min>1.0</min>
+                <max>3.0</max>
+                <delta>1.0</delta>
+            </CoreStack>
+            <FillFactor given="yes">
+                <name>Inductor fill factor</name>
+                <fixed>yes</fixed>
+                <min>0.5</min>
+                <max>0.5</max>
+                <delta>0.1</delta>
+            </FillFactor>
+            <PredefinedCores given="yes">
+                <name>T106</name>
+                <name>T124</name>
+                <name>T131</name>
+                <name>T14</name>
+                <name>T150</name>
+                <name>T16</name>
+                <name>T184</name>
+                <name>T20</name>
+                <name>T22</name>
+                <name>T32</name>
+                <name>T38</name>
+                <name>T60-D</name>
+            </PredefinedCores>
+            <CoreParameters given="no"/>
+            <PredefinedWires given="no"/>
+            <WireParameters given="yes">
+                <wireParam>
+                    <name>Strand diameter (bare) di (m)</name>
+                    <fixed>yes</fixed>
+                    <min>2.5E-4</min>
+                    <max>2.5E-4</max>
+                    <delta>1.0E-5</delta>
+                </wireParam>
+            </WireParameters>
+            <ExtraWireParameters given="yes">
+                <extraParam>1.3</extraParam>
+            </ExtraWireParameters>
+            <ThermalProperties>
+                <ambient>25.0</ambient>
+                <convection>NATURAL</convection>
+                <forced speed="0.0">FRONTBACK</forced>
+                <orientation>VERTICAL</orientation>
+                <nonExposed/>
+            </ThermalProperties>
+        </LDMSpace>
+    </DMFilter>
+    <CMFilter>
+        <CcmTot lkgI="yes">3.5</CcmTot>
+        <LCM1Range fixed="no">
+            <min>500</min>
+            <max>1000</max>
+            <delta>500</delta>
+        </LCM1Range>
+        <Ccm1 fixed="no" inSeries="yes"/>
+        <AllRangesEqualTo1>yes</AllRangesEqualTo1>
+        <attDist equal="yes"/>
+        <AllDesignSpacesEqualTo1>yes</AllDesignSpacesEqualTo1>
+        <CCMSpace stage="1">
+            <Custom defined="no"/>
+            <Series given="yes">
+                <name>Y1 B81123</name>
+                <name>Y2 B32021-6</name>
+            </Series>
+        </CCMSpace>
+        <LCMSpace stage="1">
+            <CoreType>TOROIDAL</CoreType>
+            <CoreMaterial>Vitroperm 500F-18k</CoreMaterial>
+            <WireType>SOLIDROUND</WireType>
+            <WireMaterial>Annealed Copper</WireMaterial>
+            <VolumeMax>0.001</VolumeMax>
+            <TemperatureMax>150.0</TemperatureMax>
+            <CM choke="yes" leakageIgnored="yes">110.0</CM>
+            <DesignApproach>PARAMETER_VARIATION</DesignApproach>
+            <HFIgnored>yes</HFIgnored>
+            <ProximityIgnored>yes</ProximityIgnored>
+            <CoreStack>
+                <name>Number of Stacked Inductor Cores</name>
+                <fixed>no</fixed>
+                <min>1.0</min>
+                <max>3.0</max>
+                <delta>1.0</delta>
+            </CoreStack>
+            <FillFactor given="yes">
+                <name>Inductor fill factor</name>
+                <fixed>yes</fixed>
+                <min>0.4</min>
+                <max>0.4</max>
+                <delta>0.1</delta>
+            </FillFactor>
+            <PredefinedCores given="yes">
+                <name>T60006-L2020-W450+</name>
+                <name>T60006-L2025-W451+</name>
+                <name>T60006-L2040-W452+</name>
+                <name>T60006-L2040-W453+</name>
+                <name>T60006-L2045-V101#</name>
+                <name>T60006-L2050-W565#</name>
+                <name>T60006-L2063-V110#</name>
+                <name>T60006-L2160-V066#</name>
+            </PredefinedCores>
+            <CoreParameters given="no"/>
+            <PredefinedWires given="no"/>
+            <WireParameters given="no"/>
+            <ExtraWireParameters given="yes">
+                <extraParam>0.05</extraParam>
+                <extraParam>1.0E-6</extraParam>
+            </ExtraWireParameters>
+            <ThermalProperties>
+                <ambient>25.0</ambient>
+                <convection>NATURAL</convection>
+                <forced speed="0.0">FRONTBACK</forced>
+                <orientation>VERTICAL</orientation>
+                <nonExposed/>
+            </ThermalProperties>
+        </LCMSpace>
+    </CMFilter>
+    <Parasitics>
+        <Ceq>600</Ceq>
+        <Cg>2000</Cg>
+        <Additional>
+            <DMfixed/>
+            <DMPerStage/>
+            <CMfixed/>
+            <CMPerStage/>
+        </Additional>
+        <AdditionalVolumeFactor>0</AdditionalVolumeFactor>
+        <AdditionalLossFactor>0</AdditionalLossFactor>
+        <PCBVolumeFactor>10</PCBVolumeFactor>
+    </Parasitics>
+    <OptimizationSettings>
+        <DMsimulation>
+            <dt>100E-9</dt>
+            <sim>4</sim>
+            <current given="yes">
+                <phase1>%modelpath%iDMSwiss1.dat</phase1>
+                <phase2>%modelpath%iDMSwiss2.dat</phase2>
+                <phase3>%modelpath%iDMSwiss3.dat</phase3>
+            </current>
+            <port>43055</port>
+        </DMsimulation>
+        <CMsimulation>
+            <dt>100E-9</dt>
+            <sim>4</sim>
+            <voltage given="yes">%modelpath%uCMSwiss.dat</voltage>
+            <port>43056</port>
+        </CMsimulation>
+        <optimizationType>exhaustive</optimizationType>
+        <threads>3</threads>
+        <GAapproach>Liberal</GAapproach>
+        <goal>50</goal>
+        <load>7.5</load>
+        <fsw>36</fsw>
+        <maxVol given="no"/>
+        <maxLoss given="no"/>
+        <output>OutputSwiss2Stage.txt</output>
+    </OptimizationSettings>
+</EMIFilterOptimizer>

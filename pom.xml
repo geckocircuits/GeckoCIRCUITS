@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.technokrat.gecko</groupId>
+  <artifactId>gecko</artifactId>
+  <version>1.0</version>
+
+  <name>gecko</name>
+  <description>A simple gecko.</description>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/de.sciss/syntaxpane -->
+    <dependency>
+        <groupId>de.sciss</groupId>
+        <artifactId>syntaxpane</artifactId>
+        <version>1.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>edu.emory.mathcs</groupId>
+      <artifactId>JTransforms</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge</groupId>
+      <artifactId>jwbf</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svggen -->
+    <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-svggen</artifactId>
+        <version>1.7</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-dom</artifactId>
+        <version>1.7</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-transcoder</artifactId>
+        <version>1.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.netbeans.external</groupId>
+      <artifactId>AbsoluteLayout</artifactId>
+      <version>RELEASE111</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>4.1.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+          <configuration>
+            <trimStackTrace>false</trimStackTrace>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>ch.technokrat.gecko.GeckoSim</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.1.1</version>
+          <configuration>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+            <archive>
+              <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>ch.technokrat.gecko.GeckoSim</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id> <!-- this is used for inheritance merges -->
+              <phase>package</phase> <!-- bind to the packaging phase -->
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>

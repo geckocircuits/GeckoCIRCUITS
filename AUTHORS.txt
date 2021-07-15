@@ -1,0 +1,19 @@
+AUTHORS AND DEVELOPERS
+
+
+MAIN DEVELOPERS
+
+Dr. Andreas Müsing <andreas.muesing@gecko-simulations.com>
+Dr. Andrija Stupar 
+
+CONTRIBUTORS
+
+Daniel Zimmermann
+Tibor Kereztvalvi
+Josef Ziegler
+Nicholas Eyring
+
+
+FORMER DEVELOPER AND PROJECT FOUNDER
+
+Dr. Uwe Wilhelm Drofenik

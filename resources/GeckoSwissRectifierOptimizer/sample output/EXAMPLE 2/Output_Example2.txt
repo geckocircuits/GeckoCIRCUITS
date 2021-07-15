@@ -1,0 +1,650 @@
+
+--------------------------- Configuration ----------------------------
+Switching frequency: 18.0 kHz
+
+Rectifer Diodes:
+Characteristics of single diode:
+Name: Rectifier Diode
+Device: DSEI30-12A
+Devices paralleled: 5
+Average current : 4.373839856539775 A
+RMS current: 9.087536329456404 A
+Average current: 4.373839856539775 A
+Peak current: 23.4326171875 A
+Peak voltage: -602.90625 V
+Average junction temperature: 26.0452253268043C
+TOTAL LOSSES: 5.7878639813139925 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL RECTIFIER DIODES: 34.72718388788395 W
+Total volume all rectifier diodes: 6.656285714285714E-4 m^3
+
+Current injection switches:
+Characteristics of single switch:
+Name: Current Injection Switch
+Device: IHW40T120
+Devices paralleled: 5
+Average current : 0.7202108153668825 A
+RMS current: 3.7089397947877374 A
+Average current: 0.7202108153668825 A
+Peak current: 23.2265625 A
+Peak voltage: 500.6424865722656 V
+Average junction temperature: 25.063155942028292C
+TOTAL LOSSES: 0.7075099155592759 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL INJECTION SWITCHES: 4.245059493355655 W
+Total volume all injection switches diodes: 6.656285714285714E-4 m^3
+
+High frequency switches:
+Characteristics of single switch:
+Name: High Frequency Switch
+Device: IKW40T120
+Devices paralleled: 5
+Average current : 13.172914150275492 A
+RMS current: 15.812442971201628 A
+Average current: 13.172914150275492 A
+Peak current: 23.4384765625 A
+Peak voltage: 500.40625 V
+Average junction temperature: 27.403996838615157C
+TOTAL LOSSES: 38.57923659373795 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL HIGH FREQUENCY SWITCHES: 77.1584731874759 W
+Total volume all high frequency switches: 2.820265664160401E-4 m^3
+
+Freewheeling Diodes:
+Characteristics of single diode:
+Name: Freewheeling Diode
+Device: C2D20120D
+Devices paralleled: 5
+Average current : 5.6649636613944505 A
+RMS current: 10.332455928357373 A
+Average current: 5.6649636613944505 A
+Peak current: 23.365234375 A
+Peak voltage: -499.796875 V
+Average junction temperature: 25.633045108090325C
+TOTAL LOSSES: 6.5788739421156635 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL FREEWHEELING DIODES: 13.157747884231327 W
+Total volume all freewheeling diodes: 2.820265664160401E-4 m^3
+
+Output inductor:
+E-Inductor: L = 5.044738320849439E-4 H
+
+E-Core with equal air gaps
+Material: 3C81
+h = 0.027800000000000002
+w = 0.055
+l = 0.063
+wi = 0.0375
+hw = 0.0185
+gap = 0.0011
+wm = 0.0172
+t = 0.009300000000000003
+ww = 0.01015
+wl = 0.00875
+
+
+Winding: Solid 3.1586246464040295 mm
+Number of turns N: 25
+
+Losses (W):
+Core Losses: 0.38482047388684715
+Winding losses DC: 4.21125682506981
+Winding losses skin effect: 0.023618316702032814
+Winding losses prox. effect: 0.01111450092962151
+TOTAL: 4.630810116588312
+
+Winding temperature: 43.70486130654835 C
+Core Temperature: 27.340485230624278 C
+Inductor Orientation: HORIZONTAL
+Convection: FORCED
+Air Flow Direction: FRONTBACK
+Air Speed: 5.0 m/s
+
+Total Boxed Volume: 2.559407457588658E-4 m^3
+Totals:
+TOTAL LOSSES ALL OUTPUT INDUCTORS: 9.261620233176624 W
+Total volume all output inductors: 5.118814915177316E-4 m^3
+
+Output capacitor:
+Capacitance: 1.8371222405497094E-4 F
+TOTAL OUTPUT CAPACITOR Losses: 0.6381175064748075 W
+Total Output Capacitor Volume: 7.85766569952827E-5 m^3
+
+
+DM EMI Filter:
+LDM1 = 1.8991179115040934E-4 H
+LDM2 = 1.6507327066587998E-6 H
+CDM1 = 1.7738465933975842E-5 F
+CDM2 = 8.869232966987921E-6 F
+Total estimated EMI Filter volume: 6.352040226023392E-4 m^3
+
+
+
+TOTAL VOLUME: 0.0031209724468045765 m^3
+TOTAL LOSSES: 139.18820219259825 W
+EFFICIENCY: 0.9817797129081531
+--------------------------- end Configuration ----------------------------
+
+--------------------------- Configuration ----------------------------
+Switching frequency: 23.0 kHz
+
+Rectifer Diodes:
+Characteristics of single diode:
+Name: Rectifier Diode
+Device: DSEI30-12A
+Devices paralleled: 5
+Average current : 4.421955095548798 A
+RMS current: 9.1478410411616 A
+Average current: 4.421955095548798 A
+Peak current: 21.6708984375 A
+Peak voltage: -576.9375 V
+Average junction temperature: 26.0561952387988C
+TOTAL LOSSES: 5.853717859546211 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL RECTIFIER DIODES: 35.12230715727726 W
+Total volume all rectifier diodes: 6.656285714285714E-4 m^3
+
+Current injection switches:
+Characteristics of single switch:
+Name: Current Injection Switch
+Device: IHW40T120
+Devices paralleled: 5
+Average current : 0.7409721898227933 A
+RMS current: 3.8246684051351862 A
+Average current: 0.7409721898227933 A
+Peak current: 21.595703125 A
+Peak voltage: 492.140625 V
+Average junction temperature: 25.0663988226376C
+TOTAL LOSSES: 0.7373481278869524 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL INJECTION SWITCHES: 4.424088767321714 W
+Total volume all injection switches diodes: 6.656285714285714E-4 m^3
+
+High frequency switches:
+Characteristics of single switch:
+Name: High Frequency Switch
+Device: IKW40T120
+Devices paralleled: 5
+Average current : 13.31102972864402 A
+RMS current: 15.91354404077345 A
+Average current: 13.31102972864402 A
+Peak current: 21.7470703125 A
+Peak voltage: 494.90625 V
+Average junction temperature: 27.887221804504176C
+TOTAL LOSSES: 46.35747573424959 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL HIGH FREQUENCY SWITCHES: 92.71495146849918 W
+Total volume all high frequency switches: 2.820265664160401E-4 m^3
+
+Freewheeling Diodes:
+Characteristics of single diode:
+Name: Freewheeling Diode
+Device: C2D20120D
+Devices paralleled: 5
+Average current : 5.7669992779720785 A
+RMS current: 10.514958448416404 A
+Average current: 5.7669992779720785 A
+Peak current: 21.689453125 A
+Peak voltage: -490.515625 V
+Average junction temperature: 25.64703364567391C
+TOTAL LOSSES: 6.725013268352171 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL FREEWHEELING DIODES: 13.450026536704343 W
+Total volume all freewheeling diodes: 2.820265664160401E-4 m^3
+
+Output inductor:
+E-Inductor: L = 4.6916168977338663E-4 H
+
+E-Core with equal air gaps
+Material: 3C81
+h = 0.027800000000000002
+w = 0.055
+l = 0.084
+wi = 0.0375
+hw = 0.0185
+gap = 0.0011
+wm = 0.0172
+t = 0.009300000000000003
+ww = 0.01015
+wl = 0.00875
+
+
+Winding: Solid 3.1459859297645973 mm
+Number of turns N: 21
+
+Losses (W):
+Core Losses: 0.30561011724991866
+Winding losses DC: 4.433497657130285
+Winding losses skin effect: 0.001424281375520723
+Winding losses prox. effect: 0.0015410238502158605
+TOTAL: 4.74207307960594
+
+Winding temperature: 44.79368257705036 C
+Core Temperature: 27.001173399126603 C
+Inductor Orientation: HORIZONTAL
+Convection: FORCED
+Air Flow Direction: FRONTBACK
+Air Speed: 5.0 m/s
+
+Total Boxed Volume: 3.211927627318254E-4 m^3
+Totals:
+TOTAL LOSSES ALL OUTPUT INDUCTORS: 9.48414615921188 W
+Total volume all output inductors: 6.423855254636508E-4 m^3
+
+Output capacitor:
+Capacitance: 1.2098833350212438E-4 F
+TOTAL OUTPUT CAPACITOR Losses: 0.425772143629394 W
+Total Output Capacitor Volume: 5.174864563820546E-5 m^3
+
+
+DM EMI Filter:
+LDM1 = 2.967294132691382E-4 H
+LDM2 = 2.274235236902936E-6 H
+CDM1 = 1.3882277687459355E-5 F
+CDM2 = 6.941138843729677E-6 F
+Total estimated EMI Filter volume: 7.280774160184581E-4 m^3
+
+
+
+TOTAL VOLUME: 0.0033175218628095373 m^3
+TOTAL LOSSES: 155.62129223264378 W
+EFFICIENCY: 0.979672284417917
+--------------------------- end Configuration ----------------------------
+
+--------------------------- Configuration ----------------------------
+Switching frequency: 28.0 kHz
+
+Rectifer Diodes:
+Characteristics of single diode:
+Name: Rectifier Diode
+Device: DSEI30-12A
+Devices paralleled: 5
+Average current : 4.405208557319179 A
+RMS current: 9.132251776250852 A
+Average current: 4.405208557319179 A
+Peak current: 22.060546875 A
+Peak voltage: -573.0625 V
+Average junction temperature: 26.052277659199795C
+TOTAL LOSSES: 5.831671262302909 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL RECTIFIER DIODES: 34.99002757381746 W
+Total volume all rectifier diodes: 6.656285714285714E-4 m^3
+
+Current injection switches:
+Characteristics of single switch:
+Name: Current Injection Switch
+Device: IHW40T120
+Devices paralleled: 5
+Average current : 0.7490938509099359 A
+RMS current: 3.8836615871473286 A
+Average current: 0.7490938509099359 A
+Peak current: 21.9462890625 A
+Peak voltage: 489.39434814453125 V
+Average junction temperature: 25.067971837870385C
+TOTAL LOSSES: 0.7549984815871663 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL INJECTION SWITCHES: 4.529990889522998 W
+Total volume all injection switches diodes: 6.656285714285714E-4 m^3
+
+High frequency switches:
+Characteristics of single switch:
+Name: High Frequency Switch
+Device: IKW40T120
+Devices paralleled: 5
+Average current : 13.25864699612505 A
+RMS current: 15.886422843299705 A
+Average current: 13.25864699612505 A
+Peak current: 22.1552734375 A
+Peak voltage: 487.421875 V
+Average junction temperature: 28.31214212285692C
+TOTAL LOSSES: 53.17521812999885 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL HIGH FREQUENCY SWITCHES: 106.3504362599977 W
+Total volume all high frequency switches: 2.820265664160401E-4 m^3
+
+Freewheeling Diodes:
+Characteristics of single diode:
+Name: Freewheeling Diode
+Device: C2D20120D
+Devices paralleled: 5
+Average current : 5.791476601188725 A
+RMS current: 10.567207392165676 A
+Average current: 5.791476601188725 A
+Peak current: 22.130859375 A
+Peak voltage: -488.953125 V
+Average junction temperature: 25.650737072145635C
+TOTAL LOSSES: 6.763063651155412 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL FREEWHEELING DIODES: 13.526127302310824 W
+Total volume all freewheeling diodes: 2.820265664160401E-4 m^3
+
+Output inductor:
+E-Inductor: L = 3.0745516631407876E-4 H
+
+E-Core with equal air gaps
+Material: 3C81
+h = 0.027800000000000002
+w = 0.055
+l = 0.084
+wi = 0.0375
+hw = 0.0185
+gap = 0.0011
+wm = 0.0172
+t = 0.009300000000000003
+ww = 0.01015
+wl = 0.00875
+
+
+Winding: Solid 3.498796628000038 mm
+Number of turns N: 17
+
+Losses (W):
+Core Losses: 0.396857418530189
+Winding losses DC: 2.7194535403514837
+Winding losses skin effect: 6.684142840874746E-4
+Winding losses prox. effect: 6.299907754090737E-4
+TOTAL: 3.1176093639411695
+
+Winding temperature: 38.54195651835982 C
+Core Temperature: 26.581492384255977 C
+Inductor Orientation: HORIZONTAL
+Convection: FORCED
+Air Flow Direction: FRONTBACK
+Air Speed: 5.0 m/s
+
+Total Boxed Volume: 3.058474691376725E-4 m^3
+Totals:
+TOTAL LOSSES ALL OUTPUT INDUCTORS: 6.235218727882339 W
+Total volume all output inductors: 6.11694938275345E-4 m^3
+
+Output capacitor:
+Capacitance: 1.2457297919628334E-4 F
+TOTAL OUTPUT CAPACITOR Losses: 0.4414319368693654 W
+Total Output Capacitor Volume: 5.3281855943662675E-5 m^3
+
+
+DM EMI Filter:
+LDM1 = 3.7285461637219037E-4 H
+LDM2 = 2.643649950377966E-6 H
+CDM1 = 1.140329952898447E-5 F
+CDM2 = 5.701649764492235E-6 F
+Total estimated EMI Filter volume: 8.639328381076016E-4 m^3
+
+
+
+TOTAL VOLUME: 0.0034242199080158323 m^3
+TOTAL LOSSES: 166.0732326904007 W
+EFFICIENCY: 0.9783365971535185
+--------------------------- end Configuration ----------------------------
+
+--------------------------- Configuration ----------------------------
+Switching frequency: 33.0 kHz
+
+Rectifer Diodes:
+Characteristics of single diode:
+Name: Rectifier Diode
+Device: DSEI30-12A
+Devices paralleled: 5
+Average current : 4.3959793228204855 A
+RMS current: 9.117785298280937 A
+Average current: 4.3959793228204855 A
+Peak current: 22.041015625 A
+Peak voltage: -570.5625 V
+Average junction temperature: 26.04988047389644C
+TOTAL LOSSES: 5.818872207101296 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL RECTIFIER DIODES: 34.913233242607774 W
+Total volume all rectifier diodes: 6.656285714285714E-4 m^3
+
+Current injection switches:
+Characteristics of single switch:
+Name: Current Injection Switch
+Device: IHW40T120
+Devices paralleled: 5
+Average current : 0.7405235954650964 A
+RMS current: 3.8554415328625553 A
+Average current: 0.7405235954650964 A
+Peak current: 21.90625 A
+Peak voltage: 487.796875 V
+Average junction temperature: 25.067780912598387C
+TOTAL LOSSES: 0.752900219387788 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL INJECTION SWITCHES: 4.517401316326728 W
+Total volume all injection switches diodes: 6.656285714285714E-4 m^3
+
+High frequency switches:
+Characteristics of single switch:
+Name: High Frequency Switch
+Device: IKW40T120
+Devices paralleled: 5
+Average current : 13.233642636057038 A
+RMS current: 15.858119672990135 A
+Average current: 13.233642636057038 A
+Peak current: 22.0703125 A
+Peak voltage: 494.75 V
+Average junction temperature: 28.767712152948437C
+TOTAL LOSSES: 60.49743638627889 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL HIGH FREQUENCY SWITCHES: 120.99487277255778 W
+Total volume all high frequency switches: 2.820265664160401E-4 m^3
+
+Freewheeling Diodes:
+Characteristics of single diode:
+Name: Freewheeling Diode
+Device: C2D20120D
+Devices paralleled: 5
+Average current : 5.794493115764138 A
+RMS current: 10.568911931240956 A
+Average current: 5.794493115764138 A
+Peak current: 22.1220703125 A
+Peak voltage: -490.390625 V
+Average junction temperature: 25.650991312928795C
+TOTAL LOSSES: 6.766300103289669 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL FREEWHEELING DIODES: 13.532600206579337 W
+Total volume all freewheeling diodes: 2.820265664160401E-4 m^3
+
+Output inductor:
+E-Inductor: L = 2.7234782898409745E-4 H
+
+E-Core with equal air gaps
+Material: 3C81
+h = 0.027800000000000002
+w = 0.055
+l = 0.084
+wi = 0.0375
+hw = 0.0185
+gap = 0.0011
+wm = 0.0172
+t = 0.009300000000000003
+ww = 0.01015
+wl = 0.00875
+
+
+Winding: Solid 3.953280808005037 mm
+Number of turns N: 16
+
+Losses (W):
+Core Losses: 0.3635738260300094
+Winding losses DC: 2.00973356671253
+Winding losses skin effect: 1.3106637189154314E-4
+Winding losses prox. effect: 2.950227859720655E-4
+TOTAL: 2.3737334819004032
+
+Winding temperature: 34.69461484056996 C
+Core Temperature: 26.21185350663549 C
+Inductor Orientation: HORIZONTAL
+Convection: FORCED
+Air Flow Direction: FRONTBACK
+Air Speed: 5.0 m/s
+
+Total Boxed Volume: 3.1151670479905486E-4 m^3
+Totals:
+TOTAL LOSSES ALL OUTPUT INDUCTORS: 4.7474669638008065 W
+Total volume all output inductors: 6.230334095981097E-4 m^3
+
+Output capacitor:
+Capacitance: 1.01244143617916E-4 F
+TOTAL OUTPUT CAPACITOR Losses: 0.3634651874370549 W
+Total Output Capacitor Volume: 4.330373978525064E-5 m^3
+
+
+DM EMI Filter:
+LDM1 = 4.808573172312564E-4 H
+LDM2 = 3.10834096917365E-6 H
+CDM1 = 1.0530100204567746E-5 F
+CDM2 = 5.265050102283873E-6 F
+Total estimated EMI Filter volume: 0.001056110240804284 m^3
+
+
+
+TOTAL VOLUME: 0.003617757665876867 m^3
+TOTAL LOSSES: 179.06903968930945 W
+EFFICIENCY: 0.9766808920763975
+--------------------------- end Configuration ----------------------------
+
+--------------------------- Configuration ----------------------------
+Switching frequency: 38.0 kHz
+
+Rectifer Diodes:
+Characteristics of single diode:
+Name: Rectifier Diode
+Device: DSEI30-12A
+Devices paralleled: 5
+Average current : 4.399182223624986 A
+RMS current: 9.120325497243893 A
+Average current: 4.399182223624986 A
+Peak current: 22.087890625 A
+Peak voltage: -568.375 V
+Average junction temperature: 26.050631270175707C
+TOTAL LOSSES: 5.823355855245288 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL RECTIFIER DIODES: 34.94013513147173 W
+Total volume all rectifier diodes: 6.656285714285714E-4 m^3
+
+Current injection switches:
+Characteristics of single switch:
+Name: Current Injection Switch
+Device: IHW40T120
+Devices paralleled: 5
+Average current : 0.739450702935813 A
+RMS current: 3.8621016339569985 A
+Average current: 0.739450702935813 A
+Peak current: 22.119140625 A
+Peak voltage: 486.9375 V
+Average junction temperature: 25.068343739666755C
+TOTAL LOSSES: 0.7590358166772254 W
+Total volume: 1.1093809523809523E-4 m^3
+Totals:
+TOTAL LOSSES ALL INJECTION SWITCHES: 4.554214900063353 W
+Total volume all injection switches diodes: 6.656285714285714E-4 m^3
+
+High frequency switches:
+Characteristics of single switch:
+Name: High Frequency Switch
+Device: IKW40T120
+Devices paralleled: 5
+Average current : 13.230467644227057 A
+RMS current: 15.853201908158166 A
+Average current: 13.230467644227057 A
+Peak current: 22.2041015625 A
+Peak voltage: 489.65625 V
+Average junction temperature: 29.22880068222331C
+TOTAL LOSSES: 67.9066957932431 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL HIGH FREQUENCY SWITCHES: 135.8133915864862 W
+Total volume all high frequency switches: 2.820265664160401E-4 m^3
+
+Freewheeling Diodes:
+Characteristics of single diode:
+Name: Freewheeling Diode
+Device: C2D20120D
+Devices paralleled: 5
+Average current : 5.787715310379171 A
+RMS current: 10.569567833649012 A
+Average current: 5.787715310379171 A
+Peak current: 22.2060546875 A
+Peak voltage: -485.34375 V
+Average junction temperature: 25.650429172174142C
+TOTAL LOSSES: 6.76064950494941 W
+Total volume: 1.4101328320802005E-4 m^3
+Totals:
+TOTAL LOSSES ALL FREEWHEELING DIODES: 13.52129900989882 W
+Total volume all freewheeling diodes: 2.820265664160401E-4 m^3
+
+Output inductor:
+E-Inductor: L = 2.393682090680544E-4 H
+
+E-Core with equal air gaps
+Material: 3C81
+h = 0.027800000000000002
+w = 0.055
+l = 0.084
+wi = 0.0375
+hw = 0.0185
+gap = 0.0011
+wm = 0.0172
+t = 0.009300000000000003
+ww = 0.01015
+wl = 0.00875
+
+
+Winding: Solid 4.083586773122415 mm
+Number of turns N: 15
+
+Losses (W):
+Core Losses: 0.3436452441515083
+Winding losses DC: 1.7621206774772562
+Winding losses skin effect: 2.3692594689508125E-4
+Winding losses prox. effect: 8.627365409435853E-4
+TOTAL: 2.106865584116603
+
+Winding temperature: 33.43502035159317 C
+Core Temperature: 26.081943422521807 C
+Inductor Orientation: HORIZONTAL
+Convection: FORCED
+Air Flow Direction: FRONTBACK
+Air Speed: 5.0 m/s
+
+Total Boxed Volume: 3.13142141407929E-4 m^3
+Totals:
+TOTAL LOSSES ALL OUTPUT INDUCTORS: 4.213731168233206 W
+Total volume all output inductors: 6.26284282815858E-4 m^3
+
+Output capacitor:
+Capacitance: 8.68736452273841E-5 F
+TOTAL OUTPUT CAPACITOR Losses: 0.3162161201918803 W
+Total Output Capacitor Volume: 3.7157247744817835E-5 m^3
+
+
+DM EMI Filter:
+LDM1 = 6.710130403877519E-4 H
+LDM2 = 3.8751397696424085E-6 H
+CDM1 = 1.0530100204567746E-5 F
+CDM2 = 5.265050102283873E-6 F
+Total estimated EMI Filter volume: 0.001423015498087213 m^3
+
+
+
+TOTAL VOLUME: 0.003981767304337112 m^3
+TOTAL LOSSES: 193.3589879163452 W
+EFFICIENCY: 0.9748667664904177
+--------------------------- end Configuration ----------------------------

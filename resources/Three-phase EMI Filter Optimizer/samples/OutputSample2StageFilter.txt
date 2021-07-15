@@ -1,0 +1,153 @@
+
+--------------------------- Configuration ----------------------------
+Three-phase EMI Filter (DM & CM):
+Optimization Goal: 0.5
+Number of stages: 2
+
+TOTAL FILTER LOSSES: 13.705743112917991 W
+FILTER EFFICIENCY: 0.9981759010025805
+TOTAL FILTER VOLUME: 6.014377217876674E-4 m^3
+FILTER POWER DENSITY: 1.2470119063545888E7 W/(m^3)
+Components:
+***** Stage 1 *****
+
+LDM1
+Toroid Inductor: L = 2.6030324655595935E-5 H
+
+Toroid-Core
+Material: Micrometals -14
+
+do   = 0.04
+di    = 0.02
+t       = 0.01
+
+
+Winding: Litz 2.466219139108539 mm (58st. 0.25 mm)
+Number of turns N: 38
+
+Losses (W):
+Core Losses: 0.008073492387315834
+Winding losses DC: 2.2618466771159446E-8
+Winding losses skin effect: 1.9391727132551915
+Winding losses prox. effect: 0.0
+TOTAL: 1.9472462282609742
+
+Winding temperature: 44.309557931775345 C
+Core Temperature: 44.362490495619234 C
+Inductor Orientation: VERTICAL
+Convection: NATURAL
+
+Total Boxed Volume: 4.88376444867712E-5 m^3
+
+CDM1
+Capacitor: 4 x EPCOS B32922C3684
+Capacitance: 2.72E-6 F
+Capacitor Losses: 0.18695772296024557 W
+Capacitor Volume: 1.4652E-5 m^3
+
+LCM1
+Toroid 3ph Common-mode Inductor: Lcm = 8.140270484693878E-4 H
+Leakage Inductance Ls = 6.29376E-4 H
+
+Toroid-Core
+Material: Vitroperm 500F-18k
+
+do   = 0.04
+di    = 0.02
+t       = 0.03
+
+
+Winding: Solid 3.4801384507464124 mm
+Number of turns N: 4
+
+Losses (W):
+Core Losses: 0.010216036713191585
+Winding losses DC: 1.5164060032857921E-18
+Winding losses skin effect: 0.32481841714061394
+Winding losses prox. effect: 0.0
+TOTAL: 0.33503445385380554
+
+Winding temperature: 28.923292907103104 C
+Core Temperature: 29.017801349320873 C
+Inductor Orientation: VERTICAL
+Convection: NATURAL
+
+Total Boxed Volume: 8.552211328542589E-5 m^3
+
+CCM1
+Capacitor: 1 x EPCOS B32022A3153
+Capacitance: 1.5E-8 F
+Capacitor Losses: 0.008163867537562531 W
+Capacitor Volume: 1.188E-6 m^3
+***** Stage 2 *****
+
+LDM2
+Toroid Inductor: L = 7.5738573563825755E-6 H
+
+Toroid-Core
+Material: Micrometals -14
+
+do   = 0.03
+di    = 0.02
+t       = 0.01
+
+
+Winding: Litz 2.4961508830135313 mm (59st. 0.25 mm)
+Number of turns N: 26
+
+Losses (W):
+Core Losses: 0.0022951423223659157
+Winding losses DC: 3.3477543250024525E-8
+Winding losses skin effect: 1.0502980037398129
+Winding losses prox. effect: 0.0
+TOTAL: 1.052593179539722
+
+Winding temperature: 40.253673658477595 C
+Core Temperature: 40.26629894109883 C
+Inductor Orientation: VERTICAL
+Convection: NATURAL
+
+Total Boxed Volume: 2.956134319065295E-5 m^3
+
+CDM2
+Capacitor: 2 x EPCOS B32924C3475M
+Capacitance: 9.4E-6 F
+Capacitor Losses: 0.02121298604895747 W
+Capacitor Volume: 3.7421999999999995E-5 m^3
+
+LCM2
+Toroid 3ph Common-mode Inductor: Lcm = 0.007919544402905342 H
+Leakage Inductance Ls = 0.005385759 H
+
+Toroid-Core
+Material: Vitroperm 500F-18k
+
+do   = 0.04
+di    = 0.03
+t       = 0.02
+
+
+Winding: Solid 1.9394886340518116 mm
+Number of turns N: 19
+
+Losses (W):
+Core Losses: 0.008042162285086089
+Winding losses DC: 1.2042714641655947E-14
+Winding losses skin effect: 3.730472199508712
+Winding losses prox. effect: 0.0
+TOTAL: 3.7385143617938104
+
+Winding temperature: 54.42318905923053 C
+Core Temperature: 54.508031482585736 C
+Inductor Orientation: VERTICAL
+Convection: NATURAL
+
+Total Boxed Volume: 6.74444889438175E-5 m^3
+
+CCM2
+Capacitor: 1 x EPCOS B32022A3153
+Capacitance: 1.5E-8 F
+Capacitor Losses: 7.930311336409095E-8 W
+Capacitor Volume: 1.188E-6 m^3
+
+--------------------------- end Configuration ----------------------------
