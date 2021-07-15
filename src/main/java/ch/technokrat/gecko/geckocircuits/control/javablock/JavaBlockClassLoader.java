@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  *
  * @author andreas
  */
-public final class JavaBlockClassLoader extends ClassLoader {
+public final class JavaBlockClassLoader extends URLClassLoader {
     
     private final Map<String, CompiledClassContainer> _classMap;
 
@@ -43,22 +43,19 @@ public final class JavaBlockClassLoader extends ClassLoader {
          * 
          */
         
-        super(Thread.currentThread().getContextClassLoader());
+        super(new URL[0], Thread.currentThread().getContextClassLoader());
         
         _classMap = classMap;
         
     }
 
     /**
-     * this ensables to create local classes in the .ipes-folder, this classload will find them, then.
+     * this enables to create local classes in the .ipes-folder, this classload will find them, then.
      */
     private void extendClassPath() {
 
 
         if (!Fenster.IS_APPLET) {
-            final URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-            final Class<URLClassLoader> sysclass = URLClassLoader.class;
-
             final File tmpfile = new File(GlobalFilePathes.DATNAM);
             final File file = new File(tmpfile.getAbsolutePath());
             final File directory = file.getParentFile();
@@ -66,16 +63,8 @@ public final class JavaBlockClassLoader extends ClassLoader {
                 try {
                     final String path = directory.getAbsolutePath();
                     final URL url = new URL("file://" + path + "/");
-                    final Method method = sysclass.getDeclaredMethod("addURL", URL.class);
-                    method.setAccessible(true);
-                    method.invoke(sysloader, new Object[]{url});
-                } catch (IllegalAccessException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+		    this.addURL(url);
                 } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InvocationTargetException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NoSuchMethodException ex) {
                     Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SecurityException ex) {
                     Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,4 +99,5 @@ public final class JavaBlockClassLoader extends ClassLoader {
             // return super.findClass(name);
         }
     }
+    
 }
