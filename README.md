@@ -32,11 +32,11 @@ It should have a proper class path set and includes all the dependency libs.
 
 Run it with
 
-```java -jar target/gecko-1.0-jar-with-dependencies.jar```
+```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar```
 
 To run on HiDPI screens, use
 
-```java -Dsun.java2d.uiScale=2 -jar gecko-1.0-jar-with-dependencies.jar```
+```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar gecko-1.0-jar-with-dependencies.jar```
 
 ## Tests
 
