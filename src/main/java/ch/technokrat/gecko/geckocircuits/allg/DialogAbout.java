@@ -40,16 +40,16 @@ public class DialogAbout extends JDialog {
     private Image geckoBild;
     private String releaseDate = null;
 
-    public static final String RELEASE_DATE = "2018.02.15";
-    public static final String VERSION = "GeckoCIRCUITS - v1.75";
+    public static final String RELEASE_DATE = "2021.07.23";
+    public static final String VERSION = "GeckoCIRCUITS - v2.0";
     // changing this number will give a warning message, when
     // someone will open a model file with the old version number!
-    public static final int RELEASENUMBER = 175;
+    public static final int RELEASENUMBER = 202;
     
     // increase the build-number whenever some user gets a a new update of the program.
     // Especially, this should be the case when the version that is downloadable
     // is upgraded due to a minor bug fix.
-    public static final int BUILD_NUMBER = 68;
+    public static final int BUILD_NUMBER = 82;
     
     
     public DialogAbout() {
@@ -112,7 +112,7 @@ public class DialogAbout extends JDialog {
         JTextArea jtx2 = new JTextArea();
         jtx2.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
         
-        String professionalOrOpenSource = " professional ";
+        String professionalOrOpenSource = "GNU GPL 3.0 ";
         if(StartupWindow.testOpenSourceVersion()) {
             professionalOrOpenSource = " open-source ";
         }

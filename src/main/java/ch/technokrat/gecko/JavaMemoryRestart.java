@@ -170,8 +170,8 @@ final class JavaMemoryRestart {
         final List<String> commands = new ArrayList<String>();
         commands.add(javaCommand);
         commands.add("-Xmx" + memorySize + "m");
-	GraalVM need this flag to be in compatibilty mode with Nashorn. Syntaxpane used Nashorn
-	// commands.add("-Dpolyglot.js.nashorn-compat=true"); 
+	// GraalVM need this flag to be in compatibilty mode with Nashorn. Syntaxpane used Nashorn
+	commands.add("-Dpolyglot.js.nashorn-compat=true"); 
         commands.add("-jar");
         commands.add(pathToJarFile);
         commands.addAll(Arrays.asList(args));
