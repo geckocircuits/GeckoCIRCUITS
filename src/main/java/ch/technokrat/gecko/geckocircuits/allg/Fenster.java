@@ -460,7 +460,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
         String valueString = GeckoSim.applicationProps.getProperty("ANTI_ALIASING");
         if (valueString != null) {
-            if (new Boolean(valueString)) {
+            if (Boolean.parseBoolean(valueString)) {
                 _se.setAntialiasing(true);
                 aliasingCONTROL.setSelected(true);
                 jtfStatus.setAliasing(aliasingCONTROL.isSelected());

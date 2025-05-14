@@ -171,7 +171,7 @@ public class TechFormat implements Serializable {
         try {
             //-----------------------
             // (1) Repraesentiert der Eingabe-String eine korrekt eingegebene 'double'-Zahl? -->
-            double x = (new Double(s)).doubleValue();
+            double x = Double.parseDouble(s);
             return x;
         } catch (Exception e1) {
             //-----------------------
@@ -219,12 +219,12 @@ public class TechFormat implements Serializable {
                     String sub2 = s2.substring(pos + 1);
                     double z1 = 0, z2 = 0;
                     try {
-                        z1 = (new Double(sub1)).doubleValue();
+                        z1 = Double.parseDouble(sub1);
                     } catch (Exception ex1) {
                         break;
                     }
                     try {
-                        z2 = (new Double(sub2)).doubleValue();
+                        z2 = Double.parseDouble(sub2);
                     } catch (Exception ex1) {
                         if (sub2.length() != 0) {
                             break;
@@ -276,7 +276,7 @@ public class TechFormat implements Serializable {
         // 2k --> 2000;  2k2 --> 2200;  2m --> 0.002;  2m2 --> 2.2e-3;  2u --> 2e-6;  2u4 --> 2.4e-6;  7n --> 7e-9;  usw.
         double erg = DUMMY;
         try {
-            erg = (new Double(st)).doubleValue();
+            erg = Double.parseDouble(st);
         } catch (Exception e) {
             for (int i1 = 0; i1 < abk.length; i1++) {
                 int pos = st.indexOf(abk[i1]);
@@ -285,12 +285,12 @@ public class TechFormat implements Serializable {
                     String sub2 = st.substring(pos + 1);
                     double z1 = 0, z2 = 0;
                     try {
-                        z1 = (new Double(sub1)).doubleValue();
+                        z1 = Double.parseDouble(sub1);
                     } catch (Exception e1) {
                         break;
                     }
                     try {
-                        z2 = (new Double(sub2)).doubleValue();
+                        z2 = Double.parseDouble(sub2);
                     } catch (Exception e1) {
                         if (sub2.length() != 0) {
                             break;
@@ -390,7 +390,7 @@ public class TechFormat implements Serializable {
             int e2 = (int) (Math.pow(10, e1) * Math.random());  // ganzzahlig, maximal 8-stellig
             int e3 = (int) (31 * (Math.random() - 0.5));  // [-15 ... +15]
             double data = e2 * Math.pow(10, e3);
-            double q1 = (new Double(this.formatT(data, TechFormat.FORMAT_AUTO))).doubleValue();
+            double q1 = Double.parseDouble(this.formatT(data, TechFormat.FORMAT_AUTO));
             double ratio = q1 / data;
             if (ratio > 1) {
                 ratio = data / q1;

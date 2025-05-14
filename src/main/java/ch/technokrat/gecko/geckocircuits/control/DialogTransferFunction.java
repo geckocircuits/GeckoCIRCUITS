@@ -220,7 +220,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         
         if(denominator.isEmpty()) {
             final List<Double> constValue = new ArrayList<Double>();
-            constValue.add(new Double(1));
+            constValue.add(Double.valueOf(1));
             jTextFieldPoly.setDenominatorText(PolynomTools.getPolynomString(constValue));
         } else  {
             jTextFieldPoly.setDenominatorText(PolynomTools.getPolynomString(denominator));
@@ -228,7 +228,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         
         if(numerator.isEmpty()) {
             final List<Double> constValue = new ArrayList<Double>();
-            constValue.add(new Double(1));
+            constValue.add(Double.valueOf(1));
             jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(constValue));
         } else {
             jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(numerator));        
@@ -663,8 +663,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     
     private void jButtonAddNomActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAddNomActionPerformed
 
-        float imagValue = Math.abs(new Float(jTFInsertNumIm.getText()));
-        final float realValue = new Float(jTFInsertNumberRe.getText());
+        float imagValue = Math.abs(Float.parseFloat(jTFInsertNumIm.getText()));
+        final float realValue = Float.parseFloat(jTFInsertNumberRe.getText());
         if (_inPolynomialMode) {
             imagValue = 0;
         }
@@ -689,8 +689,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
     private void jButtonAddDenomActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAddDenomActionPerformed
 
-        final float realValue = new Float(jTFInsertDeNum.getText());
-        float imagValue = Math.abs(new Float(jTFInsertDeNumIm.getText()));
+        final float realValue = Float.parseFloat(jTFInsertDeNum.getText());
+        float imagValue = Math.abs(Float.parseFloat(jTFInsertDeNumIm.getText()));
         if (_inPolynomialMode) {
             imagValue = 0;
         }
@@ -724,8 +724,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             return;
         }
 
-        final NComplex value = new NComplex(new Float(jTFInsertDeNum.getText()),
-                Math.abs(new Float(jTFInsertDeNumIm.getText())));
+        final NComplex value = new NComplex(Float.parseFloat(jTFInsertDeNum.getText()),
+                Math.abs(Float.parseFloat(jTFInsertDeNumIm.getText())));
         _deNomModel.remove(selectionIndex);
         _deNomModel.insertElementAt(new ComplexPrinter(value), selectionIndex);
         updateTransferView();
@@ -738,8 +738,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             return;
         }
 
-        final NComplex value = new NComplex(new Float(jTFInsertNumberRe.getText()),
-                Math.abs(new Float(jTFInsertNumIm.getText())));
+        final NComplex value = new NComplex(Float.parseFloat(jTFInsertNumberRe.getText()),
+                Math.abs(Float.parseFloat(jTFInsertNumIm.getText())));
         _nomModel.remove(selectionIndex);
         _nomModel.insertElementAt(new ComplexPrinter(value), selectionIndex);
         updateTransferView();

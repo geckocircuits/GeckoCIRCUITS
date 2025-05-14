@@ -34,7 +34,7 @@ public class CheckBoxList extends JList
         listSelectionBackground =  uid.getColor ("List.selectionBackground");
     }
 
-    HashSet selectionCache = new HashSet();
+    HashSet<Integer> selectionCache = new HashSet<Integer>();
     int toggleIndex = -1;
     boolean toggleWasSelected;
 
@@ -51,11 +51,11 @@ public class CheckBoxList extends JList
             removeListSelectionListener (this);
 
             // remember everything selected as a result of this action
-            HashSet newSelections = new HashSet();
+            HashSet<Integer> newSelections = new HashSet<Integer>();
             int size = getModel().getSize();
             for (int i=0; i<size; i++) {
                 if (getSelectionModel().isSelectedIndex(i)) {
-                    newSelections.add (new Integer(i));
+                    newSelections.add (Integer.valueOf(i));
                 }
             }
 
@@ -83,7 +83,7 @@ public class CheckBoxList extends JList
             for (int i=0; i<size; i++) {
                 if (getSelectionModel().isSelectedIndex(i)) {
                     System.out.println ("caching " + i);
-                    selectionCache.add (new Integer(i));
+                    selectionCache.add (Integer.valueOf(i));
                 }
             }
 

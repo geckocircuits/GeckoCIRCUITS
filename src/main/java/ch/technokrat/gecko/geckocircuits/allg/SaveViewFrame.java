@@ -790,8 +790,8 @@ public final class SaveViewFrame extends GeckoDialog {
                 assert false : "no transcoder available:  " + selectedFileType;
                 return null;
         }
-        returnValue.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(scaling * width));
-        returnValue.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(scaling * height));
+        returnValue.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, Float.valueOf(scaling * width));
+        returnValue.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, Float.valueOf(scaling * height));
         return returnValue;
     }
 }

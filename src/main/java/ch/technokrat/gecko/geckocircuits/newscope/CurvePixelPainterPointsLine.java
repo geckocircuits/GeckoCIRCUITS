@@ -27,7 +27,7 @@ final class CurvePixelPainterPointsLine extends AbstractCurvePixelPainter{
     if(_previousPixelPainter != null && _previousPixelPainter._lastValue != null){
       _paintShape = new Line2D.Float(_xPixel - 1, _previousPixelPainter._lastValue, _xPixel, value);
     }
-    _lastValue = new Float(value);
+    _lastValue = Float.valueOf(value);
     findPath();
   }
 

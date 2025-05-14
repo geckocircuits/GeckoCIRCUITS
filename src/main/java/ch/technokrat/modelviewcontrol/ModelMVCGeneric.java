@@ -118,8 +118,10 @@ public abstract class ModelMVCGeneric<T> implements Serializable{
     this._value = value;
     if(value instanceof Double) {
         double dVal = (Double) value;
-        if (dVal != dVal) {            
-            this._value = (T) new Double(1);
+        if (dVal != dVal) {
+            @SuppressWarnings("unchecked")
+            T safeValue = (T) Double.valueOf(1);
+            this._value = safeValue;
         }
     }      
     notifyModelListeners(this);

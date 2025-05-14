@@ -32,11 +32,11 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         _regelBlock = regelBlock;                        
 
         if (_regelBlock instanceof ReglerMUX) {
-            jSpinnerPortNumber.setValue(new Integer(regelBlock.XIN.size()));
+            jSpinnerPortNumber.setValue(Integer.valueOf(regelBlock.XIN.size()));
         }
         
         if (_regelBlock instanceof ReglerDemux) {
-            jSpinnerPortNumber.setValue(new Integer(regelBlock.YOUT.size()));
+            jSpinnerPortNumber.setValue(Integer.valueOf(regelBlock.YOUT.size()));
         }                    
     }
     
