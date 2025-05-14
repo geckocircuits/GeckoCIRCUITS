@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
-import com.sun.tools.javac.util.Pair;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCapacitor;
