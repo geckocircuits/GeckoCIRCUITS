@@ -28,7 +28,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn package assembly:single
+    - name: Create installation package
+      run: jpackage --name gecko --dest release --app-version 1.0 --input target --main-jar gecko-1.0-jar-with-dependencies.jar --java-options "-Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2"
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
