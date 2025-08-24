@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 
 public final class ModelResultsTest{
-  private static final String MODELS_PATH = "TestModels/";
+  private static final String MODELS_PATH = "resources/Topologies/";
 
   @BeforeClass
   public static void setUpClass(){

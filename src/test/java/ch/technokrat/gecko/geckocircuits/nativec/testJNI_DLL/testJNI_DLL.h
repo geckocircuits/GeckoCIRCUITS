@@ -28,7 +28,7 @@ extern "C" {
  * Method:    calcOutputs
  * Signature: ([D[DIDD)V
  */
-JNIEXPORT void JNICALL Java_gecko_geckocircuits_nativec_NativeCWrapper_calcOutputs
+JNIEXPORT void JNICALL Java_ch_technokrat_gecko_geckocircuits_nativec_NativeCWrapper_calcOutputs
   (JNIEnv *, jobject, jdoubleArray, jdoubleArray, jint, jdouble, jdouble);
 
 /*
@@ -36,7 +36,7 @@ JNIEXPORT void JNICALL Java_gecko_geckocircuits_nativec_NativeCWrapper_calcOutpu
  * Method:    initParameters
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_gecko_geckocircuits_nativec_NativeCWrapper_initParameters
+JNIEXPORT void JNICALL Java_ch_technokrat_gecko_geckocircuits_nativec_NativeCWrapper_initParameters
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

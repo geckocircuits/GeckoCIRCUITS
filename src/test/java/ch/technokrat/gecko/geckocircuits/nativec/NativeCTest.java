@@ -101,7 +101,6 @@ public class NativeCTest {
     }
     
     @Test
-    @Ignore
     public void testLoadAndExecuteNativeLibrary() {
         _nativeCBlock = new NativeCBlock();
         double[][] testInput = {{1, 2, 3, 4, 5}};
@@ -128,7 +127,6 @@ public class NativeCTest {
     
     
     @Test
-    @Ignore
     public void testLoadAndExecuteNLAgain() {
         // execute again with same library
         testLoadAndExecuteNativeLibrary();
