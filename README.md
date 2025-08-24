@@ -36,7 +36,7 @@ Run it with
 
 To run on HiDPI screens, use
 
-```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar gecko-1.0-jar-with-dependencies.jar```
+```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target/gecko-1.0-jar-with-dependencies.jar```
 
 ## Tests
 
