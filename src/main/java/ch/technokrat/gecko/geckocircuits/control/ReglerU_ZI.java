@@ -123,11 +123,11 @@ public final class ReglerU_ZI extends RegelBlock {
 
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        _uziDisplay.jSpinnerLength1.setValue(new Float(tokenMap.readDataLine("scale1", (Float) _uziDisplay.jSpinnerLength1.getValue())));
-        _uziDisplay.jSpinnerLength2.setValue(new Float(tokenMap.readDataLine("scale2", (Float) _uziDisplay.jSpinnerLength2.getValue())));
-        _uziDisplay.jSpinnerZ1.setValue(new Float(tokenMap.readDataLine("scale3", (Float) _uziDisplay.jSpinnerZ1.getValue())));
-        _uziDisplay.jSpinnerAverage1.setValue(new Float(tokenMap.readDataLine("average1", (Float) _uziDisplay.jSpinnerAverage1.getValue())));
-        _uziDisplay.jSpinnerAverage2.setValue(new Float(tokenMap.readDataLine("average2", (Float) _uziDisplay.jSpinnerAverage2.getValue())));
-        _uziDisplay.jSpinnerZ2.setValue(new Float(tokenMap.readDataLine("average3", (Float) _uziDisplay.jSpinnerZ2.getValue())));
+        _uziDisplay.jSpinnerLength1.setValue(Double.valueOf(tokenMap.readDataLine("scale1", (Float) _uziDisplay.jSpinnerLength1.getValue())));
+        _uziDisplay.jSpinnerLength2.setValue(Double.valueOf(tokenMap.readDataLine("scale2", (Float) _uziDisplay.jSpinnerLength2.getValue())));
+        _uziDisplay.jSpinnerZ1.setValue(Double.valueOf(tokenMap.readDataLine("scale3", (Float) _uziDisplay.jSpinnerZ1.getValue())));
+        _uziDisplay.jSpinnerAverage1.setValue(Double.valueOf(tokenMap.readDataLine("average1", (Float) _uziDisplay.jSpinnerAverage1.getValue())));
+        _uziDisplay.jSpinnerAverage2.setValue(Double.valueOf(tokenMap.readDataLine("average2", (Float) _uziDisplay.jSpinnerAverage2.getValue())));
+        _uziDisplay.jSpinnerZ2.setValue(Double.valueOf(tokenMap.readDataLine("average3", (Float) _uziDisplay.jSpinnerZ2.getValue())));
     }
 }

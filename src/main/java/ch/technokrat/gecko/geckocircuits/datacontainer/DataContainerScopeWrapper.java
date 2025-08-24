@@ -114,7 +114,7 @@ public final class DataContainerScopeWrapper extends AbstractDataContainer imple
     @Override
     public Object getDataValueInInterval(final double intervalStart, final double intervalStop, final int row) {
         AbstractDataContainer container = null;
-        Object returnValue = new Float(0.0);
+        Object returnValue = Float.valueOf(0.0f);
         if (row < this._scopeIndices.getTotalSignalNumber()) {
             container = this._scopeIndices.getDataContainer(row);
             if (container != null) {

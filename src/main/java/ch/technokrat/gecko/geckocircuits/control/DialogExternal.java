@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 
-/** 
+/**
  *
  * @author Andy
  */
@@ -43,19 +43,19 @@ public class DialogExternal extends javax.swing.JDialog {
 
         initComponents();
         jTextFieldIdString.setText(regelBlock.getStringID());
-        _regelBlock = regelBlock;        
-        
-        orderList = regelBlock.getOrderList();                        
-        jSpinnerPortNumber.setValue(new Integer(_regelBlock.getVariableTerminals().size()));                                       
+        _regelBlock = regelBlock;
+
+        orderList = regelBlock.getOrderList();
+        jSpinnerPortNumber.setValue(Integer.valueOf(_regelBlock.getVariableTerminals().size()));
         populateListView();
-    
+
     }
 
     public void populateListView() {
         jList1.removeAll();
         DefaultListModel model = new DefaultListModel();
         jList1.setModel(model);
-        
+
         for (RegelBlock block : orderList) {
             model.addElement(block.getStringID());
             if (block == _regelBlock) {
@@ -204,7 +204,7 @@ public class DialogExternal extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void jTextFieldIdStringPropertyChange(java.beans.PropertyChangeEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldIdStringPropertyChange
-        
+
 
     }//GEN-LAST:event_jTextFieldIdStringPropertyChange
 
@@ -225,8 +225,8 @@ public class DialogExternal extends javax.swing.JDialog {
 
         if (_regelBlock instanceof ReglerFromEXTERNAL) {
             ((ReglerFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
-        }                
-        
+        }
+
     }//GEN-LAST:event_jSpinnerPortNumberStateChanged
 
     private void jButtonDownActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonDownActionPerformed
@@ -264,14 +264,14 @@ public class DialogExternal extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonUpActionPerformed
 
     private void jTextFieldIdStringActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldIdStringActionPerformed
-        
+
         try {
             _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
         } catch (NameAlreadyExistsException ex) {
             ex.printStackTrace();
         }
-        
-        
+
+
         populateListView();
     }//GEN-LAST:event_jTextFieldIdStringActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

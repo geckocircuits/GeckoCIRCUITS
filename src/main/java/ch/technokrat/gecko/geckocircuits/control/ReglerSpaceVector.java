@@ -109,12 +109,12 @@ public final class ReglerSpaceVector extends RegelBlock {
 
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        svd.jSpinnerLength1.setValue(new Float(tokenMap.readDataLine("scale1", 1f)));
-        svd.jSpinnerLength2.setValue(new Float(tokenMap.readDataLine("scale2", 1f)));
-        svd.jSpinnerLength3.setValue(new Float(tokenMap.readDataLine("scale3", 1f)));
-        svd.jSpinnerAverage1.setValue(new Float(tokenMap.readDataLine("average1", 1f)));
-        svd.jSpinnerAverage2.setValue(new Float(tokenMap.readDataLine("average2", 1f)));
-        svd.jSpinnerAverage3.setValue(new Float(tokenMap.readDataLine("average3", 1f)));
+        svd.jSpinnerLength1.setValue(Double.valueOf(tokenMap.readDataLine("scale1", 1f)));
+        svd.jSpinnerLength2.setValue(Double.valueOf(tokenMap.readDataLine("scale2", 1f)));
+        svd.jSpinnerLength3.setValue(Double.valueOf(tokenMap.readDataLine("scale3", 1f)));
+        svd.jSpinnerAverage1.setValue(Double.valueOf(tokenMap.readDataLine("average1", 1f)));
+        svd.jSpinnerAverage2.setValue(Double.valueOf(tokenMap.readDataLine("average2", 1f)));
+        svd.jSpinnerAverage3.setValue(Double.valueOf(tokenMap.readDataLine("average3", 1f)));
     }
     
 }

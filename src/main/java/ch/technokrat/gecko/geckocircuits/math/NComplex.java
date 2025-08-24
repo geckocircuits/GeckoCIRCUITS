@@ -181,8 +181,8 @@ public class NComplex {
 
     @Override
     public int hashCode() {
-        Double real = new Double(re);
-        Double imag = new Double(im);
+        Double real = Double.valueOf(re);
+        Double imag = Double.valueOf(im);
         return real.hashCode() - 7 * imag.hashCode() + 3;
     }
 

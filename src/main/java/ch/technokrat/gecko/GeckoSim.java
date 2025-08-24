@@ -123,7 +123,7 @@ public class GeckoSim extends JApplet {
         // java -Xmx512m -jar GeckoCIRCUITS.jar
         // restart with more memory, if necessary!
         String memorySize = applicationProps.getProperty("MEMORY");
-        Integer reqMem = new Integer(memorySize);
+        Integer reqMem = Integer.parseInt(memorySize);
 
         if (operatingmode == OperatingMode.REMOTE) {
             String javaCommand = applicationProps.getProperty("JAVACOMMAND");
@@ -295,7 +295,7 @@ public class GeckoSim extends JApplet {
         });
         //---------
         try {
-            int anz = (new Integer(this.getParameter("nrExample"))).intValue();
+            int anz = Integer.parseInt(this.getParameter("nrExample"));
             datnamExampleApplet = new String[anz];
             for (int i1 = 0; i1 < anz; i1++) {
                 String dn = "dat";
@@ -347,7 +347,7 @@ public class GeckoSim extends JApplet {
         // Find out if it is Applet or SimulinkObject:
         // Only if parameters are available (from HTML) it is supposed to be Applet
         try {
-            int anz = (new Integer(this.getParameter("nrExample"))).intValue();  // throws exception if not Applet
+            int anz = Integer.parseInt(this.getParameter("nrExample"));  // throws exception if not Applet
             Fenster.IS_APPLET = true;
 
         } catch (Exception e) {
@@ -495,7 +495,7 @@ public class GeckoSim extends JApplet {
         try {
             if (Fenster.IS_APPLET) {
                 String javaVersion = System.getProperty("java.version");
-                double jV = (new Double(javaVersion.substring(0, 3))).doubleValue();
+                double jV = Double.parseDouble(javaVersion.substring(0, 3));
                 System.out.println("AppletMode --> " + javaVersion + "   " + jV);
                 if (jV < 1.6) {
                     javaVersionAppletOK = false;
@@ -507,7 +507,7 @@ public class GeckoSim extends JApplet {
             Properties sysProp = System.getProperties();
             //sysProp.list(System.out);
             String javaVersion = sysProp.getProperty("java.runtime.version");
-            double jV = (new Double(javaVersion.replace("+", ".").substring(0, 3))).doubleValue();
+            double jV = Double.parseDouble(javaVersion.replace("+", ".").substring(0, 3));
 
             if (jV < 1.6) {
                 StringBuffer errorMessage = new StringBuffer();
