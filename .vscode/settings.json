@@ -1,0 +1,51 @@
+{
+    // Java Configuration
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "disabled",
+    "java.project.sourcePaths": [
+        "src/main/java"
+    ],
+    "java.project.outputPath": "target/classes",
+    "java.project.referencedLibraries": [
+        "target/*.jar"
+    ],
+
+    // Maven Configuration
+    "maven.executable.path": "mvn",
+    "maven.terminal.useJavaHome": true,
+
+    // Editor Settings for Java
+    "editor.formatOnSave": false,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+
+    // File Associations
+    "files.associations": {
+        "*.ipes": "xml"
+    },
+
+    // Files to exclude from explorer
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/target": false
+    },
+
+    // Search settings
+    "search.exclude": {
+        "**/target": true,
+        "**/node_modules": true
+    },
+
+    // Terminal settings
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+
+    // Java runtime configuration
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-1.8",
+            "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-11.0.28.6-hotspot",
+            "default": true
+        }
+    ]
+}

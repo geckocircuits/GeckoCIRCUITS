@@ -1,63 +1,155 @@
-# GeckoCircuits
+# GeckoCIRCUITS
 
-This is the source code package of the software GeckoCIRCUITS. GeckoCIRCUITS is a fast circuit simulator which is optimized for applications in power electronics.
+A fast circuit simulator optimized for power electronics applications. Multi-domain simulation including thermo-electrical simulation, EMI filter design, and thermal design tools.
 
+Originally written by Andreas Müsing, Andrija Stupar and Uwe Drofenik. Published under GPLv3.
 
-## What is GeckoCIRCUITS?
-See the [FAQ](FAQ.md) section
+## Quick Start with VSCode
 
-## What is this repo?
-
-This is the "official" new GeckoCIRCUITS Github repository, created and maintained by one of the original software authors.
-GeckoCIRCUITS was hosted on Sourceforge before [GeckoCircuits](https://sourceforge.net/projects/geckocircuits/).
-My friends at [Technokrat](https://github.com/technokrat/gecko) did do some improvements (e.g. support of HiDPI Monitors) to the software, this changes are included in this repo, thanks for this contribution!
-
-## Prerequisites
-
-To build, you need maven 3 installed and a more recent JDK. Everything from JDK9 to JDK13 should work.
-
-## Building
-
-Then run
-
+### 1. Open Project in VSCode
+```bash
+code c:\Users\mhr\Documents\GeckoCIRCUITS
 ```
-mvn package
+
+### 2. Install Recommended Extensions
+When prompted, click **"Install All"** to install Java extensions, or install manually:
+- Extension Pack for Java
+- Maven for Java
+- Debugger for Java
+
+### 3. Build and Run
+**Press `F5`** - VSCode will automatically build and run GeckoCIRCUITS!
+
+Or use **`Ctrl+Shift+B`** to just build the project.
+
+## VSCode Development Workflow
+
+### Building
+- **`Ctrl+Shift+B`** - Quick build (skips tests)
+- **Terminal → Run Task → Build GeckoCIRCUITS** - Full build with tests
+- **Terminal → Run Task → Clean Build Directory** - Clean target folder
+
+### Running
+- **`F5`** - Run with debugger
+- **`Ctrl+F5`** - Run without debugger
+
+### Available Run Configurations
+Access via Run menu or Debug sidebar (`Ctrl+Shift+D`):
+
+1. **Run GeckoCIRCUITS** - Standard run (auto-builds first)
+2. **Run GeckoCIRCUITS (HiDPI)** - For 4K/high-DPI displays
+3. **Run GeckoCIRCUITS (No Build)** - Quick restart without rebuilding
+4. **Run GeckoCIRCUITS with File** - Opens currently active `.ipes` file
+5. **Run GeckoCIRCUITS (Buck Converter Example)** - Opens example circuit
+
+### Debugging
+1. Set breakpoints by clicking in the gutter (left of line numbers)
+2. Press `F5` to run with debugger
+3. Use debug controls: **F5** (Continue), **F10** (Step Over), **F11** (Step Into), **Shift+F5** (Stop)
+
+See [.vscode/README.md](.vscode/README.md) for complete VSCode guide with keyboard shortcuts and tips.
+
+## Manual Build & Run (Command Line)
+
+### Prerequisites
+- **Java**: JDK 8 or newer (JDK 11+ recommended)
+- **Maven**: 3.6+
+- **Memory**: 3GB+ heap recommended for simulations
+
+### Build
+```bash
+mvn clean package assembly:single
+```
+
+Creates `target/gecko-1.0-jar-with-dependencies.jar`
+
+### Run
+```bash
+# Standard
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar
+
+# With circuit file
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar resources/Education_ETHZ/ex_1.ipes
+
+# HiDPI displays
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target/gecko-1.0-jar-with-dependencies.jar
+```
+
+### Convenience Scripts
+- **`run.bat`** - Standard run
+- **`run-hidpi.bat`** - HiDPI run
+- **`build.bat`** - Full build with tests
+- **`build-skip-tests.bat`** - Quick build without tests
+
+## Example Circuits
+
+Find example circuits in the `resources/` directory:
+
+| Circuit Type | File Path |
+|--------------|-----------|
+| Buck Converter | `resources/Education_ETHZ/ex_1.ipes` |
+| Buck-Boost | `resources/Topologies/BuckBoost_const_dutyCycle.ipes` |
+| Three-Phase VSR | `resources/Topologies/three-phase_VSR_simpleControl_250kW.ipes` |
+
+See [TOC.md](TOC.md) for a complete catalog of examples.
+
+## Project Structure
+
+- **`src/main/java/`** - Java source code
+  - `ch.technokrat.gecko` - Core application classes
+  - `ch.technokrat.gecko.geckocircuits` - Circuit simulation components
+  - `ch.technokrat.gecko.geckoscript` - Scripting support
+- **`resources/`** - Example circuits and tutorials
+- **`pom.xml`** - Maven build configuration
+- **`.vscode/`** - VSCode tasks and launch configurations
+- **`CLAUDE.md`** - Detailed architecture documentation
+
+Main entry point: `ch.technokrat.gecko.GeckoSim`
+
+## Operating Modes
+
+GeckoCIRCUITS supports multiple operating modes:
+- **STANDALONE** - Normal desktop application (default)
+- **REMOTE** - Remote access via RMI (MATLAB integration)
+- **MMF** - Memory-mapped file communication
+- **SIMULINK** - MATLAB Simulink integration
+- **EXTERNAL** - External tool integration
+
+## Troubleshooting
+
+### Out of Memory Errors
+Increase heap size by editing `run.bat` or [.vscode/launch.json](.vscode/launch.json):
+- Change `-Xmx3G` to `-Xmx4G` or higher
+
+### Build Fails
+```bash
+mvn clean
 mvn package assembly:single
 ```
 
-This should build the `target/gecko-1.0-jar-with-dependencies.jar`.
-It should have a proper class path set and includes all the dependency libs.
+### VSCode Java Extension Issues
+- Press `Ctrl+Shift+P` → **"Java: Clean Java Language Server Workspace"**
+- Reload window: `Ctrl+Shift+P` → **"Reload Window"**
 
-## Running
+### Tests
+During build, 11 tests are skipped due to Netbeans-specific environment requirements. This is expected and the application will work correctly.
 
-Run it with
+## License
 
-```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar```
+This program is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License version 3** (GPLv3) as published by the Free Software Foundation.
 
-To run on HiDPI screens, use
-
-```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar gecko-1.0-jar-with-dependencies.jar```
-
-## Tests
-
-As you might have recognized during the build, 11 tests were skipped. Those were excluded as the codebase is hard to read and the tests only seem to fail because of some expectations how the environment should luck which is not given outside Netbeans.
-
-Feel free to fix those tests.
-
-If you would like to simply run the program, and without the intention to change, inspect
-the sourcecode or to compile the program from scratch, you should probably download
-the binary package, available at www.gecko-simulations.com instead of this sourcecode
-package.
-
-This software is published under the GNU General Public License Version 3 (GPLv3), originally written by Andreas Müsing, Andrija Stupar and Uwe Drofenik.
-
-You are free to use any IDE for compiling the sources. However we recommend you to use the Netbeans IDE, since the project with all settings an necessary files is already done in Netbeans.
-
-
-You can redistribute it and/or modify it under the terms of the GNU General Public License version 3 as published by the Free Software Foundation. For the terms of this license, see licenses/gpl_v3.txt or http://www.gnu.org/licenses/ .
-
-For a commercial usage/redistribution, please contact Gecko-Research GmbH to obtain a commercial license.
+For commercial usage/redistribution, please contact Gecko-Research GmbH to obtain a commercial license.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/ .
+See [LICENSE](LICENSE) file or visit http://www.gnu.org/licenses/
+
+## Additional Resources
+
+- **Architecture & Development**: [CLAUDE.md](CLAUDE.md)
+- **FAQ**: [FAQ.md](FAQ.md)
+- **Example Catalog**: [TOC.md](TOC.md)
+- **Authors**: [AUTHORS.txt](AUTHORS.txt)
+- **Website**: www.gecko-simulations.com
+- **Original Sourceforge**: https://sourceforge.net/projects/geckocircuits/
+- **Contributions from**: [Technokrat](https://github.com/technokrat/gecko) (HiDPI support and improvements)

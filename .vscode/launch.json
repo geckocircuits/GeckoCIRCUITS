@@ -1,0 +1,70 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run GeckoCIRCUITS",
+            "request": "launch",
+            "mainClass": "ch.technokrat.gecko.GeckoSim",
+            "projectName": "gecko",
+            "vmArgs": "-Xmx3G -Dpolyglot.js.nashorn-compat=true",
+            "args": "",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build GeckoCIRCUITS (Skip Tests)"
+        },
+        {
+            "type": "java",
+            "name": "Run GeckoCIRCUITS (HiDPI)",
+            "request": "launch",
+            "mainClass": "ch.technokrat.gecko.GeckoSim",
+            "projectName": "gecko",
+            "vmArgs": "-Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2",
+            "args": "",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build GeckoCIRCUITS (Skip Tests)"
+        },
+        {
+            "type": "java",
+            "name": "Run GeckoCIRCUITS (No Build)",
+            "request": "launch",
+            "mainClass": "ch.technokrat.gecko.GeckoSim",
+            "projectName": "gecko",
+            "vmArgs": "-Xmx3G -Dpolyglot.js.nashorn-compat=true",
+            "args": "",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
+            "name": "Run GeckoCIRCUITS (Debug Mode)",
+            "request": "launch",
+            "mainClass": "ch.technokrat.gecko.GeckoSim",
+            "projectName": "gecko",
+            "vmArgs": "-Xmx3G -Dpolyglot.js.nashorn-compat=true",
+            "args": "",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build GeckoCIRCUITS (Skip Tests)"
+        },
+        {
+            "type": "java",
+            "name": "Run GeckoCIRCUITS with File",
+            "request": "launch",
+            "mainClass": "ch.technokrat.gecko.GeckoSim",
+            "projectName": "gecko",
+            "vmArgs": "-Xmx3G -Dpolyglot.js.nashorn-compat=true",
+            "args": "${file}",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build GeckoCIRCUITS (Skip Tests)"
+        },
+        {
+            "type": "java",
+            "name": "Run GeckoCIRCUITS (Buck Converter Example)",
+            "request": "launch",
+            "mainClass": "ch.technokrat.gecko.GeckoSim",
+            "projectName": "gecko",
+            "vmArgs": "-Xmx3G -Dpolyglot.js.nashorn-compat=true",
+            "args": "resources/Education_ETHZ/ex_1.ipes",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Build GeckoCIRCUITS (Skip Tests)"
+        }
+    ]
+}
