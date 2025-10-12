@@ -37,9 +37,14 @@ public class NativeCClassLoader extends ClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         final byte[] classBytes;
-        BufferedInputStream inBuff = new BufferedInputStream(
-                ClassLoader.getSystemResourceAsStream(name.replace(".", "/")
-                        + ".class"));
+        java.io.InputStream resourceStream = ClassLoader.getSystemResourceAsStream(
+                name.replace(".", "/") + ".class");
+
+        if (resourceStream == null) {
+            throw new ClassNotFoundException("Could not find class: " + name);
+        }
+
+        BufferedInputStream inBuff = new BufferedInputStream(resourceStream);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int i;
         try {
@@ -51,8 +56,7 @@ public class NativeCClassLoader extends ClassLoader {
             out.close();
             return defineClass(name, classBytes, 0, classBytes.length);
         } catch (IOException ioe) {
-            ioe.printStackTrace();
-            return null;
+            throw new ClassNotFoundException("Error reading class: " + name, ioe);
         }
     }
     

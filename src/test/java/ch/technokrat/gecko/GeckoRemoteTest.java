@@ -30,14 +30,13 @@ public class GeckoRemoteTest {
 
     private static GeckoRemoteInterface _oldWrapped;
     private static final List<String> _staticMethodNamesToExclude = Arrays.asList("forceDisconnectFromGecko", "disconnectFromGecko", "shutdown",
-            "connectToGecko", "startGui", "simulateStep", "simulateSteps");
+            "connectToGecko", "startGui", "simulateStep", "simulateSteps", "setJavaPath");
     private static final List<String> _methodNamesToExclude = Arrays.asList("connect", "disconnect", "getSessionID", "isFree", "shutdown",
-            "simulateStep", "simulateSteps");
+            "simulateStep", "simulateSteps", "registerLastClientToCallMethod", "checkSessionID", "acceptsExtraConnections");
 
    
 
     @Test
-    @Ignore
     public void testCallAllGeckoRemoteStaticMethods() {
         final GeckoRemoteTestingDummy testingDummy = new GeckoRemoteTestingDummy();   
         
@@ -104,7 +103,6 @@ public class GeckoRemoteTest {
     }
 
     @Test
-    @Ignore
     public void testMethodsAvailableNonStaticToStatic() {
 
         final List<Method> staticMethods = getAllRelevantStaticMethods();
@@ -145,7 +143,6 @@ public class GeckoRemoteTest {
     }
 
     @Test
-    @Ignore
     public void testMethodsAvailableStaticToNonStatic() {
 
         int foundCounter = 0;

@@ -68,13 +68,15 @@ public class NativeCBlock {
     public boolean loadLibraries (final String name) {
         try {
             _customCClassLoader = new NativeCClassLoader();
-            _nativeCWrapperClass = _customCClassLoader.findClass("gecko.geckocircuits.nativec.NativeCWrapper");
+            _nativeCWrapperClass = _customCClassLoader.findClass("ch.technokrat.gecko.geckocircuits.nativec.NativeCWrapper");
             _nativeCWrapperObj = (InterfaceNativeCWrapper) _nativeCWrapperClass.newInstance();
             _nativeCWrapperObj.loadLibrary(name);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause().printStackTrace();
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
             return false;
         }
     }

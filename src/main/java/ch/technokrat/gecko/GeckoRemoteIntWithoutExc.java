@@ -238,7 +238,8 @@ public interface GeckoRemoteIntWithoutExc {
     String[] getAccessibleParameters(String componentName) ;
     
     void setGlobalParameterValue(String parameterName, double value) ;
-    double getGlobalParameterValue(String parameterName) ;        
-    
-    
+    double getGlobalParameterValue(String parameterName) ;
+
+    void acceptExtraConnections(int numberOfExtraConnections);
+
 }

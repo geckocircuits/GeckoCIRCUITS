@@ -276,6 +276,10 @@ public class GeckoRemote {
         sessionID = NO_SESSION_ID;
     }
 
+    public static void acceptExtraConnections(int numberOfExtraConnections) {
+        _proxy.acceptExtraConnections(numberOfExtraConnections);
+    }
+
     private static void checkRemoteWithException() {
         if (_wrapped == null) {
             throw new RuntimeException("You are NOT connected to any instance of GeckoCIRCUITS! Use startGui(port) or"

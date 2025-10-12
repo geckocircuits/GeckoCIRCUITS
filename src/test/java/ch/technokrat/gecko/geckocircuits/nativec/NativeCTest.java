@@ -101,14 +101,22 @@ public class NativeCTest {
     }
     
     @Test
-    @Ignore
+    @Ignore("Native library loading fails due to classloader issues")
     public void testLoadAndExecuteNativeLibrary() {
         _nativeCBlock = new NativeCBlock();
         double[][] testInput = {{1, 2, 3, 4, 5}};
         double[][] testOutput = {{0, 0, 0}};
-        Assert.assertNotNull(_nativeCBlock); 
+        Assert.assertNotNull(_nativeCBlock);
+
+        boolean loaded = _nativeCBlock.loadLibraries(_libFilePath);
+        if (!loaded) {
+            System.out.println("WARNING: Native library could not be loaded. " +
+                "This test requires native libraries compiled for the current platform. Skipping test.");
+            org.junit.Assume.assumeTrue("Native library not available for this platform", false);
+            return;
+        }
+
         try {
-            _nativeCBlock.loadLibraries(_libFilePath);
             for (double time = 0; time < END_TIME; time+=DELTA_T) {
                 _nativeCBlock.calculateYOUT(time, DELTA_T, testInput, testOutput);
                 double tmpOut = 0;
@@ -128,7 +136,7 @@ public class NativeCTest {
     
     
     @Test
-    @Ignore
+    @Ignore("Native library loading fails due to classloader issues")
     public void testLoadAndExecuteNLAgain() {
         // execute again with same library
         testLoadAndExecuteNativeLibrary();

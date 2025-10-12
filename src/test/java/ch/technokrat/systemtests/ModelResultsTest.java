@@ -43,31 +43,31 @@ public final class ModelResultsTest{
   }
 
   @Test
-  @Ignore
+  @Ignore("Requires TestModels directory and full GUI initialization")
   public void threePhaseVSRTest(){
     openRunAssert("ThreePhase-VSR_10kW_thermal.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Requires TestModels directory and full GUI initialization")
   public void buckBoostThermal(){
     openRunAssert("BuckBoost_thermal.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Requires TestModels directory and full GUI initialization")
   public void thyristorControlAndParameters(){
     openRunAssert("ThyristorControlBlock.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Requires TestModels directory and full GUI initialization")
   public void opAmp(){
     openRunAssert("OpAmp.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Requires TestModels directory and full GUI initialization")
   public void thyristorCoupling(){
     openRunAssert("ThyristorCoupling.ipes");
   }
