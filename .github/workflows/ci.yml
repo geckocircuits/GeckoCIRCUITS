@@ -20,8 +20,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
       - name: Check Java Formatting
-        # Run check, catch failure, and output a GitHub warning annotation instead of failing the job
-        run: mvn fmt:check || echo "::warning::Code is not formatted correctly. Run 'mvn fmt:format' locally."
+        run: mvn fmt:check
 
   test:
     name: Unit Tests
