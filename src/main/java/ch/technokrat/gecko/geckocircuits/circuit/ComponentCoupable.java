@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,13 +18,18 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.List;
 
 /**
- * Every component, that builds an explicit link to other components (e.g for current measurements, or
- * a inductor coupling) should implement this interface.
+ * Every component, that builds an explicit link to other components (e.g for current measurements,
+ * or a inductor coupling) should implement this interface.
+ *
  * @author andreas
  */
 public interface ComponentCoupable extends Operationable {
-    ComponentCoupling getComponentCoupling();
-    I18nKeys getCouplingTitle();
-    I18nKeys getMissingComponentsString();
-    void checkComponentCompatibility(final Object testObject, List<AbstractBlockInterface> insertList);    
+  ComponentCoupling getComponentCoupling();
+
+  I18nKeys getCouplingTitle();
+
+  I18nKeys getMissingComponentsString();
+
+  void checkComponentCompatibility(
+      final Object testObject, List<AbstractBlockInterface> insertList);
 }

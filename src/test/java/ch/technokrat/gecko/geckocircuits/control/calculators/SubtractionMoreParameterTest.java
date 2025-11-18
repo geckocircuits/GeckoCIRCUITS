@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,31 +13,31 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 public class SubtractionMoreParameterTest extends AbstractMultiInputFunctionTest {
 
-    @Override
-    public AbstractControlCalculatable calculatorFabricTwoInputs() {
-        return new SubtractionMoreParameter(2);
-    }
+  @Override
+  public AbstractControlCalculatable calculatorFabricTwoInputs() {
+    return new SubtractionMoreParameter(2);
+  }
 
-    @Override
-    public AbstractControlCalculatable calculatorFabricThreeInputs() {
-        return new SubtractionMoreParameter(3);
-    }
+  @Override
+  public AbstractControlCalculatable calculatorFabricThreeInputs() {
+    return new SubtractionMoreParameter(3);
+  }
 
-    @Override
-    public AbstractControlCalculatable matchingTwoInputFabric() {
-        return new SubtractionTwoParameter();
-    }
+  @Override
+  public AbstractControlCalculatable matchingTwoInputFabric() {
+    return new SubtractionTwoParameter();
+  }
 
-    @Override
-    @Test
-    public void testWithThreeInputs() {
-        double val = getValue(5,-2,3);        
-        assertEquals(4, val, 1e-7);
-    }
-           
+  @Override
+  @Test
+  public void testWithThreeInputs() {
+    double val = getValue(5, -2, 3);
+    assertEquals(4, val, 1e-7);
+  }
 }

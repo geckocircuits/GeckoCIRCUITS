@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,73 +15,71 @@ package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 public final class DataJunkSimple implements DataJunk {
 
-    private float[][] _data;
-    private final int _startIndex;
-    private static final int FLOAT_BYTES = 4;
+  private float[][] _data;
+  private final int _startIndex;
+  private static final int FLOAT_BYTES = 4;
 
-    public DataJunkSimple(final int startIndex, final int rows, final int columns) {
-        _data = new float[rows][columns];
-        _startIndex = startIndex;
-        assert false;
+  public DataJunkSimple(final int startIndex, final int rows, final int columns) {
+    _data = new float[rows][columns];
+    _startIndex = startIndex;
+    assert false;
+  }
+
+  @Override
+  public float getValue(final int row, final int index) {
+    assert index - _startIndex < _data[0].length : _startIndex + " " + index;
+    assert index - _startIndex >= 0;
+
+    return _data[row][index - _startIndex];
+  }
+
+  @Override
+  public void setValue(final float value, final int row, final int column) {
+    _data[row][column - _startIndex] = value;
+  }
+
+  @SuppressWarnings("PMD")
+  @Override
+  public void setValues(final float[] values, final int column) {
+    for (int row = 0; row < values.length; row++) {
+      _data[row][column - _startIndex] = values[row];
     }
+  }
 
-    @Override
-    public float getValue(final int row, final int index) {
-        assert index - _startIndex < _data[0].length : _startIndex + " " + index;
-        assert index - _startIndex >= 0;
+  @Override
+  public HiLoData getHiLoValue(final int row, final int columnStart, final int columnStop) {
+    throw new UnsupportedOperationException("HiLo Value Not supported yet.");
+  }
 
-        return _data[row][index - _startIndex];
-    }
+  public AverageValue getAverageValue(final int row, final int colStart, final int colStop) {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-    @Override
-    public void setValue(final float value, final int row, final int column) {
-        _data[row][column - _startIndex] = value;
-    }
+  @Override
+  public AverageValue getAverageValue(
+      final int row,
+      final int colStart,
+      final int colStop,
+      final double totalMinTime,
+      final double totalMaxTime) {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-    @SuppressWarnings("PMD")
-    @Override
-    public void setValues(final float[] values, final int column) {
-        for(int row = 0; row < values.length; row++) {
-            _data[row][column - _startIndex] = values[row];
-        }
-    }
+  @Override
+  public int getJunkSizeInBytes() {
+    return _data.length * _data[0].length * FLOAT_BYTES;
+  }
 
-    @Override
-    public HiLoData getHiLoValue(final int row, final int columnStart, final int columnStop) {
-        throw new UnsupportedOperationException("HiLo Value Not supported yet.");
-    }
+  @Override
+  public int getCacheSizeInBytes() {
+    return getJunkSizeInBytes();
+  }
 
-
-    public AverageValue getAverageValue(final int row, final int colStart, final int colStop) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public AverageValue getAverageValue(final int row, final int colStart,
-            final int colStop, final double totalMinTime, final double totalMaxTime) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int getJunkSizeInBytes() {
-        return _data.length * _data[0].length * FLOAT_BYTES;
-    }
-
-    @Override
-    public int getCacheSizeInBytes() {
-        return getJunkSizeInBytes();
-    }
-
-    @Override
-    public float getIntegralValue(int row, int index) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-
+  @Override
+  public float getIntegralValue(int row, int index) {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 }

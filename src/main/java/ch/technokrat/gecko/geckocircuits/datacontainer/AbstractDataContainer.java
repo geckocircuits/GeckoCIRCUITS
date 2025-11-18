@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,15 +18,15 @@ import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import java.util.Observable;
 
 /**
- * A powerful data storage object, keeps data information as e.g.
- * minumum-maximum values, ...
+ * A powerful data storage object, keeps data information as e.g. minumum-maximum values, ...
+ *
  * @author andy
  */
-public abstract class AbstractDataContainer extends Observable{
+public abstract class AbstractDataContainer extends Observable {
   /**
    * @param row the row where to search inside
    * @param columnMax maximum column value
-   * @param columnMin minimum column value      
+   * @param columnMin minimum column value
    * @return the MinMax-Data from columnOld to column
    */
   public abstract HiLoData getHiLoValue(final int row, final int columnMin, final int columnMax);
@@ -39,10 +39,10 @@ public abstract class AbstractDataContainer extends Observable{
 
   public abstract int getMaximumTimeIndex(final int row);
 
-  public abstract Object getDataValueInInterval(final double intervalStart, final double intervalStop, final int columnIndex);
+  public abstract Object getDataValueInInterval(
+      final double intervalStart, final double intervalStop, final int columnIndex);
 
   public abstract HiLoData getAbsoluteMinMaxValue(int row);
-
 
   public abstract int findTimeIndex(final double time, final int row);
 
@@ -59,12 +59,10 @@ public abstract class AbstractDataContainer extends Observable{
   public abstract AbstractTimeSerie getTimeSeries(final int row);
 
   public abstract float[] getDataArray();
-  
-  public String getSubcircuitSignalPath(final int row) {      
-      return "";
+
+  public String getSubcircuitSignalPath(final int row) {
+    return "";
   };
 
-    void setSignalPathName(int containerRowIndex, String subcircuitPath) {        
-    }
-    
+  void setSignalPathName(int containerRowIndex, String subcircuitPath) {}
 }

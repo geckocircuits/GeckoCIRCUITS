@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -11,18 +11,18 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-//package ch.technokrat.gecko.geckocircuits.newscope;
+// package ch.technokrat.gecko.geckocircuits.newscope;
 //
-//import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerExternalWrapper;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Stack;
+// import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerExternalWrapper;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.Stack;
 //
-///**
+/// **
 // * Contains the currently defined external signals within the current data
 // * container.
 // */
-//public final class DefinedExternalSignals{
+// public final class DefinedExternalSignals{
 //  private final List<ExternalSignal> _scopeExternalSignals = new ArrayList<ExternalSignal>();
 //  private DataContainerExternalWrapper _externalWrapper;
 //  private GraferV4 _grafer;
@@ -88,8 +88,9 @@
 //   */
 //  public void unDefineExternalSignal(final ExternalSignal toDelete){
 //    this._grafer.getManager().removeExternalSignal(toDelete);
-//    this._externalWrapper.removeSignal(this._scopeExternalSignals.size() - this._scopeExternalSignals.indexOf(toDelete) - 1);
+//    this._externalWrapper.removeSignal(this._scopeExternalSignals.size() -
+// this._scopeExternalSignals.indexOf(toDelete) - 1);
 //    this._scopeExternalSignals.remove(toDelete);
 //    this.registerIndices(this._externalWrapper);
 //  }
-//}
+// }

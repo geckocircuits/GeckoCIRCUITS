@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,27 +20,21 @@ package ch.technokrat.gecko.geckocircuits.newscope;
  * with start and stop time and number of steps in between.
  */
 public abstract class AbstractTimeSerie {
-    protected static final int FIND_OVER_STEP = 5;
-    public abstract double getValue(final int index);
-    public abstract void setValue(final int index, final double value);
-    /**
-     * 
-     * @return bigest index, for which data is already written into container
-     */
-    public abstract int getMaximumIndex();
-    
-    /**
-     * 
-     * @param time value to search the index for
-     * @param maxIndex maximum index for which the worksheet data is valid
-     * @return worksheet index of the given time value
-     */
-    public abstract int findTimeIndex(final double time);
+  protected static final int FIND_OVER_STEP = 5;
 
-    /**
-     * 
-     * @return the difference between the last two inserted time values.
-     */
-    public abstract double getLastTimeInterval();
-    
+  public abstract double getValue(final int index);
+
+  public abstract void setValue(final int index, final double value);
+  /** @return bigest index, for which data is already written into container */
+  public abstract int getMaximumIndex();
+
+  /**
+   * @param time value to search the index for
+   * @param maxIndex maximum index for which the worksheet data is valid
+   * @return worksheet index of the given time value
+   */
+  public abstract int findTimeIndex(final double time);
+
+  /** @return the difference between the last two inserted time values. */
+  public abstract double getLastTimeInterval();
 }

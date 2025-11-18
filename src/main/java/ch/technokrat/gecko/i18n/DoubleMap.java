@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,42 +23,36 @@ import java.util.HashMap;
 import java.util.Set;
 
 public final class DoubleMap {
-    
-    /**
-     * maps keys to values, e.g. "GeckoFrame.jMenuItem17.text" to "Export"
-     */
-    private HashMap<I18nKeys,String> _keytoValue = new HashMap<I18nKeys, String>();
-    
-    /**
-     * maps values to keys, e.g. "Export" to "GeckoFrame.jMenuItem17.text"
-     */
-    private HashMap<String, I18nKeys> _valuetoKey = new HashMap<String,I18nKeys>();        
-   
-    
-    public void insertPair(final I18nKeys englishKey, final String value) {
-        _keytoValue.put(englishKey, value);
-        _valuetoKey.put(value, englishKey);
-    }
-    
-    public void removePair(final I18nKeys key, final String value) {
-        _keytoValue.remove(key);
-        _valuetoKey.remove(value);
-    }
-    
-    public String getValue(final I18nKeys key) {
-        return _keytoValue.get(key);
-    }
-    
-    public I18nKeys getKey(final String value) {
-        return _valuetoKey.get(value);
-    }
 
-    public Set<I18nKeys> getKeySet() {
-        return _keytoValue.keySet();
-    }
-    
-    public int getSize() {
-        return _keytoValue.size();
-    }
-    
+  /** maps keys to values, e.g. "GeckoFrame.jMenuItem17.text" to "Export" */
+  private HashMap<I18nKeys, String> _keytoValue = new HashMap<I18nKeys, String>();
+
+  /** maps values to keys, e.g. "Export" to "GeckoFrame.jMenuItem17.text" */
+  private HashMap<String, I18nKeys> _valuetoKey = new HashMap<String, I18nKeys>();
+
+  public void insertPair(final I18nKeys englishKey, final String value) {
+    _keytoValue.put(englishKey, value);
+    _valuetoKey.put(value, englishKey);
+  }
+
+  public void removePair(final I18nKeys key, final String value) {
+    _keytoValue.remove(key);
+    _valuetoKey.remove(value);
+  }
+
+  public String getValue(final I18nKeys key) {
+    return _keytoValue.get(key);
+  }
+
+  public I18nKeys getKey(final String value) {
+    return _valuetoKey.get(value);
+  }
+
+  public Set<I18nKeys> getKeySet() {
+    return _keytoValue.keySet();
+  }
+
+  public int getSize() {
+    return _keytoValue.size();
+  }
 }

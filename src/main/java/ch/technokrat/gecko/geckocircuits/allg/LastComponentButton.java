@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,83 +26,83 @@ import javax.swing.JButton;
 
 public class LastComponentButton extends JButton {
 
-    private AbstractBlockInterface _showComponent;
-    private AbstractBlockInterface _tmpShowComponent;
-    private AbstractComponentTyp _typ;
-    private ComponentDirection _componentDirection = ComponentDirection.NORTH_SOUTH;
+  private AbstractBlockInterface _showComponent;
+  private AbstractBlockInterface _tmpShowComponent;
+  private AbstractComponentTyp _typ;
+  private ComponentDirection _componentDirection = ComponentDirection.NORTH_SOUTH;
 
-    public LastComponentButton() {
-    }
+  public LastComponentButton() {}
 
-    public void setSelectedShowComponent(final AbstractBlockInterface showComponent, final AbstractComponentTyp typ) {
-        _showComponent = showComponent;
-        _showComponent.setComponentDirection(_componentDirection);
-        _typ = typ;
-        repaint();
-    }
+  public void setSelectedShowComponent(
+      final AbstractBlockInterface showComponent, final AbstractComponentTyp typ) {
+    _showComponent = showComponent;
+    _showComponent.setComponentDirection(_componentDirection);
+    _typ = typ;
+    repaint();
+  }
 
-    @Override
-    protected void paintComponent(final Graphics graphics) {
-        final Graphics2D g2d = (Graphics2D) graphics;
-        setPaintSettings(graphics);
-        final AbstractBlockInterface toShow = findComponentToShow();
-        if (toShow != null) {
-            final AffineTransform oldTrans = g2d.getTransform();
-            g2d.translate(2 * getWidth() / 5, 40);
-            toShow.paintGeckoComponent(g2d);
-            toShow.paintComponentForeGround(g2d);
-            g2d.setTransform(oldTrans);
-        }
+  @Override
+  protected void paintComponent(final Graphics graphics) {
+    final Graphics2D g2d = (Graphics2D) graphics;
+    setPaintSettings(graphics);
+    final AbstractBlockInterface toShow = findComponentToShow();
+    if (toShow != null) {
+      final AffineTransform oldTrans = g2d.getTransform();
+      g2d.translate(2 * getWidth() / 5, 40);
+      toShow.paintGeckoComponent(g2d);
+      toShow.paintComponentForeGround(g2d);
+      g2d.setTransform(oldTrans);
     }
+  }
 
-    public void setTempShowComponent(final AbstractBlockInterface newTmpComponent) {
-        _tmpShowComponent = newTmpComponent;
-        _tmpShowComponent.setComponentDirection(_componentDirection);
-        repaint();
-    }
+  public void setTempShowComponent(final AbstractBlockInterface newTmpComponent) {
+    _tmpShowComponent = newTmpComponent;
+    _tmpShowComponent.setComponentDirection(_componentDirection);
+    repaint();
+  }
 
-    public void removeTempShowComponent(final AbstractBlockInterface tmpComponentToRemove) {
-        if (_tmpShowComponent == tmpComponentToRemove) {
-            _tmpShowComponent = null;
-        }
-        repaint();
+  public void removeTempShowComponent(final AbstractBlockInterface tmpComponentToRemove) {
+    if (_tmpShowComponent == tmpComponentToRemove) {
+      _tmpShowComponent = null;
     }
+    repaint();
+  }
 
-    private AbstractBlockInterface findComponentToShow() {
-        if (_tmpShowComponent != null) {
-            return _tmpShowComponent;
-        }
-        if (_showComponent != null) {
-            return _showComponent;
-        }
-        return null;
+  private AbstractBlockInterface findComponentToShow() {
+    if (_tmpShowComponent != null) {
+      return _tmpShowComponent;
     }
+    if (_showComponent != null) {
+      return _showComponent;
+    }
+    return null;
+  }
 
-    private static void setPaintSettings(final Graphics graphics) {
-        final Graphics2D g2d = (Graphics2D) graphics;
-        g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
-                java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
-    }
+  private static void setPaintSettings(final Graphics graphics) {
+    final Graphics2D g2d = (Graphics2D) graphics;
+    g2d.setRenderingHint(
+        java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+  }
 
-    public AbstractBlockInterface getSelectedBlock() {
-        return _showComponent;
-    }
+  public AbstractBlockInterface getSelectedBlock() {
+    return _showComponent;
+  }
 
-    public AbstractComponentTyp getTyp() {
-        return _typ;
-    }
+  public AbstractComponentTyp getTyp() {
+    return _typ;
+  }
 
-    public void setComponentDirection(ComponentDirection _lastRotationDirection) {
-        try {
-            _componentDirection = _lastRotationDirection;
-            if (_showComponent != null) {
-                _showComponent.setComponentDirection(_lastRotationDirection);
-            }
-            if (_tmpShowComponent != null) {
-                _tmpShowComponent.setComponentDirection(_lastRotationDirection);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+  public void setComponentDirection(ComponentDirection _lastRotationDirection) {
+    try {
+      _componentDirection = _lastRotationDirection;
+      if (_showComponent != null) {
+        _showComponent.setComponentDirection(_lastRotationDirection);
+      }
+      if (_tmpShowComponent != null) {
+        _tmpShowComponent.setComponentDirection(_lastRotationDirection);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
+  }
 }

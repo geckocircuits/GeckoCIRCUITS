@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,11 +15,13 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 public interface BStampable {
 
-    void stampVectorB(double[] bVector, double time, final double deltaT);
-    void registerBVector(BVector bVector);
-    /**
-     * tells if the component has the same stamp over several timesteps
-     * @return true if stamp will not change all the time
-     */
-    boolean isBasisStampable();   
+  void stampVectorB(double[] bVector, double time, final double deltaT);
+
+  void registerBVector(BVector bVector);
+  /**
+   * tells if the component has the same stamp over several timesteps
+   *
+   * @return true if stamp will not change all the time
+   */
+  boolean isBasisStampable();
 }

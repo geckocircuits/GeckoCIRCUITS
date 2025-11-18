@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -12,21 +12,21 @@
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//package ch.technokrat.expressionscripting;
+// package ch.technokrat.expressionscripting;
 //
-//import java.applet.Applet;
-//import java.util.ArrayList;
-//import java.util.LinkedHashSet;
-//import java.util.List;
-//import java.util.logging.Level;
-//import java.util.logging.Logger;
-//import javax.script.Bindings;
-//import javax.script.ScriptContext;
-//import javax.script.ScriptEngine;
-//import javax.script.ScriptEngineManager;
-//import javax.script.ScriptException;
+// import java.applet.Applet;
+// import java.util.ArrayList;
+// import java.util.LinkedHashSet;
+// import java.util.List;
+// import java.util.logging.Level;
+// import java.util.logging.Logger;
+// import javax.script.Bindings;
+// import javax.script.ScriptContext;
+// import javax.script.ScriptEngine;
+// import javax.script.ScriptEngineManager;
+// import javax.script.ScriptException;
 //
-//public class JavaScriptTest extends Applet {
+// public class JavaScriptTest extends Applet {
 //
 //    public static List<AbstractExpression> allExpressions;
 //    private static ScriptEngineManager mgr = new ScriptEngineManager();
@@ -47,7 +47,8 @@
 //            for (int i = 0; i < NN; i++) {
 //                if (i == 0) {
 //                    allExpressions.add(AbstractExpression.newInstance("$R." + i, "$R.5"));
-//                    //allExpressions.add(AbstractExpression.newInstance("$R.0", "$R." + (NN - 1)));
+//                    //allExpressions.add(AbstractExpression.newInstance("$R.0", "$R." + (NN -
+// 1)));
 //                } else {
 //                    String expression = "1 + $R." + ((i - 1));
 //                    allExpressions.add(AbstractExpression.newInstance("$R." + i, expression));
@@ -71,11 +72,14 @@
 //                Logger.getLogger(JavaScriptTest.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //        } catch (ScriptException ex) {
-//            String niceMessage = ex.getMessage().replaceAll("sun.org.mozilla.javascript.internal.WrappedException: Wrapped javax.script.ScriptException:", "Wrapped: ");
+//            String niceMessage =
+// ex.getMessage().replaceAll("sun.org.mozilla.javascript.internal.WrappedException: Wrapped
+// javax.script.ScriptException:", "Wrapped: ");
 //            if(niceMessage.contains(LOOP_STRING)) {
-//                niceMessage = niceMessage.substring(0, niceMessage.indexOf(LOOP_STRING) + LOOP_STRING.length());
-//            }            
-//            
+//                niceMessage = niceMessage.substring(0, niceMessage.indexOf(LOOP_STRING) +
+// LOOP_STRING.length());
+//            }
+//
 //            System.err.println("ex message " + niceMessage);
 //        }
 //    }
@@ -93,7 +97,8 @@
 //
 //            Double newVariable = searchForUnknownVariable(test);
 //            if (newVariable == null) {
-//                throw new IllegalArgumentException("Error: Variable " + test + " is not known within this context!");
+//                throw new IllegalArgumentException("Error: Variable " + test + " is not known
+// within this context!");
 //            }
 //            assert newVariable instanceof Double;
 //            _expressionStack = null;
@@ -112,10 +117,11 @@
 //                        _expressionStack.add(expression);
 //                    }
 //                }
-//                //System.out.println("searching for variable " + test + " " + _expressionStack.size());
+//                //System.out.println("searching for variable " + test + " " +
+// _expressionStack.size());
 //                return expression.evaluate();
 //            }
 //        }
 //        return 0.0;
 //    }
-//}
+// }

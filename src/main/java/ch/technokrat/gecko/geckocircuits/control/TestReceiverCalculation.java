@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,50 +17,56 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 
-class TestReceiverCalculation {                
-    
-    private final Cispr16Settings _settings;
-    final Cispr16Fft _fftOrig;
+class TestReceiverCalculation {
 
-    public TestReceiverCalculation(final DataContainerSimple dataContainer, final Cispr16Settings settings) {
-        if (dataContainer == null) {
-            throw new RuntimeException("Error: no data available for testreceiver calculation!");
-        }
+  private final Cispr16Settings _settings;
+  final Cispr16Fft _fftOrig;
 
-        if (dataContainer.getContainerStatus() != ContainerStatus.FINISHED) {
-            throw new RuntimeException("Error: cannot start testreceiver calculation during simulation!");
-        }
-        
-        _settings = settings;        
-        _fftOrig = new Cispr16Fft(dataContainer, _settings._useBlackman.getValue());        
+  public TestReceiverCalculation(
+      final DataContainerSimple dataContainer, final Cispr16Settings settings) {
+    if (dataContainer == null) {
+      throw new RuntimeException("Error: no data available for testreceiver calculation!");
     }
 
-    
-    private int getIndexFromFrequency(final double frequency) {
-        if (frequency > _fftOrig.baseFrequency * _fftOrig._resampledN / 2.5) {
-            throw new RuntimeException("Error: frequency " + frequency + " out of range. Please Decrease your simulation stepwidth.");
-        }
-        return (int) Math.round(frequency / _fftOrig.baseFrequency);
+    if (dataContainer.getContainerStatus() != ContainerStatus.FINISHED) {
+      throw new RuntimeException("Error: cannot start testreceiver calculation during simulation!");
     }
 
-    double calculateQpAtFrequency(final double frequency) {
-        final QuasiPeakCalculator thread = new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
-        return thread._quasiPeak;
-    }
+    _settings = settings;
+    _fftOrig = new Cispr16Fft(dataContainer, _settings._useBlackman.getValue());
+  }
 
-    double[] calculateAtFrequency(final double frequency) {
-        final QuasiPeakCalculator thread = new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
-        return new double[]{thread._peakValue, thread._quasiPeak, thread._avgValue};
+  private int getIndexFromFrequency(final double frequency) {
+    if (frequency > _fftOrig.baseFrequency * _fftOrig._resampledN / 2.5) {
+      throw new RuntimeException(
+          "Error: frequency "
+              + frequency
+              + " out of range. Please Decrease your simulation stepwidth.");
     }
+    return (int) Math.round(frequency / _fftOrig.baseFrequency);
+  }
 
-    double calculateAvgAtFrequency(final double frequency) {
-        QuasiPeakCalculator thread = new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
-        return thread._avgValue;
-    }
+  double calculateQpAtFrequency(final double frequency) {
+    final QuasiPeakCalculator thread =
+        new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
+    return thread._quasiPeak;
+  }
 
-    double calculatePeakAtFrequency(final double frequency) {
-        final QuasiPeakCalculator thread = new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
-        return thread._peakValue;
-    }
-    
+  double[] calculateAtFrequency(final double frequency) {
+    final QuasiPeakCalculator thread =
+        new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
+    return new double[] {thread._peakValue, thread._quasiPeak, thread._avgValue};
+  }
+
+  double calculateAvgAtFrequency(final double frequency) {
+    QuasiPeakCalculator thread =
+        new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
+    return thread._avgValue;
+  }
+
+  double calculatePeakAtFrequency(final double frequency) {
+    final QuasiPeakCalculator thread =
+        new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
+    return thread._peakValue;
+  }
 }

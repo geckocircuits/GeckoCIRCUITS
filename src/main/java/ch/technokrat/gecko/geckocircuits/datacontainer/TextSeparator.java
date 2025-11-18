@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,52 +13,49 @@
  */
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
-import ch.technokrat.gecko.geckocircuits.newscope.GeckoLineStyle;
-
 public enum TextSeparator {
 
-    /**
-     * WARNING: Don't change the order of the enumeration constants, ordinal() is used!
-     */
-    SPACE(' '),
-    TABULATOR('\t'),
-    SEMICOLON(';'),
-    COMMA(',');
+  /** WARNING: Don't change the order of the enumeration constants, ordinal() is used! */
+  SPACE(' '),
+  TABULATOR('\t'),
+  SEMICOLON(';'),
+  COMMA(',');
 
-    public static TextSeparator getFromOrdinal(final int ordinal) {
-        for (TextSeparator val : TextSeparator.values()) {
-            if (val.ordinal() == ordinal) {
-                return val;
-            }
-        }
-        return TextSeparator.SPACE;
+  public static TextSeparator getFromOrdinal(final int ordinal) {
+    for (TextSeparator val : TextSeparator.values()) {
+      if (val.ordinal() == ordinal) {
+        return val;
+      }
     }
-    private final char _symbol;
-    private final String _stringValue;
+    return TextSeparator.SPACE;
+  }
 
-    TextSeparator(final char symbol) {
-        _symbol = symbol;
-        _stringValue = "" + symbol;
-    }
+  private final char _symbol;
+  private final String _stringValue;
 
-    public int code() {
-        return _symbol;
-    }
+  TextSeparator(final char symbol) {
+    _symbol = symbol;
+    _stringValue = "" + symbol;
+  }
 
-    public static TextSeparator getFromCode(final int code) {
-        for (TextSeparator val : TextSeparator.values()) {
-            if (val.code() == code) {
-                return val;
-            }
-        }
-        return TextSeparator.SPACE;
-    }
+  public int code() {
+    return _symbol;
+  }
 
-    public char charValue() {
-        return _symbol;
+  public static TextSeparator getFromCode(final int code) {
+    for (TextSeparator val : TextSeparator.values()) {
+      if (val.code() == code) {
+        return val;
+      }
     }
-    
-    public String stringValue() {
-        return _stringValue;
-    }
+    return TextSeparator.SPACE;
+  }
+
+  public char charValue() {
+    return _symbol;
+  }
+
+  public String stringValue() {
+    return _stringValue;
+  }
 }

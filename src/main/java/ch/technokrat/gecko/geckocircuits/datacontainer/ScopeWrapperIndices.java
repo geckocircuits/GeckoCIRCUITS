@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,60 +17,59 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author andreas
- */
+/** @author andreas */
 public final class ScopeWrapperIndices {
 
-    private final List<Integer> _originalGlobalIndices;
-    private final List<Integer> _globalIndices = new ArrayList<Integer>();
-    private final List<AbstractDataContainer> _indexedDataContainers = new ArrayList<AbstractDataContainer>();
-    private final DataContainerGlobal _globalDataContainer;
-    
-    
-    public ScopeWrapperIndices(final List<Integer> globalIndices, final DataContainerGlobal globalDataContainer) {        
-        _originalGlobalIndices = Collections.unmodifiableList(globalIndices);
-        _globalDataContainer = globalDataContainer;
-        for (int index = 0; index < globalIndices.size(); index++) {
-            _indexedDataContainers.add(globalDataContainer);
-        }
-    }
+  private final List<Integer> _originalGlobalIndices;
+  private final List<Integer> _globalIndices = new ArrayList<Integer>();
+  private final List<AbstractDataContainer> _indexedDataContainers =
+      new ArrayList<AbstractDataContainer>();
+  private final DataContainerGlobal _globalDataContainer;
 
-    public int getContainerRowIndex(final int row) {
-        if(row < _globalIndices.size()) {
-            return _globalIndices.get(row);
-        } else {
-            return 0;
-        }
-        
+  public ScopeWrapperIndices(
+      final List<Integer> globalIndices, final DataContainerGlobal globalDataContainer) {
+    _originalGlobalIndices = Collections.unmodifiableList(globalIndices);
+    _globalDataContainer = globalDataContainer;
+    for (int index = 0; index < globalIndices.size(); index++) {
+      _indexedDataContainers.add(globalDataContainer);
     }
+  }
 
-    public void reset() {
-        _globalIndices.clear();
-        _globalIndices.addAll(_originalGlobalIndices);
-        _indexedDataContainers.clear();
-        for (int index = 0; index < _globalIndices.size(); index++) {
-            _indexedDataContainers.add(_globalDataContainer);
-        }
+  public int getContainerRowIndex(final int row) {
+    if (row < _globalIndices.size()) {
+      return _globalIndices.get(row);
+    } else {
+      return 0;
     }
+  }
 
-    public AbstractDataContainer getDataContainer(final int row) {
-            return _indexedDataContainers.get(row);
+  public void reset() {
+    _globalIndices.clear();
+    _globalIndices.addAll(_originalGlobalIndices);
+    _indexedDataContainers.clear();
+    for (int index = 0; index < _globalIndices.size(); index++) {
+      _indexedDataContainers.add(_globalDataContainer);
     }
+  }
 
-    int getTotalSignalNumber() {
-        return _globalIndices.size();
-    }
+  public AbstractDataContainer getDataContainer(final int row) {
+    return _indexedDataContainers.get(row);
+  }
 
-    public void defineAdditionalSignal(final AbstractDataContainer newContainer, final int rowInsertPositon,
-            final int containerRowIndex) {
-        _indexedDataContainers.add(rowInsertPositon, newContainer);
-        _globalIndices.add(rowInsertPositon, containerRowIndex);
-    }
+  int getTotalSignalNumber() {
+    return _globalIndices.size();
+  }
 
-    public void deleteSignal(final int row) {
-        _indexedDataContainers.remove(row);
-        _globalIndices.remove(row);
-    }
+  public void defineAdditionalSignal(
+      final AbstractDataContainer newContainer,
+      final int rowInsertPositon,
+      final int containerRowIndex) {
+    _indexedDataContainers.add(rowInsertPositon, newContainer);
+    _globalIndices.add(rowInsertPositon, containerRowIndex);
+  }
+
+  public void deleteSignal(final int row) {
+    _indexedDataContainers.remove(row);
+    _globalIndices.remove(row);
+  }
 }

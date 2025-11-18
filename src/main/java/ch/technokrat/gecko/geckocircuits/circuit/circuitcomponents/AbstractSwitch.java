@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,49 +19,50 @@ import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.control.ReglerGate;
 
-public abstract class AbstractSwitch extends AbstractSemiconductor implements CurrentMeasurable, DirectVoltageMeasurable {
+public abstract class AbstractSwitch extends AbstractSemiconductor
+    implements CurrentMeasurable, DirectVoltageMeasurable {
 
-    public static final double UF_DEFAULT = 0.60;
-    public static final double RD_ON_DEFAULT = 10e-3;
-    public static final double RD_OFF_DEFAULT = 1e7;
-    ReglerGate _connectedGateBlock;
-    
-    protected final LossProperties verluste = new LossProperties(this);
+  public static final double UF_DEFAULT = 0.60;
+  public static final double RD_ON_DEFAULT = 10e-3;
+  public static final double RD_OFF_DEFAULT = 1e7;
+  ReglerGate _connectedGateBlock;
 
-    @Override
-    public final void doReferenceAddAction(final ComponentCoupling added) {
-        if (added.getParent() instanceof ReglerGate) {            
-            _connectedGateBlock = ((ReglerGate) added.getParent());            
-        }
-    }
+  protected final LossProperties verluste = new LossProperties(this);
 
-    @Override
-    public final void doReferenceRemoveAction(final ComponentCoupling removed) {
-        if (removed.getParent() instanceof ReglerGate) {            
-            _connectedGateBlock = null;
-        }
+  @Override
+  public final void doReferenceAddAction(final ComponentCoupling added) {
+    if (added.getParent() instanceof ReglerGate) {
+      _connectedGateBlock = ((ReglerGate) added.getParent());
     }
+  }
 
-    public final LossProperties getVerlustBerechnung() {
-        return verluste;
+  @Override
+  public final void doReferenceRemoveAction(final ComponentCoupling removed) {
+    if (removed.getParent() instanceof ReglerGate) {
+      _connectedGateBlock = null;
     }
+  }
 
-    @Override
-    public final void initExtraFiles() {
-        verluste.getDetailedLosses().initLossFile();
-    }             
-    
-    void addGateTextInfo() {
-        if (_connectedGateBlock == null) {
-            _textInfo.addErrorValue("no gate-signal");
-        } else {
-            final String gateString = _connectedGateBlock.getIDStringDialog() + " >>";
-            _textInfo.addParameter(gateString);
-        }
+  public final LossProperties getVerlustBerechnung() {
+    return verluste;
+  }
+
+  @Override
+  public final void initExtraFiles() {
+    verluste.getDetailedLosses().initLossFile();
+  }
+
+  void addGateTextInfo() {
+    if (_connectedGateBlock == null) {
+      _textInfo.addErrorValue("no gate-signal");
+    } else {
+      final String gateString = _connectedGateBlock.getIDStringDialog() + " >>";
+      _textInfo.addParameter(gateString);
     }
-    
-    @Override
-    public void setToolbarPaintProperties() {
-        _connectedGateBlock = new ReglerGate();        
-    }
+  }
+
+  @Override
+  public void setToolbarPaintProperties() {
+    _connectedGateBlock = new ReglerGate();
+  }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,32 +17,31 @@ import org.junit.Test;
 
 public class RoundCalculatorTest extends AbstractSimpleMathFunctionTest {
 
-    @Override
-    AbstractControlCalculatable calculatorFabric() {
-        return new RoundCalculator();
-    }
+  @Override
+  AbstractControlCalculatable calculatorFabric() {
+    return new RoundCalculator();
+  }
 
-    @Override
-    @Test
-    public void testBerechneYOUTResult0() {
-        double val = getValue(0);
-        assertWithTol(0, val);
-    }
+  @Override
+  @Test
+  public void testBerechneYOUTResult0() {
+    double val = getValue(0);
+    assertWithTol(0, val);
+  }
 
-    @Override
-    @Test
-    public void testBerechneYOUTValue() {
-        double val = getValue(0.3);
-        assertWithTol(0, val);
-        val = getValue(-0.3);
-        assertWithTol(0, val);
-        val = getValue(-4.7);
-        assertWithTol(-5, val);
-    }
+  @Override
+  @Test
+  public void testBerechneYOUTValue() {
+    double val = getValue(0.3);
+    assertWithTol(0, val);
+    val = getValue(-0.3);
+    assertWithTol(0, val);
+    val = getValue(-4.7);
+    assertWithTol(-5, val);
+  }
 
-    @Override
-    public void testErrorValue() {
-        // no error possible!
-    }
-    
+  @Override
+  public void testErrorValue() {
+    // no error possible!
+  }
 }

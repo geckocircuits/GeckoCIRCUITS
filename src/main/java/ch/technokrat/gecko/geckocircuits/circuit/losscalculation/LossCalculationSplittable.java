@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,14 +13,14 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-
 /**
- * Whenever a loss calculation can be split into conduction and switching losses,
- * the conduction loss class should implement this interface.
+ * Whenever a loss calculation can be split into conduction and switching losses, the conduction
+ * loss class should implement this interface.
+ *
  * @author andy
  */
-
 public interface LossCalculationSplittable {
-    double getSwitchingLoss();
-    double getConductionLoss();
+  double getSwitchingLoss();
+
+  double getConductionLoss();
 }

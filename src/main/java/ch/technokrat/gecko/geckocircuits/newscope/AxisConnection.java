@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-public enum AxisConnection{
+public enum AxisConnection {
   ZUORDNUNG_X(51, "X"),
   ZUORDNUNG_Y(52, "Y"),
   ZUORDNUNG_Y2(53, "Y2"),
@@ -22,33 +22,33 @@ public enum AxisConnection{
   private String _displayString;
   private int _code;
 
-  AxisConnection(final int code, final String displayString){
+  AxisConnection(final int code, final String displayString) {
     _code = code;
     _displayString = displayString;
   }
 
-  static AxisConnection getFromCode(final int code){
-    for(AxisConnection val : AxisConnection.values()){
-      if(val.getCode() == code){
+  static AxisConnection getFromCode(final int code) {
+    for (AxisConnection val : AxisConnection.values()) {
+      if (val.getCode() == code) {
         return val;
       }
     }
     return AxisConnection.ZUORDNUNG_NIX;
   }
 
-  int getCode(){
+  int getCode() {
     return _code;
   }
 
   @Override
-  public String toString(){
+  public String toString() {
     return _displayString;
   }
 
-  public AxisConnection iterateNext(final boolean signal){
+  public AxisConnection iterateNext(final boolean signal) {
 
-    if(signal){
-      switch(this){
+    if (signal) {
+      switch (this) {
         case ZUORDNUNG_SIGNAL:
           return AxisConnection.ZUORDNUNG_NIX;
         case ZUORDNUNG_NIX:
@@ -59,8 +59,7 @@ public enum AxisConnection{
       }
     }
 
-
-    switch(this){
+    switch (this) {
       case ZUORDNUNG_NIX:
         return AxisConnection.ZUORDNUNG_Y;
       case ZUORDNUNG_Y:
@@ -70,7 +69,6 @@ public enum AxisConnection{
       default:
         assert false;
         break;
-
     }
     return null;
   }

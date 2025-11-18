@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,34 +21,30 @@ import java.io.Serializable;
  * @param <T>
  * @author andy
  */
-public class ModelMVC<T> extends AbstractUndoGenericModel<T>
-        implements Serializable{
+public class ModelMVC<T> extends AbstractUndoGenericModel<T> implements Serializable {
   private static final long serialVersionUID = 784635241326447L;
   private Object _descriptionObject = null;
 
-  public ModelMVC(T initValue){
+  public ModelMVC(T initValue) {
     super(initValue);
   }
 
   /**
-   *
    * @param initValue initial Float value of model
-   * @param description a string which tells what kind of object the object
-   * represents. This is used, e.g. for an undo-event: "Undo dielectric
-   * constant".
+   * @param description a string which tells what kind of object the object represents. This is
+   *     used, e.g. for an undo-event: "Undo dielectric constant".
    */
-  public ModelMVC(T initValue, Object descriptionObject){
+  public ModelMVC(T initValue, Object descriptionObject) {
     super(initValue);
     _descriptionObject = descriptionObject;
   }
 
   @Override
-  public String toString(){
-      if(_descriptionObject != null) {
-          return _descriptionObject.toString();
-      } else {
-          return getClass().getName() + "_" + hashCode();
-      }    
+  public String toString() {
+    if (_descriptionObject != null) {
+      return _descriptionObject.toString();
+    } else {
+      return getClass().getName() + "_" + hashCode();
+    }
   }
-    
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,9 +18,11 @@ import java.util.Collection;
 /**
  * Some components consist of several sub-components that are not visible to the user in the gui
  * (e.g. LISN, MOSFET, OP-Amp).
+ *
  * @author andreas
  */
 public interface HiddenSubCircuitable {
-    Collection<? extends AbstractBlockInterface> getHiddenSubCircuitElements();
-    boolean includeParentInSimulation();    
+  Collection<? extends AbstractBlockInterface> getHiddenSubCircuitElements();
+
+  boolean includeParentInSimulation();
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,30 +19,29 @@ import ch.technokrat.gecko.geckocircuits.control.calculators.MaxCalculatorTwoInp
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public final class ReglerMAX extends AbstractReglerVariableInputs {
-    public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerMAX.class, "MAX", I18nKeys.MAXIMUM);
-    
-    public ReglerMAX() {
-        super(2);
+  public static final ControlTypeInfo tinfo =
+      new ControlTypeInfo(ReglerMAX.class, "MAX", I18nKeys.MAXIMUM);
+
+  public ReglerMAX() {
+    super(2);
+  }
+
+  @Override
+  public String[] getOutputNames() {
+    return new String[] {"max"};
+  }
+
+  @Override
+  public I18nKeys[] getOutputDescription() {
+    return new I18nKeys[] {I18nKeys.LARGEST_VALUE_OF_THE_INPUTS};
+  }
+
+  @Override
+  public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
+    if (XIN.size() == 2) {
+      return new MaxCalculatorTwoInputs();
+    } else {
+      return new MaxCalculatorMultiInputs(XIN.size());
     }
-
-    @Override
-    public String[] getOutputNames() {
-        return new String[]{"max"};
-    }
-
-    @Override
-    public I18nKeys[] getOutputDescription() {
-        return new I18nKeys[]{I18nKeys.LARGEST_VALUE_OF_THE_INPUTS};
-    }        
-
-    @Override
-    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {        
-        if (XIN.size() == 2) {            
-            return new MaxCalculatorTwoInputs();
-        } else {
-            return new MaxCalculatorMultiInputs(XIN.size());
-        }
-
-    }
-        
+  }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,23 +15,16 @@ package ch.technokrat.gecko;
 
 import ch.technokrat.gecko.geckoscript.AbstractGeckoCustom;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
-import java.rmi.RemoteException;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 public final class ExternalGeckoCustom extends AbstractGeckoCustom {
- 
-    
-    public ExternalGeckoCustom(final SimulationAccess access) {
-        super(access, null);
-    }
 
-    @Override
-    public void runScript() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }            
-      
-    
+  public ExternalGeckoCustom(final SimulationAccess access) {
+    super(access, null);
+  }
+
+  @Override
+  public void runScript() {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 }

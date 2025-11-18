@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,33 +18,34 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
-public abstract class AbstractDialogWithExternalOption<T extends RegelBlock> extends DialogElementCONTROL<T> {
+public abstract class AbstractDialogWithExternalOption<T extends RegelBlock>
+    extends DialogElementCONTROL<T> {
 
-    final JCheckBox _jCheckBoxUseExternal = new JCheckBox("Use external parameters");
-    private final ControlInputTwoTerminalStateable _externable;
+  final JCheckBox _jCheckBoxUseExternal = new JCheckBox("Use external parameters");
+  private final ControlInputTwoTerminalStateable _externable;
 
-    public AbstractDialogWithExternalOption(final T element) {
-        super(element);
-        _externable = (ControlInputTwoTerminalStateable) element;
-        assert element instanceof ControlInputTwoTerminalStateable;
-        _jCheckBoxUseExternal.setSelected(_externable.isExternalSet());
+  public AbstractDialogWithExternalOption(final T element) {
+    super(element);
+    _externable = (ControlInputTwoTerminalStateable) element;
+    assert element instanceof ControlInputTwoTerminalStateable;
+    _jCheckBoxUseExternal.setSelected(_externable.isExternalSet());
 
-        _jCheckBoxUseExternal.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent event) {
-                for (JComponent comp : getComponentsDisabledExternal()) {
-                    comp.setEnabled(!_jCheckBoxUseExternal.isSelected());
-                }
+    _jCheckBoxUseExternal.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(final ActionEvent event) {
+            for (JComponent comp : getComponentsDisabledExternal()) {
+              comp.setEnabled(!_jCheckBoxUseExternal.isSelected());
             }
+          }
         });
+  }
 
-    }
+  @Override
+  protected void processInputs() {
+    super.processInputs();
+    _externable.setExternalUsed(_jCheckBoxUseExternal.isSelected());
+  }
 
-    @Override
-    protected void processInputs() {
-        super.processInputs();
-        _externable.setExternalUsed(_jCheckBoxUseExternal.isSelected());
-    }
-
-    abstract JComponent[] getComponentsDisabledExternal();
+  abstract JComponent[] getComponentsDisabledExternal();
 }

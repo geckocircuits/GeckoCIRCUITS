@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -16,11 +16,11 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
 import org.junit.Test;
 
 public class GateCalculatorTest {
-    private static final double DUMMY_DT = 1e-9;
+  private static final double DUMMY_DT = 1e-9;
 
-    @Test(expected=AssertionError.class)
-    public void testBerechneYOUT() {
-        final GateCalculator gateCalc = new GateCalculator();
-        gateCalc.berechneYOUT(DUMMY_DT);
-    }
+  @Test(expected = AssertionError.class)
+  public void testBerechneYOUT() {
+    final GateCalculator gateCalc = new GateCalculator();
+    gateCalc.berechneYOUT(DUMMY_DT);
+  }
 }

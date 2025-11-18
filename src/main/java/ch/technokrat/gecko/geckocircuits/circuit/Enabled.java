@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,41 +13,34 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-/**
- *
- * @author andreas
- */
+/** @author andreas */
 public enum Enabled {
-    DISABLED,
-    ENABLED,
-    DISABLED_SHORT;
-    
-    public static Enabled getFromOrdinal(final int ordinal) {
-        for(Enabled val : Enabled.values()) {
-            if(val.ordinal() == ordinal) {
-                return val;
-            }
-        }
-        assert false;
-        return null;
-    }
+  DISABLED,
+  ENABLED,
+  DISABLED_SHORT;
 
-    @Override
-    public String toString() {
-        switch(this) {
-            case DISABLED:
-                return "disabled";
-            case ENABLED:
-                return "enabled";
-            case DISABLED_SHORT:
-                return "shorted";
-            default:
-                assert false;
-                return "";
-        }
-            
+  public static Enabled getFromOrdinal(final int ordinal) {
+    for (Enabled val : Enabled.values()) {
+      if (val.ordinal() == ordinal) {
+        return val;
+      }
     }
-    
-    
-    
+    assert false;
+    return null;
+  }
+
+  @Override
+  public String toString() {
+    switch (this) {
+      case DISABLED:
+        return "disabled";
+      case ENABLED:
+        return "enabled";
+      case DISABLED_SHORT:
+        return "shorted";
+      default:
+        assert false;
+        return "";
+    }
+  }
 }

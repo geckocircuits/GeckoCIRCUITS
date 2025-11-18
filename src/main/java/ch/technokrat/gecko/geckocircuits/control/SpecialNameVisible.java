@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -14,12 +14,13 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 /**
- * For some components, we may define an "extra" visiblity of the component name
- * (e.g. Scope, Java-Block). This interface should "replace" the regular showName-
- * behavior.
+ * For some components, we may define an "extra" visiblity of the component name (e.g. Scope,
+ * Java-Block). This interface should "replace" the regular showName- behavior.
+ *
  * @author andreas
  */
 public interface SpecialNameVisible {
-    boolean isNameVisible();
-    void setNameVisible(final boolean newValue);
+  boolean isNameVisible();
+
+  void setNameVisible(final boolean newValue);
 }
