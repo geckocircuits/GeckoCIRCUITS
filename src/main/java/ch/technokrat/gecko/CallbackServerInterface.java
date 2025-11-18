@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,16 +15,15 @@ package ch.technokrat.gecko;
 
 import java.rmi.Remote;
 
-/**
- * This is a remote interface for doing RMI client callback.
- */
-
+/** This is a remote interface for doing RMI client callback. */
 public interface CallbackServerInterface extends Remote {
-    /**
-     * This remote method allows an object client to register for callback
-     * @param callbackClientObject is a reference to the object of the client; to be used by the server to make its callbacks.
-     * @throws java.rmi.RemoteException 
-     */
-  void registerForCallback(CallbackClientInterface callbackClientObject) throws java.rmi.RemoteException;
- 
+  /**
+   * This remote method allows an object client to register for callback
+   *
+   * @param callbackClientObject is a reference to the object of the client; to be used by the
+   *     server to make its callbacks.
+   * @throws java.rmi.RemoteException
+   */
+  void registerForCallback(CallbackClientInterface callbackClientObject)
+      throws java.rmi.RemoteException;
 }

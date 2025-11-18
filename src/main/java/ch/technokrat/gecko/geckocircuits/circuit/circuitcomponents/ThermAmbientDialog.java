@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,14 +18,14 @@ import javax.swing.JPanel;
 
 final class ThermAmbientDialog extends DialogElementLK<ThermAmbient> {
 
-    public ThermAmbientDialog(final ThermAmbient parent) {
-        super(parent);
-    }
+  public ThermAmbientDialog(final ThermAmbient parent) {
+    super(parent);
+  }
 
-    @Override
-    public void baueGUIIndividual() {
-        JPanel jpM = createParameterPanel(element._ambientTemp);
-        tf.get(0).setEditable(false);  // vorerst kann diese Temperatur nicht gesetzt werden
-        con.add(jpM, BorderLayout.CENTER);
-    }    
+  @Override
+  public void baueGUIIndividual() {
+    JPanel jpM = createParameterPanel(element._ambientTemp);
+    tf.get(0).setEditable(false); // vorerst kann diese Temperatur nicht gesetzt werden
+    con.add(jpM, BorderLayout.CENTER);
+  }
 }

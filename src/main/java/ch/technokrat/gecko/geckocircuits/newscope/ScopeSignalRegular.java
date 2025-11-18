@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,9 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.circuit.CircuitSheet;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
-import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
 
 /**
  * Immutable class, especially the scope input index should never change!
@@ -24,34 +22,35 @@ import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
  */
 public final class ScopeSignalRegular extends AbstractScopeSignal {
 
-    private final int _scopeInputIndex;
-    private final ReglerOSZI _reglerOSZI;
+  private final int _scopeInputIndex;
+  private final ReglerOSZI _reglerOSZI;
 
-    public ScopeSignalRegular(final int scopeInputIndex, final ReglerOSZI reglerOSZI) {
-        super();
-        _scopeInputIndex = scopeInputIndex;
-        _reglerOSZI = reglerOSZI;
-    }
+  public ScopeSignalRegular(final int scopeInputIndex, final ReglerOSZI reglerOSZI) {
+    super();
+    _scopeInputIndex = scopeInputIndex;
+    _reglerOSZI = reglerOSZI;
+  }
 
-    @Override
-    public String getSignalName() {
-        if (_reglerOSZI == null) {
-            return "no regleroszi defined";
-        }
-        final String returnValue = _reglerOSZI.XIN.get(_scopeInputIndex).getLabelObject().getLabelString();
-        if (returnValue.isEmpty()) {
-            return "sg." + _scopeInputIndex;
-        } else {
-            return returnValue;
-        }
+  @Override
+  public String getSignalName() {
+    if (_reglerOSZI == null) {
+      return "no regleroszi defined";
     }
+    final String returnValue =
+        _reglerOSZI.XIN.get(_scopeInputIndex).getLabelObject().getLabelString();
+    if (returnValue.isEmpty()) {
+      return "sg." + _scopeInputIndex;
+    } else {
+      return returnValue;
+    }
+  }
 
-    int getSignalIndex() {
-        return _scopeInputIndex;
-    }
+  int getSignalIndex() {
+    return _scopeInputIndex;
+  }
 
-    @Override
-    public String getSubcircuitPath() {
-        return _reglerOSZI.getSubCircuitPath();        
-    }
+  @Override
+  public String getSubcircuitPath() {
+    return _reglerOSZI.getSubCircuitPath();
+  }
 }

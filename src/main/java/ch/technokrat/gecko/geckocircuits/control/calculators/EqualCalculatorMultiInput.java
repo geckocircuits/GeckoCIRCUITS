@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,19 +15,18 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 public final class EqualCalculatorMultiInput extends AbstractControlCalculatable {
 
-    public EqualCalculatorMultiInput(final int intputSize) {
-        super(intputSize, 1);
-    }
+  public EqualCalculatorMultiInput(final int intputSize) {
+    super(intputSize, 1);
+  }
 
-    @Override
-    public void berechneYOUT(final double deltaT) {
-        _outputSignal[0][0] = 1;                
-        for(int i = 1; i < _inputSignal.length; i++) {
-            if(_inputSignal[i][0] != _inputSignal[0][0]) {                
-                _outputSignal[0][0] = 0;
-                return;
-            }
-        }
-        
+  @Override
+  public void berechneYOUT(final double deltaT) {
+    _outputSignal[0][0] = 1;
+    for (int i = 1; i < _inputSignal.length; i++) {
+      if (_inputSignal[i][0] != _inputSignal[0][0]) {
+        _outputSignal[0][0] = 0;
+        return;
+      }
     }
+  }
 }

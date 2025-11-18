@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,39 +23,45 @@ import java.util.logging.Logger;
 
 public class SpecialTypeInfo extends AbstractTypeInfo {
 
-    public SpecialTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription) {
-        super(typeClass, idString, typeDescription);
-    }
+  public SpecialTypeInfo(
+      Class<? extends AbstractBlockInterface> typeClass,
+      String idString,
+      I18nKeys typeDescription) {
+    super(typeClass, idString, typeDescription);
+  }
 
-    public SpecialTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription, I18nKeys typeDescriptionVerbose) {
-        super(typeClass, idString, typeDescription, typeDescriptionVerbose);
-    }
+  public SpecialTypeInfo(
+      Class<? extends AbstractBlockInterface> typeClass,
+      String idString,
+      I18nKeys typeDescription,
+      I18nKeys typeDescriptionVerbose) {
+    super(typeClass, idString, typeDescription, typeDescriptionVerbose);
+  }
 
-    @Override
-    public ConnectorType getSimulationDomain() {
-        return ConnectorType.NONE;
-    }
+  @Override
+  public ConnectorType getSimulationDomain() {
+    return ConnectorType.NONE;
+  }
 
-    @Override
-    public String getExportImportCharacters() {
-        return "sp";
-    }
+  @Override
+  public String getExportImportCharacters() {
+    return "sp";
+  }
 
-    @Override
-    public String getSaveIdentifier() {
-        return "ElementSPECIAL";
-    }
+  @Override
+  public String getSaveIdentifier() {
+    return "ElementSPECIAL";
+  }
 
-    @Override
-    public AbstractBlockInterface fabric() {
-        try {
-            return _typeClass.newInstance();
-        } catch (Throwable ex) {
-            System.err.println("error: " + _typeClass);
-            ex.printStackTrace();
-            Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-
+  @Override
+  public AbstractBlockInterface fabric() {
+    try {
+      return _typeClass.newInstance();
+    } catch (Throwable ex) {
+      System.err.println("error: " + _typeClass);
+      ex.printStackTrace();
+      Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
     }
+    return null;
+  }
 }

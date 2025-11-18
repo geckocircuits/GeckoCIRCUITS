@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -16,15 +16,14 @@ package ch.technokrat.gecko.geckocircuits.control;
 import ch.technokrat.gecko.geckocircuits.newscope.AbstractScopeSignal;
 
 public class ScopeSignalSimpleName extends AbstractScopeSignal {
-    private final String _name;
+  private final String _name;
 
-    public ScopeSignalSimpleName(final String name) {
-        _name = name;
-    }
+  public ScopeSignalSimpleName(final String name) {
+    _name = name;
+  }
 
-    @Override
-    public String getSignalName() {
-        return _name;
-    }
-    
+  @Override
+  public String getSignalName() {
+    return _name;
+  }
 }

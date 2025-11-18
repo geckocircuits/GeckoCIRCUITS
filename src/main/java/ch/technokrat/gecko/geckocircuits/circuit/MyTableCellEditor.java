@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,24 +21,23 @@ import javax.swing.table.TableCellEditor;
 
 class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
 
-    FormatJTextField component = new FormatJTextField();
+  FormatJTextField component = new FormatJTextField();
 
-  public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
-      int rowIndex, int vColIndex) {      
-      if(value != null) {
-          component.setNumberToField((Double) value);
-      } else {
-          component.setText("");
-      }
-        
+  public Component getTableCellEditorComponent(
+      JTable table, Object value, boolean isSelected, int rowIndex, int vColIndex) {
+    if (value != null) {
+      component.setNumberToField((Double) value);
+    } else {
+      component.setText("");
+    }
+
     return component;
   }
 
   public Object getCellEditorValue() {
-      if(component.getText().isEmpty()) {
-          return null;
-      }
+    if (component.getText().isEmpty()) {
+      return null;
+    }
     return component.getNumberFromField();
   }
 }
-    

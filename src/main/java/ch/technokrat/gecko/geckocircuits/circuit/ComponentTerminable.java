@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,11 +15,9 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import java.util.Collection;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 public interface ComponentTerminable {
-    public Collection<String> getAllNodeLabels();
-    public Collection<? extends TerminalInterface> getAllTerminals();
+  public Collection<String> getAllNodeLabels();
+
+  public Collection<? extends TerminalInterface> getAllTerminals();
 }

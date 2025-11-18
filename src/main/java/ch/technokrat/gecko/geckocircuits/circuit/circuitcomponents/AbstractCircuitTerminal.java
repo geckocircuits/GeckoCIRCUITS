@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,117 +29,119 @@ import java.awt.Graphics2D;
 import java.awt.Window;
 import java.util.List;
 
-public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterface implements SubCircuitTerminable {
+public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterface
+    implements SubCircuitTerminable {
 
-    private final TerminalToWrap _wrapped = new TerminalToWrap(this);
+  private final TerminalToWrap _wrapped = new TerminalToWrap(this);
 
-    public AbstractCircuitTerminal() {
-        super();
-        XIN.add(new TerminalTwoPortComponent(this, 0));
-        // this is only a dummy terminal, so that we get the correct label name 
-        // when loading from file. It will be replaced when the references are
-        // set correctly.
-        YOUT.add(new TerminalHiddenSubcircuit(this));
-    }
+  public AbstractCircuitTerminal() {
+    super();
+    XIN.add(new TerminalTwoPortComponent(this, 0));
+    // this is only a dummy terminal, so that we get the correct label name
+    // when loading from file. It will be replaced when the references are
+    // set correctly.
+    YOUT.add(new TerminalHiddenSubcircuit(this));
+  }
 
-    @Override
-    public void absetzenElement() {
-        super.absetzenElement();
-        _wrapped.absetzenElement();
-    }
+  @Override
+  public void absetzenElement() {
+    super.absetzenElement();
+    _wrapped.absetzenElement();
+  }
 
-    /**
-     * return null if no terminal was clicked!
-     *
-     * @param px screen coordinates in (dpix-scaled!) pixel
-     * @param py
-     * @return
-     */
-    @Override
-    public TerminalInterface clickedTerminal(final Point clickPoint) {
-        // the label dialog should never apear!
-        return null;
-    }
+  /**
+   * return null if no terminal was clicked!
+   *
+   * @param px screen coordinates in (dpix-scaled!) pixel
+   * @param py
+   * @return
+   */
+  @Override
+  public TerminalInterface clickedTerminal(final Point clickPoint) {
+    // the label dialog should never apear!
+    return null;
+  }
 
-    @Override
-    public void moveComponent(final Point moveToPoint) {
-        _wrapped.moveComponent(moveToPoint);
-    }
+  @Override
+  public void moveComponent(final Point moveToPoint) {
+    _wrapped.moveComponent(moveToPoint);
+  }
 
-    @Override
-    protected void drawForeground(final Graphics2D graphics) {
-        _wrapped.drawForeground(graphics);
-    }
+  @Override
+  protected void drawForeground(final Graphics2D graphics) {
+    _wrapped.drawForeground(graphics);
+  }
 
-    @Override
-    protected void drawBackground(final Graphics2D graphics) {
-        _wrapped.drawBackground(graphics);
-    }
+  @Override
+  protected void drawBackground(final Graphics2D graphics) {
+    _wrapped.drawBackground(graphics);
+  }
 
-    @Override
-    public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {
-        super.setParentCircuitSheet(parentCircuitSheet);
-        _wrapped.createBlockTerminal();
-    }
+  @Override
+  public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {
+    super.setParentCircuitSheet(parentCircuitSheet);
+    _wrapped.createBlockTerminal();
+  }
 
-    @Override
-    public void copyAdditionalParameters(final AbstractBlockInterface originalBlock) {
-        super.copyAdditionalParameters(originalBlock);
-        _wrapped.copyAdditionalParameters(((AbstractCircuitTerminal) originalBlock)._wrapped);
-    }
+  @Override
+  public void copyAdditionalParameters(final AbstractBlockInterface originalBlock) {
+    super.copyAdditionalParameters(originalBlock);
+    _wrapped.copyAdditionalParameters(((AbstractCircuitTerminal) originalBlock)._wrapped);
+  }
 
-    @Override
-    public void findAndSetReferenceToParentSheet(final List<SubcircuitBlock> allSubs, final String rootSubName) {
-        super.findAndSetReferenceToParentSheet(allSubs, rootSubName);
-        _wrapped.createBlockTerminal();
-    }
+  @Override
+  public void findAndSetReferenceToParentSheet(
+      final List<SubcircuitBlock> allSubs, final String rootSubName) {
+    super.findAndSetReferenceToParentSheet(allSubs, rootSubName);
+    _wrapped.createBlockTerminal();
+  }
 
-    @Override
-    protected void importIndividual(final TokenMap tokenMap) {
-        super.importIndividual(tokenMap);
-        _wrapped.importIndividual(tokenMap);
-    }
+  @Override
+  protected void importIndividual(final TokenMap tokenMap) {
+    super.importIndividual(tokenMap);
+    _wrapped.importIndividual(tokenMap);
+  }
 
-    @Override
-    protected void exportAsciiIndividual(final StringBuffer ascii) {
-        super.exportAsciiIndividual(ascii);
-        _wrapped.exportAsciiIndividual(ascii);
-    }
+  @Override
+  protected void exportAsciiIndividual(final StringBuffer ascii) {
+    super.exportAsciiIndividual(ascii);
+    _wrapped.exportAsciiIndividual(ascii);
+  }
 
-    @Override
-    public TerminalSubCircuitBlock getBlockTerminal() {
-        return _wrapped.getBlockTerminal();
-    }
+  @Override
+  public TerminalSubCircuitBlock getBlockTerminal() {
+    return _wrapped.getBlockTerminal();
+  }
 
-    @Override
-    public void deleteActionIndividual() {
-        super.deleteActionIndividual();
-        _wrapped.deleteActionIndividual();
-    }
+  @Override
+  public void deleteActionIndividual() {
+    super.deleteActionIndividual();
+    _wrapped.deleteActionIndividual();
+  }
 
-    @Override
-    protected Window openDialogWindow() {
-        return new TerminalCircuitDialog(this);
-    }
+  @Override
+  protected Window openDialogWindow() {
+    return new TerminalCircuitDialog(this);
+  }
 
-    @Override
-    public EnumTerminalLocation getTerminalLocation() {
-        return _wrapped.getTerminalLocation();
-    }
+  @Override
+  public EnumTerminalLocation getTerminalLocation() {
+    return _wrapped.getTerminalLocation();
+  }
 
-    @Override
-    public void setComponentDirection(final ComponentDirection orientation) {
-        super.setComponentDirection(ComponentDirection.NORTH_SOUTH);
-    }
+  @Override
+  public void setComponentDirection(final ComponentDirection orientation) {
+    super.setComponentDirection(ComponentDirection.NORTH_SOUTH);
+  }
 
-    @Override
-    void drawConnectorLines(final Graphics2D graphics) {
-        // no connector lines to draw!
-    }
-    
-    @Override
-    public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+  @Override
+  void drawConnectorLines(final Graphics2D graphics) {
+    // no connector lines to draw!
+  }
+
+  @Override
+  public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
+    throw new UnsupportedOperationException(
+        "Not supported yet."); // To change body of generated methods, choose Tools | Templates.
+  }
 }

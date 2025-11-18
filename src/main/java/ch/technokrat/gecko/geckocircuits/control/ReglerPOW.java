@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,42 +13,40 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
 public final class ReglerPOW extends RegelBlock {
-    public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerPOW.class, "POW", I18nKeys.POW);
+  public static final ControlTypeInfo tinfo =
+      new ControlTypeInfo(ReglerPOW.class, "POW", I18nKeys.POW);
 
-    public ReglerPOW() {
-        super(2, 1);
-    }
+  public ReglerPOW() {
+    super(2, 1);
+  }
 
-    @Override
-    public String[] getOutputNames() {
-        return new String[]{"pow"};
-    }
-    
+  @Override
+  public String[] getOutputNames() {
+    return new String[] {"pow"};
+  }
 
-    @Override
-    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new AbstractControlCalculatable(1, 1) {
+  @Override
+  public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
+    return new AbstractControlCalculatable(1, 1) {
 
-            @Override
-            public void berechneYOUT(final double deltaT) {
-                _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
-            }
-        };
-    }    
+      @Override
+      public void berechneYOUT(final double deltaT) {
+        _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
+      }
+    };
+  }
 
-    protected Window openDialogWindow() {
-        return new DialogSimpleInfoMessage(this, "y1 = (x1)^(x2)");
-    }                    
+  protected Window openDialogWindow() {
+    return new DialogSimpleInfoMessage(this, "y1 = (x1)^(x2)");
+  }
 
-    @Override
-    public I18nKeys[] getOutputDescription() {
-        return new I18nKeys[]{I18nKeys.POW_DESCRIPTION};
-    }
-
+  @Override
+  public I18nKeys[] getOutputDescription() {
+    return new I18nKeys[] {I18nKeys.POW_DESCRIPTION};
+  }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,29 +15,28 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.control.Point;
 
-/**
- *
- * @author andreas
- */
+/** @author andreas */
 public class TerminalTwoPortRelativeFixedDirection extends AbstractTerminal {
-    private final int _termDist;
-    private final ComponentDirection _fixedDirection;
-    
-    public TerminalTwoPortRelativeFixedDirection(AbstractBlockInterface relatedComponent, int termDist, ComponentDirection fixedDirection) {
-        super(relatedComponent);
-        _termDist = termDist;                        
-        _fixedDirection = fixedDirection; 
-        
-    }
+  private final int _termDist;
+  private final ComponentDirection _fixedDirection;
 
-    public Point getPosition() {
-        return TerminalTwoPortComponent.getPointFromDirection(_fixedDirection, _parentElement.getSheetPosition(), _termDist);
-    }
+  public TerminalTwoPortRelativeFixedDirection(
+      AbstractBlockInterface relatedComponent, int termDist, ComponentDirection fixedDirection) {
+    super(relatedComponent);
+    _termDist = termDist;
+    _fixedDirection = fixedDirection;
+  }
 
-    @Override
-    public AbstractTerminal createCopy(AbstractBlockInterface relatedComponent) {
-        AbstractTerminal returnValue =  new TerminalTwoPortRelativeFixedDirection(relatedComponent, _termDist, _fixedDirection);
-        returnValue.getLabelObject().setLabel(_label.getLabelString());
-        return returnValue;
-    }
+  public Point getPosition() {
+    return TerminalTwoPortComponent.getPointFromDirection(
+        _fixedDirection, _parentElement.getSheetPosition(), _termDist);
+  }
+
+  @Override
+  public AbstractTerminal createCopy(AbstractBlockInterface relatedComponent) {
+    AbstractTerminal returnValue =
+        new TerminalTwoPortRelativeFixedDirection(relatedComponent, _termDist, _fixedDirection);
+    returnValue.getLabelObject().setLabel(_label.getLabelString());
+    return returnValue;
+  }
 }

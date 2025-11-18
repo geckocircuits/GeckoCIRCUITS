@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,29 +19,29 @@ import javax.swing.JLabel;
 
 class ReglerTerminalDialog extends DialogElementCONTROL {
 
-    private FormatJTextField terminalLabel;
+  private FormatJTextField terminalLabel;
 
-    public ReglerTerminalDialog(ReglerTERMINAL reglerTerminal) {
-        super(reglerTerminal);
-    }
+  public ReglerTerminalDialog(ReglerTERMINAL reglerTerminal) {
+    super(reglerTerminal);
+  }
 
-    @Override
-    protected void baueGuiIndividual() {
-        JLabel label = new JLabel("Label:");
-        terminalLabel = new FormatJTextField();
-        terminalLabel.setText(element.XIN.get(0).getLabelObject().getLabelString());
-        jPanelName.add(label);
-        jPanelName.add(terminalLabel);
-    }
+  @Override
+  protected void baueGuiIndividual() {
+    JLabel label = new JLabel("Label:");
+    terminalLabel = new FormatJTextField();
+    terminalLabel.setText(element.XIN.get(0).getLabelObject().getLabelString());
+    jPanelName.add(label);
+    jPanelName.add(terminalLabel);
+  }
 
-    @Override
-    protected void processInputs() {
-        try {
-            final CircuitLabel label = element.XIN.get(0).getLabelObject();
-            label.setLabelFromUserDialog(terminalLabel.getText());
-            this.schliesseFenster();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+  @Override
+  protected void processInputs() {
+    try {
+      final CircuitLabel label = element.XIN.get(0).getLabelObject();
+      label.setLabelFromUserDialog(terminalLabel.getText());
+      this.schliesseFenster();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
+  }
 }

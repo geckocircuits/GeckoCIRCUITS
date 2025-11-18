@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,11 +13,11 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public class ResistorCircuit extends AbstractResistor {
-    static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(ResistorCircuit.class, "R", I18nKeys.RESISTOR_R_OHM);
+  static final AbstractTypeInfo TYPE_INFO =
+      new CircuitTypeInfo(ResistorCircuit.class, "R", I18nKeys.RESISTOR_R_OHM);
 }

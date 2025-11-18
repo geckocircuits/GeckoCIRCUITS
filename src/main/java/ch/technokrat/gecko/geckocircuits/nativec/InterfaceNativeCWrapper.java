@@ -1,7 +1,7 @@
-    /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,18 +15,17 @@
 package ch.technokrat.gecko.geckocircuits.nativec;
 
 /**
- * This Class provides Interface Prototype functions.
- * The functions init() and calcOutputs(...) are intended to be overwritten
- * by native functions.
- * Using the Interface makes the method call easier.
- * 
+ * This Class provides Interface Prototype functions. The functions init() and calcOutputs(...) are
+ * intended to be overwritten by native functions. Using the Interface makes the method call easier.
+ *
  * @author DIEHL Controls Ricardo Richter
  */
 public interface InterfaceNativeCWrapper {
-    
-    public void loadLibrary (String name);
-    
-    public void initParameters ();
-    
-    public void calcOutputs (double[] xINVector, double[] xOUTVector, int numberOfOuts, double time, double deltaT);
+
+  public void loadLibrary(String name);
+
+  public void initParameters();
+
+  public void calcOutputs(
+      double[] xINVector, double[] xOUTVector, int numberOfOuts, double time, double deltaT);
 }

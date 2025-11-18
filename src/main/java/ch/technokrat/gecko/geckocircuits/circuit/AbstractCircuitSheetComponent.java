@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,308 +18,286 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.control.Point;
 import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
+import ch.technokrat.modelviewcontrol.ModelMVC;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import ch.technokrat.modelviewcontrol.ModelMVC;
 
 public abstract class AbstractCircuitSheetComponent {
 
-    public static int dpix;  // Abstand 2er Rasterpunkte in Pixelpunkten                
-    public final static ModelMVC<Integer> dpixValue;
-    private ComponentState _modus = ComponentState.FINISHED;
+  public static int dpix; // Abstand 2er Rasterpunkte in Pixelpunkten
+  public static final ModelMVC<Integer> dpixValue;
+  private ComponentState _modus = ComponentState.FINISHED;
 
-    static {
-        dpixValue = new ModelMVC<Integer>(10, "circuit scaling size");
-        dpixValue.addModelListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dpix = dpixValue.getValue();
-                try {
-                    SchematischeEingabe2.Singleton.setNewScaling(dpix);
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.revalidate();
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.repaint();
-                } catch (NullPointerException ex) {
-                    System.err.println(ex.getMessage());
-                }
+  static {
+    dpixValue = new ModelMVC<Integer>(10, "circuit scaling size");
+    dpixValue.addModelListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            dpix = dpixValue.getValue();
+            try {
+              SchematischeEingabe2.Singleton.setNewScaling(dpix);
+              SchematischeEingabe2.Singleton._visibleCircuitSheet.revalidate();
+              SchematischeEingabe2.Singleton._visibleCircuitSheet.repaint();
+            } catch (NullPointerException ex) {
+              System.err.println(ex.getMessage());
             }
+          }
         });
-    }
-    public final ModelMVC<Enabled> _isEnabled = new ModelMVC<Enabled>(Enabled.ENABLED) {
+  }
+
+  public final ModelMVC<Enabled> _isEnabled =
+      new ModelMVC<Enabled>(Enabled.ENABLED) {
         @Override
         public String toString() {
-            return AbstractCircuitSheetComponent.this.toString();
+          return AbstractCircuitSheetComponent.this.toString();
         }
-    };
-    protected CircuitSheet _parentCircuitSheet;
-    private final UniqueObjectIdentifer _identifier = new UniqueObjectIdentifer();
-    /**
-     * temp because: at model loading time, the parent sheets are not yet
-     * created. This field is used to find the reference after the model is
-     * loaded completely. Later, this field should never ever be used, since the
-     * componentes could be moved to another subsheet.
-     *
-     */
-    private long _tempParentSheetIdentifier = 0;
-    boolean _isHiddenSubCircuitComponent = false;
-    private AbstractCircuitSheetComponent _parent;
+      };
+  protected CircuitSheet _parentCircuitSheet;
+  private final UniqueObjectIdentifer _identifier = new UniqueObjectIdentifer();
+  /**
+   * temp because: at model loading time, the parent sheets are not yet created. This field is used
+   * to find the reference after the model is loaded completely. Later, this field should never ever
+   * be used, since the componentes could be moved to another subsheet.
+   */
+  private long _tempParentSheetIdentifier = 0;
 
-    public abstract void absetzenElement();
+  boolean _isHiddenSubCircuitComponent = false;
+  private AbstractCircuitSheetComponent _parent;
 
-    public abstract void setPositionWithUndo();
+  public abstract void absetzenElement();
 
-    public abstract void deselectViaESCAPE();
+  public abstract void setPositionWithUndo();
 
-    public abstract void moveComponent(final Point moveToPoint);
+  public abstract void deselectViaESCAPE();
 
-    public abstract void paintGeckoComponent(final Graphics2D graphics);
+  public abstract void moveComponent(final Point moveToPoint);
 
-    abstract public void paintComponentForeGround(final Graphics2D graphics);    
-    
-    
-    
-    /**
-     *
-     * @param shiftIdentifier used to implement a simple group-copy operation.
-     * All Identifiers (component references, component id's and so on) are
-     * shifted by this value.
-     * @return
-     */
-    public abstract AbstractCircuitSheetComponent copyFabric(final long shiftIdentifier);
+  public abstract void paintGeckoComponent(final Graphics2D graphics);
 
-    abstract public int[] getAussenabmessungenRechteckEckpunkte();
+  public abstract void paintComponentForeGround(final Graphics2D graphics);
 
-    public AbstractCircuitSheetComponent() {
-        _identifier.createNewIdentifier();
-    }
+  /**
+   * @param shiftIdentifier used to implement a simple group-copy operation. All Identifiers
+   *     (component references, component id's and so on) are shifted by this value.
+   * @return
+   */
+  public abstract AbstractCircuitSheetComponent copyFabric(final long shiftIdentifier);
 
-    public void deleteComponent() {        
-        if (this instanceof GeckoFileable) {
-            List<GeckoFile> filesList = ((GeckoFileable)this).getFiles();
-            if (filesList != null) {
-                final ArrayList<GeckoFile> extraFiles = new ArrayList<GeckoFile>(filesList);
-                if (extraFiles != null && !extraFiles.isEmpty()) {
-                    ((GeckoFileable) this).removeLocalComponentFiles(extraFiles);
-                }
-            }
-        }       
+  public abstract int[] getAussenabmessungenRechteckEckpunkte();
 
-        deleteActionIndividual();
-                
-        //assert _parentCircuitSheet.allElements.contains(this);       
-        if (_parentCircuitSheet != null) {
-            _parentCircuitSheet.allElements.remove(this);
+  public AbstractCircuitSheetComponent() {
+    _identifier.createNewIdentifier();
+  }
+
+  public void deleteComponent() {
+    if (this instanceof GeckoFileable) {
+      List<GeckoFile> filesList = ((GeckoFileable) this).getFiles();
+      if (filesList != null) {
+        final ArrayList<GeckoFile> extraFiles = new ArrayList<GeckoFile>(filesList);
+        if (extraFiles != null && !extraFiles.isEmpty()) {
+          ((GeckoFileable) this).removeLocalComponentFiles(extraFiles);
         }
-
+      }
     }
 
-    protected void deleteActionIndividual() {
-        // override this method, if something has to be done BEFORE the component is deleted!
+    deleteActionIndividual();
+
+    // assert _parentCircuitSheet.allElements.contains(this);
+    if (_parentCircuitSheet != null) {
+      _parentCircuitSheet.allElements.remove(this);
+    }
+  }
+
+  protected void deleteActionIndividual() {
+    // override this method, if something has to be done BEFORE the component is deleted!
+  }
+
+  /** @return the modus */
+  public ComponentState getModus() {
+    return _modus;
+  }
+
+  /** @param modus the modus to set */
+  public void setModus(final ComponentState modus) {
+    this._modus = modus;
+  }
+
+  /** @return the isEnabled */
+  public Enabled isCircuitEnabled() {
+    return _isEnabled.getValue();
+  }
+
+  /** @param isEnabled the isEnabled to set */
+  public void setCircuitEnabled(final Enabled isEnabled) {
+    _isEnabled.setValue(isEnabled);
+  }
+
+  void importASCII(final TokenMap tokenMap) {
+    _identifier.importASCII(tokenMap);
+    boolean oldEnabled = true;
+
+    if (tokenMap.containsToken("parentSheetIdentifier")) {
+      _tempParentSheetIdentifier = tokenMap.readDataLine("parentSheetIdentifier", (long) 0);
     }
 
-    /**
-     * @return the modus
-     */
-    public ComponentState getModus() {
-        return _modus;
+    if (tokenMap.containsToken("enabled")) {
+      oldEnabled = tokenMap.readDataLine("enabled", oldEnabled);
+      if (oldEnabled) {
+        _isEnabled.setValueWithoutUndo(Enabled.ENABLED);
+      } else {
+        _isEnabled.setValueWithoutUndo(Enabled.DISABLED);
+      }
     }
 
-    /**
-     * @param modus the modus to set
-     */
-    public void setModus(final ComponentState modus) {
-        this._modus = modus;
+    if (tokenMap.containsToken("enabledShorted")) {
+      _isEnabled.setValueWithoutUndo(
+          Enabled.getFromOrdinal(tokenMap.readDataLine("enabledShorted", 1)));
     }
+  }
 
-    /**
-     * @return the isEnabled
-     */
-    public Enabled isCircuitEnabled() {
-        return _isEnabled.getValue();
+  public long getParentSheetIdentifier() {
+    return _tempParentSheetIdentifier;
+  }
+
+  public void exportASCII(final StringBuffer ascii) {
+    DatenSpeicher.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
+
+    if (getParentCircuitSheet() instanceof SubCircuitSheet) {
+      DatenSpeicher.appendAsString(
+          ascii.append("\nparentSheetIdentifier"),
+          ((SubCircuitSheet) _parentCircuitSheet)._subBlock.getUniqueObjectIdentifier());
+    } else {
+      DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"), (long) 0);
     }
+  }
 
-    /**
-     * @param isEnabled the isEnabled to set
-     */
-    public void setCircuitEnabled(final Enabled isEnabled) {
-        _isEnabled.setValue(isEnabled);
+  public CircuitSheet getParentCircuitSheet() {
+    if (_parent == null) {
+      return _parentCircuitSheet;
+    } else {
+      return _parent.getParentCircuitSheet();
     }
+  }
 
-    void importASCII(final TokenMap tokenMap) {
-        _identifier.importASCII(tokenMap);
-        boolean oldEnabled = true;
+  public abstract ConnectorType getSimulationDomain();
 
-        if (tokenMap.containsToken("parentSheetIdentifier")) {
-            _tempParentSheetIdentifier = tokenMap.readDataLine("parentSheetIdentifier", (long) 0);
-        }
-
-        if (tokenMap.containsToken("enabled")) {
-            oldEnabled = tokenMap.readDataLine("enabled", oldEnabled);
-            if (oldEnabled) {
-                _isEnabled.setValueWithoutUndo(Enabled.ENABLED);
-            } else {
-                _isEnabled.setValueWithoutUndo(Enabled.DISABLED);
-            }
-        }
-
-        if (tokenMap.containsToken("enabledShorted")) {
-            _isEnabled.setValueWithoutUndo(Enabled.getFromOrdinal(tokenMap.readDataLine("enabledShorted", 1)));
-        }
+  /** @param parentCircuitSheet the _parentCircuitSheet to set */
+  public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {
+    if (_parentCircuitSheet != null && _parentCircuitSheet.allElements.contains(this)) {
+      _parentCircuitSheet.allElements.remove(this);
     }
+    this._parentCircuitSheet = parentCircuitSheet;
+    _parentCircuitSheet.allElements.add(this);
+  }
 
-    public long getParentSheetIdentifier() {
-        return _tempParentSheetIdentifier;
+  /**
+   * @param allSubs the subcircuit blocks from the NEW import (and only them!
+   * @param rootSubcircuitName if "null" or "emptyString": root of the import is the main circuit
+   *     sheet. Else, find the subcircuit block and set this as root for the import.
+   */
+  public void findAndSetReferenceToParentSheet(
+      final List<SubcircuitBlock> allSubs, final String rootSubcircuitName) {
+
+    for (SubcircuitBlock subBlock : allSubs) {
+      if (subBlock.getUniqueObjectIdentifier() == _tempParentSheetIdentifier) {
+        setParentCircuitSheet(subBlock._myCircuitSheet);
+        return;
+      }
     }
+    _tempParentSheetIdentifier = 0;
 
-    public void exportASCII(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
-
-        if (getParentCircuitSheet() instanceof SubCircuitSheet) {
-            DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"),
-                    ((SubCircuitSheet) _parentCircuitSheet)._subBlock.getUniqueObjectIdentifier());
-        } else {
-            DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"), (long) 0);
-        }
-
+    if (rootSubcircuitName != null && !rootSubcircuitName.isEmpty()) {
+      SubcircuitBlock rootBlock =
+          (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
+      setParentCircuitSheet(rootBlock._myCircuitSheet);
+    } else {
+      setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
     }
+  }
 
-    public CircuitSheet getParentCircuitSheet() {
-        if (_parent == null) {
-            return _parentCircuitSheet;
-        } else {
-            return _parent.getParentCircuitSheet();
-        }
+  /**
+   * @param allSubs the subcircuit blocks from the NEW import (and only them!
+   * @param rootSubcircuitName if "null" or "emptyString": root of the import is the main circuit
+   *     sheet. Else, find the subcircuit block and set this as root for the import.
+   */
+  public void findAndSetReferenceToParentSheet2(
+      final List<SubcircuitBlock> allSubs, final String rootSubcircuitName) {
 
+    for (SubcircuitBlock subBlock : allSubs) {
+      if (subBlock.getUniqueObjectIdentifier() == _tempParentSheetIdentifier) {
+        setParentCircuitSheet(subBlock._myCircuitSheet);
+        return;
+      }
     }
+    _tempParentSheetIdentifier = 0;
 
-    public abstract ConnectorType getSimulationDomain();
-
-    /**
-     * @param parentCircuitSheet the _parentCircuitSheet to set
-     */    
-    public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {        
-        if (_parentCircuitSheet != null && _parentCircuitSheet.allElements.contains(this)) {
-            _parentCircuitSheet.allElements.remove(this);
-        }
-        this._parentCircuitSheet = parentCircuitSheet;
-        _parentCircuitSheet.allElements.add(this);                                        
+    if (rootSubcircuitName != null && !rootSubcircuitName.isEmpty()) {
+      SubcircuitBlock rootBlock =
+          (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
+      setParentCircuitSheet(rootBlock._myCircuitSheet);
+    } else {
+      setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
     }
-    
+  }
 
-    /**
-     *
-     * @param allSubs the subcircuit blocks from the NEW import (and only them!
-     * @param rootSubcircuitName if "null" or "emptyString": root of the import
-     * is the main circuit sheet. Else, find the subcircuit block and set this
-     * as root for the import.
-     */
-    public void findAndSetReferenceToParentSheet(final List<SubcircuitBlock> allSubs, final String rootSubcircuitName) {
+  boolean isSubCircuitComponent() {
+    return _isHiddenSubCircuitComponent;
+  }
 
-        for (SubcircuitBlock subBlock : allSubs) {
-            if (subBlock.getUniqueObjectIdentifier() == _tempParentSheetIdentifier) {
-                setParentCircuitSheet(subBlock._myCircuitSheet);
-                return;
-            }
-        }
-        _tempParentSheetIdentifier = 0;
+  /** @return the _identifier */
+  public UniqueObjectIdentifer getIdentifier() {
+    return _identifier;
+  }
 
+  public long getUniqueObjectIdentifier() {
+    return _identifier.getIdentifier();
+  }
 
-        if (rootSubcircuitName != null && !rootSubcircuitName.isEmpty()) {
-            SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
-            setParentCircuitSheet(rootBlock._myCircuitSheet);
-        } else {            
-            setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
-        }
+  public abstract int elementAngeklickt(final Point clickPoint);
 
+  /**
+   * used to determine if component is selected via a window, or for instance to detect if component
+   * is outside the sheeet size.
+   *
+   * @return
+   */
+  abstract Collection<? extends Point> getAllDimensionPoints();
 
+  public abstract boolean testDoDoubleClickAction(final Point clickPoint);
+
+  public abstract void doDoubleClickAction(final Point clickedPoint);
+
+  public void setParent(final AbstractCircuitSheetComponent parent) {
+    _parent = parent;
+  }
+
+  public void shiftAllIdentifiers(final long shiftValue) {
+    getIdentifier().createNewIdentifier(getUniqueObjectIdentifier() + shiftValue);
+    if (this instanceof ComponentCoupable) {
+      ComponentCoupling coupling = ((ComponentCoupable) this).getComponentCoupling();
+      coupling.shiftReferenceIDs(shiftValue);
     }
-    
-    /**
-     *
-     * @param allSubs the subcircuit blocks from the NEW import (and only them!
-     * @param rootSubcircuitName if "null" or "emptyString": root of the import
-     * is the main circuit sheet. Else, find the subcircuit block and set this
-     * as root for the import.
-     */
-    public void findAndSetReferenceToParentSheet2(final List<SubcircuitBlock> allSubs, final String rootSubcircuitName) {
-
-        for (SubcircuitBlock subBlock : allSubs) {
-            if (subBlock.getUniqueObjectIdentifier() == _tempParentSheetIdentifier) {
-                setParentCircuitSheet(subBlock._myCircuitSheet);
-                return;
-            }
-        }
-        _tempParentSheetIdentifier = 0;
-
-
-        if (rootSubcircuitName != null && !rootSubcircuitName.isEmpty()) {
-            SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
-            setParentCircuitSheet(rootBlock._myCircuitSheet);
-        } else {            
-            setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
-        }
-
-
+    if (_tempParentSheetIdentifier != 0) {
+      _tempParentSheetIdentifier += shiftValue;
     }
+    ;
+  }
 
-    boolean isSubCircuitComponent() {
-        return _isHiddenSubCircuitComponent;
+  public abstract String getExportImportCharacters();
+
+  public boolean allParentSubcircuitsEnabled() {
+    if (_parentCircuitSheet != null && _parentCircuitSheet instanceof SubCircuitSheet) {
+      SubCircuitSheet subSheet = (SubCircuitSheet) _parentCircuitSheet;
+      final SubcircuitBlock subBlock = subSheet._subBlock;
+      if (subBlock._isEnabled.getValue() != Enabled.ENABLED) {
+        return false;
+      }
     }
-
-    /**
-     * @return the _identifier
-     */
-    public UniqueObjectIdentifer getIdentifier() {
-        return _identifier;
-    }
-
-    public long getUniqueObjectIdentifier() {
-        return _identifier.getIdentifier();
-    }
-    
-    public abstract int elementAngeklickt(final Point clickPoint);
-
-    /**
-     * used to determine if component is selected via a window, or for instance
-     * to detect if component is outside the sheeet size.
-     *
-     * @return
-     */
-    abstract Collection<? extends Point> getAllDimensionPoints();
-
-    public abstract boolean testDoDoubleClickAction(final Point clickPoint);
-
-    abstract public void doDoubleClickAction(final Point clickedPoint);
-
-    public void setParent(final AbstractCircuitSheetComponent parent) {
-        _parent = parent;
-    }
-
-    public void shiftAllIdentifiers(final long shiftValue) {
-        getIdentifier().createNewIdentifier(getUniqueObjectIdentifier() + shiftValue);
-        if (this instanceof ComponentCoupable) {
-            ComponentCoupling coupling = ((ComponentCoupable) this).getComponentCoupling();
-            coupling.shiftReferenceIDs(shiftValue);
-        }
-        if (_tempParentSheetIdentifier != 0) {
-            _tempParentSheetIdentifier += shiftValue;
-        };
-    }    
-
-    public abstract String getExportImportCharacters();
-    
-    public boolean allParentSubcircuitsEnabled() {        
-        if(_parentCircuitSheet != null && _parentCircuitSheet instanceof SubCircuitSheet) {
-            SubCircuitSheet subSheet = (SubCircuitSheet) _parentCircuitSheet;
-            final SubcircuitBlock subBlock = subSheet._subBlock;
-            if(subBlock._isEnabled.getValue() != Enabled.ENABLED) {
-                return false;
-            }
-        } 
-        return true;
-    }
-    
+    return true;
+  }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,31 +13,32 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class CosCalculatorTest extends AbstractSimpleMathFunctionTest {    
+import org.junit.Test;
 
-    @Override
-    AbstractControlCalculatable calculatorFabric() {
-        return new CosCalculator();
-    }               
-    
-    @Test
-    public void testBerechneYOUTResult0() {                
-        double val = getValue(0);
-        assertWithTol(1, val);        
-    }
+public class CosCalculatorTest extends AbstractSimpleMathFunctionTest {
 
-    @Override
-    @Test
-    public void testBerechneYOUTValue() {
-        double val = getValue(-Math.PI/6);
-        assertWithTol(Math.sqrt(3)/2, val);        
-    }
+  @Override
+  AbstractControlCalculatable calculatorFabric() {
+    return new CosCalculator();
+  }
 
-    @Override    
-    public void testErrorValue() {
-        // there is no error condition for atan!        
-    }    
+  @Test
+  public void testBerechneYOUTResult0() {
+    double val = getValue(0);
+    assertWithTol(1, val);
+  }
+
+  @Override
+  @Test
+  public void testBerechneYOUTValue() {
+    double val = getValue(-Math.PI / 6);
+    assertWithTol(Math.sqrt(3) / 2, val);
+  }
+
+  @Override
+  public void testErrorValue() {
+    // there is no error condition for atan!
+  }
 }

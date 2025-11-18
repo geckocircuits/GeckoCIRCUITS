@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,23 +21,21 @@ import javax.swing.JPanel;
 
 final class ThermPvChipDialog extends DialogElementLK {
 
-    ThermPvChipDialog(final ThermPvChip parent) {
-        super(parent);
-    }
+  ThermPvChipDialog(final ThermPvChip parent) {
+    super(parent);
+  }
 
-    @Override
-    public void baueGUIIndividual() {
-        JPanel jpM = null;
-        if (element instanceof ComponentCoupable) {
-            jpM = DialogElementCONTROL.createComponentCouplingPanel((AbstractBlockInterface) element);
-        }
-        con.add(jpM, BorderLayout.CENTER);
+  @Override
+  public void baueGUIIndividual() {
+    JPanel jpM = null;
+    if (element instanceof ComponentCoupable) {
+      jpM = DialogElementCONTROL.createComponentCouplingPanel((AbstractBlockInterface) element);
     }
+    con.add(jpM, BorderLayout.CENTER);
+  }
 
-    @Override
-    public void processInputIndividual() {
-        // nothing todo here!
-    }
-    
-    
+  @Override
+  public void processInputIndividual() {
+    // nothing todo here!
+  }
 }

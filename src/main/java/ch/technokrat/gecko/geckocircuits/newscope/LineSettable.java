@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,19 +13,17 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 public interface LineSettable {
-    void setStroke(final GeckoLineStyle stroke);
-    GeckoLineStyle getStroke();
-    
-    void setTransparency(float value);
-    float getTransparency();
-    
-    GeckoColor getColor();
-    void setColor(final GeckoColor color);
-        
-    
+  void setStroke(final GeckoLineStyle stroke);
+
+  GeckoLineStyle getStroke();
+
+  void setTransparency(float value);
+
+  float getTransparency();
+
+  GeckoColor getColor();
+
+  void setColor(final GeckoColor color);
 }

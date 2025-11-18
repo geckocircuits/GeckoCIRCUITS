@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,110 +37,118 @@ import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 
 public class DialogAbout extends JDialog {
-    private Image geckoBild;
-    private String releaseDate = null;
+  private Image geckoBild;
+  private String releaseDate = null;
 
-    public static final String RELEASE_DATE = "2021.07.23";
-    public static final String VERSION = "GeckoCIRCUITS - v2.0";
-    // changing this number will give a warning message, when
-    // someone will open a model file with the old version number!
-    public static final int RELEASENUMBER = 202;
-    
-    // increase the build-number whenever some user gets a a new update of the program.
-    // Especially, this should be the case when the version that is downloadable
-    // is upgraded due to a minor bug fix.
-    public static final int BUILD_NUMBER = 82;
-    
-    
-    public DialogAbout() {
-        super.setModal(true);
-        try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());            
-            geckoBild = (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "GeckoSimulationsLogo_50.png"))).getImage();
-        } catch (Exception e) {
-            
-        }
-        
-        
-        try {
-            DateFormat dFormat = new SimpleDateFormat("yyyy.MM.dd");
-            Date rDate = dFormat.parse(RELEASE_DATE);
-            dFormat = new SimpleDateFormat("MMM yyyy", Locale.US);
-            releaseDate = dFormat.format(rDate);
-        } catch (ParseException pe) {
-        }
-        //------------------------
-        this.setTitle(" About");
-        //this.setBackground(Color.decode("0x8cc63f"));
-        this.baueGUI();
-        this.pack();
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);        
+  public static final String RELEASE_DATE = "2021.07.23";
+  public static final String VERSION = "GeckoCIRCUITS - v2.0";
+  // changing this number will give a warning message, when
+  // someone will open a model file with the old version number!
+  public static final int RELEASENUMBER = 202;
+
+  // increase the build-number whenever some user gets a a new update of the program.
+  // Especially, this should be the case when the version that is downloadable
+  // is upgraded due to a minor bug fix.
+  public static final int BUILD_NUMBER = 82;
+
+  public DialogAbout() {
+    super.setModal(true);
+    try {
+      this.setIconImage(
+          (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+      geckoBild =
+          (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "GeckoSimulationsLogo_50.png")))
+              .getImage();
+    } catch (Exception e) {
+
     }
 
-    private void baueGUI() {
-        Container con = this.getContentPane();
-        con.setLayout(new BorderLayout());
-        //------------------
-        JButton knOK = GuiFabric.getJButton(I18nKeys.OK);
-        knOK.addActionListener(new ActionListener() {
+    try {
+      DateFormat dFormat = new SimpleDateFormat("yyyy.MM.dd");
+      Date rDate = dFormat.parse(RELEASE_DATE);
+      dFormat = new SimpleDateFormat("MMM yyyy", Locale.US);
+      releaseDate = dFormat.format(rDate);
+    } catch (ParseException pe) {
+    }
+    // ------------------------
+    this.setTitle(" About");
+    // this.setBackground(Color.decode("0x8cc63f"));
+    this.baueGUI();
+    this.pack();
+    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+  }
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
+  private void baueGUI() {
+    Container con = this.getContentPane();
+    con.setLayout(new BorderLayout());
+    // ------------------
+    JButton knOK = GuiFabric.getJButton(I18nKeys.OK);
+    knOK.addActionListener(
+        new ActionListener() {
+
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            dispose();
+          }
         });
-        
-        JPanel px = new JPanel();
-        px.add(knOK);
-        JTextArea jtx = new JTextArea();
-        jtx.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
-                
-        jtx.setLineWrap(true);
-        jtx.setWrapStyleWord(true);
-        jtx.setBackground(Color.white);
-        jtx.setEditable(false);
-        //------------------
-        JPanel jpGecko = new JPanel() {
 
-            @Override
-            public void paint(Graphics g) {
-                g.drawImage(geckoBild, 0, 0, null);
-            }
+    JPanel px = new JPanel();
+    px.add(knOK);
+    JTextArea jtx = new JTextArea();
+    jtx.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
+
+    jtx.setLineWrap(true);
+    jtx.setWrapStyleWord(true);
+    jtx.setBackground(Color.white);
+    jtx.setEditable(false);
+    // ------------------
+    JPanel jpGecko =
+        new JPanel() {
+
+          @Override
+          public void paint(Graphics g) {
+            g.drawImage(geckoBild, 0, 0, null);
+          }
         };
-        jpGecko.setPreferredSize(new Dimension(242, 92));  // Bildabmessungen
-        //------------------
-        JTextArea jtx2 = new JTextArea();
-        jtx2.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
-        
-        String professionalOrOpenSource = "GNU GPL 3.0 ";
-        if(StartupWindow.testOpenSourceVersion()) {
-            professionalOrOpenSource = " open-source ";
-        }
-    
-        
-        String licenseString = "No license available.";
-                                                
-        
-        jtx2.setText("\n" + VERSION + professionalOrOpenSource +  
-                "\n" + "Build number: " + BUILD_NUMBER +
-                "\nrelased " + releaseDate + "\n\n" + 
-                licenseString + 
-                "\n\nwritten by\nAndreas Müsing\nAndrija Stupar");
-        jtx2.setLineWrap(true);
-        jtx2.setWrapStyleWord(true);
-        jtx2.setBackground(Color.white);
-        jtx2.setEditable(false);
-        //------------------
-        JPanel jpM = new JPanel();
-        jpM.setLayout(new BorderLayout());
-        jpM.setBorder(new EtchedBorder());
-        jpM.setBackground(Color.white);
-        jpM.add(jtx, BorderLayout.NORTH);
-        jpM.add(jpGecko, BorderLayout.CENTER);
-        jpM.add(jtx2, BorderLayout.SOUTH);
-        con.add(jpM, BorderLayout.CENTER);
-        con.add(px, BorderLayout.SOUTH);
-        this.pack();
-        this.setResizable(false);
+    jpGecko.setPreferredSize(new Dimension(242, 92)); // Bildabmessungen
+    // ------------------
+    JTextArea jtx2 = new JTextArea();
+    jtx2.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
+
+    String professionalOrOpenSource = "GNU GPL 3.0 ";
+    if (StartupWindow.testOpenSourceVersion()) {
+      professionalOrOpenSource = " open-source ";
     }
+
+    String licenseString = "No license available.";
+
+    jtx2.setText(
+        "\n"
+            + VERSION
+            + professionalOrOpenSource
+            + "\n"
+            + "Build number: "
+            + BUILD_NUMBER
+            + "\nrelased "
+            + releaseDate
+            + "\n\n"
+            + licenseString
+            + "\n\nwritten by\nAndreas Müsing\nAndrija Stupar");
+    jtx2.setLineWrap(true);
+    jtx2.setWrapStyleWord(true);
+    jtx2.setBackground(Color.white);
+    jtx2.setEditable(false);
+    // ------------------
+    JPanel jpM = new JPanel();
+    jpM.setLayout(new BorderLayout());
+    jpM.setBorder(new EtchedBorder());
+    jpM.setBackground(Color.white);
+    jpM.add(jtx, BorderLayout.NORTH);
+    jpM.add(jpGecko, BorderLayout.CENTER);
+    jpM.add(jtx2, BorderLayout.SOUTH);
+    con.add(jpM, BorderLayout.CENTER);
+    con.add(px, BorderLayout.SOUTH);
+    this.pack();
+    this.setResizable(false);
+  }
 }

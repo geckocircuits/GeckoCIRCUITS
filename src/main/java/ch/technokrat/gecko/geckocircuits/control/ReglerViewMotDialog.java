@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,60 +28,67 @@ import javax.swing.JPanel;
 
 class ReglerViewMotDialog extends DialogElementCONTROL {
 
-    public ReglerViewMotDialog(final ReglerVIEWMOT aThis) {
-        super(aThis);
+  public ReglerViewMotDialog(final ReglerVIEWMOT aThis) {
+    super(aThis);
+  }
+
+  @Override
+  protected void baueGuiIndividual() {
+    JPanel psw2 = new JPanel();
+    psw2.setLayout(new BorderLayout());
+    List<String> labelListeElementLK2 = new ArrayList<String>();
+    final List<AbstractCircuitBlockInterface> possibleElements =
+        element
+            .getParentCircuitSheet()
+            .allElements
+            .getClassFromContainer(AbstractCircuitBlockInterface.class);
+    for (AbstractCircuitBlockInterface elem : possibleElements) {
+      if (elem instanceof AbstractMotor) {
+        for (String parameterString :
+            ((AbstractCircuitBlockInterface) (elem)).getParameterStringIntern()) {
+          labelListeElementLK2.add(elem.getStringID() + "." + parameterString);
+        }
+      }
     }
 
-    @Override
-    protected void baueGuiIndividual() {
-        JPanel psw2 = new JPanel();
-        psw2.setLayout(new BorderLayout());
-        List<String> labelListeElementLK2 = new ArrayList<String>();
-        final List<AbstractCircuitBlockInterface> possibleElements = element.getParentCircuitSheet().allElements.
-                getClassFromContainer(AbstractCircuitBlockInterface.class);
-        for (AbstractCircuitBlockInterface elem : possibleElements) {
-            if (elem instanceof AbstractMotor) {
-                for (String parameterString : ((AbstractCircuitBlockInterface) (elem)).getParameterStringIntern()) {
-                    labelListeElementLK2.add(elem.getStringID() + "." + parameterString);
-                }
-            }
+    //
+    if (labelListeElementLK2.size() > 0) {
+      final JComboBox combo = new JComboBox();
+      for (String label : labelListeElementLK2) {
+        combo.addItem(label);
+      }
+      int indexCombo = -1;
+      for (int i1 = 0; i1 < labelListeElementLK2.size(); i1++) {
+        if (element.getParameterString()[0].equals(labelListeElementLK2.get(i1))) {
+          indexCombo = i1;
         }
-
-        //
-        if (labelListeElementLK2.size() > 0) {
-            final JComboBox combo = new JComboBox();
-            for (String label : labelListeElementLK2) { 
-                combo.addItem(label);
-            }
-            int indexCombo = -1;
-            for (int i1 = 0; i1 < labelListeElementLK2.size(); i1++) {
-                if (element.getParameterString()[0].equals(labelListeElementLK2.get(i1))) {
-                    indexCombo = i1;
+      }
+      combo.setSelectedIndex(indexCombo);
+      combo.setForeground(GlobalColors.farbeFertigElementLK);
+      combo.addActionListener(
+          new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent actionEvent) {
+              String[] parStr = element.getParameterString();
+              String selectedString = combo.getSelectedItem().toString();
+              parStr[0] = selectedString;
+              parStr[1] = selectedString.substring(0, selectedString.lastIndexOf("."));
+              parStr[2] = selectedString.substring(selectedString.lastIndexOf(".") + 1);
+              for (AbstractBlockInterface search : possibleElements) {
+                if (search.getStringID().equals(parStr[1])) {
+                  ((ReglerVIEWMOT) element)
+                      .getComponentCoupling()
+                      .setNewCouplingElementUndoable(0, search);
                 }
+              }
             }
-            combo.setSelectedIndex(indexCombo);
-            combo.setForeground(GlobalColors.farbeFertigElementLK);
-            combo.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent actionEvent) {
-                    String[] parStr = element.getParameterString();
-                    String selectedString = combo.getSelectedItem().toString();
-                    parStr[0] = selectedString;
-                    parStr[1] = selectedString.substring(0, selectedString.lastIndexOf("."));
-                    parStr[2] = selectedString.substring(selectedString.lastIndexOf(".") + 1);
-                    for (AbstractBlockInterface search : possibleElements) {
-                        if (search.getStringID().equals(parStr[1])) {
-                            ((ReglerVIEWMOT) element).getComponentCoupling().setNewCouplingElementUndoable(0, search);
-                        }
-                    }
-                }
-            });
-            psw2.add(combo);
-        } else {
-            JLabel txtNo = new JLabel("No machine in power circuit defined.");
-            txtNo.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
-            psw2.add(txtNo);
-        }
-        jpM.add(psw2);
+          });
+      psw2.add(combo);
+    } else {
+      JLabel txtNo = new JLabel("No machine in power circuit defined.");
+      txtNo.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
+      psw2.add(txtNo);
     }
+    jpM.add(psw2);
+  }
 }

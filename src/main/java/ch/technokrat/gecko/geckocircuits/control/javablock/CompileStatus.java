@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,18 +13,18 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
-
 public enum CompileStatus {
+  NOT_COMPILED,
+  COMPILED_SUCCESSFULL,
+  COMPILE_ERROR;
 
-    NOT_COMPILED, COMPILED_SUCCESSFULL, COMPILE_ERROR;
-
-    public static CompileStatus getFromOrdinal(final int ordinal) {
-        for (CompileStatus val : CompileStatus.values()) {
-            if (val.ordinal() == ordinal) {
-                return val;
-            }
-        }
-        assert false;
-        return null;
+  public static CompileStatus getFromOrdinal(final int ordinal) {
+    for (CompileStatus val : CompileStatus.values()) {
+      if (val.ordinal() == ordinal) {
+        return val;
+      }
     }
+    assert false;
+    return null;
+  }
 };

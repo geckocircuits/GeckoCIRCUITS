@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -14,21 +14,23 @@
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 /**
- * a DataContainerValuesSettable is a data container, where values can be inserted,
- * in contradiction to any of the wrappers.
+ * a DataContainerValuesSettable is a data container, where values can be inserted, in contradiction
+ * to any of the wrappers.
+ *
  * @author andreas
  */
 public interface DataContainerValuesSettable {
-    /*
-     * add another row of data points at the end of the container
-     */
-    void insertValuesAtEnd(final float[] values, final double timeValue);    
-    
-    /**
-     * since we can insert values, the memory size should also be reportable
-     * @return 
-     */
-    int getUsedRAMSizeInMB();
-    long getCachedRAMSizeInMB();
-    
+  /*
+   * add another row of data points at the end of the container
+   */
+  void insertValuesAtEnd(final float[] values, final double timeValue);
+
+  /**
+   * since we can insert values, the memory size should also be reportable
+   *
+   * @return
+   */
+  int getUsedRAMSizeInMB();
+
+  long getCachedRAMSizeInMB();
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -14,13 +14,11 @@
 
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
-
 /**
- * Special blocks are components, that cannot be clearly identified as Control, Power-Circuits or thermal.
- * So, e.g. the TextField-Block is none of Control, Power or Thermal, whereas the subcircuits 
- * are possibly all of the three domains.
+ * Special blocks are components, that cannot be clearly identified as Control, Power-Circuits or
+ * thermal. So, e.g. the TextField-Block is none of Control, Power or Thermal, whereas the
+ * subcircuits are possibly all of the three domains.
+ *
  * @author andreas
  */
-public abstract class AbstractSpecialBlock extends AbstractBlockInterface {                                                        
-}
+public abstract class AbstractSpecialBlock extends AbstractBlockInterface {}

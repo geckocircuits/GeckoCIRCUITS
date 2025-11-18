@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,32 +13,27 @@
  */
 package ch.technokrat.gecko.geckoscript;
 
-
+import java.io.IOException;
 import java.io.Writer;
 import javax.swing.JTextArea;
-import java.io.IOException;
 
-/**
- *
- * @author anstupar
- */
+/** @author anstupar */
 public final class JTextAreaWriter extends Writer {
 
-	private final JTextArea textArea;
+  private final JTextArea textArea;
 
-	public JTextAreaWriter(final JTextArea textArea) {
-		this.textArea = textArea;
-	}
+  public JTextAreaWriter(final JTextArea textArea) {
+    this.textArea = textArea;
+  }
 
-    @Override
-    public void flush(){ }
+  @Override
+  public void flush() {}
 
-    @Override
-    public void close(){ }
+  @Override
+  public void close() {}
 
-	@Override
-	public void write(char[] cbuf, int off, int len) throws IOException {
-		textArea.append(new String(cbuf, off, len));
-	}
+  @Override
+  public void write(char[] cbuf, int off, int len) throws IOException {
+    textArea.append(new String(cbuf, off, len));
+  }
 }
-

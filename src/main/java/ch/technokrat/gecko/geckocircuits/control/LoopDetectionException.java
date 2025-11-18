@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,35 +19,32 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import java.util.List;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 class LoopDetectionException extends Exception {
 
-    private final ControlOrderNode _startBlock;
-    private final List<ControlOrderNode> _loopList;
+  private final ControlOrderNode _startBlock;
+  private final List<ControlOrderNode> _loopList;
 
-    public LoopDetectionException(ControlOrderNode firstComponent, List<ControlOrderNode> loopList) {
-        _startBlock = firstComponent;
-        _loopList = loopList;
-    }
+  public LoopDetectionException(ControlOrderNode firstComponent, List<ControlOrderNode> loopList) {
+    _startBlock = firstComponent;
+    _loopList = loopList;
+  }
 
-    boolean insertTestLoopFinished(ControlOrderNode nextNode) {
-        if (_loopList.contains(nextNode)) {
-            nextNode.setLoopCrackTrue();            
-            return true;
-        } else {
-            _loopList.add(nextNode);
-            return false;
-        }
+  boolean insertTestLoopFinished(ControlOrderNode nextNode) {
+    if (_loopList.contains(nextNode)) {
+      nextNode.setLoopCrackTrue();
+      return true;
+    } else {
+      _loopList.add(nextNode);
+      return false;
     }
+  }
 
-    void printLoopMessage() {
-//        System.err.println("Control loop detected:");
-//        for (ControlOrderNode loopNode : _loopList) {
-//            System.err.print(" " + loopNode.getElementControl().getStringID());
-//        }
-//        System.err.println("");
-    }
+  void printLoopMessage() {
+    //        System.err.println("Control loop detected:");
+    //        for (ControlOrderNode loopNode : _loopList) {
+    //            System.err.print(" " + loopNode.getElementControl().getStringID());
+    //        }
+    //        System.err.println("");
+  }
 }

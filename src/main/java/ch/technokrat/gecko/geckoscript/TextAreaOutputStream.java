@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,35 +18,33 @@ import java.io.OutputStream;
 import javax.swing.JTextArea;
 
 /**
- * Simple way to "print" to a JTextArea; just say
- * PrintStream out = new PrintStream(new TextAreaOutputStream(myTextArea));
- * Then out.println() et all will all appear in the TextArea.
+ * Simple way to "print" to a JTextArea; just say PrintStream out = new PrintStream(new
+ * TextAreaOutputStream(myTextArea)); Then out.println() et all will all appear in the TextArea.
  */
 public final class TextAreaOutputStream extends OutputStream {
 
-	private final JTextArea textArea;
-	private final StringBuilder sb = new StringBuilder(4048);
+  private final JTextArea textArea;
+  private final StringBuilder sb = new StringBuilder(4048);
 
-	public TextAreaOutputStream(final JTextArea textArea) {
-		this.textArea = textArea;
-	}
+  public TextAreaOutputStream(final JTextArea textArea) {
+    this.textArea = textArea;
+  }
 
-    @Override
-    public void flush(){ }
-    
-    @Override
-    public void close(){ }
+  @Override
+  public void flush() {}
 
-	@Override
-	public void write(int b) throws IOException {                
-		if (b == '\r')
-			return;
-		
-		if (b == '\n') {                    
-			textArea.append(sb.toString());                        
-			sb.setLength(0);
-		}
-		
-		sb.append((char)b);                
-	}
+  @Override
+  public void close() {}
+
+  @Override
+  public void write(int b) throws IOException {
+    if (b == '\r') return;
+
+    if (b == '\n') {
+      textArea.append(sb.toString());
+      sb.setLength(0);
+    }
+
+    sb.append((char) b);
+  }
 }

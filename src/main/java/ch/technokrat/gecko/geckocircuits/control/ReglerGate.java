@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,71 +24,64 @@ import java.awt.Window;
 import java.util.List;
 
 public final class ReglerGate extends ReglerWithSingleReference implements ComponentCoupable {
-    private static final int BLOCK_WIDTH = 3;
-    public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerGate.class, "GATE", I18nKeys.GATE_CONTROL);
+  private static final int BLOCK_WIDTH = 3;
+  public static final ControlTypeInfo tinfo =
+      new ControlTypeInfo(ReglerGate.class, "GATE", I18nKeys.GATE_CONTROL);
 
-    public ReglerGate() {
-        super(1, 0);
+  public ReglerGate() {
+    super(1, 0);
+  }
+
+  @Override
+  public String[] getOutputNames() {
+    return new String[0];
+  }
+
+  @Override
+  public I18nKeys[] getOutputDescription() {
+    return new I18nKeys[0];
+  }
+
+  @Override
+  public double getXShift() {
+    return 1 / 2.0;
+  }
+
+  @Override
+  public int getBlockWidth() {
+    return (int) (BLOCK_WIDTH * dpix);
+  }
+
+  @Override
+  public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
+    return new GateCalculator();
+  }
+
+  @Override
+  String getDisplayValueWithoutError() {
+    return ">> " + getComponentCoupling()._coupledElements[0].getStringID();
+  };
+
+  @Override
+  public I18nKeys getMissingComponentsString() {
+    return I18nKeys.NO_SWITCH_EXISTING_IN_CIRCUIT_SHEET;
+  }
+
+  @Override
+  public I18nKeys getCouplingTitle() {
+    return I18nKeys.SELECT_SWITCH_TO_BE_CONTROLLED;
+  }
+
+  @Override
+  public void checkComponentCompatibility(
+      final Object testObject, final List<AbstractBlockInterface> insertList) {
+    if (testObject instanceof AbstractSwitch) {
+      insertList.add((AbstractCircuitBlockInterface) testObject);
     }
+  }
 
-    @Override
-    public String[] getOutputNames() {
-        return new String[0];
-    }
-
-    @Override
-    public I18nKeys[] getOutputDescription() {
-        return new I18nKeys[0];
-    }
-
-    @Override
-    public double getXShift() {
-        return 1/2.0;
-    }
-
-    @Override
-    public int getBlockWidth() {
-        return (int) (BLOCK_WIDTH * dpix);
-    }
-
-    
-    @Override
-    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new GateCalculator(); 
-    }    
-
-    @Override
-    String getDisplayValueWithoutError() {
-        return ">> " + getComponentCoupling()._coupledElements[0].getStringID();
-    };
-            
-        
-
-    @Override
-    public I18nKeys getMissingComponentsString() {
-        return I18nKeys.NO_SWITCH_EXISTING_IN_CIRCUIT_SHEET;
-    }
-
-    @Override
-    public I18nKeys getCouplingTitle() {
-        return I18nKeys.SELECT_SWITCH_TO_BE_CONTROLLED; 
-    }
-
-    @Override
-    public void checkComponentCompatibility(final Object testObject, final List<AbstractBlockInterface> insertList) {
-        if (testObject instanceof AbstractSwitch) {
-            insertList.add((AbstractCircuitBlockInterface) testObject);
-        }
-
-    }
-
-    @Override
-    protected Window openDialogWindow() {
-        return new ReglerGateDialog(this);        
-    }            
-
-    
-    
-    
-    
+  @Override
+  protected Window openDialogWindow() {
+    return new ReglerGateDialog(this);
+  }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,170 +26,180 @@ import java.util.Stack;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 public class JPanelFourier extends javax.swing.JPanel {
-    
 
-    public GraferV4 _graferNew;
-    private NewScope _graferPanel;
-    private final int NUMBER_SIGNALS = 2;
-    private final String[] SIGNAL_NAMES = new String[]{"Re", "Im"};
-    private DialogConnectSignalsGraphs _diagCON;
-    private DataContainerFourier _dataContainer;
+  public GraferV4 _graferNew;
+  private NewScope _graferPanel;
+  private final int NUMBER_SIGNALS = 2;
+  private final String[] SIGNAL_NAMES = new String[] {"Re", "Im"};
+  private DialogConnectSignalsGraphs _diagCON;
+  private DataContainerFourier _dataContainer;
 
-    public JPanelFourier() {
-        initComponents();
-        setBorder(new TitledBorder("Fourier analysis"));
-        _graferNew = new GraferV4(new ScopeSettings());
-        _graferPanel = new NewScope(_graferNew);
-        _dataContainer = null;
+  public JPanelFourier() {
+    initComponents();
+    setBorder(new TitledBorder("Fourier analysis"));
+    _graferNew = new GraferV4(new ScopeSettings());
+    _graferPanel = new NewScope(_graferNew);
+    _dataContainer = null;
+  }
+
+  public JPanelFourier(final double baseFrequency, final double[][][] erg) {
+    initComponents();
+  }
+
+  public void insertData(double baseFrequency, double[][][] erg) {
+    _graferNew = new GraferV4(new ScopeSettings());
+    _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");
+    _graferNew.setSimulationTimeBoundaries(0, erg[0][0].length * baseFrequency);
+    _graferPanel = new NewScope(_graferNew);
+    jPanelPlot.add(_graferPanel);
+    _graferNew.createInitialAndSingleDiagram(false, true, 1);
+    _graferNew._manager.getDiagrams().get(0).setAllCurvesWithBars(new int[] {0});
+
+    _dataContainer = new DataContainerFourier(3, erg[0][0].length, baseFrequency);
+    addSignalNames();
+
+    float[] magnitude = new float[erg[0][0].length];
+    float[] phase = new float[erg[1][0].length];
+    for (int i = 0; i < erg[0][0].length; i++) {
+      magnitude[i] = (float) erg[2][0][i];
+      phase[i] = (float) erg[3][0][i];
     }
-    
-    public JPanelFourier(final double baseFrequency, final double[][][] erg) {
-        initComponents();                
-    }   
-    
-    public void insertData(double baseFrequency, double[][][] erg) {
-        _graferNew = new GraferV4(new ScopeSettings());
-        _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");        
-        _graferNew.setSimulationTimeBoundaries(0, erg[0][0].length * baseFrequency);
-        _graferPanel = new NewScope(_graferNew);
-        jPanelPlot.add(_graferPanel);
-        _graferNew.createInitialAndSingleDiagram(false, true, 1);
-        _graferNew._manager.getDiagrams().get(0).setAllCurvesWithBars(new int[]{0});
+    _dataContainer.insertValues(magnitude, phase);
 
-        _dataContainer = new DataContainerFourier(3, erg[0][0].length, baseFrequency);
-        addSignalNames();
+    _dataContainer.setContainerStatus(ContainerStatus.PAUSED);
+    _graferPanel.setDataContainer(_dataContainer);
+  }
 
-
-        float[] magnitude = new float[erg[0][0].length];
-        float[] phase = new float[erg[1][0].length];
-        for (int i = 0; i < erg[0][0].length; i++) {
-            magnitude[i] = (float) erg[2][0][i];
-            phase[i] = (float) erg[3][0][i];
-        }
-        _dataContainer.insertValues(magnitude, phase);
-
-
-        _dataContainer.setContainerStatus(ContainerStatus.PAUSED);
-        _graferPanel.setDataContainer(_dataContainer);
+  private void addSignalNames() {
+    final Stack<AbstractScopeSignal> inputSignals = new Stack<AbstractScopeSignal>();
+    for (int i = 0; i < NUMBER_SIGNALS; i++) {
+      inputSignals.add(new ScopeSignalSimpleName(SIGNAL_NAMES[i]));
     }
+    _graferNew._manager.setInputSignals(inputSignals);
+  }
 
-    private void addSignalNames() {
-        final Stack<AbstractScopeSignal> inputSignals = new Stack<AbstractScopeSignal>();
-        for (int i = 0; i < NUMBER_SIGNALS; i++) {
-            inputSignals.add(new ScopeSignalSimpleName(SIGNAL_NAMES[i]));
-        }
-        _graferNew._manager.setInputSignals(inputSignals);
-    }
-    
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+  /**
+   * This method is called from within the constructor to initialize the form. WARNING: Do NOT
+   * modify this code. The content of this method is always regenerated by the Form Editor.
+   */
+  @SuppressWarnings("unchecked")
+  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+  private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        jButtonSaveData = new javax.swing.JButton();
-        jButtonSaveImage = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jPanelPlot = new javax.swing.JPanel();
+    jToolBar1 = new javax.swing.JToolBar();
+    jButtonSaveData = new javax.swing.JButton();
+    jButtonSaveImage = new javax.swing.JButton();
+    jButton2 = new javax.swing.JButton();
+    jPanelPlot = new javax.swing.JPanel();
 
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
+    jToolBar1.setFloatable(false);
+    jToolBar1.setRollover(true);
 
-        jButtonSaveData.setText("Save data");
-        jButtonSaveData.setFocusable(false);
-        jButtonSaveData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonSaveData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonSaveData.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveDataActionPerformed(evt);
-            }
+    jButtonSaveData.setText("Save data");
+    jButtonSaveData.setFocusable(false);
+    jButtonSaveData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+    jButtonSaveData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+    jButtonSaveData.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButtonSaveDataActionPerformed(evt);
+          }
         });
-        jToolBar1.add(jButtonSaveData);
+    jToolBar1.add(jButtonSaveData);
 
-        jButtonSaveImage.setText("Save as image");
-        jButtonSaveImage.setFocusable(false);
-        jButtonSaveImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButtonSaveImage.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jButtonSaveImage.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveImageActionPerformed(evt);
-            }
+    jButtonSaveImage.setText("Save as image");
+    jButtonSaveImage.setFocusable(false);
+    jButtonSaveImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+    jButtonSaveImage.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+    jButtonSaveImage.addActionListener(
+        new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent evt) {
+            jButtonSaveImageActionPerformed(evt);
+          }
         });
-        jToolBar1.add(jButtonSaveImage);
+    jToolBar1.add(jButtonSaveImage);
 
-        jButton2.setText("Plot options");
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton2);
+    jButton2.setText("Plot options");
+    jButton2.setFocusable(false);
+    jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+    jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+    jToolBar1.add(jButton2);
 
-        jPanelPlot.setLayout(new java.awt.BorderLayout());
+    jPanelPlot.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+    this.setLayout(layout);
+    layout.setHorizontalGroup(
+        layout
+            .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
-            .addComponent(jPanelPlot, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelPlot, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
+            .addComponent(
+                jPanelPlot,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                javax.swing.GroupLayout.DEFAULT_SIZE,
+                Short.MAX_VALUE));
+    layout.setVerticalGroup(
+        layout
+            .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(
+                layout
+                    .createSequentialGroup()
+                    .addComponent(
+                        jToolBar1,
+                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                        25,
+                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(
+                        jPanelPlot, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)));
+  } // </editor-fold>//GEN-END:initComponents
 
-    private void jButtonSaveDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveDataActionPerformed
+  private void jButtonSaveDataActionPerformed(
+      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_jButtonSaveDataActionPerformed
 
-        GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".txt", "plain-text ascii data", this, null);
-        if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
-            return;
+    GeckoFileChooser fileChooser =
+        GeckoFileChooser.createSaveFileChooser(".txt", "plain-text ascii data", this, null);
+    if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
+      return;
+    }
+    final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
+    final File file = new File(fileName);
+    try {
+      final FileWriter fileWriter = new FileWriter(file);
+      final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+      for (int i = 0; i < _dataContainer.getMaximumTimeIndex(0); i++) {
+        bufferedWriter.write("" + _dataContainer.getTimeValue(i, 0));
+        for (int j = 0; j < _dataContainer.getRowLength(); j++) {
+          float value = _dataContainer.getValue(j, i);
+          bufferedWriter.write(" " + value);
         }
-        final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
-        final File file = new File(fileName);
-        try {
-            final FileWriter fileWriter = new FileWriter(file);
-            final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            for (int i = 0; i < _dataContainer.getMaximumTimeIndex(0); i++) {
-                bufferedWriter.write("" + _dataContainer.getTimeValue(i, 0));
-                for(int j = 0; j < _dataContainer.getRowLength(); j++) {
-                    float value = _dataContainer.getValue(j, i);
-                    bufferedWriter.write(" " + value);
-                }
-                bufferedWriter.write("\n");
-            }
-            bufferedWriter.close();
-        } catch (Throwable ex) {
+        bufferedWriter.write("\n");
+      }
+      bufferedWriter.close();
+    } catch (Throwable ex) {
 
-            JOptionPane.showMessageDialog(null,
-                ex.getMessage() + "\n" + ex.toString(), "Error while saving file",
-                JOptionPane.ERROR_MESSAGE);
-            throw new RuntimeException("Error saving to file " + file, ex);
-        }
-    }//GEN-LAST:event_jButtonSaveDataActionPerformed
+      JOptionPane.showMessageDialog(
+          null,
+          ex.getMessage() + "\n" + ex.toString(),
+          "Error while saving file",
+          JOptionPane.ERROR_MESSAGE);
+      throw new RuntimeException("Error saving to file " + file, ex);
+    }
+  } // GEN-LAST:event_jButtonSaveDataActionPerformed
 
-    private void jButtonSaveImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveImageActionPerformed
-        new SaveViewFrame(null, _graferNew).setVisible(true);
-    }//GEN-LAST:event_jButtonSaveImageActionPerformed
+  private void jButtonSaveImageActionPerformed(
+      java.awt.event.ActionEvent evt) { // GEN-FIRST:event_jButtonSaveImageActionPerformed
+    new SaveViewFrame(null, _graferNew).setVisible(true);
+  } // GEN-LAST:event_jButtonSaveImageActionPerformed
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButtonSaveData;
-    private javax.swing.JButton jButtonSaveImage;
-    private javax.swing.JPanel jPanelPlot;
-    private javax.swing.JToolBar jToolBar1;
-    // End of variables declaration//GEN-END:variables
-       
+  // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JButton jButton2;
+  private javax.swing.JButton jButtonSaveData;
+  private javax.swing.JButton jButtonSaveImage;
+  private javax.swing.JPanel jPanelPlot;
+  private javax.swing.JToolBar jToolBar1;
+  // End of variables declaration//GEN-END:variables
+
 }

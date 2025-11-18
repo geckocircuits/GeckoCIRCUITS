@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,16 +17,23 @@ import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.GeckoFileable;
 
 public interface Nonlinearable extends GeckoFileable {
-    String getNonlinearFileEnding();
+  String getNonlinearFileEnding();
 
-    double[] getNonlinXDefault();
-    double[] getNonlinYDefault();            
-    public String getStringID();
-    public String getNonlinearFileExtension();
-    public String getIndependentVariableName();
-    public abstract String getNonlinearNameShort();
-    public String getNonlinearName();
-    public UserParameter<Double> getNonlinearReplacedParameter();
-    public double[][] getInitalNonlinValues();
-    
+  double[] getNonlinXDefault();
+
+  double[] getNonlinYDefault();
+
+  public String getStringID();
+
+  public String getNonlinearFileExtension();
+
+  public String getIndependentVariableName();
+
+  public abstract String getNonlinearNameShort();
+
+  public String getNonlinearName();
+
+  public UserParameter<Double> getNonlinearReplacedParameter();
+
+  public double[][] getInitalNonlinValues();
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,26 +17,23 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
-/**
- *
- * @author andreas
- */
+/** @author andreas */
 public abstract class AbstractPTCalculator extends AbstractSingleInputSingleOutputCalculator {
 
-    protected double _TVal;
-    protected double _a1Val;
+  protected double _TVal;
+  protected double _a1Val;
 
-    public AbstractPTCalculator(final double timeConstant, final double gainFactor) {
-        super();
-        _TVal = timeConstant;
-        _a1Val = gainFactor;
-    }
+  public AbstractPTCalculator(final double timeConstant, final double gainFactor) {
+    super();
+    _TVal = timeConstant;
+    _a1Val = gainFactor;
+  }
 
-    public void setTimeConstant(final double value) {
-        _TVal = value;
-    }
+  public void setTimeConstant(final double value) {
+    _TVal = value;
+  }
 
-    public void setGain(final double value) {
-        _a1Val = value;
-    }
+  public void setGain(final double value) {
+    _a1Val = value;
+  }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,45 +26,43 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-/**
- *
- * @author andy
- */
+/** @author andy */
 class LISNDialog extends DialogElementLK {
 
-    public LISNDialog(final LISN parent) {
-        super(parent);
-    }
+  public LISNDialog(final LISN parent) {
+    super(parent);
+  }
 
-    @Override
-    protected void baueGUIIndividual() {
-        JPanel jpDefLISN = new JPanel();
-        jpDefLISN.setLayout(new BorderLayout());
-        JComponent jcLISN = new JComponent() {
-            public void paint(Graphics g) {
-                try {
-                    g.setColor(Color.white);
-                    g.fillRect(0, 0, 999, 999);
-                    Image img = (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "lisn.png"))).getImage();
-                    g.drawImage(img, 10, 0, new JFrame());
-                } catch (Exception e) {
-                    System.out.println(e + "   srthrszhj5shj");
-                }
+  @Override
+  protected void baueGUIIndividual() {
+    JPanel jpDefLISN = new JPanel();
+    jpDefLISN.setLayout(new BorderLayout());
+    JComponent jcLISN =
+        new JComponent() {
+          public void paint(Graphics g) {
+            try {
+              g.setColor(Color.white);
+              g.fillRect(0, 0, 999, 999);
+              Image img =
+                  (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "lisn.png"))).getImage();
+              g.drawImage(img, 10, 0, new JFrame());
+            } catch (Exception e) {
+              System.out.println(e + "   srthrszhj5shj");
             }
+          }
         };
-        jcLISN.setPreferredSize(new Dimension(306 + 2 * 10, 322));
-        jpDefLISN.add(jcLISN, BorderLayout.CENTER);
-        //---------------
-        JTabbedPane tabberLISN = new JTabbedPane();
-        tabberLISN.addTab("Definition", jpDefLISN);
-        //tabberLISN.addTab("Parameter", jpParLISN);
-        //
-        con.add(tabberLISN, BorderLayout.CENTER);
+    jcLISN.setPreferredSize(new Dimension(306 + 2 * 10, 322));
+    jpDefLISN.add(jcLISN, BorderLayout.CENTER);
+    // ---------------
+    JTabbedPane tabberLISN = new JTabbedPane();
+    tabberLISN.addTab("Definition", jpDefLISN);
+    // tabberLISN.addTab("Parameter", jpParLISN);
+    //
+    con.add(tabberLISN, BorderLayout.CENTER);
+  }
 
-    }
-
-    @Override
-    public void processInputIndividual() {
-        // nothing todo for LISN
-    }
+  @Override
+  public void processInputIndividual() {
+    // nothing todo for LISN
+  }
 }
