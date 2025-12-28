@@ -2079,8 +2079,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             File dateTimeTestOrig = new File(aktuellerDateiName);
             File autoBackupTimeTest = new File(dateiName);
             if (dateTimeTestOrig.lastModified() < autoBackupTimeTest.lastModified()) {
-                DateFormat dFormat = new SimpleDateFormat();
-
                 int n = JOptionPane.showConfirmDialog(
                         this,
                         "The automatic backup file has a later modification date: " + new Date(autoBackupTimeTest.lastModified())
