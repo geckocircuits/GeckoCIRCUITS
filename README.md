@@ -4,11 +4,75 @@ A fast circuit simulator optimized for power electronics applications. Multi-dom
 
 Originally written by Andreas Müsing, Andrija Stupar and Uwe Drofenik. Published under GPLv3.
 
+## Manual Build & Run (Command Line)
+
+### Prerequisites
+- **Java**: JDK 21 (required - project is built for Java 21)
+- **Maven**: 3.6+
+- **Memory**: 3GB+ heap recommended for simulations
+
+### Setting up JAVA_HOME
+
+The VSCode tasks and Maven require the `JAVA_HOME` environment variable to be set correctly.
+
+**For Windows users:**
+
+Add to your Environment Variables:
+1. Press `Win+R`, type `sysdm.cpl`
+2. Go to **Advanced** → **Environment Variables**
+3. Add or edit `JAVA_HOME` pointing to your JDK 21 installation
+4. Ensure `%JAVA_HOME%\bin` is in your `PATH`
+
+Or for Git Bash users, add to `~/.bashrc` or `~/.bash_profile`:
+```bash
+export JAVA_HOME="/c/Program Files/Java/jdk-21"  # Adjust to your installation path
+```
+(Note the Unix-style path with forward slashes)
+
+**For Linux/Mac users:**
+
+Add to your `~/.bashrc` or `~/.zshrc`:
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk  # Adjust path as needed
+```
+
+**Verify your setup:**
+```bash
+echo $JAVA_HOME
+mvn -version
+```
+
+After setting JAVA_HOME, restart your terminal or VSCode for changes to take effect.
+
+### Build
+```bash
+mvn clean package assembly:single
+```
+
+Creates `target/gecko-1.0-jar-with-dependencies.jar`
+
+### Run
+```bash
+# Standard
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar
+
+# With circuit file
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar resources/Education_ETHZ/ex_1.ipes
+
+# HiDPI displays
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target/gecko-1.0-jar-with-dependencies.jar
+```
+
+
 ## Quick Start with VSCode
 
 ### 1. Open Project in VSCode
 ```bash
-code c:\Users\mhr\Documents\GeckoCIRCUITS
+# From the project directory
+code .
+
+# Or open from anywhere with the project path
+code /path/to/GeckoCIRCUITS
 ```
 
 ### 2. Install Recommended Extensions
@@ -49,37 +113,6 @@ Access via Run menu or Debug sidebar (`Ctrl+Shift+D`):
 
 See [.vscode/README.md](.vscode/README.md) for complete VSCode guide with keyboard shortcuts and tips.
 
-## Manual Build & Run (Command Line)
-
-### Prerequisites
-- **Java**: JDK 8 or newer (JDK 11+ recommended)
-- **Maven**: 3.6+
-- **Memory**: 3GB+ heap recommended for simulations
-
-### Build
-```bash
-mvn clean package assembly:single
-```
-
-Creates `target/gecko-1.0-jar-with-dependencies.jar`
-
-### Run
-```bash
-# Standard
-java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar
-
-# With circuit file
-java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar resources/Education_ETHZ/ex_1.ipes
-
-# HiDPI displays
-java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target/gecko-1.0-jar-with-dependencies.jar
-```
-
-### Convenience Scripts
-- **`run.bat`** - Standard run
-- **`run-hidpi.bat`** - HiDPI run
-- **`build.bat`** - Full build with tests
-- **`build-skip-tests.bat`** - Quick build without tests
 
 ## Example Circuits
 

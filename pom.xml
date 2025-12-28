@@ -15,8 +15,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -27,14 +27,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js</artifactId>
-      <version>20.3.0</version>
-    </dependency>  
+      <groupId>org.graalvm.polyglot</groupId>
+      <artifactId>polyglot</artifactId>
+      <version>23.1.0</version>
+    </dependency>
     <dependency>
-      <groupId>org.graalvm.js</groupId>
-      <artifactId>js-scriptengine</artifactId>
-      <version>20.3.0</version>
+      <groupId>org.graalvm.polyglot</groupId>
+      <artifactId>js</artifactId>
+      <version>23.1.0</version>
+      <type>pom</type>
     </dependency>
     <!-- https://mvnrepository.com/artifact/de.sciss/syntaxpane -->
     <dependency>
@@ -82,7 +83,7 @@
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
-      <version>4.1.0</version>
+      <version>5.14.0</version>
     </dependency>
   </dependencies>
 
@@ -109,8 +110,9 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
 	  <configuration>
-	    <source>1.8</source>
-            <target>1.8</target>
+	    <source>21</source>
+            <target>21</target>
+            <release>21</release>
         </configuration>
           <!--version>3.8.0</version-->
         </plugin>

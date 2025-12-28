@@ -68,21 +68,20 @@
         {
             "label": "Run Tests",
             "type": "shell",
-            "command": "mvn",
-            "args": [
-                "test"
-            ],
-            "group": "test",
+            "command": "mvn test",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
             "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
+                "panel": "dedicated",
                 "clear": false
             },
-            "problemMatcher": [],
-            "detail": "Run Maven tests"
+            "problemMatcher": ["$junit"],
+            "detail": "Run Maven tests with Java 21"
         },
         {
             "label": "Maven: Update Dependencies",

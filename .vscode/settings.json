@@ -38,14 +38,13 @@
     },
 
     // Terminal settings
-    "terminal.integrated.defaultProfile.windows": "PowerShell",
-
-    // Java runtime configuration
-    "java.configuration.runtimes": [
-        {
-            "name": "JavaSE-1.8",
-            "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-11.0.28.6-hotspot",
-            "default": true
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.profiles.windows": {
+        "Git Bash": {
+            "source": "Git Bash"
         }
-    ]
+    },
+
+    // Java debug settings
+    "java.debug.settings.enableRunDebugCodeLens": true
 }
