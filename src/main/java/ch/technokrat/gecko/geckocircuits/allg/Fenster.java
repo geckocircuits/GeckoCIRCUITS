@@ -1171,7 +1171,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } else {
             System.out.println("Warning: Check for auto-backup file disabled!");
         }
-        long toc = System.currentTimeMillis();
+        //long toc = System.currentTimeMillis();
         //System.out.println("loading time: " + (toc - tic) / 1000.0);        
     }
 
@@ -1215,7 +1215,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             } else if (befehl.equals("Open")) {
                 _se.setConnectorTestMode(false);
                 if (Fenster.IS_APPLET) {
-                    DialogAppletExamples dialogAppletExamples = new DialogAppletExamples(datnamExampleApplet, this);
+                    new DialogAppletExamples(datnamExampleApplet, this);
                 } else {
                     if (_se.getZustandGeaendert()) {
                         int returnOption = JOptionPane.showConfirmDialog(
