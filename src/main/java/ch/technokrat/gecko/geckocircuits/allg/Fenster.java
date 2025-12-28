@@ -2182,10 +2182,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         String[] lines = null;
         //----------
         // GZIP-Format (March 2009) - ganz neu! --> 
-        try {                        
+        try {
             GZIPInputStream in1 = null;
             if (Fenster.IS_APPLET) {
-                in1 = new GZIPInputStream((new URL(GeckoSim.urlApplet, dateiName)).openStream());
+                in1 = new GZIPInputStream(GeckoSim.urlApplet.toURI().resolve(dateiName).toURL().openStream());
             } else {
                 in1 = new GZIPInputStream(new FileInputStream(dateiName));
             }
