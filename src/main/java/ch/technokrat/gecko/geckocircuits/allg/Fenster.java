@@ -946,7 +946,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             // BufferedWriter out= new BufferedWriter(new FileWriter(GlobalFilePathes.DATNAM));
             //
             // Komprimierter Datenstrom --> reduzierte und unleserliche Datei -->
-//            DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
+            // DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
             GZIPOutputStream out1 = new GZIPOutputStream(new FileOutputStream(file));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1));
             //            
@@ -1018,7 +1018,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     public void createNewFile() {
         optimizerParameterData.clear();
-        this.aktuellerDateiName = UNTITLED;
+        Fenster.aktuellerDateiName = UNTITLED;
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
         sea._typElement = null;
         _se.resetCircuitSheetsForNewFile();
