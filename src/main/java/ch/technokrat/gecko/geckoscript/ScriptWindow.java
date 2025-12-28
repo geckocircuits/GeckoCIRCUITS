@@ -611,12 +611,6 @@ public class ScriptWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     javax.swing.JTextArea jTextAreaOutput;
     // End of variables declaration//GEN-END:variables
-    private static final String functionDetails = "<font face=\"Tahoma\" size=\"3\">This is a set of functions available within the GeckoSCRIPT which allows the user to write "
-            + "scripts for manipulating the simulation and the model within GeckoCIRCUITS. It gives the ability to run the simulation, "
-            + "extract results from it, display results and parameter values, and to change the parameter values of model elements. As "
-            + "far as the elements of the model (switches, capacitors, integrators, etc.) are concerned, these functions operate based on "
-            + "their names (which GeckoCIRCUITS gives by default and which are also editable by the user) and the names of their "
-            + "parameters (visible by opening the dialog box for each element by double-clicking on it). </font><br><br><br>";
 
     private void compileCode() {        
         CompileScript.compile(this);
