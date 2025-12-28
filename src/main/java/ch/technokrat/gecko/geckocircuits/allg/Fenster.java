@@ -80,11 +80,11 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     public static final boolean INCLUDE_GeckoMAGNETICS = false;
     public static final boolean INCLUDE_GeckoHEAT = false;
     public static final boolean INCLUDE_GeckoEMC = false;
-    private static final String UNTITLED = "Untitled";  // wird in der Fenster-Leiste angezeigt, wenn eine neue Datei gestartet wird
-    public static String aktuellerDateiName = UNTITLED;  // ohne Pfadangabe! - nur zur Anzeige in der Fensterleiste (so wie bei Windows ueblich)
+    private static final String UNTITLED = "Untitled";  // displayed in the window title bar when a new file is started
+    public static String aktuellerDateiName = UNTITLED;  // without path! - only for display in the window title bar (as is common in Windows)
     //--------------------------------------
     private JSplitPane split;
-    public static int seaBREITE = 110;  // Breite der 'SchematischeEingabeAuswahl2()'-Komponente am rechten Rand
+    public static int seaBREITE = 110;  // width of the 'SchematischeEingabeAuswahl2()' component on the right edge
     public JCheckBoxMenuItem vItemShowParLK, vItemShowFlowLK, vItemShowNameLK, vItemShowTextLineLK;
     public JCheckBoxMenuItem vItemShowParCONTROL, vItemShowNameCONTROL, vItemShowTextLineCONTROL;
     public JCheckBoxMenuItem aliasingCONTROL;
@@ -97,12 +97,12 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     private JMenuItem mItemUndo, mItemRedo, mItemCopy, mItemMove, mItemDelete, mItemEscape, mItemSelectAll, mItemDisable, mItemDisableShort;
     private JMenuItem mItemParameter, mItemRun, mItemStop, mItemContinue;
     //--------------------------------------
-    final GeckoStatusBar jtfStatus = new GeckoStatusBar("Ready ...", this);  // Status-Anzeige der Schaltungs-Simulation
+    final GeckoStatusBar jtfStatus = new GeckoStatusBar("Ready ...", this);  // Status display of the circuit simulation
     public static final int RECENT_FILE_SPACE = -1;
     //--------------------------------------
     private boolean speicherVorgangLaeuft = false;
     //--------------------------------------
-    // Falls als Applet gestartet wird, dann koennen folgenden Dateien geladen werden: 
+    // If started as an applet, the following files can be loaded:
     private String[] datnamExampleApplet;
     //-------------------------
     // simple parameter-set for GeckoOPTIMIZER --> 
@@ -158,7 +158,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     }
 
     /**
-     * damit kann man den Simulator aktivieren bzw. de-aktivieren -->
+     * this can be used to activate or deactivate the simulator
      *
      * @param simulatorAktiviert
      */
@@ -196,7 +196,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         }
 
         this.addWindowListener(this);
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);  // damit man den 'QuitWithoutSaving'-Dialog hochfahren kann ...
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);  // so that the 'QuitWithoutSaving' dialog can be raised ...
         this.addComponentListener(this);
         //---------------------------------
 
@@ -216,7 +216,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         baueGUI();
 
         Timer timer = new Timer();
-        // start after 10 sek, and then save a backup after every 20 sek
+        // start after 10 seconds, and then save a backup after every 20 seconds
         if (!IS_BRANDED) {
             timer.schedule(new BackupTask(), 10000, 20000);
         }
@@ -293,7 +293,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             mItemSaveAs.setEnabled(false);
             mItemSaveView.setEnabled(false);
         }
-        // 
+        //
         fileMenu.add(mItemNew);
         mItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
         fileMenu.add(mItemOpen);
@@ -304,7 +304,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         fileMenu.add(mItemSaveApplet);
         fileMenu.add(mItemSaveView);
         fileMenu.add(mItemExit);
-        // die zuletzt bearbeiteten Dateien: 
+        // the most recently edited files:
         fileMenu.addSeparator();
         mItemRECENT_1 = new JMenuItem(getTextMenuItemRECENT(GlobalFilePathes.RECENT_CIRCUITS_1, RECENT_FILE_SPACE));
         mItemRECENT_1.addActionListener(this);
@@ -799,11 +799,11 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     }
 
     /**
-     * Verarbeitung derKeyEvents fuer DELETE, weil das scheinbar nicht mit den
-     * Menu-Accelerators funktionert --> (Java-Bug??)
+     * Processing of KeyEvents for DELETE, because this apparently does not work with
+     * menu accelerators --> (Java bug??)
      */
     private void processKeyEvents(KeyEvent ke) {
-        if ((ke.getKeyChar() == KeyEvent.VK_DELETE) || (ke.getKeyCode() == KeyEvent.VK_DELETE) || (ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) || (ke.getKeyChar() == 4)) // '4' entspricht CONTROL_D
+        if ((ke.getKeyChar() == KeyEvent.VK_DELETE) || (ke.getKeyCode() == KeyEvent.VK_DELETE) || (ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) || (ke.getKeyChar() == 4)) // '4' corresponds to CONTROL_D
         {
             _se.deleteSelectedComponentsWithUndo();
             return;
@@ -821,12 +821,12 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     }
 
-    // zur Modifikation der Titelleiste --> wenn Aenderungen noch nicht gespeichert wurden --> 
+    // for modification of the title bar --> when changes have not yet been saved -->
     public void modifiziereTitel() {
         this.setTitle(aktuellerDateiName + "*" + spTitleX + "GeckoCIRCUITS");
     }
 
-    // wird aufgerufen, nachdem die Fensterabmessungen bekannt sind:
+    // is called after the window dimensions are known:
     public void aktualisiereDividerSplitPane(int breiteFenster) {
         split.setDividerLocation(breiteFenster - seaBREITE);
     }
@@ -849,7 +849,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 GlobalFilePathes.RECENT_CIRCUITS_3 = GlobalFilePathes.RECENT_CIRCUITS_2;
                 GlobalFilePathes.RECENT_CIRCUITS_2 = GlobalFilePathes.RECENT_CIRCUITS_1;
                 GlobalFilePathes.RECENT_CIRCUITS_1 = datnam;
-            } else {  // voellig neuer Name
+            } else {  // completely new name
                 GlobalFilePathes.RECENT_CIRCUITS_4 = GlobalFilePathes.RECENT_CIRCUITS_3;
                 GlobalFilePathes.RECENT_CIRCUITS_3 = GlobalFilePathes.RECENT_CIRCUITS_2;
                 GlobalFilePathes.RECENT_CIRCUITS_2 = GlobalFilePathes.RECENT_CIRCUITS_1;
@@ -890,7 +890,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         rawSaveFile(new File(aktuellerDateiName));
 
         speicherVorgangLaeuft = false;
-        _se.resetModelModified();  // damit wird verhindert, dass 'QuitWithoutSaving'-Dialog aufgerufen wird, obwohl Datei bereits gespeichert
+        _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
 
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
         this.aktualisierePropertiesRECENT(aktuellerDateiName);
@@ -904,10 +904,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                     Fenster.optimizerParameterData,
                     uniqueFileID, _scripter, _fileManager, _se, _solverSettings);
             //------------
-            // Plain-Test Variante in ASCII -->
+            // Plain-Test variant in ASCII -->
             // BufferedWriter out= new BufferedWriter(new FileWriter(GlobalFilePathes.DATNAM));
             //
-            // Komprimierter Datenstrom --> reduzierte und unleserliche Datei -->
+            // Compressed data stream --> reduced and unreadable file -->
             // DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
             GZIPOutputStream out1 = new GZIPOutputStream(new FileOutputStream(file));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1));
@@ -935,7 +935,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         }
         speicherVorgangLaeuft = true;
         //----
-        // falls noch kein Datei-Name gewaehlt wurde -->
+        // if no file name has been selected yet -->
         if (aktuellerDateiName.equals(UNTITLED)) {
             GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".ipes", "Circuit Simulation Files (*.ipes)", this, null);
 
@@ -968,7 +968,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             rawSaveFile(new File(aktuellerDateiName));
             //------------
             speicherVorgangLaeuft = false;
-            _se.resetModelModified();  // damit wird verhindert, dass 'QuitWithoutSaving'-Dialog aufgerufen wird, obwohl Datei bereits gespeichert
+            _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
             //
         } catch (Exception e) {
             speicherVorgangLaeuft = false;
@@ -984,7 +984,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
         sea._typElement = null;
         _se.resetCircuitSheetsForNewFile();
-        _se.resetModelModified();  // damit wird verhindert, dass 'QuitWithoutSaving'-Dialog aufgerufen wird, obwohl Datei bereits gespeichert
+        _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
     }
 
     @Override
@@ -1016,7 +1016,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     }
 
     private void setAnsicht() {
-        // Ansicht-Menu entsprechend setzen
+        // set view menu accordingly
         vItemShowNameLK.setState(SchematischeEingabe2._lkDisplayMode.showName);
         vItemShowParLK.setState(SchematischeEingabe2._lkDisplayMode.showParameter);
         vItemShowTextLineLK.setState(SchematischeEingabe2._lkDisplayMode.showTextLine);
@@ -1059,7 +1059,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         }
 
         if (daten.fontSize == 0) {
-            daten.fontSize = 12;  // default, falls keine Daten vorhanden
+            daten.fontSize = 12;  // default, if no data available
         }
         if (daten._fontTyp == null) {
             daten._fontTyp = "Arial";
@@ -1091,7 +1091,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         }
 
         if (daten.fontSize == 0) {
-            daten.fontSize = 12;  // default, falls keine Daten vorhanden
+            daten.fontSize = 12;  // default, if no data available
         }
         if (daten._fontTyp == null) {
             daten._fontTyp = "Arial";
@@ -1148,7 +1148,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 if (Fenster.IS_APPLET) {
                     this.createNewFile();
                 } else {
-                    // 'createNewFile()' wird optional vom Dialog aus aufgerufen
+                    // 'createNewFile()' is optionally called from the dialog
                     if (_se.getZustandGeaendert()) {
 
                         int returnOption = JOptionPane.showConfirmDialog(
@@ -1565,7 +1565,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         _se._circuitSheet.requestFocus();
     }
 
-    // called from DialogNewWithoutSaving --> 
+    // called from DialogNewWithoutSaving -->
     public void loadFileFromList_withoutSaving(int nrOfFile) {
         try {
             switch (nrOfFile) {
@@ -1676,9 +1676,9 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     }
 
     /**
-     * Set up the simulation menu. this gets called both at initial gui
-     * generation, and at a provide license event. We look up the simulation
-     * menu item, and substitute it with a new JMenuItem created here.
+     * Set up the simulation menu. This gets called both at initial GUI
+     * generation and at a provide license event. We look up the simulation
+     * menu item and substitute it with a new JMenuItem created here.
      */
     public void setSimulationMenu() {
         JMenu simMenu = _menuBar.getMenu(_simMenuIndex);
@@ -1937,7 +1937,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         }
         speicherVorgangLaeuft = true;
         //----
-        // falls noch kein Datei-Name gewaehlt wurde -->
+        // if no file name has been selected yet -->
         if (aktuellerDateiName.equals(UNTITLED)) {
             saveFile();
         }
@@ -1949,10 +1949,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                     Fenster.optimizerParameterData,
                     0, _scripter, _fileManager, _se, _solverSettings);
             //------------
-            // Plain-Test Variante in ASCII -->
+            // Plain-Test variant in ASCII -->
             // BufferedWriter out= new BufferedWriter(new FileWriter(GlobalFilePathes.DATNAM));
             //
-            // Komprimierter Datenstrom --> reduzierte und unleserliche Datei -->
+            // Compressed data stream --> reduced and unreadable file -->
             datLK.saveAsApplet = true;
             GZIPOutputStream out1 = new GZIPOutputStream(fOut);
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1));
@@ -1963,7 +1963,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             out.close();
             //------------
             speicherVorgangLaeuft = false;
-            _se.resetModelModified();  // damit wird verhindert, dass 'QuitWithoutSaving'-Dialog aufgerufen wird, obwohl Datei bereits gespeichert
+            _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
             //
         } catch (Exception e) {
             speicherVorgangLaeuft = false;
@@ -2111,8 +2111,8 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         try {
             String dat = txt.substring(txt.lastIndexOf(System.getProperty("file.separator")) + 1);
             if (dat.length() + 5 > txtSpace) {
-                return dat;  // nur der Dateiname
-            }            // teilweise wird die Pfadangabe mitgegeben:
+                return dat;  // only the file name
+            }            // partially the path specification is included:
             int space = txtSpace - (dat.length() + 5);
             String erg = txt.substring(0, space) + " .. " + System.getProperty("file.separator") + " " + dat;
             return erg;
@@ -2124,7 +2124,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     private static String[] getLinesArrayFromIpesFile(String dateiName) {
         String[] lines = null;
         //----------
-        // GZIP-Format (March 2009) - ganz neu! --> 
+        // GZIP format (March 2009) - completely new! -->
         try {
             GZIPInputStream in1 = null;
             if (Fenster.IS_APPLET) {
@@ -2152,7 +2152,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } catch (Exception e) {
             System.out.println("openFile() - GZIP >> " + e);
             e.printStackTrace();
-            // neue Version 'gezipt' -->
+            // new version 'gzipped' -->
             try {
                 InflaterInputStream in1 = new InflaterInputStream(new FileInputStream(GlobalFilePathes.DATNAM));
                 BufferedReader in = new BufferedReader(new InputStreamReader(in1));
