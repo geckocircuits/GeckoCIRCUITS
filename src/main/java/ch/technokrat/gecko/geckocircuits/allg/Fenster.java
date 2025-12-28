@@ -1922,7 +1922,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 try {
                     final ZipFile zipSrc = new ZipFile(zipFile);
                     final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(newFile));
-                    final Enumeration srcEntries = zipSrc.entries();
+                    final Enumeration<? extends ZipEntry> srcEntries = zipSrc.entries();
 
                     int counter = 0;
                     while (srcEntries.hasMoreElements() && !progressMonitor.isCanceled()) {
@@ -1933,7 +1933,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                             setProgress(progress);
                         }
 
-                        ZipEntry entry = (ZipEntry) srcEntries.nextElement();
+                        ZipEntry entry = srcEntries.nextElement();
                         ZipEntry newEntry = new ZipEntry(entry.getName());
                         zos.putNextEntry(newEntry);
 
