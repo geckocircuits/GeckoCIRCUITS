@@ -2191,7 +2191,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             }
 
             BufferedReader in = new BufferedReader(new InputStreamReader(in1));
-            Vector datVec = new Vector();
+            Vector<String> datVec = new Vector<>();
             String z = null;
 
             while ((z = in.readLine()) != null) {
@@ -2200,13 +2200,12 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 //                }
                 datVec.addElement(z);
             }
-            long readFileEnd = System.currentTimeMillis();
 
             in.close();
 
             lines = new String[datVec.size()];
             for (int i1 = 0; i1 < datVec.size(); i1++) {
-                lines[i1] = (String) datVec.elementAt(i1);
+                lines[i1] = datVec.elementAt(i1);
             }
             
 
@@ -2218,7 +2217,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             try {
                 InflaterInputStream in1 = new InflaterInputStream(new FileInputStream(GlobalFilePathes.DATNAM));
                 BufferedReader in = new BufferedReader(new InputStreamReader(in1));
-                Vector datVec = new Vector();
+                Vector<String> datVec = new Vector<>();
                 String z = null;
                 while ((z = in.readLine()) != null) {
                     datVec.addElement(z);
@@ -2226,7 +2225,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 in.close();
                 lines = new String[datVec.size()];
                 for (int i1 = 0; i1 < datVec.size(); i1++) {
-                    lines[i1] = (String) datVec.elementAt(i1);
+                    lines[i1] = datVec.elementAt(i1);
                     //System.out.println("zeile[i1]= "+zeile[i1]);
                 }                
             } catch (Exception eGZIP) {
