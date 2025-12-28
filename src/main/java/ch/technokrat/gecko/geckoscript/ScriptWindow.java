@@ -174,7 +174,7 @@ public class ScriptWindow extends javax.swing.JFrame {
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListFunctions =         new javax.swing.JList() {
+        jListFunctions =         new javax.swing.JList<FunctionDescription>() {
 
             public String getToolTipText(MouseEvent e) {
                 int index = locationToIndex(e.getPoint());
@@ -586,9 +586,9 @@ public class ScriptWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonCompile;
     private javax.swing.JButton jButtonFunctionDetails1;
     private javax.swing.JButton jButtonRun;
-    private javax.swing.JComboBox jComboBoxCategory;
+    private javax.swing.JComboBox<MethodCategory> jComboBoxCategory;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JList jListFunctions;
+    private javax.swing.JList<FunctionDescription> jListFunctions;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
