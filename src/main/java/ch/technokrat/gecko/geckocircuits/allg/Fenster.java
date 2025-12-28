@@ -831,40 +831,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     }
 
-    private boolean ausserhalb(Point xy1, Point xy2, int worksheetGrenzeX, int worksheetGrenzeY) {
-        if (xy1.x > worksheetGrenzeX || xy1.y > worksheetGrenzeY) {
-            return true;
-        }
-        if (xy2.x > worksheetGrenzeX || xy2.y > worksheetGrenzeY) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean imNegativenBereich(Point[] xy1, Point[] xy2) {
-        for (int i2 = 0; i2 < xy1.length; i2++) {
-            if (xy1[i2].x < 0 || xy1[i2].y < 0) {
-                return true;
-            }
-        }
-        for (int i2 = 0; i2 < xy2.length; i2++) {
-            if (xy2[i2].x < 0 || xy2[i2].y < 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean imNegativenBereich(Point xy1, Point xy2) {
-        if (xy1.x < 0 || xy1.y < 0) {
-            return true;
-        }
-        if (xy2.x < 0 || xy2.y < 0) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * Verarbeitung derKeyEvents fuer DELETE, weil das scheinbar nicht mit den
      * Menu-Accelerators funktionert --> (Java-Bug??)
