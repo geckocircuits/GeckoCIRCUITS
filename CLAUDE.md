@@ -10,8 +10,7 @@ GeckoCIRCUITS is a fast circuit simulator optimized for power electronics applic
 
 ### Building the project
 ```bash
-mvn package
-mvn package assembly:single
+mvn clean package assembly:single
 ```
 
 This creates `target/gecko-1.0-jar-with-dependencies.jar` with all dependencies included.
@@ -22,6 +21,11 @@ mvn test
 ```
 
 Note: 11 tests are currently excluded due to Netbeans-specific environment requirements.
+
+### Quick build (skip tests)
+```bash
+mvn clean package assembly:single -DskipTests
+```
 
 ## Running the Application
 
@@ -47,8 +51,16 @@ java -jar gecko-1.0-jar-with-dependencies.jar -mm [filename] [filesize]
 
 ### Loading a circuit file
 ```bash
-java -jar gecko-1.0-jar-with-dependencies.jar path/to/file.ipes
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar path/to/file.ipes
 ```
+
+## VSCode Development
+
+The project includes VSCode configuration for easy development:
+- **Tasks**: Maven build and test tasks available via `Ctrl+Shift+B` or Task menu
+- **Launch**: Multiple run configurations (standard, HiDPI, with file, etc.)
+- **Terminal**: Git Bash is configured as the default terminal
+- See [.vscode/README.md](.vscode/README.md) for complete VSCode guide
 
 ## Architecture
 
@@ -104,18 +116,20 @@ GeckoCIRCUITS can be controlled from external tools (particularly MATLAB/Simulin
 ### Dependencies
 
 Key dependencies (see pom.xml):
-- GraalVM JavaScript engine (for scripting support, requires `-Dpolyglot.js.nashorn-compat=true`)
-- JTransforms (FFT operations)
-- Apache Batik (SVG generation)
-- SyntaxPane (code editor)
-- JNA (native access)
+- **GraalVM JavaScript engine** 23.1.0 (for scripting support, requires `-Dpolyglot.js.nashorn-compat=true`)
+- **JTransforms** 2.4 (FFT operations)
+- **Apache Batik** 1.7 (SVG generation)
+- **SyntaxPane** 1.2.0 (code editor)
+- **JNA** 5.14.0 (native access)
+- **Log4j** 1.2.17 (logging)
+- **JUnit** 4.12 (testing)
 
 ## Development Notes
 
 ### Java Version
-- Compiled for Java 8 (source/target 1.8)
-- Tested with JDK 9-13 according to README
-- Uses `tools.jar` for Java compilation features (JAVA-Function control block)
+- **Required: JDK 21** (project is compiled for Java 21)
+- Maven compiler configuration: source/target 21
+- GraalVM JavaScript engine for scripting support (requires `-Dpolyglot.js.nashorn-compat=true`)
 
 ### Property Files
 - Default properties: `/defaultProperties.prp` (in JAR)
@@ -149,9 +163,10 @@ The `resources/` directory contains extensive examples:
 - HiDPI support available via system property
 
 ### Testing
-- JUnit 4 tests in `src/test/`
+- JUnit 4.12 tests in `src/test/`
 - Some tests require specific Netbeans environment and are excluded
 - Test mode controlled by `GeckoSim._isTestingMode` flag
+- Run tests via VSCode task (`Ctrl+Shift+P` → "Run Test Task") or `mvn test`
 
 ### Licensing
 - GPLv3 for open source use
