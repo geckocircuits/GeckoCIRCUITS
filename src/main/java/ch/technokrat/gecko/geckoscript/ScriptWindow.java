@@ -74,10 +74,10 @@ public class ScriptWindow extends javax.swing.JFrame {
         _circuit = circuitSim;
         _nameGenerator = new Random((new Date()).getTime());
         initComponents();
-        _listModel = new DefaultListModel();
+        _listModel = new DefaultListModel<>();
         jListFunctions.setModel(_listModel);
         _outputStream = new PrintStream(new TextAreaOutputStream(jTextAreaOutput));
-        _categoryModel = new DefaultComboBoxModel();
+        _categoryModel = new DefaultComboBoxModel<>();
         for (MethodCategory cat : MethodCategory.values()) {
             _categoryModel.addElement(cat);
         }
