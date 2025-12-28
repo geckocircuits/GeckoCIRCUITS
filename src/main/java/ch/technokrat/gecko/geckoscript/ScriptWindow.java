@@ -191,7 +191,7 @@ public class ScriptWindow extends javax.swing.JFrame {
                 return null;
             }
         };
-        jComboBoxCategory = new javax.swing.JComboBox();
+        jComboBoxCategory = new javax.swing.JComboBox<>();
         jSplitPane3 = new javax.swing.JSplitPane();
         jPanel4 = new javax.swing.JPanel();
         jPanelImports = new javax.swing.JPanel();
