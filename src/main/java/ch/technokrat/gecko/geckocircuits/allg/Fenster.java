@@ -939,7 +939,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         try {
             DatenSpeicher datLK = new DatenSpeicher(
                     getSize(),
-                    this.optimizerParameterData,
+                    Fenster.optimizerParameterData,
                     uniqueFileID, _scripter, _fileManager, _se, _solverSettings);
             //------------
             // Plain-Test Variante in ASCII -->
@@ -2003,7 +2003,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
             DatenSpeicher datLK = new DatenSpeicher(
                     this.getSize(),
-                    this.optimizerParameterData,
+                    Fenster.optimizerParameterData,
                     0, _scripter, _fileManager, _se, _solverSettings);
             //------------
             // Plain-Test Variante in ASCII -->
