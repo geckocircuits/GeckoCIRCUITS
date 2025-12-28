@@ -666,13 +666,13 @@ public class ScriptWindow extends javax.swing.JFrame {
 
     private void loadFunctionInfosIntoList() {
         _listModel.clear();
-        Class RemoteClass = AbstractGeckoCustom.class;
+        Class<?> RemoteClass = AbstractGeckoCustom.class;
 
         for (Method method : RemoteClass.getMethods()) {
             doFilterListMethod(method);
         }
 
-        Class RemoteClass2 = GeckoRemoteInterface.class;
+        Class<?> RemoteClass2 = GeckoRemoteInterface.class;
         for (Method method : RemoteClass2.getMethods()) {
             doFilterListMethod(method);
         }
