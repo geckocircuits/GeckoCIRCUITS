@@ -1070,7 +1070,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     public void openFile(BufferedReader in) throws IOException {
         _se.resetCircuitSheetsForNewFile();
-        Vector datVec = new Vector();
+        Vector<String> datVec = new Vector<>();
         String z = null;
         while ((z = in.readLine()) != null) {
             datVec.addElement(z);
@@ -1078,7 +1078,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         in.close();
         String[] zeile = new String[datVec.size()];
         for (int i1 = 0; i1 < datVec.size(); i1++) {
-            zeile[i1] = (String) datVec.elementAt(i1);
+            zeile[i1] = datVec.elementAt(i1);
             //System.out.println("zeile[i1]= "+zeile[i1]);
         }
 
