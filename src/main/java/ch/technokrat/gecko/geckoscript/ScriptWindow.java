@@ -61,8 +61,8 @@ public class ScriptWindow extends javax.swing.JFrame {
     final JEditorPane _sourceCodeCompilerTextArea;
     final JEditorPane _compMessagesTextArea;
     String compilerMessages = "";
-    final DefaultListModel _listModel;
-    final DefaultComboBoxModel _categoryModel;
+    final DefaultListModel<FunctionDescription> _listModel;
+    final DefaultComboBoxModel<MethodCategory> _categoryModel;
     final PrintStream _outputStream;        
     
 
