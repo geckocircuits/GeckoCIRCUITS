@@ -530,9 +530,22 @@ public class ScriptWindow extends javax.swing.JFrame {
             public void run() {
                 jButtonRun.setEnabled(false);
                 jButtonAbort.setEnabled(true);
-                runCode();
-                jButtonRun.setEnabled(true);
-                jButtonAbort.setEnabled(false);
+                try {
+                    runCode();
+                } catch (Exception e) {
+                    if (Thread.currentThread().isInterrupted()) {
+                        _outputStream.append("\nScript execution was aborted.\n");
+                    } else {
+                        Throwable toPrint = e;
+                        if (e.getCause() != null) {
+                            toPrint = e.getCause();
+                        }
+                        _outputStream.append("\n\t" + toPrint.getMessage() + "\n");
+                    }
+                } finally {
+                    jButtonRun.setEnabled(true);
+                    jButtonAbort.setEnabled(false);
+                }
             }
         };
 
@@ -554,7 +567,7 @@ public class ScriptWindow extends javax.swing.JFrame {
 
     private void jButtonAbortActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAbortActionPerformed
         if (computationThread != null && computationThread.isAlive()) {
-            computationThread.stop();
+            computationThread.interrupt();
         }
     }//GEN-LAST:event_jButtonAbortActionPerformed
 
