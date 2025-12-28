@@ -37,9 +37,6 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,7 +83,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     private static final String UNTITLED = "Untitled";  // wird in der Fenster-Leiste angezeigt, wenn eine neue Datei gestartet wird
     public static String aktuellerDateiName = UNTITLED;  // ohne Pfadangabe! - nur zur Anzeige in der Fensterleiste (so wie bei Windows ueblich)
     //--------------------------------------
-    //
     private JSplitPane split;
     public static int seaBREITE = 110;  // Breite der 'SchematischeEingabeAuswahl2()'-Komponente am rechten Rand
     public JCheckBoxMenuItem vItemShowParLK, vItemShowFlowLK, vItemShowNameLK, vItemShowTextLineLK;
@@ -100,8 +96,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     private JMenuItem mItemRECENT_1, mItemRECENT_2, mItemRECENT_3, mItemRECENT_4;
     private JMenuItem mItemUndo, mItemRedo, mItemCopy, mItemMove, mItemDelete, mItemEscape, mItemSelectAll, mItemDisable, mItemDisableShort;
     private JMenuItem mItemParameter, mItemRun, mItemStop, mItemContinue;
-    //private JMenuItem mItemGoSteadyState, mItemSaveState, mItemLoadState, mItemResetState, mItemClearStates;
-    //--------------------------------------    
     //--------------------------------------
     final GeckoStatusBar jtfStatus = new GeckoStatusBar("Ready ...", this);  // Status-Anzeige der Schaltungs-Simulation
     public static final int RECENT_FILE_SPACE = -1;
@@ -179,13 +173,8 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     public Fenster() {
 
-//        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-//            System.out.println("look and feel: " + info.getClassName());
-//        }
-
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (InstantiationException ex) {
             Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
@@ -194,14 +183,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
         }
-
-        /*
-         * try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (ClassNotFoundException ex) {
-         * Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex); } catch (InstantiationException ex) {
-         * Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex); } catch (IllegalAccessException ex) {
-         * Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex); } catch (UnsupportedLookAndFeelException ex) {
-         * Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex); }
-         */
         try {
             java.net.URI iconUri = GlobalFilePathes.PFAD_PICS_URL.toURI().resolve("gecko.gif");
             this.setIconImage((new ImageIcon(iconUri.toURL())).getImage());
@@ -232,9 +213,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         sea = new SchematischeEingabeAuswahl2();
         _se.setSchematischeEingabeAuswahl(sea);
         sea.anmeldenSchematischeEingabe(_se);
-        //sea.setEnabledAt(1, false);                                 
-        //---------------------------------
-        //this.baueGUI();
         baueGUI();
 
         Timer timer = new Timer();
@@ -384,7 +362,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemDisableShort = GuiFabric.getJMenuItem(I18nKeys.SHORT_CIRCUIT_COMPONENT);
         mItemDisableShort.setActionCommand("DisableShort");
         mItemDisableShort.addActionListener(this);
-        //mItemDisableShort.setMnemonic(KeyEvent.VK_ALT);
 
         mItemImport = GuiFabric.getJMenuItem(I18nKeys.IMPORT);
         mItemImport.setActionCommand("Import");
@@ -658,7 +635,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemConnectorTest.addActionListener(this);
         mItemConnectorTest.setActionCommand("mItemConnectorTest");
         mItemConnectorTest.setSelected(false);
-        //mItemConnectorTest.setForeground(GlobalColors.farbeConnectorTestMode);
 
         //
         mItemSetPar = GuiFabric.getJMenuItem(I18nKeys.SET_PARAMETERS);
@@ -688,18 +664,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemCheckModel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
         toolsMenu.addSeparator();
         toolsMenu.add(mItemSetPar);
-        //toolsMenu.add(mItemSetOrder);
         toolsMenu.addSeparator();
         toolsMenu.add(mItemMemorySettings);
         toolsMenu.add(mItemUpdateSettings);
         toolsMenu.add(mItemRemoteSettings);
-        //
-        //toolsMenu.add(mItem3DElectromag);
-        //mItem3DElectromag.setEnabled(false);
-        //toolsMenu.add(mItemOptimize);
-        //mItemOptimize.setEnabled(false);
-        // 
-        //toolsMenu.add(mItemTest);
         JMenu helpMenu = GuiFabric.getJMenu(I18nKeys.HELP);
 
         JMenuItem mItemAbout = GuiFabric.getJMenuItem(I18nKeys.ABOUT);
@@ -787,7 +755,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         _menuBar.add(editMenu);
         JMenu simMenu = GuiFabric.getJMenu(I18nKeys.SIMULATION);
         _menuBar.add(simMenu);
-        //_menuBar.add(simMenu);
         _menuBar.add(viewMenu);
         _menuBar.add(toolsMenu);
         _menuBar.add(helpMenu);
@@ -836,7 +803,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
      * Menu-Accelerators funktionert --> (Java-Bug??)
      */
     private void processKeyEvents(KeyEvent ke) {
-        //System.out.println((int)ke.getKeyChar()+"\t"+ke.getKeyText(ke.getKeyCode())+"\t"+ke.getKeyCode()+"\n"+ke); 
         if ((ke.getKeyChar() == KeyEvent.VK_DELETE) || (ke.getKeyCode() == KeyEvent.VK_DELETE) || (ke.getKeyChar() == KeyEvent.VK_BACK_SPACE) || (ke.getKeyChar() == 4)) // '4' entspricht CONTROL_D
         {
             _se.deleteSelectedComponentsWithUndo();
@@ -853,10 +819,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
         }
 
-        /*
-         * else if ((ke.getKeyCode()==0)&&((int)ke.getKeyChar()==3)) // entspricht CONTROL_C
-         * se.kopiereAllesImBearbeitungsModus();
-         */
     }
 
     // zur Modifikation der Titelleiste --> wenn Aenderungen noch nicht gespeichert wurden --> 
@@ -1171,8 +1133,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } else {
             System.out.println("Warning: Check for auto-backup file disabled!");
         }
-        //long toc = System.currentTimeMillis();
-        //System.out.println("loading time: " + (toc - tic) / 1000.0);        
     }
 
     public void actionPerformed(ActionEvent ae) {
@@ -1596,7 +1556,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         DialogSimParameter dialogSim = new DialogSimParameter(parent, _solverSettings);
         dialogSim.setLocationRelativeTo(parent);
         dialogSim.setVisible(true);
-        //_se._circuitSheet.requestFocus();
     }
 
     private void doAboutDialog() {
@@ -1684,11 +1643,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             if (mItemParameter != null) {
                 mItemParameter.setEnabled(false);
                 mItemRun.setEnabled(false);
-                //mItemGoSteadyState.setEnabled(false);
-                //mItemSaveState.setEnabled(false);
-                //mItemLoadState.setEnabled(false);
-                //mItemResetState.setEnabled(false);
-                //mItemClearStates.setEnabled(false);
                 mItemStop.setEnabled(true);
                 mItemContinue.setEnabled(false);
             }
@@ -1707,9 +1661,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 mItemSaveApplet.setEnabled(true);
             }
 
-            /*
-             * mItemUndo.setEnabled(true); mItemRedo.setEnabled(true);
-             */
             mItemCopy.setEnabled(true);
             mItemMove.setEnabled(true);
             mItemDelete.setEnabled(true);
@@ -1771,17 +1722,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemStop.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
         simMenu.add(mItemContinue);
         mItemContinue.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0));
-        //simMenu.addSeparator();
-        //simMenu.add(mItemGoSteadyState);
-        //simMenu.add(mItemLoadState);
-        //simMenu.add(mItemSaveState);
-        //simMenu.add(mItemResetState);
-        //simMenu.add(mItemClearStates);
         if (GeckoSim.operatingmode == OperatingMode.SIMULINK) {
             mItemRun.setEnabled(false);
             mItemStop.setEnabled(false);
             mItemContinue.setEnabled(false);
-            //mItemGoSteadyState.setEnabled(false);
         }
     }
 
@@ -2009,7 +1953,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             // BufferedWriter out= new BufferedWriter(new FileWriter(GlobalFilePathes.DATNAM));
             //
             // Komprimierter Datenstrom --> reduzierte und unleserliche Datei -->
-//            DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
             datLK.saveAsApplet = true;
             GZIPOutputStream out1 = new GZIPOutputStream(fOut);
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1));
@@ -2195,9 +2138,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             String z = null;
 
             while ((z = in.readLine()) != null) {
-//                if(!isAutoBackupFile) {
-//                    System.out.println(z);
-//                }
                 datVec.addElement(z);
             }
 
@@ -2212,7 +2152,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } catch (Exception e) {
             System.out.println("openFile() - GZIP >> " + e);
             e.printStackTrace();
-            //----------
             // neue Version 'gezipt' -->
             try {
                 InflaterInputStream in1 = new InflaterInputStream(new FileInputStream(GlobalFilePathes.DATNAM));
