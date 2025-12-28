@@ -1550,7 +1550,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 NetzlisteAllg nlA = NetzlisteAllg.fabricNetzlistComplete(_se.getConnection(ConnectorType.CONTROL), _se.getElementCONTROL());
                 new DialogControlCheck(this, true, NetzlisteCONTROL.FabricRunSimulation(nlA)).setVisible(true);
             } else if (befehl.equals("memorySettings")) {
-                DialogMemory dm = new DialogMemory();
+                new DialogMemory();
 
             } else if (befehl.equals("updateSettings")) {
                 DialogUpdateSettings du = new DialogUpdateSettings();
