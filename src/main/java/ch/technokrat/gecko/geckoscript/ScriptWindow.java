@@ -626,12 +626,8 @@ public class ScriptWindow extends javax.swing.JFrame {
             try {
                 _scriptObject.runScript();
             } catch (Throwable e) {
-                Throwable toPrint = e;
-                if (e.getCause() != null) {
-                    toPrint = e.getCause();
-                }
                 System.err.println("\t" + e);
-                // this is UGLY: we need a newline at the end, otherwise the output is not written!                
+                // this is UGLY: we need a newline at the end, otherwise the output is not written!
                 _outputStream.append("\n\t" + e.getMessage() + "\n");
                 for (StackTraceElement ste : e.getStackTrace()) {
                     _outputStream.append(ste + "\n\t");
