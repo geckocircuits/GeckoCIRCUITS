@@ -25,7 +25,6 @@ import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -440,7 +439,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK));
 
         mItemDisable.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK));
-        mItemDisableShort.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.ALT_MASK));
+        mItemDisableShort.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.ALT_DOWN_MASK));
 
         editMenu.add(mItemDisable);
         editMenu.add(mItemDisableShort);
