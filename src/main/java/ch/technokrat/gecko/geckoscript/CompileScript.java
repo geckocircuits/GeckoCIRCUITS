@@ -127,7 +127,7 @@ public class CompileScript {
             }
             sw.addSourceLine("");
             if (sw._advancedOption) {
-                sw.addSourceLine("    public " + sw._className + "(SimulationAccess simaccess, JTextArea outputArea, HashMap element_map) {");
+                sw.addSourceLine("    public " + sw._className + "(SimulationAccess simaccess, JTextArea outputArea, HashMap<String, Object> element_map) {");
             } else {
                 sw.addSourceLine("    public " + sw._className + "(SimulationAccess simaccess, JTextArea outputArea) {");
             }

@@ -49,7 +49,7 @@ public class ScriptWindow extends javax.swing.JFrame {
     String _advancedVariables = "";
     String _advancedConstructor = "";
     boolean _advancedOption = false;
-    HashMap _advancedObjects;
+    HashMap<String, Object> _advancedObjects;
 
     String _compileSourceCode = "";
     String _workingDirectory;
