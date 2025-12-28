@@ -905,8 +905,6 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         GeckoSim.applicationProps.setProperty("RECENT_CIRCUITS_2", GlobalFilePathes.RECENT_CIRCUITS_2);
         GeckoSim.applicationProps.setProperty("RECENT_CIRCUITS_3", GlobalFilePathes.RECENT_CIRCUITS_3);
         GeckoSim.applicationProps.setProperty("RECENT_CIRCUITS_4", GlobalFilePathes.RECENT_CIRCUITS_4);
-
-        DateFormat dFormat = new SimpleDateFormat("yyyy.MM.dd");
     }
 
     public void saveFileAs() {
