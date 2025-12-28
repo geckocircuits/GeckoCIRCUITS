@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.ExternalGeckoCustom;
 import ch.technokrat.gecko.GeckoCustomMMF;
-import ch.technokrat.gecko.GeckoExternal;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.*;
@@ -30,6 +29,7 @@ import java.awt.Event;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
@@ -85,11 +85,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     public static final boolean INCLUDE_GeckoMAGNETICS = false;
     public static final boolean INCLUDE_GeckoHEAT = false;
     public static final boolean INCLUDE_GeckoEMC = false;
-    private static final String UNTITLED = "Untitled";  // wird in der Fenster-Leiste angezeigt, wenn eine neue Datei gestartet wird 
+    private static final String UNTITLED = "Untitled";  // wird in der Fenster-Leiste angezeigt, wenn eine neue Datei gestartet wird
     public static String aktuellerDateiName = UNTITLED;  // ohne Pfadangabe! - nur zur Anzeige in der Fensterleiste (so wie bei Windows ueblich)
-    private String dateiEndung = "ipes";
     //--------------------------------------
-    // 
+    //
     private JSplitPane split;
     public static int seaBREITE = 110;  // Breite der 'SchematischeEingabeAuswahl2()'-Komponente am rechten Rand
     public JCheckBoxMenuItem vItemShowParLK, vItemShowFlowLK, vItemShowNameLK, vItemShowTextLineLK;
@@ -206,7 +205,8 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
          * Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex); }
          */
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            java.net.URI iconUri = GlobalFilePathes.PFAD_PICS_URL.toURI().resolve("gecko.gif");
+            this.setIconImage((new ImageIcon(iconUri.toURL())).getImage());
         } catch (Exception e) {
         }
 
@@ -319,11 +319,11 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         }
         // 
         fileMenu.add(mItemNew);
-        mItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
+        mItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         fileMenu.add(mItemOpen);
-        mItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
+        mItemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
         fileMenu.add(mItemSave);
-        mItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+        mItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
         fileMenu.add(mItemSaveAs);
         fileMenu.add(mItemSaveApplet);
         fileMenu.add(mItemSaveView);
@@ -426,21 +426,21 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
             }
         });
-        mItemRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK));
-        mItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK));
+        mItemRedo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, InputEvent.CTRL_MASK));
+        mItemUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
         editMenu.addSeparator();
         editMenu.add(mItemMove);
-        mItemMove.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK));
+        mItemMove.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_MASK));
         editMenu.add(mItemCopy);
-        mItemCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
+        mItemCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK));
         editMenu.add(mItemDelete);    //mItemDelete.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
         editMenu.add(mItemEscape);
         mItemEscape.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 
         editMenu.add(mItemSelectAll);
-        mItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
+        mItemSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
 
-        mItemDisable.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.CTRL_MASK));
+        mItemDisable.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK));
         mItemDisableShort.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, Event.ALT_MASK));
 
         editMenu.add(mItemDisable);
@@ -680,14 +680,14 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemFindString.setActionCommand("mItemFind");
         mItemFindString.addActionListener(this);
         mItemFindString.setMnemonic(KeyEvent.VK_F);
-        mItemFindString.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.CTRL_MASK));
+        mItemFindString.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
 
         //
         toolsMenu.add(mItemConnectorTest);
-        mItemConnectorTest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, Event.CTRL_MASK));
+        mItemConnectorTest.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_MASK));
         toolsMenu.add(mItemCheckModel);
         toolsMenu.add(mItemFindString);
-        mItemCheckModel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Event.CTRL_MASK));
+        mItemCheckModel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
         toolsMenu.addSeparator();
         toolsMenu.add(mItemSetPar);
         //toolsMenu.add(mItemSetOrder);
