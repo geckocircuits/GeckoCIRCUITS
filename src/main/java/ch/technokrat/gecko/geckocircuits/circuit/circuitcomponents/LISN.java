@@ -242,7 +242,6 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
         restoreOrigTransformation(graphics);
-        int x = getSheetPosition().x;
         int y = getSheetPosition().y;
 
         int x1 = XIN.get(0).getPosition().x;
@@ -289,7 +288,7 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     protected void drawForeground(final Graphics2D graphics) {
         graphics.drawRect((int) (-dpix * 2.5), (int) (-dpix * 1.5), (int) (dpix * 4.0), (int) (dpix * 4.0));
         restoreOrigTransformation(graphics);
-        //g.drawString("LISN", (int)(dpix*x)-10, (int)(dpix*(y-0.0))); 
+        //g.drawString("LISN", (int)(dpix*x)-10, (int)(dpix*(y-0.0)));
         graphics.setColor(Color.magenta);
         int x = getSheetPosition().x;
         int y = getSheetPosition().y;
@@ -297,17 +296,10 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         int x1 = XIN.get(0).getPosition().x;
         int y1 = XIN.get(0).getPosition().y;
         int x2 = XIN.get(1).getPosition().x;
-        int y2 = XIN.get(1).getPosition().y;        
+        int y2 = XIN.get(1).getPosition().y;
         int x3 = XIN.get(2).getPosition().x;
         int y3 = XIN.get(2).getPosition().y;
-        
-        int x4 = YOUT.get(0).getPosition().x;
-        int y4 = YOUT.get(0).getPosition().y;
-        int x5 = YOUT.get(1).getPosition().x;
-        int y5 = YOUT.get(1).getPosition().y;
-        int x6 = YOUT.get(2).getPosition().x;
-        int y6 = YOUT.get(2).getPosition().y;
-        
+
         int x7 = YOUT.get(3).getPosition().x;
         int y7 = YOUT.get(3).getPosition().y;
         int x8 = YOUT.get(4).getPosition().x;
@@ -316,7 +308,7 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         int y9 = YOUT.get(5).getPosition().y;
         int x10 = YOUT.get(6).getPosition().x;
         int y10 = YOUT.get(6).getPosition().y;
-        
+
         graphics.drawString("R", (int) (dpix * (x - 2.5)) + 2, (int) (dpix * y1) + 5);
         graphics.drawString("S", (int) (dpix * (x - 2.5)) + 2, (int) (dpix * y2) + 5);
         graphics.drawString("T", (int) (dpix * (x - 2.5)) + 2, (int) (dpix * y3) + 5);
