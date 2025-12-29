@@ -28,7 +28,6 @@ import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.SpecialNameVisible;
 import ch.technokrat.gecko.geckocircuits.control.VariableTerminalNumber;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time;
 import ch.technokrat.gecko.geckocircuits.control.javablock.ReglerJavaTriangles;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
