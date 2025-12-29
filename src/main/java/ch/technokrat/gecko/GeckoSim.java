@@ -341,7 +341,7 @@ public class GeckoSim extends JApplet {
         // Find out if it is Applet or SimulinkObject:
         // Only if parameters are available (from HTML) it is supposed to be Applet
         try {
-            int anz = Integer.parseInt(this.getParameter("nrExample"));  // throws exception if not Applet
+            Integer.parseInt(this.getParameter("nrExample"));  // throws exception if not Applet
             Fenster.IS_APPLET = true;
 
         } catch (Exception e) {
