@@ -220,9 +220,8 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         }
                 
         final TokenMap tokenMap = new TokenMap(ascii);
-        StringTokenizer stk = null;
         //------------------
-        
+
         _messkurvePvCOND.clear();
         //------------------        
         boolean needClearSwitchCurves = true;        
