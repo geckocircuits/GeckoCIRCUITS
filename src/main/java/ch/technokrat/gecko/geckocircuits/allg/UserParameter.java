@@ -643,38 +643,38 @@ public final class UserParameter<T> {
             _initialValue = initialValue;
         }
 
-        public UserParameter.Builder showWhenEnumValueIsSet(UserParameter<? extends Enum> enumParameter, Enum enumValue) {
+        public Builder<T> showWhenEnumValueIsSet(UserParameter<? extends Enum> enumParameter, Enum enumValue) {
             _enumConditionParameter = enumParameter;
             _enumConditionValue = enumValue;
             return this;
         }
-        
-        public UserParameter.Builder showInTextInfo(final TextInfoType textInfoType) {
+
+        public Builder<T> showInTextInfo(final TextInfoType textInfoType) {
             _textInfoType = textInfoType;
             return this;
         }
 
-        public UserParameter.Builder unit(final String... units) {
+        public Builder<T> unit(final String... units) {
             assert units.length > 0;
             Collections.addAll(_units, units);
             return this;
         }
 
-        public UserParameter.Builder arrayIndex(final AbstractBlockInterface parameterBlock, final int index) {
+        public Builder<T> arrayIndex(final AbstractBlockInterface parameterBlock, final int index) {
             _index = index;
             _paramterableObject = parameterBlock;
             return this;
         }
 
-        public UserParameter.Builder longName(final I18nKeys name, final I18nKeys... additionalNames) {
+        public Builder<T> longName(final I18nKeys name, final I18nKeys... additionalNames) {
             _longNames.add(name.getTranslation());
             for(I18nKeys additionalName : additionalNames) {
                 _longNames.add(additionalName.getTranslation());
-            }            
+            }
             return this;
         }
 
-        public UserParameter.Builder shortName(final String... shortNames) {
+        public Builder<T> shortName(final String... shortNames) {
             assert shortNames.length > 0;
             Collections.addAll(_shortNames, shortNames);
             return this;
@@ -687,12 +687,12 @@ public final class UserParameter<T> {
          * @param additionalAlternativeNames
          * @return 
          */
-        public UserParameter.Builder addAlternativeShortName(final String... additionalAlternativeNames) {            
+        public Builder<T> addAlternativeShortName(final String... additionalAlternativeNames) {
             Collections.addAll(_alternativeShortNames, additionalAlternativeNames);
             return this;
         }
 
-        public UserParameter.Builder mapDomains(final ConnectorType... connectorTypes) {
+        public Builder<T> mapDomains(final ConnectorType... connectorTypes) {
             assert connectorTypes.length > 0;
             this._connectorTypeMap = new ArrayList<ConnectorType>();            
             Collections.addAll(_connectorTypeMap, connectorTypes);
