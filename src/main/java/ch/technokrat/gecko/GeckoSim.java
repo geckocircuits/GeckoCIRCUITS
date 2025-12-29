@@ -40,7 +40,22 @@ import javax.swing.JApplet;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-@SuppressWarnings({"deprecation", "removal"})
+/**
+ * Main GeckoCIRCUITS simulation class.
+ *
+ * This class extends JApplet to maintain backward compatibility with legacy
+ * applet deployments. The JApplet API is deprecated since modern browsers
+ * no longer support Java applets, but we keep this for:
+ * - Older systems that still use applet mode
+ * - Legacy integration with external tools
+ * - Historical circuit files that expect applet behavior
+ *
+ * For modern deployments, the application runs in standalone mode via main().
+ *
+ * Note: We suppress deprecation warnings because maintaining legacy applet
+ * support is intentional for backward compatibility, not an oversight.
+ */
+@SuppressWarnings("removal")  // JApplet is deprecated but we maintain it for legacy compatibility
 public class GeckoSim extends JApplet {
 
     public static long startTime;
