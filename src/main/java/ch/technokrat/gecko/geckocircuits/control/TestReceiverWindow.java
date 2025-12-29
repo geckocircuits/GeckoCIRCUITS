@@ -18,7 +18,6 @@ import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
-import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerFourier;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerCompressable;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.AbstractScopeSignal;

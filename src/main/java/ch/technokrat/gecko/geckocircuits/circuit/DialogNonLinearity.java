@@ -20,11 +20,8 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
-import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
-import ch.technokrat.gecko.geckocircuits.newscope.GraferV4;
-import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
 import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
 
 import java.net.URL;
