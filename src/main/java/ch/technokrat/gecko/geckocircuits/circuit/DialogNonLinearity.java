@@ -28,7 +28,6 @@ import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
 import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
 
 import ch.technokrat.gecko.i18n.GuiFabric;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.net.URL;
 import java.awt.BorderLayout;
 import java.awt.Container;

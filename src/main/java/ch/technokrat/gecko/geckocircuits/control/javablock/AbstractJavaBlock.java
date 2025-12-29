@@ -19,7 +19,6 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;

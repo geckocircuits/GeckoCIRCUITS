@@ -27,7 +27,6 @@ import ch.technokrat.gecko.i18n.resources.EnglishMapper;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.Locale;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 
 public class LangInit extends javax.swing.JDialog implements PropertyChangeListener {
 

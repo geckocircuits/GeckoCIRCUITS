@@ -30,7 +30,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public abstract class RegelBlock extends AbstractBlockInterface implements Serializable {
 

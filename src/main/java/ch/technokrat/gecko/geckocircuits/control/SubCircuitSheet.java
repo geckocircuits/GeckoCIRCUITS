@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TerminalCircuit;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.DialogSubCktSettings;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
