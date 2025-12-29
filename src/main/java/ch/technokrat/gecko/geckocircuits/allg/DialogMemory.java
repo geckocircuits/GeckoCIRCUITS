@@ -60,7 +60,6 @@ public class DialogMemory extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jButton1 = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
@@ -70,7 +69,7 @@ public class DialogMemory extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabelFree = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jComboBoxLossy = new javax.swing.JComboBox();
+        jComboBoxLossy = new javax.swing.JComboBox<String>();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
@@ -141,7 +140,7 @@ public class DialogMemory extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Scope memory handling"));
 
         jComboBoxLossy.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jComboBoxLossy.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No loss", "Low", "Medium", "High" }));
+        jComboBoxLossy.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "No loss", "Low", "Medium", "High" }));
         jComboBoxLossy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxLossyActionPerformed(evt);
@@ -322,9 +321,8 @@ public class DialogMemory extends javax.swing.JFrame {
         DataJunkCompressable.setPrecisionField(DataJunkCompressable.PRECISIONS[jComboBoxLossy.getSelectedIndex()]);
     }//GEN-LAST:event_jComboBoxLossyActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBoxLossy;
+    private javax.swing.JComboBox<String> jComboBoxLossy;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
