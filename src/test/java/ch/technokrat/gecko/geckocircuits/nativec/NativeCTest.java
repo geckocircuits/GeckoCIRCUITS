@@ -17,7 +17,6 @@ package ch.technokrat.gecko.geckocircuits.nativec;
 import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.Before;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.Ignore;
