@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.Rule;
 import org.junit.Ignore;
 import org.junit.rules.ExpectedException;
+import org.junit.Assert;
 
 
 /**
