@@ -20,27 +20,14 @@ import java.io.Serializable;
 
 public class TechFormat implements Serializable {
 
-    //------------------------------
-    /*
-    public static final String FORMAT_SCIENCE_K1= "#.#E0";
-    public static final String FORMAT_SCIENCE_K2= "#.##E0";
-    public static final String FORMAT_SCIENCE_K3= "#.###E0";
-    public static final String FORMAT_ENG_K1= "###.#E0";
-    public static final String FORMAT_ENG_K2= "###.##E0";
-    public static final String FORMAT_ENG_K3= "###.###E0";
-    public static final String FORMAT_NOEXP_K0= "#.";
-    public static final String FORMAT_NOEXP_K1= "#.#";
-    public static final String FORMAT_NOEXP_K2= "#.##";
-    public static final String FORMAT_NOEXP_K3= "#.###";
-     */
-    public static final String FORMAT_AUTO = "AUTO";  // automatische Anpassung an die Groesse der zu formatierenden Zahl
+    public static final String FORMAT_AUTO = "AUTO";  // automatic adjustment to the size of the number to format
     //
     private int anzDigits = 4;  // default
     //
     private DecimalFormat df;
     //------------------------------
-    private String[] abk = new String[]{"p", "n", "u", "m", "k", "M"};  // moegliche technische "Zahlen"eingaben
-    private int[] hoch = new int[]{-12, -9, -6, -3, +3, +6};   // zugehoerige Exponenten
+    private String[] abk = new String[]{"p", "n", "u", "m", "k", "M"};  // possible technical number inputs
+    private int[] hoch = new int[]{-12, -9, -6, -3, +3, +6};   // corresponding exponents
     //------------------------------
     private static final double ln10 = Math.log(10);
     private static final double DUMMY = -1.111222333444555e-77;
@@ -48,16 +35,12 @@ public class TechFormat implements Serializable {
 
     public TechFormat() {
         df = (DecimalFormat) (NumberFormat.getNumberInstance(Locale.of("en", "US")));
-        //this.testAusgabe2();
     }
 
     public void setMaximumDigits(int anzDigits) {
         this.anzDigits = anzDigits;
     }
-    private double xfmax = 0, fmax = 0;  // zum Testen des Algorithmus in formatENG()
-
-
-
+    private double xfmax = 0, fmax = 0;   // for testing the algorithm in formatENG()
 
     public String formatENG(double x, int anzDigits) {
             
@@ -83,16 +66,16 @@ public class TechFormat implements Serializable {
                 anz3erPakete++;
             }
         }
-        int z1 = (int) z;  // vor der Kommastelle
+        int z1 = (int) z;  // before the decimal point
         double hz = this.exp10(anzDigits);
-        int z2 = (int) Math.round((z - z1) * hz);  // nach der Kommastelle
+        int z2 = (int) Math.round((z - z1) * hz);  // after the decimal point
         if (z2 / hz == 1) {
             z1 += 1;
             z2 = 0;
-        }  // numerischer Ueberlauf
+        }  // numeric overflow
         int anzVorgestellteNullen = anzDigits - (int) (Math.log(z2) / ln10) - 1;
         if (z2 == 1000) {
-            anzVorgestellteNullen--;  // notwendige Korrektur wegen Rundungsfehler bei  Math.log(z2)/ln10
+            anzVorgestellteNullen--;  // necessary correction due to rounding errors in Math.log(z2)/ln10
         }
         if (z2 == 0) {
             anzVorgestellteNullen = anzDigits;
@@ -129,54 +112,39 @@ public class TechFormat implements Serializable {
             fmax = Math.abs(fehler);
             xfmax = x;
         }
-        //System.out.println("x="+x+"    anzDigits="+anzDigits+"    --> "+erg+"     "+fehler+"%");
         return erg.toString();
     }
 
-    // (1) Zahl (double) wird in einen String zur GUI-Ausgabe umgewandelt
+    // (1) Number (double) is converted to a string for GUI output
     //
     public String formatT(double x, String pattern) {
         if (pattern.equals(TechFormat.FORMAT_AUTO)) {
-            /*
-            // AUTO-Strategie: Zahlen mit Endung 'E-3', 'E0', 'E3' werden nicht in exponetieller Schreibweise dargestellt,
-            // alle anderen in Ingenieur-maessiger Darstellung (3er-Packete)
-            df.applyPattern("#E0");
-            String s= df.format(x);
-            System.out.println("x= "+x+"  /  s= "+s);
-            if (s.endsWith("E0"))       df.applyPattern("#.#####");
-            else if (s.endsWith("E3"))  df.applyPattern("#.##");
-            else if (s.endsWith("E-3")) df.applyPattern("#.########");
-            else df.applyPattern("0.###E0");
-            s= df.format(x);
-            System.out.println("sneu= "+s);
-            return s;
-             */
             return this.formatENG(x, anzDigits);
         } else {
             df.applyPattern(pattern);
             StringBuffer sb = new StringBuffer(df.format(x));
             for (int i1 = 0; i1 < sb.length(); i1++) {
                 if (sb.charAt(i1) == 'E') {
-                    sb.setCharAt(i1, 'e');  // 'e' ist optisch ansprechender als 'E'
+                    sb.setCharAt(i1, 'e');  // 'e' is visually more appealing than 'E'
                 }
             }
             return sb.toString();
         }
     }
 
-    // (2) String wird eingelesen und in eine Zahl (double) umgewandelt
-    // optional fuer die Eingabe:
+    // (2) String is read and converted to a number (double)
+    // optional for input:
     // 2k --> 2000;  2k2 --> 2200;  2m --> 0.002;  2m2 --> 2.2e-3;  2u --> 2e-6;  2u4 --> 2.4e-6;  7n --> 7e-9;  usw.
     //
     public double parseT(String s) {
         try {
             //-----------------------
-            // (1) Repraesentiert der Eingabe-String eine korrekt eingegebene 'double'-Zahl? -->
+            // (1) Does the input string represent a correctly entered 'double' number? -->
             double x = Double.parseDouble(s);
             return x;
         } catch (Exception e1) {
             //-----------------------
-            // (2) Enthaelt der Eingabe-String ungueltige Eingabe-Zeichen? -->
+            // (2) Does the input string contain invalid input characters? -->
             String s2 = s.trim();
             char[] sc = s2.toCharArray();
             int anzTechZeichen = 0, anzKomma = 0;
@@ -184,12 +152,12 @@ public class TechFormat implements Serializable {
                 if ((sc[i1] != '0') && (sc[i1] != '1') && (sc[i1] != '2') && (sc[i1] != '3') && (sc[i1] != '4') && (sc[i1] != '5') && (sc[i1] != '6') && (sc[i1] != '7') && (sc[i1] != '8') && (sc[i1] != '9')
                         && (sc[i1] != 'e') && (sc[i1] != 'E') && (sc[i1] != '+') && (sc[i1] != '-') && (sc[i1] != '.')
                         && (sc[i1] != 'p') && (sc[i1] != 'n') && (sc[i1] != 'u') && (sc[i1] != 'm') && (sc[i1] != 'k') && (sc[i1] != 'M')) {
-                    throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'  --> unzulaessiges Zeichen");
+                    throw new NumberFormatException("Invalid number format in 'TechFormat'  --> invalid character");
                 }
                 if (((sc[i1] == '+') || (sc[i1] == '-')) && (i1 != 0)) {
-                    // '+' und '-' stehen nicht am Beginn --> stehen sie vor dem Exponenten? (waere OK) -->
+                    // '+' and '-' are not at the beginning --> are they before the exponent? (would be OK) -->
                     if ((sc[i1 - 1] != 'e') && (sc[i1 - 1] != 'E')) {
-                        throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'  --> '+' bzw '-' an unzulaessiger Stelle");
+                        throw new NumberFormatException("Invalid number format in 'TechFormat'  --> '+' or '-' at invalid position");
                     }
                 }
                 if ((sc[i1] == 'e') || (sc[i1] == 'E') || (sc[i1] == 'p') || (sc[i1] == 'n') || (sc[i1] == 'u') || (sc[i1] == 'm') || (sc[i1] == 'k') || (sc[i1] == 'M')) {
@@ -200,18 +168,18 @@ public class TechFormat implements Serializable {
                 }
             }
             if ((sc[sc.length - 1] == 'e') || (sc[sc.length - 1] == 'E')) {
-                throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'  --> kein Exponent definiert");
+                throw new NumberFormatException("Invalid number format in 'TechFormat'  --> no exponent defined");
             }
             if (anzTechZeichen > 1) {
-                throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'  --> mehr als ein 'Sonder'zeichen");
+                throw new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one special character");
             }
             if (anzKomma > 1) {
-                throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'  --> mehr als ein Komma");
+                throw new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one decimal point");
             }
             //
-            // Annahme: alle Falscheingaben wurden eliminiert - ab jetzt keine Exception mehr moeglich
+            // Assumption: all incorrect inputs have been eliminated - no more exceptions possible from here
             //-----------------------
-            // (3) Zeichen sind OK, wir parsen entsprechend den technischen Eingaben definiert in abk[]  zB. -->
+            // (3) Characters are OK, we parse according to the technical inputs defined in abk[] e.g. -->
             // 2k --> 2000;  2k2 --> 2200;  2m --> 0.002;  2m2 --> 2.2e-3;  2u --> 2e-6;  2u4 --> 2.4e-6;  7n --> 7e-9;  usw.
             for (int i1 = 0; i1 < abk.length; i1++) {
                 int pos = s2.indexOf(abk[i1]);
@@ -236,8 +204,8 @@ public class TechFormat implements Serializable {
                 }
             }
             //-----------------------
-            // (4) hier sollten wir eigentlich gar nicht hingelangen -->
-            throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'  --> unbekanntes Problem [9324ubf902]");
+            // (4) we should not actually reach here -->
+            throw new NumberFormatException("Invalid number format in 'TechFormat'  --> unbekanntes Problem [9324ubf902]");
         }
     }
 
@@ -245,7 +213,7 @@ public class TechFormat implements Serializable {
     public String format(String eingabe, int maxNachKomma) {
         double erg = this.fmt(eingabe);
         if (erg == DUMMY) {
-            throw new NumberFormatException("Ungueltiges Zahlenformat in 'TechFormat'");
+            throw new NumberFormatException("Invalid number format in 'TechFormat'");
         }
         return this.fmt(erg, maxNachKomma);
     }
@@ -327,30 +295,14 @@ public class TechFormat implements Serializable {
     }
 
     public void testAusgabe() {
+
         //----------------------------
-        /*
-        this.formatENG(12.999999, 5);
-        this.formatENG(12.99, 1);
-        this.formatENG(12.99, 2);
-        this.formatENG(12.99, 3);
-        this.formatENG(12.9, 2);
-         */
-        /*
-        this.formatENG(1010003.0516670677, anzDigits);
-        for (int i1=0;  i1<-2000000;  i1++) {
-        double basis= 2*(Math.random()-0.5);
-        int potenz= (int)(2*(Math.random()-0.5) *15);
-        this.formatENG(Math.pow(10,potenz)*basis, 5);
-        }
-        System.out.println();  System.out.println("fmax="+fmax+"   @ x="+xfmax);
-         */
-        //----------------------------
-        // Testen 'parseT()' -->
+        // Testing 'parseT()' -->
         String[] s = new String[]{
             "1234.676", "1,234.676", "1'234.676", "12'3'4.676", "1234.6m76", "12e4", "-98.55e45", "0.67E-67", "123n4.676", "1234n.676", "1234.676e", "1234.676EE",
             "2e.", "2e+.", "2e+0.67", "e3434", ".e3", "2k34", "2k2", "13m", "300", "7.1"
         };
-        System.out.println("Testen 'parseT()' -->");
+        System.out.println("Testing 'parseT()' -->");
         for (int i1 = 0; i1 < s.length; i1++) {
             try {
                 System.out.println(i1 + "\t" + this.parseT(s[i1]) + "\t\t" + s[i1]);
@@ -361,15 +313,8 @@ public class TechFormat implements Serializable {
         System.out.println();
         //----------------------------
         // Teste 'formatT()' -->
-        System.out.println("Testen 'formatT()' -->");
-        /*
-        String[] test= new String[]{"12m", "12m2m", "22i", "192.565656mu"};
-        for (int i1=0;  i1<test.length;  i1++)
-        System.out.println(test[i1]+"\t\t"+this.fmt(test[i1])+"\t\t"+this.fmt(this.fmt(test[i1]),4));
-        System.out.println("-------------------------");
-        System.out.println(this.format("1.5um", 3));
-        this.applyPattern("##0.##E0");
-         */
+        System.out.println("Testing 'formatT()' -->");
+
         double[] data = new double[]{
             0.000000000000123456, 0.00000000000123456, 0.0000000000123456, 0.000000000123456,
             0.00000000123456, 0.0000000123456, 0.000000123456, 0.00000123456, 0.0000123456,
@@ -385,10 +330,10 @@ public class TechFormat implements Serializable {
     public void testAusgabe2() {
         //----------------------------
         // Teste 'formatT()' -->
-        System.out.println("Random-Testen 'formatT()' -->");
+        System.out.println("Random-Testing 'formatT()' -->");
         for (int i1 = 0; i1 < 999999; i1++) {
-            int e1 = (int) (1 + 8 * Math.random());  // [-1 ... +8] --> Anzahl Stellen
-            int e2 = (int) (Math.pow(10, e1) * Math.random());  // ganzzahlig, maximal 8-stellig
+            int e1 = (int) (1 + 8 * Math.random());  // [-1 ... +8] --> number of digits
+            int e2 = (int) (Math.pow(10, e1) * Math.random());  // integer, maximum 8 digits
             int e3 = (int) (31 * (Math.random() - 0.5));  // [-15 ... +15]
             double data = e2 * Math.pow(10, e3);
             double q1 = Double.parseDouble(this.formatT(data, TechFormat.FORMAT_AUTO));
@@ -400,6 +345,5 @@ public class TechFormat implements Serializable {
                 System.out.println(data + "\t\t" + this.formatT(data, TechFormat.FORMAT_AUTO) + "\t\tratio= " + ratio);
             }
         }
-        //----------------------------
     }
 }
