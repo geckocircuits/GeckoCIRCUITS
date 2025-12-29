@@ -269,7 +269,7 @@ public class GeckoSim extends JApplet {
     public void init() {
 
         Fenster.IS_APPLET = true;
-        GeckoSim.urlApplet = this.getCodeBase();  // vom Applet
+        GeckoSim.urlApplet = this.getCodeBase();  // from the applet
         setDefaultFonts();
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
 
@@ -392,7 +392,7 @@ public class GeckoSim extends JApplet {
         this.performScreenSettings(_win);
         //=================================
 
-        _win.setActivationOfSimulator(true);  // wird an spaeterer Stelle laufend gecheckt
+        _win.setActivationOfSimulator(true);  // is continuously checked at a later location
 
         if (Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
             _win.setAppletFiles(datnamExampleApplet);
@@ -523,7 +523,7 @@ public class GeckoSim extends JApplet {
         try {
             ClassLoader cl = ClassLoader.getSystemClassLoader();
             //------------------------------------------
-            // Was ist mit 'tools.jar', die der CONTROL-Block 'JAVA-Function' als Compiler braucht? 
+            // What about 'tools.jar', which the CONTROL block 'JAVA-Function' needs as compiler? 
             try {
                 cl.loadClass("com.sun.tools.javac.Main");
                 compiler_toolsjar_missing = false;
