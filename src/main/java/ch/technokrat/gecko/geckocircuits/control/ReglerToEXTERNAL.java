@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;

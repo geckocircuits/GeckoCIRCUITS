@@ -1,103 +1,13 @@
 [{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/Documentation.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.lang.annotation.Inherited is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 38,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/ExternalGeckoCustom.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.rmi.RemoteException is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 32,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 97,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.RegelBlock is never used",
-	"source": "Java",
-	"startLineNumber": 24,
-	"startColumn": 8,
-	"endLineNumber": 24,
-	"endColumn": 60,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable tic is not used",
-	"source": "Java",
-	"startLineNumber": 190,
-	"startColumn": 14,
-	"endLineNumber": 190,
-	"endColumn": 17,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable toc is not used",
-	"source": "Java",
-	"startLineNumber": 445,
-	"startColumn": 14,
-	"endLineNumber": 445,
-	"endColumn": 17,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777761",
 	"severity": 4,
 	"message": "Type safety: Unchecked cast from List<capture#3-of ? extends Object> to List<String>",
 	"source": "Java",
-	"startLineNumber": 539,
+	"startLineNumber": 535,
 	"startColumn": 38,
-	"endLineNumber": 539,
+	"endLineNumber": 535,
 	"endColumn": 57,
 	"origin": "extHost1"
 },{
@@ -107,10 +17,10 @@
 	"severity": 4,
 	"message": "Dead code",
 	"source": "Java",
-	"startLineNumber": 543,
+	"startLineNumber": 539,
 	"startColumn": 27,
-	"endLineNumber": 543,
-	"endColumn": 72,
+	"endLineNumber": 541,
+	"endColumn": 10,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
@@ -119,10 +29,10 @@
 	"severity": 4,
 	"message": "Dead code",
 	"source": "Java",
-	"startLineNumber": 612,
+	"startLineNumber": 608,
 	"startColumn": 27,
-	"endLineNumber": 612,
-	"endColumn": 73,
+	"endLineNumber": 610,
+	"endColumn": 10,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
@@ -131,10 +41,10 @@
 	"severity": 4,
 	"message": "Dead code",
 	"source": "Java",
-	"startLineNumber": 626,
+	"startLineNumber": 622,
 	"startColumn": 27,
-	"endLineNumber": 626,
-	"endColumn": 73,
+	"endLineNumber": 624,
+	"endColumn": 10,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
@@ -143,10 +53,10 @@
 	"severity": 4,
 	"message": "Dead code",
 	"source": "Java",
-	"startLineNumber": 640,
+	"startLineNumber": 636,
 	"startColumn": 27,
-	"endLineNumber": 640,
-	"endColumn": 73,
+	"endLineNumber": 638,
+	"endColumn": 10,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DatenSpeicher.java",
@@ -155,9 +65,9 @@
 	"severity": 2,
 	"message": "TODO ??? NetzlisteCONTROL.globalData.setSignalName(row, sigNames[row]);",
 	"source": "Java",
-	"startLineNumber": 358,
+	"startLineNumber": 355,
 	"startColumn": 20,
-	"endLineNumber": 358,
+	"endLineNumber": 355,
 	"endColumn": 91,
 	"origin": "extHost1"
 },{
@@ -195,86 +105,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import java.awt.Font is never used",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 21,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogAppletExamples.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.awt.Graphics is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 25,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogAppletExamples.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.awt.Dimension is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 26,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogAppletExamples.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JComponent is never used",
+	"message": "The import javax.swing.BorderFactory is never used",
 	"source": "Java",
 	"startLineNumber": 29,
 	"startColumn": 8,
 	"endLineNumber": 29,
-	"endColumn": 30,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogAppletExamples.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JLabel is never used",
-	"source": "Java",
-	"startLineNumber": 30,
-	"startColumn": 8,
-	"endLineNumber": 30,
-	"endColumn": 26,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogAppletExamples.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.BorderFactory is never used",
-	"source": "Java",
-	"startLineNumber": 34,
-	"startColumn": 8,
-	"endLineNumber": 34,
 	"endColumn": 33,
 	"tags": [
 		1
@@ -287,9 +122,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.border.TitledBorder is never used",
 	"source": "Java",
-	"startLineNumber": 35,
+	"startLineNumber": 30,
 	"startColumn": 8,
-	"endLineNumber": 35,
+	"endLineNumber": 30,
 	"endColumn": 39,
 	"tags": [
 		1
@@ -302,9 +137,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 51,
+	"startLineNumber": 46,
 	"startColumn": 13,
-	"endLineNumber": 51,
+	"endLineNumber": 46,
 	"endColumn": 18,
 	"origin": "extHost1"
 },{
@@ -314,9 +149,9 @@
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 57,
+	"startLineNumber": 52,
 	"startColumn": 50,
-	"endLineNumber": 57,
+	"endLineNumber": 52,
 	"endColumn": 53,
 	"tags": [
 		2
@@ -329,9 +164,9 @@
 	"severity": 4,
 	"message": "Type safety: The constructor JList(Object[]) belongs to the raw type JList. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 94,
+	"startLineNumber": 89,
 	"startColumn": 16,
-	"endLineNumber": 94,
+	"endLineNumber": 89,
 	"endColumn": 46,
 	"origin": "extHost1"
 },{
@@ -341,9 +176,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 94,
+	"startLineNumber": 89,
 	"startColumn": 20,
-	"endLineNumber": 94,
+	"endLineNumber": 89,
 	"endColumn": 25,
 	"origin": "extHost1"
 },{
@@ -508,14 +343,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
+	"code": "268435844",
 	"severity": 4,
-	"message": "The value of the local variable dragRec is not used",
+	"message": "The import java.awt.dnd.DragGestureRecognizer is never used",
 	"source": "Java",
-	"startLineNumber": 65,
-	"startColumn": 31,
-	"endLineNumber": 65,
-	"endColumn": 38,
+	"startLineNumber": 29,
+	"startColumn": 8,
+	"endLineNumber": 29,
+	"endColumn": 42,
 	"tags": [
 		1
 	],
@@ -829,28 +664,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogFindInModel.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.GeckoSim is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 36,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogFindInModel.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "603979893",
 	"severity": 4,
 	"message": "The static method clearFind() from the type CircuitSheet should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 74,
+	"startLineNumber": 73,
 	"startColumn": 13,
-	"endLineNumber": 74,
+	"endLineNumber": 73,
 	"endColumn": 49,
 	"origin": "extHost1"
 },{
@@ -860,9 +680,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 105,
+	"startLineNumber": 104,
 	"startColumn": 22,
-	"endLineNumber": 105,
+	"endLineNumber": 104,
 	"endColumn": 39,
 	"origin": "extHost1"
 },{
@@ -872,9 +692,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 125,
+	"startLineNumber": 124,
 	"startColumn": 29,
-	"endLineNumber": 125,
+	"endLineNumber": 124,
 	"endColumn": 45,
 	"origin": "extHost1"
 },{
@@ -884,9 +704,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 203,
+	"startLineNumber": 202,
 	"startColumn": 15,
-	"endLineNumber": 203,
+	"endLineNumber": 202,
 	"endColumn": 31,
 	"origin": "extHost1"
 },{
@@ -896,9 +716,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addElement(Object) belongs to the raw type DefaultListModel. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 205,
+	"startLineNumber": 204,
 	"startColumn": 17,
-	"endLineNumber": 205,
+	"endLineNumber": 204,
 	"endColumn": 71,
 	"origin": "extHost1"
 },{
@@ -908,9 +728,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 205,
+	"startLineNumber": 204,
 	"startColumn": 19,
-	"endLineNumber": 205,
+	"endLineNumber": 204,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -920,9 +740,9 @@
 	"severity": 4,
 	"message": "The static method clearFind() from the type CircuitSheet should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 212,
+	"startLineNumber": 211,
 	"startColumn": 9,
-	"endLineNumber": 212,
+	"endLineNumber": 211,
 	"endColumn": 45,
 	"origin": "extHost1"
 },{
@@ -932,9 +752,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 220,
+	"startLineNumber": 219,
 	"startColumn": 13,
-	"endLineNumber": 220,
+	"endLineNumber": 219,
 	"endColumn": 30,
 	"origin": "extHost1"
 },{
@@ -987,86 +807,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import java.awt.Color is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogLizenz.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JFrame is never used",
-	"source": "Java",
-	"startLineNumber": 25,
-	"startColumn": 8,
-	"endLineNumber": 25,
-	"endColumn": 26,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogLizenz.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.BorderFactory is never used",
-	"source": "Java",
-	"startLineNumber": 29,
-	"startColumn": 8,
-	"endLineNumber": 29,
-	"endColumn": 33,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogLizenz.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.border.TitledBorder is never used",
-	"source": "Java",
-	"startLineNumber": 30,
-	"startColumn": 8,
-	"endLineNumber": 30,
-	"endColumn": 39,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogLizenz.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.Date is never used",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 8,
-	"endLineNumber": 31,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogLizenz.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import java.text.DateFormat is never used",
 	"source": "Java",
-	"startLineNumber": 32,
+	"startLineNumber": 27,
 	"startColumn": 8,
-	"endLineNumber": 32,
+	"endLineNumber": 27,
 	"endColumn": 28,
 	"tags": [
 		1
@@ -1079,9 +824,9 @@
 	"severity": 4,
 	"message": "The import java.text.SimpleDateFormat is never used",
 	"source": "Java",
-	"startLineNumber": 33,
+	"startLineNumber": 28,
 	"startColumn": 8,
-	"endLineNumber": 33,
+	"endLineNumber": 28,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -1094,9 +839,9 @@
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 48,
+	"startLineNumber": 43,
 	"startColumn": 52,
-	"endLineNumber": 48,
+	"endLineNumber": 43,
 	"endColumn": 55,
 	"tags": [
 		2
@@ -1105,14 +850,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogMakeExternal.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
+	"code": "268435844",
 	"severity": 4,
-	"message": "The value of the local variable filter is not used",
+	"message": "The import javax.swing.filechooser.FileFilter is never used",
 	"source": "Java",
-	"startLineNumber": 257,
-	"startColumn": 26,
-	"endLineNumber": 257,
-	"endColumn": 32,
+	"startLineNumber": 20,
+	"startColumn": 8,
+	"endLineNumber": 20,
+	"endColumn": 42,
 	"tags": [
 		1
 	],
@@ -1137,86 +882,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.GeckoRemoteInterface is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 48,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogRemotePort.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.GeckoSim is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 36,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogRemotePort.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.rmi.registry.LocateRegistry is never used",
-	"source": "Java",
-	"startLineNumber": 25,
-	"startColumn": 8,
-	"endLineNumber": 25,
-	"endColumn": 40,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogRemotePort.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.rmi.registry.Registry is never used",
-	"source": "Java",
-	"startLineNumber": 26,
-	"startColumn": 8,
-	"endLineNumber": 26,
-	"endColumn": 34,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogRemotePort.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.rmi.server.ExportException is never used",
-	"source": "Java",
-	"startLineNumber": 27,
-	"startColumn": 8,
-	"endLineNumber": 27,
-	"endColumn": 39,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogRemotePort.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import java.rmi.server.UnicastRemoteObject is never used",
 	"source": "Java",
-	"startLineNumber": 28,
+	"startLineNumber": 23,
 	"startColumn": 8,
-	"endLineNumber": 28,
+	"endLineNumber": 23,
 	"endColumn": 43,
 	"tags": [
 		1
@@ -1229,9 +899,9 @@
 	"severity": 4,
 	"message": "JComboBox is a raw type. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 124,
+	"startLineNumber": 119,
 	"startColumn": 29,
-	"endLineNumber": 124,
+	"endLineNumber": 119,
 	"endColumn": 50,
 	"origin": "extHost1"
 },{
@@ -1241,9 +911,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addItem(Object) belongs to the raw type JComboBox. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 577,
+	"startLineNumber": 572,
 	"startColumn": 17,
-	"endLineNumber": 577,
+	"endLineNumber": 572,
 	"endColumn": 53,
 	"origin": "extHost1"
 },{
@@ -1253,9 +923,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addItem(Object) belongs to the raw type JComboBox. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 590,
+	"startLineNumber": 585,
 	"startColumn": 13,
-	"endLineNumber": 590,
+	"endLineNumber": 585,
 	"endColumn": 59,
 	"origin": "extHost1"
 },{
@@ -1265,9 +935,9 @@
 	"severity": 4,
 	"message": "JComboBox is a raw type. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 732,
+	"startLineNumber": 727,
 	"startColumn": 13,
-	"endLineNumber": 732,
+	"endLineNumber": 727,
 	"endColumn": 34,
 	"origin": "extHost1"
 },{
@@ -1399,44 +1069,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFile.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.IDStringDialog is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 64,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFile.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "570425421",
 	"severity": 4,
 	"message": "The value of the field GeckoFile.EMPTY_STRING is not used",
 	"source": "Java",
-	"startLineNumber": 70,
+	"startLineNumber": 69,
 	"startColumn": 35,
-	"endLineNumber": 70,
+	"endLineNumber": 69,
 	"endColumn": 47,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties is never used",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 80,
 	"tags": [
 		1
 	],
@@ -1448,9 +1088,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 44,
+	"startLineNumber": 43,
 	"startColumn": 19,
-	"endLineNumber": 44,
+	"endLineNumber": 43,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -1460,9 +1100,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 44,
+	"startLineNumber": 43,
 	"startColumn": 61,
-	"endLineNumber": 44,
+	"endLineNumber": 43,
 	"endColumn": 77,
 	"origin": "extHost1"
 },{
@@ -1472,9 +1112,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 45,
+	"startLineNumber": 44,
 	"startColumn": 19,
-	"endLineNumber": 45,
+	"endLineNumber": 44,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -1484,9 +1124,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 45,
+	"startLineNumber": 44,
 	"startColumn": 61,
-	"endLineNumber": 45,
+	"endLineNumber": 44,
 	"endColumn": 77,
 	"origin": "extHost1"
 },{
@@ -1496,9 +1136,9 @@
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 109,
+	"startLineNumber": 108,
 	"startColumn": 50,
-	"endLineNumber": 109,
+	"endLineNumber": 108,
 	"endColumn": 53,
 	"tags": [
 		2
@@ -1511,9 +1151,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addElement(Object) belongs to the raw type DefaultListModel. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 130,
+	"startLineNumber": 129,
 	"startColumn": 13,
-	"endLineNumber": 130,
+	"endLineNumber": 129,
 	"endColumn": 57,
 	"origin": "extHost1"
 },{
@@ -1523,9 +1163,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addElement(Object) belongs to the raw type DefaultListModel. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 134,
+	"startLineNumber": 133,
 	"startColumn": 13,
-	"endLineNumber": 134,
+	"endLineNumber": 133,
 	"endColumn": 59,
 	"origin": "extHost1"
 },{
@@ -1535,9 +1175,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addElement(Object) belongs to the raw type DefaultListModel. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 155,
+	"startLineNumber": 154,
 	"startColumn": 9,
-	"endLineNumber": 155,
+	"endLineNumber": 154,
 	"endColumn": 44,
 	"origin": "extHost1"
 },{
@@ -1547,9 +1187,9 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 183,
+	"startLineNumber": 182,
 	"startColumn": 66,
-	"endLineNumber": 183,
+	"endLineNumber": 182,
 	"endColumn": 83,
 	"tags": [
 		2
@@ -1562,9 +1202,9 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 209,
+	"startLineNumber": 208,
 	"startColumn": 62,
-	"endLineNumber": 209,
+	"endLineNumber": 208,
 	"endColumn": 79,
 	"tags": [
 		2
@@ -1577,9 +1217,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 241,
+	"startLineNumber": 240,
 	"startColumn": 39,
-	"endLineNumber": 241,
+	"endLineNumber": 240,
 	"endColumn": 56,
 	"origin": "extHost1"
 },{
@@ -1589,9 +1229,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 252,
+	"startLineNumber": 251,
 	"startColumn": 35,
-	"endLineNumber": 252,
+	"endLineNumber": 251,
 	"endColumn": 52,
 	"origin": "extHost1"
 },{
@@ -1601,9 +1241,9 @@
 	"severity": 4,
 	"message": "Type safety: The method setModel(ListModel) belongs to the raw type JList. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 287,
+	"startLineNumber": 286,
 	"startColumn": 9,
-	"endLineNumber": 287,
+	"endLineNumber": 286,
 	"endColumn": 61,
 	"origin": "extHost1"
 },{
@@ -1613,9 +1253,9 @@
 	"severity": 4,
 	"message": "Type safety: The method setModel(ListModel) belongs to the raw type JList. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 402,
+	"startLineNumber": 401,
 	"startColumn": 9,
-	"endLineNumber": 402,
+	"endLineNumber": 401,
 	"endColumn": 57,
 	"origin": "extHost1"
 },{
@@ -1625,9 +1265,9 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 538,
+	"startLineNumber": 537,
 	"startColumn": 54,
-	"endLineNumber": 538,
+	"endLineNumber": 537,
 	"endColumn": 71,
 	"tags": [
 		2
@@ -1640,9 +1280,9 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 589,
+	"startLineNumber": 588,
 	"startColumn": 58,
-	"endLineNumber": 589,
+	"endLineNumber": 588,
 	"endColumn": 75,
 	"tags": [
 		2
@@ -1655,9 +1295,9 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 603,
+	"startLineNumber": 602,
 	"startColumn": 58,
-	"endLineNumber": 603,
+	"endLineNumber": 602,
 	"endColumn": 75,
 	"tags": [
 		2
@@ -1670,9 +1310,9 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 618,
+	"startLineNumber": 617,
 	"startColumn": 54,
-	"endLineNumber": 618,
+	"endLineNumber": 617,
 	"endColumn": 71,
 	"tags": [
 		2
@@ -1685,13 +1325,25 @@
 	"severity": 4,
 	"message": "The method getSelectedValues() from the type JList is deprecated",
 	"source": "Java",
-	"startLineNumber": 632,
+	"startLineNumber": 631,
 	"startColumn": 54,
-	"endLineNumber": 632,
+	"endLineNumber": 631,
 	"endColumn": 71,
 	"tags": [
 		2
 	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 706,
+	"startColumn": 13,
+	"endLineNumber": 706,
+	"endColumn": 30,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
@@ -1706,42 +1358,15 @@
 	"endColumn": 30,
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 708,
-	"startColumn": 13,
-	"endLineNumber": 708,
-	"endColumn": 30,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoJavaCompiler.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable cp4 is not used",
-	"source": "Java",
-	"startLineNumber": 264,
-	"startColumn": 20,
-	"endLineNumber": 264,
-	"endColumn": 23,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoJavaCompiler.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
 	"severity": 4,
 	"message": "Diagnostic is a raw type. References to generic type Diagnostic<S> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 274,
+	"startLineNumber": 273,
 	"startColumn": 22,
-	"endLineNumber": 274,
+	"endLineNumber": 273,
 	"endColumn": 32,
 	"origin": "extHost1"
 },{
@@ -1751,9 +1376,9 @@
 	"severity": 4,
 	"message": "Class is a raw type. References to generic type Class<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 300,
+	"startLineNumber": 299,
 	"startColumn": 17,
-	"endLineNumber": 300,
+	"endLineNumber": 299,
 	"endColumn": 22,
 	"origin": "extHost1"
 },{
@@ -1763,9 +1388,9 @@
 	"severity": 4,
 	"message": "Class is a raw type. References to generic type Class<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 302,
+	"startLineNumber": 301,
 	"startColumn": 17,
-	"endLineNumber": 302,
+	"endLineNumber": 301,
 	"endColumn": 22,
 	"origin": "extHost1"
 },{
@@ -1775,9 +1400,9 @@
 	"severity": 4,
 	"message": "Type safety: The method getMethod(String, Class...) belongs to the raw type Class. References to generic type Class<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 305,
+	"startLineNumber": 304,
 	"startColumn": 35,
-	"endLineNumber": 305,
+	"endLineNumber": 304,
 	"endColumn": 74,
 	"origin": "extHost1"
 },{
@@ -1787,9 +1412,9 @@
 	"severity": 4,
 	"message": "Class is a raw type. References to generic type Class<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 316,
+	"startLineNumber": 315,
 	"startColumn": 17,
-	"endLineNumber": 316,
+	"endLineNumber": 315,
 	"endColumn": 22,
 	"origin": "extHost1"
 },{
@@ -1799,9 +1424,9 @@
 	"severity": 4,
 	"message": "Type safety: The method getMethod(String, Class...) belongs to the raw type Class. References to generic type Class<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 320,
+	"startLineNumber": 319,
 	"startColumn": 33,
-	"endLineNumber": 320,
+	"endLineNumber": 319,
 	"endColumn": 72,
 	"origin": "extHost1"
 },{
@@ -1901,46 +1526,16 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/OptimizerParameterData.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.Collection is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 28,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SimulationRunner.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.RegelBlock is never used",
+	"message": "The import java.util.List is never used",
 	"source": "Java",
-	"startLineNumber": 19,
+	"startLineNumber": 24,
 	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 60,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SimulationRunner.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable allElements is not used",
-	"source": "Java",
-	"startLineNumber": 160,
-	"startColumn": 38,
-	"endLineNumber": 160,
-	"endColumn": 49,
+	"endLineNumber": 24,
+	"endColumn": 22,
 	"tags": [
 		1
 	],
@@ -1952,9 +1547,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 163,
+	"startLineNumber": 161,
 	"startColumn": 18,
-	"endLineNumber": 163,
+	"endLineNumber": 161,
 	"endColumn": 33,
 	"origin": "extHost1"
 },{
@@ -1964,9 +1559,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 164,
+	"startLineNumber": 162,
 	"startColumn": 18,
-	"endLineNumber": 164,
+	"endLineNumber": 162,
 	"endColumn": 33,
 	"origin": "extHost1"
 },{
@@ -1976,9 +1571,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 168,
+	"startLineNumber": 166,
 	"startColumn": 22,
-	"endLineNumber": 168,
+	"endLineNumber": 166,
 	"endColumn": 37,
 	"origin": "extHost1"
 },{
@@ -1988,9 +1583,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 169,
+	"startLineNumber": 167,
 	"startColumn": 29,
-	"endLineNumber": 169,
+	"endLineNumber": 167,
 	"endColumn": 44,
 	"origin": "extHost1"
 },{
@@ -2000,9 +1595,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 170,
+	"startLineNumber": 168,
 	"startColumn": 30,
-	"endLineNumber": 170,
+	"endLineNumber": 168,
 	"endColumn": 45,
 	"origin": "extHost1"
 },{
@@ -2012,9 +1607,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 176,
+	"startLineNumber": 174,
 	"startColumn": 57,
-	"endLineNumber": 176,
+	"endLineNumber": 174,
 	"endColumn": 72,
 	"origin": "extHost1"
 },{
@@ -2024,9 +1619,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 178,
+	"startLineNumber": 176,
 	"startColumn": 18,
-	"endLineNumber": 178,
+	"endLineNumber": 176,
 	"endColumn": 33,
 	"origin": "extHost1"
 },{
@@ -2036,9 +1631,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 192,
+	"startLineNumber": 190,
 	"startColumn": 31,
-	"endLineNumber": 192,
+	"endLineNumber": 190,
 	"endColumn": 46,
 	"origin": "extHost1"
 },{
@@ -2048,9 +1643,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 192,
+	"startLineNumber": 190,
 	"startColumn": 71,
-	"endLineNumber": 192,
+	"endLineNumber": 190,
 	"endColumn": 86,
 	"origin": "extHost1"
 },{
@@ -2060,9 +1655,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 241,
+	"startLineNumber": 239,
 	"startColumn": 35,
-	"endLineNumber": 241,
+	"endLineNumber": 239,
 	"endColumn": 50,
 	"origin": "extHost1"
 },{
@@ -2072,9 +1667,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 244,
+	"startLineNumber": 242,
 	"startColumn": 34,
-	"endLineNumber": 244,
+	"endLineNumber": 242,
 	"endColumn": 49,
 	"origin": "extHost1"
 },{
@@ -2084,9 +1679,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 290,
+	"startLineNumber": 288,
 	"startColumn": 26,
-	"endLineNumber": 290,
+	"endLineNumber": 288,
 	"endColumn": 41,
 	"origin": "extHost1"
 },{
@@ -2096,9 +1691,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 290,
+	"startLineNumber": 288,
 	"startColumn": 90,
-	"endLineNumber": 290,
+	"endLineNumber": 288,
 	"endColumn": 105,
 	"origin": "extHost1"
 },{
@@ -2108,55 +1703,10 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 292,
+	"startLineNumber": 290,
 	"startColumn": 64,
-	"endLineNumber": 292,
+	"endLineNumber": 290,
 	"endColumn": 79,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Level is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Logger is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 32,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JDialog is never used",
-	"source": "Java",
-	"startLineNumber": 23,
-	"startColumn": 8,
-	"endLineNumber": 23,
-	"endColumn": 27,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
@@ -2165,9 +1715,9 @@
 	"severity": 4,
 	"message": "The value of the field StartupWindow.DISPOSE_WAIT_TIME_MILLIS is not used",
 	"source": "Java",
-	"startLineNumber": 50,
+	"startLineNumber": 47,
 	"startColumn": 18,
-	"endLineNumber": 50,
+	"endLineNumber": 47,
 	"endColumn": 42,
 	"tags": [
 		1
@@ -2180,9 +1730,9 @@
 	"severity": 4,
 	"message": "The value of the field StartupWindow.rand is not used",
 	"source": "Java",
-	"startLineNumber": 52,
+	"startLineNumber": 49,
 	"startColumn": 33,
-	"endLineNumber": 52,
+	"endLineNumber": 49,
 	"endColumn": 37,
 	"tags": [
 		1
@@ -2195,55 +1745,10 @@
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 85,
+	"startLineNumber": 82,
 	"startColumn": 23,
-	"endLineNumber": 85,
+	"endLineNumber": 82,
 	"endColumn": 34,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SuggestionField.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.LinkedList is never used",
-	"source": "Java",
-	"startLineNumber": 40,
-	"startColumn": 8,
-	"endLineNumber": 40,
-	"endColumn": 28,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SuggestionField.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Level is never used",
-	"source": "Java",
-	"startLineNumber": 42,
-	"startColumn": 8,
-	"endLineNumber": 42,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SuggestionField.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Logger is never used",
-	"source": "Java",
-	"startLineNumber": 43,
-	"startColumn": 8,
-	"endLineNumber": 43,
-	"endColumn": 32,
 	"tags": [
 		1
 	],
@@ -2255,9 +1760,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 54,
+	"startLineNumber": 51,
 	"startColumn": 13,
-	"endLineNumber": 54,
+	"endLineNumber": 51,
 	"endColumn": 18,
 	"origin": "extHost1"
 },{
@@ -2267,9 +1772,9 @@
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 151,
+	"startLineNumber": 148,
 	"startColumn": 26,
-	"endLineNumber": 151,
+	"endLineNumber": 148,
 	"endColumn": 31,
 	"origin": "extHost1"
 },{
@@ -2279,9 +1784,9 @@
 	"severity": 4,
 	"message": "Type safety: The method setListData(Object[]) belongs to the raw type JList. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 235,
+	"startLineNumber": 232,
 	"startColumn": 9,
-	"endLineNumber": 235,
+	"endLineNumber": 232,
 	"endColumn": 47,
 	"origin": "extHost1"
 },{
@@ -2291,9 +1796,9 @@
 	"severity": 4,
 	"message": "Iterator is a raw type. References to generic type Iterator<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 343,
+	"startLineNumber": 340,
 	"startColumn": 17,
-	"endLineNumber": 343,
+	"endLineNumber": 340,
 	"endColumn": 25,
 	"origin": "extHost1"
 },{
@@ -2303,55 +1808,10 @@
 	"severity": 4,
 	"message": "Type safety: The method setListData(Object[]) belongs to the raw type JList. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 362,
+	"startLineNumber": 359,
 	"startColumn": 21,
-	"endLineNumber": 362,
+	"endLineNumber": 359,
 	"endColumn": 104,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/UndoRedoManager.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.io.ObjectOutputStream is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 34,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/UndoRedoManager.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.io.ByteArrayOutputStream is never used",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 37,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/UndoRedoManager.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.zip.DeflaterOutputStream is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 42,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/UserParameter.java",
@@ -2806,28 +2266,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock is never used",
-	"source": "Java",
-	"startLineNumber": 26,
-	"startColumn": 8,
-	"endLineNumber": 26,
-	"endColumn": 83,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 112,
+	"startLineNumber": 111,
 	"startColumn": 14,
-	"endLineNumber": 112,
+	"endLineNumber": 111,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2837,9 +2282,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 119,
+	"startLineNumber": 118,
 	"startColumn": 14,
-	"endLineNumber": 119,
+	"endLineNumber": 118,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2849,9 +2294,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 149,
+	"startLineNumber": 148,
 	"startColumn": 14,
-	"endLineNumber": 149,
+	"endLineNumber": 148,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2861,9 +2306,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 156,
+	"startLineNumber": 155,
 	"startColumn": 14,
-	"endLineNumber": 156,
+	"endLineNumber": 155,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2873,9 +2318,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 167,
+	"startLineNumber": 166,
 	"startColumn": 14,
-	"endLineNumber": 167,
+	"endLineNumber": 166,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2885,9 +2330,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 175,
+	"startLineNumber": 174,
 	"startColumn": 14,
-	"endLineNumber": 175,
+	"endLineNumber": 174,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2897,9 +2342,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 183,
+	"startLineNumber": 182,
 	"startColumn": 14,
-	"endLineNumber": 183,
+	"endLineNumber": 182,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2909,9 +2354,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 336,
+	"startLineNumber": 335,
 	"startColumn": 14,
-	"endLineNumber": 336,
+	"endLineNumber": 335,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2921,36 +2366,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 354,
+	"startLineNumber": 353,
 	"startColumn": 14,
-	"endLineNumber": 354,
-	"endColumn": 27,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable number is not used",
-	"source": "Java",
-	"startLineNumber": 356,
-	"startColumn": 24,
-	"endLineNumber": 356,
-	"endColumn": 30,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 449,
-	"startColumn": 14,
-	"endLineNumber": 449,
+	"endLineNumber": 353,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2960,9 +2378,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 471,
+	"startLineNumber": 448,
 	"startColumn": 14,
-	"endLineNumber": 471,
+	"endLineNumber": 448,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2972,9 +2390,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 481,
+	"startLineNumber": 470,
 	"startColumn": 14,
-	"endLineNumber": 481,
+	"endLineNumber": 470,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -2984,9 +2402,21 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 490,
+	"startLineNumber": 480,
+	"startColumn": 14,
+	"endLineNumber": 480,
+	"endColumn": 27,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 489,
 	"startColumn": 18,
-	"endLineNumber": 490,
+	"endLineNumber": 489,
 	"endColumn": 31,
 	"origin": "extHost1"
 },{
@@ -2996,10 +2426,22 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 500,
+	"startLineNumber": 499,
 	"startColumn": 18,
-	"endLineNumber": 500,
+	"endLineNumber": 499,
 	"endColumn": 31,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 713,
+	"startColumn": 14,
+	"endLineNumber": 713,
+	"endColumn": 27,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
@@ -3009,20 +2451,8 @@
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 714,
-	"startColumn": 14,
-	"endLineNumber": 714,
-	"endColumn": 27,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 715,
 	"startColumn": 18,
-	"endLineNumber": 715,
+	"endLineNumber": 714,
 	"endColumn": 31,
 	"origin": "extHost1"
 },{
@@ -3032,9 +2462,9 @@
 	"severity": 4,
 	"message": "Type safety: The method setValueWithoutUndo(Object) belongs to the raw type UserParameter. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 718,
+	"startLineNumber": 717,
 	"startColumn": 21,
-	"endLineNumber": 718,
+	"endLineNumber": 717,
 	"endColumn": 73,
 	"origin": "extHost1"
 },{
@@ -3044,9 +2474,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 932,
+	"startLineNumber": 931,
 	"startColumn": 47,
-	"endLineNumber": 932,
+	"endLineNumber": 931,
 	"endColumn": 60,
 	"origin": "extHost1"
 },{
@@ -3056,9 +2486,9 @@
 	"severity": 4,
 	"message": "Type safety: The expression of type UserParameter needs unchecked conversion to conform to UserParameter<? extends Object>",
 	"source": "Java",
-	"startLineNumber": 933,
+	"startLineNumber": 932,
 	"startColumn": 34,
-	"endLineNumber": 933,
+	"endLineNumber": 932,
 	"endColumn": 44,
 	"origin": "extHost1"
 },{
@@ -3068,25 +2498,10 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 936,
+	"startLineNumber": 935,
 	"startColumn": 49,
-	"endLineNumber": 936,
+	"endLineNumber": 935,
 	"endColumn": 62,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractSpecialBlock.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.resources.I18nKeys is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 51,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractTerminal.java",
@@ -3128,36 +2543,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractTypeInfo.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Level is never used",
-	"source": "Java",
-	"startLineNumber": 25,
-	"startColumn": 8,
-	"endLineNumber": 25,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/AbstractTypeInfo.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Logger is never used",
-	"source": "Java",
-	"startLineNumber": 26,
-	"startColumn": 8,
-	"endLineNumber": 26,
-	"endColumn": 32,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCapacitor.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -3189,26 +2574,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent is never used",
 	"source": "Java",
-	"startLineNumber": 20,
+	"startLineNumber": 19,
 	"startColumn": 8,
-	"endLineNumber": 20,
+	"endLineNumber": 19,
 	"endColumn": 79,
 	"tags": [
 		1
@@ -3221,9 +2591,9 @@
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.CONTROL is never used",
 	"source": "Java",
-	"startLineNumber": 22,
+	"startLineNumber": 21,
 	"startColumn": 15,
-	"endLineNumber": 22,
+	"endLineNumber": 21,
 	"endColumn": 78,
 	"tags": [
 		1
@@ -3236,9 +2606,9 @@
 	"severity": 4,
 	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 161,
+	"startLineNumber": 160,
 	"startColumn": 14,
-	"endLineNumber": 161,
+	"endLineNumber": 160,
 	"endColumn": 27,
 	"origin": "extHost1"
 },{
@@ -3248,9 +2618,9 @@
 	"severity": 4,
 	"message": "Type safety: The expression of type List needs unchecked conversion to conform to List<String>",
 	"source": "Java",
-	"startLineNumber": 171,
+	"startLineNumber": 170,
 	"startColumn": 16,
-	"endLineNumber": 171,
+	"endLineNumber": 170,
 	"endColumn": 38,
 	"origin": "extHost1"
 },{
@@ -3260,9 +2630,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 174,
+	"startLineNumber": 173,
 	"startColumn": 36,
-	"endLineNumber": 174,
+	"endLineNumber": 173,
 	"endColumn": 52,
 	"origin": "extHost1"
 },{
@@ -3272,9 +2642,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 176,
+	"startLineNumber": 175,
 	"startColumn": 27,
-	"endLineNumber": 176,
+	"endLineNumber": 175,
 	"endColumn": 43,
 	"origin": "extHost1"
 },{
@@ -3284,9 +2654,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 178,
+	"startLineNumber": 177,
 	"startColumn": 14,
-	"endLineNumber": 178,
+	"endLineNumber": 177,
 	"endColumn": 30,
 	"origin": "extHost1"
 },{
@@ -3296,9 +2666,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 178,
+	"startLineNumber": 177,
 	"startColumn": 60,
-	"endLineNumber": 178,
+	"endLineNumber": 177,
 	"endColumn": 76,
 	"origin": "extHost1"
 },{
@@ -3384,21 +2754,6 @@
 	"startColumn": 15,
 	"endLineNumber": 32,
 	"endColumn": 108,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitSource.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable index is not used",
-	"source": "Java",
-	"startLineNumber": 238,
-	"startColumn": 17,
-	"endLineNumber": 238,
-	"endColumn": 22,
 	"tags": [
 		1
 	],
@@ -3541,44 +2896,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractMotorIM.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativeFixedDirection is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 80,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractMotorIM.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536871090",
 	"severity": 4,
 	"message": "The assignment to variable psisd has no effect",
 	"source": "Java",
-	"startLineNumber": 74,
+	"startLineNumber": 73,
 	"startColumn": 9,
-	"endLineNumber": 74,
+	"endLineNumber": 73,
 	"endColumn": 22,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractMotorSM.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativeFixedDirection is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 80,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractResistor.java",
@@ -3774,12 +3099,12 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable i is not used",
+	"message": "The value of the local variable dd is not used",
 	"source": "Java",
-	"startLineNumber": 126,
+	"startLineNumber": 240,
 	"startColumn": 16,
-	"endLineNumber": 126,
-	"endColumn": 17,
+	"endLineNumber": 240,
+	"endColumn": 18,
 	"tags": [
 		1
 	],
@@ -3789,42 +3114,12 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable u is not used",
+	"message": "The value of the local variable alpha is not used",
 	"source": "Java",
-	"startLineNumber": 126,
-	"startColumn": 23,
-	"endLineNumber": 126,
-	"endColumn": 24,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/BJT.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable ddx is not used",
-	"source": "Java",
-	"startLineNumber": 241,
-	"startColumn": 54,
-	"endLineNumber": 241,
-	"endColumn": 57,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/BJT.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable ddy is not used",
-	"source": "Java",
-	"startLineNumber": 241,
-	"startColumn": 82,
-	"endLineNumber": 241,
-	"endColumn": 85,
+	"startLineNumber": 240,
+	"startColumn": 27,
+	"endLineNumber": 240,
+	"endColumn": 32,
 	"tags": [
 		1
 	],
@@ -3836,9 +3131,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 279,
+	"startLineNumber": 278,
 	"startColumn": 27,
-	"endLineNumber": 279,
+	"endLineNumber": 278,
 	"endColumn": 43,
 	"origin": "extHost1"
 },{
@@ -4061,21 +3356,6 @@
 	"endColumn": 20,
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/CapacitorCircuit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 6,
-	"startColumn": 8,
-	"endLineNumber": 6,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/CapacitorDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67109438",
@@ -4098,21 +3378,6 @@
 	"startColumn": 8,
 	"endLineNumber": 19,
 	"endColumn": 94,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/CircuitGlobalTerminal.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 22,
 	"tags": [
 		1
 	],
@@ -4363,28 +3628,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/DialogViewPowerModule.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 97,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/DialogViewPowerModule.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67110271",
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 44,
+	"startLineNumber": 43,
 	"startColumn": 50,
-	"endLineNumber": 44,
+	"endLineNumber": 43,
 	"endColumn": 53,
 	"tags": [
 		2
@@ -4397,9 +3647,9 @@
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 83,
+	"startLineNumber": 82,
 	"startColumn": 40,
-	"endLineNumber": 83,
+	"endLineNumber": 82,
 	"endColumn": 43,
 	"tags": [
 		2
@@ -4458,21 +3708,6 @@
 	"startColumn": 16,
 	"endLineNumber": 26,
 	"endColumn": 154,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/HeatFlowCurrentSource.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IdealSwitch.java",
@@ -4555,28 +3790,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IdealSwitchDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JTabbedPane is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IdealSwitchDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67109438",
 	"severity": 4,
 	"message": "Type safety: A generic array of UserParameter<? extends Number> is created for a varargs parameter",
 	"source": "Java",
-	"startLineNumber": 28,
+	"startLineNumber": 27,
 	"startColumn": 16,
-	"endLineNumber": 28,
+	"endLineNumber": 27,
 	"endColumn": 109,
 	"origin": "extHost1"
 },{
@@ -4597,29 +3817,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IdealTransformer.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
+	"code": "268435844",
 	"severity": 4,
-	"message": "The value of the local variable frc is not used",
+	"message": "The import java.awt.font.FontRenderContext is never used",
 	"source": "Java",
-	"startLineNumber": 275,
-	"startColumn": 27,
-	"endLineNumber": 275,
-	"endColumn": 30,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IdealTransformer.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable pk1 is not used",
-	"source": "Java",
-	"startLineNumber": 312,
-	"startColumn": 16,
-	"endLineNumber": 312,
-	"endColumn": 19,
+	"startLineNumber": 40,
+	"startColumn": 8,
+	"endLineNumber": 40,
+	"endColumn": 39,
 	"tags": [
 		1
 	],
@@ -4631,9 +3836,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 328,
+	"startLineNumber": 327,
 	"startColumn": 27,
-	"endLineNumber": 328,
+	"endLineNumber": 327,
 	"endColumn": 43,
 	"origin": "extHost1"
 },{
@@ -4771,28 +3976,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IGBTDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JTabbedPane is never used",
-	"source": "Java",
-	"startLineNumber": 25,
-	"startColumn": 8,
-	"endLineNumber": 25,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/IGBTDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67109438",
 	"severity": 4,
 	"message": "Type safety: A generic array of UserParameter<? extends Number> is created for a varargs parameter",
 	"source": "Java",
-	"startLineNumber": 38,
+	"startLineNumber": 37,
 	"startColumn": 30,
-	"endLineNumber": 38,
+	"endLineNumber": 37,
 	"endColumn": 168,
 	"origin": "extHost1"
 },{
@@ -5142,26 +4332,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable x is not used",
-	"source": "Java",
-	"startLineNumber": 245,
-	"startColumn": 13,
-	"endLineNumber": 245,
-	"endColumn": 14,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
 	"message": "The value of the local variable x1 is not used",
 	"source": "Java",
-	"startLineNumber": 297,
+	"startLineNumber": 296,
 	"startColumn": 13,
-	"endLineNumber": 297,
+	"endLineNumber": 296,
 	"endColumn": 15,
 	"tags": [
 		1
@@ -5174,9 +4349,9 @@
 	"severity": 4,
 	"message": "The value of the local variable x2 is not used",
 	"source": "Java",
-	"startLineNumber": 299,
+	"startLineNumber": 298,
 	"startColumn": 13,
-	"endLineNumber": 299,
+	"endLineNumber": 298,
 	"endColumn": 15,
 	"tags": [
 		1
@@ -5189,9 +4364,9 @@
 	"severity": 4,
 	"message": "The value of the local variable x3 is not used",
 	"source": "Java",
-	"startLineNumber": 301,
+	"startLineNumber": 300,
 	"startColumn": 13,
-	"endLineNumber": 301,
+	"endLineNumber": 300,
 	"endColumn": 15,
 	"tags": [
 		1
@@ -5202,7 +4377,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable x4 is not used",
+	"message": "The value of the local variable y7 is not used",
 	"source": "Java",
 	"startLineNumber": 304,
 	"startColumn": 13,
@@ -5217,22 +4392,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable y4 is not used",
-	"source": "Java",
-	"startLineNumber": 305,
-	"startColumn": 13,
-	"endLineNumber": 305,
-	"endColumn": 15,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable x5 is not used",
+	"message": "The value of the local variable y8 is not used",
 	"source": "Java",
 	"startLineNumber": 306,
 	"startColumn": 13,
@@ -5247,22 +4407,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable y5 is not used",
-	"source": "Java",
-	"startLineNumber": 307,
-	"startColumn": 13,
-	"endLineNumber": 307,
-	"endColumn": 15,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable x6 is not used",
+	"message": "The value of the local variable y9 is not used",
 	"source": "Java",
 	"startLineNumber": 308,
 	"startColumn": 13,
@@ -5277,71 +4422,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
-	"message": "The value of the local variable y6 is not used",
-	"source": "Java",
-	"startLineNumber": 309,
-	"startColumn": 13,
-	"endLineNumber": 309,
-	"endColumn": 15,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable y7 is not used",
-	"source": "Java",
-	"startLineNumber": 312,
-	"startColumn": 13,
-	"endLineNumber": 312,
-	"endColumn": 15,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable y8 is not used",
-	"source": "Java",
-	"startLineNumber": 314,
-	"startColumn": 13,
-	"endLineNumber": 314,
-	"endColumn": 15,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable y9 is not used",
-	"source": "Java",
-	"startLineNumber": 316,
-	"startColumn": 13,
-	"endLineNumber": 316,
-	"endColumn": 15,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/LISN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
 	"message": "The value of the local variable y10 is not used",
 	"source": "Java",
-	"startLineNumber": 318,
+	"startLineNumber": 310,
 	"startColumn": 13,
-	"endLineNumber": 318,
+	"endLineNumber": 310,
 	"endColumn": 16,
 	"tags": [
 		1
@@ -5354,9 +4439,9 @@
 	"severity": 4,
 	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 356,
+	"startLineNumber": 348,
 	"startColumn": 27,
-	"endLineNumber": 356,
+	"endLineNumber": 348,
 	"endColumn": 43,
 	"origin": "extHost1"
 },{
@@ -5465,36 +4550,6 @@
 	"endColumn": 97,
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorImSat.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable psird is not used",
-	"source": "Java",
-	"startLineNumber": 188,
-	"startColumn": 16,
-	"endLineNumber": 188,
-	"endColumn": 21,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorImSat.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable psirq is not used",
-	"source": "Java",
-	"startLineNumber": 189,
-	"startColumn": 16,
-	"endLineNumber": 189,
-	"endColumn": 21,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorImSatDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -5536,18 +4591,6 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorPMSMDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67109423",
-	"severity": 4,
-	"message": "Type safety: The return type List for getDialogSortedParameters() from the type MotorPMSMDialog needs unchecked conversion to conform to List<UserParameter<Double>> from the type AbstractMotorDialog<T>",
-	"source": "Java",
-	"startLineNumber": 39,
-	"startColumn": 5,
-	"endLineNumber": 39,
-	"endColumn": 9,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorPMSMDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
 	"severity": 4,
 	"message": "List is a raw type. References to generic type List<E> should be parameterized",
@@ -5558,19 +4601,16 @@
 	"endColumn": 9,
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorSmSalient.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MotorPMSMDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
+	"code": "67109423",
 	"severity": 4,
-	"message": "The import java.util.List is never used",
+	"message": "Type safety: The return type List for getDialogSortedParameters() from the type MotorPMSMDialog needs unchecked conversion to conform to List<UserParameter<Double>> from the type AbstractMotorDialog<T>",
 	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
+	"startLineNumber": 39,
+	"startColumn": 5,
+	"endLineNumber": 39,
+	"endColumn": 9,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/MutualCouplingCalculator.java",
@@ -5906,21 +4946,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/RelTerminal.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 91,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ReluctanceAndCircuitTypeInfo.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -5931,21 +4956,6 @@
 	"startColumn": 8,
 	"endLineNumber": 17,
 	"endColumn": 66,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ReluctanceComponent.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 97,
 	"tags": [
 		1
 	],
@@ -6012,6 +5022,21 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
+	"message": "The import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField is never used",
+	"source": "Java",
+	"startLineNumber": 16,
+	"startColumn": 8,
+	"endLineNumber": 16,
+	"endColumn": 63,
+	"tags": [
+		1
+	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ResistorDialog.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "268435844",
+	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.DialogNonLinearity is never used",
 	"source": "Java",
 	"startLineNumber": 17,
@@ -6027,41 +5052,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.GuiFabric is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 42,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ResistorDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.resources.I18nKeys is never used",
+	"message": "The import java.awt.event.ActionEvent is never used",
 	"source": "Java",
 	"startLineNumber": 19,
 	"startColumn": 8,
 	"endLineNumber": 19,
-	"endColumn": 51,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ResistorDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.awt.event.ActionEvent is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -6074,9 +5069,9 @@
 	"severity": 4,
 	"message": "The import java.awt.event.ActionListener is never used",
 	"source": "Java",
-	"startLineNumber": 22,
+	"startLineNumber": 20,
 	"startColumn": 8,
-	"endLineNumber": 22,
+	"endLineNumber": 20,
 	"endColumn": 37,
 	"tags": [
 		1
@@ -6089,25 +5084,10 @@
 	"severity": 4,
 	"message": "The import javax.swing.BorderFactory is never used",
 	"source": "Java",
-	"startLineNumber": 23,
+	"startLineNumber": 21,
 	"startColumn": 8,
-	"endLineNumber": 23,
+	"endLineNumber": 21,
 	"endColumn": 33,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ResistorDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JButton is never used",
-	"source": "Java",
-	"startLineNumber": 24,
-	"startColumn": 8,
-	"endLineNumber": 24,
-	"endColumn": 27,
 	"tags": [
 		1
 	],
@@ -6119,9 +5099,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.JCheckBox is never used",
 	"source": "Java",
-	"startLineNumber": 25,
+	"startLineNumber": 22,
 	"startColumn": 8,
-	"endLineNumber": 25,
+	"endLineNumber": 22,
 	"endColumn": 29,
 	"tags": [
 		1
@@ -6134,9 +5114,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.border.TitledBorder is never used",
 	"source": "Java",
-	"startLineNumber": 27,
+	"startLineNumber": 24,
 	"startColumn": 8,
-	"endLineNumber": 27,
+	"endLineNumber": 24,
 	"endColumn": 39,
 	"tags": [
 		1
@@ -6149,25 +5129,10 @@
 	"severity": 4,
 	"message": "Type safety: A generic array of UserParameter<? extends Number> is created for a varargs parameter",
 	"source": "Java",
-	"startLineNumber": 37,
+	"startLineNumber": 34,
 	"startColumn": 22,
-	"endLineNumber": 37,
+	"endLineNumber": 34,
 	"endColumn": 63,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/ResistorDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable capacitanceField is not used",
-	"source": "Java",
-	"startLineNumber": 40,
-	"startColumn": 32,
-	"endLineNumber": 40,
-	"endColumn": 48,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/SpecialTypeInfo.java",
@@ -6195,36 +5160,6 @@
 	"startColumn": 9,
 	"endLineNumber": 162,
 	"endColumn": 329,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/TerminalCircuit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 91,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/TerminalCircuit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/TerminalCircuitDialog.java",
@@ -6595,59 +5530,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/CircuitSheet.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable noPoints is not used",
-	"source": "Java",
-	"startLineNumber": 89,
-	"startColumn": 13,
-	"endLineNumber": 89,
-	"endColumn": 21,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/CircuitSheet.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "570425420",
 	"severity": 4,
 	"message": "The static field ConnectorType.RELUCTANCE should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 542,
+	"startLineNumber": 540,
 	"startColumn": 48,
-	"endLineNumber": 542,
+	"endLineNumber": 540,
 	"endColumn": 58,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/CircuitTypeInfo.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Level is never used",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/CircuitTypeInfo.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Logger is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 32,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/ComponentCoupling.java",
@@ -6996,57 +5886,12 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus is never used",
+	"message": "The import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple is never used",
 	"source": "Java",
 	"startLineNumber": 23,
 	"startColumn": 8,
 	"endLineNumber": 23,
-	"endColumn": 71,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/DialogNonLinearity.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple is never used",
-	"source": "Java",
-	"startLineNumber": 24,
-	"startColumn": 8,
-	"endLineNumber": 24,
 	"endColumn": 75,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/DialogNonLinearity.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.GraferV4 is never used",
-	"source": "Java",
-	"startLineNumber": 26,
-	"startColumn": 8,
-	"endLineNumber": 26,
-	"endColumn": 59,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/DialogNonLinearity.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings is never used",
-	"source": "Java",
-	"startLineNumber": 27,
-	"startColumn": 8,
-	"endLineNumber": 27,
-	"endColumn": 64,
 	"tags": [
 		1
 	],
@@ -7058,40 +5903,10 @@
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel is never used",
 	"source": "Java",
-	"startLineNumber": 28,
+	"startLineNumber": 25,
 	"startColumn": 8,
-	"endLineNumber": 28,
+	"endLineNumber": 25,
 	"endColumn": 68,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/DialogNonLinearity.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.GuiFabric is never used",
-	"source": "Java",
-	"startLineNumber": 30,
-	"startColumn": 8,
-	"endLineNumber": 30,
-	"endColumn": 42,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/DialogNonLinearity.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.resources.I18nKeys is never used",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 8,
-	"endLineNumber": 31,
-	"endColumn": 51,
 	"tags": [
 		1
 	],
@@ -7103,9 +5918,9 @@
 	"severity": 4,
 	"message": "The import java.awt.BorderLayout is never used",
 	"source": "Java",
-	"startLineNumber": 33,
+	"startLineNumber": 28,
 	"startColumn": 8,
-	"endLineNumber": 33,
+	"endLineNumber": 28,
 	"endColumn": 29,
 	"tags": [
 		1
@@ -7118,9 +5933,9 @@
 	"severity": 4,
 	"message": "The import java.awt.Container is never used",
 	"source": "Java",
-	"startLineNumber": 34,
+	"startLineNumber": 29,
 	"startColumn": 8,
-	"endLineNumber": 34,
+	"endLineNumber": 29,
 	"endColumn": 26,
 	"tags": [
 		1
@@ -7133,9 +5948,9 @@
 	"severity": 4,
 	"message": "The import java.awt.event.ActionEvent is never used",
 	"source": "Java",
-	"startLineNumber": 36,
+	"startLineNumber": 31,
 	"startColumn": 8,
-	"endLineNumber": 36,
+	"endLineNumber": 31,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -7148,9 +5963,9 @@
 	"severity": 4,
 	"message": "The import java.awt.event.ActionListener is never used",
 	"source": "Java",
-	"startLineNumber": 37,
+	"startLineNumber": 32,
 	"startColumn": 8,
-	"endLineNumber": 37,
+	"endLineNumber": 32,
 	"endColumn": 37,
 	"tags": [
 		1
@@ -7163,9 +5978,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.border.TitledBorder is never used",
 	"source": "Java",
-	"startLineNumber": 39,
+	"startLineNumber": 34,
 	"startColumn": 8,
-	"endLineNumber": 39,
+	"endLineNumber": 34,
 	"endColumn": 39,
 	"tags": [
 		1
@@ -7178,9 +5993,9 @@
 	"severity": 4,
 	"message": "The import java.io.File is never used",
 	"source": "Java",
-	"startLineNumber": 40,
+	"startLineNumber": 35,
 	"startColumn": 8,
-	"endLineNumber": 40,
+	"endLineNumber": 35,
 	"endColumn": 20,
 	"tags": [
 		1
@@ -7193,9 +6008,9 @@
 	"severity": 4,
 	"message": "The import java.util.ArrayList is never used",
 	"source": "Java",
-	"startLineNumber": 41,
+	"startLineNumber": 36,
 	"startColumn": 8,
-	"endLineNumber": 41,
+	"endLineNumber": 36,
 	"endColumn": 27,
 	"tags": [
 		1
@@ -7208,9 +6023,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.event.TableModelEvent is never used",
 	"source": "Java",
-	"startLineNumber": 42,
+	"startLineNumber": 37,
 	"startColumn": 8,
-	"endLineNumber": 42,
+	"endLineNumber": 37,
 	"endColumn": 41,
 	"tags": [
 		1
@@ -7223,9 +6038,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.event.TableModelListener is never used",
 	"source": "Java",
-	"startLineNumber": 43,
+	"startLineNumber": 38,
 	"startColumn": 8,
-	"endLineNumber": 43,
+	"endLineNumber": 38,
 	"endColumn": 44,
 	"tags": [
 		1
@@ -7238,9 +6053,9 @@
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 53,
+	"startLineNumber": 48,
 	"startColumn": 50,
-	"endLineNumber": 53,
+	"endLineNumber": 48,
 	"endColumn": 53,
 	"tags": [
 		2
@@ -7296,26 +6111,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractResistor is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 84,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/LKMatrices.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.LK_LKOP2 is never used",
 	"source": "Java",
-	"startLineNumber": 23,
+	"startLineNumber": 22,
 	"startColumn": 15,
-	"endLineNumber": 23,
+	"endLineNumber": 22,
 	"endColumn": 94,
 	"tags": [
 		1
@@ -7328,9 +6128,9 @@
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.REL_RELUCTANCE is never used",
 	"source": "Java",
-	"startLineNumber": 24,
+	"startLineNumber": 23,
 	"startColumn": 15,
-	"endLineNumber": 24,
+	"endLineNumber": 23,
 	"endColumn": 100,
 	"tags": [
 		1
@@ -7343,9 +6143,9 @@
 	"severity": 4,
 	"message": "The static field LKMatrices.FAST_NULL_R should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 618,
+	"startLineNumber": 617,
 	"startColumn": 84,
-	"endLineNumber": 618,
+	"endLineNumber": 617,
 	"endColumn": 95,
 	"origin": "extHost1"
 },{
@@ -7355,25 +6155,10 @@
 	"severity": 4,
 	"message": "The static field LKMatrices.FAST_NULL_R should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 625,
+	"startLineNumber": 624,
 	"startColumn": 84,
-	"endLineNumber": 625,
+	"endLineNumber": 624,
 	"endColumn": 95,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/LKMatrices.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable gain is not used",
-	"source": "Java",
-	"startLineNumber": 1054,
-	"startColumn": 36,
-	"endLineNumber": 1054,
-	"endColumn": 40,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/LKMatrices.java",
@@ -7382,9 +6167,9 @@
 	"severity": 4,
 	"message": "The value of the local variable x1 is not used",
 	"source": "Java",
-	"startLineNumber": 1056,
+	"startLineNumber": 1054,
 	"startColumn": 33,
-	"endLineNumber": 1056,
+	"endLineNumber": 1054,
 	"endColumn": 35,
 	"tags": [
 		1
@@ -7397,25 +6182,10 @@
 	"severity": 4,
 	"message": "The value of the local variable y1 is not used",
 	"source": "Java",
-	"startLineNumber": 1057,
+	"startLineNumber": 1055,
 	"startColumn": 30,
-	"endLineNumber": 1057,
+	"endLineNumber": 1055,
 	"endColumn": 32,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/losscalculation/DetailledLossPanel.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.awt.Component is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 26,
 	"tags": [
 		1
 	],
@@ -7427,9 +6197,9 @@
 	"severity": 4,
 	"message": "The import java.util.Comparator is never used",
 	"source": "Java",
-	"startLineNumber": 28,
+	"startLineNumber": 27,
 	"startColumn": 8,
-	"endLineNumber": 28,
+	"endLineNumber": 27,
 	"endColumn": 28,
 	"tags": [
 		1
@@ -7442,9 +6212,9 @@
 	"severity": 4,
 	"message": "Type safety: Unchecked cast from LossCurve to T",
 	"source": "Java",
-	"startLineNumber": 71,
+	"startLineNumber": 70,
 	"startColumn": 39,
-	"endLineNumber": 71,
+	"endLineNumber": 70,
 	"endColumn": 51,
 	"origin": "extHost1"
 },{
@@ -7454,10 +6224,25 @@
 	"severity": 4,
 	"message": "Type safety: Unchecked cast from LossCurve to T",
 	"source": "Java",
-	"startLineNumber": 117,
+	"startLineNumber": 116,
 	"startColumn": 29,
-	"endLineNumber": 117,
+	"endLineNumber": 116,
 	"endColumn": 85,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/losscalculation/VerlustBerechnungDetailed.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "268435844",
+	"severity": 4,
+	"message": "The import java.util.StringTokenizer is never used",
+	"source": "Java",
+	"startLineNumber": 33,
+	"startColumn": 8,
+	"endLineNumber": 33,
+	"endColumn": 33,
+	"tags": [
+		1
+	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/losscalculation/VerlustBerechnungDetailed.java",
@@ -7475,21 +6260,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/losscalculation/VerlustBerechnungDetailed.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable stk is not used",
-	"source": "Java",
-	"startLineNumber": 223,
-	"startColumn": 25,
-	"endLineNumber": 223,
-	"endColumn": 28,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/LUDecompositionCache.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -7500,6 +6270,21 @@
 	"startColumn": 8,
 	"endLineNumber": 17,
 	"endColumn": 25,
+	"tags": [
+		1
+	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/LUDecompositionCache.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "268435844",
+	"severity": 4,
+	"message": "The import java.util.Map.Entry is never used",
+	"source": "Java",
+	"startLineNumber": 19,
+	"startColumn": 8,
+	"endLineNumber": 19,
+	"endColumn": 27,
 	"tags": [
 		1
 	],
@@ -7530,21 +6315,6 @@
 	"startColumn": 18,
 	"endLineNumber": 89,
 	"endColumn": 55,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/LUDecompositionCache.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536870973",
-	"severity": 4,
-	"message": "The value of the local variable size is not used",
-	"source": "Java",
-	"startLineNumber": 99,
-	"startColumn": 14,
-	"endLineNumber": 99,
-	"endColumn": 18,
 	"tags": [
 		1
 	],
@@ -7732,28 +6502,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/NetListLK.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractResistor is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 84,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/NetListLK.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
 	"message": "The value of the local variable maxLc is not used",
 	"source": "Java",
-	"startLineNumber": 474,
+	"startLineNumber": 473,
 	"startColumn": 13,
-	"endLineNumber": 474,
+	"endLineNumber": 473,
 	"endColumn": 18,
 	"tags": [
 		1
@@ -7766,9 +6521,9 @@
 	"severity": 4,
 	"message": "Type safety: The constructor AbstractMap.SimpleEntry(Object, Object) belongs to the raw type AbstractMap.SimpleEntry. References to generic type AbstractMap.SimpleEntry<K,V> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 498,
+	"startLineNumber": 497,
 	"startColumn": 29,
-	"endLineNumber": 498,
+	"endLineNumber": 497,
 	"endColumn": 78,
 	"origin": "extHost1"
 },{
@@ -7778,9 +6533,9 @@
 	"severity": 4,
 	"message": "Type safety: The expression of type AbstractMap.SimpleEntry needs unchecked conversion to conform to AbstractMap.SimpleEntry<AbstractCircuitBlockInterface,AbstractCircuitBlockInterface>",
 	"source": "Java",
-	"startLineNumber": 498,
+	"startLineNumber": 497,
 	"startColumn": 29,
-	"endLineNumber": 498,
+	"endLineNumber": 497,
 	"endColumn": 78,
 	"origin": "extHost1"
 },{
@@ -7790,9 +6545,9 @@
 	"severity": 4,
 	"message": "AbstractMap.SimpleEntry is a raw type. References to generic type AbstractMap.SimpleEntry<K,V> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 498,
+	"startLineNumber": 497,
 	"startColumn": 33,
-	"endLineNumber": 498,
+	"endLineNumber": 497,
 	"endColumn": 56,
 	"origin": "extHost1"
 },{
@@ -8052,7 +6807,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant SELECT_WINDOW needs a corresponding case label in this enum switch on SchematischeEingabe2.MouseMoveMode",
+	"message": "The enum constant NONE needs a corresponding case label in this enum switch on SchematischeEingabe2.MouseMoveMode",
 	"source": "Java",
 	"startLineNumber": 1292,
 	"startColumn": 17,
@@ -8064,7 +6819,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant NONE needs a corresponding case label in this enum switch on SchematischeEingabe2.MouseMoveMode",
+	"message": "The enum constant SELECT_WINDOW needs a corresponding case label in this enum switch on SchematischeEingabe2.MouseMoveMode",
 	"source": "Java",
 	"startLineNumber": 1292,
 	"startColumn": 17,
@@ -8238,163 +6993,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant TH_PvCHIP needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_SMSALIENT needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_CTH needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_TRANS needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_PMSM needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_MMF needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_INDUCTOR needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_BJT needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_MODUL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_TEMP needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_D needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_IMA needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant TH_FLOW needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -8418,139 +7017,31 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_IMC needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_L needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_OPV1 needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_AMBIENT needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_M needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_RELUCTANCE needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_I needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant NONLIN_REL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
 	"message": "The enum constant LK_MOTOR_SMROUND needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_TRANS needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -8574,7 +7065,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant TH_RTH needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_D needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -8586,31 +7077,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_C needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_FLOW needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_MOTOR_SMSALIENT needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -8634,7 +7101,31 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_U needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant TH_CTH needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR_IMC needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -8658,6 +7149,186 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
+	"message": "The enum constant NONLIN_REL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_I needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_BJT needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_RTH needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR_PMSM needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_PvCHIP needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_M needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_TEMP needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_OPV1 needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_MODUL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_L needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR_IMA needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
 	"message": "The enum constant LK_LISN needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
@@ -8670,7 +7341,91 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant TH_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant REL_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_MMF needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_AMBIENT needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_U needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_RELUCTANCE needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_C needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_INDUCTOR needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -9155,105 +7910,15 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/WorksheetSize.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 83,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/AbstractCurrentMeasurement.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 24,
-	"startColumn": 8,
-	"endLineNumber": 24,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/AbstractTrigonometricFunction.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.resources.I18nKeys is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 51,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/BlockOrderOptimizer3.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Level is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/BlockOrderOptimizer3.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.logging.Logger is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 32,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/calculators/SmallSignalCalculator.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 15,
-	"endLineNumber": 18,
-	"endColumn": 102,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/calculators/SmallSignalCalculator.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft is never used",
 	"source": "Java",
-	"startLineNumber": 20,
+	"startLineNumber": 19,
 	"startColumn": 8,
-	"endLineNumber": 20,
+	"endLineNumber": 19,
 	"endColumn": 61,
 	"tags": [
 		1
@@ -9266,9 +7931,9 @@
 	"severity": 4,
 	"message": "The value of the field SmallSignalCalculator.FOUR is not used",
 	"source": "Java",
-	"startLineNumber": 32,
+	"startLineNumber": 31,
 	"startColumn": 30,
-	"endLineNumber": 32,
+	"endLineNumber": 31,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -9281,9 +7946,9 @@
 	"severity": 4,
 	"message": "The static field AbstractControlCalculatable._time should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 94,
+	"startLineNumber": 93,
 	"startColumn": 31,
-	"endLineNumber": 94,
+	"endLineNumber": 93,
 	"endColumn": 36,
 	"origin": "extHost1"
 },{
@@ -9293,9 +7958,9 @@
 	"severity": 4,
 	"message": "The method printResults(float[], float[]) from the type SmallSignalCalculator is never used locally",
 	"source": "Java",
-	"startLineNumber": 205,
+	"startLineNumber": 204,
 	"startColumn": 18,
-	"endLineNumber": 205,
+	"endLineNumber": 204,
 	"endColumn": 63,
 	"tags": [
 		1
@@ -9308,9 +7973,9 @@
 	"severity": 4,
 	"message": "The method printResults() from the type SmallSignalCalculator is never used locally",
 	"source": "Java",
-	"startLineNumber": 312,
+	"startLineNumber": 311,
 	"startColumn": 18,
-	"endLineNumber": 312,
+	"endLineNumber": 311,
 	"endColumn": 32,
 	"tags": [
 		1
@@ -9414,21 +8079,6 @@
 	"startColumn": 12,
 	"endLineNumber": 133,
 	"endColumn": 45,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ControlGlobalTerminal.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ControlOrderNode.java",
@@ -10098,26 +8748,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.ControlSourceType is never used",
+	"message": "The import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable is never used",
 	"source": "Java",
 	"startLineNumber": 20,
 	"startColumn": 8,
 	"endLineNumber": 20,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogSmallSignalAnalysis.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
 	"endColumn": 89,
 	"tags": [
 		1
@@ -10130,55 +8765,10 @@
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.GeckoSymbol is never used",
 	"source": "Java",
-	"startLineNumber": 25,
+	"startLineNumber": 24,
 	"startColumn": 8,
-	"endLineNumber": 25,
+	"endLineNumber": 24,
 	"endColumn": 62,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogSmallSignalAnalysis.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.GuiFabric is never used",
-	"source": "Java",
-	"startLineNumber": 30,
-	"startColumn": 8,
-	"endLineNumber": 30,
-	"endColumn": 42,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogSmallSignalAnalysis.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.resources.I18nKeys is never used",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 8,
-	"endLineNumber": 31,
-	"endColumn": 51,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogSmallSignalAnalysis.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JButton is never used",
-	"source": "Java",
-	"startLineNumber": 40,
-	"startColumn": 8,
-	"endLineNumber": 40,
-	"endColumn": 27,
 	"tags": [
 		1
 	],
@@ -10190,9 +8780,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.JSpinner is never used",
 	"source": "Java",
-	"startLineNumber": 45,
+	"startLineNumber": 41,
 	"startColumn": 8,
-	"endLineNumber": 45,
+	"endLineNumber": 41,
 	"endColumn": 28,
 	"tags": [
 		1
@@ -10205,9 +8795,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.SpinnerModel is never used",
 	"source": "Java",
-	"startLineNumber": 46,
+	"startLineNumber": 42,
 	"startColumn": 8,
-	"endLineNumber": 46,
+	"endLineNumber": 42,
 	"endColumn": 32,
 	"tags": [
 		1
@@ -10220,9 +8810,9 @@
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 72,
+	"startLineNumber": 68,
 	"startColumn": 23,
-	"endLineNumber": 72,
+	"endLineNumber": 68,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -10235,9 +8825,9 @@
 	"severity": 4,
 	"message": "The static field SmallSignalCalculator._bode should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 120,
+	"startLineNumber": 116,
 	"startColumn": 38,
-	"endLineNumber": 120,
+	"endLineNumber": 116,
 	"endColumn": 43,
 	"origin": "extHost1"
 },{
@@ -10247,9 +8837,9 @@
 	"severity": 4,
 	"message": "The constructor ScopeSettings() is deprecated",
 	"source": "Java",
-	"startLineNumber": 145,
+	"startLineNumber": 141,
 	"startColumn": 38,
-	"endLineNumber": 145,
+	"endLineNumber": 141,
 	"endColumn": 51,
 	"tags": [
 		2
@@ -10262,9 +8852,9 @@
 	"severity": 4,
 	"message": "Type safety: Potential heap pollution via varargs parameter parameters",
 	"source": "Java",
-	"startLineNumber": 176,
+	"startLineNumber": 172,
 	"startColumn": 75,
-	"endLineNumber": 176,
+	"endLineNumber": 172,
 	"endColumn": 85,
 	"origin": "extHost1"
 },{
@@ -10274,9 +8864,9 @@
 	"severity": 4,
 	"message": "Type safety: A generic array of UserParameter<? extends Number> is created for a varargs parameter",
 	"source": "Java",
-	"startLineNumber": 247,
+	"startLineNumber": 243,
 	"startColumn": 24,
-	"endLineNumber": 247,
+	"endLineNumber": 243,
 	"endColumn": 64,
 	"origin": "extHost1"
 },{
@@ -10286,9 +8876,9 @@
 	"severity": 4,
 	"message": "Type safety: A generic array of UserParameter<? extends Number> is created for a varargs parameter",
 	"source": "Java",
-	"startLineNumber": 250,
+	"startLineNumber": 246,
 	"startColumn": 27,
-	"endLineNumber": 250,
+	"endLineNumber": 246,
 	"endColumn": 63,
 	"origin": "extHost1"
 },{
@@ -10298,9 +8888,9 @@
 	"severity": 4,
 	"message": "Type safety: A generic array of UserParameter<? extends Number> is created for a varargs parameter",
 	"source": "Java",
-	"startLineNumber": 253,
+	"startLineNumber": 249,
 	"startColumn": 28,
-	"endLineNumber": 253,
+	"endLineNumber": 249,
 	"endColumn": 63,
 	"origin": "extHost1"
 },{
@@ -10310,9 +8900,9 @@
 	"severity": 4,
 	"message": "The method runCalculation() from the type DialogSmallSignalAnalysis is never used locally",
 	"source": "Java",
-	"startLineNumber": 273,
+	"startLineNumber": 269,
 	"startColumn": 18,
-	"endLineNumber": 273,
+	"endLineNumber": 269,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -10516,28 +9106,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/javablock/AbstractJavaBlock.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.i18n.resources.I18nKeys is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 51,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/javablock/AbstractJavaBlock.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777761",
 	"severity": 4,
 	"message": "Type safety: Unchecked cast from Object to Map<String,CompiledClassContainer>",
 	"source": "Java",
-	"startLineNumber": 196,
+	"startLineNumber": 195,
 	"startColumn": 66,
-	"endLineNumber": 196,
+	"endLineNumber": 195,
 	"endColumn": 126,
 	"origin": "extHost1"
 },{
@@ -10547,9 +9122,9 @@
 	"severity": 4,
 	"message": "The method saveSourcesForDebug(String, String) from the type AbstractJavaBlock is never used locally",
 	"source": "Java",
-	"startLineNumber": 226,
+	"startLineNumber": 225,
 	"startColumn": 18,
-	"endLineNumber": 226,
+	"endLineNumber": 225,
 	"endColumn": 86,
 	"tags": [
 		1
@@ -10575,26 +9150,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import java.awt.Graphics is never used",
-	"source": "Java",
-	"startLineNumber": 23,
-	"startColumn": 8,
-	"endLineNumber": 23,
-	"endColumn": 25,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/javablock/CodeWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import java.util.Timer is never used",
 	"source": "Java",
-	"startLineNumber": 34,
+	"startLineNumber": 33,
 	"startColumn": 8,
-	"endLineNumber": 34,
+	"endLineNumber": 33,
 	"endColumn": 23,
 	"tags": [
 		1
@@ -10607,9 +9167,9 @@
 	"severity": 4,
 	"message": "The import javax.swing.table.DefaultTableModel is never used",
 	"source": "Java",
-	"startLineNumber": 51,
+	"startLineNumber": 50,
 	"startColumn": 8,
-	"endLineNumber": 51,
+	"endLineNumber": 50,
 	"endColumn": 43,
 	"tags": [
 		1
@@ -10622,9 +9182,9 @@
 	"severity": 4,
 	"message": "The constructor URL(URL, String) is deprecated since version 20",
 	"source": "Java",
-	"startLineNumber": 124,
+	"startLineNumber": 123,
 	"startColumn": 49,
-	"endLineNumber": 124,
+	"endLineNumber": 123,
 	"endColumn": 52,
 	"tags": [
 		2
@@ -10637,9 +9197,9 @@
 	"severity": 4,
 	"message": "The method jButtonAutoIndentActionPerformed(ActionEvent) from the type CodeWindow is never used locally",
 	"source": "Java",
-	"startLineNumber": 942,
+	"startLineNumber": 941,
 	"startColumn": 14,
-	"endLineNumber": 942,
+	"endLineNumber": 941,
 	"endColumn": 78,
 	"tags": [
 		1
@@ -10652,9 +9212,9 @@
 	"severity": 2,
 	"message": "TODO add your handling code here:",
 	"source": "Java",
-	"startLineNumber": 994,
+	"startLineNumber": 993,
 	"startColumn": 12,
-	"endLineNumber": 994,
+	"endLineNumber": 993,
 	"endColumn": 45,
 	"origin": "extHost1"
 },{
@@ -10965,26 +9525,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time is never used",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 15,
-	"endLineNumber": 31,
-	"endColumn": 102,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/javablock/ReglerJavaFunction.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import java.util.ArrayList is never used",
 	"source": "Java",
-	"startLineNumber": 40,
+	"startLineNumber": 39,
 	"startColumn": 8,
-	"endLineNumber": 40,
+	"endLineNumber": 39,
 	"endColumn": 27,
 	"tags": [
 		1
@@ -10997,9 +9542,9 @@
 	"severity": 4,
 	"message": "Type safety: The expression of type TreeSet needs unchecked conversion to conform to Set<String>",
 	"source": "Java",
-	"startLineNumber": 100,
+	"startLineNumber": 99,
 	"startColumn": 58,
-	"endLineNumber": 100,
+	"endLineNumber": 99,
 	"endColumn": 71,
 	"origin": "extHost1"
 },{
@@ -11009,9 +9554,9 @@
 	"severity": 4,
 	"message": "TreeSet is a raw type. References to generic type TreeSet<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 100,
+	"startLineNumber": 99,
 	"startColumn": 62,
-	"endLineNumber": 100,
+	"endLineNumber": 99,
 	"endColumn": 69,
 	"origin": "extHost1"
 },{
@@ -11276,60 +9821,15 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/RegelBlock.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JOptionPane is never used",
-	"source": "Java",
-	"startLineNumber": 33,
-	"startColumn": 8,
-	"endLineNumber": 33,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAbsolutValue.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAmperemeter.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAmperemeter.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.TokenMap is never used",
 	"source": "Java",
-	"startLineNumber": 20,
+	"startLineNumber": 19,
 	"startColumn": 8,
-	"endLineNumber": 20,
+	"endLineNumber": 19,
 	"endColumn": 58,
 	"tags": [
 		1
@@ -11408,66 +9908,6 @@
 	"endColumn": 58,
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAreaCosine.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 15,
-	"startColumn": 8,
-	"endLineNumber": 15,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAreaSine.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAreaTangens.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerConstant.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerConstantDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67109438",
@@ -11484,72 +9924,12 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerControlDebug.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix is never used",
 	"source": "Java",
-	"startLineNumber": 17,
+	"startLineNumber": 16,
 	"startColumn": 15,
-	"endLineNumber": 17,
+	"endLineNumber": 16,
 	"endColumn": 91,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerCosine.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerCounter.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerDelay.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
 	"tags": [
 		1
 	],
@@ -11577,111 +9957,6 @@
 	"startColumn": 33,
 	"endLineNumber": 31,
 	"endColumn": 41,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerDivision.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerDQABC.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerEqual.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerExclusiveOr.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerExponential.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerFlowMeter.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerFluxMeter.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
 	"tags": [
 		1
 	],
@@ -11721,21 +9996,6 @@
 	"startColumn": 41,
 	"endLineNumber": 211,
 	"endColumn": 59,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGain.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGainDialog.java",
@@ -11796,51 +10056,6 @@
 	"startColumn": 9,
 	"endLineNumber": 24,
 	"endColumn": 12,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGreaterEqual.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGreaterThan.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerHysteresis.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerHysteresisDialog.java",
@@ -11982,21 +10197,6 @@
 	"startColumn": 23,
 	"endLineNumber": 40,
 	"endColumn": 113,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerLimit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp is never used",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 8,
-	"endLineNumber": 16,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerLimitDialog.java",
@@ -12827,21 +11027,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerSmallSignalAnalysis.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.ControlSourceType is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 67,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerSpaceVector.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -13566,26 +11751,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface is never used",
-	"source": "Java",
-	"startLineNumber": 18,
-	"startColumn": 8,
-	"endLineNumber": 18,
-	"endColumn": 97,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/SubCircuitSheet.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp is never used",
 	"source": "Java",
-	"startLineNumber": 23,
+	"startLineNumber": 22,
 	"startColumn": 8,
-	"endLineNumber": 23,
+	"endLineNumber": 22,
 	"endColumn": 78,
 	"tags": [
 		1
@@ -13598,9 +11768,9 @@
 	"severity": 4,
 	"message": "The value of the local variable win is not used",
 	"source": "Java",
-	"startLineNumber": 59,
+	"startLineNumber": 58,
 	"startColumn": 25,
-	"endLineNumber": 59,
+	"endLineNumber": 58,
 	"endColumn": 28,
 	"tags": [
 		1
@@ -13662,26 +11832,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerFourier is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 76,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/TestReceiverWindow.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.control.QuasiPeakCalculator is never used",
 	"source": "Java",
-	"startLineNumber": 31,
+	"startLineNumber": 30,
 	"startColumn": 8,
-	"endLineNumber": 31,
+	"endLineNumber": 30,
 	"endColumn": 69,
 	"tags": [
 		1
@@ -13694,9 +11849,9 @@
 	"severity": 4,
 	"message": "The import java.awt.event.ActionEvent is never used",
 	"source": "Java",
-	"startLineNumber": 33,
+	"startLineNumber": 32,
 	"startColumn": 8,
-	"endLineNumber": 33,
+	"endLineNumber": 32,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -13709,9 +11864,9 @@
 	"severity": 4,
 	"message": "The import java.awt.event.ActionListener is never used",
 	"source": "Java",
-	"startLineNumber": 34,
+	"startLineNumber": 33,
 	"startColumn": 8,
-	"endLineNumber": 34,
+	"endLineNumber": 33,
 	"endColumn": 37,
 	"tags": [
 		1
@@ -13724,9 +11879,9 @@
 	"severity": 4,
 	"message": "The constructor ScopeSettings() is deprecated",
 	"source": "Java",
-	"startLineNumber": 80,
+	"startLineNumber": 79,
 	"startColumn": 39,
-	"endLineNumber": 80,
+	"endLineNumber": 79,
 	"endColumn": 52,
 	"tags": [
 		2
@@ -13739,9 +11894,9 @@
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 104,
+	"startLineNumber": 103,
 	"startColumn": 23,
-	"endLineNumber": 104,
+	"endLineNumber": 103,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -13754,9 +11909,9 @@
 	"severity": 4,
 	"message": "The method relativeMeasure(float, float) from the type TestReceiverWindow is never used locally",
 	"source": "Java",
-	"startLineNumber": 658,
+	"startLineNumber": 657,
 	"startColumn": 20,
-	"endLineNumber": 658,
+	"endLineNumber": 657,
 	"endColumn": 63,
 	"tags": [
 		1
@@ -13769,9 +11924,9 @@
 	"severity": 4,
 	"message": "The method eliminateBelowMedian200Hz(TestReceiverCalculation, float[], List<Integer>) from the type TestReceiverWindow is never used locally",
 	"source": "Java",
-	"startLineNumber": 692,
+	"startLineNumber": 691,
 	"startColumn": 27,
-	"endLineNumber": 692,
+	"endLineNumber": 691,
 	"endColumn": 144,
 	"tags": [
 		1
@@ -13784,9 +11939,9 @@
 	"severity": 4,
 	"message": "The value of the local variable counter is not used",
 	"source": "Java",
-	"startLineNumber": 695,
+	"startLineNumber": 694,
 	"startColumn": 13,
-	"endLineNumber": 695,
+	"endLineNumber": 694,
 	"endColumn": 20,
 	"tags": [
 		1
@@ -13799,9 +11954,9 @@
 	"severity": 4,
 	"message": "The value of the field TestReceiverWindow.CalculationRunnable._memoryContainer is not used",
 	"source": "Java",
-	"startLineNumber": 873,
+	"startLineNumber": 872,
 	"startColumn": 33,
-	"endLineNumber": 873,
+	"endLineNumber": 872,
 	"endColumn": 49,
 	"tags": [
 		1
@@ -13814,9 +11969,9 @@
 	"severity": 4,
 	"message": "Type safety: The expression of type Set needs unchecked conversion to conform to Set<Integer>",
 	"source": "Java",
-	"startLineNumber": 895,
+	"startLineNumber": 894,
 	"startColumn": 34,
-	"endLineNumber": 895,
+	"endLineNumber": 894,
 	"endColumn": 55,
 	"origin": "extHost1"
 },{
@@ -13826,9 +11981,9 @@
 	"severity": 4,
 	"message": "The value of the field TestReceiverWindow.buttonGroup1 is not used",
 	"source": "Java",
-	"startLineNumber": 1228,
+	"startLineNumber": 1227,
 	"startColumn": 37,
-	"endLineNumber": 1228,
+	"endLineNumber": 1227,
 	"endColumn": 49,
 	"tags": [
 		1
@@ -14059,28 +12214,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/datacontainer/DataTableFrame.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JFrame is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 26,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/datacontainer/DataTableFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536871547",
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 40,
+	"startLineNumber": 39,
 	"startColumn": 23,
-	"endLineNumber": 40,
+	"endLineNumber": 39,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -14488,28 +12628,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/nativec/ReglerNativeC.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time is never used",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 15,
-	"endLineNumber": 31,
-	"endColumn": 102,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/nativec/ReglerNativeC.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 58,
+	"startLineNumber": 57,
 	"startColumn": 13,
-	"endLineNumber": 58,
+	"endLineNumber": 57,
 	"endColumn": 29,
 	"origin": "extHost1"
 },{
@@ -14519,9 +12644,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 450,
+	"startLineNumber": 449,
 	"startColumn": 12,
-	"endLineNumber": 450,
+	"endLineNumber": 449,
 	"endColumn": 28,
 	"origin": "extHost1"
 },{
@@ -14531,9 +12656,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 451,
+	"startLineNumber": 450,
 	"startColumn": 9,
-	"endLineNumber": 451,
+	"endLineNumber": 450,
 	"endColumn": 25,
 	"origin": "extHost1"
 },{
@@ -14543,9 +12668,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 451,
+	"startLineNumber": 450,
 	"startColumn": 39,
-	"endLineNumber": 451,
+	"endLineNumber": 450,
 	"endColumn": 55,
 	"origin": "extHost1"
 },{
@@ -14555,9 +12680,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addElement(Object) belongs to the raw type DefaultListModel. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 454,
+	"startLineNumber": 453,
 	"startColumn": 13,
-	"endLineNumber": 454,
+	"endLineNumber": 453,
 	"endColumn": 43,
 	"origin": "extHost1"
 },{
@@ -14567,9 +12692,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 459,
+	"startLineNumber": 458,
 	"startColumn": 45,
-	"endLineNumber": 459,
+	"endLineNumber": 458,
 	"endColumn": 61,
 	"origin": "extHost1"
 },{
@@ -14579,9 +12704,9 @@
 	"severity": 4,
 	"message": "DefaultListModel is a raw type. References to generic type DefaultListModel<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 483,
+	"startLineNumber": 482,
 	"startColumn": 32,
-	"endLineNumber": 483,
+	"endLineNumber": 482,
 	"endColumn": 48,
 	"origin": "extHost1"
 },{
@@ -14785,28 +12910,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/CharacteristicsCalculator.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/CharacteristicsCalculator.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536870973",
 	"severity": 4,
 	"message": "The value of the local variable isContinusRowsCalculation is not used",
 	"source": "Java",
-	"startLineNumber": 201,
+	"startLineNumber": 200,
 	"startColumn": 17,
-	"endLineNumber": 201,
+	"endLineNumber": 200,
 	"endColumn": 42,
 	"tags": [
 		1
@@ -14819,9 +12929,9 @@
 	"severity": 4,
 	"message": "The value of the local variable tick is not used",
 	"source": "Java",
-	"startLineNumber": 214,
+	"startLineNumber": 213,
 	"startColumn": 14,
-	"endLineNumber": 214,
+	"endLineNumber": 213,
 	"endColumn": 18,
 	"tags": [
 		1
@@ -14860,28 +12970,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/CompressedData.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.List is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 22,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/CompressedData.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "603979894",
 	"severity": 4,
 	"message": "The method getRandomInt(int, int) from the type CompressedData is never used locally",
 	"source": "Java",
-	"startLineNumber": 62,
+	"startLineNumber": 61,
 	"startColumn": 24,
-	"endLineNumber": 62,
+	"endLineNumber": 61,
 	"endColumn": 54,
 	"tags": [
 		1
@@ -15293,21 +13388,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/FourierGUIless.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JOptionPane is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/GeckoDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67110271",
@@ -15398,21 +13478,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/HorizontalLevel.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.awt.Component is never used",
-	"source": "Java",
-	"startLineNumber": 17,
-	"startColumn": 8,
-	"endLineNumber": 17,
-	"endColumn": 26,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/JPanelAxisSettings2.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777747",
@@ -15462,66 +13527,6 @@
 	"startColumn": 13,
 	"endLineNumber": 304,
 	"endColumn": 34,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/JPanelFourier.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425421",
-	"severity": 4,
-	"message": "The value of the field JPanelFourier._diagCON is not used",
-	"source": "Java",
-	"startLineNumber": 40,
-	"startColumn": 40,
-	"endLineNumber": 40,
-	"endColumn": 48,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/JPanelFourier.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "134217861",
-	"severity": 4,
-	"message": "The constructor ScopeSettings() is deprecated",
-	"source": "Java",
-	"startLineNumber": 46,
-	"startColumn": 39,
-	"endLineNumber": 46,
-	"endColumn": 52,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/JPanelFourier.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "134217861",
-	"severity": 4,
-	"message": "The constructor ScopeSettings() is deprecated",
-	"source": "Java",
-	"startLineNumber": 56,
-	"startColumn": 39,
-	"endLineNumber": 56,
-	"endColumn": 52,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/JPanelFourier.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536871547",
-	"severity": 4,
-	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
-	"source": "Java",
-	"startLineNumber": 95,
-	"startColumn": 23,
-	"endLineNumber": 95,
-	"endColumn": 34,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/JPanelGridSettings.java",
@@ -17190,41 +15195,11 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus is never used",
+	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.AbstractScopeSignal is never used",
 	"source": "Java",
 	"startLineNumber": 20,
 	"startColumn": 8,
 	"endLineNumber": 20,
-	"endColumn": 71,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/scope/FourierPlotFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerFourier is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 76,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/scope/FourierPlotFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.AbstractScopeSignal is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
 	"endColumn": 70,
 	"tags": [
 		1
@@ -17237,40 +15212,10 @@
 	"severity": 4,
 	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.DialogConnectSignalsGraphs is never used",
 	"source": "Java",
-	"startLineNumber": 23,
+	"startLineNumber": 21,
 	"startColumn": 8,
-	"endLineNumber": 23,
+	"endLineNumber": 21,
 	"endColumn": 77,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/scope/FourierPlotFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.GraferV4 is never used",
-	"source": "Java",
-	"startLineNumber": 24,
-	"startColumn": 8,
-	"endLineNumber": 24,
-	"endColumn": 59,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/scope/FourierPlotFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings is never used",
-	"source": "Java",
-	"startLineNumber": 26,
-	"startColumn": 8,
-	"endLineNumber": 26,
-	"endColumn": 64,
 	"tags": [
 		1
 	],
@@ -17282,9 +15227,9 @@
 	"severity": 4,
 	"message": "The import java.io.BufferedWriter is never used",
 	"source": "Java",
-	"startLineNumber": 27,
+	"startLineNumber": 23,
 	"startColumn": 8,
-	"endLineNumber": 27,
+	"endLineNumber": 23,
 	"endColumn": 30,
 	"tags": [
 		1
@@ -17297,9 +15242,9 @@
 	"severity": 4,
 	"message": "The import java.io.File is never used",
 	"source": "Java",
-	"startLineNumber": 28,
+	"startLineNumber": 24,
 	"startColumn": 8,
-	"endLineNumber": 28,
+	"endLineNumber": 24,
 	"endColumn": 20,
 	"tags": [
 		1
@@ -17312,9 +15257,9 @@
 	"severity": 4,
 	"message": "The import java.io.FileWriter is never used",
 	"source": "Java",
-	"startLineNumber": 29,
+	"startLineNumber": 25,
 	"startColumn": 8,
-	"endLineNumber": 29,
+	"endLineNumber": 25,
 	"endColumn": 26,
 	"tags": [
 		1
@@ -17327,25 +15272,10 @@
 	"severity": 4,
 	"message": "The import java.util.Stack is never used",
 	"source": "Java",
-	"startLineNumber": 30,
+	"startLineNumber": 26,
 	"startColumn": 8,
-	"endLineNumber": 30,
+	"endLineNumber": 26,
 	"endColumn": 23,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/scope/FourierPlotFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JOptionPane is never used",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 8,
-	"endLineNumber": 31,
-	"endColumn": 31,
 	"tags": [
 		1
 	],
@@ -17357,9 +15287,9 @@
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 51,
+	"startLineNumber": 46,
 	"startColumn": 23,
-	"endLineNumber": 51,
+	"endLineNumber": 46,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -18718,28 +16648,13 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckoscript/SimulationAccess.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.javablock.ExtraFilesWindow is never used",
-	"source": "Java",
-	"startLineNumber": 23,
-	"startColumn": 8,
-	"endLineNumber": 23,
-	"endColumn": 76,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckoscript/SimulationAccess.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "570425420",
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 62,
+	"startLineNumber": 61,
 	"startColumn": 70,
-	"endLineNumber": 62,
+	"endLineNumber": 61,
 	"endColumn": 85,
 	"origin": "extHost1"
 },{
@@ -18749,9 +16664,9 @@
 	"severity": 4,
 	"message": "Type safety: Unchecked cast from AbstractCircuitBlockInterface to T",
 	"source": "Java",
-	"startLineNumber": 131,
+	"startLineNumber": 130,
 	"startColumn": 33,
-	"endLineNumber": 131,
+	"endLineNumber": 130,
 	"endColumn": 42,
 	"origin": "extHost1"
 },{
@@ -18761,9 +16676,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 219,
+	"startLineNumber": 218,
 	"startColumn": 20,
-	"endLineNumber": 219,
+	"endLineNumber": 218,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -18773,9 +16688,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 223,
+	"startLineNumber": 222,
 	"startColumn": 20,
-	"endLineNumber": 223,
+	"endLineNumber": 222,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -18785,9 +16700,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 227,
+	"startLineNumber": 226,
 	"startColumn": 20,
-	"endLineNumber": 227,
+	"endLineNumber": 226,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -18797,9 +16712,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 231,
+	"startLineNumber": 230,
 	"startColumn": 20,
-	"endLineNumber": 231,
+	"endLineNumber": 230,
 	"endColumn": 35,
 	"origin": "extHost1"
 },{
@@ -18809,9 +16724,9 @@
 	"severity": 4,
 	"message": "The static method getOpenFileName() from the type Fenster should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 248,
+	"startLineNumber": 247,
 	"startColumn": 25,
-	"endLineNumber": 248,
+	"endLineNumber": 247,
 	"endColumn": 53,
 	"origin": "extHost1"
 },{
@@ -18821,9 +16736,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 276,
+	"startLineNumber": 275,
 	"startColumn": 27,
-	"endLineNumber": 276,
+	"endLineNumber": 275,
 	"endColumn": 42,
 	"origin": "extHost1"
 },{
@@ -18833,9 +16748,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 280,
+	"startLineNumber": 279,
 	"startColumn": 27,
-	"endLineNumber": 280,
+	"endLineNumber": 279,
 	"endColumn": 42,
 	"origin": "extHost1"
 },{
@@ -18845,9 +16760,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 284,
+	"startLineNumber": 283,
 	"startColumn": 27,
-	"endLineNumber": 284,
+	"endLineNumber": 283,
 	"endColumn": 42,
 	"origin": "extHost1"
 },{
@@ -18857,9 +16772,9 @@
 	"severity": 4,
 	"message": "The static field Fenster._solverSettings should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 288,
+	"startLineNumber": 287,
 	"startColumn": 27,
-	"endLineNumber": 288,
+	"endLineNumber": 287,
 	"endColumn": 42,
 	"origin": "extHost1"
 },{
@@ -18869,25 +16784,10 @@
 	"severity": 4,
 	"message": "The value of the local variable netzlisteAllg1 is not used",
 	"source": "Java",
-	"startLineNumber": 401,
+	"startLineNumber": 400,
 	"startColumn": 29,
-	"endLineNumber": 401,
+	"endLineNumber": 400,
 	"endColumn": 43,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/GeckoSimulink.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.control.RegelBlock is never used",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 8,
-	"endLineNumber": 20,
-	"endColumn": 60,
 	"tags": [
 		1
 	],
@@ -18899,9 +16799,9 @@
 	"severity": 4,
 	"message": "The static field GeckoSim._win should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 89,
+	"startLineNumber": 88,
 	"startColumn": 28,
-	"endLineNumber": 89,
+	"endLineNumber": 88,
 	"endColumn": 32,
 	"origin": "extHost1"
 },{
@@ -18911,9 +16811,9 @@
 	"severity": 4,
 	"message": "The static field GeckoSim._win should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 93,
+	"startLineNumber": 92,
 	"startColumn": 35,
-	"endLineNumber": 93,
+	"endLineNumber": 92,
 	"endColumn": 39,
 	"origin": "extHost1"
 },{
@@ -18923,9 +16823,9 @@
 	"severity": 4,
 	"message": "The static field GeckoSim._win should be accessed in a static way",
 	"source": "Java",
-	"startLineNumber": 97,
+	"startLineNumber": 96,
 	"startColumn": 28,
-	"endLineNumber": 97,
+	"endLineNumber": 96,
 	"endColumn": 32,
 	"origin": "extHost1"
 },{
@@ -18959,75 +16859,15 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/i18n/InitParameters.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.Locale is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 24,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/i18n/LangInit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import java.util.Locale is never used",
-	"source": "Java",
-	"startLineNumber": 28,
-	"startColumn": 8,
-	"endLineNumber": 28,
-	"endColumn": 24,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/i18n/LangInit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JComponent is never used",
-	"source": "Java",
-	"startLineNumber": 29,
-	"startColumn": 8,
-	"endLineNumber": 29,
-	"endColumn": 30,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/i18n/LangInit.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import javax.swing.JOptionPane is never used",
-	"source": "Java",
-	"startLineNumber": 30,
-	"startColumn": 8,
-	"endLineNumber": 30,
-	"endColumn": 31,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/i18n/LangInit.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "570425421",
 	"severity": 4,
 	"message": "The value of the field LangInit.arguments is not used",
 	"source": "Java",
-	"startLineNumber": 54,
+	"startLineNumber": 51,
 	"startColumn": 29,
-	"endLineNumber": 54,
+	"endLineNumber": 51,
 	"endColumn": 38,
 	"tags": [
 		1
@@ -19040,9 +16880,9 @@
 	"severity": 4,
 	"message": "Type safety: The method addItem(Object) belongs to the raw type JComboBox. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 121,
+	"startLineNumber": 118,
 	"startColumn": 13,
-	"endLineNumber": 121,
+	"endLineNumber": 118,
 	"endColumn": 53,
 	"origin": "extHost1"
 },{
@@ -19052,9 +16892,9 @@
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 237,
+	"startLineNumber": 234,
 	"startColumn": 23,
-	"endLineNumber": 237,
+	"endLineNumber": 234,
 	"endColumn": 34,
 	"tags": [
 		1
@@ -19067,9 +16907,9 @@
 	"severity": 4,
 	"message": "JComboBox is a raw type. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 243,
+	"startLineNumber": 240,
 	"startColumn": 42,
-	"endLineNumber": 243,
+	"endLineNumber": 240,
 	"endColumn": 63,
 	"origin": "extHost1"
 },{
@@ -19079,9 +16919,9 @@
 	"severity": 4,
 	"message": "JComboBox is a raw type. References to generic type JComboBox<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 311,
+	"startLineNumber": 308,
 	"startColumn": 13,
-	"endLineNumber": 311,
+	"endLineNumber": 308,
 	"endColumn": 34,
 	"origin": "extHost1"
 },{
@@ -19218,66 +17058,6 @@
 	"startColumn": 40,
 	"endLineNumber": 109,
 	"endColumn": 41,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/modelviewcontrol/DelegateCheckBox.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.modelviewcontrol.IGenericMVCView is never used",
-	"source": "Java",
-	"startLineNumber": 21,
-	"startColumn": 8,
-	"endLineNumber": 21,
-	"endColumn": 54,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/modelviewcontrol/DelegateCheckBox.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.modelviewcontrol.ModelMVC is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 47,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/modelviewcontrol/DelegateIntSpinner.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.modelviewcontrol.IGenericMVCView is never used",
-	"source": "Java",
-	"startLineNumber": 22,
-	"startColumn": 8,
-	"endLineNumber": 22,
-	"endColumn": 54,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/modelviewcontrol/DelegateIntSpinner.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.modelviewcontrol.ModelMVC is never used",
-	"source": "Java",
-	"startLineNumber": 23,
-	"startColumn": 8,
-	"endLineNumber": 23,
-	"endColumn": 47,
-	"tags": [
-		1
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/modelviewcontrol/GroupableUndoManager.java",

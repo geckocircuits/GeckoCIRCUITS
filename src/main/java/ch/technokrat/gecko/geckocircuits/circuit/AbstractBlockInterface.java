@@ -19,7 +19,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitc
 import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SemiconductorLossCalculatable;

@@ -29,8 +29,6 @@ import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
 import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesConstantDt;
 import ch.technokrat.gecko.geckocircuits.control.QuasiPeakCalculator;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;

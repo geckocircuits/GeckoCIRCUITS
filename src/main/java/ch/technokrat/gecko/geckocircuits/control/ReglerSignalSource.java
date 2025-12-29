@@ -32,8 +32,6 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
 import java.io.BufferedReader;
 import java.io.File;

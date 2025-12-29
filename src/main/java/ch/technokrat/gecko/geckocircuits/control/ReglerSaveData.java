@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.Documentation;
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;

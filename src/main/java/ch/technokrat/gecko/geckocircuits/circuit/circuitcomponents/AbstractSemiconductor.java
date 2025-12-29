@@ -23,8 +23,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossCalculation
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
