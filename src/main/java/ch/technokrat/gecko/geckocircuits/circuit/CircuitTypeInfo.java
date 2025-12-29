@@ -16,8 +16,6 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTypeInfo;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
