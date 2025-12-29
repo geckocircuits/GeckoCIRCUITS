@@ -34,7 +34,7 @@ public class DialogMemory extends javax.swing.JFrame {
         jLabelFree.setText(used + " MB");
 
         String memorySize = GeckoSim.applicationProps.getProperty("MEMORY");
-        jSpinnerStartup.setValue(new Integer(memorySize));
+        jSpinnerStartup.setValue(Integer.parseInt(memorySize));
 
         String lossyCompression = GeckoSim.applicationProps.getProperty("LOSSY_COMPRESSION");
         
