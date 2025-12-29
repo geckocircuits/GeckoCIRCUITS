@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

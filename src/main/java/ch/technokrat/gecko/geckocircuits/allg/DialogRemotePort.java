@@ -15,16 +15,11 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.GeckoCustomMMF;
 import ch.technokrat.gecko.GeckoCustomRemote;
-import ch.technokrat.gecko.GeckoRemoteInterface;
 import ch.technokrat.gecko.GeckoRemoteRegistry;
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
