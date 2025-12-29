@@ -40,7 +40,7 @@ public class TechFormat implements Serializable {
     public void setMaximumDigits(int anzDigits) {
         this.anzDigits = anzDigits;
     }
-    private double xfmax = 0, fmax = 0;   // for testing the algorithm in formatENG()
+    private double fmax = 0;   // for testing the algorithm in formatENG()
 
     public String formatENG(double x, int anzDigits) {
             
@@ -110,7 +110,6 @@ public class TechFormat implements Serializable {
         }
         if (Math.abs(fehler) > fmax) {
             fmax = Math.abs(fehler);
-            xfmax = x;
         }
         return erg.toString();
     }
