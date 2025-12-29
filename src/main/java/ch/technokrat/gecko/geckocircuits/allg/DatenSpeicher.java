@@ -14,14 +14,12 @@
 package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.ControlTyp;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
 import ch.technokrat.gecko.geckocircuits.control.Point;
-import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
 import java.awt.Dimension;
@@ -187,7 +185,6 @@ public class DatenSpeicher implements Serializable {
     }
 
     private int importASCII(String[] ascii, final boolean isBackupRead) {
-        long tic = System.currentTimeMillis();
         final TokenMap tokenMap = new TokenMap(ascii, true);
         //tokenMap.makeBlockTokenMap(ascii, true);        
 
@@ -442,7 +439,6 @@ public class DatenSpeicher implements Serializable {
             }
         }
 
-        long toc = System.currentTimeMillis();        
         return uniqueFileId;
     }
 
