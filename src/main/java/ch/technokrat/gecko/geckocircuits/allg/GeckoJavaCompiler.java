@@ -261,7 +261,6 @@ public class GeckoJavaCompiler {
             String cp1 = _workingDirectory;
             String cp2 = cp0 + "/build/classes";
             String cp3 = GlobalFilePathes.PFAD_JAR_HOME + "GeckoCIRCUITS.jar";
-            String cp4 = "GeckoCIRCUITS.jar";
             opt.add(cp0 + ";" + cp1 + ";" + cp2 + ";" + cp3 + ";");
             //System.out.println("options --> \n"+cp0+"\n"+cp1+"\n"+cp2+"\n"+cp3+"\n----");
 
