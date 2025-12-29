@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 
 /**
  *

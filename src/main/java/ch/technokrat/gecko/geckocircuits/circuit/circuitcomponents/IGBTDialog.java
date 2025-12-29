@@ -22,7 +22,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 
 public final class IGBTDialog extends AbstractDialogPowerSwitch<IGBT> {
 
