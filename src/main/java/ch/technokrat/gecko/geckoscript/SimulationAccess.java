@@ -20,7 +20,6 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.*;
 import ch.technokrat.gecko.geckocircuits.control.DataSaver;
-import ch.technokrat.gecko.geckocircuits.control.javablock.ExtraFilesWindow;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
