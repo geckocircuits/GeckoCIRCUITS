@@ -15,12 +15,11 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
 
-public class CheckBoxList extends JList
+public class CheckBoxList extends JList<String>
     implements ListSelectionListener {
 
     static Color listForeground, listBackground,
@@ -34,7 +33,7 @@ public class CheckBoxList extends JList
         listSelectionBackground =  uid.getColor ("List.selectionBackground");
     }
 
-    HashSet selectionCache = new HashSet();
+    HashSet<Integer> selectionCache = new HashSet<Integer>();
     int toggleIndex = -1;
     boolean toggleWasSelected;
 
@@ -51,18 +50,18 @@ public class CheckBoxList extends JList
             removeListSelectionListener (this);
 
             // remember everything selected as a result of this action
-            HashSet newSelections = new HashSet();
+            HashSet<Integer> newSelections = new HashSet<Integer>();
             int size = getModel().getSize();
             for (int i=0; i<size; i++) {
                 if (getSelectionModel().isSelectedIndex(i)) {
-                    newSelections.add (new Integer(i));
+                    newSelections.add(i);
                 }
             }
 
             // turn on everything that was previously selected
-            Iterator it = selectionCache.iterator();
+            Iterator<Integer> it = selectionCache.iterator();
             while (it.hasNext()) {
-                int index = ((Integer) it.next()).intValue();
+                int index = it.next();
                 System.out.println ("adding " + index);
                 getSelectionModel().addSelectionInterval(index, index);
             }
@@ -71,7 +70,7 @@ public class CheckBoxList extends JList
             it = newSelections.iterator();
             while (it.hasNext()) {
                 Integer nextInt = (Integer) it.next();
-                int index = nextInt.intValue();
+                int index = nextInt;
                 if (selectionCache.contains (nextInt))
                     getSelectionModel().removeSelectionInterval (index, index);
                 else
@@ -83,7 +82,7 @@ public class CheckBoxList extends JList
             for (int i=0; i<size; i++) {
                 if (getSelectionModel().isSelectedIndex(i)) {
                     System.out.println ("caching " + i);
-                    selectionCache.add (new Integer(i));
+                    selectionCache.add(i);
                 }
             }
 
@@ -96,14 +95,14 @@ public class CheckBoxList extends JList
 
 
     public static void main (String[] args) {
-        JList list = new CheckBoxList ();
-        DefaultListModel defModel = new DefaultListModel();
+        JList<String> list = new CheckBoxList();
+        DefaultListModel<String> defModel = new DefaultListModel<String>();
         list.setModel (defModel);
         String[] listItems = {
             "Chris", "Joshua", "Daniel", "Michael",
             "Don", "Kimi", "Kelly", "Keagan"
         };
-        Iterator it = Arrays.asList(listItems).iterator();
+        Iterator<String> it = Arrays.asList(listItems).iterator();
         while (it.hasNext())
             defModel.addElement (it.next());
         // show list
@@ -119,7 +118,7 @@ public class CheckBoxList extends JList
 
 
     class CheckBoxListCellRenderer extends JComponent
-        implements ListCellRenderer {
+        implements ListCellRenderer<Object> {
         DefaultListCellRenderer defaultComp;
         JCheckBox checkbox;
         public CheckBoxListCellRenderer() {
@@ -130,7 +129,7 @@ public class CheckBoxList extends JList
             add (defaultComp, BorderLayout.CENTER);
         }
 
-        public Component getListCellRendererComponent(JList list,
+        public Component getListCellRendererComponent(JList<?> list,
                                                       Object  value,
                                                       int index,
                                                       boolean isSelected,
