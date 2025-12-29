@@ -353,7 +353,7 @@ public abstract class AbstractBlockInterface extends AbstractCircuitSheetCompone
     public void checkNameOptParameter() {
         for (UserParameter par : getRegisteredParameters()) {
             if (!par.getNameOpt().isEmpty()) {
-                double number = Fenster.optimizerParameterData.getNumberFromName(par.getNameOpt());
+                Fenster.optimizerParameterData.getNumberFromName(par.getNameOpt());
             }
 
         }

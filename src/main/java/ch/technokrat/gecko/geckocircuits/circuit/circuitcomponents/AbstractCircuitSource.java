@@ -235,7 +235,6 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
     public void addTextInfoErrorReference() {
         if ((sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT)
                 || (sourceType.getValue() == CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY)) {
-            int index = -1;
             if (sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT) {
                 final String couplingLabel = getPotentialCoupling().getLabels()[0];
                 if (couplingLabel == null || couplingLabel.isEmpty()) {
