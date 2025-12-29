@@ -555,8 +555,6 @@ public class GeckoSim extends JApplet {
         }
 
         win.setLocationByPlatform(true);
-
-        // System.out.println("Detected Screen-Size:  "+b+" x "+h);
     }
 
     public static void saveProperties() {
@@ -566,7 +564,7 @@ public class GeckoSim extends JApplet {
             // bad hack: if property is found in defaultProperties, and not in
             // application properties, this will save the missing property also
             // in the newly created application-property file.
-            Enumeration propNames = applicationProps.propertyNames();
+            Enumeration<?> propNames = applicationProps.propertyNames();
             while (propNames.hasMoreElements()) {
                 String key = propNames.nextElement().toString();
                 applicationProps.setProperty(key, applicationProps.getProperty(key));
@@ -617,8 +615,6 @@ public class GeckoSim extends JApplet {
     }
 
     private static void setDefaultFonts() {
-//        UIManager.getLookAndFeelDefaults()
-//                .put("defaultFont", );
 
         Font defaultFont = new Font("Arial Unicode MS", Font.PLAIN, 12);
 
