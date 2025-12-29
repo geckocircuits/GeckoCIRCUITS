@@ -272,7 +272,6 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         g2.drawLine((int) (dpix * (0 + 1)), (int) (dpix * (0 - HEIGHT) - rq), (int) (dpix * (0 + 1)), (int) (dpix * (0 - 2)));
 
         // Ansichten -->
-        FontRenderContext frc = ((Graphics2D) graphics).getFontRenderContext();
         restoreOrigTransformation(graphics);
 
         if (SchematischeEingabe2._lkDisplayMode.showFlowSymbol) {
@@ -309,7 +308,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
     @Override
     protected void drawForeground(final Graphics2D graphics) {
         int pkd = (int) (0.4 * dpix);  // Durchmesser des Kopplungspunktes in Pixel
-        double pk1 = 1.0, pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen        
+        double pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen
         graphics.fillOval((int) (dpix * (+pk2) - pkd / 2), (int) (dpix * (-1.4) - pkd / 2), pkd, pkd);
         graphics.fillOval((int) (dpix * (-pk2) - pkd / 2), (int) (dpix * (+_reversed.getValue() * 1.4) - pkd / 2), pkd, pkd);
     }
