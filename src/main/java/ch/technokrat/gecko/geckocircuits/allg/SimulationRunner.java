@@ -156,7 +156,6 @@ public final class SimulationRunner {
         boolean getAnfangsbedVomDialogfenster = true;
         //---------------------
 
-        List<AbstractBlockInterface> allElements = _se.getBlockInterfaceComponents();
         simKern = new SimulationsKern();
         double tSTART = 0, tAktuell = tSTART;
         _fenster._solverSettings._tDURATION.setValueWithoutUndo(tEND);
