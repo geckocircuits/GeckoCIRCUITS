@@ -295,8 +295,8 @@ implements Operationable, Nonlinearable {
             if (tokens.countTokens() != 2) {
                 throw new NumberFormatException("Impromer data point in file: " + currentLine);
             }            
-            nonLinX[i] = (new Double(tokens.nextToken())).doubleValue();
-            nonLinY[i] = (new Double(tokens.nextToken())).doubleValue();
+            nonLinX[i] = Double.parseDouble(tokens.nextToken());
+            nonLinY[i] = Double.parseDouble(tokens.nextToken());
         }
 
         return new double[][]{nonLinX, nonLinY};
