@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
-import ch.technokrat.gecko.geckocircuits.circuit.IDStringDialog;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;
 import java.util.LinkedHashSet;

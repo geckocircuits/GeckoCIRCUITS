@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile.StorageType;
 import ch.technokrat.gecko.geckocircuits.circuit.DialogNonLinearity;
 import ch.technokrat.gecko.geckocircuits.circuit.GeckoFileable;
-import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;
 import java.awt.Color;
 import java.io.File;

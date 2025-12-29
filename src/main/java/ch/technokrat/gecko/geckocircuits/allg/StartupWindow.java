@@ -18,9 +18,6 @@ import ch.technokrat.gecko.geckocircuits.control.QuasiPeakCalculator;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 public class StartupWindow extends javax.swing.JDialog {

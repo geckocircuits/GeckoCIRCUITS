@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern.SimulationStatus;
-import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
