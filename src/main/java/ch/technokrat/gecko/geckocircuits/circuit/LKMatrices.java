@@ -1051,11 +1051,10 @@ public class LKMatrices {
                             break;
                         case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
-                            double gain = netzliste.parameter[i1][11];
                             int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
                             int x1 = nodePairDVC[i1][0],
                              y1 = nodePairDVC[i1][1];
-                            netzliste.eLKneu[i1]._currentInAmps = 0;//gain * (p[x1] - p[y1]);                            
+                            netzliste.eLKneu[i1]._currentInAmps = 0;//gain * (p[x1] - p[y1]);
                             //System.out.println("cur: " + (gain * (p[x1] - p[y1])) + " " + x1 + " " + y1);
                             break;
                         default:
