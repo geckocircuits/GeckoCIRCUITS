@@ -47,7 +47,7 @@ public class TechFormat implements Serializable {
     //------------------------------
 
     public TechFormat() {
-        df = (DecimalFormat) (NumberFormat.getNumberInstance(new Locale("en", "US")));
+        df = (DecimalFormat) (NumberFormat.getNumberInstance(Locale.of("en", "US")));
         //this.testAusgabe2();
     }
 
@@ -56,8 +56,9 @@ public class TechFormat implements Serializable {
     }
     private double xfmax = 0, fmax = 0;  // zum Testen des Algorithmus in formatENG()
 
-    
-    
+
+
+
     public String formatENG(double x, int anzDigits) {
             
         if (Math.abs(x) > Double.MAX_VALUE - 1) {
