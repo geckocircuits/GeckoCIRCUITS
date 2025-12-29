@@ -700,7 +700,7 @@ public final class UserParameter<T> {
         }
 
         public UserParameter<T> build() {
-            UserParameter returnValue = new UserParameter<T>(this);
+            UserParameter<T> returnValue = new UserParameter<T>(this);
             if (returnValue._parameterableObject != null) {
                 returnValue._parameterableObject.registerParameter(returnValue);
             }
