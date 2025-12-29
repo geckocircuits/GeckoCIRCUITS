@@ -18,7 +18,6 @@ import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCapacitor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractInductor;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractResistor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.InductorCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.MutualInductance;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;

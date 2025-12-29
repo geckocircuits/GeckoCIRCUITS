@@ -19,7 +19,6 @@ import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractResistor;
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.LK_LKOP2;
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.REL_RELUCTANCE;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;

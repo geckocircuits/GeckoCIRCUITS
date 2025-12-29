@@ -17,7 +17,6 @@ import ch.technokrat.gecko.GeckoExternal;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.circuit.ControlSourceType;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.SmallSignalCalculator;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
