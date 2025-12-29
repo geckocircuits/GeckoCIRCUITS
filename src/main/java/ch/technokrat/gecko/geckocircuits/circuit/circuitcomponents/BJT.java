@@ -120,11 +120,10 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         super();        
         _collectorTerminal = XIN.get(0);
         _baseTerminal = new TerminalRelativePosition(this, -2, 0);        
-        _emitterTerminal = YOUT.get(0);        
+        _emitterTerminal = YOUT.get(0);
         XIN.add(_baseTerminal);
         //YOUT.add(_baseMidTerminal);
-        double i = 0, u = 0;    // Strom und Spannung eines Zweipols --> wird laufend in 'LKMatrizen' in parameter[] hineingeschrieben
-                
+
         _diode1 = (Diode) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_D, this);
         _diode1.getIDStringDialog().setRandomStringID();        
         _diode1.setOutputTerminal(0, _collectorTerminal);
@@ -238,8 +237,8 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
 
     @Override
     protected void drawForeground(final Graphics2D graphics) {
-        double dd = 0.25, alpha = Math.atan(HEIGHT), ddx = dd * Math.cos(alpha), ddy = dd * Math.sin(alpha);
-        
+        double dd = 0.25, alpha = Math.atan(HEIGHT);
+
         int[] xPoints = new int[]{(int) -(dpix * 0.5), -dpix / 3, 0};
         int[] yPoints = new int[]{(int) (dpix * 0.8), (int) (dpix * 0.5), dpix};
 
