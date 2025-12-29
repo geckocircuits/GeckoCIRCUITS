@@ -62,7 +62,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         initLists(optimizedList);
         
         _dragSource = new DragSource();
-        DragGestureRecognizer dragRec = _dragSource.createDefaultDragGestureRecognizer(jListUser, DnDConstants.ACTION_MOVE, this);
+        _dragSource.createDefaultDragGestureRecognizer(jListUser, DnDConstants.ACTION_MOVE, this);
         _dropTarget = new DropTarget(jListUser, this);
         
         setVisible(true);
