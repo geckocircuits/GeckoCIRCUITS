@@ -40,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-// TODO: this is a mess, please clean anybody up!
+// TODO: Future developer: This class needs refactoring when you have time and understand the full context.
 
 public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock 
 implements Operationable, Nonlinearable {       
@@ -390,10 +390,10 @@ implements Operationable, Nonlinearable {
     // nlX,nlY define the picewise non-linear characteristic, x is the actual value 
     public double getActualValueLINFromLinearizedCharacteristicInverse(double x) {        
         int i1 = 0;
-        boolean debug = false;
-        if( x > -23.513443326778713) {
-            debug = true;
-        }
+//        boolean debug = false;
+//        if( x > -23.513443326778713) {
+//            debug = true;
+//        }
         int pkt = nonlinearData[0].length;
         while ((i1 < pkt) && (nonlinearData[0][i1] < x)) {
             i1++;
