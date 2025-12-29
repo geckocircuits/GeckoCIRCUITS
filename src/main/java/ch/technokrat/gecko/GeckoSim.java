@@ -16,7 +16,6 @@ package ch.technokrat.gecko;
 import ch.technokrat.gecko.geckocircuits.allg.*;
 import ch.technokrat.gecko.i18n.LangInit;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
@@ -25,10 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -61,8 +57,6 @@ public class GeckoSim extends JApplet {
     public static long startTime;
     public static Fenster _win;
     static GeckoSim _geckoSim;
-    private static ByteBuffer _systemMatrixBuffer;
-    private static DoubleBuffer _sysDB;
     public static boolean _initialShow = true; // this is used from the infineon applet!    
     private String[] datnamExampleApplet;
     private String datnamStartApplet;
@@ -100,23 +94,7 @@ public class GeckoSim extends JApplet {
         }                
         Locale.setDefault(Locale.ENGLISH);
         startTime = System.currentTimeMillis();
-        
-        /*try {
-        for (javax.swing.UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-            if ("Nimbus".equals(info.getName())) {
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }*/
-        
-        //UIManager.put("nimbusBase",Color.getHSBColor(1.33f, 0.9f, 0.8f));
-        //UIManager.put("nimbusBlueGrey", Color.getHSBColor(1.33f, 0.4f, 0.9f));
-        //UIManager.put("control", Color.getHSBColor(1.33f, 0.3f, 0.8f));
 
-        
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
 
         if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF) {
@@ -375,8 +353,7 @@ public class GeckoSim extends JApplet {
 
         }
         //=================================
-        // this.logErrorsIntoFile();
-        //System.setProperty("file.encoding", "shift_jis");          //This doesn't change anything that I can tell
+
         this.checkJavaVersion();
         if (Fenster.IS_APPLET) {
             if (!javaVersionAppletOK) {
@@ -387,13 +364,9 @@ public class GeckoSim extends JApplet {
         }
         this.checkIfLibraryIsMissing();
         GlobalFilePathes.PFAD_PICS_URL = GetJarPath.getPathPICS();
-        //System.out.println("PFAD_JAR_HOME -->   "+GlobalFilePathes.PFAD_JAR_HOME+"\nPFAD_PICS_URL --> "+GlobalFilePathes.PFAD_PICS_URL+"\n--------------");
+
         loadApplicationProperties();
         this.loadPropertyFile();
-
-        //=================================
-        // eigentliches Programm starten und Anpassen an Bildschirmabmessungen -->
-        //PiccoloTest test = new PiccoloTest();
 
         
         if (!Fenster.IS_APPLET && Arrays.asList("gnome-shell", "mate", "other...").contains(System.getenv("DESKTOP_SESSION"))) {
@@ -418,15 +391,11 @@ public class GeckoSim extends JApplet {
 
         this.performScreenSettings(_win);
         //=================================
-        //boolean zeitLizenzOK= lizenzierung.isLicenceOK(Lizenzierung.LIZENZTYP_ZEITDAUER); 
-        //boolean macLizenzOK=  lizenzierung.isLicenceOK(Lizenzierung.LIZENZTYP_MAC_GUELTIG); 
+
         _win.setActivationOfSimulator(true);  // wird an spaeterer Stelle laufend gecheckt
-//        if (zeitLizenzOK && macLizenzOK) win.setActivationOfSimulator(true); else win.setActivationOfSimulator(false);
-        //=================================
 
         if (Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
             _win.setAppletFiles(datnamExampleApplet);
-            //win.setVisible(true);  // --> wird erst bei Maus-Klick im Applet-Modus aktiviert! ??
         } else {
             if (_initialShow) {
                 _win.setVisible(true);
@@ -521,7 +490,6 @@ public class GeckoSim extends JApplet {
             }
             //--------------------
             Properties sysProp = System.getProperties();
-            //sysProp.list(System.out);
             String javaVersion = sysProp.getProperty("java.runtime.version");
             double jV = Double.parseDouble(javaVersion.replace("+", ".").substring(0, 3));
 
@@ -570,20 +538,6 @@ public class GeckoSim extends JApplet {
                     JOptionPane.ERROR_MESSAGE);
         } catch (Throwable ex) {
             ex.printStackTrace();
-        }
-    }
-
-    private void logErrorsIntoFile() {
-        if (Fenster.IS_APPLET) {
-            return;
-        }
-        try {
-            String LOGFILE_NAME = "GeckoCIRCUITS.log";
-            PrintStream ps = new PrintStream(new FileOutputStream(LOGFILE_NAME));
-            System.setErr(ps);
-            System.setOut(ps);
-        } catch (Exception e) {
-            System.out.println(e + "   erqogfn32");
         }
     }
 
