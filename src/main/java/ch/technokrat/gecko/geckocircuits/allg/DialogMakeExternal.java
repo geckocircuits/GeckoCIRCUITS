@@ -254,22 +254,6 @@ public final class DialogMakeExternal extends javax.swing.JDialog {
 
     private void jButtonChooserActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonChooserActionPerformed
 
-        final FileFilter filter = new FileFilter() {
-
-            @Override
-            public boolean accept(final File file) {
-                if (file.isDirectory()) {
-                    return true;
-                }
-                return file.getName().endsWith(_geckoFile.getExtension());
-            }
-
-            @Override
-            public String getDescription() {
-                return _geckoFile.getExtension();
-            }
-        };
-
         final GeckoFileChooser saveFileChooser = GeckoFileChooser.createSimpleSaveFileChooser(_geckoFile.getExtension(), this);
                 
         if (saveFileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {            
