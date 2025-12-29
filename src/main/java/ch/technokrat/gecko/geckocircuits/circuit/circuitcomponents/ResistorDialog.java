@@ -34,11 +34,9 @@ class ResistorDialog extends DialogElementLK<AbstractResistor> {
 
     @Override
     protected void baueGUIIndividual() {
-        JPanel pIN = createParameterPanel(element._resistance);        
-        
-        
-        final FormatJTextField capacitanceField = tf.get(0);
-                
+        JPanel pIN = createParameterPanel(element._resistance);
+
+
         final JPanel pINyC = new JPanel();
         pINyC.setLayout(new BorderLayout());
         pINyC.add(pIN, BorderLayout.NORTH);

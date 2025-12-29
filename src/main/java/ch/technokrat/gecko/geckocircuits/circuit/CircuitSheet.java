@@ -86,14 +86,12 @@ public class CircuitSheet extends JPanel {
         int startY = visibleRect.y / dpix - 1;
         int stopX = startX + visibleRect.width / dpix + 2;
         int stopY = startY + visibleRect.height / dpix + 2;
-        int noPoints = 0;
 
         for (int ix = Math.max(0, startX); ix < Math.min(_worksheetSize.getSizeX(), stopX); ix++) {
             for (int iy = Math.max(0, startY); iy < Math.min(_worksheetSize.getSizeY(), stopY); iy++) {
                 int xPos = dpix * ix;
                 int yPos = dpix * iy;
                 g2d.drawLine(xPos, yPos, xPos, yPos);
-                noPoints++;
             }
         }
     }
