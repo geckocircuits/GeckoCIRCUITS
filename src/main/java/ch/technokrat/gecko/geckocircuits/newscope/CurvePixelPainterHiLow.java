@@ -34,7 +34,7 @@ final class CurvePixelPainterHiLow extends AbstractCurvePixelPainter{
     _lowPixelValue = Math.min(lowPixelValue, hiPixelValue);
     _hiPixelValue = Math.max(lowPixelValue, hiPixelValue);
 
-    _lastValue = new Float((lowPixelValue + hiPixelValue) / 2);
+    _lastValue = (lowPixelValue + hiPixelValue) / 2;
     findPath();
   }
 

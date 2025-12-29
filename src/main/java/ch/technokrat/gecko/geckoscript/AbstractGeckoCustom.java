@@ -376,6 +376,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
      */
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void setLossFile(final String elementName, final String lossFileName) throws FileNotFoundException {
 
         AbstractBlockInterface circuit_elem = IDStringDialog.getComponentByName(elementName);
@@ -389,6 +390,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void setNonLinear(final String elementName, final String characteristicFileName)
             throws FileNotFoundException {
         AbstractBlockInterface circuit_elem = IDStringDialog.getComponentByName(elementName);
@@ -1380,12 +1382,14 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void delete(final String elementName) {
         deleteComponent(elementName);
     }
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void create(final String elementType, final String elementName, final int xPosition, final int yPosition) {
         createComponent(elementType, elementName, xPosition, yPosition);
     }
@@ -1699,6 +1703,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public float[] realFFT(final float[] timeValues) {
         return floatFFT(timeValues);
     }

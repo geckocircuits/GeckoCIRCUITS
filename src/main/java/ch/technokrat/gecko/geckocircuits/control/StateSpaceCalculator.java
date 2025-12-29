@@ -157,11 +157,10 @@ public final class StateSpaceCalculator {
     }
     
     void initializeWithNewDt(final double deltaT) {
-         double deltaTOld = _deltaT;
          calculateMatrixA(deltaT);
-            
+
          //TODO: for differentiation (using _stateVariables._xOLD and _stateVariables._xNEW
-         // the stepwidth-change is not yet implemented correctly!         
+         // the stepwidth-change is not yet implemented correctly!
     }
 
     StateVariables getStateVariables() {
@@ -247,17 +246,17 @@ public final class StateSpaceCalculator {
     public int hashCode() {
         int hashCode = 0;
         for (int i = 0; i < _denomPolynom.length; i++) {
-            hashCode += i + (new Double(_denomPolynom[i])).hashCode();
+            hashCode += i + Double.valueOf(_denomPolynom[i]).hashCode();
         }
 
         for (int i = 0; i < _leadingPolynom.length; i++) {
-            hashCode += i + (new Double(_leadingPolynom[i])).hashCode();
+            hashCode += i + Double.valueOf(_leadingPolynom[i]).hashCode();
         }
 
         for (int i = 0; i < _transferNum.length; i++) {
-            hashCode += i + (new Double(_transferNum[i])).hashCode();
+            hashCode += i + Double.valueOf(_transferNum[i]).hashCode();
         }
-        hashCode += new Double(_deltaT).hashCode();
+        hashCode += Double.valueOf(_deltaT).hashCode();
         return hashCode;
     }
 

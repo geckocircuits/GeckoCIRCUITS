@@ -36,6 +36,7 @@ public final class DataContainerScopeWrapper extends AbstractDataContainer imple
     private final List<AbstractScopeSignal> _signalsList;
     private final Observer _observer;
 
+    @SuppressWarnings("deprecation")
     public DataContainerScopeWrapper(final AbstractDataContainer globalContainer, final ScopeWrapperIndices indices,
             final DefinedMeanSignals meanSignals, final List<AbstractScopeSignal> signalsList) {
         this._signalsList = signalsList;
@@ -114,7 +115,7 @@ public final class DataContainerScopeWrapper extends AbstractDataContainer imple
     @Override
     public Object getDataValueInInterval(final double intervalStart, final double intervalStop, final int row) {
         AbstractDataContainer container = null;
-        Object returnValue = new Float(0.0);
+        Object returnValue = 0.0f;
         if (row < this._scopeIndices.getTotalSignalNumber()) {
             container = this._scopeIndices.getDataContainer(row);
             if (container != null) {

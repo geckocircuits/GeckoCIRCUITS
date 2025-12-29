@@ -59,10 +59,5 @@ public class NativeCClassLoader extends ClassLoader {
             throw new ClassNotFoundException("Error reading class: " + name, ioe);
         }
     }
-    
-    // used for debugging
-    public void finalize() {
-        //System.out.println("NativeCClassLoader garbage collected");
-    }
 
 }

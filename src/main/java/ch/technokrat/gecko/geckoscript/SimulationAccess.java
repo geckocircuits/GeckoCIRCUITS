@@ -33,7 +33,7 @@ public class SimulationAccess implements GeckoFileable {
     final static long DUMMY_BLOCK_ID = -1231231987;
     final List<GeckoFile> _additionalSourceFiles = new ArrayList<GeckoFile>();
     private boolean _populateFileList = false;
-    private final Set<String> _additionalFilesHashKeys = new TreeSet();
+    private final Set<String> _additionalFilesHashKeys = new TreeSet<>();
 
     private ScriptWindow scriptwindow;
     public SchematischeEingabe2 se;
@@ -143,16 +143,16 @@ public class SimulationAccess implements GeckoFileable {
     }
 
     private static List<List<AbstractBlockInterface>> doListSort(final List<? extends AbstractBlockInterface> unsorted) {
-        List<List<AbstractBlockInterface>> sortedListofLists = new ArrayList<List<AbstractBlockInterface>>();
-        List<Class> types = new ArrayList<Class>();
-        HashMap<Class, List<AbstractBlockInterface>> listsByType = new HashMap<Class, List<AbstractBlockInterface>>();
+        List<List<AbstractBlockInterface>> sortedListofLists = new ArrayList<>();
+        List<Class<?>> types = new ArrayList<>();
+        HashMap<Class<?>, List<AbstractBlockInterface>> listsByType = new HashMap<>();
         List<AbstractBlockInterface> currentList;
 
         for (AbstractBlockInterface elem : unsorted) {
-            Class elementClass = elem.getClass();
+            Class<?> elementClass = elem.getClass();
             currentList = listsByType.get(elementClass);
             if (currentList == null) {
-                currentList = new ArrayList<AbstractBlockInterface>();
+                currentList = new ArrayList<>();
                 currentList.add(elem);
                 listsByType.put(elementClass, currentList);
                 types.add(elementClass);
@@ -161,7 +161,7 @@ public class SimulationAccess implements GeckoFileable {
             }
         }
 
-        for (Class elemType : types) {
+        for (Class<?> elemType : types) {
             sortedListofLists.add(listsByType.get(elemType));
         }
 
