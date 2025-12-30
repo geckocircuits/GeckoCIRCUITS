@@ -83,7 +83,7 @@ public class NativeCBlock {
     
     public void unloadLibraries () {
         try {
-            ClassLoader clLoader = this.getClass().getClassLoader();
+            /*ClassLoader clLoader = this.getClass().getClassLoader();
             Field field = ClassLoader.class.getDeclaredField("nativeLibraries");
             field.setAccessible(true);
             Vector libs = (Vector) field.get(clLoader);
@@ -91,7 +91,7 @@ public class NativeCBlock {
                 Method finalize = o.getClass().getDeclaredMethod("finalize", new Class[0]);
                 finalize.setAccessible(true);
                 finalize.invoke(o, new Object[0]);
-            }
+            }*/
             _nativeCWrapperObj = null;
             _nativeCWrapperClass = null;
             _customCClassLoader = null;

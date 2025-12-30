@@ -20,7 +20,7 @@
 /**
  * Do NOT edit this function
  */
-JNIEXPORT void JNICALL Java_gecko_geckocircuits_nativec_NativeCWrapper_calcOutputs
+JNIEXPORT void JNICALL Java_ch_technokrat_gecko_geckocircuits_nativec_NativeCWrapper_calcOutputs
   (JNIEnv *env, jobject jObj, jdoubleArray xIn, jdoubleArray xOut, jint outLength, jdouble jtime, jdouble jdeltaT) {
 
    jboolean isCopyIn, isCopyOut;
@@ -45,7 +45,7 @@ JNIEXPORT void JNICALL Java_gecko_geckocircuits_nativec_NativeCWrapper_calcOutpu
 /**
  *  Do NOT edit this function
  */
-JNIEXPORT void JNICALL Java_gecko_geckocircuits_nativec_NativeCWrapper_initParameters
+JNIEXPORT void JNICALL Java_ch_technokrat_gecko_geckocircuits_nativec_NativeCWrapper_initParameters
   (JNIEnv *env, jobject jObj) {
 	initParameters ();
 }
