@@ -16,8 +16,9 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 
+@SuppressWarnings("rawtypes")
 public final class CapacitorCalculator extends CircuitComponent implements AStampable, BStampable,
-        DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
+         DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
 
     //private final LKreisC _lkCap;
     public static boolean initCapacitor = false;
