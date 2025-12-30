@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.*;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;

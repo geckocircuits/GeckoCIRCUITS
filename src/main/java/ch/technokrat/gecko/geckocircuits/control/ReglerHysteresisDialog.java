@@ -20,8 +20,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.util.Arrays;
-import java.util.Collection;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 

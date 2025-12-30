@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;

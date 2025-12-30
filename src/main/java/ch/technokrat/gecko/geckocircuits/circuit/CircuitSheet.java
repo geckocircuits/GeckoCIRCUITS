@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;

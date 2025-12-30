@@ -19,7 +19,6 @@ import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.geckocircuits.control.ReglerGate;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.undo.CannotRedoException;

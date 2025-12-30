@@ -28,7 +28,6 @@ import java.net.URL;
 import java.awt.Container;
 import java.awt.Dimension;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 

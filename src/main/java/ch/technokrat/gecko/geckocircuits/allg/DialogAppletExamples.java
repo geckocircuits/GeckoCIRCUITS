@@ -26,8 +26,6 @@ import java.io.FileNotFoundException;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.BorderFactory;
-import javax.swing.border.TitledBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JList;

@@ -20,7 +20,6 @@ import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.ExtremumType;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.FlankType;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.IterationDirection;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
