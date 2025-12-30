@@ -15,6 +15,7 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 
+@SuppressWarnings("rawtypes")
 public class InductorCalculator extends CircuitComponent implements BStampable,
         HistoryUpdatable {
 
