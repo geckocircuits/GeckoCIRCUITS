@@ -1349,9 +1349,8 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
 
         CircuitSheet parentSheet = _circuitSheet.findSubCircuit(elementName);
         connector.setParentCircuitSheet(parentSheet);
-        String truncatedElementName = elementName;
         if (parentSheet != _circuitSheet) {
-            truncatedElementName = elementName.substring(elementName.lastIndexOf('#') + 1, elementName.length());
+            elementName.substring(elementName.lastIndexOf('#') + 1, elementName.length());
         }
 
         connector.setParentCircuitSheet(parentSheet);
