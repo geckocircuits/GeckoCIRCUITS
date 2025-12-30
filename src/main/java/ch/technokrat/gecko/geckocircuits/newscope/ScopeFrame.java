@@ -329,7 +329,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
     });
     jMenuScopeData.add(jMenuItemScopeSettings);
 
-    jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     jMenuItemExit.setText("Exit");
     jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -342,7 +342,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
 
     jMenuGraphs.setText("Graphs");
 
-    jMenuItemSignalGraph.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItemSignalGraph.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     jMenuItemSignalGraph.setText("Signal - Graph");
     jMenuItemSignalGraph.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {

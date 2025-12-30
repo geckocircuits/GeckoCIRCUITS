@@ -1788,7 +1788,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                         indexAngeklickterGraph = -1;
                     }
                     //-------------
-                    if ((me.getModifiers() & me.BUTTON1_MASK) != 0 && !me.isControlDown()) {
+                    if ((me.getModifiersEx() & me.BUTTON1_DOWN_MASK) != 0 && !me.isControlDown()) {
                         inDiffMode = false;
                         xSchieberPix = mx;
                     } else {

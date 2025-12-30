@@ -530,7 +530,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     private boolean isRightMouseClickActionOrCtrlLeftClick(final MouseEvent me) {
         // on mac's with only one mouse button, you can ctrl+leftclick
         // to emulate a right-click. 
-        return me.getModifiers() == me.BUTTON3_MASK || me.getModifiers() == 18;
+        return me.getModifiersEx() == me.BUTTON3_DOWN_MASK || me.getModifiersEx() == me.BUTTON3_DOWN_MASK;
     }
 
     private void doRightMouseClickAction() {
@@ -871,7 +871,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     public void mousePressed(final MouseEvent me) {
 
         if (me.getClickCount() < 2 && System.currentTimeMillis() - _lastMouseClickTime < 350
-                && me.getModifiers() != MouseEvent.BUTTON3_MASK && _mouseMoveMode != MouseMoveMode.DRAW_CONNECTION) {
+                && me.getModifiersEx() != MouseEvent.BUTTON3_DOWN_MASK && _mouseMoveMode != MouseMoveMode.DRAW_CONNECTION) {
             // this is to prevent the following: when trying to double-click a component, but
             // accidentally we move the mouse during the double click, the component is moved,
             // accidentaly. This is annoying, e.g. when shifting a scope and all labels are
@@ -880,7 +880,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
             return;
         }
 
-        if (!(me.getModifiers() == MouseEvent.BUTTON3_MASK)) {
+        if (!(me.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK)) {
             _lastMouseClickTime = System.currentTimeMillis();
         }
 

@@ -363,7 +363,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 setSelectedDiagram(diagram);
 
                 // rechte Maus --> 'Flippen' der ZUORDNUNG ohne Dialogfenster-Eingabe
-                if (mouseEvent.getModifiers() == MouseEvent.BUTTON3_MASK || mouseEvent.isControlDown()) {
+                if (mouseEvent.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK || mouseEvent.isControlDown()) {
                     final AxisConnection jcbAchsenTyp = curve.getAxisConnection().iterateNext(diagram instanceof DiagramSignal);
                     diagram.getCurve(columnIndex - 1).setAxisConnection(jcbAchsenTyp);
                     jbM[rowIndex][columnIndex].setText(jcbAchsenTyp.toString());
