@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import static ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.CONTROL;
 import ch.technokrat.gecko.geckocircuits.circuit.ElementDisplayProperties;
@@ -28,6 +27,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterface {
 
     static final TechFormat tcf = new TechFormat();
