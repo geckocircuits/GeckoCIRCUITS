@@ -38,6 +38,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
  *
  * @author andreas
  */
+@SuppressWarnings("unchecked")
 public final class UserParameter<T> {
 
     private final List<String> _unit;
