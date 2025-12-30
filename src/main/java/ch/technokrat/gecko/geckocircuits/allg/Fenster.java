@@ -828,7 +828,9 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     // is called after the window dimensions are known:
     public void aktualisiereDividerSplitPane(int breiteFenster) {
-        split.setDividerLocation(breiteFenster - seaBREITE);
+        if (split != null) {
+            split.setDividerLocation(breiteFenster - seaBREITE);
+        }
     }
 
     private void aktualisierePropertiesRECENT(String datnam) {

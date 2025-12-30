@@ -121,8 +121,8 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
             old_spaceVectorRealPos = spaceVectorRealPos;
             old_spaceVectorImagPos = spaceVectorImagPos;
 
-            spaceVectorRealPos = (int) ((Float) _length.getValue() * spaceVectorReal);
-            spaceVectorImagPos = (int) ((Float) _length.getValue() * spaceVectorImag);
+            spaceVectorRealPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorReal);
+            spaceVectorImagPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorImag);
 
             if (old_spaceVectorImagPos != spaceVectorImagPos || old_spaceVectorRealPos != spaceVectorRealPos) {
                 offGraph.setColor(_paintColor);
