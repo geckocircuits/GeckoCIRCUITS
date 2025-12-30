@@ -1,16 +1,25 @@
-$  /usr/bin/env C:\\Program\ Files\\Eclipse\ Adoptium\\jdk-21.0.9.10-hotspot\\bin\\java.exe -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:64570 @C:\\Users\\mhr\\AppData\\Local\\Temp\\cp_dx03d53a40y8gz1u0hee7c8g2.argfile ch.technokrat.gecko.GeckoSim 
-file:/C:/Users/mhr/Documents/GeckoCIRCUITS/target/classes/ch/technokrat/gecko/geckocircuits/allg/
-Starting GeckoCIRCUITS...
-Requested memory size: 512MB.
-Available JVM memory: 2932 MB.
-Could not find editor library jsyntaxpane.jar. Scripting tool disabled.
-GeckoCIRCUITS is ready
-java.lang.ClassCastException: class java.lang.Double cannot be cast to class java.lang.Float (java.lang.Double and java.lang.Float are in module java.base of loader 'bootstrap')
-        at ch.technokrat.gecko.geckocircuits.control.UZiDisplay$DrawVector.setPlotVector(UZiDisplay.java:86)
-        at ch.technokrat.gecko.geckocircuits.control.UZiDisplay.drawVector(UZiDisplay.java:467)
-        at ch.technokrat.gecko.geckocircuits.control.ReglerU_ZI$1.berechneYOUT(ReglerU_ZI.java:46)
-        at ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL.berechneZeitschritt(NetzlisteCONTROL.java:355)
-        at ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern.simulateOneTimeStep(SimulationsKern.java:145)
-        at ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern.runSimulation(SimulationsKern.java:336)
-        at ch.technokrat.gecko.geckocircuits.allg.SimulationRunner$RunThreadRun.run(SimulationRunner.java:218)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
+[{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlCheck.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 86,
+	"startColumn": 27,
+	"endLineNumber": 86,
+	"endColumn": 44,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlCheck.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 88,
+	"startColumn": 28,
+	"endLineNumber": 88,
+	"endColumn": 45,
+	"origin": "extHost1"
+}]

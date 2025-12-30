@@ -83,9 +83,9 @@ public class DialogControlCheck extends javax.swing.JDialog {
 
         jButtonOk = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListInPort = new javax.swing.JList();
+        jListInPort = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListOutPort = new javax.swing.JList();
+        jListOutPort = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
