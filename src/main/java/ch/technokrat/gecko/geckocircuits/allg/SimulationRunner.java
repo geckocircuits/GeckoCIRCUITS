@@ -158,14 +158,14 @@ public final class SimulationRunner {
 
         simKern = new SimulationsKern();
         double tSTART = 0, tAktuell = tSTART;
-        _fenster._solverSettings._tDURATION.setValueWithoutUndo(tEND);
-        _fenster._solverSettings.dt.setValueWithoutUndo(dtLoc);
+        Fenster._solverSettings._tDURATION.setValueWithoutUndo(tEND);
+        Fenster._solverSettings.dt.setValueWithoutUndo(dtLoc);
         //double tEND = tDURATION;
         //double dtLoc = dt;
 
-        if (_fenster._solverSettings.inPreCalculationMode) {
-            tEND = _fenster._solverSettings._T_pre.getValue();
-            dtLoc = _fenster._solverSettings._dt_pre.getValue();
+        if (Fenster._solverSettings.inPreCalculationMode) {
+            tEND = Fenster._solverSettings._T_pre.getValue();
+            dtLoc = Fenster._solverSettings._dt_pre.getValue();
         }
 
         nlContainer = NetListContainer.fabricStartSimulation(_se, simKern);

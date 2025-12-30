@@ -63,23 +63,23 @@ public class TerminalControl extends TerminalRelativePosition implements Control
         if(index < 0) {
             return;
         }
-        
-        
-        
-        final int dpix = _parentElement.dpix;
+
+
+
+        final int dpix = AbstractCircuitSheetComponent.dpix;
         if(value == 0) {
             graphics.setColor(Color.LIGHT_GRAY);
-            graphics.fillOval(_parentElement.dpix * getPosition().x - CIRCLE_DIAMETER/2, 
+            graphics.fillOval(dpix * getPosition().x - CIRCLE_DIAMETER/2,
                 dpix * getPosition().y-CIRCLE_DIAMETER/2, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
             graphics.setColor(Color.GRAY);
-            graphics.drawOval(_parentElement.dpix * getPosition().x - CIRCLE_DIAMETER/2, 
+            graphics.drawOval(dpix * getPosition().x - CIRCLE_DIAMETER/2,
                 dpix * getPosition().y-CIRCLE_DIAMETER/2, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
         } else if(value == 1) {
             graphics.setColor(Color.BLUE);
-            graphics.fillOval(_parentElement.dpix * getPosition().x - CIRCLE_DIAMETER/2, 
+            graphics.fillOval(dpix * getPosition().x - CIRCLE_DIAMETER/2,
                 dpix * getPosition().y-CIRCLE_DIAMETER/2, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
         } else {
-            
+
             String valueString = "" + value;
             if(value < 0) {
                 valueString = valueString.substring(0, 2);
@@ -87,8 +87,8 @@ public class TerminalControl extends TerminalRelativePosition implements Control
                 valueString = valueString.substring(0, 1);
             }
             //graphics.setColor(Color.GREEN);
-            graphics.fillOval(_parentElement.dpix * getPosition().x - CIRCLE_DIAMETER/2, 
-                _parentElement.dpix * getPosition().y-2 * CIRCLE_DIAMETER/2, 2 * CIRCLE_DIAMETER, 2 * CIRCLE_DIAMETER);
+            graphics.fillOval(dpix * getPosition().x - CIRCLE_DIAMETER/2,
+                dpix * getPosition().y-2 * CIRCLE_DIAMETER/2, 2 * CIRCLE_DIAMETER, 2 * CIRCLE_DIAMETER);
             graphics.setColor(Color.WHITE);
             Font oldFont = graphics.getFont();
             graphics.setFont(new Font("Arial", Font.PLAIN, 10));
