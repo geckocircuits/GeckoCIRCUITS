@@ -179,8 +179,8 @@ public class DialogControlCheck extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JList jListInPort;
-    private javax.swing.JList jListOutPort;
+    private javax.swing.JList<String> jListInPort;
+    private javax.swing.JList<String> jListOutPort;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

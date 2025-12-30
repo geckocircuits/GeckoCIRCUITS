@@ -216,7 +216,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
     private javax.swing.JCheckBox jCheckBoxIgnore;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField;
     // End of variables declaration//GEN-END:variables

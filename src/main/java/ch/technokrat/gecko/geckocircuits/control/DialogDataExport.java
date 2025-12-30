@@ -877,8 +877,8 @@ public final class DialogDataExport extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelFilter;
-    private javax.swing.JList jListAvailable;
-    private javax.swing.JList jListSelected;
+    private javax.swing.JList<DataIndexItem> jListAvailable;
+    private javax.swing.JList<DataIndexItem> jListSelected;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

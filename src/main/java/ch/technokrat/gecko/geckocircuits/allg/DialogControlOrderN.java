@@ -274,8 +274,8 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
     private javax.swing.JButton jButtonReset;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jListOptimized;
-    private javax.swing.JList jListUser;
+    private javax.swing.JList<RegelBlock> jListOptimized;
+    private javax.swing.JList<RegelBlock> jListUser;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
