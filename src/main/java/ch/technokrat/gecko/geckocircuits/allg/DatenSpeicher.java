@@ -530,19 +530,16 @@ public class DatenSpeicher implements Serializable {
         
 
     
+    @SuppressWarnings("unchecked")
     public static void appendAsString(StringBuffer ascii, List<? extends Object> wert) {
         if(wert.size() > 0 && wert.get(0) instanceof String) {
-            appendStringArray(ascii, (List<String>) wert);
+            appendStringArray(ascii, (List<String>)wert);
             return;
         }
         ascii.append("[] ");
-        if (wert == null) {
-            ascii.append("null");
-        } else {
-            for (Object value : wert) {
-                ascii.append(value);
-                ascii.append(' ');
-            }
+        for (Object value : wert) {
+            ascii.append(value);
+            ascii.append(' ');
         }
     }
     
@@ -605,42 +602,30 @@ public class DatenSpeicher implements Serializable {
 
     public static void appendAsString(StringBuffer ascii, int[][] wert) {
         ascii.append("[][] " + wert.length + " " + wert[0].length);
-        if (wert == null) {
-            ascii.append(" null");
-        } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                for (int i2 = 0; i2 < wert[0].length; i2++) {
-                    ascii.append(' ');
-                    ascii.append(wert[i1][i2]);
-                }
+        for (int i1 = 0; i1 < wert.length; i1++) {
+            for (int i2 = 0; i2 < wert[0].length; i2++) {
+                ascii.append(' ');
+                ascii.append(wert[i1][i2]);
             }
         }
     }
 
     public static void appendAsString(StringBuffer ascii, double[][] wert) {
         ascii.append("[][] " + wert.length + " " + wert[0].length);
-        if (wert == null) {
-            ascii.append(" null");
-        } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                for (int i2 = 0; i2 < wert[0].length; i2++) {
-                    ascii.append(' ');
-                    ascii.append(wert[i1][i2]);
-                }
+        for (int i1 = 0; i1 < wert.length; i1++) {
+            for (int i2 = 0; i2 < wert[0].length; i2++) {
+                ascii.append(' ');
+                ascii.append(wert[i1][i2]);
             }
         }
     }
 
     public static void appendAsString(StringBuffer ascii, boolean[][] wert) {
         ascii.append("[][] " + wert.length + " " + wert[0].length);
-        if (wert == null) {
-            ascii.append(" null");
-        } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                for (int i2 = 0; i2 < wert[0].length; i2++) {
-                    ascii.append(' ');
-                    ascii.append(wert[i1][i2]);
-                }
+        for (int i1 = 0; i1 < wert.length; i1++) {
+            for (int i2 = 0; i2 < wert[0].length; i2++) {
+                ascii.append(' ');
+                ascii.append(wert[i1][i2]);
             }
         }
     }
