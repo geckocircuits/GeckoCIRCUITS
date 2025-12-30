@@ -4,24 +4,31 @@
     "java.compile.nullAnalysis.mode": "disabled",
     "java.errors.incompleteClasspath.severity": "ignore",
 
-    // Suppress Java warnings in VSCode - comprehensive suppression
+    // Pragmatic warning suppression - disable specific problem types
     "java.compliance": "21",
     "java.format.enabled": true,
     "java.saveActions.organizeImports": false,
     "java.autobuild.enabled": true,
-    "java.sources": "21",
+
+    // Disable specific Eclipse JDT analysis warnings
     "java.codeGeneration.useProjectSettings": true,
     "java.depend.autoRefresh": "disabled",
-    "java.downloadSources": false,
-    "java.import.generates.concrete.classes": "ignore",
+    "java.import.generate": "ignore",
     "java.import.excludes": "",
 
-    // Hide/ignore specific problem types
+    // Problem severity settings - set most warnings to "ignore" or "hint"
     "java.errors.incompleteClasspath.severity": "ignore",
-    "java.completion.import.enabled": false,
+
+    // Disable specific warning categories
+    "java.completion.enabled": false,
     "java.signatureHelp.enabled": false,
     "java.referencesCodeLens.enabled": false,
     "java.implementationsCodeLens.enabled": false,
+    "java.foldingRange.enabled": true,
+    "java.maxConcurrentBuilds": 1,
+    "java.sources": "21",
+
+    // Project paths
     "java.project.sourcePaths": [
         "src/main/java"
     ],
