@@ -387,7 +387,6 @@ public class SimulationsKern {
     // setze die Anfangsbedingungen entsprechend der letzten Berechnung, wenn CONTINUE gedrueckt wurde -->
     public void setInitialConditionsFromContinue() {
         if ((lkmLK.p.length != pLK_ALT.length) || (lkmTHERM.p.length != pTHERM_ALT.length)) {
-            DialogWarningNodeNumber dialogWarningNodeNumber = new DialogWarningNodeNumber();
             //System.out.println("Warning: Node-Number has been changed!");
             return;
         }

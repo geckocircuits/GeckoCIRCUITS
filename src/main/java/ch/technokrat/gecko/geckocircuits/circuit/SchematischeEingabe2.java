@@ -1582,9 +1582,9 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     // und diese Label von C_VOLT registriert werden, dann ist C_VOLT auf 'not defined' zu setzen
     // gleiches gilt fuer TH_TEMP und Labels in THERM
     private void updateNewNetlists() {
-        final NetListLK netzliste = NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.LK_AND_RELUCTANCE), getElementLK());
-        final NetListLK netzlisteTherm = NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.THERMAL), getElementTHERM());
-        final NetzlisteAllg nlCONTROL = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), getElementCONTROL());
+        NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.LK_AND_RELUCTANCE), getElementLK());
+        NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.THERMAL), getElementTHERM());
+        NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), getElementCONTROL());
         _circuitSheet.updateAllPotentialCoupables();
     }
 
