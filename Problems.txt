@@ -1,79 +1,61 @@
 [{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlCheck.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogUpdate.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "67110271",
+	"severity": 4,
+	"message": "The constructor URL(String) is deprecated since version 20",
+	"source": "Java",
+	"startLineNumber": 131,
+	"startColumn": 45,
+	"endLineNumber": 131,
+	"endColumn": 48,
+	"tags": [
+		2
+	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogUpdate.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "67110271",
+	"severity": 4,
+	"message": "The constructor URL(String) is deprecated since version 20",
+	"source": "Java",
+	"startLineNumber": 367,
+	"startColumn": 33,
+	"endLineNumber": 367,
+	"endColumn": 36,
+	"tags": [
+		2
+	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogUpdateSettings.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536871547",
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 80,
+	"startLineNumber": 53,
 	"startColumn": 23,
-	"endLineNumber": 80,
+	"endLineNumber": 53,
 	"endColumn": 34,
 	"tags": [
 		1
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFile.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
+	"code": "570425421",
 	"severity": 4,
-	"message": "The import java.awt.dnd.DragGestureRecognizer is never used",
+	"message": "The value of the field GeckoFile.EMPTY_STRING is not used",
 	"source": "Java",
-	"startLineNumber": 29,
-	"startColumn": 8,
-	"endLineNumber": 29,
-	"endColumn": 42,
+	"startLineNumber": 69,
+	"startColumn": 35,
+	"endLineNumber": 69,
+	"endColumn": 47,
 	"tags": [
 		1
 	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 83,
-	"startColumn": 30,
-	"endLineNumber": 83,
-	"endColumn": 47,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 89,
-	"startColumn": 25,
-	"endLineNumber": 89,
-	"endColumn": 42,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536871362",
-	"severity": 2,
-	"message": "TODO add your handling code here:",
-	"source": "Java",
-	"startLineNumber": 222,
-	"startColumn": 12,
-	"endLineNumber": 222,
-	"endColumn": 45,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "536871362",
-	"severity": 2,
-	"message": "TODO add your handling code here:",
-	"source": "Java",
-	"startLineNumber": 226,
-	"startColumn": 12,
-	"endLineNumber": 226,
-	"endColumn": 45,
 	"origin": "extHost1"
 }]

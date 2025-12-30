@@ -89,25 +89,6 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         +"\n// Now we can proceed with the simulation:\n"
         +"GECKO.continueCalculation(); \n" 
         +""; 
-    private String example2= ""
-        +"String[] nameOpt= new String[]{\"$r\",\"$c\"}; \n"
-        +"double rmin=10, rmax=100, r=rmin, cmin=100e-6, cmax=1e-3, c=cmin;\n"
-        +"double[] valueOpt= new double[]{r,c};  \n"
-        +"GECKO.setOptimizerParameterData(nameOpt,valueOpt); \n"
-        +"for (int j1=0;  j1<10;  j1++) {\n"
-        +"    r= rmin +j1/10.0*(rmax-rmin);\n"
-        +"    for (int j2=0;  j2<10;  j2++) {\n"
-        +"        c= cmin +j2/10.0*(cmax-cmin);\n"
-        +"        valueOpt[0]= r;\n"
-        +"        valueOpt[1]= c;\n"
-        +"        GECKO.setSimParameter(1e-6,20e-3,-1);  \n"
-        +"        GECKO.startCalculation(); \n"
-        +"        while (GECKO.isSimulationRunning()) { try { Thread.sleep(500); } catch (Exception ie) {} } \n"
-        +"        double[][] zv= GECKO.getZV(); \n"
-        +"        for (int )"
-        +"    }\n"
-        +"}\n"
-        +""; 
     //--------------
     /*
     --------------

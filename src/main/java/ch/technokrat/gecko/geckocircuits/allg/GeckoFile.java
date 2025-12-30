@@ -66,7 +66,6 @@ public final class GeckoFile {
     private final String _extension;
     private static final double HASH_CONST1 = 5.0;
     private static final double HASH_CONST2 = 2032.6;
-    private static final String[] EMPTY_STRING = new String[0];
     private AbstractStorageStrategy _storageStrategy;
     private long _lastDiskModification = -1;
 

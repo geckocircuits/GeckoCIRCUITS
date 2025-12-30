@@ -20,7 +20,6 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
-import java.rmi.server.UnicastRemoteObject;
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 
@@ -116,7 +115,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
         _jRadioButtonLocalHostOnly = new javax.swing.JRadioButton();
         _jRadioButtonNetwork = new javax.swing.JRadioButton();
         _jLabelFrom = new javax.swing.JLabel();
-        _jComboBoxIPs = new javax.swing.JComboBox();
+        _jComboBoxIPs = new javax.swing.JComboBox<>();
         _jLabelByAddress = new javax.swing.JLabel();
         _jButtonOK = new javax.swing.JButton();
         _jButtonApply = new javax.swing.JButton();
@@ -724,7 +723,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
     private javax.swing.JButton _jButtonRefresh;
     private javax.swing.JButton _jButtonTest;
     private javax.swing.JCheckBox _jCheckBoxEnableMMF;
-    private javax.swing.JComboBox _jComboBoxIPs;
+    private javax.swing.JComboBox<String> _jComboBoxIPs;
     private javax.swing.JFormattedTextField _jFormattedTextFieldPort;
     private javax.swing.JLabel _jLabelByAddress;
     private javax.swing.JLabel _jLabelFrom;
