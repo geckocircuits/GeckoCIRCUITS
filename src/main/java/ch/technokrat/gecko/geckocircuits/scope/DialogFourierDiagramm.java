@@ -75,7 +75,9 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         super.setModal(true);
         addComponentListener(this);
         try {
-            setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception e) {
         }
         _an = erg[0];
@@ -211,6 +213,7 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         //=======================================
     }
 
+    @SuppressWarnings("deprecation")
     private void baueGUItoolbar() {
         //--------------------
         try {

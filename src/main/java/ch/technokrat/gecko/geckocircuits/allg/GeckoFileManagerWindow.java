@@ -102,10 +102,12 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         
     }
 
-    private void init(final List<GeckoFile> alreadyUsedFiles, final String extension) {        
+    private void init(final List<GeckoFile> alreadyUsedFiles, final String extension) {
         super.setModal(true);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception ex) {
             System.err.println("could not load image icon!");
         }

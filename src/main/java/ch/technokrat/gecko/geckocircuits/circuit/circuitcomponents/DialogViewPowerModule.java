@@ -40,7 +40,9 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
     public DialogViewPowerModule(AbstractCircuitBlockInterface elementTH, Container c) {
         super.setModal(true);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception e) {
         }
         this.addWindowListener(this);
@@ -79,7 +81,9 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         pM.setLayout(new BorderLayout());
         Image imgMx = null;
         try {
-            imgMx = (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "modulIntern.png"))).getImage();
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "modulIntern.png");
+            imgMx = (new ImageIcon(url)).getImage();
         } catch (Exception e) {
             System.out.println(e);
         }

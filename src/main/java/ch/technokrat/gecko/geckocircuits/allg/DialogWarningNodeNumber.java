@@ -40,7 +40,11 @@ public class DialogWarningNodeNumber extends JDialog implements WindowListener, 
 
     public DialogWarningNodeNumber () {
         super.setModal(true);
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception e) {}
+        try {
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
+        } catch (Exception e) {}
         this.addWindowListener(this);
         this.setTitle(" Warning: Node Number");
         this.baueGUI();

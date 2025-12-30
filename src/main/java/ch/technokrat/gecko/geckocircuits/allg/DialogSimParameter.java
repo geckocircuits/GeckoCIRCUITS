@@ -42,7 +42,6 @@ public class DialogSimParameter extends JDialog implements ActionListener {
     private double _dt, _tDuration, _tPause;
     private SolverSettings _solverSettings;
     private FormatJTextField[] _tf;
-    private static final TechFormat TECH_FORMAT = new TechFormat();
     private static final int COLS = 6;
     private double _tPre = -1;
     private double _dtPre = -1;
@@ -54,7 +53,9 @@ public class DialogSimParameter extends JDialog implements ActionListener {
         super(owner, true);
         
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception e) {
         }
         this._solverSettings = callback;
