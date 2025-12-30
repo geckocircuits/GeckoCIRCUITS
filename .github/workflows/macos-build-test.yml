@@ -12,33 +12,46 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Install build tools
-      run: |
-        brew install gcc
+      # macOS-specific: Build native libraries
+      - name: Install build tools
+        run: |
+          brew install gcc
 
-    - name: Build native JNI libraries for macOS
-      run: |
-        cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
-        chmod +x build_native_libraries.sh
-        ./build_native_libraries.sh
-        echo "Native macOS .dylib libraries built successfully"
-        ls -lh *.dylib
+      - name: Build native JNI libraries for macOS
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          chmod +x build_native_libraries.sh
+          ./build_native_libraries.sh
+          echo "Native macOS .dylib libraries built successfully"
+          ls -lh *.dylib
 
-    - name: Build with Maven
-      run: mvn clean compile -DskipTests
+      # Maven build
+      - name: Build with Maven
+        run: mvn clean compile -DskipTests --no-transfer-progress
 
-    - name: Run tests
-      run: mvn test
+      - name: Run tests
+        run: mvn test --no-transfer-progress
 
-    - name: Verify build
-      run: mvn verify -DskipTests
+      - name: Verify build
+        run: mvn verify -DskipTests --no-transfer-progress
+
+      # Build artifacts
+      - name: Package JAR
+        run: mvn package -DskipTests --no-transfer-progress
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gecko-jar-macos
+          path: target/gecko-*.jar
+          retention-days: 30

@@ -1,4 +1,4 @@
-name: Ubuntu Build and Test
+name: Build and Test
 
 on:
   push:
@@ -9,37 +9,90 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Install GCC build tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential
+      # Ubuntu-specific: Build native libraries
+      - name: Install GCC build tools
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
 
-    - name: Build native JNI libraries for Linux
-      run: |
-        cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
-        chmod +x build_native_libraries.sh
-        ./build_native_libraries.sh
-        echo "Native Linux .so libraries built successfully"
-        ls -lh *.so
+      - name: Build native JNI libraries for Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          chmod +x build_native_libraries.sh
+          ./build_native_libraries.sh
+          echo "Native Linux .so libraries built successfully"
+          ls -lh *.so
 
-    - name: Build with Maven
-      run: mvn clean compile -DskipTests
+      # Windows-specific: Build native libraries
+      - name: Install MinGW-w64
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          choco install mingw -y --no-progress
+          echo "C:\ProgramData\mingw64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-    - name: Run tests
-      run: mvn test
+      - name: Build native JNI libraries for Windows
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          export PATH="/c/ProgramData/mingw64/mingw64/bin:$PATH"
+          gcc --version
+          gcc -shared -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/win32" -o libtestJNI_DLL.dll testJNI_DLL.c -Wl,--kill-at
+          cp libtestJNI_DLL.dll libtestJNI_DLL2.dll
+          echo "Native Windows DLL libraries built successfully"
+          ls -lh *.dll
 
-    - name: Verify build
-      run: mvn verify -DskipTests
+      # macOS-specific: Build native libraries
+      - name: Install build tools
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install gcc
+
+      - name: Build native JNI libraries for macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          chmod +x build_native_libraries.sh
+          ./build_native_libraries.sh
+          echo "Native macOS .dylib libraries built successfully"
+          ls -lh *.dylib
+
+      # Maven build
+      - name: Build with Maven
+        run: mvn clean compile -DskipTests --no-transfer-progress
+
+      - name: Run tests
+        run: mvn test --no-transfer-progress
+
+      - name: Verify build
+        run: mvn verify -DskipTests --no-transfer-progress
+
+      # Build artifacts
+      - name: Package JAR
+        run: mvn package -DskipTests --no-transfer-progress
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gecko-jar-${{ matrix.os }}
+          path: target/gecko-*.jar
+          retention-days: 30

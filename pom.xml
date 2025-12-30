@@ -17,24 +17,36 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
+
+    <!-- Dependency version management for easy updates -->
+    <junit.version>5.11.3</junit.version>
+    <log4j2.version>2.24.3</log4j2.version>
+    <graalvm.version>24.1.1</graalvm.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- JUnit 4 vintage for legacy tests -->
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.graalvm.polyglot</groupId>
       <artifactId>polyglot</artifactId>
-      <version>23.1.0</version>
+      <version>${graalvm.version}</version>
     </dependency>
     <dependency>
       <groupId>org.graalvm.polyglot</groupId>
       <artifactId>js</artifactId>
-      <version>23.1.0</version>
+      <version>${graalvm.version}</version>
       <type>pom</type>
     </dependency>
     <!-- https://mvnrepository.com/artifact/de.sciss/syntaxpane -->
@@ -129,13 +141,34 @@
           </configuration>
           <!--version>3.8.0</version-->
         </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-          <configuration>
-            <trimStackTrace>false</trimStackTrace>
-          </configuration>
-        </plugin>
+         <plugin>
+           <artifactId>maven-surefire-plugin</artifactId>
+           <version>2.22.1</version>
+           <configuration>
+             <trimStackTrace>false</trimStackTrace>
+           </configuration>
+         </plugin>
+         <!-- JaCoCo for test coverage tracking -->
+         <plugin>
+           <groupId>org.jacoco</groupId>
+           <artifactId>jacoco-maven-plugin</artifactId>
+           <version>0.8.12</version>
+           <executions>
+             <execution>
+               <id>prepare-agent</id>
+               <goals>
+                 <goal>prepare-agent</goal>
+               </goals>
+             </execution>
+             <execution>
+               <id>report</id>
+               <phase>test</phase>
+               <goals>
+                 <goal>report</goal>
+               </goals>
+             </execution>
+           </executions>
+         </plugin>
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
