@@ -55,7 +55,7 @@ public class TerminalControlOutput extends TerminalControl {
     
     @Override
     public void paintLabelString(final Graphics2D graphics2D) {        
-        final int dpix = _parentElement.dpix;
+        final int dpix = AbstractCircuitSheetComponent.dpix;
 
         if (!_label.getLabelString().isEmpty()) {
             graphics2D.drawString(_label.getLabelString(), (int) (dpix * getPosition().x), 
