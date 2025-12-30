@@ -43,7 +43,8 @@ import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.ModelMVC;
 
-public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
+    @SuppressWarnings("rawtypes")
+    public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
         implements ComponentTerminable {
 
     public List<UserParameter<? extends Object>> registeredParameters = new ArrayList<UserParameter<? extends Object>>();
