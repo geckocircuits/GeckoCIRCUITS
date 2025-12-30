@@ -720,7 +720,7 @@ public final class SaveViewFrame extends GeckoDialog {
     }
 
     private void scaleSvgImageIfNecessary(final SVGGraphics2D svgGenerator) {
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         switch (selectedFileType) {
             case PDF:
                 break;
@@ -736,7 +736,7 @@ public final class SaveViewFrame extends GeckoDialog {
     private void createGifImage() throws FileNotFoundException, IOException {
         final int height = _viewPanel.getHeight();
         final int width = _viewPanel.getWidth();
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         final BufferedImage img = new BufferedImage((int) (scaling * width),
                 (int) (scaling * height), BufferedImage.TYPE_INT_RGB);
         final Graphics2D g2d = (Graphics2D) img.getGraphics();
@@ -774,7 +774,7 @@ public final class SaveViewFrame extends GeckoDialog {
         final int height = _viewPanel.getHeight();
         final int width = _viewPanel.getWidth();
 
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         switch (selectedFileType) {
             case PDF:
                 returnValue = new PDFTranscoder();

@@ -174,7 +174,7 @@ public class JPanelLineProperties extends javax.swing.JPanel {
     @SuppressWarnings("PMD")
     private void jSpinnerTranspStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerTranspStateChanged
         if (_redrawComponent != null) {
-            _lineSettable.setTransparency((Float) jSpinnerTransp.getValue());
+            _lineSettable.setTransparency(((Number) jSpinnerTransp.getValue()).floatValue());
         }
         repaintComponent();
     }//GEN-LAST:event_jSpinnerTranspStateChanged
