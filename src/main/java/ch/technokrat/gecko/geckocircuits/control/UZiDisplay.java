@@ -17,7 +17,6 @@ import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 
-import java.net.URL;
 
 /*
  * SpaceVectorDisplay.java
