@@ -96,7 +96,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
             arrayIndex(this, 14).
             build();
     private AbstractBlockInterface[] _qLK;
-    private final AbstractTerminal intern0, intern1, intern2, intern3, intern4, intern5;
+    private final AbstractTerminal intern0, intern1, intern2, intern3;
     private static final double R_ISOLATION = 10e6;  // isolation, defined as high resistance
     private static final double R_F = 1;  // set always to one, define time-constant Tp=Rp*Cp via Cp
     private final AbstractVoltageSource _internalVoltageSource;
@@ -121,8 +121,6 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
         intern1 = new TerminalRelativePosition(this, -1, 0);
         intern2 = new TerminalRelativePosition(this, -1, 1);
         intern3 = new TerminalRelativePosition(this, 0, -1);
-        intern4 = new TerminalRelativePosition(this, 0, 0);
-        intern5 = new TerminalRelativePosition(this, 0, 1);
 
         setComponentDirection(ComponentDirection.WEST_EAST);
         _rIN = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);
@@ -314,7 +312,8 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     }
     
     @Override
+    @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);        
+        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);
     }
 }

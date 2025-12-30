@@ -20,7 +20,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.net.URI;
-import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -41,7 +40,8 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
 
     }
 
-    protected JTabbedPane createGUI_OPV1() {   
+    @SuppressWarnings({"varargs", "unchecked"})
+    protected JTabbedPane createGUI_OPV1() {
         JPanel mainParameter = createParameterPanel(element.gainValue, element.inputResistance, element.outputResistance, element.frequencyDependency);
         mainParameter.setBorder(new TitledBorder("Main Parameters"));
         
