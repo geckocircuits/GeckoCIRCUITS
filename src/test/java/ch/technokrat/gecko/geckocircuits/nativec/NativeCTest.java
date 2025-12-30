@@ -70,7 +70,17 @@ public class NativeCTest {
     @Before
     public void setUp() {
         try {
-            _libName = "libtestJNI_DLL.dll";
+            // Detect platform and select appropriate library extension
+            String osName = System.getProperty("os.name").toLowerCase();
+            String libExtension;
+            if (osName.contains("win")) {
+                libExtension = ".dll";
+            } else if (osName.contains("mac") || osName.contains("darwin")) {
+                libExtension = ".dylib";
+            } else {
+                libExtension = ".so";
+            }
+            _libName = "libtestJNI_DLL" + libExtension;
             // construct an absolute file path to the test library
             // this is needed for the System.load() to work
             _libFilePath = constructAbsolutPath(_libName);
@@ -140,7 +150,7 @@ public class NativeCTest {
         // execute again with same library
         testLoadAndExecuteNativeLibrary();
         // test with different library
-        String testLib2 = "libtestJNI_DLL2.dll";
+        String testLib2 = _libName.replace("libtestJNI_DLL", "libtestJNI_DLL2");
         _libFilePath = constructAbsolutPath(testLib2);
         Assert.assertNotNull(_libFilePath);
         testLoadAndExecuteNativeLibrary();
