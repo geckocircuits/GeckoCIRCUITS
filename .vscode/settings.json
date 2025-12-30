@@ -4,29 +4,9 @@
     "java.compile.nullAnalysis.mode": "disabled",
     "java.errors.incompleteClasspath.severity": "ignore",
 
-    // Pragmatic warning suppression - disable specific problem types
+    // Project settings
     "java.compliance": "21",
-    "java.format.enabled": true,
-    "java.saveActions.organizeImports": false,
     "java.autobuild.enabled": true,
-
-    // Disable specific Eclipse JDT analysis warnings
-    "java.codeGeneration.useProjectSettings": true,
-    "java.depend.autoRefresh": "disabled",
-    "java.import.generate": "ignore",
-    "java.import.excludes": "",
-
-    // Problem severity settings - set most warnings to "ignore" or "hint"
-    "java.errors.incompleteClasspath.severity": "ignore",
-
-    // Disable specific warning categories
-    "java.completion.enabled": false,
-    "java.signatureHelp.enabled": false,
-    "java.referencesCodeLens.enabled": false,
-    "java.implementationsCodeLens.enabled": false,
-    "java.foldingRange.enabled": true,
-    "java.maxConcurrentBuilds": 1,
-    "java.sources": "21",
 
     // Project paths
     "java.project.sourcePaths": [
@@ -42,6 +22,7 @@
     "maven.terminal.useJavaHome": true,
 
     // Editor Settings for Java
+    "java.format.enabled": true,
     "editor.formatOnSave": false,
     "editor.tabSize": 4,
     "editor.insertSpaces": true,
