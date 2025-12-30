@@ -470,7 +470,6 @@ public class NetListLK {
     private void definiere_magnetischeKopplungen_im_LK() {
 
         // M -->   []{ k - xL1(Koord.) - yL1(Koord.) - xL2(Koord.) - yL2(Koord.) - ID-Nr_L1 - ID-Nr_L2 {
-        int maxLc = elementANZAHL;
         List<AbstractMap.SimpleEntry<AbstractCircuitBlockInterface, AbstractCircuitBlockInterface>> kLc = new ArrayList<AbstractMap.SimpleEntry<AbstractCircuitBlockInterface, AbstractCircuitBlockInterface>>();
         List<Double> kM = new ArrayList<Double>();
 

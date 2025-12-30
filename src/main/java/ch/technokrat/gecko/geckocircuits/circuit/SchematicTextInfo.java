@@ -182,8 +182,6 @@ public final class SchematicTextInfo {
         _yTxtKlickMax = (int) (dpix * (yPos + _dyTxt + _lyTxt));
         _xTxtKlickMax = (int) (dpix * (xPos + _dxTxt + _maxLengthText));
 
-        final int rectHeight = _yTxtKlickMax - _yTxtKlickMin;
-        final int rectWidth = _xTxtKlickMax - _xTxtKlickMin;
         //g.drawRect(_xTxtKlickMin, getYTxtKlickMin(), rectWidth, rectHeight);
     }
 
