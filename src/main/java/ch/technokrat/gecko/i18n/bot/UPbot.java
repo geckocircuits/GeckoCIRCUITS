@@ -25,7 +25,6 @@ import java.lang.StringBuilder;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import ch.technokrat.gecko.i18n.translationtoolbox.TranslationDialog;
-import ch.technokrat.gecko.i18n.LangInit;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public class UPbot {

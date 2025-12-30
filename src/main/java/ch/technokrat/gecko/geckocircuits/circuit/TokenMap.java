@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
 import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

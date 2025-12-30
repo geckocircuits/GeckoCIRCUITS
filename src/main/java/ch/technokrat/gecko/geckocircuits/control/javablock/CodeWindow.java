@@ -30,7 +30,6 @@ import java.awt.event.WindowListener;
 import java.net.URL;
 import java.util.EventObject;
 import java.util.List;
-import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;

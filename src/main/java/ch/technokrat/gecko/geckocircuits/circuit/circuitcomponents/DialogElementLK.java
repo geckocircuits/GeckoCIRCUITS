@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;

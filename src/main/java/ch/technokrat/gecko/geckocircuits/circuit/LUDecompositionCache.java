@@ -14,10 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 //import java.util.WeakHashMap;
 
 /**

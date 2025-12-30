@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckoscript;
 
-import ch.technokrat.gecko.Documentation;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;

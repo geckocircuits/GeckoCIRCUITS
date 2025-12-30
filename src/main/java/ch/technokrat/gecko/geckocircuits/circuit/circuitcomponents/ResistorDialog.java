@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.circuit.DialogNonLinearity;
 import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
