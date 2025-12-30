@@ -239,7 +239,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jButtonRemove = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jListSelectedFilesToAdd = new javax.swing.JList();
+        jListSelectedFilesToAdd = new javax.swing.JList<>();
         jButtonAddNewFile = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jRadioButtonIsExternalNew = new javax.swing.JRadioButton();
@@ -250,7 +250,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jButtonAddSelectedExistingFiles = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListAvailableFiles = new javax.swing.JList();
+        jListAvailableFiles = new javax.swing.JList<>();
         jPanel5 = new javax.swing.JPanel();
         jRadioButtonIsInternalExisting = new javax.swing.JRadioButton();
         jRadioButtonIsExternalExisting = new javax.swing.JRadioButton();

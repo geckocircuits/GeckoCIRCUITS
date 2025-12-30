@@ -145,7 +145,7 @@ public final class SuggestionField extends JTextField {
         this._dialog.setUndecorated(true);
         this._dialog.setFocusableWindowState(false);
         this._dialog.setFocusable(false);
-        this._list = new JList();
+        this._list = new JList<>();
         _list.setFixedCellWidth(160);
         this._list.addMouseListener(new MouseListener() {
             private int selected;
@@ -337,7 +337,7 @@ public final class SuggestionField extends JTextField {
         public void run() {
             try {
                 SuggestionField.this.setFont(SuggestionField.this._busy);
-                Iterator it = SuggestionField.this._suggestions.iterator();
+                Iterator<String> it = SuggestionField.this._suggestions.iterator();
                 String word = SuggestionField.this.getText();
                 while (it.hasNext()) {
                     if (this.stop) {

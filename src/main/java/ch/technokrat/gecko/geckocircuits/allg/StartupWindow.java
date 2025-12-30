@@ -46,7 +46,6 @@ public class StartupWindow extends javax.swing.JDialog {
     
     private long DISPOSE_WAIT_TIME_MILLIS = 5000;
     private static final long START_DELAY_TIME_MILLIS = 10000;
-    private static final Random rand = new Random(System.currentTimeMillis());
     public static final String DONATE_CODE_KEY = "DONATE_CODE";
    
     private final static Timer delayWindowTimer = new Timer();
@@ -78,8 +77,7 @@ public class StartupWindow extends javax.swing.JDialog {
         returnValue.pack();
         return returnValue;
     }
-
-    @SuppressWarnings("unchecked")
+ 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

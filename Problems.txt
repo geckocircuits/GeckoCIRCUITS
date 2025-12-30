@@ -1,61 +1,97 @@
 [{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogUpdate.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SimulationRunner.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110271",
+	"code": "268435844",
 	"severity": 4,
-	"message": "The constructor URL(String) is deprecated since version 20",
+	"message": "The import java.util.List is never used",
 	"source": "Java",
-	"startLineNumber": 131,
-	"startColumn": 45,
-	"endLineNumber": 131,
-	"endColumn": 48,
+	"startLineNumber": 24,
+	"startColumn": 8,
+	"endLineNumber": 24,
+	"endColumn": 22,
 	"tags": [
-		2
+		1
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogUpdate.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110271",
+	"code": "570425421",
 	"severity": 4,
-	"message": "The constructor URL(String) is deprecated since version 20",
+	"message": "The value of the field StartupWindow.DISPOSE_WAIT_TIME_MILLIS is not used",
 	"source": "Java",
-	"startLineNumber": 367,
+	"startLineNumber": 47,
+	"startColumn": 18,
+	"endLineNumber": 47,
+	"endColumn": 42,
+	"tags": [
+		1
+	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "570425421",
+	"severity": 4,
+	"message": "The value of the field StartupWindow.rand is not used",
+	"source": "Java",
+	"startLineNumber": 49,
 	"startColumn": 33,
-	"endLineNumber": 367,
-	"endColumn": 36,
+	"endLineNumber": 49,
+	"endColumn": 37,
 	"tags": [
-		2
+		1
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogUpdateSettings.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/StartupWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "536871547",
 	"severity": 4,
 	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 53,
+	"startLineNumber": 82,
 	"startColumn": 23,
-	"endLineNumber": 53,
+	"endLineNumber": 82,
 	"endColumn": 34,
 	"tags": [
 		1
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFile.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SuggestionField.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425421",
+	"code": "16777748",
 	"severity": 4,
-	"message": "The value of the field GeckoFile.EMPTY_STRING is not used",
+	"message": "Type safety: The expression of type JList needs unchecked conversion to conform to JList<String>",
 	"source": "Java",
-	"startLineNumber": 69,
-	"startColumn": 35,
-	"endLineNumber": 69,
-	"endColumn": 47,
-	"tags": [
-		1
-	],
+	"startLineNumber": 148,
+	"startColumn": 22,
+	"endLineNumber": 148,
+	"endColumn": 33,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SuggestionField.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 148,
+	"startColumn": 26,
+	"endLineNumber": 148,
+	"endColumn": 31,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/SuggestionField.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "Iterator is a raw type. References to generic type Iterator<E> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 340,
+	"startColumn": 17,
+	"endLineNumber": 340,
+	"endColumn": 25,
 	"origin": "extHost1"
 }]

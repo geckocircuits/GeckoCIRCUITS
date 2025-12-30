@@ -270,7 +270,7 @@ public class GeckoJavaCompiler {
 
             if (!task.call()) {
                 //------------------
-                for (Diagnostic dm : diagnostics.getDiagnostics()) {
+                for (Diagnostic<?> dm : diagnostics.getDiagnostics()) {
                     compilerWriter.println(dm);
                 }
                 _compileStatus = COMPILESTATUS.COMPILE_ERROR;
@@ -312,7 +312,7 @@ public class GeckoJavaCompiler {
                 } catch (SecurityException ex) {
                     Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                Class[] partypes2 = new Class[1];
+                Class<?>[] partypes2 = new Class<?>[1];
                 partypes2[0] = gecko.getClass();
                 try {
                     //---------

@@ -70,7 +70,7 @@ public class GeckoStatusBar extends JPanel {
                                 _portLabelButton.setForeground(Color.ORANGE);
                                 _portLabelButton.setToolTipText("GeckoREMOTE " + I18nKeys.LISTENING_AT_PORT + " " + GeckoRemoteRegistry.getRemoteAccessPort());
                             } else {
-                                _portLabelButton.setText(I18nKeys.CONNECTION_TEST_FAILED.LISTENING_AT_PORT.getTranslation() + " : " + GeckoRemoteRegistry.getRemoteAccessPort());
+                                _portLabelButton.setText(I18nKeys.LISTENING_AT_PORT.getTranslation() + " : " + GeckoRemoteRegistry.getRemoteAccessPort());
                                 _portLabelButton.setForeground(Color.RED);
                             }
                         }

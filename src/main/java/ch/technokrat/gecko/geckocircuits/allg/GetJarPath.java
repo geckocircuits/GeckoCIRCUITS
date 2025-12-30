@@ -44,13 +44,12 @@ public class GetJarPath {
     private static String _JARpath;
     private static String _JARFilePath;
     private static Class<?> _refToCallingPackage;
-    private static GetJarPath _gjp;
     private static final String BUILD_CLASSES_STRING = "/build/classes";
     private static final String TARGET_CLASSES_STRING = "/target/classes";
 
     private static void initializeWithOwnClassRef() {
         if (!_initialized) {
-            _gjp = new GetJarPath(GetJarPath.class);
+            new GetJarPath(GetJarPath.class);
         }
     }
 
