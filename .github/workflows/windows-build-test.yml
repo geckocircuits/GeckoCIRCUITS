@@ -22,6 +22,20 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Set up MinGW (GCC for Windows)
+      uses: egor-tensin/setup-mingw@v1
+      with:
+        platform: x64
+
+    - name: Build native JNI libraries for Windows
+      shell: bash
+      run: |
+        cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+        gcc -shared -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/win32" -o libtestJNI_DLL.dll testJNI_DLL.c -Wl,--kill-at
+        cp libtestJNI_DLL.dll libtestJNI_DLL2.dll
+        echo "Native Windows DLL libraries built successfully"
+        ls -lh *.dll
+
     - name: Build with Maven
       run: mvn clean compile -DskipTests
 

@@ -22,6 +22,18 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Install build tools
+      run: |
+        brew install gcc
+
+    - name: Build native JNI libraries for macOS
+      run: |
+        cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+        chmod +x build_native_libraries.sh
+        ./build_native_libraries.sh
+        echo "Native macOS .dylib libraries built successfully"
+        ls -lh *.dylib
+
     - name: Build with Maven
       run: mvn clean compile -DskipTests
 
