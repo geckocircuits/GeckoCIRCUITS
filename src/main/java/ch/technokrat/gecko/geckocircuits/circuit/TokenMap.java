@@ -137,7 +137,6 @@ public final class TokenMap {
                                 _specialMap.put(lineToken, list);
                             }
 
-                            int nrLines = j - readLineNumber;
                             readLineNumber = j;
                         }
                     } 
