@@ -79,7 +79,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
 
         Collections.sort(selectionList, ALPHABETIC_SORT);
 
-        final JComboBox combo = new JComboBox();
+        final JComboBox<String> combo = new JComboBox<>();
 
         int comboSelectionIndex = -1;
         for (int i = 0; i < selectionList.size(); i++) {

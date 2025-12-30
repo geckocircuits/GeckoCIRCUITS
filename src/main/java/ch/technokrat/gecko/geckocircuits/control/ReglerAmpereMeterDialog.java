@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 
 class ReglerAmpereMeterDialog extends DialogElementCONTROL {
     
-    private JComboBox _comboLossType;
+    private JComboBox<LossComponent> _comboLossType;
     
     public ReglerAmpereMeterDialog(final AbstractCurrentMeasurement reglerAMP) {
         super(reglerAMP);
@@ -38,7 +38,7 @@ class ReglerAmpereMeterDialog extends DialogElementCONTROL {
                 //extra panel for flow measurement
                 final JPanel psw2 = new JPanel();
                 psw2.setLayout(new BorderLayout());
-                _comboLossType = new JComboBox();
+                _comboLossType = new JComboBox<>() ;
                 final LossComponent[] components = LossComponent.values();
                 for (int i = 0; i < components.length; i++) {
                     _comboLossType.addItem(components[i]);

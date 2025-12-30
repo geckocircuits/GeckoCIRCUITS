@@ -48,7 +48,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
     private double _dtPre = -1;
     private String[] _solverOptions = {"Backward Euler", "Trapezoidal", "Gear-Shichman"};
     private int _solvertype;
-    private JComboBox _dropdownSolvSel = new JComboBox(_solverOptions);
+    private JComboBox<String> _dropdownSolvSel = new JComboBox<>(_solverOptions);
 
     public DialogSimParameter(final Frame owner, final SolverSettings callback) {
         super(owner, true);

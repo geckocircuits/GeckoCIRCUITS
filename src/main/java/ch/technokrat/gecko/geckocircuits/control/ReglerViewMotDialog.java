@@ -49,7 +49,7 @@ class ReglerViewMotDialog extends DialogElementCONTROL {
 
         //
         if (labelListeElementLK2.size() > 0) {
-            final JComboBox combo = new JComboBox();
+            final JComboBox<String> combo = new JComboBox<>();
             for (String label : labelListeElementLK2) { 
                 combo.addItem(label);
             }
