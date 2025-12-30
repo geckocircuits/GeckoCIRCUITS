@@ -24,8 +24,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog; 
 import java.net.URL;
