@@ -73,7 +73,7 @@ public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
                 if (classMap.containsKey(type)) {
                     classMap.get(type).add(toAdd);
                 } else {
-                    ArrayList newList = new ArrayList();
+                    ArrayList newList = new ArrayList<>();
                     newList.add(toAdd);
                     classMap.put(type, newList);
                 }

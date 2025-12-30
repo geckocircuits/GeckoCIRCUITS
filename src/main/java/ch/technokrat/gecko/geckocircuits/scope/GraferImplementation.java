@@ -176,7 +176,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     private TechFormat cf = new TechFormat();
     private NumberFormat nf = NumberFormat.getNumberInstance();
     //==========================================
-    private ArrayList txtEintraege = new ArrayList();
+    private ArrayList<String> txtEintraege = new ArrayList<>();
     private int xSchieberPix2;
     private double[] xSchieberWert2 = new double[]{-1, -1};
     private double[][] ySchieberWert2;

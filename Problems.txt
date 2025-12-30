@@ -748,32 +748,26 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 182,
-	"startColumn": 66,
+	"startColumn": 42,
 	"endLineNumber": 182,
-	"endColumn": 83,
-	"tags": [
-		2
-	],
+	"endColumn": 112,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 208,
-	"startColumn": 62,
+	"startColumn": 42,
 	"endLineNumber": 208,
-	"endColumn": 79,
-	"tags": [
-		2
-	],
+	"endColumn": 108,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
@@ -826,77 +820,62 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 537,
-	"startColumn": 54,
+	"startColumn": 34,
 	"endLineNumber": 537,
-	"endColumn": 71,
-	"tags": [
-		2
-	],
+	"endColumn": 100,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 588,
-	"startColumn": 58,
+	"startColumn": 34,
 	"endLineNumber": 588,
-	"endColumn": 75,
-	"tags": [
-		2
-	],
+	"endColumn": 104,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 602,
-	"startColumn": 58,
+	"startColumn": 34,
 	"endLineNumber": 602,
-	"endColumn": 75,
-	"tags": [
-		2
-	],
+	"endColumn": 104,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 617,
-	"startColumn": 54,
+	"startColumn": 34,
 	"endLineNumber": 617,
-	"endColumn": 71,
-	"tags": [
-		2
-	],
+	"endColumn": 100,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 631,
-	"startColumn": 54,
+	"startColumn": 34,
 	"endLineNumber": 631,
-	"endColumn": 71,
-	"tags": [
-		2
-	],
+	"endColumn": 100,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/GeckoFileManagerWindow.java",
@@ -4933,59 +4912,26 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110270",
+	"code": "570425420",
 	"severity": 4,
-	"message": "The method getModifiers() from the type InputEvent is deprecated since version 9",
+	"message": "The static field InputEvent.BUTTON3_DOWN_MASK should be accessed in a static way",
 	"source": "Java",
 	"startLineNumber": 533,
-	"startColumn": 19,
+	"startColumn": 42,
 	"endLineNumber": 533,
-	"endColumn": 31,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.BUTTON3_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 533,
-	"startColumn": 40,
-	"endLineNumber": 533,
-	"endColumn": 52,
-	"tags": [
-		2
-	],
+	"endColumn": 59,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "570425420",
 	"severity": 4,
-	"message": "The static field InputEvent.BUTTON3_MASK should be accessed in a static way",
+	"message": "The static field InputEvent.BUTTON3_DOWN_MASK should be accessed in a static way",
 	"source": "Java",
 	"startLineNumber": 533,
-	"startColumn": 40,
+	"startColumn": 89,
 	"endLineNumber": 533,
-	"endColumn": 52,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110270",
-	"severity": 4,
-	"message": "The method getModifiers() from the type InputEvent is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 533,
-	"startColumn": 59,
-	"endLineNumber": 533,
-	"endColumn": 71,
-	"tags": [
-		2
-	],
+	"endColumn": 106,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
@@ -5034,66 +4980,6 @@
 	"startColumn": 30,
 	"endLineNumber": 689,
 	"endColumn": 40,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110270",
-	"severity": 4,
-	"message": "The method getModifiers() from the type InputEvent is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 874,
-	"startColumn": 23,
-	"endLineNumber": 874,
-	"endColumn": 35,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.BUTTON3_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 874,
-	"startColumn": 52,
-	"endLineNumber": 874,
-	"endColumn": 64,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110270",
-	"severity": 4,
-	"message": "The method getModifiers() from the type InputEvent is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 883,
-	"startColumn": 18,
-	"endLineNumber": 883,
-	"endColumn": 30,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.BUTTON3_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 883,
-	"startColumn": 47,
-	"endLineNumber": 883,
-	"endColumn": 59,
-	"tags": [
-		2
-	],
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SchematischeEingabe2.java",
@@ -5241,7 +5127,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant REL_MMF needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_C needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5253,7 +5139,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant NONLIN_REL needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant TH_CTH needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5265,7 +5151,19 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_MOTOR_PMSM needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_MOTOR needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR_SMROUND needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5289,67 +5187,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant TH_PvCHIP needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_I needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_IMC needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_L needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_RELUCTANCE needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_RTH needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_MOTOR_PMSM needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5373,7 +5211,31 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant REL_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_MOTOR_IMSAT needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_MMF needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5409,43 +5271,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_R needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_TRANS needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_PERM needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_MOTOR_SMSALIENT needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5469,7 +5295,55 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_MOTOR_IMSAT needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_LISN needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_I needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR_PERM needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_PvCHIP needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_FLOW needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5493,7 +5367,115 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_MOTOR_SMROUND needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_MOTOR_IMA needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_MOTOR_IMC needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_R needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_L needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant REL_RELUCTANCE needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_TRANS needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant LK_D needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant NONLIN_REL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
+	"source": "Java",
+	"startLineNumber": 284,
+	"startColumn": 21,
+	"endLineNumber": 284,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "33555193",
+	"severity": 4,
+	"message": "The enum constant TH_TEMP needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5517,7 +5499,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_BJT needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant REL_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5529,31 +5511,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_C needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_CTH needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_D needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant TH_RTH needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5589,18 +5547,6 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant LK_MOTOR_SMSALIENT needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
 	"message": "The enum constant REL_INDUCTOR needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
@@ -5613,67 +5559,7 @@
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "33555193",
 	"severity": 4,
-	"message": "The enum constant TH_TEMP needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant REL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_MOTOR_IMA needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_GLOBAL_TERMINAL needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant LK_LISN needs a corresponding case label in this enum switch on CircuitTyp",
-	"source": "Java",
-	"startLineNumber": 284,
-	"startColumn": 21,
-	"endLineNumber": 284,
-	"endColumn": 38,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/SimulationsKern.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555193",
-	"severity": 4,
-	"message": "The enum constant TH_FLOW needs a corresponding case label in this enum switch on CircuitTyp",
+	"message": "The enum constant LK_BJT needs a corresponding case label in this enum switch on CircuitTyp",
 	"source": "Java",
 	"startLineNumber": 284,
 	"startColumn": 21,
@@ -5822,54 +5708,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalControlBidirectional.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425420",
-	"severity": 4,
-	"message": "The static field AbstractCircuitSheetComponent.dpix should be accessed in a static way",
-	"source": "Java",
-	"startLineNumber": 37,
-	"startColumn": 82,
-	"endLineNumber": 37,
-	"endColumn": 86,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalControlBidirectional.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425420",
-	"severity": 4,
-	"message": "The static field AbstractCircuitSheetComponent.dpix should be accessed in a static way",
-	"source": "Java",
-	"startLineNumber": 38,
-	"startColumn": 43,
-	"endLineNumber": 38,
-	"endColumn": 47,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalControlInput.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425420",
-	"severity": 4,
-	"message": "The static field AbstractCircuitSheetComponent.dpix should be accessed in a static way",
-	"source": "Java",
-	"startLineNumber": 55,
-	"startColumn": 82,
-	"endLineNumber": 55,
-	"endColumn": 86,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalControlInput.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425420",
-	"severity": 4,
-	"message": "The static field AbstractCircuitSheetComponent.dpix should be accessed in a static way",
-	"source": "Java",
-	"startLineNumber": 56,
-	"startColumn": 43,
-	"endLineNumber": 56,
-	"endColumn": 47,
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalControlOutput.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -5883,18 +5721,6 @@
 	"tags": [
 		1
 	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalControlOutput.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425420",
-	"severity": 4,
-	"message": "The static field AbstractCircuitSheetComponent.dpix should be accessed in a static way",
-	"source": "Java",
-	"startLineNumber": 58,
-	"startColumn": 41,
-	"endLineNumber": 58,
-	"endColumn": 45,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/TerminalHiddenSubcircuit.java",
@@ -6656,30 +6482,6 @@
 	"endColumn": 33,
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogReglerVariableInputs.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 48,
-	"endLineNumber": 20,
-	"endColumn": 68,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogReglerVariableInputs.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 26,
-	"startColumn": 9,
-	"endLineNumber": 26,
-	"endColumn": 37,
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogSmallSignalAnalysis.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
@@ -6903,30 +6705,6 @@
 	"tags": [
 		1
 	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogWindowWithoutInput.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 40,
-	"endLineNumber": 16,
-	"endColumn": 60,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DialogWindowWithoutInput.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 9,
-	"endLineNumber": 19,
-	"endColumn": 22,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/DragTest.java",
@@ -7496,42 +7274,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAmpereMeterDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 25,
-	"startColumn": 39,
-	"endLineNumber": 25,
-	"endColumn": 59,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAmpereMeterDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 30,
-	"startColumn": 9,
-	"endLineNumber": 30,
-	"endColumn": 26,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerAmpereMeterDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777752",
-	"severity": 4,
-	"message": "Type safety: The field jpM from the raw type DialogElementCONTROL is assigned a value of type JPanel. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 36,
-	"startColumn": 13,
-	"endLineNumber": 36,
-	"endColumn": 16,
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerConstantDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "67109438",
@@ -7644,42 +7386,6 @@
 	"startColumn": 76,
 	"endLineNumber": 26,
 	"endColumn": 93,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGateDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 16,
-	"startColumn": 32,
-	"endLineNumber": 16,
-	"endColumn": 52,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGateDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 9,
-	"endLineNumber": 19,
-	"endColumn": 27,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerGateDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777752",
-	"severity": 4,
-	"message": "Type safety: The field jpM from the raw type DialogElementCONTROL is assigned a value of type JPanel. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 24,
-	"startColumn": 9,
-	"endLineNumber": 24,
-	"endColumn": 12,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerHysteresisDialog.java",
@@ -8120,30 +7826,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerTerminalDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 20,
-	"startColumn": 36,
-	"endLineNumber": 20,
-	"endColumn": 56,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerTerminalDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 25,
-	"startColumn": 9,
-	"endLineNumber": 25,
-	"endColumn": 31,
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerToEXTERNAL.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
@@ -8207,42 +7889,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerViewMotDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 29,
-	"startColumn": 35,
-	"endLineNumber": 29,
-	"endColumn": 55,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerViewMotDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 32,
-	"startColumn": 9,
-	"endLineNumber": 32,
-	"endColumn": 22,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerVOLTDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "DialogElementCONTROL is a raw type. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 31,
-	"startColumn": 32,
-	"endLineNumber": 31,
-	"endColumn": 52,
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerVOLTDialog.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
@@ -8253,30 +7899,6 @@
 	"startColumn": 5,
 	"endLineNumber": 34,
 	"endColumn": 14,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerVOLTDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777746",
-	"severity": 4,
-	"message": "Type safety: The constructor DialogElementCONTROL(RegelBlock) belongs to the raw type DialogElementCONTROL. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 37,
-	"startColumn": 9,
-	"endLineNumber": 37,
-	"endColumn": 24,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerVOLTDialog.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777752",
-	"severity": 4,
-	"message": "Type safety: The field jpM from the raw type DialogElementCONTROL is assigned a value of type DialogPanelVoltageMeasurement. References to generic type DialogElementCONTROL<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 44,
-	"startColumn": 9,
-	"endLineNumber": 44,
-	"endColumn": 12,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReglerVOLTDialog.java",
@@ -8437,17 +8059,14 @@
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReportingListTransferHandler.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67108967",
+	"code": "16777747",
 	"severity": 4,
-	"message": "The method getSelectedValues() from the type JList is deprecated",
+	"message": "Type safety: The method toArray(Object[]) belongs to the raw type List. References to generic type List<E> should be parameterized",
 	"source": "Java",
 	"startLineNumber": 169,
-	"startColumn": 45,
+	"startColumn": 37,
 	"endLineNumber": 169,
-	"endColumn": 62,
-	"tags": [
-		2
-	],
+	"endColumn": 91,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/ReportingListTransferHandler.java",
@@ -8646,18 +8265,6 @@
 	"startColumn": 88,
 	"endLineNumber": 39,
 	"endColumn": 92,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/TerminalControlInputWithLabel.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "570425420",
-	"severity": 4,
-	"message": "The static field AbstractCircuitSheetComponent.dpix should be accessed in a static way",
-	"source": "Java",
-	"startLineNumber": 52,
-	"startColumn": 47,
-	"endLineNumber": 52,
-	"endColumn": 51,
 	"origin": "extHost1"
 },{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/control/TestReceiverWindow.java",
@@ -9668,36 +9275,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/DialogConnectSignalsGraphs.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110270",
-	"severity": 4,
-	"message": "The method getModifiers() from the type InputEvent is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 366,
-	"startColumn": 32,
-	"endLineNumber": 366,
-	"endColumn": 44,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/DialogConnectSignalsGraphs.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.BUTTON3_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 366,
-	"startColumn": 61,
-	"endLineNumber": 366,
-	"endColumn": 73,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/DialogCurveProperties.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777747",
@@ -10628,36 +10205,6 @@
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/ScopeFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.CTRL_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 332,
-	"startColumn": 125,
-	"endLineNumber": 332,
-	"endColumn": 134,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/ScopeFrame.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.CTRL_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 345,
-	"startColumn": 132,
-	"endLineNumber": 345,
-	"endColumn": 141,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/ScopeSettings.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "570425421",
@@ -10868,36 +10415,6 @@
 	"endColumn": 79,
 	"tags": [
 		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/SliderContainer.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "67110270",
-	"severity": 4,
-	"message": "The method getModifiers() from the type InputEvent is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 265,
-	"startColumn": 22,
-	"endLineNumber": 265,
-	"endColumn": 34,
-	"tags": [
-		2
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/newscope/SliderContainer.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "33555840",
-	"severity": 4,
-	"message": "The field InputEvent.BUTTON1_MASK is deprecated since version 9",
-	"source": "Java",
-	"startLineNumber": 265,
-	"startColumn": 50,
-	"endLineNumber": 265,
-	"endColumn": 62,
-	"tags": [
-		2
 	],
 	"origin": "extHost1"
 },{
