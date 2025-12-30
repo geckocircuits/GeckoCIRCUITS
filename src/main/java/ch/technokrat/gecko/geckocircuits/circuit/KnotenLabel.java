@@ -16,10 +16,8 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Rectangle; 
 import java.awt.Graphics2D;
-import java.awt.BasicStroke; 
 import java.awt.font.FontRenderContext;
 import java.io.Serializable;
 
@@ -33,8 +31,6 @@ public class KnotenLabel implements Serializable {
     private int xTxt, yTxt;      // Pixel-Koord. vom Text
     private int xAnker, yAnker;  // ScematicEntry-Koord. vom Ankerpunkt, d.h. wohin die graue Linie zielt 
     private int x1click, y1click, x2click, y2click;  // definiert Klickbereich in Pixel 
-    private Font font;
-    private Color fb; 
     private boolean visible=false; 
     //----------------------------------
 

@@ -167,6 +167,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     }
 
     @Override
+    @SuppressWarnings({"unchecked", "varargs"})
     public JPanel createParameterPanel(UserParameter<? extends Number>... parameters) {
         JPanel returnValue = super.createParameterPanel(parameters); //To change body of generated methods, choose Tools | Templates.
         Object formatField = returnValue.getComponent(1);

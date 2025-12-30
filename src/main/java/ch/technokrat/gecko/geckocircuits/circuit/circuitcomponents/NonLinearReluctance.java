@@ -18,7 +18,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
-import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import static ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.LK;
 import static ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.RELUCTANCE;

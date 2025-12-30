@@ -26,8 +26,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -311,6 +309,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         registeredParameters.remove(index);
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
     public JPanel createParameterPanel(final UserParameter<? extends Number>... parameters) {
         JPanel pPD = new JPanel();
         pPD.setLayout(new GridLayout(parameters.length + 1, 2));

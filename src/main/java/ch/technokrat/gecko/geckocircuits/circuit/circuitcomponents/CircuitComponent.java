@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractTwoPortLKreisBlock;
 
 /**
  *

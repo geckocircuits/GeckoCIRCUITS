@@ -2,6 +2,12 @@
     // Java Configuration
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.compile.nullAnalysis.mode": "disabled",
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "java.completion.filteredTypes": [
+        "java.awt.*",
+        "com.sun.*"
+    ],
+    "java.autobuild.enabled": true,
     "java.project.sourcePaths": [
         "src/main/java"
     ],
