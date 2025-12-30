@@ -41,6 +41,7 @@ public class InductorCalculator extends CircuitComponent implements BStampable,
         return _inductance;
     }
 
+    @Override
     public void stampVectorB(double[] b, double t, double dt) {
 
         double bW = 0;
@@ -63,9 +64,11 @@ public class InductorCalculator extends CircuitComponent implements BStampable,
         return (-_oldCurrent - dt * (_potential1 - _potential2) / (2 * _inductance));
     }
 
+    @Override
     public void registerBVector(BVector bvector) {
     }
 
+    @Override
     public boolean isBasisStampable() {
         return false;
     }

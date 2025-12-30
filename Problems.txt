@@ -1,13 +1,1 @@
-[{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/OperationalAmplifier.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 315,
-	"startColumn": 27,
-	"endLineNumber": 315,
-	"endColumn": 43,
-	"origin": "extHost1"
-}]
+[]
