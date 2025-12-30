@@ -171,9 +171,9 @@ public final class SimulationRunner {
         nlContainer = NetListContainer.fabricStartSimulation(_se, simKern);
 
         simKern.initSimulation(
-                dtLoc, tSTART, tAktuell, tEND, _fenster._solverSettings._tPAUSE.getValue(),
+                dtLoc, tSTART, tAktuell, tEND, Fenster._solverSettings._tPAUSE.getValue(),
                 getAnfangsbedVomDialogfenster, nlContainer, false);
-        _fenster._solverSettings._dt_ALT = dtLoc;
+        Fenster._solverSettings._dt_ALT = dtLoc;
         simKern.initialisiereCONTROLatSimulationStart(dtLoc);  // wird nicht gemacht, wenn 'Continue' aktiviert wird
         _fenster.jtfStatus.setText("Starting Simulation ... ");
 
@@ -187,7 +187,7 @@ public final class SimulationRunner {
 
     //for initializing simulation to be controlled step by step from GeckoSCRIPT
     public void initSim() {
-        this.initSim(_fenster._solverSettings.dt.getValue(), _fenster._solverSettings._tDURATION.getValue());
+        this.initSim(Fenster._solverSettings.dt.getValue(), Fenster._solverSettings._tDURATION.getValue());
     }
     
 
@@ -236,10 +236,10 @@ public final class SimulationRunner {
                 } catch (java.lang.OutOfMemoryError err) {
                     throw new OutOfMemoryError("Could not allocate enough java RAM memory for the simulation!");
                 } finally {
-                    if (!_fenster._solverSettings.inPreCalculationMode) {
+                    if (!Fenster._solverSettings.inPreCalculationMode) {
                         endRun();
                     } else {
-                        _fenster._solverSettings.inPreCalculationMode = false;
+                        Fenster._solverSettings.inPreCalculationMode = false;
                         try {
                             _fenster.continueCalculation(false);
                         } catch (Throwable error) {                            
@@ -285,8 +285,8 @@ public final class SimulationRunner {
         double tSTART = 0, tAktuell = tSTART;
         nlContainer = NetListContainer.fabricStartSimulation(_se, simKern);
         simKern.initSimulation(
-                _fenster._solverSettings.dt.getValue(), tSTART, tAktuell, tEnd, _fenster._solverSettings._tPAUSE.getValue(),
+                Fenster._solverSettings.dt.getValue(), tSTART, tAktuell, tEnd, Fenster._solverSettings._tPAUSE.getValue(),
                 getAnfangsbedVomDialogfenster, nlContainer, false);
-        simKern.initialisiereCONTROLatSimulationStart(_fenster._solverSettings.dt.getValue());
+        simKern.initialisiereCONTROLatSimulationStart(Fenster._solverSettings.dt.getValue());
     }
 }
