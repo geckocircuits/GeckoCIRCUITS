@@ -17,6 +17,7 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.GeckoFileable;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +53,10 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
     public ExtraFilesWindow(final GeckoFileable geckoFileable) {
         super();
         try {
-            this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
         } catch (Exception ex) {
-            Logger.getLogger(ExtraFilesWindow.class.getName()).log(Level.INFO, "could not load image icon!");            
+            Logger.getLogger(ExtraFilesWindow.class.getName()).log(Level.INFO, "could not load image icon!");
         }
 
         _geckoFileable = geckoFileable;

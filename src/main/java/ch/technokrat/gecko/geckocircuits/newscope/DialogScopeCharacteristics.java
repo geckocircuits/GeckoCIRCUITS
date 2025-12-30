@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -87,7 +88,8 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 try {
                     graphics.setColor(java.awt.Color.white);
                     graphics.fillRect(0, 0, RECT_SIZE, RECT_SIZE);  // weisser Hintergrund
-                    java.awt.Image equ1 = new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "equ1.png")).getImage();
+                    URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+                    java.awt.Image equ1 = new ImageIcon(picsUrl.toURI().resolve("equ1.png").toURL()).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exc) {
                     exc.printStackTrace();
@@ -113,7 +115,8 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 try {
                     graphics.setColor(java.awt.Color.white);
                     graphics.fillRect(0, 0, RECT_SIZE, RECT_SIZE);  // weisser Hintergrund
-                    java.awt.Image equ1 = new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "equ2b.png")).getImage();
+                    URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+                    java.awt.Image equ1 = new ImageIcon(picsUrl.toURI().resolve("equ2b.png").toURL()).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exception) {
                     exception.printStackTrace();

@@ -18,6 +18,7 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -54,7 +55,8 @@ public class GeckoDialog extends JDialog {
 
     private void init() {
         try {
-            this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -89,7 +91,8 @@ public class GeckoDialog extends JDialog {
     
     public void setGeckoIconImage() {
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage((new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL())).getImage());
         } catch (Exception e) {
         }
     }

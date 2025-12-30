@@ -28,6 +28,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -141,7 +142,8 @@ public final class ScopeFrame extends javax.swing.JFrame{
     initComponents();
 
     try{
-      this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+      URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+      this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
     }catch(Exception e){
       e.printStackTrace();
     }

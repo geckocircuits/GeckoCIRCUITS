@@ -23,6 +23,7 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
 
+import java.net.URI;
 import java.net.URL;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -36,7 +37,7 @@ public class DialogNonLinearity extends GeckoDialog {
         _content = new NonLinearDialogPanel(this, elementLK, yAxisLog);        
         setContentPane(_content);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            this.setIconImage((new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "gecko.gif").toURL())).getImage());
         } catch (Exception e) {
         }
         

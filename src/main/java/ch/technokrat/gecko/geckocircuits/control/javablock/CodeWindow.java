@@ -26,6 +26,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.URI;
 import java.net.URL;
 import java.util.EventObject;
 import java.util.List;
@@ -117,7 +118,8 @@ public final class CodeWindow extends javax.swing.JFrame {
     public CodeWindow(final ReglerJavaFunction regelBlock, final StringBuffer outputStringBuffer) {
         super();
         try {
-            this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -935,9 +937,6 @@ private void jButtonExample1ActionPerformed(java.awt.event.ActionEvent evt) {//N
     jTabbedPane.setSelectedIndex(0);
 }//GEN-LAST:event_jButtonExample1ActionPerformed
 
-private void jButtonAutoIndentActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAutoIndentActionPerformed
-}//GEN-LAST:event_jButtonAutoIndentActionPerformed
-
 private void jCheckBoxShowNameActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jCheckBoxShowNameActionPerformed
     _javaFunction.setNameVisible(jCheckBoxShowName.isSelected());
 }//GEN-LAST:event_jCheckBoxShowNameActionPerformed
@@ -987,7 +986,6 @@ private void jTextFieldNamePropertyChange(java.beans.PropertyChangeEvent evt) {/
     }//GEN-LAST:event_jButtonExternalFilesActionPerformed
 
     private void jRadioButtonFixedBusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFixedBusActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonFixedBusActionPerformed
 
     private void loadCodeIntoRegler() {

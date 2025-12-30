@@ -15,7 +15,8 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import javax.swing.ImageIcon; 
-import java.net.URL; 
+import java.net.URI;
+import java.net.URL;
 
 
 /*
@@ -85,12 +86,12 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
         private JSpinner _average;
         private int averageSpan = 1;
         
-        private void setSpaceVector(final double r, final double s, double t) {            
-            
+        private void setSpaceVector(final double r, final double s, double t) {
+
             double re = 2 / 3.0 * (r - 0.5 * s - 0.5 * t);
             double im = -2 / 3.0 * (+0.5 * SQRT3 * s - 0.5 * SQRT3 * t);
-            
-            float average = (Float) _average.getValue();
+
+            float average = ((Number) _average.getValue()).floatValue();
             if( average > 0) {
                 averageSpan = (int) (average * 1E-6 / _timeStep);
                 if(averageSpan > HISTORY_BUFFER_SIZE) {
@@ -165,7 +166,10 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
 
     /** Creates new form SpaceVectorDisplay */
     public SpaceVectorDisplay(RegelBlock regelBlock) {
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception ex) {}
+        try {
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage((new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL())).getImage());
+        } catch (Exception ex) {}
         initComponents();
 
         if(regelBlock instanceof ReglerSpaceVector) {

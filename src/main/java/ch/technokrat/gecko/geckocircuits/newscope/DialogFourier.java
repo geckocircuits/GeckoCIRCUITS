@@ -35,6 +35,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JCheckBox;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.JOptionPane;
 
@@ -63,7 +64,8 @@ public class DialogFourier extends JDialog {
         _newScope = newScope;
         super.setModal(true);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage((new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL())).getImage());
         } catch (Exception e) {
         }
         this.worksheet = worksheet;
