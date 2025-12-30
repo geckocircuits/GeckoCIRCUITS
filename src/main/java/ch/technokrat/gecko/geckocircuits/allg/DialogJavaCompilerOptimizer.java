@@ -128,7 +128,11 @@ public class DialogJavaCompilerOptimizer extends JFrame {
     
     
     public DialogJavaCompilerOptimizer (GeckoJavaCompiler geckoJavaCompiler) {
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception ex) {}
+        try {
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
+        } catch (Exception ex) {}
         this.initComponents();        
         //-------
         this.geckoJavaCompiler= geckoJavaCompiler; 

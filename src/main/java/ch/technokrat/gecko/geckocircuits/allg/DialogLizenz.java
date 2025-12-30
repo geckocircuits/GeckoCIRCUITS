@@ -38,7 +38,11 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
 
     public DialogLizenz (StringBuffer sbInfoTxt) {
         super.setModal(true);
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception e) {}
+        try {
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
+        } catch (Exception e) {}
         this.sbInfoTxt= sbInfoTxt; 
         this.addWindowListener(this);
         this.setTitle(" Licence Information");
