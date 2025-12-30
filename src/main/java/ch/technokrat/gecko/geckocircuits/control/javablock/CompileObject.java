@@ -18,7 +18,6 @@ import ch.technokrat.gecko.GeckoRuntimeException;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GetJarPath;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.control;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossComponent;
 import java.awt.*;
