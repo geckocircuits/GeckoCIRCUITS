@@ -43,7 +43,7 @@ public class GetJarPath {
     private static boolean _initialized;
     private static String _JARpath;
     private static String _JARFilePath;
-    private static Class _refToCallingPackage;
+    private static Class<?> _refToCallingPackage;
     private static GetJarPath _gjp;
     private static final String BUILD_CLASSES_STRING = "/build/classes";
     private static final String TARGET_CLASSES_STRING = "/target/classes";
@@ -63,7 +63,7 @@ public class GetJarPath {
      *
      * @param clazz
      */
-    public GetJarPath(final Class clazz) {
+    public GetJarPath(final Class<?> clazz) {
         synchronized (this) {
             _refToCallingPackage = clazz;
             _initialized = true;

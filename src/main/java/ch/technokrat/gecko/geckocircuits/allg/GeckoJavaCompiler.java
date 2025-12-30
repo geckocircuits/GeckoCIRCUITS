@@ -296,9 +296,9 @@ public class GeckoJavaCompiler {
                 };
 
                 Class<?> c = Class.forName(_className, false, cl);
-                Class clazz = c;// Class.forName(_className, true, urlCl);                
+                Class<?> clazz = c;// Class.forName(_className, true, urlCl);                
 
-                Class[] partypes = new Class[0];
+                Class<?>[] partypes = new Class<?>[0];
                 try {
                     //---------
                     _run_script = clazz.getMethod("run_script", partypes);

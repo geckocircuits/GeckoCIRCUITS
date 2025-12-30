@@ -81,7 +81,7 @@ public class JavaBlockVector extends AbstractJavaBlock {
             _classNameFileMap = _compileObject.getClassNameFileMap();
 
             final ClassLoader classLoader = new JavaBlockClassLoader(_classNameFileMap);
-            final Class clazz = Class.forName(_compileObject.getClassName(), false, classLoader);
+            final Class<?> clazz = Class.forName(_compileObject.getClassName(), false, classLoader);
 
             try {
                 _compiledInstance = (ControlCalculatable) clazz.newInstance();
