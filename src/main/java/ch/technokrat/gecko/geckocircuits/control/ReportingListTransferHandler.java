@@ -166,7 +166,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
             _source = (JList) comp;
             _indices = _source.getSelectedIndices();
 
-            final Object[] values = _source.getSelectedValues();
+            final Object[] values = _source.getSelectedValuesList().toArray(new Object[0]);
             if (values == null || values.length == 0) {
                 return null;
             }

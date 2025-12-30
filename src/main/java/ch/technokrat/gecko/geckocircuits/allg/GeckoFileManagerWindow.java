@@ -179,7 +179,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
                 jRadioButtonIsInternalNew.setSelected(false);
             } else {
 
-                Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValues();
+                Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
                 GeckoFile selectedFile = (GeckoFile) selectedFiles[selectedFiles.length - 1];
 
                 if (selectedFile.getStorageType() == StorageType.EXTERNAL) {
@@ -205,7 +205,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
                 jRadioButtonIsInternalExisting.setSelected(false);
             } else {
 
-                Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+                Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
                 GeckoFile selectedFile = (GeckoFile) selectedFiles[selectedFiles.length - 1];
 
                 if (selectedFile.getStorageType() == StorageType.EXTERNAL) {
@@ -534,7 +534,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddSelectedExistingFilesActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAddSelectedExistingFilesActionPerformed
-        Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+        Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
         for (int i = 0; i < selectedFiles.length; i++) {
             addGeckoFileToList((GeckoFile) selectedFiles[i]);
         }
@@ -585,7 +585,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonAddNewFileActionPerformed
 
     private void jRadioButtonIsExternalNewActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsExternalNewActionPerformed
-        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValues();
+        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -599,7 +599,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButtonIsExternalNewActionPerformed
 
     private void jRadioButtonIsInternalNewActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsInternalNewActionPerformed
-        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValues();
+        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -614,7 +614,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButtonIsInternalNewActionPerformed
 
     private void jRadioButtonIsExternalExistingActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsExternalExistingActionPerformed
-        Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+        Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -628,7 +628,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButtonIsExternalExistingActionPerformed
 
     private void jRadioButtonIsInternalExistingActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsInternalExistingActionPerformed
-        Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+        Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
