@@ -3,11 +3,25 @@
     "java.configuration.updateBuildConfiguration": "automatic",
     "java.compile.nullAnalysis.mode": "disabled",
     "java.errors.incompleteClasspath.severity": "ignore",
-    "java.completion.filteredTypes": [
-        "java.awt.*",
-        "com.sun.*"
-    ],
+
+    // Suppress Java warnings in VSCode - comprehensive suppression
+    "java.compliance": "21",
+    "java.format.enabled": true,
+    "java.saveActions.organizeImports": false,
     "java.autobuild.enabled": true,
+    "java.sources": "21",
+    "java.codeGeneration.useProjectSettings": true,
+    "java.depend.autoRefresh": "disabled",
+    "java.downloadSources": false,
+    "java.import.generates.concrete.classes": "ignore",
+    "java.import.excludes": "",
+
+    // Hide/ignore specific problem types
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "java.completion.import.enabled": false,
+    "java.signatureHelp.enabled": false,
+    "java.referencesCodeLens.enabled": false,
+    "java.implementationsCodeLens.enabled": false,
     "java.project.sourcePaths": [
         "src/main/java"
     ],
