@@ -121,7 +121,11 @@
               <arg>-Xlint:-cast</arg>
               <arg>-Xlint:-finally</arg>
               <arg>-Xlint:-path</arg>
+              <arg>-Xlint:-fallthrough</arg>
+              <arg>-Xlint:-overloads</arg>
+              <arg>-Xlint:-static</arg>
             </compilerArgs>
+            <showWarnings>false</showWarnings>
           </configuration>
           <!--version>3.8.0</version-->
         </plugin>
