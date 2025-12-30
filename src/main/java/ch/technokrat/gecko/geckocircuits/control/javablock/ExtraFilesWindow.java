@@ -236,7 +236,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
     private javax.swing.JButton jButtonAddNewFiles;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JButton jButtonRemoveSelected;
-    private javax.swing.JList jListExtraSourceFiles;
+    private javax.swing.JList<GeckoFile> jListExtraSourceFiles;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;

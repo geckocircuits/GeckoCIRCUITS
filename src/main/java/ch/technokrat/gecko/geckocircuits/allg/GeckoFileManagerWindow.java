@@ -703,8 +703,8 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     private javax.swing.JLabel jLabelAlreadyAvailable;
     private javax.swing.JLabel jLabelFileType;
     private javax.swing.JLabel jLabelFileType2;
-    private javax.swing.JList jListAvailableFiles;
-    private javax.swing.JList jListSelectedFilesToAdd;
+    private javax.swing.JList<GeckoFile> jListAvailableFiles;
+    private javax.swing.JList<GeckoFile> jListSelectedFilesToAdd;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

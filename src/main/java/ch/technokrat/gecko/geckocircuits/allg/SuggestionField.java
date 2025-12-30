@@ -48,7 +48,7 @@ public final class SuggestionField extends JTextField {
 
     private static final long serialVersionUID = 1756202080423312153L;
     private final JDialog _dialog;
-    private JList _list;
+    private JList<String> _list;
     private List<String> _data = new ArrayList<String>();
     private final List<String> _suggestions = new ArrayList<String>();
     private InterruptableMatcher _matcher;
@@ -229,7 +229,7 @@ public final class SuggestionField extends JTextField {
         }
         Collections.sort(data);
         this._data = data;
-        this._list.setListData(data.toArray());
+        this._list.setListData(data.toArray(new String[0]));
         return true;
     }
 
@@ -356,7 +356,7 @@ public final class SuggestionField extends JTextField {
 
                 SuggestionField.this.setFont(SuggestionField.this._regular);
                 if (SuggestionField.this._suggestions.size() > 0) {
-                    SuggestionField.this._list.setListData(SuggestionField.this._suggestions.toArray());
+                    SuggestionField.this._list.setListData(SuggestionField.this._suggestions.toArray(new String[0]));
                     SuggestionField.this._list.setSelectedIndex(0);
                     SuggestionField.this._list.ensureIndexIsVisible(0);
                     SuggestionField.this._dialog.setVisible(true);

@@ -56,7 +56,7 @@ public class NativeCDialog extends GeckoDialog {
     private final DefaultListModel _fileList;
     private final Container _con;
     private final JButton jButtonOK = GuiFabric.getJButton(I18nKeys.OK);
-    private final JList jListLibFiles;
+    private final JList<String> jListLibFiles;
     private final JButton jButtonOpenFile = GuiFabric.getJButton(I18nKeys.ADD_NEW);
     private final JButton jButtonRemoveSelection = GuiFabric.getJButton(I18nKeys.REMOVE_SELECTION);
     

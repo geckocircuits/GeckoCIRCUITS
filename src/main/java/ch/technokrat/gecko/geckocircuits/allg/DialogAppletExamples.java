@@ -41,7 +41,7 @@ public class DialogAppletExamples extends JDialog implements WindowListener, Act
     //---------------------------------
     private String[] datnamExampleApplet;
     private Fenster callback;
-    private JList list;
+    private JList<String> list;
     //---------------------------------
 
     public DialogAppletExamples(String[] datnamExampleApplet, Fenster callback) {
@@ -84,7 +84,7 @@ public class DialogAppletExamples extends JDialog implements WindowListener, Act
         jtx.setBackground(Color.white);
         jtx.setEditable(false);
         //------------------
-        list = new JList(datnamExampleApplet);
+        list = new JList<>(datnamExampleApplet);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //------------------
         JPanel jpM = new JPanel();

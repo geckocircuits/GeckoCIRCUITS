@@ -186,7 +186,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
         return COPY_OR_MOVE;
     }
 
-    private List getArrayList(final Transferable transf) {
+    private List<?> getArrayList(final Transferable transf) {
         List returnValue;
         try {
             if (hasLocalArrayListFlavor(transf.getTransferDataFlavors())) {
