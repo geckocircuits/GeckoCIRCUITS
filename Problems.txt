@@ -1,45 +1,14 @@
-mhr@DESKTOP-QIG4RJ0 MINGW64 ~/Documents/GeckoCIRCUITS (main)
-$  cd c:\\Users\\mhr\\Documents\\GeckoCIRCUITS ; /usr/bin/env C:\\Program\ Files\\Eclipse\ Adoptium\\jdk-21.0.9.10-hotspot\\bin\\java.exe @C:\\Users\\mhr\\AppData\\Local\\Temp\\cp_dx03d53a40y8gz1u0hee7c8g2.argfile ch.technokrat.gecko.GeckoSim resources/Education_ETHZ/ex_1.ipes 
+$  /usr/bin/env C:\\Program\ Files\\Eclipse\ Adoptium\\jdk-21.0.9.10-hotspot\\bin\\java.exe -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=localhost:64570 @C:\\Users\\mhr\\AppData\\Local\\Temp\\cp_dx03d53a40y8gz1u0hee7c8g2.argfile ch.technokrat.gecko.GeckoSim 
 file:/C:/Users/mhr/Documents/GeckoCIRCUITS/target/classes/ch/technokrat/gecko/geckocircuits/allg/
 Starting GeckoCIRCUITS...
 Requested memory size: 512MB.
 Available JVM memory: 2932 MB.
-Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Cannot invoke "javax.swing.JSplitPane.setDividerLocation(int)" because "this.split" is null
-        at ch.technokrat.gecko.geckocircuits.allg.Fenster.aktualisiereDividerSplitPane(Fenster.java:831)
-        at ch.technokrat.gecko.geckocircuits.allg.Fenster.componentResized(Fenster.java:1760)
-        at java.desktop/java.awt.AWTEventMulticaster.componentResized(AWTEventMulticaster.java:169)
-        at java.desktop/java.awt.Component.processComponentEvent(Component.java:6447)
-        at java.desktop/java.awt.Component.processEvent(Component.java:6401)
-        at java.desktop/java.awt.Container.processEvent(Container.java:2266)
-        at java.desktop/java.awt.Window.processEvent(Window.java:2056)
-        at java.desktop/java.awt.Component.dispatchEventImpl(Component.java:4996)
-        at java.desktop/java.awt.Container.dispatchEventImpl(Container.java:2324)
-        at java.desktop/java.awt.Window.dispatchEventImpl(Window.java:2780)
-        at java.desktop/java.awt.Component.dispatchEvent(Component.java:4828)
-        at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:775)
-        at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:720)
-        at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:714)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
-        at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:98)
-        at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:747)
-        at java.desktop/java.awt.EventQueue$5.run(EventQueue.java:745)
-        at java.base/java.security.AccessController.doPrivileged(AccessController.java:400)
-        at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:87)
-        at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:744)
-        at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
-        at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
-        at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
-        at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
-        at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
-        at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
 Could not find editor library jsyntaxpane.jar. Scripting tool disabled.
-resources/Education_ETHZ/ex_1.ipes
 GeckoCIRCUITS is ready
 java.lang.ClassCastException: class java.lang.Double cannot be cast to class java.lang.Float (java.lang.Double and java.lang.Float are in module java.base of loader 'bootstrap')
-        at ch.technokrat.gecko.geckocircuits.control.SpaceVectorDisplay$SpaceVector.setSpaceVector(SpaceVectorDisplay.java:124)
-        at ch.technokrat.gecko.geckocircuits.control.SpaceVectorDisplay.drawVector(SpaceVectorDisplay.java:532)
-        at ch.technokrat.gecko.geckocircuits.control.calculators.SpaceVectorCalculator.berechneYOUT(SpaceVectorCalculator.java:29)
+        at ch.technokrat.gecko.geckocircuits.control.UZiDisplay$DrawVector.setPlotVector(UZiDisplay.java:86)
+        at ch.technokrat.gecko.geckocircuits.control.UZiDisplay.drawVector(UZiDisplay.java:467)
+        at ch.technokrat.gecko.geckocircuits.control.ReglerU_ZI$1.berechneYOUT(ReglerU_ZI.java:46)
         at ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL.berechneZeitschritt(NetzlisteCONTROL.java:355)
         at ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern.simulateOneTimeStep(SimulationsKern.java:145)
         at ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern.runSimulation(SimulationsKern.java:336)
