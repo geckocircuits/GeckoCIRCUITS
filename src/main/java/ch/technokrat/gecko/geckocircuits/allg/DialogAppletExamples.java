@@ -47,7 +47,9 @@ public class DialogAppletExamples extends JDialog implements WindowListener, Act
     public DialogAppletExamples(String[] datnamExampleApplet, Fenster callback) {
         super.setModal(true);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception e) {
         }
         this.addWindowListener(this);
