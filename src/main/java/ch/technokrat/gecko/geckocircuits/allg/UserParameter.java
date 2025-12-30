@@ -38,7 +38,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
  *
  * @author andreas
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class UserParameter<T> {
 
     private final List<String> _unit;
@@ -623,7 +623,6 @@ public final class UserParameter<T> {
         private String _identifier;
         private final T _initialValue;
         private List<ConnectorType> _connectorTypeMap;
-        private ConnectorType _activeDomain;
         private final List<String> _units = new ArrayList<String>();
         private final List<String> _shortNames = new ArrayList<String>();
         private final List<String> _alternativeShortNames = new ArrayList<String>();
