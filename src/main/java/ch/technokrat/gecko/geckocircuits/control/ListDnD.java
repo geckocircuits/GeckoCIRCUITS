@@ -30,7 +30,7 @@ public class ListDnD {
     }
  
     private JScrollPane getListComponent(String s) {
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<String> model = new DefaultListModel<>();
         for(int j = 0; j < 5; j++)
             model.addElement(s + " " + (j+1));
         JList list = new JList(model);

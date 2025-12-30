@@ -196,9 +196,9 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
             @Override
             public void actionPerformed(final ActionEvent event){
                 System.out.println("Reset pressed");
-                final DefaultListModel userModel = new DefaultListModel();
+                final DefaultListModel<RegelBlock> userModel = new DefaultListModel<>();
                 for(int i=0; i<jListOptimized.getModel().getSize(); i++){
-                    userModel.addElement(jListOptimized.getModel().getElementAt(i));
+                    userModel.addElement((RegelBlock) jListOptimized.getModel().getElementAt(i));
                 }
                 jListUser.setModel(userModel);
             }
@@ -206,8 +206,8 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
     }
     
     private void initLists(final List<RegelBlock> optimizedList){
-        final DefaultListModel optModel = new DefaultListModel();
-        final DefaultListModel userModel = new DefaultListModel();
+        final DefaultListModel<RegelBlock> optModel = new DefaultListModel<>();
+        final DefaultListModel<RegelBlock> userModel = new DefaultListModel<>();
         for(RegelBlock regelblock : optimizedList){
             optModel.addElement(regelblock);
             userModel.addElement(regelblock);
@@ -367,12 +367,12 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
             return;
         }
         dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-        final DefaultListModel model = (DefaultListModel) jListUser.getModel();
+        final DefaultListModel<RegelBlock> model = (DefaultListModel<RegelBlock>) jListUser.getModel();
         model.remove(_sourceIndex);
         if (index < _sourceIndex){
-            model.add(index, _draggedObject);
+            model.add(index, (RegelBlock) _draggedObject);
         } else {
-            model.add(index-1, _draggedObject);
+            model.add(index-1, (RegelBlock) _draggedObject);
         }
         jListUser.setModel(model);
         dtde.dropComplete(true);

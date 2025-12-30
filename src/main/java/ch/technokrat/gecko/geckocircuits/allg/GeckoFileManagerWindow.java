@@ -40,8 +40,8 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     private final StorageType _newFileType = StorageType.EXTERNAL;
     private final JFileChooser _addFilesDialog = new JFileChooser();
     private final List<GeckoFile> _newFilesToAdd = new ArrayList<GeckoFile>();
-    private final DefaultListModel _existingFilesList = new DefaultListModel();
-    private final DefaultListModel _selectedFilesList = new DefaultListModel();
+    private final DefaultListModel<GeckoFile> _existingFilesList = new DefaultListModel<>();
+    private final DefaultListModel<GeckoFile> _selectedFilesList = new DefaultListModel<>();
     private boolean _isLossElement = false;
     private boolean _singleFileOnly = true;
     private final List<GeckoFile> _filesToRemove = new ArrayList<GeckoFile>();

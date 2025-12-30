@@ -121,7 +121,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         });
 
         jList1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
-        jList1.setModel(new DefaultListModel());
+        jList1.setModel(new DefaultListModel<>());
         jScrollPane1.setViewportView(jList1);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -201,7 +201,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
             Set<String> found = _se._visibleCircuitSheet.findString(searchText, jCheckBoxIgnore.isSelected(), !jCheckBoxExact.isSelected());
             ((DefaultListModel)jList1.getModel()).clear();
             for(String tmp : found) {
-                ((DefaultListModel) jList1.getModel()).addElement(tmp);
+                ((DefaultListModel<String>) jList1.getModel()).addElement(tmp);
             }
         }
     }//GEN-LAST:event_jTextFieldKeyReleased

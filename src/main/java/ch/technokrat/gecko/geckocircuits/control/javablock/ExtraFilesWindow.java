@@ -35,7 +35,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
 
     private final GeckoFileable _geckoFileable;
     private GeckoFileManagerWindow _fileManagerWindow;
-    private final DefaultListModel _extraFiles = new DefaultListModel();
+    private final DefaultListModel<GeckoFile> _extraFiles = new DefaultListModel<>();
 
     private final ListSelectionListener _listSelectionListener = new ListSelectionListener() {
 

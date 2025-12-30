@@ -100,21 +100,21 @@ public final class DialogDataExport extends javax.swing.JDialog {
         
         final List<String> selectedStrings = _reglerDataSave.getSelectedNames();
         final int rowLength = container.getRowLength();
-        ((DefaultListModel) jListAvailable.getModel()).clear();
+        ((DefaultListModel<DataIndexItem>) jListAvailable.getModel()).clear();
         for (int i = 0; i < rowLength; i++) {
             final DataIndexItem listItem = new DataIndexItem(i, container.getSignalName(i));
             if (!selectedStrings.contains(listItem.toString())) {
-                ((DefaultListModel) jListAvailable.getModel()).addElement(listItem);
+                ((DefaultListModel<DataIndexItem>) jListAvailable.getModel()).addElement(listItem);
             }
 
         }
 
         // here, it is important that we keep the order of the selected elements!
-        ((DefaultListModel) jListSelected.getModel()).clear();
+        ((DefaultListModel<DataIndexItem>) jListSelected.getModel()).clear();
         for (int i = 0; i < selectedStrings.size(); i++) {
             final DataIndexItem listItem = new DataIndexItem(i, selectedStrings.get(i));
             if (selectedStrings.contains(listItem.toString())) {
-                ((DefaultListModel) jListSelected.getModel()).addElement(listItem);
+                ((DefaultListModel<DataIndexItem>) jListSelected.getModel()).addElement(listItem);
             }
 
         }        

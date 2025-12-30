@@ -33,7 +33,7 @@ public class DialogControlCheck extends javax.swing.JDialog {
         _nlc = nlc;
         initComponents();
         
-        DefaultListModel inModel = new DefaultListModel();
+        DefaultListModel<String> inModel = new DefaultListModel<>();
         for(String errorPort : _nlc._inPortsStringWithoutConnection) {
             inModel.addElement(errorPort);
         }
@@ -52,7 +52,7 @@ public class DialogControlCheck extends javax.swing.JDialog {
             }
         });
         
-        DefaultListModel outModel = new DefaultListModel();
+        DefaultListModel<String> outModel = new DefaultListModel<>();
         for(String errorPort : _nlc._outPortsStringWithoutConnection) {
             outModel.addElement(errorPort);
         }
