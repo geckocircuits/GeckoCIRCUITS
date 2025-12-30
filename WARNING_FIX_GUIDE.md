@@ -1,24 +1,44 @@
-# Warning Suppression Guide
+# Warning Fix Guide
 
-All warnings are currently suppressed in `pom.xml`. To enable one warning rule at a time and fix the issues:
+All warnings are currently suppressed in `pom.xml`. To enable one warning rule at a time and fix the issues systematically:
 
-## Step 1: Enable a specific warning
+## VSCode Warning Display Issue
 
-Remove the corresponding `-Xlint:-<warning>` from the compiler args in `pom.xml`:
+**Important:** VSCode's Java extension performs independent analysis from the Maven compiler. The Maven compiler suppression in `pom.xml` does NOT prevent VSCode from showing warnings.
+
+### Option 1: Filter warnings in VSCode (Quick)
+
+In VSCode Problems panel (Ctrl+Shift+M), click the filter icon and type to hide specific warnings:
+- Type: `rawtypes` - hides raw type warnings
+- Type: `unchecked` - hides unchecked warnings
+- Type: `unused` - hides unused variable/import warnings
+- Type: `hints` - hides all style hints
+
+### Option 2: Configure VSCode to ignore problem types
+
+Add to `.vscode/settings.json`:
+```json
+"java.errors.incompleteClasspath.severity": "ignore",
+"java.errors.typeParameter": "ignore",  // For raw types
+"java.errors.unused": "ignore",  // For unused code
+"java.errors.deprecation": "ignore",  // For deprecated usage
+"java.completion.enabled": false,  // Disable completion warnings
+```
+
+### Option 3: Systematic fix (Recommended)
+
+Fix warnings one category at a time:
+
+## Step 1: Enable a specific warning type
+
+Remove the corresponding `-Xlint:-<warning>` from `pom.xml` compiler args:
 
 ```xml
-<plugin>
-  <artifactId>maven-compiler-plugin</artifactId>
-  <configuration>
-    <compilerArgs>
-      <!-- Remove this line to enable raw type warnings -->
-      <arg>-Xlint:-rawtypes</arg>
-      <!-- Remove this line to enable unchecked warnings -->
-      <arg>-Xlint:-unchecked</arg>
-      <!-- ... etc -->
-    </compilerArgs>
-  </configuration>
-</plugin>
+<!-- Remove this line to enable raw type warnings -->
+<arg>-Xlint:-rawtypes</arg>
+<!-- Remove this line to enable unchecked warnings -->
+<arg>-Xlint:-unchecked</arg>
+<!-- ... etc -->
 ```
 
 ## Step 2: Recompile to see the warnings
@@ -51,6 +71,10 @@ mvn clean compile
 ```
 
 Check that all warnings of that type are gone before moving to the next rule.
+
+## Step 6: Repeat for next warning type
+
+Move to the next `-Xlint` option and repeat steps 1-5.
 
 ## Warning Types to Fix (in order of complexity)
 
@@ -91,6 +115,16 @@ Check that all warnings of that type are gone before moving to the next rule.
 10. **static** - Static member access
    - Use `ClassName.staticMember` instead of `instance.staticMember`
 
+## Additional VSCode-Specific Warnings (hints)
+
+These are style suggestions from VSCode's Java extension:
+- **Leaking this in constructor** - Passing `this` before super() call (often OK)
+- **Convert switch to rule switch** - Java 12+ feature (can ignore)
+- **Anonymous to lambda** - Modernization suggestion (can ignore)
+- **Constant naming** - Style preference (e.g., `DEF_uF` is intentional)
+
+To hide these "hints" in VSCode, filter by Type: `hints` in the Problems panel.
+
 ## Re-enable all warnings
 
 After fixing all individual warnings, remove ALL compilerArgs to enable full checking:
@@ -102,7 +136,15 @@ After fixing all individual warnings, remove ALL compilerArgs to enable full che
     <source>21</source>
     <target>21</target>
     <release>21</release>
-    <!-- Remove all compilerArgs when done -->
+    <!-- Remove all <compilerArgs> when done -->
   </configuration>
 </plugin>
 ```
+
+## Summary
+
+- Maven settings only affect Maven builds, not VSCode analysis
+- VSCode shows warnings independently of `pom.xml` settings
+- To work efficiently, fix ONE warning category at a time
+- Use VSCode Problems filter to see only the warnings you're currently fixing
+- Consider ignoring "hints" type (style suggestions) if they don't affect functionality
