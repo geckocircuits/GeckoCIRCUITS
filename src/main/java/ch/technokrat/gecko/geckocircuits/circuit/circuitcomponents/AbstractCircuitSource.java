@@ -23,6 +23,10 @@ import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupling;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
+// Note: Static imports below ARE used in this file. IDE reports them as unused
+// because some code uses fully qualified names (CircuitSourceType.CONSTANT)
+// while other code uses the static import style (CONSTANT). Both styles are
+// used throughout the class.
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_DC;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUERT;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIN;

@@ -1,103 +1,76 @@
 [{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitSource.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "268435844",
 	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent is never used",
+	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_DC is never used",
 	"source": "Java",
-	"startLineNumber": 19,
-	"startColumn": 8,
-	"endLineNumber": 19,
-	"endColumn": 79,
-	"tags": [
-		1
-	],
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "268435844",
-	"severity": 4,
-	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.CONTROL is never used",
-	"source": "Java",
-	"startLineNumber": 21,
+	"startLineNumber": 26,
 	"startColumn": 15,
-	"endLineNumber": 21,
-	"endColumn": 78,
+	"endLineNumber": 26,
+	"endColumn": 84,
 	"tags": [
 		1
 	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitSource.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
+	"code": "268435844",
 	"severity": 4,
-	"message": "UserParameter is a raw type. References to generic type UserParameter<T> should be parameterized",
+	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUERT is never used",
 	"source": "Java",
-	"startLineNumber": 160,
-	"startColumn": 14,
-	"endLineNumber": 160,
-	"endColumn": 27,
+	"startLineNumber": 27,
+	"startColumn": 15,
+	"endLineNumber": 27,
+	"endColumn": 97,
+	"tags": [
+		1
+	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitSource.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777748",
+	"code": "268435844",
 	"severity": 4,
-	"message": "Type safety: The expression of type List needs unchecked conversion to conform to List<String>",
+	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIN is never used",
 	"source": "Java",
-	"startLineNumber": 170,
-	"startColumn": 16,
-	"endLineNumber": 170,
-	"endColumn": 38,
+	"startLineNumber": 28,
+	"startColumn": 15,
+	"endLineNumber": 28,
+	"endColumn": 85,
+	"tags": [
+		1
+	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitSource.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
+	"code": "268435844",
 	"severity": 4,
-	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
+	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY is never used",
 	"source": "Java",
-	"startLineNumber": 173,
-	"startColumn": 36,
-	"endLineNumber": 173,
-	"endColumn": 52,
+	"startLineNumber": 29,
+	"startColumn": 15,
+	"endLineNumber": 29,
+	"endColumn": 108,
+	"tags": [
+		1
+	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitSource.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
+	"code": "268435844",
 	"severity": 4,
-	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
+	"message": "The import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface.tcf is never used",
 	"source": "Java",
-	"startLineNumber": 175,
-	"startColumn": 27,
-	"endLineNumber": 175,
-	"endColumn": 43,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 177,
-	"startColumn": 14,
-	"endLineNumber": 177,
-	"endColumn": 30,
-	"origin": "extHost1"
-},{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/circuit/circuitcomponents/AbstractCircuitBlockInterface.java",
-	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
-	"severity": 4,
-	"message": "CircuitComponent is a raw type. References to generic type CircuitComponent<T> should be parameterized",
-	"source": "Java",
-	"startLineNumber": 177,
-	"startColumn": 60,
-	"endLineNumber": 177,
-	"endColumn": 76,
+	"startLineNumber": 32,
+	"startColumn": 15,
+	"endLineNumber": 32,
+	"endColumn": 108,
+	"tags": [
+		1
+	],
 	"origin": "extHost1"
 }]
