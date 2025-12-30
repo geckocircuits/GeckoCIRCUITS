@@ -1,25 +1,79 @@
 [{
 	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlCheck.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
-	"code": "16777788",
+	"code": "536871547",
 	"severity": 4,
-	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
+	"message": "Unnecessary @SuppressWarnings(\"unchecked\")",
 	"source": "Java",
-	"startLineNumber": 86,
-	"startColumn": 27,
-	"endLineNumber": 86,
-	"endColumn": 44,
+	"startLineNumber": 80,
+	"startColumn": 23,
+	"endLineNumber": 80,
+	"endColumn": 34,
+	"tags": [
+		1
+	],
 	"origin": "extHost1"
 },{
-	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlCheck.java",
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "268435844",
+	"severity": 4,
+	"message": "The import java.awt.dnd.DragGestureRecognizer is never used",
+	"source": "Java",
+	"startLineNumber": 29,
+	"startColumn": 8,
+	"endLineNumber": 29,
+	"endColumn": 42,
+	"tags": [
+		1
+	],
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
 	"owner": "_generated_diagnostic_collection_name_#3",
 	"code": "16777788",
 	"severity": 4,
 	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
 	"source": "Java",
-	"startLineNumber": 88,
-	"startColumn": 28,
-	"endLineNumber": 88,
+	"startLineNumber": 83,
+	"startColumn": 30,
+	"endLineNumber": 83,
+	"endColumn": 47,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "16777788",
+	"severity": 4,
+	"message": "JList is a raw type. References to generic type JList<E> should be parameterized",
+	"source": "Java",
+	"startLineNumber": 89,
+	"startColumn": 25,
+	"endLineNumber": 89,
+	"endColumn": 42,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "536871362",
+	"severity": 2,
+	"message": "TODO add your handling code here:",
+	"source": "Java",
+	"startLineNumber": 222,
+	"startColumn": 12,
+	"endLineNumber": 222,
+	"endColumn": 45,
+	"origin": "extHost1"
+},{
+	"resource": "/C:/Users/mhr/Documents/GeckoCIRCUITS/src/main/java/ch/technokrat/gecko/geckocircuits/allg/DialogControlOrderN.java",
+	"owner": "_generated_diagnostic_collection_name_#3",
+	"code": "536871362",
+	"severity": 2,
+	"message": "TODO add your handling code here:",
+	"source": "Java",
+	"startLineNumber": 226,
+	"startColumn": 12,
+	"endLineNumber": 226,
 	"endColumn": 45,
 	"origin": "extHost1"
 }]

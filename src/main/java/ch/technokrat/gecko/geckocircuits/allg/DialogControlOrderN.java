@@ -26,7 +26,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragGestureRecognizer;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DragSourceDragEvent;
 import java.awt.dnd.DragSourceDropEvent;
@@ -80,13 +79,13 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListOptimized = new javax.swing.JList();
+        jListOptimized = new javax.swing.JList<>();
         jButtonOK = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListUser = new javax.swing.JList();
+        jListUser = new javax.swing.JList<>();
         jButtonReset = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
@@ -219,11 +218,9 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
     
     
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonOKActionPerformed
 
     /**
