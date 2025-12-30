@@ -109,11 +109,20 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-	  <configuration>
+          <configuration>
 	    <source>21</source>
             <target>21</target>
             <release>21</release>
-        </configuration>
+            <compilerArgs>
+              <arg>-Xlint:-rawtypes</arg>
+              <arg>-Xlint:-unchecked</arg>
+              <arg>-Xlint:-deprecation</arg>
+              <arg>-Xlint:-serial</arg>
+              <arg>-Xlint:-cast</arg>
+              <arg>-Xlint:-finally</arg>
+              <arg>-Xlint:-path</arg>
+            </compilerArgs>
+          </configuration>
           <!--version>3.8.0</version-->
         </plugin>
         <plugin>
