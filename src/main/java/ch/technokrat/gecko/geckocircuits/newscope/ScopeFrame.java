@@ -28,7 +28,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;

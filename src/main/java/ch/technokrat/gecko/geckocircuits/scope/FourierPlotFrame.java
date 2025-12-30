@@ -21,7 +21,6 @@ import ch.technokrat.gecko.geckocircuits.newscope.AbstractScopeSignal;
 import ch.technokrat.gecko.geckocircuits.newscope.DialogConnectSignalsGraphs;
 import ch.technokrat.gecko.geckocircuits.newscope.NewScope;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 
 /**

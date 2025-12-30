@@ -19,7 +19,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalInterface;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

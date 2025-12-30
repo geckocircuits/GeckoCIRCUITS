@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 class IdealSwitchDialog extends AbstractDialogPowerSwitch<IdealSwitch> {

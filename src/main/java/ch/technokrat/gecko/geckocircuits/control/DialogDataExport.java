@@ -23,7 +23,6 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.DataIndexItem;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataTableFrame;
 import ch.technokrat.gecko.geckocircuits.datacontainer.HeaderSymbol;
 import ch.technokrat.gecko.geckocircuits.datacontainer.TextSeparator;
-import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;

@@ -24,7 +24,6 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Window;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
