@@ -170,8 +170,10 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
         return Collections.EMPTY_LIST;
     }
     
+    @SuppressWarnings("rawtypes")
     public abstract List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart();
     
+    @SuppressWarnings("rawtypes")
     static List<? extends CircuitComponent> getCalculatorsFromSubComponents(final HiddenSubCircuitable subCircuitable) {
         Collection<? extends AbstractBlockInterface> hiddenSubs = subCircuitable.getHiddenSubCircuitElements();
         List<CircuitComponent> returnValue = new ArrayList<CircuitComponent>();

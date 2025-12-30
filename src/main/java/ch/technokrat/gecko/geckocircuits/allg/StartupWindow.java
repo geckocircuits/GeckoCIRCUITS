@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.control.QuasiPeakCalculator;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
@@ -44,7 +43,6 @@ public class StartupWindow extends javax.swing.JDialog {
         return false;
     }
     
-    private long DISPOSE_WAIT_TIME_MILLIS = 5000;
     private static final long START_DELAY_TIME_MILLIS = 10000;
     public static final String DONATE_CODE_KEY = "DONATE_CODE";
    
@@ -73,7 +71,6 @@ public class StartupWindow extends javax.swing.JDialog {
         returnValue.jLabel1.setText("<html><font color='red'><b>" + featureName + 
                 ": This feature of GeckoCIRCUITS is not included in the "
                 + "open-source release. </b><br><font color='black'>" + returnValue.jLabel1.getText().substring(24));
-        returnValue.DISPOSE_WAIT_TIME_MILLIS = 0;
         returnValue.pack();
         return returnValue;
     }

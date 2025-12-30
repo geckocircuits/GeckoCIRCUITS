@@ -151,7 +151,7 @@ public final class UserParameter<T> {
         return getFromMultipleValues(_longName);
     }
 
-    private <T> T getFromMultipleValues(List<T> list) {
+    private <U> U getFromMultipleValues(List<U> list) {
         try {
             if (_typeMap == null || _typeMap.isEmpty() || list.size() == 1) {
                 return list.get(0);
