@@ -26,7 +26,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-class ReglerViewMotDialog extends DialogElementCONTROL {
+class ReglerViewMotDialog extends DialogElementCONTROL<ReglerVIEWMOT> {
 
     public ReglerViewMotDialog(final ReglerVIEWMOT aThis) {
         super(aThis);

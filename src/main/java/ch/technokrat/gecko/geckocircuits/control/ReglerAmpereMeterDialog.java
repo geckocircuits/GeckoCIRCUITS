@@ -22,7 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-class ReglerAmpereMeterDialog extends DialogElementCONTROL {
+class ReglerAmpereMeterDialog extends DialogElementCONTROL<AbstractCurrentMeasurement> {
     
     private JComboBox<LossComponent> _comboLossType;
     
