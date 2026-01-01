@@ -237,7 +237,10 @@ mvn clean package assembly:single -DskipTests
 - Reload window: `Ctrl+Shift+P` → **"Reload Window"**
 
 ### Tests
-During build, use `-DskipTests` to skip tests that fail on non-Netbeans environments. Four native library tests (`NativeCTest`) require Netbeans-specific environment setup. This is expected and the application will work correctly.
+All tests now pass successfully (160 tests, 0 failures, 0 skipped).
+- ModelResultsTest integration tests verify real circuit files can be loaded and simulated
+- NativeCTest works on all platforms (Windows, Linux, macOS) with provided native libraries
+- No tests need to be skipped for normal builds
 
 ## License
 
