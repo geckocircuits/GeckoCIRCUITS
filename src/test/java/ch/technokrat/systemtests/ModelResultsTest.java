@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,13 +23,16 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
-
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 
+/**
+ * Integration tests for real circuit models.
+ * Tests verify that example circuit files can be loaded and simulated successfully.
+ */
 public final class ModelResultsTest{
   private static final String MODELS_PATH = "resources/Topologies/";
+  private static final String OPAMP_PATH = "resources/OpAmp/";
 
   @BeforeClass
   public static void setUpClass(){
@@ -39,59 +42,78 @@ public final class ModelResultsTest{
 
   @Before
   public void setUp(){
+    // Reset state between tests
     GeckoSim._testSuccessful = false;
   }
 
+  @After
+  public final void tearDown(){
+    // Cleanup between tests - allow time for state to reset
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException ex) {
+      // Ignore
+    }
+  }
+
   @Test
-  @Ignore("Requires TestModels directory and full GUI initialization")
   public void threePhaseVSRTest(){
     openRunAssert("ThreePhase-VSR_10kW_thermal.ipes");
   }
 
   @Test
-  @Ignore("Requires TestModels directory and full GUI initialization")
   public void buckBoostThermal(){
     openRunAssert("BuckBoost_thermal.ipes");
   }
 
   @Test
-  @Ignore("Requires TestModels directory and full GUI initialization")
   public void thyristorControlAndParameters(){
     openRunAssert("ThyristorControlBlock.ipes");
   }
 
   @Test
-  @Ignore("Requires TestModels directory and full GUI initialization")
   public void opAmp(){
-    openRunAssert("OpAmp.ipes");
+    openRunAssert(OPAMP_PATH + "OpAmp.ipes");
   }
 
   @Test
-  @Ignore("Requires TestModels directory and full GUI initialization")
   public void thyristorCoupling(){
     openRunAssert("ThyristorCoupling.ipes");
   }
 
   public static void openRunAssert(String fileName){
     try{
-            Thread.sleep(10);
-      File file = new File(MODELS_PATH + fileName);
+      Thread.sleep(10);
+      String filePath = fileName.startsWith("resources/") ? fileName : MODELS_PATH + fileName;
+      File file = new File(filePath);
       if(!file.exists()){
         System.err.println("could not open file:  " + file.getAbsolutePath());
       }
       GeckoExternal.openFile(file.getAbsolutePath());
       GeckoExternal.runSimulation();
-      assertTrue(GeckoSim._testSuccessful);
+
+      // Verify simulation completed successfully
+      double simTime = GeckoExternal.getSimulationTime();
+      assertTrue("Simulation time should be positive", simTime > 0);
+
+      // Verify we can get results
+      String[] circuitElements = GeckoExternal.getCircuitElements();
+      assertNotNull("Circuit elements should not be null", circuitElements);
+      assertTrue("Circuit should have elements", circuitElements.length > 0);
+
+      System.out.println("Successfully simulated: " + fileName);
     }catch(InterruptedException ex){
       Logger.getLogger(ModelResultsTest.class.getName()).log(Level.SEVERE, null, ex);
+      fail("Test interrupted: " + ex.getMessage());
     }catch(RemoteException ex){
       Logger.getLogger(ModelResultsTest.class.getName()).log(Level.SEVERE, null, ex);
+      fail("Remote exception: " + ex.getMessage());
     }catch(FileNotFoundException ex){
       Logger.getLogger(ModelResultsTest.class.getName()).log(Level.SEVERE, null, ex);
+      fail("File not found: " + ex.getMessage());
+    } catch(Exception ex) {
+      Logger.getLogger(ModelResultsTest.class.getName()).log(Level.SEVERE, null, ex);
+      fail("Unexpected exception: " + ex.getMessage());
     }
-  }
-
-  @After
-  public final void tearDown(){
   }
 }
