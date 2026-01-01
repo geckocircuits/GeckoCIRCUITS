@@ -28,6 +28,9 @@ target/
 # Native installer output
 release/
 
+# macOS native test libraries (platform-specific, built by CI/CD)
+*.dylib
+
 # Claude Code workspace files
 .claude/
 
