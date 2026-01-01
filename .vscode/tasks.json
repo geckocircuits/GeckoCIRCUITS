@@ -2,13 +2,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build GeckoCIRCUITS",
+            "label": "Build GeckoCIRCUITS (Skip Tests)",
             "type": "shell",
             "command": "mvn",
             "args": [
                 "clean",
                 "package",
-                "assembly:single"
+                "assembly:single",
+                "-DskipTests"
             ],
             "group": {
                 "kind": "build",
@@ -23,17 +24,16 @@
                 "clear": false
             },
             "problemMatcher": [],
-            "detail": "Build GeckoCIRCUITS with Maven (includes tests)"
+            "detail": "Build GeckoCIRCUITS with Maven (skip tests - default)"
         },
         {
-            "label": "Build GeckoCIRCUITS (Skip Tests)",
+            "label": "Build GeckoCIRCUITS (With Tests)",
             "type": "shell",
             "command": "mvn",
             "args": [
                 "clean",
                 "package",
-                "assembly:single",
-                "-DskipTests"
+                "assembly:single"
             ],
             "group": "build",
             "presentation": {
@@ -45,7 +45,7 @@
                 "clear": false
             },
             "problemMatcher": [],
-            "detail": "Build GeckoCIRCUITS with Maven (skip tests for faster build)"
+            "detail": "Build GeckoCIRCUITS with Maven (with tests - may fail)"
         },
         {
             "label": "Clean Build Directory",

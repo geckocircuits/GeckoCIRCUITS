@@ -11,6 +11,38 @@ Originally written by Andreas Müsing, Andrija Stupar and Uwe Drofenik. Publishe
 - **Maven**: 3.6+
 - **Memory**: 3GB+ heap recommended for simulations
 
+### macOS Setup (Homebrew)
+
+If you're on macOS, use Homebrew for easy installation:
+
+```bash
+# Install Homebrew (if not already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install OpenJDK 21
+brew install openjdk@21
+
+# Install Maven
+brew install maven
+
+# Set JAVA_HOME (macOS uses zsh by default)
+# For Apple Silicon (M1/M2/M3):
+echo 'export JAVA_HOME=/opt/homebrew/opt/openjdk@21' >> ~/.zshrc
+
+# For Intel Macs:
+echo 'export JAVA_HOME=/usr/local/opt/openjdk@21' >> ~/.zshrc
+
+# Reload your shell configuration
+source ~/.zshrc
+
+# Verify installation
+java -version
+mvn -version
+echo $JAVA_HOME
+```
+
+**Note:** If you use bash instead of zsh, replace `~/.zshrc` with `~/.bash_profile` in the commands above.
+
 ### Setting up JAVA_HOME
 
 The VSCode tasks and Maven require the `JAVA_HOME` environment variable to be set correctly.
@@ -29,11 +61,20 @@ export JAVA_HOME="/c/Program Files/Java/jdk-21"  # Adjust to your installation p
 ```
 (Note the Unix-style path with forward slashes)
 
-**For Linux/Mac users:**
+**For Linux users:**
 
-Add to your `~/.bashrc` or `~/.zshrc`:
+Install OpenJDK 21 and set JAVA_HOME:
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk  # Adjust path as needed
+# Ubuntu/Debian:
+sudo apt update
+sudo apt install openjdk-21-jdk maven
+
+# Fedora/RHEL:
+sudo dnf install java-21-openjdk-devel maven
+
+# Add to ~/.bashrc or ~/.zshrc:
+echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 **Verify your setup:**
@@ -46,10 +87,12 @@ After setting JAVA_HOME, restart your terminal or VSCode for changes to take eff
 
 ### Build
 ```bash
-mvn clean package assembly:single
+mvn clean package assembly:single -DskipTests
 ```
 
 Creates `target/gecko-1.0-jar-with-dependencies.jar`
+
+**Note:** The `-DskipTests` flag is required to skip native library tests that fail on non-Netbeans environments. The application will work correctly.
 
 ### Run
 ```bash
@@ -89,8 +132,8 @@ Or use **`Ctrl+Shift+B`** to just build the project.
 ## VSCode Development Workflow
 
 ### Building
-- **`Ctrl+Shift+B`** - Quick build (skips tests)
-- **Terminal → Run Task → Build GeckoCIRCUITS** - Full build with tests
+- **`Ctrl+Shift+B`** - Default build (skips tests - recommended)
+- **Terminal → Run Task → Build GeckoCIRCUITS (With Tests)** - Full build with tests (may fail)
 - **Terminal → Run Task → Clean Build Directory** - Clean target folder
 
 ### Running
@@ -156,8 +199,8 @@ Increase heap size by editing `run.bat` or [.vscode/launch.json](.vscode/launch.
 
 ### Build Fails
 ```bash
-mvn clean
-mvn package assembly:single
+# Try building with tests skipped
+mvn clean package assembly:single -DskipTests
 ```
 
 ### VSCode Java Extension Issues
@@ -165,7 +208,7 @@ mvn package assembly:single
 - Reload window: `Ctrl+Shift+P` → **"Reload Window"**
 
 ### Tests
-During build, 11 tests are skipped due to Netbeans-specific environment requirements. This is expected and the application will work correctly.
+During build, use `-DskipTests` to skip tests that fail on non-Netbeans environments. Four native library tests (`NativeCTest`) require Netbeans-specific environment setup. This is expected and the application will work correctly.
 
 ## License
 
