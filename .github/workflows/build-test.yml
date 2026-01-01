@@ -67,7 +67,7 @@ jobs:
       - name: Install build tools
         if: matrix.os == 'macos-latest'
         run: |
-          brew install gcc || echo "GCC may already be installed"
+          which gcc && echo "GCC already installed" || brew install gcc
           export JAVA_HOME=$JAVA_HOME
           echo "JAVA_HOME=$JAVA_HOME"
 
@@ -76,7 +76,6 @@ jobs:
         run: |
           cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
           chmod +x build_native_libraries.sh
-          export JAVA_HOME=$JAVA_HOME
           ./build_native_libraries.sh || echo "Warning: Native library build failed, continuing..."
           echo "Native macOS .dylib libraries:"
           ls -lh *.dylib 2>/dev/null || echo "No .dylib files found"
