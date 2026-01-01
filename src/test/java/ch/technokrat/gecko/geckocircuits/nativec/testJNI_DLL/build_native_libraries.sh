@@ -21,11 +21,11 @@ fi
 
 JAVA_INCLUDE="$JAVA_HOME/include"
 if [ "$PLATFORM" = "Mac" ]; then
-    JAVA_INCLUDE="$JAVA_HOME/include/darwin"
+    JAVA_PLATFORM_INCLUDE="$JAVA_HOME/include/darwin"
 elif [ "$PLATFORM" = "Linux" ]; then
-    JAVA_INCLUDE="$JAVA_HOME/include/linux"
+    JAVA_PLATFORM_INCLUDE="$JAVA_HOME/include/linux"
 elif [ "$PLATFORM" = "Windows" ]; then
-    JAVA_INCLUDE="$JAVA_HOME/include/win32"
+    JAVA_PLATFORM_INCLUDE="$JAVA_HOME/include/win32"
 fi
 
 echo "Java include directory: $JAVA_INCLUDE"
