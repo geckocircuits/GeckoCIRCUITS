@@ -23,9 +23,12 @@ The native libraries are platform-specific and must be compiled separately for e
 - The existing `libtestJNI_DLL.so` was compiled with old package name
 - Must be rebuilt using the build script below
 
-### macOS
-❌ **NOT AVAILABLE** - No `.dylib` files present
-- Needs to be built from source using the build script
+### macOS (x86_64, ARM64)
+✅ **AVAILABLE** - Built with updated JNI signatures
+- Compiled using GCC with proper JNI headers
+- JNI functions use correct package name: `Java_ch_technokrat_gecko_geckocircuits_nativec_*`
+- Tests pass successfully
+- Universal binary compatible with both Intel and Apple Silicon
 
 ## Building Native Libraries
 
