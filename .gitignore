@@ -33,3 +33,8 @@ release/
 # Claude Code workspace files
 .claude/
 
+# Eclipse IDE files
+.classpath
+.project
+.settings/
+

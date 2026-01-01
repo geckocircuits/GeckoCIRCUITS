@@ -182,6 +182,35 @@ See [TOC.md](TOC.md) for a complete catalog of examples.
 
 Main entry point: `ch.technokrat.gecko.GeckoSim`
 
+## Remote Control & Automation
+
+GeckoCIRCUITS provides comprehensive remote control capabilities for:
+- Running simulations programmatically
+- Setting and modifying parameters
+- Retrieving simulation results
+- Performing signal analysis (RMS, THD, FFT, etc.)
+- Integrating with MATLAB, Python, or other external tools
+
+**📖 See [REMOTE_CONTROL_MANUAL.md](REMOTE_CONTROL_MANUAL.md) for complete documentation on:**
+- Remote Mode (RMI) and Memory-Mapped File Mode (MMF)
+- API reference with all available methods
+- Code examples in Java, MATLAB, Octave, and Python
+- Best practices and troubleshooting
+
+**Quick Example:**
+```bash
+# Start GeckoCIRCUITS with remote access on port 43035
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true \
+  -jar target/gecko-1.0-jar-with-dependencies.jar -p 43035
+
+# Connect from MATLAB/Octave
+gesim = javaObject('gecko.GeckoRemote');
+gesim.connectToGecko(43035);
+gesim.runSimulation();
+results = gesim.getSignalData('Scope1.Out1', 0, gesim.getSimulationTime(), 1);
+gesim.disconnectFromGecko();
+```
+
 ## Operating Modes
 
 GeckoCIRCUITS supports multiple operating modes:
