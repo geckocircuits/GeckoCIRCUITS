@@ -32,6 +32,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.swing.JApplet;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -80,7 +82,14 @@ public class GeckoSim extends JApplet {
      */
     public static boolean _testSuccessful = false;
     public static boolean _isTestingMode = false;
-    public static OperatingMode operatingmode = OperatingMode.STANDALONE;  // default 
+    public static OperatingMode operatingmode = OperatingMode.STANDALONE;  // default
+
+    static {
+        System.setProperty("polyglot.js.nashorn-compat", "true");
+        System.setProperty("polyglot", "true");
+        System.setProperty("org.graalvm.polyglot.js.nashorn-compat", "true");
+        ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
+    }
 
     public static void stopTime() {
         long stopTime = System.currentTimeMillis();
@@ -94,8 +103,6 @@ public class GeckoSim extends JApplet {
         }
         Locale.setDefault(Locale.ENGLISH);
         startTime = System.currentTimeMillis();
-
-        System.setProperty("polyglot.js.nashorn-compat", "true");
 
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
 

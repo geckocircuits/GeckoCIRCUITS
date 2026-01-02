@@ -115,14 +115,21 @@ public final class CodeWindow extends javax.swing.JFrame {
     };
     private final VariableBusWidth _variableBusWidth;
 
+    private void setIconImageSafe() {
+        try {
+            this.setIconImage(new ImageIcon(CodeWindow.class.getResource("/gecko.gif")).getImage());
+        } catch (Exception ex) {
+            // Fallback - no icon available
+        }
+    }
+
     public CodeWindow(final ReglerJavaFunction regelBlock, final StringBuffer outputStringBuffer) {
         super();
-        try {
-            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
-            this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        setIconImageSafe();
+
+        initComponents();
+
+        initComponents();
         //System.out.println("CodeWindow"); 
         initComponents();
         //-------
@@ -144,7 +151,6 @@ public final class CodeWindow extends javax.swing.JFrame {
 
         _javaFunction = regelBlock;
         _variableBusWidth = regelBlock._variableBusWidth;
-        DefaultSyntaxKit.initKit();
 
         _codeTextArea = createScrollableEditorPane(jPanelCode);
 
