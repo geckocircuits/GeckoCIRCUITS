@@ -101,17 +101,11 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
 
   @Override
   public int getUsedRAMSizeInMB(){
-    if (_settable == null) {
-      return 0;
-    }
     return _settable.getUsedRAMSizeInMB();
   }
 
   @Override
   public long getCachedRAMSizeInMB(){
-    if (_settable == null) {
-      return 0;
-    }
     return _settable.getCachedRAMSizeInMB();
   }
 

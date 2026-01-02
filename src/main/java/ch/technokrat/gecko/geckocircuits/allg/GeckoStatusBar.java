@@ -18,6 +18,7 @@ import ch.technokrat.gecko.GeckoRemoteRegistry;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
+import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerValuesSettable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.*;
@@ -202,6 +203,12 @@ public class GeckoStatusBar extends JPanel {
         DataContainerValuesSettable dc = NetzlisteCONTROL.globalData;
         if (dc == null) {
             return;
+        }
+        if (dc instanceof ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) {
+            ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer adc = (ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) dc;
+            if (adc.getContainerStatus() == ContainerStatus.DELETED) {
+                return;
+            }
         }
         // 20 MB for the program itself!
         try {
