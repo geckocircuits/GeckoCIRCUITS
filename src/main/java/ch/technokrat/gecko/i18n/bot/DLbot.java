@@ -39,7 +39,9 @@ public class DLbot {
     private static MediaWikiBot initBot() throws Exception {
             // print DEBUG messages in console if DEBUG_MODE is turned on
             if (InitParameters.DEBUG_MODE) {
-                org.apache.log4j.BasicConfigurator.configure(); // configure log4j
+                org.apache.logging.log4j.core.config.Configurator.setRootLevel(
+                    org.apache.logging.log4j.Level.DEBUG
+                ); // configure log4j2
             }
             progress = Math.min(progress + 2, 99); // update progress
             MediaWikiBot b = new MediaWikiBot(InitParameters.WIKI_URL);

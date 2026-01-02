@@ -23,10 +23,10 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
 
-    <!-- Dependency version management for easy updates -->
-    <junit.version>5.11.3</junit.version>
-    <log4j2.version>2.24.3</log4j2.version>
-    <graalvm.version>24.1.1</graalvm.version>
+     <!-- Dependency version management for easy updates -->
+     <junit.version>5.11.3</junit.version>
+     <log4j2.version>2.24.3</log4j2.version>
+     <graalvm.version>24.1.1</graalvm.version>
   </properties>
 
   <dependencies>
@@ -70,11 +70,16 @@
       <artifactId>jwbf</artifactId>
       <version>3.1.1</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svggen -->
     <dependency>
