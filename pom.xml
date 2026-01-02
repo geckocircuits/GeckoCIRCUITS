@@ -13,8 +13,13 @@
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <!-- NOTE: Maven compiler may output INFO-level warnings about deprecated API usage.
+       These are informational only and do not affect the build. To suppress these
+       messages during builds, use: mvn -q clean compile (or any other maven goal)
+       The -Xlint:none flag disables javac linting but Maven still reports summary messages. -->
+
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
 
@@ -95,7 +100,7 @@
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
-      <version>5.14.0</version>
+      <version>5.17.0</version>
     </dependency>
   </dependencies>
 
@@ -121,28 +126,18 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
           <configuration>
-	    <source>21</source>
+            <source>21</source>
             <target>21</target>
             <release>21</release>
             <compilerArgs>
-              <arg>-Xlint:-rawtypes</arg>
-              <arg>-Xlint:-unchecked</arg>
-              <arg>-Xlint:-deprecation</arg>
-              <arg>-Xlint:-serial</arg>
-              <arg>-Xlint:-cast</arg>
-              <arg>-Xlint:-finally</arg>
-              <arg>-Xlint:-path</arg>
-              <arg>-Xlint:-fallthrough</arg>
-              <arg>-Xlint:-overloads</arg>
-              <arg>-Xlint:-static</arg>
+              <arg>-Xlint:none</arg>
             </compilerArgs>
-            <showWarnings>false</showWarnings>
           </configuration>
-          <!--version>3.8.0</version-->
         </plugin>
          <plugin>
-           <artifactId>maven-surefire-plugin</artifactId>
+            <artifactId>maven-surefire-plugin</artifactId>
            <version>2.22.1</version>
            <configuration>
              <trimStackTrace>false</trimStackTrace>
