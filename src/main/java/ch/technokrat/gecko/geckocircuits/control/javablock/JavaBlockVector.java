@@ -36,11 +36,14 @@ public class JavaBlockVector extends AbstractJavaBlock {
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidArrayLoops"})
     void calculateYOUT(final double time, final double deltaT, final double[][] inputSignals,
             final double[][] outputSignals) throws Exception {
+        if (_compiledInstance == null) {
+            throw new IllegalStateException("Java block compilation failed - cannot simulate. Check error logs for details.");
+        }
 
         for (int i = 0; i < _xINVector.length; i++) {
             _xINVector[i] = inputSignals[i][0];
         }
-        
+
 
         final double[] outValue = _compiledInstance.calculateYOUT(_xINVector, time, deltaT);
 
@@ -72,6 +75,9 @@ public class JavaBlockVector extends AbstractJavaBlock {
     
     @Override
     protected void doInitialize(double[][] xIN, double[][] yOUT) {
+        if (_compiledInstance == null) {
+            throw new IllegalStateException("Java block compilation failed - cannot initialize. Check error logs for details.");
+        }
         _compiledInstance.init();
     }
 
@@ -86,16 +92,16 @@ public class JavaBlockVector extends AbstractJavaBlock {
             try {
                 _compiledInstance = (ControlCalculatable) clazz.newInstance();
             } catch (NoClassDefFoundError err) {
-                err.printStackTrace();
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
             } catch (InstantiationException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "SecurityException while creating Java block instance: " + ex.getMessage(), ex);
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
         }
     }
 

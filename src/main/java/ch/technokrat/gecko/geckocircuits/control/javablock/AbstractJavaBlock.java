@@ -108,7 +108,7 @@ public abstract class AbstractJavaBlock {
         try {
             doCompilationIfRequired();
         } catch (IOException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException during compilation: " + ex.getMessage(), ex);
         }
     }
 
@@ -172,7 +172,7 @@ public abstract class AbstractJavaBlock {
             final byte[] outBytes = baos.toByteArray();
             DatenSpeicher.appendAsString(ascii.append("\nclassMapBytes"), outBytes);
         } catch (IOException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException while serializing class map: " + ex.getMessage(), ex);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -194,7 +194,7 @@ public abstract class AbstractJavaBlock {
             final Map<String, CompiledClassContainer> classMap = (Map<String, CompiledClassContainer>) oInStream.readObject();
             _classNameFileMap = classMap;
         } catch (IOException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException while deserializing class map: " + ex.getMessage(), ex);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -230,12 +230,12 @@ public abstract class AbstractJavaBlock {
             out.close();
             fstream.close();
         } catch (IOException ex) {
-            Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, "IOException while saving debug sources: " + ex.getMessage(), ex);
         } finally {
             try {
                 fstream.close();
             } catch (IOException ex) {
-                Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, "IOException while closing debug file: " + ex.getMessage(), ex);
             }
         }
     }
