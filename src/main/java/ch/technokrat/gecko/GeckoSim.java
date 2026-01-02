@@ -91,9 +91,11 @@ public class GeckoSim extends JApplet {
     public static void main(final String[] args) {
         if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF) {
             setDefaultFonts();
-        }                
+        }
         Locale.setDefault(Locale.ENGLISH);
         startTime = System.currentTimeMillis();
+
+        System.setProperty("polyglot.js.nashorn-compat", "true");
 
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
 
