@@ -89,6 +89,11 @@ public class GeckoSim extends JApplet {
         System.setProperty("polyglot", "true");
         System.setProperty("org.graalvm.polyglot.js.nashorn-compat", "true");
         ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
+        
+        // Initialize SyntaxPane's script engine if GraalVM JavaScript is available
+        if (engine != null) {
+            System.setProperty("script.engine", "org.graalvm.polyglot.js.script.JSBindings");
+        }
     }
 
     public static void stopTime() {
@@ -530,21 +535,14 @@ public class GeckoSim extends JApplet {
         }
 
         try {
-            ClassLoader cl = ClassLoader.getSystemClassLoader();
-            //------------------------------------------
-            // What about 'tools.jar', which the CONTROL block 'JAVA-Function' needs as compiler? 
-            try {
-                cl.loadClass("com.sun.tools.javac.Main");
+            javax.tools.JavaCompiler compiler = javax.tools.ToolProvider.getSystemJavaCompiler();
+            if (compiler != null) {
                 compiler_toolsjar_missing = false;
-            } catch (Exception e) {
+            } else {
                 compiler_toolsjar_missing = true;
             }
-        } catch (UnsupportedClassVersionError err) {
-            JOptionPane.showMessageDialog(null,
-                    err.toString() + "\nWrong version of library tools.jar. Please enshure to use a lib/tools.jar file version\n"
-                    + "compatible with your Java JVM. GeckoCIRCUITS is currently running with JVM " + System.getProperty("java.version"),
-                    "Library Memory error!",
-                    JOptionPane.ERROR_MESSAGE);
+        } catch (NoClassDefFoundError | SecurityException err) {
+            compiler_toolsjar_missing = true;
         } catch (Throwable ex) {
             ex.printStackTrace();
         }

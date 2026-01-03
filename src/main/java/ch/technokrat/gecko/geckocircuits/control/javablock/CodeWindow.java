@@ -274,10 +274,40 @@ public final class CodeWindow extends javax.swing.JFrame {
             }
         };
     
+    private static boolean isScriptEngineAvailable() {
+        javax.script.ScriptEngineManager manager = new javax.script.ScriptEngineManager();
+        javax.script.ScriptEngine engine = manager.getEngineByName("js");
+        if (engine == null) {
+            engine = manager.getEngineByExtension("js");
+        }
+        if (engine == null) {
+            engine = manager.getEngineByMimeType("text/javascript");
+        }
+        if (engine == null) {
+            engine = manager.getEngineByMimeType("application/javascript");
+        }
+        if (engine == null) {
+            System.err.println("Available script engines: " + manager.getEngineFactories());
+        }
+        return engine != null;
+    }
+
     public static JEditorPane createScrollableEditorPane(JPanel jPanelToInsert) {
         JEditorPane returnValue = new JEditorPane();
         JScrollPane codeScroll = new JScrollPane(returnValue);
-        returnValue.setContentType("text/java");
+        
+        if (isScriptEngineAvailable()) {
+            try {
+                returnValue.setContentType("text/java");
+            } catch (NullPointerException | NoClassDefFoundError ex) {
+                System.err.println("Warning: SyntaxPane initialization failed, using plain editor");
+                returnValue.setContentType("text/plain");
+            }
+        } else {
+            System.err.println("Warning: JavaScript engine not available, using plain editor");
+            returnValue.setContentType("text/plain");
+        }
+        
         returnValue.setMinimumSize(MIN_DIM);
         
         returnValue.addKeyListener(keyPressedSetModelDirty);
