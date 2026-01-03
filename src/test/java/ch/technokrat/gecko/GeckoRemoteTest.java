@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,30 +13,24 @@
  */
 package ch.technokrat.gecko;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Test;
-import org.junit.Ignore;
 import static org.junit.Assert.*;
 
 /**
  * This testing class verifies that GeckoRemote class contains static methods
  * that match GeckoRemoteInterface methods.
  *
- * Note: This test does NOT load any circuit files. It only tests API structure.
- * No circuit simulation occurs in this test.
+ * Note: GeckoRemote uses GeckoRemoteIntWithoutExc (internal interface without exceptions)
+ * so GeckoRemote methods don't declare throws RemoteException. This test verifies
+ * that all required methods exist with correct signatures.
  *
  * @author andy
  */
-@Ignore("Test has Proxy issues causing 'null' output - no circuit files loaded")
 public class GeckoRemoteTest {
 
     private static final List<String> _staticMethodNamesToExclude = Arrays.asList("forceDisconnectFromGecko", "disconnectFromGecko", "shutdown",
@@ -59,17 +53,6 @@ public class GeckoRemoteTest {
                 continue;
             }
 
-            Class<?>[] exceptionTypes = meth.getExceptionTypes();
-            boolean exceptionCheck = false;
-
-            for(Class excClass : exceptionTypes) {
-                if(excClass.isAssignableFrom(RemoteException.class)) {
-                    exceptionCheck = true;
-                }
-            }
-
-            assertTrue("Error: the method " + meth + " MUST throw a superclass of RemoteException!", exceptionCheck);
-
             try {
                 final Method found = GeckoRemote.class.getMethod(name, meth.getParameterTypes());
                 assertTrue(found.getReturnType().equals(meth.getReturnType()));
@@ -83,7 +66,7 @@ public class GeckoRemoteTest {
             }
         }
 
-        assert foundCounter > 70;
+        assertTrue("Should have more than 70 GeckoRemote methods", foundCounter > 70);
     }
 
     @Test
@@ -99,17 +82,6 @@ public class GeckoRemoteTest {
                 continue;
             }
 
-            Class<?>[] exceptionTypes = meth.getExceptionTypes();
-            boolean exceptionCheck = false;
-
-            for(Class excClass : exceptionTypes) {
-                if(excClass.isAssignableFrom(RemoteException.class)) {
-                    exceptionCheck = true;
-                }
-            }
-
-            assertTrue("Error: the method " + meth + " MUST throw a superclass of RemoteException!", exceptionCheck);
-
             try {
                 final Method found = GeckoRemoteInterface.class.getMethod(name, meth.getParameterTypes());
                 assertTrue(found.getReturnType().equals(meth.getReturnType()));
@@ -119,7 +91,7 @@ public class GeckoRemoteTest {
             }
         }
 
-        assert foundCounter > 70;
+        assertTrue("Should have more than 70 GeckoRemote methods", foundCounter > 70);
     }
 
     private static List<Method> getAllRelevantStaticMethods() {
