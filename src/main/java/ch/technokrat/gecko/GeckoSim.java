@@ -538,11 +538,18 @@ public class GeckoSim extends JApplet {
             javax.tools.JavaCompiler compiler = javax.tools.ToolProvider.getSystemJavaCompiler();
             if (compiler != null) {
                 compiler_toolsjar_missing = false;
+                System.out.println("Java Compiler found: " + compiler.getClass().getName());
             } else {
                 compiler_toolsjar_missing = true;
+                System.err.println("ERROR: Java Compiler not found. JDK is required (JRE is not sufficient).");
+                System.err.println("Current Java version: " + System.getProperty("java.version"));
+                System.err.println("Java vendor: " + System.getProperty("java.vendor"));
+                System.err.println("Java home: " + System.getProperty("java.home"));
             }
         } catch (NoClassDefFoundError | SecurityException err) {
             compiler_toolsjar_missing = true;
+            System.err.println("ERROR: Exception while checking for Java Compiler: " + err.getMessage());
+            err.printStackTrace();
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
