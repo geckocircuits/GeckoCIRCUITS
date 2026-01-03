@@ -20,7 +20,7 @@ This creates `target/gecko-1.0-jar-with-dependencies.jar` with all dependencies 
 mvn test
 ```
 
-Note: 11 tests are currently excluded due to Netbeans-specific environment requirements.
+Note: All 159 tests now pass successfully (0 failures, 0 skipped).
 
 ### Quick build (skip tests)
 ```bash
@@ -164,9 +164,20 @@ The `resources/` directory contains extensive examples:
 
 ### Testing
 - JUnit 4.12 tests in `src/test/`
-- Some tests require specific Netbeans environment and are excluded
+- All 159 tests now pass successfully (0 failures, 0 skipped)
 - Test mode controlled by `GeckoSim._isTestingMode` flag
 - Run tests via VSCode task (`Ctrl+Shift+P` → "Run Test Task") or `mvn test`
+
+**Test Categories:**
+1. **Unit tests**: Calculator and component tests
+2. **Integration tests**: ModelResultsTest - loads and simulates real circuit files
+3. **API tests**: GeckoRemoteTest - verifies GeckoRemote API consistency
+
+**GeckoRemoteTest Details:**
+- Validates that `GeckoRemote` wrapper methods match `GeckoRemoteInterface` interface
+- Ensures all required remote API methods exist with correct signatures
+- Critical for MATLAB/Octave integration and external tool access
+- Uses GeckoRemoteIntWithoutExc interface (internal proxy, no exception declarations)
 
 ### Licensing
 - GPLv3 for open source use

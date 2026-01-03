@@ -259,7 +259,7 @@ jobs:
 
 ### 2.3 Fix Excluded Tests
 
-**Problem:** 11 tests excluded for NetBeans-specific reasons
+**Problem:** Previously 11 tests were excluded for NetBeans-specific reasons. All 159 tests now pass (0 failures, 0 skipped).
 
 **Action:** Review each excluded test
 ```bash

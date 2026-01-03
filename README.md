@@ -237,8 +237,9 @@ mvn clean package assembly:single -DskipTests
 - Reload window: `Ctrl+Shift+P` → **"Reload Window"**
 
 ### Tests
-All tests now pass successfully (160 tests, 0 failures, 0 skipped).
+All tests now pass successfully (159 tests, 0 failures, 0 skipped).
 - ModelResultsTest integration tests verify real circuit files can be loaded and simulated
+- GeckoRemoteTest verifies API consistency between GeckoRemote and GeckoRemoteInterface
 - NativeCTest works on all platforms (Windows, Linux, macOS) with provided native libraries
 - No tests need to be skipped for normal builds
 
