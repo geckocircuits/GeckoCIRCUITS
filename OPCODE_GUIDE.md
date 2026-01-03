@@ -1,6 +1,6 @@
-# CLAUDE.md
+# OPCODE Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance for working with the GeckoCIRCUITS codebase, especially when using OpenCode CLI tools.
 
 ## Project Overview
 
@@ -56,7 +56,7 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dep
 
 ## VSCode Development
 
-The project includes VSCode configuration for easy development:
+The project includes VSCode configuration for easy development. Note: Other IDEs (IntelliJ, Eclipse, NetBeans) can also be used with standard Maven projects.
 - **Tasks**: Maven build and test tasks available via `Ctrl+Shift+B` or Task menu
 - **Launch**: Multiple run configurations (standard, HiDPI, with file, etc.)
 - **Terminal**: Git Bash is configured as the default terminal
