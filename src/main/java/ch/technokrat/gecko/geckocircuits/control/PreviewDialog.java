@@ -28,14 +28,16 @@ abstract class PreviewDialog extends JDialog {
         super(parent);
         try {
             URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
-            setIconImage((new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL())).getImage());
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         getContentPane().add(createComponent());
         pack();
-        setResizable(false);        
-        setLocation(parent.getLocationOnScreen().x + parent.getWidth(), parent.getLocationOnScreen().y);        
+        setResizable(false);
+        setLocation(parent.getLocationOnScreen().x + parent.getWidth(), parent.getLocationOnScreen().y);
     }           
     
     abstract JComponent createComponent();

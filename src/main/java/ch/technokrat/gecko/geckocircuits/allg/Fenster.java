@@ -37,6 +37,7 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -184,8 +185,9 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } catch (ClassNotFoundException ex) {
         }
         try {
-            java.net.URI iconUri = GlobalFilePathes.PFAD_PICS_URL.toURI().resolve("gecko.gif");
-            this.setIconImage((new ImageIcon(iconUri.toURL())).getImage());
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
         }
 
@@ -2130,7 +2132,9 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         try {
             GZIPInputStream in1 = null;
             if (Fenster.IS_APPLET) {
-                in1 = new GZIPInputStream(GeckoSim.urlApplet.toURI().resolve(dateiName).toURL().openStream());
+                // Fix for Java 21: use URL constructor instead of URI.toURL()
+                URL fileUrl = new URL(GeckoSim.urlApplet, dateiName);
+                in1 = new GZIPInputStream(fileUrl.openStream());
             } else {
                 in1 = new GZIPInputStream(new FileInputStream(dateiName));
             }
