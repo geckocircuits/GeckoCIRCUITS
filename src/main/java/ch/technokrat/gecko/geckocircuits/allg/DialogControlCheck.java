@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSheet;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.control.Point;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
 import javax.swing.DefaultListModel;
@@ -47,7 +47,7 @@ public class DialogControlCheck extends javax.swing.JDialog {
                 if(selectionIndex > -1) {
                     final Point showPoint = _nlc._inPortsWithoutConnection.get(selectionIndex).getPosition();
                     CircuitSheet._findNodes.add(showPoint);                    
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.repaint();
+                    SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
                 }                                                
             }
         });
@@ -66,7 +66,7 @@ public class DialogControlCheck extends javax.swing.JDialog {
                 int selectionIndex = jListOutPort.getSelectedIndex();
                 if(selectionIndex > -1) {
                     CircuitSheet._findNodes.add(_nlc._outPortsWithoutConnection.get(selectionIndex).getPosition());
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.repaint();
+                    SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
                 }                                
             }
         });                

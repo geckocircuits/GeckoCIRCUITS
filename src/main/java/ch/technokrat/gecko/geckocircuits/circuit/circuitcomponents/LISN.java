@@ -173,7 +173,7 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         
         // 3x Ausgangswiderstand (Konverter-seitig) --> 
         //if (!elementVonDateiGeladen) {
-        //    SchematischeEingabe2.staticZaehlerLKelementeINIT[CircuitTyp.LK_R]++;
+        //    SchematicEditor2.staticZaehlerLKelementeINIT[CircuitTyp.LK_R]++;
         //}
         _Rout1 = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);
         _Rout2 = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);

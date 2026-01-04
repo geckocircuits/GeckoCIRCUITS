@@ -56,7 +56,7 @@ public class SchematischeEingabeAuswahl2 extends JTabbedPane {
     private final Map<AbstractComponentTyp, AbstractBlockInterface> _map = new HashMap<AbstractComponentTyp, AbstractBlockInterface>();
     private AbstractBlockInterface _paintBlock = null;
     public AbstractComponentTyp _typElement = null;
-    private SchematischeEingabe2 se;
+    private SchematicEditor2 se;
     private CircuitTyp[] _typLK = new CircuitTyp[]{
         CircuitTyp.LK_U, CircuitTyp.LK_I, CircuitTyp.LK_R, CircuitTyp.LK_C, CircuitTyp.LK_L,
         CircuitTyp.LK_LKOP2, CircuitTyp.LK_M, CircuitTyp.LK_S, CircuitTyp.LK_IGBT, CircuitTyp.LK_MOSFET,
@@ -114,7 +114,7 @@ public class SchematischeEingabeAuswahl2 extends JTabbedPane {
     };
     private LastComponentButton _lastComponentButton;
 
-    public void anmeldenSchematischeEingabe(SchematischeEingabe2 se) {
+    public void anmeldenSchematischeEingabe(SchematicEditor2 se) {
         this.se = se;
     }
 

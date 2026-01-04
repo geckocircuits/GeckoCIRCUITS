@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSheet;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,12 +31,12 @@ import javax.swing.event.ListSelectionListener;
  */
 public final class DialogFindInModel extends javax.swing.JDialog {
 
-    private final SchematischeEingabe2 _se;
+    private final SchematicEditor2 _se;
 
     /**
      * Creates new form DialogFindInModel
      */
-    public DialogFindInModel(java.awt.Frame parent, boolean modal, SchematischeEingabe2 se) {
+    public DialogFindInModel(java.awt.Frame parent, boolean modal, SchematicEditor2 se) {
         super(parent, modal);
         initComponents();
         if(! Fenster.IS_APPLET) {

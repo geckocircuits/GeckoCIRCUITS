@@ -39,9 +39,9 @@ public abstract class AbstractCircuitSheetComponent {
             public void actionPerformed(ActionEvent e) {
                 dpix = dpixValue.getValue();
                 try {
-                    SchematischeEingabe2.Singleton.setNewScaling(dpix);
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.revalidate();
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.repaint();
+                    SchematicEditor2.Singleton.setNewScaling(dpix);
+                    SchematicEditor2.Singleton._visibleCircuitSheet.revalidate();
+                    SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
                 } catch (NullPointerException ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -231,7 +231,7 @@ public abstract class AbstractCircuitSheetComponent {
             SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
             setParentCircuitSheet(rootBlock._myCircuitSheet);
         } else {            
-            setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
+            setParentCircuitSheet(SchematicEditor2.Singleton._circuitSheet);
         }
 
 
@@ -259,7 +259,7 @@ public abstract class AbstractCircuitSheetComponent {
             SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
             setParentCircuitSheet(rootBlock._myCircuitSheet);
         } else {            
-            setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
+            setParentCircuitSheet(SchematicEditor2.Singleton._circuitSheet);
         }
 
 

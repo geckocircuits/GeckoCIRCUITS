@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2.MouseMoveMode;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2.MouseMoveMode;
 import ch.technokrat.gecko.geckocircuits.control.Point;
 import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.TextFieldBlock;
@@ -40,7 +40,7 @@ public class CircuitSheet extends JPanel {
             return super.add(toAdd);
         }
     };
-    public final SchematischeEingabe2 _se;
+    public final SchematicEditor2 _se;
     public final WorksheetSize _worksheetSize;
     /**
      * the nodes which should be highlighted due to a string search
@@ -51,7 +51,7 @@ public class CircuitSheet extends JPanel {
      */
     public static Set<Point> _showNodes = new HashSet<Point>();
 
-    public CircuitSheet(final SchematischeEingabe2 se) {
+    public CircuitSheet(final SchematicEditor2 se) {
         _se = se;
         _worksheetSize = new WorksheetSize(this);
         setLayout(null);

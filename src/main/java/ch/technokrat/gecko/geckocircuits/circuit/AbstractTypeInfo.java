@@ -128,7 +128,7 @@ public abstract class AbstractTypeInfo {
     
     public static final AbstractBlockInterface fabricNew(final AbstractTypeInfo typ) {        
         final AbstractBlockInterface returnValue = typ.fabric();
-        returnValue.setParentCircuitSheet(SchematischeEingabe2.Singleton._visibleCircuitSheet);
+        returnValue.setParentCircuitSheet(SchematicEditor2.Singleton._visibleCircuitSheet);
         returnValue.doOperationAfterNewConstruction();
         return returnValue;
     }

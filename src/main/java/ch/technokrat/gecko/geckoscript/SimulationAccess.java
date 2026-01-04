@@ -35,11 +35,11 @@ public class SimulationAccess implements GeckoFileable {
     private final Set<String> _additionalFilesHashKeys = new TreeSet<>();
 
     private ScriptWindow scriptwindow;
-    public SchematischeEingabe2 se;
+    public SchematicEditor2 se;
     private Fenster mainWindow;
 
     public SimulationAccess(final Fenster fenster) {
-        se = SchematischeEingabe2.Singleton;
+        se = SchematicEditor2.Singleton;
         mainWindow = fenster;
         assert mainWindow != null;
         try {

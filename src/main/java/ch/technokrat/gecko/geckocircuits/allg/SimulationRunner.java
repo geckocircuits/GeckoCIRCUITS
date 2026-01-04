@@ -29,11 +29,11 @@ import javax.swing.JOptionPane;
 public final class SimulationRunner {
 
     final Fenster _fenster;
-    final SchematischeEingabe2 _se;
+    final SchematicEditor2 _se;
     public SimulationsKern simKern;
     private NetListContainer nlContainer;
 
-    public SimulationRunner(final Fenster fenster, final SchematischeEingabe2 schematicEntry) {
+    public SimulationRunner(final Fenster fenster, final SchematicEditor2 schematicEntry) {
         _fenster = fenster;
         _se = schematicEntry;
     }

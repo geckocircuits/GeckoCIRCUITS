@@ -18,7 +18,7 @@ import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -183,7 +183,7 @@ implements Operationable, Nonlinearable {
             _textInfo.addErrorValue("Nonlinear file not found!");
         }
 
-        if (SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (SchematicEditor2._lkDisplayMode.showParameter) {
 
             double displayValue = 0;
             if (this instanceof AbstractCapacitor) {

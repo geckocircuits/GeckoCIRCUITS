@@ -161,8 +161,8 @@ public final class SchematicTextInfo {
 
         final FontRenderContext frc = graphics.getFontRenderContext();
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        if (SchematischeEingabe2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
-            _yTxtKlickMin = _yTxtKlickMin - SchematischeEingabe2.DY_ZEILENABSTAND_TXT;
+        if (SchematicEditor2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
+            _yTxtKlickMin = _yTxtKlickMin - SchematicEditor2.DY_ZEILENABSTAND_TXT;
         }
 
         int counter = 0;

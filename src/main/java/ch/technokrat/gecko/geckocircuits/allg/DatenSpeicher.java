@@ -76,7 +76,7 @@ public class DatenSpeicher implements Serializable {
     public DatenSpeicher(
             Dimension windowDimension,
             OptimizerParameterData optimizerParameterData, 
-            int uniqueFileId, SimulationAccess scripter, GeckoFileManager fileMgr, SchematischeEingabe2 se,
+            int uniqueFileId, SimulationAccess scripter, GeckoFileManager fileMgr, SchematicEditor2 se,
             SolverSettings solverSettings) {
         this._allSheetComponents.addAll(se._circuitSheet.getAllElements());
         this._dt = solverSettings.dt.getValue();
@@ -86,8 +86,8 @@ public class DatenSpeicher implements Serializable {
         this.solverType = solverSettings.SOLVER_TYPE.getValue().getOldGeckoIndex();
 
         this.dpix = AbstractCircuitSheetComponent.dpix;
-        this.fontSize = SchematischeEingabe2.circuitFont.getSize();
-        this._fontTyp = SchematischeEingabe2.circuitFont.getFontName();
+        this.fontSize = SchematicEditor2.circuitFont.getSize();
+        this._fontTyp = SchematicEditor2.circuitFont.getFontName();
         this._fensterWidth = windowDimension.width;
         this._fensterHeight = windowDimension.height;
 
@@ -156,17 +156,17 @@ public class DatenSpeicher implements Serializable {
         asc.append("\nfensterHeight ").append(_fensterHeight);
         Fenster._se._circuitSheet._worksheetSize.exportAscii(asc);
         // 
-        asc.append("\nANSICHT_SHOW_LK_NAME ").append(SchematischeEingabe2._lkDisplayMode.showName);
-        asc.append("\nANSICHT_SHOW_LK_PARAMETER ").append(SchematischeEingabe2._lkDisplayMode.showParameter);
-        asc.append("\nANSICHT_SHOW_LK_FLOWDIR ").append(SchematischeEingabe2._lkDisplayMode.showFlowSymbol);
-        asc.append("\nANSICHT_SHOW_LK_TEXTLINIE ").append(SchematischeEingabe2._lkDisplayMode.showTextLine);
-        asc.append("\nANSICHT_SHOW_THERM_NAME ").append(SchematischeEingabe2._thermDisplayMode.showName);
-        asc.append("\nANSICHT_SHOW_THERM_PARAMETER ").append(SchematischeEingabe2._thermDisplayMode.showParameter);
-        asc.append("\nANSICHT_SHOW_THERM_FLOWDIR ").append(SchematischeEingabe2._thermDisplayMode.showFlowSymbol);
-        asc.append("\nANSICHT_SHOW_THERM_TEXTLINIE ").append(SchematischeEingabe2._thermDisplayMode.showTextLine);
-        asc.append("\nANSICHT_SHOW_CONTROL_NAME ").append(SchematischeEingabe2._controlDisplayMode.showName);
-        asc.append("\nANSICHT_SHOW_CONTROL_PARAMETER ").append(SchematischeEingabe2._controlDisplayMode.showParameter);
-        asc.append("\nANSICHT_SHOW_CONTROL_TEXTLINIE ").append(SchematischeEingabe2._controlDisplayMode.showTextLine);
+        asc.append("\nANSICHT_SHOW_LK_NAME ").append(SchematicEditor2._lkDisplayMode.showName);
+        asc.append("\nANSICHT_SHOW_LK_PARAMETER ").append(SchematicEditor2._lkDisplayMode.showParameter);
+        asc.append("\nANSICHT_SHOW_LK_FLOWDIR ").append(SchematicEditor2._lkDisplayMode.showFlowSymbol);
+        asc.append("\nANSICHT_SHOW_LK_TEXTLINIE ").append(SchematicEditor2._lkDisplayMode.showTextLine);
+        asc.append("\nANSICHT_SHOW_THERM_NAME ").append(SchematicEditor2._thermDisplayMode.showName);
+        asc.append("\nANSICHT_SHOW_THERM_PARAMETER ").append(SchematicEditor2._thermDisplayMode.showParameter);
+        asc.append("\nANSICHT_SHOW_THERM_FLOWDIR ").append(SchematicEditor2._thermDisplayMode.showFlowSymbol);
+        asc.append("\nANSICHT_SHOW_THERM_TEXTLINIE ").append(SchematicEditor2._thermDisplayMode.showTextLine);
+        asc.append("\nANSICHT_SHOW_CONTROL_NAME ").append(SchematicEditor2._controlDisplayMode.showName);
+        asc.append("\nANSICHT_SHOW_CONTROL_PARAMETER ").append(SchematicEditor2._controlDisplayMode.showParameter);
+        asc.append("\nANSICHT_SHOW_CONTROL_TEXTLINIE ").append(SchematicEditor2._controlDisplayMode.showTextLine);
         asc.append("\nFileVersion " + DialogAbout.RELEASENUMBER);
         asc.append("\nUniqueFileId " + _uniqueFileId);
         
@@ -253,54 +253,54 @@ public class DatenSpeicher implements Serializable {
 
 
         if (tokenMap.containsToken("ANSICHT_SHOW_LK_NAME")) {
-            SchematischeEingabe2._lkDisplayMode.showName = tokenMap.readDataLine("ANSICHT_SHOW_LK_NAME",
-                    SchematischeEingabe2._lkDisplayMode.showName);
+            SchematicEditor2._lkDisplayMode.showName = tokenMap.readDataLine("ANSICHT_SHOW_LK_NAME",
+                    SchematicEditor2._lkDisplayMode.showName);
 
 
-            SchematischeEingabe2._lkDisplayMode.showParameter = tokenMap.readDataLine("ANSICHT_SHOW_LK_PARAMETER",
-                    SchematischeEingabe2._lkDisplayMode.showParameter);
+            SchematicEditor2._lkDisplayMode.showParameter = tokenMap.readDataLine("ANSICHT_SHOW_LK_PARAMETER",
+                    SchematicEditor2._lkDisplayMode.showParameter);
 
-            SchematischeEingabe2._lkDisplayMode.showFlowSymbol = tokenMap.readDataLine("ANSICHT_SHOW_LK_FLOWDIR",
-                    SchematischeEingabe2._lkDisplayMode.showFlowSymbol);
+            SchematicEditor2._lkDisplayMode.showFlowSymbol = tokenMap.readDataLine("ANSICHT_SHOW_LK_FLOWDIR",
+                    SchematicEditor2._lkDisplayMode.showFlowSymbol);
 
-            SchematischeEingabe2._lkDisplayMode.showTextLine = tokenMap.readDataLine("ANSICHT_SHOW_LK_TEXTLINIE",
-                    SchematischeEingabe2._lkDisplayMode.showTextLine);
+            SchematicEditor2._lkDisplayMode.showTextLine = tokenMap.readDataLine("ANSICHT_SHOW_LK_TEXTLINIE",
+                    SchematicEditor2._lkDisplayMode.showTextLine);
 
-            SchematischeEingabe2._thermDisplayMode.showName = tokenMap.readDataLine("ANSICHT_SHOW_THERM_NAME",
-                    SchematischeEingabe2._thermDisplayMode.showName);
+            SchematicEditor2._thermDisplayMode.showName = tokenMap.readDataLine("ANSICHT_SHOW_THERM_NAME",
+                    SchematicEditor2._thermDisplayMode.showName);
 
-            SchematischeEingabe2._thermDisplayMode.showParameter = tokenMap.readDataLine("ANSICHT_SHOW_THERM_PARAMETER",
-                    SchematischeEingabe2._thermDisplayMode.showParameter);
+            SchematicEditor2._thermDisplayMode.showParameter = tokenMap.readDataLine("ANSICHT_SHOW_THERM_PARAMETER",
+                    SchematicEditor2._thermDisplayMode.showParameter);
 
-            SchematischeEingabe2._thermDisplayMode.showFlowSymbol = tokenMap.readDataLine("ANSICHT_SHOW_THERM_FLOWDIR",
-                    SchematischeEingabe2._thermDisplayMode.showFlowSymbol);
+            SchematicEditor2._thermDisplayMode.showFlowSymbol = tokenMap.readDataLine("ANSICHT_SHOW_THERM_FLOWDIR",
+                    SchematicEditor2._thermDisplayMode.showFlowSymbol);
 
-            SchematischeEingabe2._thermDisplayMode.showTextLine = tokenMap.readDataLine("ANSICHT_SHOW_THERM_TEXTLINIE",
-                    SchematischeEingabe2._thermDisplayMode.showTextLine);
-            SchematischeEingabe2._controlDisplayMode.showName = tokenMap.readDataLine("ANSICHT_SHOW_CONTROL_NAME",
-                    SchematischeEingabe2._controlDisplayMode.showName);
+            SchematicEditor2._thermDisplayMode.showTextLine = tokenMap.readDataLine("ANSICHT_SHOW_THERM_TEXTLINIE",
+                    SchematicEditor2._thermDisplayMode.showTextLine);
+            SchematicEditor2._controlDisplayMode.showName = tokenMap.readDataLine("ANSICHT_SHOW_CONTROL_NAME",
+                    SchematicEditor2._controlDisplayMode.showName);
 
-            SchematischeEingabe2._controlDisplayMode.showParameter = tokenMap.readDataLine("ANSICHT_SHOW_CONTROL_PARAMETER",
-                    SchematischeEingabe2._controlDisplayMode.showParameter);
+            SchematicEditor2._controlDisplayMode.showParameter = tokenMap.readDataLine("ANSICHT_SHOW_CONTROL_PARAMETER",
+                    SchematicEditor2._controlDisplayMode.showParameter);
 
-            SchematischeEingabe2._controlDisplayMode.showTextLine = tokenMap.readDataLine("ANSICHT_SHOW_CONTROL_TEXTLINIE",
-                    SchematischeEingabe2._controlDisplayMode.showTextLine);
+            SchematicEditor2._controlDisplayMode.showTextLine = tokenMap.readDataLine("ANSICHT_SHOW_CONTROL_TEXTLINIE",
+                    SchematicEditor2._controlDisplayMode.showTextLine);
 
         }
 
-        GeckoSim._win.vItemShowParLK.setSelected(SchematischeEingabe2._lkDisplayMode.showParameter);
-        GeckoSim._win.vItemShowFlowLK.setSelected(SchematischeEingabe2._lkDisplayMode.showFlowSymbol);
-        GeckoSim._win.vItemShowTextLineLK.setSelected(SchematischeEingabe2._lkDisplayMode.showTextLine);
-        GeckoSim._win.vItemShowNameLK.setSelected(SchematischeEingabe2._lkDisplayMode.showName);
+        GeckoSim._win.vItemShowParLK.setSelected(SchematicEditor2._lkDisplayMode.showParameter);
+        GeckoSim._win.vItemShowFlowLK.setSelected(SchematicEditor2._lkDisplayMode.showFlowSymbol);
+        GeckoSim._win.vItemShowTextLineLK.setSelected(SchematicEditor2._lkDisplayMode.showTextLine);
+        GeckoSim._win.vItemShowNameLK.setSelected(SchematicEditor2._lkDisplayMode.showName);
 
-        GeckoSim._win.vItemShowParCONTROL.setSelected(SchematischeEingabe2._controlDisplayMode.showParameter);
-        GeckoSim._win.vItemShowTextLineCONTROL.setSelected(SchematischeEingabe2._controlDisplayMode.showTextLine);
-        GeckoSim._win.vItemShowNameCONTROL.setSelected(SchematischeEingabe2._controlDisplayMode.showName);
+        GeckoSim._win.vItemShowParCONTROL.setSelected(SchematicEditor2._controlDisplayMode.showParameter);
+        GeckoSim._win.vItemShowTextLineCONTROL.setSelected(SchematicEditor2._controlDisplayMode.showTextLine);
+        GeckoSim._win.vItemShowNameCONTROL.setSelected(SchematicEditor2._controlDisplayMode.showName);
 
-        GeckoSim._win.vItemShowParTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showParameter);
-        GeckoSim._win.vItemShowFlowTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showFlowSymbol);
-        GeckoSim._win.vItemShowTextLineTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showTextLine);
-        GeckoSim._win.vItemShowNameTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showName);
+        GeckoSim._win.vItemShowParTHERM.setSelected(SchematicEditor2._thermDisplayMode.showParameter);
+        GeckoSim._win.vItemShowFlowTHERM.setSelected(SchematicEditor2._thermDisplayMode.showFlowSymbol);
+        GeckoSim._win.vItemShowTextLineTHERM.setSelected(SchematicEditor2._thermDisplayMode.showTextLine);
+        GeckoSim._win.vItemShowNameTHERM.setSelected(SchematicEditor2._thermDisplayMode.showName);
 
                 
         

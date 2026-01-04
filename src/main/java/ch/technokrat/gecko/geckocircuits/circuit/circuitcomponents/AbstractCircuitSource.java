@@ -31,7 +31,7 @@ import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUERT;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIN;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface.tcf;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -206,7 +206,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
         super.addTextInfoParameters(); //To change body of generated methods, choose Tools | Templates.
         addTextInfoErrorReference();
 
-        if (!SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (!SchematicEditor2._lkDisplayMode.showParameter) {
             return;
         }
 

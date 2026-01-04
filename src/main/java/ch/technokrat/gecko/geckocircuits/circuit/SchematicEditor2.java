@@ -43,7 +43,7 @@ import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.GroupableUndoManager;
 
-public final class SchematischeEingabe2 implements MouseListener, MouseMotionListener {
+public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
     private SchematischeEingabeAuswahl2 _sea;
@@ -367,7 +367,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
                 toRename.getIDStringDialog().setNewNameChecked(newName);
                 updateComponentCouplings(oldName, newName);
             } catch (NameAlreadyExistsException ex) {
-                Logger.getLogger(SchematischeEingabe2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SchematicEditor2.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -519,7 +519,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         }
         AbstractComponentTyp newType = _sea._typElement;
         _sea._typElement = null;
-        AbstractBlockInterface newElement = newType.getTypeInfo().fabricNew(newType.getTypeInfo());
+        AbstractBlockInterface newElement = AbstractTypeInfo.fabricNew(newType.getTypeInfo());
         if (newElement != null) {
             _elementsJustInitialized = true;
             _createComponentAction = new CreateComponentUndoAction(Arrays.asList(newElement));
@@ -529,8 +529,8 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
 
     private boolean isRightMouseClickActionOrCtrlLeftClick(final MouseEvent me) {
         // on mac's with only one mouse button, you can ctrl+leftclick
-        // to emulate a right-click. 
-        return me.getModifiersEx() == me.BUTTON3_DOWN_MASK || me.getModifiersEx() == me.BUTTON3_DOWN_MASK;
+        // to emulate a right-click.
+        return me.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK || me.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK;
     }
 
     private void doRightMouseClickAction() {
@@ -578,7 +578,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
 
             boolean returnValue = super.add(e);
             if (e instanceof AbstractCircuitSheetComponent) {
-                ((AbstractCircuitSheetComponent) e).setModus(ComponentState.SELECTED);
+                e.setModus(ComponentState.SELECTED);
             }
             return returnValue;
         }
@@ -608,14 +608,14 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     public void setActivationOfSimulator(boolean simulatorAktiviert) {
         this.simulatorAktiviert = simulatorAktiviert;
     }
-    public static SchematischeEingabe2 Singleton;
+    public static SchematicEditor2 Singleton;
 
     // damit man die Titelleiste modifizieren kann, wenn die Aenderungen noch nicht gespeichert sind --> 
     public void setFenster(Fenster win) {
         this.win = win;
     }
 
-    public SchematischeEingabe2(final Fenster win) {
+    public SchematicEditor2(final Fenster win) {
         this.win = win;
         _circuitSheet.setPreferredSize(new Dimension(1000, 1000));
 
@@ -630,18 +630,18 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     }
 
     public void resetModelModified() {
-        this.zustandGeaendert = false;
+        zustandGeaendert = false;
     }
 
     public boolean getZustandGeaendert() {
-        return this.zustandGeaendert;
+        return zustandGeaendert;
     }
 
     public void setzeFont(int fontSize, String fontTyp) {
-        SchematischeEingabe2.circuitFont = new Font(fontTyp, Font.PLAIN, fontSize);
-        SchematischeEingabe2.foLKSmall = new Font(fontTyp, Font.PLAIN, (int) (fontSize * 2 / 3));
-        int fs = SchematischeEingabe2.circuitFont.getSize();
-        SchematischeEingabe2.DY_ZEILENABSTAND_TXT = fs + (fs < 12 ? 2 : 3);
+        SchematicEditor2.circuitFont = new Font(fontTyp, Font.PLAIN, fontSize);
+        SchematicEditor2.foLKSmall = new Font(fontTyp, Font.PLAIN, fontSize * 2 / 3);
+        int fs = SchematicEditor2.circuitFont.getSize();
+        SchematicEditor2.DY_ZEILENABSTAND_TXT = fs + (fs < 12 ? 2 : 3);
         _circuitSheet.repaint();
     }
 
@@ -685,8 +685,8 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         ReglerToEXTERNAL.toExternals.clear();
 
         AbstractUndoGenericModel.undoManager.discardAllEdits();
-        _visibleCircuitSheet._findNodes.clear();
-        _visibleCircuitSheet._showNodes.clear();
+        CircuitSheet._findNodes.clear();
+        CircuitSheet._showNodes.clear();
     }
 
     public NetListLK getNetzliste(final ConnectorType connectorType) {
@@ -1274,14 +1274,14 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         //---------------------------
         // Symbol Zeichenstift beim Zeichnen der Verbindungen  -->
         int dpix = AbstractCircuitSheetComponent.dpix;
-        xStift[0] = (int) (dpix * px);
-        yStift[0] = (int) (dpix * (py));
+        xStift[0] = dpix * px;
+        yStift[0] = dpix * py;
         xStift[1] = (int) (dpix * (px + 0.4));
         yStift[1] = (int) (dpix * (py - 1.5));
         xStift[2] = (int) (dpix * (px + 0.7));
         yStift[2] = (int) (dpix * (py - 1.5));
         xStift[3] = (int) (dpix * (px + 0.1));
-        yStift[3] = (int) (dpix * (py));
+        yStift[3] = dpix * py;
         //
         //---------------------------
         // Elemente (LK, CONTROL, THERM) werden ausgewaehlt und erzeugt/initialisiert  -->
@@ -1489,9 +1489,9 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         }
 
         // alle im Markierungsrechteck enthaltenen Elemente und Verbindungen muessen in den BEARBEITUNGS-Modus gesetzt werden,
-        // alles ausserhalb wird 'FERTIG' gesetzt (deaktiviert fuer Verarbeitung) -->        
+        // alles ausserhalb wird 'FERTIG' gesetzt (deaktiviert fuer Verarbeitung) -->
         //
-        if (_mouseMoveMode == MouseMoveMode.SELECT_WINDOW && (me.getModifiers() != me.BUTTON3_MASK)) {  // --> keine Reaktion beim Druecken der rechten Maus-Taste
+        if (_mouseMoveMode == MouseMoveMode.SELECT_WINDOW && (me.getModifiersEx() != MouseEvent.BUTTON3_DOWN_MASK)) {  // --> keine Reaktion beim Druecken der rechten Maus-Taste
             _selectedComponents.clear();
             _selectedComponents.addAll(_visibleCircuitSheet.getElementsInRectangle(x1markRe, y1markRe, x2markRe, y2markRe));
             _mouseMoveMode = MouseMoveMode.NONE;
@@ -1511,7 +1511,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {
-            Logger.getLogger(SchematischeEingabe2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SchematicEditor2.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         testCreateNewComponent();
@@ -1633,7 +1633,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     // 
     public void updateComponentCouplings(final String nameVorher, final String neuerName) {
         for (ComponentCoupable element : _circuitSheet.getAllElements().getClassFromContainer(ComponentCoupable.class)) {
-            final ComponentCoupling coupling = ((ComponentCoupable) element).getComponentCoupling();
+            final ComponentCoupling coupling = element.getComponentCoupling();
             coupling.updateCouplingParameterStrings();
         }
     }
@@ -1875,7 +1875,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
                     try {
                         block.setNewNameChecked(IDStringDialog.findUnusedName(originalName));
                     } catch (NameAlreadyExistsException ex1) {
-                        Logger.getLogger(SchematischeEingabe2.class.getName()).log(Level.SEVERE, null, ex1);
+                        Logger.getLogger(SchematicEditor2.class.getName()).log(Level.SEVERE, null, ex1);
                     }
                 }
             }

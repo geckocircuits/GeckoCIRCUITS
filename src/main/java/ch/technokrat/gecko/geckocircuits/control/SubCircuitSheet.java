@@ -43,7 +43,7 @@ public class SubCircuitSheet extends CircuitSheet {
     private final JButton _infoButton;
     private JLabel _nameLabel;
 
-    public SubCircuitSheet(SchematischeEingabe2 se, SubcircuitBlock subBlock) {
+    public SubCircuitSheet(SchematicEditor2 se, SubcircuitBlock subBlock) {
         super(se);
         _subBlock = subBlock;
         _upButton = GuiFabric.getJButton(I18nKeys.LEVEL_UP);
@@ -55,8 +55,8 @@ public class SubCircuitSheet extends CircuitSheet {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Fenster win = SchematischeEingabe2.Singleton.win;                
-                SchematischeEingabe2.Singleton.setNewVisibleCircuitSheet(_subBlock.getParentCircuitSheet());
+                Fenster win = SchematicEditor2.Singleton.win;                
+                SchematicEditor2.Singleton.setNewVisibleCircuitSheet(_subBlock.getParentCircuitSheet());
             }
         });
 
@@ -87,19 +87,19 @@ public class SubCircuitSheet extends CircuitSheet {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AbstractBlockInterface newElement = null;                                
-                switch(SchematischeEingabe2.Singleton.wireModeVersteckt) {
-                    case SchematischeEingabe2.WIRE_MODE_LK:
-                    case SchematischeEingabe2.WIRE_MODE_RELUCTANCE:
-                    case SchematischeEingabe2.WIRE_MODE_THERM:
+                switch(SchematicEditor2.Singleton.wireModeVersteckt) {
+                    case SchematicEditor2.WIRE_MODE_LK:
+                    case SchematicEditor2.WIRE_MODE_RELUCTANCE:
+                    case SchematicEditor2.WIRE_MODE_THERM:
                         newElement = AbstractTypeInfo.fabricNew(AbstractTypeInfo.getTypeInfoFromClass(TerminalCircuit.class));
                         break;
-                    case SchematischeEingabe2.WIRE_MODE_CONTROL:
+                    case SchematicEditor2.WIRE_MODE_CONTROL:
                         newElement = AbstractTypeInfo.fabricNew(AbstractTypeInfo.getTypeInfoFromClass(ReglerTERMINAL.class));
                         break;
                     default:
                         assert false;
                 }                
-                SchematischeEingabe2.Singleton.insertNewElement(newElement);
+                SchematicEditor2.Singleton.insertNewElement(newElement);
             }
         });
 

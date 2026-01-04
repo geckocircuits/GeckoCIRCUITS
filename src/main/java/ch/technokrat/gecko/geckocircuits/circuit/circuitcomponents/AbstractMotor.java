@@ -25,7 +25,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.PostCalculatable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupling;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
@@ -138,7 +138,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        if (!SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (!SchematicEditor2._lkDisplayMode.showParameter) {
             return;
         }
 

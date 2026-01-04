@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.control.javablock;
 
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rtextarea.RTextScrollPane;
@@ -117,17 +117,17 @@ public class CodeWindowModern extends JFrame {
         textArea.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-                SchematischeEingabe2.Singleton.setDirtyFlag();
+                SchematicEditor2.Singleton.setDirtyFlag();
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                SchematischeEingabe2.Singleton.setDirtyFlag();
+                SchematicEditor2.Singleton.setDirtyFlag();
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                SchematischeEingabe2.Singleton.setDirtyFlag();
+                SchematicEditor2.Singleton.setDirtyFlag();
             }
         });
 
@@ -156,17 +156,17 @@ public class CodeWindowModern extends JFrame {
         textArea.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-                SchematischeEingabe2.Singleton.setDirtyFlag();
+                SchematicEditor2.Singleton.setDirtyFlag();
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                SchematischeEingabe2.Singleton.setDirtyFlag();
+                SchematicEditor2.Singleton.setDirtyFlag();
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                SchematischeEingabe2.Singleton.setDirtyFlag();
+                SchematicEditor2.Singleton.setDirtyFlag();
             }
         });
 

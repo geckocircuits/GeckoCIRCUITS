@@ -20,7 +20,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentDirection;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
@@ -292,7 +292,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        if (!SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (!SchematicEditor2._lkDisplayMode.showParameter) {
             return;
         }
 

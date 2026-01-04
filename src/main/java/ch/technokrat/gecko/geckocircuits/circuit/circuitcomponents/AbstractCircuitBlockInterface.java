@@ -20,7 +20,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import static ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.CONTROL;
 import ch.technokrat.gecko.geckocircuits.circuit.ElementDisplayProperties;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,9 +139,9 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
             case LK:
             case RELUCTANCE:
             case LK_AND_RELUCTANCE:
-                return SchematischeEingabe2._lkDisplayMode;
+                return SchematicEditor2._lkDisplayMode;
             case THERMAL:
-                return SchematischeEingabe2._thermDisplayMode;
+                return SchematicEditor2._thermDisplayMode;
             case CONTROL:
                 assert false;
                 break;

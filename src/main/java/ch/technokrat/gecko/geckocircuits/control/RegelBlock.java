@@ -384,7 +384,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     @Override
     public final ElementDisplayProperties getDisplayProperties() {
-        return SchematischeEingabe2._controlDisplayMode;
+        return SchematicEditor2._controlDisplayMode;
     }
 
     final void setActiveCalculator(final AbstractControlCalculatable calc) {

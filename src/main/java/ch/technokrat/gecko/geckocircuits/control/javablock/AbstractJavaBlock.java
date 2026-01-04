@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.control.javablock;
 import ch.technokrat.gecko.GeckoRuntimeException;
 import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;
 import java.util.*;
@@ -47,7 +47,7 @@ public abstract class AbstractJavaBlock {
         if (!checkIfCompilationRequired()) {
             return;
         }
-        SchematischeEingabe2.zustandGeaendert = true;
+        SchematicEditor2.zustandGeaendert = true;
         
         String className = CompileObject.findUniqueClassName();
         String sourceString = SourceFileGenerator.createSourceCode(_javaBlockSource, className, _reglerJavaBlock.YOUT.size(), _reglerJavaBlock._variableBusWidth);
@@ -59,7 +59,7 @@ public abstract class AbstractJavaBlock {
         }
 
         // repaint schematic entry - because color of JavaCode-Block could change            
-        SchematischeEingabe2.Singleton._circuitSheet.repaint();
+        SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
     private boolean checkIfCompilationRequired() {
@@ -103,7 +103,7 @@ public abstract class AbstractJavaBlock {
 
     void compileNewBlockSource(final JavaBlockSource newSourceCode) {
         _javaBlockSource = newSourceCode;
-        SchematischeEingabe2.Singleton.setDirtyFlag();
+        SchematicEditor2.Singleton.setDirtyFlag();
 
         try {
             doCompilationIfRequired();

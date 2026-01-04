@@ -18,7 +18,7 @@ import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.Enabled;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.datacontainer.*;
@@ -232,7 +232,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
             }
         }
 
-        SchematischeEingabe2.Singleton._circuitSheet.repaint();
+        SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
     @Override

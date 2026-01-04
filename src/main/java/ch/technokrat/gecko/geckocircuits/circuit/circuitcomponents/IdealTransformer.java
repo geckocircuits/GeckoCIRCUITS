@@ -22,7 +22,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
@@ -272,13 +272,13 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         // Ansichten -->
         restoreOrigTransformation(graphics);
 
-        if (SchematischeEingabe2._lkDisplayMode.showFlowSymbol) {
+        if (SchematicEditor2._lkDisplayMode.showFlowSymbol) {
             this.defineFlowSymbol(getComponentDirection(), graphics);
         }
 
-        if (SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (SchematicEditor2._lkDisplayMode.showParameter) {
             Font origFont = graphics.getFont();
-            graphics.setFont(SchematischeEingabe2.foLKSmall);
+            graphics.setFont(SchematicEditor2.foLKSmall);
             switch (getComponentDirection()) {
                 case EAST_WEST:
                     graphics.drawString("" + _windings1.getValue().floatValue(), dpix * x - graphics.getFontMetrics().stringWidth("" + _windings1.getValue().floatValue()) / 2, (int) (dpix * (y - 1.3)));

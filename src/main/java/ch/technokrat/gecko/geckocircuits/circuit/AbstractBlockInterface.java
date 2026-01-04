@@ -727,7 +727,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
 
     @Override
     public void paintComponentForeGround(final Graphics2D graphics) {
-        graphics.setFont(SchematischeEingabe2.circuitFont);
+        graphics.setFont(SchematicEditor2.circuitFont);
         graphics.setColor(getForeGroundColor());
 
         for (AbstractTerminal term : XIN) {
@@ -757,7 +757,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
 
     @Override
     public void paintGeckoComponent(final Graphics2D graphics) {
-        graphics.setFont(SchematischeEingabe2.circuitFont);
+        graphics.setFont(SchematicEditor2.circuitFont);
         graphics.setColor(getForeGroundColor());
 
         _textInfo.clearParameters();
@@ -978,7 +978,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
     @Override
     public void doDoubleClickAction(final Point clickedPoint) {
         final TerminalInterface clickedTerm = clickedTerminal(clickedPoint);
-        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematischeEingabe2.Singleton._visibleCircuitSheet) {
+        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematicEditor2.Singleton._visibleCircuitSheet) {
             final DialogLabelEingeben labelDialog = new DialogLabelEingeben(clickedTerm);
             labelDialog.setVisible(true);
             return;

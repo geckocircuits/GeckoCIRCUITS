@@ -76,7 +76,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     //--------------------------------------
     private boolean simulatorAktiviert = false;
     //
-    public static SchematischeEingabe2 _se;
+    public static SchematicEditor2 _se;
     public SchematischeEingabeAuswahl2 sea;
     public static final boolean INCLUDE_GeckoMAGNETICS = false;
     public static final boolean INCLUDE_GeckoHEAT = false;
@@ -208,7 +208,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             }
         };
 
-        _se = new SchematischeEingabe2(this);
+        _se = new SchematicEditor2(this);
 
         _simRunner = new SimulationRunner(this, _se);
 
@@ -447,60 +447,60 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         vItemShowNameLK = new JCheckBoxMenuItem("Name");
         vItemShowNameLK.addActionListener(this);
         vItemShowNameLK.setActionCommand("vItemShowNameLK");
-        vItemShowNameLK.setSelected(SchematischeEingabe2._lkDisplayMode.showName);
+        vItemShowNameLK.setSelected(SchematicEditor2._lkDisplayMode.showName);
         vItemShowNameLK.setForeground(GlobalColors.farbeFertigElementLK);
         vItemShowParLK = new JCheckBoxMenuItem("Show Parameter");
         vItemShowParLK.addActionListener(this);
         vItemShowParLK.setActionCommand("vItemShowParLK");
-        vItemShowParLK.setSelected(SchematischeEingabe2._lkDisplayMode.showParameter);
+        vItemShowParLK.setSelected(SchematicEditor2._lkDisplayMode.showParameter);
         vItemShowParLK.setForeground(GlobalColors.farbeFertigElementLK);
         vItemShowTextLineLK = new JCheckBoxMenuItem("Show Text-Line");
         vItemShowTextLineLK.addActionListener(this);
         vItemShowTextLineLK.setActionCommand("vItemShowTextLineLK");
-        vItemShowTextLineLK.setSelected(SchematischeEingabe2._lkDisplayMode.showParameter);
+        vItemShowTextLineLK.setSelected(SchematicEditor2._lkDisplayMode.showParameter);
         vItemShowTextLineLK.setForeground(GlobalColors.farbeFertigElementLK);
         vItemShowFlowLK = new JCheckBoxMenuItem("Flow Direction");
         vItemShowFlowLK.addActionListener(this);
         vItemShowFlowLK.setActionCommand("vItemShowFlowLK");
-        vItemShowFlowLK.setSelected(SchematischeEingabe2._lkDisplayMode.showFlowSymbol);
+        vItemShowFlowLK.setSelected(SchematicEditor2._lkDisplayMode.showFlowSymbol);
         vItemShowFlowLK.setForeground(GlobalColors.farbeFertigElementLK);
         //
         vItemShowNameCONTROL = new JCheckBoxMenuItem("Name");
         vItemShowNameCONTROL.addActionListener(this);
         vItemShowNameCONTROL.setActionCommand("vItemShowNameCONTROL");
-        vItemShowNameCONTROL.setSelected(SchematischeEingabe2._controlDisplayMode.showName);
+        vItemShowNameCONTROL.setSelected(SchematicEditor2._controlDisplayMode.showName);
         vItemShowNameCONTROL.setForeground(GlobalColors.farbeFertigElementCONTROL);
         vItemShowParCONTROL = new JCheckBoxMenuItem("Show Parameter");
         vItemShowParCONTROL.addActionListener(this);
         vItemShowParCONTROL.setActionCommand("vItemShowParCONTROL");
-        vItemShowParCONTROL.setSelected(SchematischeEingabe2._controlDisplayMode.showParameter);
+        vItemShowParCONTROL.setSelected(SchematicEditor2._controlDisplayMode.showParameter);
         vItemShowParCONTROL.setForeground(GlobalColors.farbeFertigElementCONTROL);
         vItemShowTextLineCONTROL = new JCheckBoxMenuItem("Show Text-Line");
         vItemShowTextLineCONTROL.addActionListener(this);
         vItemShowTextLineCONTROL.setActionCommand("vItemShowTextLineCONTROL");
-        vItemShowTextLineCONTROL.setSelected(SchematischeEingabe2._controlDisplayMode.showParameter);
+        vItemShowTextLineCONTROL.setSelected(SchematicEditor2._controlDisplayMode.showParameter);
         vItemShowTextLineCONTROL.setForeground(GlobalColors.farbeFertigElementCONTROL);
         //
         vItemShowNameTHERM = new JCheckBoxMenuItem("Name");
         vItemShowNameTHERM.addActionListener(this);
         vItemShowNameTHERM.setActionCommand("vItemShowNameTHERM");
 
-        vItemShowNameTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showName);
+        vItemShowNameTHERM.setSelected(SchematicEditor2._thermDisplayMode.showName);
         vItemShowNameTHERM.setForeground(GlobalColors.farbeFertigElementTHERM);
         vItemShowParTHERM = new JCheckBoxMenuItem("Show Parameter");
         vItemShowParTHERM.addActionListener(this);
         vItemShowParTHERM.setActionCommand("vItemShowParTHERM");
-        vItemShowParTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showParameter);
+        vItemShowParTHERM.setSelected(SchematicEditor2._thermDisplayMode.showParameter);
         vItemShowParTHERM.setForeground(GlobalColors.farbeFertigElementTHERM);
         vItemShowTextLineTHERM = new JCheckBoxMenuItem("Show Text-Line");
         vItemShowTextLineTHERM.addActionListener(this);
         vItemShowTextLineTHERM.setActionCommand("vItemShowTextLineTHERM");
-        vItemShowTextLineTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showParameter);
+        vItemShowTextLineTHERM.setSelected(SchematicEditor2._thermDisplayMode.showParameter);
         vItemShowTextLineTHERM.setForeground(GlobalColors.farbeFertigElementTHERM);
         vItemShowFlowTHERM = new JCheckBoxMenuItem("Flow Direction");
         vItemShowFlowTHERM.addActionListener(this);
         vItemShowFlowTHERM.setActionCommand("vItemShowFlowTHERM");
-        vItemShowFlowTHERM.setSelected(SchematischeEingabe2._thermDisplayMode.showFlowSymbol);
+        vItemShowFlowTHERM.setSelected(SchematicEditor2._thermDisplayMode.showFlowSymbol);
         vItemShowFlowTHERM.setForeground(GlobalColors.farbeFertigElementTHERM);
         //
         JMenuItem menueGroesse = GuiFabric.getJMenuItem(I18nKeys.WORKSHEET_SIZE);
@@ -1021,17 +1021,17 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     private void setAnsicht() {
         // set view menu accordingly
-        vItemShowNameLK.setState(SchematischeEingabe2._lkDisplayMode.showName);
-        vItemShowParLK.setState(SchematischeEingabe2._lkDisplayMode.showParameter);
-        vItemShowTextLineLK.setState(SchematischeEingabe2._lkDisplayMode.showTextLine);
-        vItemShowFlowLK.setState(SchematischeEingabe2._lkDisplayMode.showFlowSymbol);
-        vItemShowNameCONTROL.setState(SchematischeEingabe2._controlDisplayMode.showName);
-        vItemShowParCONTROL.setState(SchematischeEingabe2._controlDisplayMode.showParameter);
-        vItemShowTextLineCONTROL.setState(SchematischeEingabe2._controlDisplayMode.showTextLine);
-        vItemShowNameTHERM.setState(SchematischeEingabe2._thermDisplayMode.showName);
-        vItemShowParTHERM.setState(SchematischeEingabe2._thermDisplayMode.showParameter);
-        vItemShowTextLineTHERM.setState(SchematischeEingabe2._thermDisplayMode.showTextLine);
-        vItemShowFlowTHERM.setState(SchematischeEingabe2._thermDisplayMode.showFlowSymbol);
+        vItemShowNameLK.setState(SchematicEditor2._lkDisplayMode.showName);
+        vItemShowParLK.setState(SchematicEditor2._lkDisplayMode.showParameter);
+        vItemShowTextLineLK.setState(SchematicEditor2._lkDisplayMode.showTextLine);
+        vItemShowFlowLK.setState(SchematicEditor2._lkDisplayMode.showFlowSymbol);
+        vItemShowNameCONTROL.setState(SchematicEditor2._controlDisplayMode.showName);
+        vItemShowParCONTROL.setState(SchematicEditor2._controlDisplayMode.showParameter);
+        vItemShowTextLineCONTROL.setState(SchematicEditor2._controlDisplayMode.showTextLine);
+        vItemShowNameTHERM.setState(SchematicEditor2._thermDisplayMode.showName);
+        vItemShowParTHERM.setState(SchematicEditor2._thermDisplayMode.showParameter);
+        vItemShowTextLineTHERM.setState(SchematicEditor2._thermDisplayMode.showTextLine);
+        vItemShowFlowTHERM.setState(SchematicEditor2._thermDisplayMode.showFlowSymbol);
     }
 
     public void openFile(BufferedReader in) throws IOException {
@@ -1422,10 +1422,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 continueCalculationWithPossibleErrorMessage();
             } else if (befehl.equals(
                     "vItemShowNameLK")) {
-                SchematischeEingabe2._lkDisplayMode.showName = vItemShowNameLK.getState();
-                if ((!SchematischeEingabe2._lkDisplayMode.showName) && (!SchematischeEingabe2._lkDisplayMode.showParameter)) {
+                SchematicEditor2._lkDisplayMode.showName = vItemShowNameLK.getState();
+                if ((!SchematicEditor2._lkDisplayMode.showName) && (!SchematicEditor2._lkDisplayMode.showParameter)) {
                     vItemShowTextLineLK.setState(false);
-                    SchematischeEingabe2._lkDisplayMode.showTextLine = vItemShowTextLineLK.getState();
+                    SchematicEditor2._lkDisplayMode.showTextLine = vItemShowTextLineLK.getState();
                 }
                 _se._visibleCircuitSheet.repaint();
             } else if (befehl.equals(
@@ -1434,65 +1434,65 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 jtfStatus.setAliasing(aliasingCONTROL.isSelected());
             } else if (befehl.equals(
                     "vItemShowParLK")) {
-                SchematischeEingabe2._lkDisplayMode.showParameter = vItemShowParLK.getState();
-                if ((!SchematischeEingabe2._lkDisplayMode.showName) && (!SchematischeEingabe2._lkDisplayMode.showParameter)) {
+                SchematicEditor2._lkDisplayMode.showParameter = vItemShowParLK.getState();
+                if ((!SchematicEditor2._lkDisplayMode.showName) && (!SchematicEditor2._lkDisplayMode.showParameter)) {
                     vItemShowTextLineLK.setState(false);
-                    SchematischeEingabe2._lkDisplayMode.showTextLine = vItemShowTextLineLK.getState();
+                    SchematicEditor2._lkDisplayMode.showTextLine = vItemShowTextLineLK.getState();
                 }
                 _se._visibleCircuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowTextLineLK")) {
-                SchematischeEingabe2._lkDisplayMode.showTextLine = vItemShowTextLineLK.getState();
+                SchematicEditor2._lkDisplayMode.showTextLine = vItemShowTextLineLK.getState();
                 _se._visibleCircuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowFlowLK")) {
-                SchematischeEingabe2._lkDisplayMode.showFlowSymbol = vItemShowFlowLK.getState();
+                SchematicEditor2._lkDisplayMode.showFlowSymbol = vItemShowFlowLK.getState();
                 _se._visibleCircuitSheet.repaint();
                 //---------------------------------------------------------
             } else if (befehl.equals(
                     "vItemShowNameCONTROL")) {
-                SchematischeEingabe2._controlDisplayMode.showName = vItemShowNameCONTROL.getState();
-                if ((!SchematischeEingabe2._controlDisplayMode.showName) && (!SchematischeEingabe2._controlDisplayMode.showParameter)) {
+                SchematicEditor2._controlDisplayMode.showName = vItemShowNameCONTROL.getState();
+                if ((!SchematicEditor2._controlDisplayMode.showName) && (!SchematicEditor2._controlDisplayMode.showParameter)) {
                     vItemShowTextLineCONTROL.setState(false);
-                    SchematischeEingabe2._controlDisplayMode.showTextLine = vItemShowTextLineCONTROL.getState();
+                    SchematicEditor2._controlDisplayMode.showTextLine = vItemShowTextLineCONTROL.getState();
                 }
                 _se._circuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowParCONTROL")) {
-                SchematischeEingabe2._controlDisplayMode.showParameter = vItemShowParCONTROL.getState();
-                if ((!SchematischeEingabe2._controlDisplayMode.showName) && (!SchematischeEingabe2._controlDisplayMode.showParameter)) {
+                SchematicEditor2._controlDisplayMode.showParameter = vItemShowParCONTROL.getState();
+                if ((!SchematicEditor2._controlDisplayMode.showName) && (!SchematicEditor2._controlDisplayMode.showParameter)) {
                     vItemShowTextLineCONTROL.setState(false);
-                    SchematischeEingabe2._controlDisplayMode.showTextLine = vItemShowTextLineCONTROL.getState();
+                    SchematicEditor2._controlDisplayMode.showTextLine = vItemShowTextLineCONTROL.getState();
                 }
                 _se._circuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowTextLineCONTROL")) {
-                SchematischeEingabe2._controlDisplayMode.showTextLine = vItemShowTextLineCONTROL.getState();
+                SchematicEditor2._controlDisplayMode.showTextLine = vItemShowTextLineCONTROL.getState();
                 _se._circuitSheet.repaint();
                 //---------------------------------------------------------
             } else if (befehl.equals(
                     "vItemShowNameTHERM")) {
-                SchematischeEingabe2._thermDisplayMode.showName = vItemShowNameTHERM.getState();
-                if ((!SchematischeEingabe2._thermDisplayMode.showName) && (!SchematischeEingabe2._thermDisplayMode.showParameter)) {
+                SchematicEditor2._thermDisplayMode.showName = vItemShowNameTHERM.getState();
+                if ((!SchematicEditor2._thermDisplayMode.showName) && (!SchematicEditor2._thermDisplayMode.showParameter)) {
                     vItemShowTextLineTHERM.setState(false);
-                    SchematischeEingabe2._thermDisplayMode.showTextLine = vItemShowTextLineTHERM.getState();
+                    SchematicEditor2._thermDisplayMode.showTextLine = vItemShowTextLineTHERM.getState();
                 }
                 _se._circuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowParTHERM")) {
-                SchematischeEingabe2._thermDisplayMode.showParameter = vItemShowParTHERM.getState();
-                if ((!SchematischeEingabe2._thermDisplayMode.showName) && (!SchematischeEingabe2._thermDisplayMode.showParameter)) {
+                SchematicEditor2._thermDisplayMode.showParameter = vItemShowParTHERM.getState();
+                if ((!SchematicEditor2._thermDisplayMode.showName) && (!SchematicEditor2._thermDisplayMode.showParameter)) {
                     vItemShowTextLineTHERM.setState(false);
-                    SchematischeEingabe2._thermDisplayMode.showTextLine = vItemShowTextLineTHERM.getState();
+                    SchematicEditor2._thermDisplayMode.showTextLine = vItemShowTextLineTHERM.getState();
                 }
                 _se._circuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowTextLineTHERM")) {
-                SchematischeEingabe2._thermDisplayMode.showTextLine = vItemShowTextLineTHERM.getState();
+                SchematicEditor2._thermDisplayMode.showTextLine = vItemShowTextLineTHERM.getState();
                 _se._circuitSheet.repaint();
             } else if (befehl.equals(
                     "vItemShowFlowTHERM")) {
-                SchematischeEingabe2._thermDisplayMode.showFlowSymbol = vItemShowFlowTHERM.getState();
+                SchematicEditor2._thermDisplayMode.showFlowSymbol = vItemShowFlowTHERM.getState();
                 _se._circuitSheet.repaint();
             } else if (befehl.equals(
                     "setParameters")) {

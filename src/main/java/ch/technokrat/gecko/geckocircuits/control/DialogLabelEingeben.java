@@ -126,7 +126,7 @@ public final class DialogLabelEingeben extends JDialog {
                 // 'OK'-Knopf oder 'Return'-Taste gedrueckt --> entsprechender Label des Elements wird aktualisiert
                 _label.setLabelFromUserDialog(_textField.getText());                
                 _clickedTerminal.getCircuitSheet().updateRenamedLabel(_originalLabel, _textField.getText(), _conType);
-                SchematischeEingabe2.Singleton.registerChangeWithNetlistUpdate();
+                SchematicEditor2.Singleton.registerChangeWithNetlistUpdate();
                 dispose();
             }
         });
