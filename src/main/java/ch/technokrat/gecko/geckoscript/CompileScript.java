@@ -18,7 +18,7 @@ import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoRuntimeException;
 import ch.technokrat.gecko.geckocircuits.control.javablock.AbstractCompileObject;
-import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindow;
+import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindowModern;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileObject;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileObjectNull;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileStatus;
@@ -171,7 +171,7 @@ public class CompileScript {
 
             if (_compileObject.getCompileStatus() != CompileStatus.COMPILED_SUCCESSFULL) {                
                 sw._compileStatus = CompileStatus.COMPILE_ERROR;                
-                sw.compilerMessages = CodeWindow.checkForOldCompiler(sw.compilerMessages);
+                sw.compilerMessages = CodeWindowModern.checkForOldCompiler(sw.compilerMessages);
             } else {
                 sw._compileStatus = CompileStatus.COMPILED_SUCCESSFULL;                                
             }

@@ -54,7 +54,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerJavaFunction.class, "JAVA", I18nKeys.JAVA_FUNCTION);
     private final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
     private final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
-    private CodeWindow _codeWindow;
+    private CodeWindowModern _codeWindow;
 
     final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzXIN", 3).
@@ -628,9 +628,9 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         } else {
-            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden 
+            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden
             if (_codeWindow == null) {
-                _codeWindow = new CodeWindow(this, _outputStringBuffer);
+                _codeWindow = new CodeWindowModern(this, _outputStringBuffer);
                 _codeWindow.loadSourcesText();
             } else {
                 if (_codeWindow.isVisible()) {

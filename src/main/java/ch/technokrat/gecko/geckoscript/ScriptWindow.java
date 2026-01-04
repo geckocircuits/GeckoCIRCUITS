@@ -19,7 +19,7 @@ import ch.technokrat.gecko.Documentation;
 import ch.technokrat.gecko.GeckoRemoteInterface;
 import ch.technokrat.gecko.MethodCategory;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
-import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindow;
+import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindowModern;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileStatus;
 import ch.technokrat.gecko.geckocircuits.control.javablock.ExtraFilesWindow;
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
 import javax.swing.*;
-import de.sciss.syntaxpane.DefaultSyntaxKit;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 public class ScriptWindow extends javax.swing.JFrame {
     ExtraFilesWindow _extSourceWindow;
@@ -53,13 +53,13 @@ public class ScriptWindow extends javax.swing.JFrame {
 
     String _compileSourceCode = "";
     String _workingDirectory;
-    CompileStatus _compileStatus = CompileStatus.NOT_COMPILED;    
+    CompileStatus _compileStatus = CompileStatus.NOT_COMPILED;
     AbstractGeckoCustom _scriptObject;
-    final JEditorPane _codeTextArea;
-    final JEditorPane _declarationsTextArea;
-    final JEditorPane _importsTextArea;
-    final JEditorPane _sourceCodeCompilerTextArea;
-    final JEditorPane _compMessagesTextArea;
+    final RSyntaxTextArea _codeTextArea;
+    final RSyntaxTextArea _declarationsTextArea;
+    final RSyntaxTextArea _importsTextArea;
+    final RSyntaxTextArea _sourceCodeCompilerTextArea;
+    final RSyntaxTextArea _compMessagesTextArea;
     String compilerMessages = "";
     final DefaultListModel<FunctionDescription> _listModel;
     final DefaultComboBoxModel<MethodCategory> _categoryModel;
@@ -106,16 +106,14 @@ public class ScriptWindow extends javax.swing.JFrame {
             }
         });
 
-        DefaultSyntaxKit.initKit();
+        _codeTextArea = CodeWindowModern.createScrollableEditorPane(jPanelCodeEditor);
 
-        _codeTextArea = CodeWindow.createScrollableEditorPane(jPanelCodeEditor);
-
-        _declarationsTextArea = CodeWindow.createScrollableEditorPane(jPanelDeclarations);
-        _importsTextArea = CodeWindow.createScrollableEditorPane(jPanelImports);
-        _sourceCodeCompilerTextArea = CodeWindow.createScrollableEditorPane(jPanelCompMessages);
+        _declarationsTextArea = CodeWindowModern.createScrollableEditorPane(jPanelDeclarations);
+        _importsTextArea = CodeWindowModern.createScrollableEditorPane(jPanelImports);
+        _sourceCodeCompilerTextArea = CodeWindowModern.createScrollableEditorPane(jPanelCompMessages);
         _sourceCodeCompilerTextArea.setEditable(false);
 
-        _compMessagesTextArea = CodeWindow.createScrollableEditorPane(jPanelCompilerErrors);
+        _compMessagesTextArea = CodeWindowModern.createScrollableEditorPane(jPanelCompilerErrors);
         _compMessagesTextArea.setEditable(false);
 
         this.setMinimumSize(new Dimension(1000, 800));

@@ -528,7 +528,9 @@ public class GeckoSim extends JApplet {
             System.err.println("Could not check java version.");
         }
     }
-
+    
+    public static boolean scriptEngineAvailable = false;
+    
     private void checkIfLibraryIsMissing() {
         if (Fenster.IS_APPLET) {
             return;
@@ -546,12 +548,24 @@ public class GeckoSim extends JApplet {
                 System.err.println("Java vendor: " + System.getProperty("java.vendor"));
                 System.err.println("Java home: " + System.getProperty("java.home"));
             }
+            
+            javax.script.ScriptEngineManager manager = new javax.script.ScriptEngineManager();
+            javax.script.ScriptEngine engine = manager.getEngineByName("js");
+            if (engine == null) {
+                engine = manager.getEngineByExtension("js");
+            }
+            if (engine == null) {
+                engine = manager.getEngineByMimeType("text/javascript");
+            }
+            if (engine == null) {
+                engine = manager.getEngineByMimeType("application/javascript");
+            }
+            scriptEngineAvailable = (engine != null);
+            
         } catch (NoClassDefFoundError | SecurityException err) {
-            compiler_toolsjar_missing = true;
-            System.err.println("ERROR: Exception while checking for Java Compiler: " + err.getMessage());
-            err.printStackTrace();
+            scriptEngineAvailable = false;
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            scriptEngineAvailable = false;
         }
     }
 

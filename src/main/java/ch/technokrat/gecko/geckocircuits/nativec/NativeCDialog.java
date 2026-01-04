@@ -17,7 +17,7 @@ package ch.technokrat.gecko.geckocircuits.nativec;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindow;
+import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindowModern;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -136,7 +136,7 @@ public class NativeCDialog extends GeckoDialog {
                         _regNCObj.setNewNameChecked(_selectedLibFile.getFile().getName());
                     }
                     catch (NameAlreadyExistsException exc) {
-                        Logger.getLogger(CodeWindow.class.getName()).log(Level.SEVERE, null, exc);
+                        Logger.getLogger(CodeWindowModern.class.getName()).log(Level.SEVERE, null, exc);
                         JOptionPane.showMessageDialog(null, "Seems like the selected Native Library is already used by another block!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
