@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitGlobalTerminal;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
@@ -47,7 +47,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
     private SchematicComponentSelection2 _sea;
-    public Fenster win;
+    public MainWindow win;
     //
     private boolean simulatorAktiviert = false;
     public static boolean zustandGeaendert = false;  // zeigt an, ob 'QuitWithoutSaving' aktiviert werden muss
@@ -134,11 +134,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         centerPanel.setBorder(new EmptyBorder(EMPTY_BORDER_OFFSET, EMPTY_BORDER_OFFSET, 0, 0));
         centerPanel.setOpaque(false);
         centerPanel.add(_visibleCircuitSheet);
-        Fenster.seScroll.setViewportView(centerPanel);
+        MainWindow.seScroll.setViewportView(centerPanel);
         _visibleCircuitSheet.addMouseListener(this);
         _visibleCircuitSheet.addMouseMotionListener(this);
         _visibleCircuitSheet.addKeyListener(win.keyAdapter);
-        Fenster.seScroll.revalidate();
+        MainWindow.seScroll.revalidate();
 
         for (AbstractCircuitSheetComponent searchTerminal
                 : _selectedComponents.toArray(new AbstractCircuitSheetComponent[_selectedComponents.size()])) {
@@ -152,7 +152,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             defineNewParent.setParentCircuitSheet(_visibleCircuitSheet);
         }
         newCircuitSheet.revalidate();
-        Fenster.seScroll.repaint();
+        MainWindow.seScroll.repaint();
     }
 
     private Point findRasterPoint(final MouseEvent mouseEvent) {
@@ -611,11 +611,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     public static SchematicEditor2 Singleton;
 
     // damit man die Titelleiste modifizieren kann, wenn die Aenderungen noch nicht gespeichert sind --> 
-    public void setFenster(Fenster win) {
+    public void setFenster(MainWindow win) {
         this.win = win;
     }
 
-    public SchematicEditor2(final Fenster win) {
+    public SchematicEditor2(final MainWindow win) {
         this.win = win;
         _circuitSheet.setPreferredSize(new Dimension(1000, 1000));
 
@@ -666,7 +666,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                 ((GeckoFileable) elem).initExtraFiles();
             }
         }
-        Fenster._scripter.initExtraFiles();
+        MainWindow._scripter.initExtraFiles();
     }
 
     public void resetCircuitSheetsForNewFile() {
@@ -1507,7 +1507,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     @Override
     public void mouseEntered(final MouseEvent me) {
-        _visibleCircuitSheet.requestFocusInWindow();  // damit koennen KeyEvents in Fenster() abgearbeitet werden 
+        _visibleCircuitSheet.requestFocusInWindow();  // damit koennen KeyEvents in MainWindow() abgearbeitet werden 
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {

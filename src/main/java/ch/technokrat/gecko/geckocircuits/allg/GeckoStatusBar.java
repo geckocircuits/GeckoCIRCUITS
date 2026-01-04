@@ -48,11 +48,11 @@ public class GeckoStatusBar extends JPanel {
     private static MemoryWarning _memoryWarning;
     private static boolean _showMemoryWarning = true;
     private double _runningPercentage;
-    private final Fenster _fenster;
+    private final MainWindow _fenster;
     private final GeckoProgressPanel _jPanelProgress;
     private Font font = calculateLabelFont();
 
-    GeckoStatusBar(String ti_ReadySim, final Fenster fenster) {
+    GeckoStatusBar(String ti_ReadySim, final MainWindow fenster) {
         _fenster = fenster;
         TimerTask task = new TimerTask() {
             public void run() {

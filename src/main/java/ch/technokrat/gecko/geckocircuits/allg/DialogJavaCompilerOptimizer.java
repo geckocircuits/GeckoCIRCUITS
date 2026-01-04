@@ -433,7 +433,7 @@ private void jButtonExample2ActionPerformed(java.awt.event.ActionEvent evt) {//N
 
 private void jButtonExample1ActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonExample1ActionPerformed
     jTextAreaCode.setText(example1); 
-    jTextAreaImports.setText("import ch.technokrat.gecko.geckocircuits.allg.Fenster;\n");
+    jTextAreaImports.setText("import ch.technokrat.gecko.geckocircuits.allg.MainWindow;\n");
     jTextAreaStaticInit.setText("");
     jTextAreaVariables.setText("");     
 }//GEN-LAST:event_jButtonExample1ActionPerformed

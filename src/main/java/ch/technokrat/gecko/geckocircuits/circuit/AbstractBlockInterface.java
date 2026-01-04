@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
@@ -352,7 +352,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
     public void checkNameOptParameter() {
         for (UserParameter par : getRegisteredParameters()) {
             if (!par.getNameOpt().isEmpty()) {
-                Fenster.optimizerParameterData.getNumberFromName(par.getNameOpt());
+                MainWindow.optimizerParameterData.getNumberFromName(par.getNameOpt());
             }
 
         }

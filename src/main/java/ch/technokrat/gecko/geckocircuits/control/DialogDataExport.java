@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GetJarPath;
 import ch.technokrat.gecko.geckocircuits.control.ReglerSaveData.OutputType;
@@ -57,7 +57,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jSpinnerDigits.setValue(_reglerDataSave._significDigits.getValue());
         _dataSaver = _parentDataSaver;
 
-        jTextArea1.setText(Fenster.aktuellerDateiName.replace(".ipes", "CISPR.txt"));
+        jTextArea1.setText(MainWindow.aktuellerDateiName.replace(".ipes", "CISPR.txt"));
 
         if (_containers.size() == 1) {
             jLabelFilter.setVisible(false);

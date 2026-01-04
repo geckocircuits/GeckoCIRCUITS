@@ -154,7 +154,7 @@ public class ProjectData implements Serializable {
         asc.append("\nfontTyp ").append(_fontTyp);
         asc.append("\nfensterWidth ").append(_fensterWidth);
         asc.append("\nfensterHeight ").append(_fensterHeight);
-        Fenster._se._circuitSheet._worksheetSize.exportAscii(asc);
+        MainWindow._se._circuitSheet._worksheetSize.exportAscii(asc);
         // 
         asc.append("\nANSICHT_SHOW_LK_NAME ").append(SchematicEditor2._lkDisplayMode.showName);
         asc.append("\nANSICHT_SHOW_LK_PARAMETER ").append(SchematicEditor2._lkDisplayMode.showParameter);

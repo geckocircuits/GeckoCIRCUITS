@@ -372,7 +372,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         if (!_datnamXY.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
             //first check if this is a file loaded from previous versions
             try {
-                _externalDataFile = Fenster._fileManager.getFile(_externalDataFileHashValue);                                                
+                _externalDataFile = MainWindow._fileManager.getFile(_externalDataFileHashValue);                                                
             } catch (FileNotFoundException e) {
                 final String errorMessage = "External data file missing in signal source "
                         + getStringID() + ":\n" + e.getMessage();
@@ -400,11 +400,11 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         //check first if file already exists, and remove it
         if (_externalDataFile != null) {
             _externalDataFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(_externalDataFile);
+            MainWindow._fileManager.maintain(_externalDataFile);
         }
         _externalDataFile = newFiles.get(0);
         _externalDataFile.setUser(getUniqueObjectIdentifier());
-        Fenster._fileManager.addFile(_externalDataFile);
+        MainWindow._fileManager.addFile(_externalDataFile);
         _datnamXY = _externalDataFile.getCurrentAbsolutePath();
     }
 
@@ -414,7 +414,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         //since there is only one file, we just remove it
         if (!filesToRemove.isEmpty() && _externalDataFile != null) {
             _externalDataFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(_externalDataFile);
+            MainWindow._fileManager.maintain(_externalDataFile);
             _externalDataFile = null;
             _datnamXY = GlobalFilePathes.DATNAM_NOT_DEFINED;
         }
@@ -494,10 +494,10 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             public Object doOperation(final Object parameterValue) {
 
                 try {
-                    _externalDataFile = new GeckoFile(new File((String) parameterValue), GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());
+                    _externalDataFile = new GeckoFile(new File((String) parameterValue), GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());
                     _externalDataFile.setUser(getUniqueObjectIdentifier());
                     _datnamXY = (String) parameterValue;
-                    Fenster._fileManager.addFile(_externalDataFile);
+                    MainWindow._fileManager.addFile(_externalDataFile);
                     return true;
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ReglerSignalSource.class.getName()).log(Level.SEVERE, null, ex);

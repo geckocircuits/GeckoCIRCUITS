@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckoscript;
 
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.*;
@@ -36,9 +36,9 @@ public class SimulationAccess implements GeckoFileable {
 
     private ScriptWindow scriptwindow;
     public SchematicEditor2 se;
-    private Fenster mainWindow;
+    private MainWindow mainWindow;
 
-    public SimulationAccess(final Fenster fenster) {
+    public SimulationAccess(final MainWindow fenster) {
         se = SchematicEditor2.Singleton;
         mainWindow = fenster;
         assert mainWindow != null;
@@ -240,7 +240,7 @@ public class SimulationAccess implements GeckoFileable {
 
     public final void importFromFile(final String fileName, final String importIntoSubcircuit)
             throws FileNotFoundException {
-        Fenster.importComponentsFromFile(fileName, importIntoSubcircuit);
+        MainWindow.importComponentsFromFile(fileName, importIntoSubcircuit);
     }
 
     File getCurrentModelFile() {
@@ -312,8 +312,8 @@ public class SimulationAccess implements GeckoFileable {
              * ElementInterface element,
              */int x, int y) throws Exception {
         boolean valid = false;
-        int worksheetSizeX = Fenster._se._circuitSheet._worksheetSize.getSizeX();
-        int worksheetSizeY = Fenster._se._circuitSheet._worksheetSize.getSizeY();
+        int worksheetSizeX = MainWindow._se._circuitSheet._worksheetSize.getSizeX();
+        int worksheetSizeY = MainWindow._se._circuitSheet._worksheetSize.getSizeY();
         if (x >= worksheetSizeX || y >= worksheetSizeY) {
             throw new Exception("Given position is outside defined drawing area! Sheet size is " + worksheetSizeX + "x" + worksheetSizeY + " and given new position is " + x + "x" + y + ".");
         } else {
@@ -434,7 +434,7 @@ public class SimulationAccess implements GeckoFileable {
         for (GeckoFile newFile : newFiles) {
             _additionalSourceFiles.add(newFile);
             newFile.setUser(DUMMY_BLOCK_ID);
-            Fenster._fileManager.addFile(newFile);
+            MainWindow._fileManager.addFile(newFile);
         }
         scriptwindow._extSourceWindow.addNewFiles(newFiles);
     }
@@ -449,7 +449,7 @@ public class SimulationAccess implements GeckoFileable {
         for (GeckoFile removedFile : filesToRemove) {
             _additionalSourceFiles.remove(removedFile);
             removedFile.removeUser(DUMMY_BLOCK_ID);
-            Fenster._fileManager.maintain(removedFile);
+            MainWindow._fileManager.maintain(removedFile);
         }
 
         scriptwindow._extSourceWindow.removeFilesFromList(filesToRemove);
@@ -492,7 +492,7 @@ public class SimulationAccess implements GeckoFileable {
                 }
                 hashValue = Long.valueOf(hash.trim());
                 try {
-                    file = Fenster._fileManager.getFile(hashValue);
+                    file = MainWindow._fileManager.getFile(hashValue);
                     _additionalSourceFiles.add(file);
                 } catch (Exception e) {
                     fileMissing = true;
@@ -511,12 +511,12 @@ public class SimulationAccess implements GeckoFileable {
     }
 
     void setWorksheetSize(int sizeX, int sizeY) {
-        Fenster._se._circuitSheet._worksheetSize.setNewWorksheetSize(sizeX, sizeY);
+        MainWindow._se._circuitSheet._worksheetSize.setNewWorksheetSize(sizeX, sizeY);
     }
 
     int[] getWorksheetSize() {
-        int sizeX = Fenster._se._circuitSheet._worksheetSize.getSizeX();
-        int sizeY = Fenster._se._circuitSheet._worksheetSize.getSizeY();
+        int sizeX = MainWindow._se._circuitSheet._worksheetSize.getSizeX();
+        int sizeY = MainWindow._se._circuitSheet._worksheetSize.getSizeY();
         return new int[]{sizeX, sizeY};
     }
 

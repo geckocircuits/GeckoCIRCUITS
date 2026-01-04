@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -155,7 +155,7 @@ public class GeckoRemote {
     }
 
     public static void connectToGecko() {
-        Fenster.IS_APPLET = false; // this is needed - otherwise we cannot read the properties
+        MainWindow.IS_APPLET = false; // this is needed - otherwise we cannot read the properties
         GeckoSim.forceLoadApplicationProperties();
         connectToGecko(GeckoRemoteRegistry.getRemoteAccessPort());
     }

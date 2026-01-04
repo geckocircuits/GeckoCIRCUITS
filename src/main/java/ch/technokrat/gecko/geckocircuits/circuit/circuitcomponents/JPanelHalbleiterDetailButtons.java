@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
@@ -51,7 +51,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
         
         JButton jbS2load = GuiFabric.getJButton(I18nKeys.LOAD_SEMICONDUCTOR);
         jbS2load.setMaximumSize(new Dimension(BUTTON_WIDTH, 25));
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             jbS2load.setEnabled(false);
         }
         
@@ -131,7 +131,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
             _jlS2b.setText("Loss file not found!");
         }
         Color fS2 = (isFileLinkOK) ? Color.decode("0x006400") : Color.red;
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             fS2 = Color.decode("0x006400");  // weil im Applet-Modus keine Datei verwendet wird, ist die Farbe hier nie 'rot'
         }
         int cls = 20;

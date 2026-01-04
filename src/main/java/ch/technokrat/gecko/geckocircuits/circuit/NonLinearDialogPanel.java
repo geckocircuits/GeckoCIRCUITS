@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
@@ -197,7 +197,7 @@ public class NonLinearDialogPanel extends JPanel {
                 } else if (savedExternalFile != null) {
                     //characteristic has been saved to an external file, and we should not attribute this to the circuit element
                     try {
-                        GeckoFile newFileFromExternal = new GeckoFile(savedExternalFile, GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());
+                        GeckoFile newFileFromExternal = new GeckoFile(savedExternalFile, GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());
                         ArrayList<GeckoFile> newFile = new ArrayList<GeckoFile>();
                         newFile.add(newFileFromExternal);
                         _nonlinearParent.addFiles(newFile);

@@ -29,7 +29,7 @@ import javax.swing.JButton;
  * have been deprecated since Java 9, this functionality is maintained for backward
  * compatibility with existing deployments that may still rely on applet mode.
  *
- * Modern applications should use the standalone application mode (Fenster) instead.
+ * Modern applications should use the standalone application mode (MainWindow) instead.
  */
 @SuppressWarnings("removal")  // JApplet is deprecated but required for legacy applet support
 public class AppletSimLE extends JApplet {
@@ -40,7 +40,7 @@ public class AppletSimLE extends JApplet {
         JButton butCircuitSim= new JButton("System Simulator");
         butCircuitSim.addActionListener(new ActionListener () {
             public void actionPerformed (ActionEvent ae) {
-                Fenster win= new Fenster();
+                MainWindow win= new MainWindow();
                 win.setSize(700,530);
                 win.setLocation(300,200);
                 win.setVisible(true);

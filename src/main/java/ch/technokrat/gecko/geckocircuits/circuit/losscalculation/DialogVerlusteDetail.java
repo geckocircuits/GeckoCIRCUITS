@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile.StorageType;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
@@ -184,7 +184,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
 
     private String getNewFileNameDialog() {
         final StringBuffer fileName = new StringBuffer();
-        if (!Fenster.IS_APPLET) {
+        if (!MainWindow.IS_APPLET) {
             // Erstellung Array vom Datentyp Object, Hinzufügen der Optionen               
             Object[] options = {"External File", "Model-intern File"};
 

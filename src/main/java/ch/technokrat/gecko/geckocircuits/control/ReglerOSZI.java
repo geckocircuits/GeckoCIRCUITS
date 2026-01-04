@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -403,7 +403,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             importScopeSettings(scopeMap);
         }
 
-        if (Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
+        if (MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
             _scopeFrame.setVisible(true);
         }
     }
@@ -472,7 +472,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         _scopeFrame.clearZVDaten();
         _scopeFrame._scope.setDataContainer(_zvDatenRAM);
         //------------
-        // jedesmal, wenn ein neues SCOPE-Fenster 'laeuft', beginnt die ZV-Datenspeicherung von Neuem
+        // jedesmal, wenn ein neues SCOPE-MainWindow 'laeuft', beginnt die ZV-Datenspeicherung von Neuem
         if (_waveformChar != null) {
             _waveformChar.setInvalid();
         }

@@ -40,11 +40,11 @@ public class DialogAppletExamples extends JDialog implements WindowListener, Act
 
     //---------------------------------
     private String[] datnamExampleApplet;
-    private Fenster callback;
+    private MainWindow callback;
     private JList<String> list;
     //---------------------------------
 
-    public DialogAppletExamples(String[] datnamExampleApplet, Fenster callback) {
+    public DialogAppletExamples(String[] datnamExampleApplet, MainWindow callback) {
         super.setModal(true);
         try {
             @SuppressWarnings("deprecation")

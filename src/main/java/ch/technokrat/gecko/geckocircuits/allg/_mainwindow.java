@@ -13,40 +13,34 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
-
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
-import ch.technokrat.gecko.geckocircuits.circuit.NetListContainer;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
-import ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern;
+import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern.SimulationStatus;
-import ch.technokrat.gecko.geckocircuits.circuit.SolverSettings;
-import ch.technokrat.gecko.geckocircuits.control.DataSaver;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
+import ch.technokrat.gecko.geckocircuits.control.DataSaver;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
-public final class SimulationRunner {
+public final class _mainwindow {
 
-    final MainWindow _mainwindow;
+    final MainWindow _fenster;
     final SchematicEditor2 _se;
     public SimulationsKern simKern;
     private NetListContainer nlContainer;
 
-    public SimulationRunner(final MainWindow mainwindow, final SchematicEditor2 schematicEntry) {
-        _mainwindow = mainwindow;
+    public _mainwindow(final MainWindow fenster, final SchematicEditor2 schematicEntry) {
+        _fenster = fenster;
         _se = schematicEntry;
     }
 
     public void startCalculation(boolean createNewSimThread, SolverSettings solverSettings) throws Exception {
         boolean getAnfangsbedVomDialogfenster = true;
-        _mainwindow.setMenuDuringSimulation(true, false);
+        _fenster.setMenuDuringSimulation(true, false);
 
         simKern = new SimulationsKern();
         double tSTART = 0, tAktuell = tSTART;
@@ -88,13 +82,13 @@ public final class SimulationRunner {
 
     void continueCalculation(final boolean createNewSimThread, final SolverSettings solverSettings) throws Exception {
         boolean getAnfangsbedVomDialogfenster = false;
-        _mainwindow.setMenuDuringSimulation(true, false);
+        _fenster.setMenuDuringSimulation(true, false);
 
         double tAktuell = simKern.getZeitAktuell();  // da sind wir gerade beim Simulieren
         double tSTART = simKern.getTSTART();
         double tEND = simKern.getTEND();
 
-        if (tAktuell >= tEND) {  // naechstes Simulations-Fenster wird geoeffnet
+        if (tAktuell >= tEND) {  // naechstes Simulations-MainWindow wird geoeffnet
             tSTART = tEND;
             tEND += solverSettings._tDURATION.getValue();
             simKern.setZeiten(tSTART, tEND, solverSettings.dt.getValue());
@@ -146,7 +140,7 @@ public final class SimulationRunner {
                 return;
             }
 
-            _mainwindow.setMenuDuringSimulation(false, true);
+            _fenster.setMenuDuringSimulation(false, true);
             NetzlisteCONTROL.globalData.setContainerStatus(ContainerStatus.PAUSED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,7 +150,7 @@ public final class SimulationRunner {
     public void initSim(double dtLoc, double tEND) {
         
         // Ganz am Anfang: t0=0
-        _mainwindow.setMenuDuringSimulation(true, false);
+        _fenster.setMenuDuringSimulation(true, false);
         //
         boolean getAnfangsbedVomDialogfenster = true;
         //---------------------
@@ -180,7 +174,7 @@ public final class SimulationRunner {
                 getAnfangsbedVomDialogfenster, nlContainer, false);
         MainWindow._solverSettings._dt_ALT = dtLoc;
         simKern.initialisiereCONTROLatSimulationStart(dtLoc);  // wird nicht gemacht, wenn 'Continue' aktiviert wird
-        _mainwindow.jtfStatus.setText("Starting Simulation ... ");
+        _fenster.jtfStatus.setText("Starting Simulation ... ");
 
         for (AbstractBlockInterface block : _se.getElementCONTROL()) {
             if (block instanceof ReglerOSZI) {
@@ -216,24 +210,24 @@ public final class SimulationRunner {
 
                 q1 = System.currentTimeMillis();
                 q2 = 0;
-                _mainwindow.jtfStatus.setText("Starting Simulation ... ");
+                _fenster.jtfStatus.setText("Starting Simulation ... ");
 
                 
                 try {
                     simKern.runSimulation();
 
                     if (MainWindow.IS_BRANDED) {
-                        _mainwindow.mItemNew.setEnabled(false);
-                        _mainwindow.mItemOpen.setEnabled(false);
+                        _fenster.mItemNew.setEnabled(false);
+                        _fenster.mItemOpen.setEnabled(false);
                     } else {
-                        _mainwindow.mItemNew.setEnabled(true);
-                        _mainwindow.mItemOpen.setEnabled(true);
+                        _fenster.mItemNew.setEnabled(true);
+                        _fenster.mItemOpen.setEnabled(true);
                     }
-                    _mainwindow.mItemExit.setEnabled(true);
+                    _fenster.mItemExit.setEnabled(true);
                     if (!MainWindow.IS_APPLET) {
-                        _mainwindow.mItemSave.setEnabled(true);
-                        _mainwindow.mItemSaveAs.setEnabled(true);
-                        _mainwindow.mItemSaveView.setEnabled(true);
+                        _fenster.mItemSave.setEnabled(true);
+                        _fenster.mItemSaveAs.setEnabled(true);
+                        _fenster.mItemSaveView.setEnabled(true);
                     }
 
 
@@ -246,7 +240,7 @@ public final class SimulationRunner {
                     } else {
                         MainWindow._solverSettings.inPreCalculationMode = false;
                         try {
-                            _mainwindow.continueCalculation(false);
+                            _fenster.continueCalculation(false);
                         } catch (Throwable error) {                            
                             error.printStackTrace();
                             throw new RuntimeException(error);
@@ -271,12 +265,12 @@ public final class SimulationRunner {
 
         public void endRun() {
             q2 = System.currentTimeMillis();
-            _mainwindow.pauseSimulation();
+            _fenster.pauseSimulation();
             simKern._simulationStatus = SimulationStatus.FINISHED;
             simKern.tearDownOnPause();
-            _mainwindow.jtfStatus.setzeStatusRechenzeit(q2 - q1);
+            _fenster.jtfStatus.setzeStatusRechenzeit(q2 - q1);
             waitForDataSavers();
-            _mainwindow.setMenuDuringSimulation(false, true);
+            _fenster.setMenuDuringSimulation(false, true);
         }
     }
 
@@ -284,7 +278,7 @@ public final class SimulationRunner {
     // SIMULINK-KOPPLUNG  -  Zugriff erfolgt ueber 'GeckoSim.java'
     //
     public void external_init(double tEnd) {
-        _mainwindow.jtfStatus.setText("Starting Simulation ... ");
+        _fenster.jtfStatus.setText("Starting Simulation ... ");
         boolean getAnfangsbedVomDialogfenster = true;  // AB von Simulink abholen!
         simKern = new SimulationsKern();
         double tSTART = 0, tAktuell = tSTART;

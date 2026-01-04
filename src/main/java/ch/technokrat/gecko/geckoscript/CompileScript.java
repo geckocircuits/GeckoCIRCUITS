@@ -15,7 +15,7 @@
 package ch.technokrat.gecko.geckoscript;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoRuntimeException;
 import ch.technokrat.gecko.geckocircuits.control.javablock.AbstractCompileObject;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindowModern;
@@ -81,7 +81,7 @@ public class CompileScript {
     }
     
     static void compile(final ScriptWindow sw) {
-        if(Fenster.IS_APPLET) return;
+        if(MainWindow.IS_APPLET) return;
         
         if(GeckoSim.compiler_toolsjar_missing) {
               JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);

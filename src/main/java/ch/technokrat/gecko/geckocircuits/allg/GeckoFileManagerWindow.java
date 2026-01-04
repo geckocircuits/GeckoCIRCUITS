@@ -121,7 +121,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         lsmExisting.addListSelectionListener(new GeckoFileExistingListSelectionHandler());
 
 
-        List<GeckoFile> existingFiles = Fenster._fileManager.getFilesByExtension(extension);
+        List<GeckoFile> existingFiles = MainWindow._fileManager.getFilesByExtension(extension);
 
         if (alreadyUsedFiles.size() > 0) {
             existingFiles.removeAll(alreadyUsedFiles);
@@ -140,7 +140,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
 
     private void addNewFileToList(final File newSelectedFile) {
         try {
-            GeckoFile newFile = new GeckoFile(newSelectedFile, _newFileType, Fenster.getOpenFileName());
+            GeckoFile newFile = new GeckoFile(newSelectedFile, _newFileType, MainWindow.getOpenFileName());
             addGeckoFileToList(newFile);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);

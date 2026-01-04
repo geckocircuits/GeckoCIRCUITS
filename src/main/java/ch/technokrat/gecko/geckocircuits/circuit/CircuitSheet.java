@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2.MouseMoveMode;
@@ -64,7 +64,7 @@ public class CircuitSheet extends JPanel {
     public void drawCircuitSheet(java.awt.Graphics2D g2d) {
         final JViewport viewport = ((JViewport) this.getParent().getParent());        
         // as applet, the SVG jar is not available!
-        if(!Fenster.IS_APPLET && g2d instanceof SVGGraphics2D) {
+        if(!MainWindow.IS_APPLET && g2d instanceof SVGGraphics2D) {
             return; // don't paint the pixels points for exporting to images!
         }
         Rectangle visibleRect = viewport.getViewRect();
@@ -629,7 +629,7 @@ public class CircuitSheet extends JPanel {
     }
 
     public void doSetVisibleAction() {
-        Fenster._northPanel.removeAll();
-        Fenster._northPanel.revalidate();
+        MainWindow._northPanel.removeAll();
+        MainWindow._northPanel.revalidate();
     }
 }

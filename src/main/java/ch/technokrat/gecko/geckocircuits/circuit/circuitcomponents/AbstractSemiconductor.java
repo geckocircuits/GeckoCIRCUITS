@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
@@ -135,7 +135,7 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
 
                 //if it doesn't exist, try first to see if it is in the same directory as the currently open model file
                 if (!lossFile.exists()) {
-                    final File modelFile = new File(Fenster.getOpenFileName());
+                    final File modelFile = new File(MainWindow.getOpenFileName());
                     final String currentModelDirectory = modelFile.getParent();
                     final String correctedFileName = currentModelDirectory + System.getProperty("file.separator") + parameterValue;
                     lossFile = new File(correctedFileName);

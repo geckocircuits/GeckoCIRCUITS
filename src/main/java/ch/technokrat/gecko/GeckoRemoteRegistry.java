@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class GeckoRemoteRegistry {
             return; // nothing todo - port already enabled!
         }
         try {            
-            remoteAccess = new GeckoCustomRemote(Fenster._scripter);            
+            remoteAccess = new GeckoCustomRemote(MainWindow._scripter);            
             
             GeckoRemoteInterface stub = (GeckoRemoteInterface) UnicastRemoteObject.exportObject(remoteAccess, 0);            
             System.setProperty("java.rmi.server.hostname",_ipAddress);

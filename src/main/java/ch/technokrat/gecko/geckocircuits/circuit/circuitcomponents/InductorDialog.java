@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.circuit.DialogNonLinearity;
 import ch.technokrat.gecko.i18n.GuiFabric;
@@ -91,7 +91,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
                 
             }
         });
-        if (Fenster.INCLUDE_GeckoMAGNETICS) {
+        if (MainWindow.INCLUDE_GeckoMAGNETICS) {
             
             if (jcbLossL.isSelected()) {
                 jbMAG1.setEnabled(true);

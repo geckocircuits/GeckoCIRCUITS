@@ -63,12 +63,12 @@ public class GeckoJavaCompiler {
     };
     private COMPILESTATUS _compileStatus = COMPILESTATUS.NOT_COMPILED;
     //-------------------------------------------------------------------
-    private Fenster gecko;
+    private MainWindow gecko;
 
     public GeckoJavaCompiler() {
     }
 
-    public void setGecko(Fenster gecko) {
+    public void setGecko(MainWindow gecko) {
         this.gecko = gecko;
     }
 
@@ -157,7 +157,7 @@ public class GeckoJavaCompiler {
             appendSourcLine(" * Source created on " + new Date());
             appendSourcLine(" */");
             appendSourcLine("public class " + className + " { ");
-            appendSourcLine("\nprivate static Fenster GECKO;\n");
+            appendSourcLine("\nprivate static MainWindow GECKO;\n");
             appendSourcLine("// static variables: ");
             //-------------
             reader = new BufferedReader(new StringReader(_javaStaticVariables));
@@ -171,7 +171,7 @@ public class GeckoJavaCompiler {
                 appendSourcLine("\t\t" + strLine);
             }
             appendSourcLine("}");
-            appendSourcLine("    public static void _setGecko (Fenster gecko) throws Exception { GECKO=gecko; }");
+            appendSourcLine("    public static void _setGecko (MainWindow gecko) throws Exception { GECKO=gecko; }");
             appendSourcLine("    public static void run_script () throws Exception {");
             appendSourcLine("// Your code here:");
             appendSourcLine("// ****************** your code segment **********************");
@@ -391,7 +391,7 @@ public class GeckoJavaCompiler {
 
     public void test() {
         this.setSourceCode("double cc=5;\nSystem.out.println(\"javaSourceCode --> \"+cc+\"   xx=\"+GeckoSim.xx);\n");
-        this.setImportCode("import ch.technokrat.gecko.GeckoSim;\nimport ch.technokrat.gecko.geckocircuits.allg.Fenster;\n");
+        this.setImportCode("import ch.technokrat.gecko.GeckoSim;\nimport ch.technokrat.gecko.geckocircuits.allg.MainWindow;\n");
         this.setStaticInitCode("//staticCode");
         //-------
         try {

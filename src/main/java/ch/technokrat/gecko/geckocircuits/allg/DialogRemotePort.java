@@ -54,13 +54,13 @@ public final class DialogRemotePort extends javax.swing.JDialog {
         final boolean isLocalhost = "localhost".equals(selectedIP) || "127.0.0.1".equals(selectedIP);
         _jRadioButtonLocalHostOnly.setSelected(isLocalhost);
         _jRadioButtonNetwork.setSelected(!isLocalhost);
-        if (Fenster._mmf_access == null) {
+        if (MainWindow._mmf_access == null) {
             _jCheckBoxEnableMMF.setSelected(false);
         } else {
-            _jCheckBoxEnableMMF.setSelected(Fenster._mmf_access.isEnabled());
-            if (Fenster._mmf_access.isEnabled()) {
-                _jTextFieldMMFile.setText(Fenster._mmf_access.getFile());
-                _jSpinnerMMFSize.setValue((int)(Fenster._mmf_access.getFileSize() / 1024 / 1024));
+            _jCheckBoxEnableMMF.setSelected(MainWindow._mmf_access.isEnabled());
+            if (MainWindow._mmf_access.isEnabled()) {
+                _jTextFieldMMFile.setText(MainWindow._mmf_access.getFile());
+                _jSpinnerMMFSize.setValue((int)(MainWindow._mmf_access.getFileSize() / 1024 / 1024));
             }
         }
         checkButtons();
@@ -624,27 +624,27 @@ public final class DialogRemotePort extends javax.swing.JDialog {
     private void processUserInputMMF() {
         try {
             if (_jCheckBoxEnableMMF.isSelected()) { //if user wants to enable access
-                if (Fenster._mmf_access == null) {
-                    Fenster._mmf_access = new GeckoCustomMMF(Fenster._scripter);
+                if (MainWindow._mmf_access == null) {
+                    MainWindow._mmf_access = new GeckoCustomMMF(MainWindow._scripter);
                 }
                 final String fileName = _jTextFieldMMFile.getText();
                 final long fileSize = (Integer) _jSpinnerMMFSize.getValue() * 1024l * 1024l;
-                if (!Fenster._mmf_access.isEnabled()) {
-                    Fenster._mmf_access.enableAccess(fileName, fileSize);
+                if (!MainWindow._mmf_access.isEnabled()) {
+                    MainWindow._mmf_access.enableAccess(fileName, fileSize);
                 } else {
-                    final String existingFile = Fenster._mmf_access.getFile();
-                    final long existingSize = Fenster._mmf_access.getFileSize();
+                    final String existingFile = MainWindow._mmf_access.getFile();
+                    final long existingSize = MainWindow._mmf_access.getFileSize();
                     //check if access already enabled with the same parameters
                     if ((!fileName.equals(existingFile)) && fileSize != existingSize) {
-                        Fenster._mmf_access.disableAccess();
-                        Fenster._mmf_access.enableAccess(fileName, fileSize);
+                        MainWindow._mmf_access.disableAccess();
+                        MainWindow._mmf_access.enableAccess(fileName, fileSize);
                     }
                 }
                 checkStatusMMF();
             } else {
-                if (Fenster._mmf_access != null) {
-                    if (Fenster._mmf_access.isEnabled()) {
-                        Fenster._mmf_access.disableAccess();
+                if (MainWindow._mmf_access != null) {
+                    if (MainWindow._mmf_access.isEnabled()) {
+                        MainWindow._mmf_access.disableAccess();
                     }
                 }
                 checkStatusMMF();
@@ -656,10 +656,10 @@ public final class DialogRemotePort extends javax.swing.JDialog {
     }
     
     private void checkStatusMMF() {
-        if (Fenster._mmf_access == null) {
+        if (MainWindow._mmf_access == null) {
             jTextAreaMMFStatus.setText("Status: access via m.m.f. is not enabled.");
         } else {
-            jTextAreaMMFStatus.setText(Fenster._mmf_access.getStatus());
+            jTextAreaMMFStatus.setText(MainWindow._mmf_access.getStatus());
         }
     }
 

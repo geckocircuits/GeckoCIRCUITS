@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TerminalCircu
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.DialogSubCktSettings;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import ch.technokrat.gecko.i18n.GuiFabric;
@@ -55,7 +55,7 @@ public class SubCircuitSheet extends CircuitSheet {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Fenster win = SchematicEditor2.Singleton.win;                
+                MainWindow win = SchematicEditor2.Singleton.win;                
                 SchematicEditor2.Singleton.setNewVisibleCircuitSheet(_subBlock.getParentCircuitSheet());
             }
         });
@@ -143,12 +143,12 @@ public class SubCircuitSheet extends CircuitSheet {
         super.doSetVisibleAction();    
         _nameLabel = new JLabel();
         setNameLabelText();
-        Fenster._northPanel.add(_nameLabel);
-        Fenster._northPanel.add(_upButton);
-        Fenster._northPanel.add(_settingsButton);
-        Fenster._northPanel.add(_newTerminalButton);
-        Fenster._northPanel.add(_infoButton);
-        Fenster._northPanel.revalidate();
+        MainWindow._northPanel.add(_nameLabel);
+        MainWindow._northPanel.add(_upButton);
+        MainWindow._northPanel.add(_settingsButton);
+        MainWindow._northPanel.add(_newTerminalButton);
+        MainWindow._northPanel.add(_infoButton);
+        MainWindow._northPanel.revalidate();
         //this.add(upButton);        
     }
     

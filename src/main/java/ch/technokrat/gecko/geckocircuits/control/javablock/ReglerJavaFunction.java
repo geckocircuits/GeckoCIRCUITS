@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.SystemOutputRedirect;
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -342,7 +342,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             for (String hash : _additionalFilesHashKeys) {
                 hashValue = Long.valueOf(hash);
                 try {
-                    file = Fenster._fileManager.getFile(hashValue);
+                    file = MainWindow._fileManager.getFile(hashValue);
                     _javaBlock._additionalSourceFiles.add(file);
                 } catch (Exception e) {
                     fileMissing = true;
@@ -539,7 +539,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         for (GeckoFile newFile : newFiles) {
             _javaBlock._additionalSourceFiles.add(newFile);
             newFile.setUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.addFile(newFile);
+            MainWindow._fileManager.addFile(newFile);
         }
         _codeWindow.addNewExtraFiles(newFiles);
     }
@@ -549,7 +549,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         for (GeckoFile removedFile : filesToRemove) {
             _javaBlock._additionalSourceFiles.remove(removedFile);
             removedFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(removedFile);
+            MainWindow._fileManager.maintain(removedFile);
         }
 
         if (_codeWindow != null) {

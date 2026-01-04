@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
@@ -96,7 +96,7 @@ implements Operationable, Nonlinearable {
             throw new IllegalAccessException("Non-linear characteristic file must end with extension " + getNonlinearFileEnding());
         } else {            
             try {                
-                GeckoFile newFile = new GeckoFile(file, GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());                
+                GeckoFile newFile = new GeckoFile(file, GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());                
                 ArrayList<GeckoFile> newFileList = new ArrayList<GeckoFile>();                
                 newFileList.add(newFile);                
                 addFiles(newFileList);
@@ -116,7 +116,7 @@ implements Operationable, Nonlinearable {
         //in this case there should only be one file to remove
         if (filesToRemove.size() > 0 && nonLinearChar != null) {
             nonLinearChar.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(nonLinearChar);
+            MainWindow._fileManager.maintain(nonLinearChar);
             nonLinearChar = null;
         }
     }    
@@ -130,12 +130,12 @@ implements Operationable, Nonlinearable {
                 double[][] nonLin = readNonLinearCharacteristicFromFile(newNonLin);
                 if (nonLinearChar != null) {
                     nonLinearChar.removeUser(getUniqueObjectIdentifier());
-                    Fenster._fileManager.maintain(nonLinearChar);
+                    MainWindow._fileManager.maintain(nonLinearChar);
                 }
                 nonLinearChar = newNonLin;
                 nonlinearData = nonLin;
                 nonLinearChar.setUser(getUniqueObjectIdentifier());
-                Fenster._fileManager.addFile(nonLinearChar);
+                MainWindow._fileManager.addFile(nonLinearChar);
                 nonLinearLastModified = nonLinearChar.checkModificationTimeStamp();
             } catch (NumberFormatException e) {
                 final String errorMessage = "Non-linear characteristic file format error: \n" + e.getMessage();
@@ -224,7 +224,7 @@ implements Operationable, Nonlinearable {
                 File nonLinFile = new File(characteristicFileName);                
                 //if it doesn't exist, try first to see if it is in the same directory as the currently open model file
                 if (!nonLinFile.exists()) {
-                    final File modelFile = new File(ch.technokrat.gecko.geckocircuits.allg.Fenster.getOpenFileName());
+                    final File modelFile = new File(ch.technokrat.gecko.geckocircuits.allg.MainWindow.getOpenFileName());
                     final String currentModelDirectory = modelFile.getParent();
                     final String nonLinFileName = currentModelDirectory + System.getProperty("file.separator") + characteristicFileName;
                     nonLinFile = new File(nonLinFileName);                    
@@ -342,13 +342,13 @@ implements Operationable, Nonlinearable {
         nonlinearData = data;
         if (nonLinearChar != null) {
             nonLinearChar.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(nonLinearChar);
+            MainWindow._fileManager.maintain(nonLinearChar);
         }
         try {
             File newFile = writeNonLinearCharacteristicToFile(nonlinearData, new File(newInternalFileName));
-            nonLinearChar = new GeckoFile(newFile, GeckoFile.StorageType.INTERNAL, Fenster.getOpenFileName());
+            nonLinearChar = new GeckoFile(newFile, GeckoFile.StorageType.INTERNAL, MainWindow.getOpenFileName());
             nonLinearChar.setUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.addFile(nonLinearChar);
+            MainWindow._fileManager.addFile(nonLinearChar);
             nonLinearLastModified = nonLinearChar.checkModificationTimeStamp();
         } catch (Exception e) {
             final String errorMessage = "Error writing non-linear characteristic file in " + getStringID() + "\n" + e.getMessage();
@@ -474,7 +474,7 @@ implements Operationable, Nonlinearable {
         if (_isNonlinear.getValue()) {
             if (initNonLinFromFile) {
                 try {
-                    nonLinearChar = Fenster._fileManager.getFile(nonLinearCharHashValueForInit);
+                    nonLinearChar = MainWindow._fileManager.getFile(nonLinearCharHashValueForInit);
                     updateNonLinearCharacteristic();
                 } catch (FileNotFoundException e) {
                     createNewInitialInternalFile();                    
@@ -510,7 +510,7 @@ implements Operationable, Nonlinearable {
         File tmpFile = new File(getStringID() + "_" + randByte + getNonlinearFileEnding());
         try {
             byte[] fileContents = writeNonLinearCharacteristicToBytes();
-            GeckoFile newFile = new GeckoFile(tmpFile, Fenster.getOpenFileName(), fileContents);
+            GeckoFile newFile = new GeckoFile(tmpFile, MainWindow.getOpenFileName(), fileContents);
             ArrayList<GeckoFile> newFiles = new ArrayList<GeckoFile>();
             newFiles.add(newFile);
             addFiles(newFiles);

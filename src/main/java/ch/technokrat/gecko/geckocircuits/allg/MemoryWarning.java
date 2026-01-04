@@ -18,12 +18,12 @@ package ch.technokrat.gecko.geckocircuits.allg;
  * @author andreas
  */
 public class MemoryWarning extends javax.swing.JDialog {
-    private final Fenster _fenster;
+    private final MainWindow _fenster;
 
     /**
      * Creates new form MemoryWarning
      */
-    public MemoryWarning(java.awt.Frame parent, boolean modal, final Fenster fenster) {
+    public MemoryWarning(java.awt.Frame parent, boolean modal, final MainWindow fenster) {
         super(parent, modal);
         setTitle("Memory usage warning!");
         this.setLocationByPlatform(true);

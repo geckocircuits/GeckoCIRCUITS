@@ -68,7 +68,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
-public final class Fenster extends JFrame implements WindowListener, ActionListener, ComponentListener {
+public final class MainWindow extends JFrame implements WindowListener, ActionListener, ComponentListener {
     
 
     int _simMenuIndex = 2; // simulation menu is third in bar.
@@ -118,7 +118,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     public static GeckoFileManager _fileManager = null;
     public static ExternalGeckoCustom _external = null;
     public static GeckoCustomMMF _mmf_access = null;
-    public final SimulationRunner _simRunner;
+    public final _mainwindow _simRunner;
     public final KeyAdapter keyAdapter;
     private static final String spTitleX = "  -  ";
     public static boolean IS_BRANDED = false;
@@ -172,16 +172,16 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         this.datnamExampleApplet = datnamExampleApplet;
     }
 
-    public Fenster() {
+    public MainWindow() {
 
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
         } catch (InstantiationException ex) {
-            Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
         }
         try {
@@ -191,7 +191,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } catch (Exception e) {
         }
 
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             this.setTitle("*** Applet-Mode *** GeckoCIRCUITS ***");
         } else {
             this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
@@ -210,7 +210,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
         _se = new SchematicEditor2(this);
 
-        _simRunner = new SimulationRunner(this, _se);
+        _simRunner = new _mainwindow(this, _se);
 
         sea = new SchematicComponentSelection2();
         _se.setSchematischeEingabeAuswahl(sea);
@@ -232,7 +232,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         _fileManager = new GeckoFileManager();
         //default file for unsaved work
         String jarPath = GetJarPath.getJarFilePath();
-        if (!IS_BRANDED && !Fenster.IS_APPLET) {
+        if (!IS_BRANDED && !MainWindow.IS_APPLET) {
             if (jarPath != null) {
                 File jarFile = new File(jarPath);
                 GlobalFilePathes.DATNAM = jarFile.getParent() + System.getProperty("file.separator") + "unsavedFile.ipes";
@@ -243,7 +243,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             GlobalFilePathes.DATNAM = "Applet";
         }
 
-        if (!Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
+        if (!MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
             //StartupWindow.fabricUnBlocking();
         }
 
@@ -279,7 +279,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             mItemSaveApplet.setEnabled(false);
         }
 
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             mItemSaveApplet.setEnabled(false);
         }
 
@@ -290,7 +290,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         mItemExit.setActionCommand("Exit");
         mItemExit.addActionListener(this);
 
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             mItemSave.setEnabled(false);
             mItemSaveAs.setEnabled(false);
             mItemSaveView.setEnabled(false);
@@ -506,7 +506,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         JMenuItem menueGroesse = GuiFabric.getJMenuItem(I18nKeys.WORKSHEET_SIZE);
         menueGroesse.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                DialogSheetSize.fabric(Fenster.this, _se._visibleCircuitSheet._worksheetSize);
+                DialogSheetSize.fabric(MainWindow.this, _se._visibleCircuitSheet._worksheetSize);
             }
         });
 
@@ -696,7 +696,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
         helpMenu.add(mItemUpdate);
 
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             mItemFeedback.setEnabled(false);
             //mItemUpdate.setEnabled(false);
         }
@@ -745,7 +745,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         } else {
             mItemEMC.setEnabled(false);
         }
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             mItem3DTherm.setEnabled(false);
             mItemMagnet.setEnabled(false);
             mItemEMC.setEnabled(false);
@@ -829,9 +829,9 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     }
 
     // is called after the window dimensions are known:
-    public void aktualisiereDividerSplitPane(int breiteFenster) {
+    public void aktualisiereDividerSplitPane(int breiteMainWindow) {
         if (split != null) {
-            split.setDividerLocation(breiteFenster - seaBREITE);
+            split.setDividerLocation(breiteMainWindow - seaBREITE);
         }
     }
 
@@ -905,7 +905,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         try {
             ProjectData datLK = new ProjectData(
                     getSize(),
-                    Fenster.optimizerParameterData,
+                    MainWindow.optimizerParameterData,
                     uniqueFileID, _scripter, _fileManager, _se, _solverSettings);
             //------------
             // Plain-Test variant in ASCII -->
@@ -984,7 +984,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     public void createNewFile() {
         optimizerParameterData.clear();
-        Fenster.aktuellerDateiName = UNTITLED;
+        MainWindow.aktuellerDateiName = UNTITLED;
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
         sea._typElement = null;
         _se.resetCircuitSheetsForNewFile();
@@ -1015,7 +1015,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         try {
             openFile(fileChooser.getFileWithCheckedEnding().getAbsolutePath());
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1149,7 +1149,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             //========================================================================
             if (befehl.equals("New")) {
                 _se.setConnectorTestMode(false);
-                if (Fenster.IS_APPLET) {
+                if (MainWindow.IS_APPLET) {
                     this.createNewFile();
                 } else {
                     // 'createNewFile()' is optionally called from the dialog
@@ -1178,7 +1178,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 }
             } else if (befehl.equals("Open")) {
                 _se.setConnectorTestMode(false);
-                if (Fenster.IS_APPLET) {
+                if (MainWindow.IS_APPLET) {
                     new DialogAppletExamples(datnamExampleApplet, this);
                 } else {
                     if (_se.getZustandGeaendert()) {
@@ -1406,7 +1406,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                             throw new FileNotFoundException("File not found " + fileName);
                         }                        
                     } catch(Throwable error) {
-                        JOptionPane.showMessageDialog(Fenster.this,
+                        JOptionPane.showMessageDialog(MainWindow.this,
                             "Error during file import : " + fileName + "\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }                                        
             } else if (befehl.equals("Export")) {
@@ -1591,7 +1591,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             this.setAnsicht();
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Fenster.class
+            Logger.getLogger(MainWindow.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1614,7 +1614,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             mItemOpen.setEnabled(true);
         }
         mItemExit.setEnabled(true);
-        if (!Fenster.IS_APPLET) {
+        if (!MainWindow.IS_APPLET) {
             mItemSave.setEnabled(true);
             mItemSaveAs.setEnabled(true);
             mItemSaveView.setEnabled(true);
@@ -1658,7 +1658,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                 mItemOpen.setEnabled(true);
             }
             mItemExit.setEnabled(true);
-            if (!Fenster.IS_APPLET) {
+            if (!MainWindow.IS_APPLET) {
                 mItemSave.setEnabled(true);
                 mItemSaveAs.setEnabled(true);
                 mItemSaveView.setEnabled(true);
@@ -1688,7 +1688,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         JMenu simMenu = _menuBar.getMenu(_simMenuIndex);
         simMenu.removeAll();
         //---------------
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             this.setSimulationMenuOK(simMenu);
             mItemSaveApplet.setEnabled(false);
             return;
@@ -1776,7 +1776,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     public void schliesseProgramm() {
 
-        if (Fenster.IS_APPLET && !IS_BRANDED) {
+        if (MainWindow.IS_APPLET && !IS_BRANDED) {
             this.setVisible(false);
             return;
         }
@@ -1801,14 +1801,14 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             return;
         }
 
-        if (!Fenster.IS_APPLET && !IS_BRANDED) {
+        if (!MainWindow.IS_APPLET && !IS_BRANDED) {
             GeckoSim.saveProperties();
         }
         if (_se.getZustandGeaendert()) {
             int returnOption = JOptionPane.showConfirmDialog(
                     this,
                     "The model has changed since last save to the model\nfile. Do you like to save your model "
-                    + "to the file:\n" + Fenster.aktuellerDateiName + "\nbefore exiting GeckoCIRCUITS?",
+                    + "to the file:\n" + MainWindow.aktuellerDateiName + "\nbefore exiting GeckoCIRCUITS?",
                     "Warning: Exit GeckoCIRCUITS without saving!",
                     JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -1856,7 +1856,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     void copyFile(final File zipFile, final File newFile) {
 
-        final ProgressMonitor progressMonitor = new ProgressMonitor(Fenster.this, "Saving applet...", "Please wait.", 0, 100);
+        final ProgressMonitor progressMonitor = new ProgressMonitor(MainWindow.this, "Saving applet...", "Please wait.", 0, 100);
 
         class Task extends SwingWorker<Void, Void> {
 
@@ -1897,7 +1897,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
                     zos.putNextEntry(new ZipEntry("brand.ipes"));
                     BufferedOutputStream writer = new BufferedOutputStream(zos);
-                    Fenster.this.saveFileAsApplet(writer);
+                    MainWindow.this.saveFileAsApplet(writer);
 
                     zos.close();
                     zipSrc.close();
@@ -1908,13 +1908,13 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                             progress++;
                             setProgress(progress);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(Fenster.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
 
                 } catch (IOException ex) {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(Fenster.this,
+                    JOptionPane.showMessageDialog(MainWindow.this,
                             "Could not write to output file: " + newFile.getAbsolutePath() + " \n Error-message: " + ex.getMessage(),
                             "Warning",
                             JOptionPane.WARNING_MESSAGE);
@@ -1950,7 +1950,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
             ProjectData datLK = new ProjectData(
                     this.getSize(),
-                    Fenster.optimizerParameterData,
+                    MainWindow.optimizerParameterData,
                     0, _scripter, _fileManager, _se, _solverSettings);
             //------------
             // Plain-Test variant in ASCII -->
@@ -2038,7 +2038,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
                         openFile(dateiName);
 
                     } catch (FileNotFoundException ex) {
-                        Logger.getLogger(Fenster.class
+                        Logger.getLogger(MainWindow.class
                                 .getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -2131,7 +2131,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         // GZIP format (March 2009) - completely new! -->
         try {
             GZIPInputStream in1 = null;
-            if (Fenster.IS_APPLET) {
+            if (MainWindow.IS_APPLET) {
                 // Fix for Java 21: use URL constructor instead of URI.toURL()
                 URL fileUrl = new URL(GeckoSim.urlApplet, dateiName);
                 in1 = new GZIPInputStream(fileUrl.openStream());

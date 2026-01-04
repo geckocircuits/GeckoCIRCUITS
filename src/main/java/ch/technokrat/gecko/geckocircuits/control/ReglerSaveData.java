@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.Enabled;
@@ -167,7 +167,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     private String findInitialFile() {        
-        if (!Fenster.IS_APPLET && GlobalFilePathes.DATNAM != null) {
+        if (!MainWindow.IS_APPLET && GlobalFilePathes.DATNAM != null) {
             File ipesFile = new File(GlobalFilePathes.DATNAM);
             String parentDirectory = ipesFile.getParent();
             int testCounter = 1;

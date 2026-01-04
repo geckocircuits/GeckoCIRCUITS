@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import java.io.File;
 import java.net.MalformedURLException;
@@ -53,7 +53,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
     private void extendClassPath() {
 
 
-        if (!Fenster.IS_APPLET) {
+        if (!MainWindow.IS_APPLET) {
             final File tmpfile = new File(GlobalFilePathes.DATNAM);
             final File file = new File(tmpfile.getAbsolutePath());
             final File directory = file.getParentFile();

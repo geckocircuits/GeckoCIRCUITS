@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.GeckoFileable;
@@ -163,7 +163,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
     public void removeLossFile() {
         if (lossFile != null) {
             lossFile.removeUser(_parent.getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(lossFile);
+            MainWindow._fileManager.maintain(lossFile);
         }
 
         datnamGemesseneVerluste = GlobalFilePathes.DATNAM_NOT_DEFINED;
@@ -179,7 +179,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         try {
             GZIPInputStream in1 = new GZIPInputStream(newLossFile.getInputStream());
             /*
-             * if (Fenster.IS_APPLET) { in1 = new GZIPInputStream((new URL(GeckoSim.urlApplet, fyomu)).openStream()); } else { in1 =
+             * if (MainWindow.IS_APPLET) { in1 = new GZIPInputStream((new URL(GeckoSim.urlApplet, fyomu)).openStream()); } else { in1 =
              * new GZIPInputStream(new FileInputStream(fyomu)); }
              */
             BufferedReader in = new BufferedReader(new InputStreamReader(in1));
@@ -252,11 +252,11 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         //remove old loss file, set new
         if (lossFile != null) {
             lossFile.removeUser(_parent.getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(lossFile);
+            MainWindow._fileManager.maintain(lossFile);
         }
         newLossFile.setUser(_parent.getUniqueObjectIdentifier());
         lossFile = newLossFile;
-        Fenster._fileManager.addFile(lossFile);
+        MainWindow._fileManager.addFile(lossFile);
                 
         return true;
     }
@@ -264,7 +264,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
     public void initLossFile() {
         if (lossFileHashValue != 0) {            
             try {                
-                GeckoFile detailedLossFile = Fenster._fileManager.getFile(lossFileHashValue);
+                GeckoFile detailedLossFile = MainWindow._fileManager.getFile(lossFileHashValue);
                 leseDetailVerlusteVonDatei(detailedLossFile);
             } catch (FileNotFoundException e) {
                 //this means this is probably an old .ipes file without a valid hash key for the GeckoFile (i.e. saved in an older version)
@@ -280,17 +280,17 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         GeckoFile file;
         //first assume given path is absolute
         try {
-            file = new GeckoFile(new File(fyomu), GeckoFile.StorageType.INTERNAL, Fenster.getOpenFileName());
+            file = new GeckoFile(new File(fyomu), GeckoFile.StorageType.INTERNAL, MainWindow.getOpenFileName());
             System.out.println("try to load file " + file);
             leseDetailVerlusteVonDatei(file);
             _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.DETAILED);
         } catch (FileNotFoundException e) { //if not, see if it is a relative path to the .ipes file location
-            String modelFilePath = Fenster.getOpenFileName();
+            String modelFilePath = MainWindow.getOpenFileName();
             if(!modelFilePath.equals("Untitled")) {
                 modelFilePath = modelFilePath.substring(0, modelFilePath.lastIndexOf(File.separator));
             String newPath = modelFilePath + File.separator + fyomu;
             try {
-                file = new GeckoFile(new File(newPath), GeckoFile.StorageType.INTERNAL, Fenster.getOpenFileName());
+                file = new GeckoFile(new File(newPath), GeckoFile.StorageType.INTERNAL, MainWindow.getOpenFileName());
                 _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.SIMPLE);
             } catch (FileNotFoundException e2) {
                 System.err.println("Loss file " + fyomu + " for component " + _parent.getStringID() + " not found!");
@@ -337,7 +337,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             out.flush();
             out.close();
             //blocks using this loss file can also see the changes
-            newLossFile = new GeckoFile(lossesFile, storageType, Fenster.getOpenFileName());
+            newLossFile = new GeckoFile(lossesFile, storageType, MainWindow.getOpenFileName());
             newLossFile.setUser(_parent.getUniqueObjectIdentifier());
             datnamGemesseneVerluste = fkaku;
         } catch (Exception e) {
@@ -347,10 +347,10 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             //check first if a loss file already exists, and remove it if it does
             if (lossFile != null) {
                 lossFile.removeUser(_parent.getUniqueObjectIdentifier());
-                Fenster._fileManager.maintain(lossFile);
+                MainWindow._fileManager.maintain(lossFile);
             }
             lossFile = newLossFile;
-            Fenster._fileManager.addFile(lossFile);
+            MainWindow._fileManager.addFile(lossFile);
         }
 
         return true;
@@ -363,7 +363,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
      */
     public boolean pruefeLinkAufHalbleiterDatei() {
 
-        if (Fenster.IS_APPLET) {
+        if (MainWindow.IS_APPLET) {
             return false;
         }
 
@@ -374,7 +374,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         if (lossFile.getStorageType() == GeckoFile.StorageType.EXTERNAL) {
             return new File(lossFile.getCurrentAbsolutePath()).exists();
         } else {
-            for (GeckoFile gFile : Fenster._fileManager.getFilesByExtension(".scl")) {
+            for (GeckoFile gFile : MainWindow._fileManager.getFilesByExtension(".scl")) {
                 if (gFile.getCurrentAbsolutePath().equals(lossFile.getCurrentAbsolutePath())) {
                     return true;
                 }

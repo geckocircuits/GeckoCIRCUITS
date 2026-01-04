@@ -39,7 +39,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
     public DialogFindInModel(java.awt.Frame parent, boolean modal, SchematicEditor2 se) {
         super(parent, modal);
         initComponents();
-        if(! Fenster.IS_APPLET) {
+        if(! MainWindow.IS_APPLET) {
             this.setAlwaysOnTop(true);
         }
         
