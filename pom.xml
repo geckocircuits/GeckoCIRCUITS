@@ -142,7 +142,7 @@
             <target>21</target>
             <release>21</release>
             <compilerArgs>
-              <arg>-Xlint:none</arg>
+              <arg>-Xlint:all</arg>
             </compilerArgs>
           </configuration>
         </plugin>
@@ -173,9 +173,27 @@
                </goals>
              </execution>
            </executions>
-         </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
+          </plugin>
+          <!-- SpotBugs for bug detection -->
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>4.8.6.6</version>
+          </plugin>
+          <!-- Checkstyle for style checking -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.5.0</version>
+          </plugin>
+          <!-- PMD for code quality -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.25.0</version>
+          </plugin>
+         <plugin>
+           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
           <configuration>
             <archive>
