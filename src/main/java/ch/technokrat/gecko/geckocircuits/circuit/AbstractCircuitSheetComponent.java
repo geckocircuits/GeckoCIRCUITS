@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.control.Point;
@@ -175,13 +175,13 @@ public abstract class AbstractCircuitSheetComponent {
     }
 
     public void exportASCII(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
+        ProjectData.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
 
         if (getParentCircuitSheet() instanceof SubCircuitSheet) {
-            DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"),
+            ProjectData.appendAsString(ascii.append("\nparentSheetIdentifier"),
                     ((SubCircuitSheet) _parentCircuitSheet)._subBlock.getUniqueObjectIdentifier());
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"), (long) 0);
+            ProjectData.appendAsString(ascii.append("\nparentSheetIdentifier"), (long) 0);
         }
 
     }

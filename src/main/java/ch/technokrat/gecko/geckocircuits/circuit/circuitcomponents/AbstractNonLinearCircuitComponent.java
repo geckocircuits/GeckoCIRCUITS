@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
@@ -443,12 +443,12 @@ implements Operationable, Nonlinearable {
 
     @Override
     public void exportAsciiIndividual(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nnonlinX"), nonlinearData[0]);
-        DatenSpeicher.appendAsString(ascii.append("\nnonlinY"), nonlinearData[1]);
+        ProjectData.appendAsString(ascii.append("\nnonlinX"), nonlinearData[0]);
+        ProjectData.appendAsString(ascii.append("\nnonlinY"), nonlinearData[1]);
         if (nonLinearChar != null) {
-            DatenSpeicher.appendAsString(ascii.append("\nnonLinearCharHashValue"), nonLinearChar.getHashValue());
+            ProjectData.appendAsString(ascii.append("\nnonLinearCharHashValue"), nonLinearChar.getHashValue());
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nnonLinearCharHashValue"), 0);
+            ProjectData.appendAsString(ascii.append("\nnonLinearCharHashValue"), 0);
         }
     }
 

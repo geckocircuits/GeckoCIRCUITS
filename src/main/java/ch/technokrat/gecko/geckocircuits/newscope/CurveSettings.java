@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 /**
@@ -42,15 +42,15 @@ final class CurveSettings {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ncurveColor"), _curveColor.code());
-        DatenSpeicher.appendAsString(ascii.append("\ncurveLineStyle"), _curveLineStyle.code());
-        DatenSpeicher.appendAsString(ascii.append("\nshowCurveSymbols"), _curveShowPtSymbols);
-        DatenSpeicher.appendAsString(ascii.append("\nsymbolColor"), _crvSymbFarbe.code());
-        DatenSpeicher.appendAsString(ascii.append("\nsymbolShape"), _crvSymbShape.code());
-        DatenSpeicher.appendAsString(ascii.append("\ncrvTransparency"), _crvTransparency);
-        DatenSpeicher.appendAsString(ascii.append("\nfillDigitalColor"), _crvFillingDigColor.code());
-        DatenSpeicher.appendAsString(ascii.append("\nisFillDigitalCurves"), _crvFillDigitalCurves);
-        DatenSpeicher.appendAsString(ascii.append("\nlineType"), _lineType.code());
+        ProjectData.appendAsString(ascii.append("\ncurveColor"), _curveColor.code());
+        ProjectData.appendAsString(ascii.append("\ncurveLineStyle"), _curveLineStyle.code());
+        ProjectData.appendAsString(ascii.append("\nshowCurveSymbols"), _curveShowPtSymbols);
+        ProjectData.appendAsString(ascii.append("\nsymbolColor"), _crvSymbFarbe.code());
+        ProjectData.appendAsString(ascii.append("\nsymbolShape"), _crvSymbShape.code());
+        ProjectData.appendAsString(ascii.append("\ncrvTransparency"), _crvTransparency);
+        ProjectData.appendAsString(ascii.append("\nfillDigitalColor"), _crvFillingDigColor.code());
+        ProjectData.appendAsString(ascii.append("\nisFillDigitalCurves"), _crvFillDigitalCurves);
+        ProjectData.appendAsString(ascii.append("\nlineType"), _lineType.code());
     }
 
     void importASCII(final TokenMap curveMap) {

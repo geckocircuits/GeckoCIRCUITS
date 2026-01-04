@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import java.awt.Graphics2D;
@@ -72,7 +72,7 @@ public abstract class AbstractCurve implements LineSettable, SymbolSettable {
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
         _curveSettings.exportIndividualCONTROL(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\naxisConnection"), _axisConnection.getCode());
+        ProjectData.appendAsString(ascii.append("\naxisConnection"), _axisConnection.getCode());
     }
 
     public AxisConnection getAxisConnection() {

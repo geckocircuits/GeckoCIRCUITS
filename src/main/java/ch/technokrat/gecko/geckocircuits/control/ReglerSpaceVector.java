@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.SpaceVectorCalculator;
@@ -96,13 +96,13 @@ public final class ReglerSpaceVector extends RegelBlock {
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nscale1"), ((Number) svd.jSpinnerLength1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale2"), ((Number) svd.jSpinnerLength2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale3"), ((Number) svd.jSpinnerLength3.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale1"), ((Number) svd.jSpinnerLength1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale2"), ((Number) svd.jSpinnerLength2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale3"), ((Number) svd.jSpinnerLength3.getValue()).toString());
 
-        DatenSpeicher.appendAsString(ascii.append("\naverage1"), ((Number) svd.jSpinnerAverage1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage2"), ((Number) svd.jSpinnerAverage2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage3"), ((Number) svd.jSpinnerAverage3.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage1"), ((Number) svd.jSpinnerAverage1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage2"), ((Number) svd.jSpinnerAverage2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage3"), ((Number) svd.jSpinnerAverage3.getValue()).toString());
 
     }
 

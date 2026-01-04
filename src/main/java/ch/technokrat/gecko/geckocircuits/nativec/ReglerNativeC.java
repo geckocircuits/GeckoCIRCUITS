@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.nativec;
 
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.SystemOutputRedirect;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentState;
@@ -328,8 +328,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {                
-        DatenSpeicher.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
-        DatenSpeicher.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
+        ProjectData.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
+        ProjectData.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
     }
 
     @Override

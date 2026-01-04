@@ -341,14 +341,14 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ndatnamXY"), _datnamXY);
+        ProjectData.appendAsString(ascii.append("\ndatnamXY"), _datnamXY);
         if (_externalDataFile == null) {
-            DatenSpeicher.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFileHashValue);
+            ProjectData.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFileHashValue);
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFile.getHashValue());
+            ProjectData.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFile.getHashValue());
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nversion170"), 1);
+        ProjectData.appendAsString(ascii.append("\nversion170"), 1);
 
     }
 

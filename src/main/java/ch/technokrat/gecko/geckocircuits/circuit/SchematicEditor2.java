@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitGlobalTerminal;
@@ -795,7 +795,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         return Collections.unmodifiableCollection(returnValue);
     }
 
-    public void ladeGespeicherteNetzlisteVonDatenSpeicher(final DatenSpeicher daten,
+    public void ladeGespeicherteNetzlisteVonProjectData(final ProjectData daten,
             final String insertIntoSubCircuitName) {
         for (AbstractCircuitSheetComponent elem : daten._allSheetComponents) {
             elem.findAndSetReferenceToParentSheet(daten.allSubCircuitBlocks, insertIntoSubCircuitName);
@@ -1813,7 +1813,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void readSelectedElementsFromASCIIString(final String[] ascii) {
-        final DatenSpeicher datenSpeicher = new DatenSpeicher(ascii, false, null);
+        final ProjectData datenSpeicher = new ProjectData(ascii, false, null);
         datenSpeicher.shiftComponentReferences();
 
         _elementsJustInitialized = true;

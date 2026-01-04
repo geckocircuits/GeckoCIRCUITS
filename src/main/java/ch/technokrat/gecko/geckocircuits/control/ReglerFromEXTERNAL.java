@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
@@ -171,8 +171,8 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ntn"), _terminalNumber);
-        DatenSpeicher.appendAsString(ascii.append("\ntorder"), fromExternals.indexOf(this));
+        ProjectData.appendAsString(ascii.append("\ntn"), _terminalNumber);
+        ProjectData.appendAsString(ascii.append("\ntorder"), fromExternals.indexOf(this));
     }
 
     @Override

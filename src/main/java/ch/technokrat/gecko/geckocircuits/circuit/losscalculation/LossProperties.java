@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicTextInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
@@ -49,7 +49,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
         ascii.append("\n<Verluste>");
 
         _lossCalculationDetailed.exportASCII(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\nverlustTyp"), _lossType.getValue().getOldGeckoCIRCUITSOrdinal());
+        ProjectData.appendAsString(ascii.append("\nverlustTyp"), _lossType.getValue().getOldGeckoCIRCUITSOrdinal());
         ascii.append("\n<\\Verluste>");
     }
 

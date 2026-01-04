@@ -31,8 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.JOptionPane;
 
-// Hilfsklasse: Format fuer die Daten-Speicherung
-public class DatenSpeicher implements Serializable {
+// Helper class: Format for project data storage
+public class ProjectData implements Serializable {
 
     public final List<AbstractCircuitSheetComponent> _allSheetComponents = new ArrayList<AbstractCircuitSheetComponent>();
     public List<SubcircuitBlock> allSubCircuitBlocks = new ArrayList<SubcircuitBlock>();
@@ -73,7 +73,7 @@ public class DatenSpeicher implements Serializable {
     public List<Double> _optimizerData = new ArrayList<Double>();
     private OptimizerParameterData _optimizer;
 
-    public DatenSpeicher(
+    public ProjectData(
             Dimension windowDimension,
             OptimizerParameterData optimizerParameterData, 
             int uniqueFileId, SimulationAccess scripter, GeckoFileManager fileMgr, SchematicEditor2 se,
@@ -99,7 +99,7 @@ public class DatenSpeicher implements Serializable {
 
     }
 
-    public DatenSpeicher(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer) {
+    public ProjectData(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer) {
 //        if(!isBackupRead) {            
 //            for(String tmp : ascii) {
 //                System.out.println(tmp);
@@ -121,12 +121,12 @@ public class DatenSpeicher implements Serializable {
             elementCounter++;
         }
         
-        DatenSpeicher.appendAsString(asc.append("\noptimizerName"), optimizerParameterData.getNameOpt());
-        DatenSpeicher.appendAsString(asc.append("\noptimizerValue"), optimizerParameterData.getValueOpt());
-        DatenSpeicher.appendAsString(asc, "\n<scripterCode>\n" + _scripter.getScriptCode() + "\n<\\scripterCode>");
-        DatenSpeicher.appendAsString(asc, "\n<scripterImports>\n" + _scripter.getImportCode() + "\n<\\scripterImports>");
-        DatenSpeicher.appendAsString(asc, "\n<scripterDeclarations>\n" + _scripter.getDeclarationCode() + " " + "\n<\\scripterDeclarations>");
-        DatenSpeicher.appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");                
+        ProjectData.appendAsString(asc.append("\noptimizerName"), optimizerParameterData.getNameOpt());
+        ProjectData.appendAsString(asc.append("\noptimizerValue"), optimizerParameterData.getValueOpt());
+        ProjectData.appendAsString(asc, "\n<scripterCode>\n" + _scripter.getScriptCode() + "\n<\\scripterCode>");
+        ProjectData.appendAsString(asc, "\n<scripterImports>\n" + _scripter.getImportCode() + "\n<\\scripterImports>");
+        ProjectData.appendAsString(asc, "\n<scripterDeclarations>\n" + _scripter.getDeclarationCode() + " " + "\n<\\scripterDeclarations>");
+        ProjectData.appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");                
         
         asc.append("\n");
         if (saveAsApplet) {
@@ -176,7 +176,7 @@ public class DatenSpeicher implements Serializable {
             signalNames[i] = NetzlisteCONTROL.globalData.getSignalName(i);
         }
 
-        DatenSpeicher.appendAsString(asc.append("\ndataContainerSignals[] "), signalNames);
+        ProjectData.appendAsString(asc.append("\ndataContainerSignals[] "), signalNames);
 
         //
         asc.append("\n=======================\n ");

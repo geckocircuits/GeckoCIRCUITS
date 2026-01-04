@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
@@ -142,7 +142,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         try {
             // Relative Pfadangaben pruefen und gegebenfalls aktualisieren:
             if (!datnamGemesseneVerluste.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
-                String aktualisierterPfad = DatenSpeicher.lokalisiereRelativenPfad(GlobalFilePathes.DATNAM, datnamGemesseneVerluste);
+                String aktualisierterPfad = ProjectData.lokalisiereRelativenPfad(GlobalFilePathes.DATNAM, datnamGemesseneVerluste);
                 datnamGemesseneVerluste = aktualisierterPfad;
             }
         } catch (Exception e) {
@@ -152,11 +152,11 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
     }
 
     public void exportASCII(StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ndatnamGemesseneVerluste"), datnamGemesseneVerluste);
+        ProjectData.appendAsString(ascii.append("\ndatnamGemesseneVerluste"), datnamGemesseneVerluste);
         if (lossFile != null) {
-            DatenSpeicher.appendAsString(ascii.append("\nlossFileHashValue"), lossFile.getHashValue());
+            ProjectData.appendAsString(ascii.append("\nlossFileHashValue"), lossFile.getHashValue());
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nlossFileHashValue"), lossFileHashValue);
+            ProjectData.appendAsString(ascii.append("\nlossFileHashValue"), lossFileHashValue);
         }
     }
 
@@ -306,13 +306,13 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         // false if loss file is to be saved with .ipes file
 
         StringBuffer ascii = new StringBuffer();
-        DatenSpeicher.appendAsString(ascii.append("\nanzMesskurvenPvSWITCH"), messkurvePvSWITCH.size());
+        ProjectData.appendAsString(ascii.append("\nanzMesskurvenPvSWITCH"), messkurvePvSWITCH.size());
 
         for (SwitchingLossCurve curve : messkurvePvSWITCH) {
             curve.exportASCII(ascii);
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nanzMesskurvenPvCOND"), messkurvePvCOND.size());
+        ProjectData.appendAsString(ascii.append("\nanzMesskurvenPvCOND"), messkurvePvCOND.size());
         for (LeitverlusteMesskurve curve : messkurvePvCOND) {
             curve.exportASCII(ascii);
         }

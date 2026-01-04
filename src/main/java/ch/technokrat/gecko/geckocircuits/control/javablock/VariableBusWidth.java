@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
@@ -87,8 +87,8 @@ class VariableBusWidth {
             busWidth[counter] = entry.getValue();
             counter++;
         }
-        DatenSpeicher.appendAsString(ascii.append("\nvaluesBusWidth"),busWidth);
-        DatenSpeicher.appendAsString(ascii.append("\nindicesBusWidth"),indicesList);
+        ProjectData.appendAsString(ascii.append("\nvaluesBusWidth"),busWidth);
+        ProjectData.appendAsString(ascii.append("\nindicesBusWidth"),indicesList);
         
     }
     

@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.SaveViewFrame;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -175,13 +175,13 @@ public final class ScopeFrame extends javax.swing.JFrame{
   public void exportIndividualCONTROL(final StringBuffer ascii){
     _scope.exportInvidualControl(ascii);
     _powerAnalysisSettings.exportIndividualControl(ascii);
-    DatenSpeicher.appendAsString(ascii.append("\nwindowWidth"), _windowWidth);
-    DatenSpeicher.appendAsString(ascii.append("\nwindowHeight"), _windowHeight);
+    ProjectData.appendAsString(ascii.append("\nwindowWidth"), _windowWidth);
+    ProjectData.appendAsString(ascii.append("\nwindowHeight"), _windowHeight);
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenWidth"), screenSize.width);
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenHeight"), screenSize.height);
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenPosX"), _positionPoint.x);
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenPosY"), _positionPoint.y);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenWidth"), screenSize.width);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenHeight"), screenSize.height);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenPosX"), _positionPoint.x);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenPosY"), _positionPoint.y);
   }
 
   public void importIndividualCONTROL(final TokenMap settingsMap){

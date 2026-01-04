@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.control.javablock;
 import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.SystemOutputRedirect;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
@@ -483,8 +483,8 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         _javaBlock.exportIndividualCONTROL(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
-        DatenSpeicher.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
+        ProjectData.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
+        ProjectData.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
         _variableBusWidth.exportAsciiIndividual(ascii);
     }
 

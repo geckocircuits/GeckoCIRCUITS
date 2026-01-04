@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.control.DialogLabelEingeben;
 import ch.technokrat.gecko.geckocircuits.control.Point;
@@ -284,7 +284,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     // zum Speichern im ASCII-Format (anstatt als Object-Stream) -->
     public final void exportASCII(final StringBuffer ascii) {
         ascii.append("<Verbindung>");
-        DatenSpeicher.appendAsString(ascii.append("\nlabel"), _label.getLabelString());
+        ProjectData.appendAsString(ascii.append("\nlabel"), _label.getLabelString());
 
         int[] xPoints = new int[_connectorPoints.size()];
         int[] yPoints = new int[_connectorPoints.size()];
@@ -293,12 +293,12 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
             yPoints[i] = _connectorPoints.get(i).y;
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nx"), xPoints);
-        DatenSpeicher.appendAsString(ascii.append("\ny"), yPoints);
+        ProjectData.appendAsString(ascii.append("\nx"), xPoints);
+        ProjectData.appendAsString(ascii.append("\ny"), yPoints);
 
         super.exportASCII(ascii);
 
-        DatenSpeicher.appendAsString(ascii.append("\nconnectorType"), _connectorType.ordinal());
+        ProjectData.appendAsString(ascii.append("\nconnectorType"), _connectorType.ordinal());
         ascii.append(new StringBuffer("\n<\\Verbindung>\n"));
     }
 

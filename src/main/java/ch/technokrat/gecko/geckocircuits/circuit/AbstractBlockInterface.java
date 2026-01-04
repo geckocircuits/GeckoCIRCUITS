@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
@@ -424,22 +424,22 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
         }
 
 
-        DatenSpeicher.appendAsString(ascii.append("\nlabelAnfangsKnoten"), labelAnfangsKnoten);
-        DatenSpeicher.appendAsString(ascii.append("\nlabelEndKnoten"), labelEndKnoten);
+        ProjectData.appendAsString(ascii.append("\nlabelAnfangsKnoten"), labelAnfangsKnoten);
+        ProjectData.appendAsString(ascii.append("\nlabelEndKnoten"), labelEndKnoten);
         super.exportASCII(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\ntyp"), getTypeEnum().getTypeNumber());
+        ProjectData.appendAsString(ascii.append("\ntyp"), getTypeEnum().getTypeNumber());
         getIdentifier().exportASCII(ascii);
 
-        DatenSpeicher.appendAsString(ascii.append("\nx"), getSheetPosition().x);
-        DatenSpeicher.appendAsString(ascii.append("\ny"), getSheetPosition().y);
-        DatenSpeicher.appendAsString(ascii.append("\nparameter"), parameter);
+        ProjectData.appendAsString(ascii.append("\nx"), getSheetPosition().x);
+        ProjectData.appendAsString(ascii.append("\ny"), getSheetPosition().y);
+        ProjectData.appendAsString(ascii.append("\nparameter"), parameter);
 
-        DatenSpeicher.appendAsString(ascii.append("\nparameterString"), parameterString);
+        ProjectData.appendAsString(ascii.append("\nparameterString"), parameterString);
         updateNameOptArray();
-        DatenSpeicher.appendAsString(ascii.append("\nnameOpt"), nameOpt);
+        ProjectData.appendAsString(ascii.append("\nnameOpt"), nameOpt);
 
-        DatenSpeicher.appendAsString(ascii.append("\norientierung"), getComponentDirection().code());
-        DatenSpeicher.appendAsString(ascii.append("\nidStringDialog"), getStringID());
+        ProjectData.appendAsString(ascii.append("\norientierung"), getComponentDirection().code());
+        ProjectData.appendAsString(ascii.append("\nidStringDialog"), getStringID());
 
         if (this instanceof ComponentCoupable) {
             ((ComponentCoupable) this).getComponentCoupling().exportASCII(ascii);

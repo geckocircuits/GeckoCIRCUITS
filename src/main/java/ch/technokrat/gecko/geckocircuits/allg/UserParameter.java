@@ -490,35 +490,35 @@ public final class UserParameter<T> {
         
         final String nameOptString = getNameOpt();
         if(!getNameOpt().isEmpty()) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifierNameOpt), nameOptString);
+            ProjectData.appendAsString(ascii.append("\n" + _identifierNameOpt), nameOptString);
         }
         
         if (value instanceof Double) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), (Double) value);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), (Double) value);
             return;
         }
         if (value instanceof Boolean) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), (Boolean) value);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), (Boolean) value);
             return;
         }
 
         if (value instanceof Integer) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), (Integer) value);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), (Integer) value);
             return;
         }
 
         if (value instanceof ControlSourceType) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((ControlSourceType) value).getOldGeckoID());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((ControlSourceType) value).getOldGeckoID());
             return;
         }
 
         if (value instanceof CircuitSourceType) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((CircuitSourceType) value).getOldGeckoID());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((CircuitSourceType) value).getOldGeckoID());
             return;
         }
         
         if (value instanceof SSAShape) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((SSAShape) value).ordinal());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((SSAShape) value).ordinal());
             return;
         }
         
@@ -529,12 +529,12 @@ public final class UserParameter<T> {
             if(writeString.contains("\n")) {                
                 writeString = writeString.replaceAll("\n", "\\\\n");                                
             }
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), writeString);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), writeString);
             return;
         }
 
         if (value instanceof Color) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((Color) value).getRGB());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((Color) value).getRGB());
             return;
         }                
 

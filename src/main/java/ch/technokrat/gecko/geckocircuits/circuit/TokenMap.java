@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import java.util.*;
 import java.util.logging.Level;
@@ -311,7 +311,7 @@ public final class TokenMap {
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen            
             String wert = stk.nextToken();
-            if (wert.equals(DatenSpeicher.NIX)) {
+            if (wert.equals(ProjectData.NIX)) {
                 return "";
             }
 
@@ -369,12 +369,12 @@ public final class TokenMap {
             final Integer lineNumber = _map.get(identifier);
             final String ascii = asciiLines[lineNumber];
             final String asciiDaten = ascii.substring(ascii.indexOf(' '));
-            final StringTokenizer stk = new StringTokenizer(asciiDaten, DatenSpeicher.SEPARATOR_ASCII_STRINGARRAY);
+            final StringTokenizer stk = new StringTokenizer(asciiDaten, ProjectData.SEPARATOR_ASCII_STRINGARRAY);
             stk.nextToken();  // erster Wert wird uebersprungen
             String[] wert = new String[stk.countTokens()];
             for (int i1 = 0; i1 < wert.length; i1++) {
                 wert[i1] = stk.nextToken();
-                if (wert[i1].equals(DatenSpeicher.NIX)) {
+                if (wert[i1].equals(ProjectData.NIX)) {
                     wert[i1] = "";
                 }
             }
@@ -389,13 +389,13 @@ public final class TokenMap {
         try {
             final Integer lineNumber = _map.get(identifier);
             final String ascii = asciiLines[lineNumber];            
-            final StringTokenizer stk = new StringTokenizer(ascii, DatenSpeicher.SEPARATOR_ASCII_STRINGARRAY);
+            final StringTokenizer stk = new StringTokenizer(ascii, ProjectData.SEPARATOR_ASCII_STRINGARRAY);
             stk.nextToken();  // erster Wert wird uebersprungen
             final int numberTokens = stk.countTokens();            
             List<String> wert = new ArrayList<String>();
             for (int i1 = 0; i1 < numberTokens; i1++) {
                 String token = stk.nextToken();
-                if (token.equals(DatenSpeicher.NIX)) {
+                if (token.equals(ProjectData.NIX)) {
                     wert.add("");                    
                 } else {
                     wert.add(token);
@@ -516,7 +516,7 @@ public final class TokenMap {
                 wert = ascii.substring(identifierNew.length() + 1);
                 wert = wert.replaceAll("\\\\n", "\n");
             }
-            if (wert.equals(DatenSpeicher.NIX)) {
+            if (wert.equals(ProjectData.NIX)) {
                 wert = "";
             }
             return wert;

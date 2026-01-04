@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -104,13 +104,13 @@ public final class ReglerU_ZI extends RegelBlock {
 
     @Override
     protected void exportAsciiIndividual(StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nscale1"), ((Number) _uziDisplay.jSpinnerLength1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale2"), ((Number) _uziDisplay.jSpinnerLength2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale3"), ((Number) _uziDisplay.jSpinnerZ1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale1"), ((Number) _uziDisplay.jSpinnerLength1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale2"), ((Number) _uziDisplay.jSpinnerLength2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale3"), ((Number) _uziDisplay.jSpinnerZ1.getValue()).toString());
 
-        DatenSpeicher.appendAsString(ascii.append("\naverage1"), ((Number) _uziDisplay.jSpinnerAverage1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage2"), ((Number) _uziDisplay.jSpinnerAverage2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage3"), ((Number) _uziDisplay.jSpinnerZ2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage1"), ((Number) _uziDisplay.jSpinnerAverage1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage2"), ((Number) _uziDisplay.jSpinnerAverage2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage3"), ((Number) _uziDisplay.jSpinnerZ2.getValue()).toString());
 
     }
 

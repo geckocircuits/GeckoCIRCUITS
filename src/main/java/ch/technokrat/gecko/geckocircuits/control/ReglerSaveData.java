@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -242,13 +242,13 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
+        ProjectData.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
                 new String[_selectedSignalNames.size()]));
-        DatenSpeicher.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
-        DatenSpeicher.appendAsString(ascii.append("\nitemSeparator"), _itemSeparator.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nheaderSymbol"), _headerSymbol.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nsaveModus"), _saveModus.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nfileOverwrite"), _fileOverwrite.ordinal());
+        ProjectData.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
+        ProjectData.appendAsString(ascii.append("\nitemSeparator"), _itemSeparator.ordinal());
+        ProjectData.appendAsString(ascii.append("\nheaderSymbol"), _headerSymbol.ordinal());
+        ProjectData.appendAsString(ascii.append("\nsaveModus"), _saveModus.ordinal());
+        ProjectData.appendAsString(ascii.append("\nfileOverwrite"), _fileOverwrite.ordinal());
     }
 
     @Override

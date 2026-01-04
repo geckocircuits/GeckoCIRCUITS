@@ -82,9 +82,9 @@ public class KnotenLabel implements Serializable {
         ascii.append("<Verbindung>");
         //------------------
         /*
-        DatenSpeicher.appendAsString(ascii.append("\nlabel"), label);
-        DatenSpeicher.appendAsString(ascii.append("\nxLabel"), xLabel);
-        DatenSpeicher.appendAsString(ascii.append("\nyLabel"), yLabel);
+        ProjectData.appendAsString(ascii.append("\nlabel"), label);
+        ProjectData.appendAsString(ascii.append("\nxLabel"), xLabel);
+        ProjectData.appendAsString(ascii.append("\nyLabel"), yLabel);
         */
         //-----------
         ascii.append(new StringBuffer("\n<\\Verbindung>\n"));

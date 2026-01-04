@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
@@ -97,7 +97,7 @@ public final class ReglerFlowMeter extends AbstractCurrentMeasurement {
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         super.exportAsciiIndividual(ascii);
         
-        DatenSpeicher.appendAsString(ascii.append("\nlosscomp"), _measurementType.getSaveString());
+        ProjectData.appendAsString(ascii.append("\nlosscomp"), _measurementType.getSaveString());
     }
     
     @Override

@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
@@ -235,7 +235,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     @Override
     protected void importIndividual(TokenMap tokenMap) {
         super.importIndividual(tokenMap);
-        if(DatenSpeicher.readFileVersion < 170) { 
+        if(ProjectData.readFileVersion < 170) { 
             // backwards compatibility: before version 1.70, the 
             // machines could not be rotated!
             setComponentDirection(ComponentDirection.NORTH_SOUTH);            

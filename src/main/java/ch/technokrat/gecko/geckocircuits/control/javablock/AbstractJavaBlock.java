@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
 import ch.technokrat.gecko.GeckoRuntimeException;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -161,8 +161,8 @@ public abstract class AbstractJavaBlock {
         }
         ascii.append("\n<\\extraSourceFiles>");
 
-        DatenSpeicher.appendAsString(ascii.append("\nclassName"), _compileObject.getClassName());
-        DatenSpeicher.appendAsString(ascii.append("\nCompileStatus"), _compileObject.getCompileStatus().ordinal());
+        ProjectData.appendAsString(ascii.append("\nclassName"), _compileObject.getClassName());
+        ProjectData.appendAsString(ascii.append("\nCompileStatus"), _compileObject.getCompileStatus().ordinal());
 
         try {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -170,7 +170,7 @@ public abstract class AbstractJavaBlock {
             oOutStream.writeObject(_classNameFileMap);
             oOutStream.close();
             final byte[] outBytes = baos.toByteArray();
-            DatenSpeicher.appendAsString(ascii.append("\nclassMapBytes"), outBytes);
+            ProjectData.appendAsString(ascii.append("\nclassMapBytes"), outBytes);
         } catch (IOException ex) {
             Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException while serializing class map: " + ex.getMessage(), ex);
         } catch (Exception ex) {

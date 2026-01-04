@@ -404,12 +404,12 @@ public final class GeckoFile {
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<GeckoFile>");
         //----------------------------------------
-        DatenSpeicher.appendAsString(ascii.append("\nhashValue"), _hash);
-        DatenSpeicher.appendAsString(ascii.append("\nabsPath"), _absolutePath);
-        DatenSpeicher.appendAsString(ascii.append("\nrelPath"), _relativePath);
-        DatenSpeicher.appendAsString(ascii.append("\nfileSep"), _separator);
-        DatenSpeicher.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[_usageList.size()]));
+        ProjectData.appendAsString(ascii.append("\nhashValue"), _hash);
+        ProjectData.appendAsString(ascii.append("\nabsPath"), _absolutePath);
+        ProjectData.appendAsString(ascii.append("\nrelPath"), _relativePath);
+        ProjectData.appendAsString(ascii.append("\nfileSep"), _separator);
+        ProjectData.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
+        ProjectData.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[_usageList.size()]));
 
         ascii.append("\n<usageList>");
         for (Long userID : _usageList) {
@@ -420,7 +420,7 @@ public final class GeckoFile {
         ascii.append("\n<\\usageList>");
 
         if (_storageStrategy.getStorageType() == StorageType.INTERNAL) {
-            DatenSpeicher.appendAsString(ascii.append("\nfileContents"), _fileContents);
+            ProjectData.appendAsString(ascii.append("\nfileContents"), _fileContents);
         }
 
         ascii.append("\n<\\GeckoFile>");

@@ -212,14 +212,14 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         for (int i = 0; i < XIN.size(); i++) {
             shiftLabelsIn[i] = XIN.get(i).getHasDoubleValue();
         }
-        DatenSpeicher.appendAsString(ascii.append("\nshiftLabelsIn"), shiftLabelsIn);
+        ProjectData.appendAsString(ascii.append("\nshiftLabelsIn"), shiftLabelsIn);
 
         boolean[] shiftLabelsOut = new boolean[YOUT.size()];
         for (int i = 0; i < YOUT.size(); i++) {
             shiftLabelsOut[i] = YOUT.get(i).getHasDoubleValue();
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nshiftLabelsOut"), shiftLabelsOut);
+        ProjectData.appendAsString(ascii.append("\nshiftLabelsOut"), shiftLabelsOut);
     }
 
     @Override

@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -110,8 +110,8 @@ public final class SchematicTextInfo {
     }
 
     public void exportASCII(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
-        DatenSpeicher.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
+        ProjectData.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
+        ProjectData.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
     }
 
     void absetzenText(final Point position) {

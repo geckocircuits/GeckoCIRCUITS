@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
@@ -157,7 +157,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         super.exportAsciiIndividual(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\nnewFormat160"), true);
+        ProjectData.appendAsString(ascii.append("\nnewFormat160"), true);
     }
 
     @Override

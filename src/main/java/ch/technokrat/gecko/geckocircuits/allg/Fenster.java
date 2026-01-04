@@ -903,7 +903,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     public void rawSaveFile(File file) {
 
         try {
-            DatenSpeicher datLK = new DatenSpeicher(
+            ProjectData datLK = new ProjectData(
                     getSize(),
                     Fenster.optimizerParameterData,
                     uniqueFileID, _scripter, _fileManager, _se, _solverSettings);
@@ -1048,10 +1048,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
             //System.out.println("zeile[i1]= "+zeile[i1]);
         }
 
-        DatenSpeicher daten = new DatenSpeicher(zeile, false, null);
+        ProjectData daten = new ProjectData(zeile, false, null);
         _se.resetCircuitSheetsForNewFile();
         optimizerParameterData.clearAndInitializeWithoutUndo(daten._optimizerNames, daten._optimizerData);
-        _se.ladeGespeicherteNetzlisteVonDatenSpeicher(daten, null);
+        _se.ladeGespeicherteNetzlisteVonProjectData(daten, null);
         AbstractCircuitSheetComponent.dpixValue.setValueWithoutUndo(daten.dpix);
         daten.updateSolverSettings(_solverSettings);
 
@@ -1082,9 +1082,9 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         _se.resetCircuitSheetsForNewFile();
         GlobalFilePathes.DATNAM = dateiName;
         _se.resetCircuitSheetsForNewFile();
-        DatenSpeicher daten = loadDatenSpeicherFromFile(dateiName, false, optimizerParameterData);        
+        ProjectData daten = loadProjectDataFromFile(dateiName, false, optimizerParameterData);        
         daten.updateSolverSettings(_solverSettings);        
-        _se.ladeGespeicherteNetzlisteVonDatenSpeicher(daten, null);
+        _se.ladeGespeicherteNetzlisteVonProjectData(daten, null);
 
         AbstractCircuitSheetComponent.dpixValue.setValue(daten.dpix);
 
@@ -1948,7 +1948,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         try {
             aktuellerDateiName = GlobalFilePathes.DATNAM;
 
-            DatenSpeicher datLK = new DatenSpeicher(
+            ProjectData datLK = new ProjectData(
                     this.getSize(),
                     Fenster.optimizerParameterData,
                     0, _scripter, _fileManager, _se, _solverSettings);
@@ -2013,10 +2013,10 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
     private void checkAutoBackupFileId(int openFileId) {
 
-        DatenSpeicher daten = null;
+        ProjectData daten = null;
         String dateiName = getAutoBackupFileName();
         try {
-            daten = loadDatenSpeicherFromFile(dateiName, true, null);
+            daten = loadProjectDataFromFile(dateiName, true, null);
         } catch (FileNotFoundException ex) {
             System.err.println("Could not read autobackup-file: " + dateiName);
             return;
@@ -2064,21 +2064,21 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     }
 
     public static void importComponentsFromFile(final String fileName, final String importIntoSubCircuitName) throws FileNotFoundException {
-        DatenSpeicher daten = loadDatenSpeicherFromFile(fileName, false, null);
+        ProjectData daten = loadProjectDataFromFile(fileName, false, null);
         daten.shiftComponentReferences();
-        _se.ladeGespeicherteNetzlisteVonDatenSpeicher(daten, importIntoSubCircuitName);
+        _se.ladeGespeicherteNetzlisteVonProjectData(daten, importIntoSubCircuitName);
         _se.initAdditionalFiles(daten._allSheetComponents);
         _se.updateAllComponentReferences();
     }
 
-    public static DatenSpeicher loadDatenSpeicherFromFile(String dateiName, boolean isAutoBackupFile, OptimizerParameterData optimizer) throws FileNotFoundException {
+    public static ProjectData loadProjectDataFromFile(String dateiName, boolean isAutoBackupFile, OptimizerParameterData optimizer) throws FileNotFoundException {
         if (!IS_APPLET && !(new File(dateiName).exists())) {
             throw new FileNotFoundException("File: " + GlobalFilePathes.DATNAM + " not found!");
         }
         
-        DatenSpeicher daten = null;        
+        ProjectData daten = null;        
         String[] lines = getLinesArrayFromIpesFile(dateiName);        
-        daten = new DatenSpeicher(lines, isAutoBackupFile, optimizer);        
+        daten = new ProjectData(lines, isAutoBackupFile, optimizer);        
         return daten;
 
     }

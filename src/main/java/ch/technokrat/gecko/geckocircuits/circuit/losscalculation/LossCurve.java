@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -40,7 +40,7 @@ public abstract class LossCurve {
     final void exportASCII(final StringBuffer ascii) {
         
         ascii.append("\n<" + getXMLTag() + ">");
-        DatenSpeicher.appendAsString(ascii.append("\ndata"), data);
+        ProjectData.appendAsString(ascii.append("\ndata"), data);
         tj.writeXMLToFile(ascii);
         exportIndividual(ascii);
         ascii.append("\n<\\" + getXMLTag() + ">");                        

@@ -18,7 +18,7 @@ package ch.technokrat.gecko.geckocircuits.newscope;
  * compatibility reasons, it is still here. It should be refactored or removed, soon!
  *
  */
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 import java.io.Serializable;
@@ -316,7 +316,7 @@ public class ScopeSettings implements Serializable {
     //
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<scopeSettings>");
-        DatenSpeicher.appendAsString(ascii.append("\nnoInputSignals"), noInputSignals);
+        ProjectData.appendAsString(ascii.append("\nnoInputSignals"), noInputSignals);
         ascii.append("\n<\\scopeSettings>");
     }
 

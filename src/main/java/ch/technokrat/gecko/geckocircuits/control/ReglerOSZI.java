@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
@@ -342,13 +342,13 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             _scopeSettings.exportASCII(appendLater);
             super.exportAsciiIndividual(appendLater);
             appendLater.append("\ntn");
-            DatenSpeicher.appendAsString(appendLater.append("\nisShowName"), _isShowName);
+            ProjectData.appendAsString(appendLater.append("\nisShowName"), _isShowName);
 
             _saveLoadSignalNames = new String[_zvDatenRAM.getRowLength()];
             for (int i = 0; i < _zvDatenRAM.getRowLength(); i++) {
                 _saveLoadSignalNames[i] = _zvDatenRAM.getSignalName(i);
             }
-            DatenSpeicher.appendAsString(appendLater.append("\nsavedSignalNames"), _saveLoadSignalNames);
+            ProjectData.appendAsString(appendLater.append("\nsavedSignalNames"), _saveLoadSignalNames);
 
             _meanSignals.exportIndividualCONTROL(appendLater);
             appendLater.append("\n<ScopeSettings>\n");
