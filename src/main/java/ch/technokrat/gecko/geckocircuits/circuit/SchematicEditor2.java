@@ -46,7 +46,7 @@ import ch.technokrat.modelviewcontrol.GroupableUndoManager;
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
-    private SchematischeEingabeAuswahl2 _sea;
+    private SchematicComponentSelection2 _sea;
     public Fenster win;
     //
     private boolean simulatorAktiviert = false;
@@ -506,7 +506,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         return returnValue;
     }
 
-    public void setSchematischeEingabeAuswahl(SchematischeEingabeAuswahl2 sea) {
+    public void setSchematischeEingabeAuswahl(SchematicComponentSelection2 sea) {
         _sea = sea;
     }
 

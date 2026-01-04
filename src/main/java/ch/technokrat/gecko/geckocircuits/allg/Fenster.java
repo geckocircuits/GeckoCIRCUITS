@@ -77,7 +77,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     private boolean simulatorAktiviert = false;
     //
     public static SchematicEditor2 _se;
-    public SchematischeEingabeAuswahl2 sea;
+    public SchematicComponentSelection2 sea;
     public static final boolean INCLUDE_GeckoMAGNETICS = false;
     public static final boolean INCLUDE_GeckoHEAT = false;
     public static final boolean INCLUDE_GeckoEMC = false;
@@ -85,7 +85,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     public static String aktuellerDateiName = UNTITLED;  // without path! - only for display in the window title bar (as is common in Windows)
     //--------------------------------------
     private JSplitPane split;
-    public static int seaBREITE = 110;  // width of the 'SchematischeEingabeAuswahl2()' component on the right edge
+    public static int seaBREITE = 110;  // width of the 'SchematicComponentSelection2()' component on the right edge
     public JCheckBoxMenuItem vItemShowParLK, vItemShowFlowLK, vItemShowNameLK, vItemShowTextLineLK;
     public JCheckBoxMenuItem vItemShowParCONTROL, vItemShowNameCONTROL, vItemShowTextLineCONTROL;
     public JCheckBoxMenuItem aliasingCONTROL;
@@ -212,7 +212,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
 
         _simRunner = new SimulationRunner(this, _se);
 
-        sea = new SchematischeEingabeAuswahl2();
+        sea = new SchematicComponentSelection2();
         _se.setSchematischeEingabeAuswahl(sea);
         sea.anmeldenSchematischeEingabe(_se);
         baueGUI();
