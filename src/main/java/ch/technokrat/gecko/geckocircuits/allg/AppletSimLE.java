@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.Color;
 
 import javax.swing.JApplet;
@@ -33,18 +32,18 @@ import javax.swing.JButton;
  */
 @SuppressWarnings("removal")  // JApplet is deprecated but required for legacy applet support
 public class AppletSimLE extends JApplet {
+    private static final long serialVersionUID = 1L;
 
 
+    @Override
     public void init () {
         
         JButton butCircuitSim= new JButton("System Simulator");
-        butCircuitSim.addActionListener(new ActionListener () {
-            public void actionPerformed (ActionEvent ae) {
-                MainWindow win= new MainWindow();
-                win.setSize(700,530);
-                win.setLocation(300,200);
-                win.setVisible(true);
-            }
+        butCircuitSim.addActionListener(ae -> {
+            MainWindow win= new MainWindow();
+            win.setSize(700,530);
+            win.setLocation(300,200);
+            win.setVisible(true);
         });
         butCircuitSim.setBackground(Color.orange);
         this.setBackground(Color.white);
