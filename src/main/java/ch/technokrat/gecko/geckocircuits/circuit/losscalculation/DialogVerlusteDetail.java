@@ -184,43 +184,37 @@ public final class DialogVerlusteDetail extends GeckoDialog {
 
     private String getNewFileNameDialog() {
         final StringBuffer fileName = new StringBuffer();
-        if (!MainWindow.IS_APPLET) {
-            // Erstellung Array vom Datentyp Object, Hinzufügen der Optionen               
-            Object[] options = {"External File", "Model-intern File"};
+        // Erstellung Array vom Datentyp Object, Hinzufügen der Optionen
+        Object[] options = {"External File", "Model-intern File"};
 
-            int selected = JOptionPane.showOptionDialog(null,
-                    "Do you like to create a real file on your harddisk or a \n"
-                    + "file that is internal to the simulation model?",
-                    "Select file type",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, options, options[0]);
+        int selected = JOptionPane.showOptionDialog(null,
+                "Do you like to create a real file on your harddisk or a \n"
+                + "file that is internal to the simulation model?",
+                "Select file type",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
 
-            switch (selected) {
-                case -1: // window closed by cross-escape
+        switch (selected) {
+            case -1: // window closed by cross-escape
+                return null;
+            case 0:
+                _storageType = StorageType.EXTERNAL;
+                GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".scl", "Semiconductor Loss Files (*.scl)", this, null);
+                if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
                     return null;
-                case 0:
-                    _storageType = StorageType.EXTERNAL;
-                    GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".scl", "Semiconductor Loss Files (*.scl)", this, null);
-                    if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
-                        return null;
-                    }
-                    fileName.append(fileChooser.getFileWithCheckedEnding());
-                    break;
-                case 1:
-                    _storageType = StorageType.INTERNAL;
-                    // Aufruf der statischen Methode showMessageDialog()
-                    fileName.append(JOptionPane.showInputDialog(null, "Please select a file name identifier:",
-                            "Choose file name",
-                            JOptionPane.PLAIN_MESSAGE));
-                    break;
-                default:
-                    assert false;
-            }
-
-            if (!fileName.toString().endsWith(".scl")) {
-                fileName.append(".scl");
-            }
+                }
+                fileName.append(fileChooser.getFileWithCheckedEnding());
+                break;
+            case 1:
+                _storageType = StorageType.INTERNAL;
+                // Aufruf der statischen Methode showMessageDialog()
+                fileName.append(JOptionPane.showInputDialog(null, "Please select a file name identifier:",
+                        "Choose file name",
+                        JOptionPane.PLAIN_MESSAGE));
+                break;
+            default:
+                assert false;
         }
         return fileName.toString();
     }

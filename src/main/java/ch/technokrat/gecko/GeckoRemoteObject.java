@@ -156,7 +156,6 @@ public class GeckoRemoteObject {
     }
 
     public static GeckoRemoteObject connectToGecko() {
-        MainWindow.IS_APPLET = false; // this is needed - otherwise we cannot read the properties
         GeckoSim.forceLoadApplicationProperties();
         return connectToExistingInstance(GeckoRemoteRegistry.getRemoteAccessPort());
     }

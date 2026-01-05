@@ -60,7 +60,6 @@ public class ProjectData implements Serializable {
     public String _scripterDeclarations = "";
     public String _scripterExtraFiles = "";
     public int solverType;
-    public boolean saveAsApplet = false;
     private GeckoFileManager _fileManager;
     public ArrayList<GeckoFile> fileMgrFiles;
     public static int readFileVersion;
@@ -129,12 +128,8 @@ public class ProjectData implements Serializable {
         ProjectData.appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");                
         
         asc.append("\n");
-        if (saveAsApplet) {
-            _fileManager.exportASCIIApplet(asc);
-        } else {
-            _fileManager.exportASCII(asc);
-        }
-//        geckoOpt.exportASCII(asc); 
+        _fileManager.exportASCII(asc);
+//        geckoOpt.exportASCII(asc);
         asc.append("\n\n");
         //------------------
         // aktuelles Datum: 

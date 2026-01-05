@@ -230,11 +230,9 @@ public final class SimulationRunner {
                         _mainwindow.mItemOpen.setEnabled(true);
                     }
                     _mainwindow.mItemExit.setEnabled(true);
-                    if (!MainWindow.IS_APPLET) {
-                        _mainwindow.mItemSave.setEnabled(true);
-                        _mainwindow.mItemSaveAs.setEnabled(true);
-                        _mainwindow.mItemSaveView.setEnabled(true);
-                    }
+                    _mainwindow.mItemSave.setEnabled(true);
+                    _mainwindow.mItemSaveAs.setEnabled(true);
+                    _mainwindow.mItemSaveView.setEnabled(true);
 
 
 

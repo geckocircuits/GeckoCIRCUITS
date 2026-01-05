@@ -39,10 +39,8 @@ public final class DialogFindInModel extends javax.swing.JDialog {
     public DialogFindInModel(java.awt.Frame parent, boolean modal, SchematicEditor2 se) {
         super(parent, modal);
         initComponents();
-        if(! MainWindow.IS_APPLET) {
-            this.setAlwaysOnTop(true);
-        }
-        
+        this.setAlwaysOnTop(true);
+
         this.setTitle("Search strings in model");
         _se = se;
         this.setVisible(true);

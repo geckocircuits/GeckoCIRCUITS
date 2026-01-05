@@ -178,10 +178,6 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         // GZIP-Format (March 2009) - ganz neu! --> 
         try {
             GZIPInputStream in1 = new GZIPInputStream(newLossFile.getInputStream());
-            /*
-             * if (MainWindow.IS_APPLET) { in1 = new GZIPInputStream((new URL(GeckoSim.urlApplet, fyomu)).openStream()); } else { in1 =
-             * new GZIPInputStream(new FileInputStream(fyomu)); }
-             */
             BufferedReader in = new BufferedReader(new InputStreamReader(in1));
             String z = null;
             while ((z = in.readLine()) != null) {
@@ -362,10 +358,6 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
      * could not be found, return null!
      */
     public boolean pruefeLinkAufHalbleiterDatei() {
-
-        if (MainWindow.IS_APPLET) {
-            return false;
-        }
 
         if (lossFile == null) {
             return false;

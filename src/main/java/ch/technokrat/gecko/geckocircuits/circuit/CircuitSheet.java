@@ -63,8 +63,7 @@ public class CircuitSheet extends JPanel {
      */
     public void drawCircuitSheet(java.awt.Graphics2D g2d) {
         final JViewport viewport = ((JViewport) this.getParent().getParent());        
-        // as applet, the SVG jar is not available!
-        if(!MainWindow.IS_APPLET && g2d instanceof SVGGraphics2D) {
+        if(g2d instanceof SVGGraphics2D) {
             return; // don't paint the pixels points for exporting to images!
         }
         Rectangle visibleRect = viewport.getViewRect();

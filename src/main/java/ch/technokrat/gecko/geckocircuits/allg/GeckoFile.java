@@ -431,15 +431,6 @@ public final class GeckoFile {
      *
      * @param ascii
      */
-    public void exportASCIIApplet(final StringBuffer ascii) {
-        final AbstractStorageStrategy oldIsExternalValue = _storageStrategy;
-        _storageStrategy = new InternalStrategy();
-        if (oldIsExternalValue.getStorageType() == StorageType.EXTERNAL) {
-            _fileContents = readFileIntoMemory();            
-        }        
-        exportASCII(ascii);
-        _storageStrategy = oldIsExternalValue;
-    }
 
     /**
      * get the file contents as a String

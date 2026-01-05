@@ -403,9 +403,6 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             importScopeSettings(scopeMap);
         }
 
-        if (MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
-            _scopeFrame.setVisible(true);
-        }
     }
 
     //for use with GeckoSCRIPT - get waveform characteristics for a particular channel

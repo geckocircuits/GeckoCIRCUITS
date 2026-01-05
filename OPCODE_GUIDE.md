@@ -145,7 +145,7 @@ Key dependencies (see pom.xml):
 - Swing-based GUI
 - Main window class: `Fenster`
 - Custom file chooser: `GeckoFileChooser`
-- Supports both windowed and applet modes
+- Supports standalone desktop application mode
 
 ### Circuit Examples
 The `resources/` directory contains extensive examples:

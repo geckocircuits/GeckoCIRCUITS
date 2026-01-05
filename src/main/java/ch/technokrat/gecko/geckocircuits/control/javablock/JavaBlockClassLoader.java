@@ -53,22 +53,20 @@ public final class JavaBlockClassLoader extends URLClassLoader {
     private void extendClassPath() {
 
 
-        if (!MainWindow.IS_APPLET) {
-            final File tmpfile = new File(GlobalFilePathes.DATNAM);
-            final File file = new File(tmpfile.getAbsolutePath());
-            final File directory = file.getParentFile();
-            if (directory.isDirectory()) {
-                try {
-                    final String path = directory.getAbsolutePath();
-                    final URL url = new URL("file://" + path + "/");
-		    this.addURL(url);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        final File tmpfile = new File(GlobalFilePathes.DATNAM);
+        final File file = new File(tmpfile.getAbsolutePath());
+        final File directory = file.getParentFile();
+        if (directory.isDirectory()) {
+            try {
+                final String path = directory.getAbsolutePath();
+                final URL url = new URL("file://" + path + "/");
+		this.addURL(url);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

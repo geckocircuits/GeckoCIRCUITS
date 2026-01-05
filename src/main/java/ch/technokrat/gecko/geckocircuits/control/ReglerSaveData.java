@@ -166,8 +166,8 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
         _selectedSignalIndices.remove(removeIndex);
     }
 
-    private String findInitialFile() {        
-        if (!MainWindow.IS_APPLET && GlobalFilePathes.DATNAM != null) {
+    private String findInitialFile() {
+        if (GlobalFilePathes.DATNAM != null) {
             File ipesFile = new File(GlobalFilePathes.DATNAM);
             String parentDirectory = ipesFile.getParent();
             int testCounter = 1;

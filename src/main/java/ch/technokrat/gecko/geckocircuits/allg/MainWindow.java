@@ -103,14 +103,11 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     //--------------------------------------
     private boolean speicherVorgangLaeuft = false;
     //--------------------------------------
-    // If started as an applet, the following files can be loaded:
-    private String[] datnamExampleApplet;
     //-------------------------
     // simple parameter-set for GeckoOPTIMIZER --> 
     public static final OptimizerParameterData optimizerParameterData = new OptimizerParameterData();
     public static final JScrollPane seScroll = new JScrollPane();
-    //-------------------------        
-    private JMenuItem mItemSaveApplet;
+    //-------------------------
     private int uniqueFileID = 0;
     public static SimulationAccess _scripter = null;
     public static final SolverSettings _solverSettings = new SolverSettings();
@@ -122,7 +119,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public final KeyAdapter keyAdapter;
     private static final String spTitleX = "  -  ";
     public static boolean IS_BRANDED = false;
-    public static boolean IS_APPLET = true;  // set at runtime
     private SuggestionField _searchTestField;
     public LastComponentButton _lastComponentButton;
     public final static JPanel _northPanel = new JPanel();
@@ -168,10 +164,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         _se.setActivationOfSimulator(simulatorAktiviert);
     }
 
-    public void setAppletFiles(String[] datnamExampleApplet) {
-        this.datnamExampleApplet = datnamExampleApplet;
-    }
-
     public MainWindow() {
 
         try {
@@ -191,11 +183,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         } catch (Exception e) {
         }
 
-        if (MainWindow.IS_APPLET) {
-            this.setTitle("*** Applet-Mode *** GeckoCIRCUITS ***");
-        } else {
-            this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
-        }
+        this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
 
         this.addWindowListener(this);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);  // so that the 'QuitWithoutSaving' dialog can be raised ...
@@ -232,7 +220,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         _fileManager = new GeckoFileManager();
         //default file for unsaved work
         String jarPath = GetJarPath.getJarFilePath();
-        if (!IS_BRANDED && !MainWindow.IS_APPLET) {
+        if (!IS_BRANDED) {
             if (jarPath != null) {
                 File jarFile = new File(jarPath);
                 GlobalFilePathes.DATNAM = jarFile.getParent() + System.getProperty("file.separator") + "unsavedFile.ipes";
@@ -243,7 +231,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             GlobalFilePathes.DATNAM = "Applet";
         }
 
-        if (!MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
+        if (!MainWindow.IS_BRANDED) {
             //StartupWindow.fabricUnBlocking();
         }
 
@@ -269,32 +257,12 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         mItemSaveAs.setActionCommand("Save As");
         mItemSaveAs.addActionListener(this);
 
-        mItemSaveApplet = GuiFabric.getJMenuItem(I18nKeys.SAVE_AS_APPLET);
-        mItemSaveApplet.setActionCommand("SaveApplet");
-        mItemSaveApplet.addActionListener(this);
-
-        if (IS_BRANDED) {
-            mItemNew.setEnabled(false);
-            mItemOpen.setEnabled(false);
-            mItemSaveApplet.setEnabled(false);
-        }
-
-        if (MainWindow.IS_APPLET) {
-            mItemSaveApplet.setEnabled(false);
-        }
-
         mItemSaveView = GuiFabric.getJMenuItem(I18nKeys.SAVE_VIEW_AS_IMAGE);
         mItemSaveView.setActionCommand("Save View as Image");
         mItemSaveView.addActionListener(this);
         mItemExit = GuiFabric.getJMenuItem(I18nKeys.EXIT);
         mItemExit.setActionCommand("Exit");
         mItemExit.addActionListener(this);
-
-        if (MainWindow.IS_APPLET) {
-            mItemSave.setEnabled(false);
-            mItemSaveAs.setEnabled(false);
-            mItemSaveView.setEnabled(false);
-        }
         //
         fileMenu.add(mItemNew);
         mItemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
@@ -303,7 +271,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         fileMenu.add(mItemSave);
         mItemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
         fileMenu.add(mItemSaveAs);
-        fileMenu.add(mItemSaveApplet);
         fileMenu.add(mItemSaveView);
         fileMenu.add(mItemExit);
         // the most recently edited files:
@@ -696,11 +663,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
         helpMenu.add(mItemUpdate);
 
-        if (MainWindow.IS_APPLET) {
-            mItemFeedback.setEnabled(false);
-            //mItemUpdate.setEnabled(false);
-        }
-
         //=======================================
         // Simulations-Status-Anzeige:
         JLabel jlSpace1 = new JLabel("       ");
@@ -743,11 +705,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         if (INCLUDE_GeckoEMC) {
             mItemEMC.setEnabled(true);
         } else {
-            mItemEMC.setEnabled(false);
-        }
-        if (MainWindow.IS_APPLET) {
-            mItem3DTherm.setEnabled(false);
-            mItemMagnet.setEnabled(false);
             mItemEMC.setEnabled(false);
         }
         //=======================================
@@ -1128,7 +1085,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         // second: the window which asks for the autobackup halts the whole simulink system!
         if (GeckoSim.operatingmode == OperatingMode.STANDALONE) {
             try {
-                if (!IS_APPLET && !GeckoSim._isTestingMode) {
+                if (!GeckoSim._isTestingMode) {
                     checkAutoBackupFileId(daten._uniqueFileId);
                 }
             } catch (Exception ex) {
@@ -1149,81 +1106,58 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             //========================================================================
             if (befehl.equals("New")) {
                 _se.setConnectorTestMode(false);
-                if (MainWindow.IS_APPLET) {
-                    this.createNewFile();
-                } else {
-                    // 'createNewFile()' is optionally called from the dialog
-                    if (_se.getZustandGeaendert()) {
+                // 'createNewFile()' is optionally called from the dialog
+                if (_se.getZustandGeaendert()) {
 
-                        int returnOption = JOptionPane.showConfirmDialog(
-                                this,
-                                "The content of the file has changed.\nDo you want to save the changes?\n",
-                                "Warning: Create new file",
-                                JOptionPane.YES_NO_CANCEL_OPTION);
+                    int returnOption = JOptionPane.showConfirmDialog(
+                            this,
+                            "The content of the file has changed.\nDo you want to save the changes?\n",
+                            "Warning: Create new file",
+                            JOptionPane.YES_NO_CANCEL_OPTION);
 
-                        switch (returnOption) {
-                            case 0:
-                                saveFile();
-                            case 1: // just exit, without saving
-                                createNewFile();
-                                break;
-                            case 2: // cancel option
-                                break;
-                            default:
-                                assert false;
-                        }
-                    } else {
-                        this.createNewFile();
+                    switch (returnOption) {
+                        case 0:
+                            saveFile();
+                        case 1: // just exit, without saving
+                            createNewFile();
+                            break;
+                        case 2: // cancel option
+                            break;
+                        default:
+                            assert false;
                     }
+                } else {
+                    this.createNewFile();
                 }
             } else if (befehl.equals("Open")) {
                 _se.setConnectorTestMode(false);
-                if (MainWindow.IS_APPLET) {
-                    new DialogAppletExamples(datnamExampleApplet, this);
-                } else {
-                    if (_se.getZustandGeaendert()) {
-                        int returnOption = JOptionPane.showConfirmDialog(
-                                this,
-                                "The content of the file has changed.\nDo you want to save the changes?\n",
-                                "Warning: Open new file",
-                                JOptionPane.YES_NO_CANCEL_OPTION);
+                if (_se.getZustandGeaendert()) {
+                    int returnOption = JOptionPane.showConfirmDialog(
+                            this,
+                            "The content of the file has changed.\nDo you want to save the changes?\n",
+                            "Warning: Open new file",
+                            JOptionPane.YES_NO_CANCEL_OPTION);
 
-                        switch (returnOption) {
-                            case 0:
-                                saveFile();
-                            case 1: // just exit, without saving
-                                this.openFileDialog();
-                                this.setAnsicht();
-                                break;
-                            case 2: // cancel option
-                                break;
-                            default:
-                                assert false;
-                        }
-                    } else {
-                        this.openFileDialog();
-                        this.setAnsicht();
+                    switch (returnOption) {
+                        case 0:
+                            saveFile();
+                        case 1: // just exit, without saving
+                            this.openFileDialog();
+                            this.setAnsicht();
+                            break;
+                        case 2: // cancel option
+                            break;
+                        default:
+                            assert false;
                     }
+                } else {
+                    this.openFileDialog();
+                    this.setAnsicht();
                 }
             } else if (befehl.equals("Save")) {
                 this.saveFile();
             } else if (befehl.equals("Save As")) {
                 this.saveFileAs();
-            } else if (befehl.equals("SaveApplet")) {
-                File currentDirectory = null;
-                try {
-                    currentDirectory = new File(GlobalFilePathes.DATNAM);
-                } catch (Exception e) {
-                    currentDirectory = new File(GlobalFilePathes.PFAD_JAR_HOME);
-                }
-
-                GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".jar", ".jar Simulation Applet (*.jar)", this, currentDirectory);
-
-                if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.OK) {
-                    File appletFile = fileChooser.getFileWithCheckedEnding();
-                    saveAsApplet(appletFile);
-                    return;
-                }
             } else if (befehl.equals("Save View as Image")) {
                 try {
                     new SaveViewFrame(this, _se._visibleCircuitSheet).setVisible(true);
@@ -1614,11 +1548,9 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             mItemOpen.setEnabled(true);
         }
         mItemExit.setEnabled(true);
-        if (!MainWindow.IS_APPLET) {
-            mItemSave.setEnabled(true);
-            mItemSaveAs.setEnabled(true);
-            mItemSaveView.setEnabled(true);
-        }
+        mItemSave.setEnabled(true);
+        mItemSaveAs.setEnabled(true);
+        mItemSaveView.setEnabled(true);
         setzeSTATUS("Stopped after  ");
         pauseSimulation();
         setMenuDuringSimulation(false, true);
@@ -1650,20 +1582,15 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 mItemStop.setEnabled(true);
                 mItemContinue.setEnabled(false);
             }
-
-            mItemSaveApplet.setEnabled(false);
         } else if (endReached) {
             if (!IS_BRANDED) {
                 mItemNew.setEnabled(true);
                 mItemOpen.setEnabled(true);
             }
             mItemExit.setEnabled(true);
-            if (!MainWindow.IS_APPLET) {
-                mItemSave.setEnabled(true);
-                mItemSaveAs.setEnabled(true);
-                mItemSaveView.setEnabled(true);
-                mItemSaveApplet.setEnabled(true);
-            }
+            mItemSave.setEnabled(true);
+            mItemSaveAs.setEnabled(true);
+            mItemSaveView.setEnabled(true);
 
             mItemCopy.setEnabled(true);
             mItemMove.setEnabled(true);
@@ -1688,15 +1615,8 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         JMenu simMenu = _menuBar.getMenu(_simMenuIndex);
         simMenu.removeAll();
         //---------------
-        if (MainWindow.IS_APPLET) {
-            this.setSimulationMenuOK(simMenu);
-            mItemSaveApplet.setEnabled(false);
-            return;
-        }
+        this.setSimulationMenuOK(simMenu);
 
-        //---------------
-            this.setSimulationMenuOK(simMenu);
-        
     }
 
     private void setSimulationMenuOK(JMenu simMenu) {
@@ -1776,11 +1696,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
     public void schliesseProgramm() {
 
-        if (MainWindow.IS_APPLET && !IS_BRANDED) {
-            this.setVisible(false);
-            return;
-        }
-
         if (IS_BRANDED) {
             try {
                 System.exit(0);
@@ -1801,7 +1716,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             return;
         }
 
-        if (!MainWindow.IS_APPLET && !IS_BRANDED) {
+        if (!MainWindow.IS_BRANDED) {
             GeckoSim.saveProperties();
         }
         if (_se.getZustandGeaendert()) {
@@ -1836,24 +1751,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public void external_end(long tStartSimulink, long tEndSimulink) {
         jtfStatus.setzeStatusRechenzeit(tEndSimulink - tStartSimulink);
     }
-
-    private void saveAsApplet(File outFile) {
-
-        if (!outFile.getAbsolutePath().endsWith(".jar")) {
-            outFile = new File(outFile.getAbsolutePath() + ".jar");
-        }
-
-        String jarPath = GetJarPath.getJarFilePath();
-        File jarFile = new File(jarPath);
-        if (jarFile.exists()) {
-            copyFile(jarFile, outFile);
-        } else {
-            System.err.println("Jar-File does not exist:\n"
-                    + jarFile.getAbsolutePath());
-        }
-
-    }
-
     void copyFile(final File zipFile, final File newFile) {
 
         final ProgressMonitor progressMonitor = new ProgressMonitor(MainWindow.this, "Saving applet...", "Please wait.", 0, 100);
@@ -1895,10 +1792,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                         bis.close();
                     }
 
-                    zos.putNextEntry(new ZipEntry("brand.ipes"));
-                    BufferedOutputStream writer = new BufferedOutputStream(zos);
-                    MainWindow.this.saveFileAsApplet(writer);
-
                     zos.close();
                     zipSrc.close();
 
@@ -1932,49 +1825,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             }
         });
 
-    }
-
-    public void saveFileAsApplet(OutputStream fOut) {
-        //----------------
-        if (speicherVorgangLaeuft) {
-            return;
-        }
-        speicherVorgangLaeuft = true;
-        //----
-        // if no file name has been selected yet -->
-        if (aktuellerDateiName.equals(UNTITLED)) {
-            saveFile();
-        }
-        try {
-            aktuellerDateiName = GlobalFilePathes.DATNAM;
-
-            ProjectData datLK = new ProjectData(
-                    this.getSize(),
-                    MainWindow.optimizerParameterData,
-                    0, _scripter, _fileManager, _se, _solverSettings);
-            //------------
-            // Plain-Test variant in ASCII -->
-            // BufferedWriter out= new BufferedWriter(new FileWriter(GlobalFilePathes.DATNAM));
-            //
-            // Compressed data stream --> reduced and unreadable file -->
-            datLK.saveAsApplet = true;
-            GZIPOutputStream out1 = new GZIPOutputStream(fOut);
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1));
-            //
-            out.write(datLK.exportASCII());
-            datLK.saveAsApplet = false;
-            out.flush();
-            out.close();
-            //------------
-            speicherVorgangLaeuft = false;
-            _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
-            //
-        } catch (Exception e) {
-            speicherVorgangLaeuft = false;
-            System.out.println(e + " peorkkkg");
-        }
-        this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
-        this.aktualisierePropertiesRECENT(aktuellerDateiName);
     }
 
     // check if written file is bigger than a given
@@ -2072,10 +1922,10 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public static ProjectData loadProjectDataFromFile(String dateiName, boolean isAutoBackupFile, OptimizerParameterData optimizer) throws FileNotFoundException {
-        if (!IS_APPLET && !(new File(dateiName).exists())) {
+        if (!(new File(dateiName).exists())) {
             throw new FileNotFoundException("File: " + GlobalFilePathes.DATNAM + " not found!");
         }
-        
+
         ProjectData daten = null;        
         String[] lines = getLinesArrayFromIpesFile(dateiName);        
         daten = new ProjectData(lines, isAutoBackupFile, optimizer);        
@@ -2131,13 +1981,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         // GZIP format (March 2009) - completely new! -->
         try {
             GZIPInputStream in1 = null;
-            if (MainWindow.IS_APPLET) {
-                // Fix for Java 21: use URL constructor instead of URI.toURL()
-                URL fileUrl = new URL(GeckoSim.urlApplet, dateiName);
-                in1 = new GZIPInputStream(fileUrl.openStream());
-            } else {
-                in1 = new GZIPInputStream(new FileInputStream(dateiName));
-            }
+            in1 = new GZIPInputStream(new FileInputStream(dateiName));
 
             BufferedReader in = new BufferedReader(new InputStreamReader(in1));
             Vector<String> datVec = new Vector<>();

@@ -81,8 +81,6 @@ public class CompileScript {
     }
     
     static void compile(final ScriptWindow sw) {
-        if(MainWindow.IS_APPLET) return;
-        
         if(GeckoSim.compiler_toolsjar_missing) {
               JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             sw._compMessagesTextArea.setText("Compilar library tools.jar is missing in the ./lib directory!");

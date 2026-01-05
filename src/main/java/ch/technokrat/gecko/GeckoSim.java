@@ -34,36 +34,28 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.swing.JApplet;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
  * Main GeckoCIRCUITS simulation class.
  *
- * This class extends JApplet to maintain backward compatibility with legacy
- * applet deployments. The JApplet API is deprecated since modern browsers
- * no longer support Java applets, but we keep this for:
- * - Older systems that still use applet mode
- * - Legacy integration with external tools
- * - Historical circuit files that expect applet behavior
+ * This is the entry point for the GeckoCIRCUITS circuit simulator application.
+ * The application runs in standalone mode via main().
  *
- * For modern deployments, the application runs in standalone mode via main().
- *
- * Note: We suppress deprecation warnings because maintaining legacy applet
- * support is intentional for backward compatibility, not an oversight.
+ * Supports multiple operating modes:
+ * - STANDALONE (default) - Normal desktop application
+ * - REMOTE - Remote access via RMI (MATLAB integration)
+ * - MMF - Memory-mapped file communication
+ * - SIMULINK - MATLAB Simulink integration
+ * - EXTERNAL - External tool integration
  */
-@SuppressWarnings("removal")  // JApplet is deprecated but we maintain it for legacy compatibility
-public class GeckoSim extends JApplet {
+public class GeckoSim {
 
     public static long startTime;
     public static MainWindow _win;
     static GeckoSim _geckoSim;
-    public static boolean _initialShow = true; // this is used from the infineon applet!    
-    private String[] datnamExampleApplet;
-    private String datnamStartApplet;
-    public static URL urlApplet;
-    private boolean javaVersionAppletOK = true;
+    public static boolean _initialShow = true;
     public static double xx = 4.67;
     // property stuff
     public static Properties defaultProps;
@@ -117,13 +109,8 @@ public class GeckoSim extends JApplet {
 
         if (testIfBrandedVersion()) {
             MainWindow.IS_BRANDED = true;
-            MainWindow.IS_APPLET = true;
-
-        } else {
-            MainWindow.IS_APPLET = false;  // is set to 'true' in its declaration
         }
 
-        MainWindow.IS_APPLET = false;  // is set to 'true' in its declaration
         //
         loadApplicationProperties();
         //--------------------
@@ -175,20 +162,20 @@ public class GeckoSim extends JApplet {
         }
 
         if (operatingmode != OperatingMode.SIMULINK && operatingmode != OperatingMode.EXTERNAL
-                && !MainWindow.IS_APPLET && !GeckoSim._isTestingMode) {
+                && !GeckoSim._isTestingMode) {
             if (JavaMemoryRestart.isMemoryRestartRequired(reqMem)
                     && JavaMemoryRestart.startNewGeckoCIRCUITSJVM(reqMem, args, applicationProps.getProperty("JAVACOMMAND"))) {
                 System.exit(12);
             }
         }
         _geckoSim = new GeckoSim();
-        
+
         _geckoSim.initialisiere();
-        if (!MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
+        if (!MainWindow.IS_BRANDED) {
             SystemOutputRedirect.init();
         }
 
-        
+
         // test if branded version is used:
         if (testIfBrandedVersion()) {
             try {
@@ -278,104 +265,15 @@ public class GeckoSim extends JApplet {
     public GeckoSim() {
     }
 
-    // JApplet --> 
-    @Override
-    public void init() {
-
-        MainWindow.IS_APPLET = true;
-        GeckoSim.urlApplet = this.getCodeBase();  // from the applet
-        setDefaultFonts();
-        GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
-
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent me) {
-                if (_win == null) {
-                    return;
-                }
-                _win.setVisible(true);
-                try {
-                    _win.openFile(datnamStartApplet);
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(GeckoSim.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        //---------
-        try {
-            int anz = Integer.parseInt(this.getParameter("nrExample"));
-            datnamExampleApplet = new String[anz];
-            for (int i1 = 0; i1 < anz; i1++) {
-                String dn = "dat";
-                if (i1 < 10) {
-                    dn += "0";
-                }
-                dn += ("" + (i1 + 1));
-                datnamExampleApplet[i1] = this.getParameter(dn);
-            }
-            datnamStartApplet = this.getParameter("startFile");
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        operatingmode = OperatingMode.STANDALONE;
-        this.initialisiere();
-    }
-
-    // JApplet --> 
-    @Override
-    public void paint(Graphics g) {
-        g.setColor(Color.orange);
-        g.fillRect(0, 0, 500, 300);
-        int x0 = 10, y0 = 0, dy = 17;
-        //--------
-        if (javaVersionAppletOK) {
-            g.setColor(Color.black);
-            g.setFont(new Font("Arial", Font.BOLD, 12));
-            g.drawString("GeckoCIRCUITS  -  Click Here!", x0, y0 + 1 * dy);
-            g.setFont(GlobalFonts.foAUSWAHL);
-            g.drawString("Java-Applet Mode: Limited Functionality", x0, y0 + 2 * dy);
-        } else {
-            g.setColor(Color.black);
-            g.setFont(GlobalFonts.foAUSWAHL);
-            g.drawString("GeckoCIRCUITS", x0, y0 + 1 * dy);
-            g.setFont(GlobalFonts.foAUSWAHL);
-            g.drawString("Java-Applet Mode: Limited Functionality", x0, y0 + 2 * dy);
-            g.setColor(Color.red);
-            g.setFont(new Font("Arial", Font.BOLD, 12));
-            g.drawString("Java 1.6 needs to be installed!", x0, y0 + 3 * dy);
-        }
-    }
-
     private void initialisiere() {
         //new LangInit(args); 
         LangInit.initEnglish();
 
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
         //---------
-        // Find out if it is Applet or SimulinkObject:
-        // Only if parameters are available (from HTML) it is supposed to be Applet
-        try {
-            Integer.parseInt(this.getParameter("nrExample"));  // throws exception if not Applet
-            MainWindow.IS_APPLET = true;
-
-        } catch (Exception e) {
-            if (MainWindow.IS_BRANDED) {
-                MainWindow.IS_APPLET = true;
-            } else {
-                MainWindow.IS_APPLET = false;
-            }
-
-        }
-        //=================================
 
         this.checkJavaVersion();
-        if (MainWindow.IS_APPLET) {
-            if (!javaVersionAppletOK) {
-                return;
-            }
-        } else {
-            checkIfOpenedFromZipfile();
-        }
+        checkIfOpenedFromZipfile();
         this.checkIfLibraryIsMissing();
         GlobalFilePathes.PFAD_PICS_URL = GetJarPath.getPathPICS();
 
@@ -383,7 +281,7 @@ public class GeckoSim extends JApplet {
         this.loadPropertyFile();
 
         
-        if (!MainWindow.IS_APPLET && Arrays.asList("gnome-shell", "mate", "other...").contains(System.getenv("DESKTOP_SESSION"))) {
+        if (Arrays.asList("gnome-shell", "mate", "other...").contains(System.getenv("DESKTOP_SESSION"))) {
             try {
                 Class<?> xwm = Class.forName("sun.awt.X11.XWM");
                 Field awt_wmgr = xwm.getDeclaredField("awt_wmgr");
@@ -408,12 +306,8 @@ public class GeckoSim extends JApplet {
 
         _win.setActivationOfSimulator(true);  // is continuously checked at a later location
 
-        if (MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
-            _win.setAppletFiles(datnamExampleApplet);
-        } else {
-            if (_initialShow) {
-                _win.setVisible(true);
-            }
+        if (_initialShow) {
+            _win.setVisible(true);
         }
         _win.setSimulationMenu();
     }
@@ -447,7 +341,7 @@ public class GeckoSim extends JApplet {
             }
 
             // now load properties from last invocation
-            if (!MainWindow.IS_APPLET && !MainWindow.IS_BRANDED) {
+            if (!MainWindow.IS_BRANDED) {
                 try {
                     APPLICATION_PROPERTY_FILE = GetJarPath.getJarPath() + "GeckoProperties.prp";
                     try {
@@ -492,17 +386,6 @@ public class GeckoSim extends JApplet {
     // funktioniert nur, wenn Java 1.6 installiert ist -> 
     private void checkJavaVersion() {
         try {
-            if (MainWindow.IS_APPLET) {
-                String javaVersion = System.getProperty("java.version");
-                double jV = Double.parseDouble(javaVersion.substring(0, 3));
-                System.out.println("AppletMode --> " + javaVersion + "   " + jV);
-                if (jV < 1.6) {
-                    javaVersionAppletOK = false;
-                    this.repaint();
-                }
-                return;
-            }
-            //--------------------
             Properties sysProp = System.getProperties();
             String javaVersion = sysProp.getProperty("java.runtime.version");
             double jV = Double.parseDouble(javaVersion.replace("+", ".").substring(0, 3));
@@ -532,10 +415,6 @@ public class GeckoSim extends JApplet {
     public static boolean scriptEngineAvailable = false;
     
     private void checkIfLibraryIsMissing() {
-        if (MainWindow.IS_APPLET) {
-            return;
-        }
-
         try {
             javax.tools.JavaCompiler compiler = javax.tools.ToolProvider.getSystemJavaCompiler();
             if (compiler != null) {
