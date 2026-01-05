@@ -118,7 +118,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public static GeckoFileManager _fileManager = null;
     public static ExternalGeckoCustom _external = null;
     public static GeckoCustomMMF _mmf_access = null;
-    public final _mainwindow _simRunner;
+    public final SimulationRunner _simRunner;
     public final KeyAdapter keyAdapter;
     private static final String spTitleX = "  -  ";
     public static boolean IS_BRANDED = false;
@@ -210,7 +210,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
         _se = new SchematicEditor2(this);
 
-        _simRunner = new _mainwindow(this, _se);
+        _simRunner = new SimulationRunner(this, _se);
 
         sea = new SchematicComponentSelection2();
         _se.setSchematischeEingabeAuswahl(sea);
