@@ -13,38 +13,37 @@
  */
 package ch.technokrat.gecko.geckocircuits.scope;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ComponentEvent;
-import java.awt.Event;
-import javax.swing.KeyStroke;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-import javax.swing.JToolBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.JDialog;
-import java.net.URL;
-import java.util.StringTokenizer;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+@SuppressWarnings({"deprecation", "serial", "this-escape"})
 public class DialogFourierDiagramm extends JDialog implements ComponentListener {
 
     //-------------------
@@ -53,12 +52,12 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
     private DisplayFourierWorksheet[] sheet;
     private FourierKurvenRekonstruktion[] rekonstruktion;
     //
-    private AbstractDataContainer _worksheet;
-    private double[][] _cn, _jn, _an, _bn;
-    private double _f1;
-    private int _nMin;
-    private double _rng1, _rng2;
-    private boolean[] _signalFourierAnalysiert;
+    private final AbstractDataContainer _worksheet;
+    private final double[][] _cn, _jn, _an, _bn;
+    private final double _f1;
+    private final int _nMin;
+    private final double _rng1, _rng2;
+    private final boolean[] _signalFourierAnalysiert;
     //
     private int mausModus = GraferImplementation.MAUSMODUS_NIX;
     private int iconONnummerALT = 0;
@@ -66,19 +65,17 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
     private ImageIcon[] iconOFF, iconON;
     private JButton[] jbMaus;
     private JToolBar jtb1;
-    private JMenuItem mItemF3, mItemF5;
+    private JMenuItem mItemF3;
     //-----------------------
 
     public DialogFourierDiagramm(
             double[][][] erg, boolean[] sngFourierAnalysiert, int nMin, double f1, AbstractDataContainer worksheet,
             double rng1, double rng2) {
         super.setModal(true);
-        addComponentListener(this);
         try {
-            @SuppressWarnings("deprecation")
-            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
-            setIconImage((new ImageIcon(url)).getImage());
-        } catch (Exception e) {
+            java.net.URI uri = java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "gecko.gif");
+            setIconImage((new ImageIcon(uri.toURL())).getImage());
+        } catch (java.net.MalformedURLException e) {
         }
         _an = erg[0];
         _bn = erg[1];
@@ -91,11 +88,12 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         _rng2 = rng2;
         _worksheet = worksheet;
 
-        setTitle(" " + "Diagram Fourier-Transform");
+        setTitle("Diagram Fourier-Transform");
         getContentPane().setLayout(new BorderLayout());
         baueGUItoolbar();
         baueGUI();
         pack();
+        addComponentListener(this);
     }
 
     private void baueGUI() {
@@ -130,82 +128,50 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         con.add(jpIN, BorderLayout.SOUTH);
         con.add(jtb1, BorderLayout.WEST);
         //=======================================
-        final JDialog ich = this;  // Selbstreferenz
-        final FileFilter filter = new FileFilter() {
-
-            public boolean accept(File f) {
-                if (f.isDirectory()) {
-                    return true;
-                }
-                if (f.getName().endsWith(".dat")) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            public String getDescription() {
-                return new String("Data File, Space-Spr. (*.dat)");
-            }
-        };
         //-----------
         JMenu dataMenu = GuiFabric.getJMenu(I18nKeys.FILE);
         mItemF3 = GuiFabric.getJMenuItem(I18nKeys.WRITE_DATA_TO_FILE);
         mItemF3.setMnemonic(KeyEvent.VK_S);
-        mItemF3.addActionListener(new ActionListener() {
+        mItemF3.addActionListener((ActionEvent ae) -> {
+            GeckoFileChooser fileChooser = GeckoFileChooser.createSimpleSaveFileChooser(".dat", DialogFourierDiagramm.this);
+            if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
+                return;
+            }
 
-            public void actionPerformed(ActionEvent ae) {
-                //------------------------------
-                GeckoFileChooser fileChooser = GeckoFileChooser.createSimpleSaveFileChooser(".dat", DialogFourierDiagramm.this);
-                if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
-                    return;
+            StringBuffer sb = new StringBuffer();
+            sb.append("N ");
+            for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
+                if (_signalFourierAnalysiert[i1]) {
+                    sb.append(_worksheet.getSignalName(i1-1) + "_cN " + _worksheet.getSignalName(i1-1) + "_phiN[rad] ");
                 }
-                
-                //------------------
-                // zuerst die Signal-Namen in der obersten Zeile -->
-                StringBuffer sb = new StringBuffer();
-                sb.append("N ");
-                for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
-                    if (_signalFourierAnalysiert[i1]) {
-                        sb.append(_worksheet.getSignalName(i1-1) + "_cN " + _worksheet.getSignalName(i1-1) + "_phiN[rad] ");
+            }
+            sb.append("\n");
+            for (int i1 = 0; i1 < _cn[0].length; i1++) {
+                sb.append(i1 + " ");
+                for (int i2 = 1; i2 < _worksheet.getRowLength()+1; i2++) {
+                    if (_signalFourierAnalysiert[i2]) {
+                        sb.append(_cn[i2 - 1][i1] + " " + _jn[i2 - 1][i1] + " ");
                     }
+
                 }
                 sb.append("\n");
-                // jetzt die zugehoerigen Daten in allen folgenden Zeilen -->
-                for (int i1 = 0; i1 < _cn[0].length; i1++) {
-                    sb.append(i1 + " ");
-                    for (int i2 = 1; i2 < _worksheet.getRowLength()+1; i2++) {
-                        if (_signalFourierAnalysiert[i2]) {
-                            sb.append(_cn[i2 - 1][i1] + " " + _jn[i2 - 1][i1] + " ");
-                        }
-
-                    }
-                    sb.append("\n");
-                }
-                // ... und jetzt abspeichern -->
-                try {
-                    BufferedWriter fkaku = new BufferedWriter(new FileWriter(fileChooser.getFileWithCheckedEnding()));
-                    fkaku.write(sb.toString());
-                    fkaku.flush();
-                    fkaku.close();
-                } catch (Exception e) {
-                    System.out.println(e + "   qe90r8gn03g8q");
-                }
-                //------------------------------
+            }
+            try {
+                BufferedWriter fkaku = new BufferedWriter(new FileWriter(fileChooser.getFileWithCheckedEnding()));
+                fkaku.write(sb.toString());
+                fkaku.flush();
+                fkaku.close();
+            } catch (Exception e) {
+                System.out.println(e + "   qe90r8gn03g8q");
             }
         });
         JMenuItem mItemF5 = GuiFabric.getJMenuItem(I18nKeys.EXIT);
         mItemF5.setMnemonic(KeyEvent.VK_X);
-        mItemF5.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent ae) {
-                DialogFourierDiagramm.this.dispose();
-            }
-        });
+        mItemF5.addActionListener((ActionEvent ae) -> DialogFourierDiagramm.this.dispose());
         dataMenu.add(mItemF3);
-        mItemF3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+        mItemF3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         dataMenu.add(mItemF5);
-        mItemF5.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK));
+        mItemF5.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
         //
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(dataMenu);
@@ -213,35 +179,33 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         //=======================================
     }
 
-    @SuppressWarnings("deprecation")
     private void baueGUItoolbar() {
         //--------------------
         try {
             iconON = new ImageIcon[]{
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_off.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_zoomFit2.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_zoomFenster.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_getXYschieber.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_log.png")), /*, /*
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_zoomDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_getXYkreuz.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_drawLine.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_drawText.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_measureDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_measureDY.png")),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_off.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_zoomFit2.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_zoomFenster.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_getXYschieber.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_log.png").toURL()), /*, /*
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_zoomDX.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_getXYkreuz.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_drawLine.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_drawText.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_measureDX.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_measureDY.png").toURL()),
                      */};
             iconOFF = new ImageIcon[]{
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_off.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_zoomFit2.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_zoomFenster.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_getXYschieber.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_log.png")), /*
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_zoomDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_getXYkreuz.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_drawLine.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_drawText.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_measureDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_measureDY.png")),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_off.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_zoomFit2.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_zoomFenster.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_getXYschieber.png").toURL()),
+                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_log.png").toURL()), /*
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_zoomDX.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_getXYkreuz.png").toURL()),
+                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_drawLine.png").toURL()),
+                     new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_measureDX.png").toURL()),
+                     new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_measureDY.png").toURL()),
                      */};
         } catch (Exception e) {
             Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, e.getMessage());
@@ -252,12 +216,7 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
             jbMaus[i1] = new JButton();
             jbMaus[i1].setIcon(iconOFF[i1]);
             jbMaus[i1].setActionCommand("mausModus " + i1);
-            jbMaus[i1].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent actionEvent) {
-                    aktualisiereMausModus(actionEvent);
-                }
-            });
+            jbMaus[i1].addActionListener((final ActionEvent actionEvent) -> aktualisiereMausModus(actionEvent));
 
             //--------------------
             switch (i1) {
