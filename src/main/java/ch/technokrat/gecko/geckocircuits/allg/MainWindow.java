@@ -470,13 +470,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         vItemShowFlowTHERM.setSelected(SchematicEditor2._thermDisplayMode.showFlowSymbol);
         vItemShowFlowTHERM.setForeground(GlobalColors.farbeFertigElementTHERM);
         //
-        JMenuItem menueGroesse = GuiFabric.getJMenuItem(I18nKeys.WORKSHEET_SIZE);
-        menueGroesse.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                DialogSheetSize.fabric(MainWindow.this, _se._visibleCircuitSheet._worksheetSize);
-            }
-        });
-
         JMenu menueSkalierung = GuiFabric.getJMenu(I18nKeys.SCALING);
         JMenuItem mItemSkal10 = GuiFabric.getJMenuItem(I18nKeys.POINT_10);
         mItemSkal10.addActionListener(new ActionListener() {
@@ -566,7 +559,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         menueFontSize.add(mItemFS18);
         //
         JMenu viewMenu = GuiFabric.getJMenu(I18nKeys.VIEW);
-        viewMenu.add(menueGroesse);
         viewMenu.add(menueSkalierung);
         viewMenu.add(menueFontSize);
         viewMenu.add(aliasingCONTROL);
