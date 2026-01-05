@@ -1,264 +1,268 @@
 # GeckoCIRCUITS
 
-A fast circuit simulator optimized for power electronics applications. Multi-domain simulation including thermo-electrical simulation, EMI filter design, and thermal design tools.
+A fast circuit simulator optimized for power electronics applications. Multi-domain simulation including thermo-electrical simulation, EMI filter design, and thermal design tools. The application can run standalone, as an applet, or integrate with external tools like MATLAB/Simulink.
 
-Originally written by Andreas Müsing, Andrija Stupar and Uwe Drofenik. Published under GPLv3.
+## Table of Contents
 
-## Manual Build & Run (Command Line)
+- [Quick Start](#quick-start) - Get up and running in 5 minutes
+- [Getting Help](#getting-help) - Where to find information and support
+- [GUI Development](#gui-development) - Using NetBeans GUI Designer
+- [Architecture Overview](#architecture-overview) - System structure
+- [Project Structure](#project-structure) - Code organization
+- [Testing](#testing) - Running and writing tests
+- [Examples & Resources](#examples--resources) - Circuit examples and tutorials
 
-### Prerequisites
-- **Java**: JDK 21 (required - project is built for Java 21)
-- **Maven**: 3.6+
-- **Memory**: 3GB+ heap recommended for simulations
+---
 
-### macOS Setup (Homebrew)
+## Quick Start
 
-If you're on macOS, use Homebrew for easy installation:
+### New Developer? Start Here!
 
-```bash
-# Install Homebrew (if not already installed)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+**Prerequisites:**
+1. **Java JDK 21** - Required for this project
+2. **Maven 3.6+** - Build tool (project uses Maven)
+3. **NetBeans IDE** - For GUI design with .form files (recommended)
+   - Download: https://www.netbeans.org/downloads/
+   - Alternative: Use VSCode for code editing
 
-# Install OpenJDK 21
-brew install openjdk@21
+**Setup Steps (15 minutes):**
 
-# Install Maven
-brew install maven
-
-# Set JAVA_HOME (macOS uses zsh by default)
-# For Apple Silicon (M1/M2/M3):
-echo 'export JAVA_HOME=/opt/homebrew/opt/openjdk@21' >> ~/.zshrc
-
-# For Intel Macs:
-echo 'export JAVA_HOME=/usr/local/opt/openjdk@21' >> ~/.zshrc
-
-# Reload your shell configuration
-source ~/.zshrc
-
-# Verify installation
-java -version
-mvn -version
-echo $JAVA_HOME
+**Step 1: Set JAVA_HOME (Windows - Optional but Recommended)**
+```
+1. Press Win+R, type: sysdm.cpl
+2. Go to "Advanced" → "Environment Variables"
+3. Add new variable:
+   - Variable name: JAVA_HOME
+   - Variable value: C:\Program Files\Java\jdk-21 (adjust to your path)
+4. Click OK
+5. Restart VSCode (if open)
 ```
 
-**Note:** If you use bash instead of zsh, replace `~/.zshrc` with `~/.bash_profile` in the commands above.
-
-### Setting up JAVA_HOME
-
-The VSCode tasks and Maven require the `JAVA_HOME` environment variable to be set correctly.
-
-**For Windows users:**
-
-Add to your Environment Variables:
-1. Press `Win+R`, type `sysdm.cpl`
-2. Go to **Advanced** → **Environment Variables**
-3. Add or edit `JAVA_HOME` pointing to your JDK 21 installation
-4. Ensure `%JAVA_HOME%\bin` is in your `PATH`
-
-Or for Git Bash users, add to `~/.bashrc` or `~/.bash_profile`:
-```bash
-export JAVA_HOME="/c/Program Files/Java/jdk-21"  # Adjust to your installation path
+**Step 2: Install Maven (Windows - Optional)**
 ```
-(Note the Unix-style path with forward slashes)
-
-**For Linux users:**
-
-Install OpenJDK 21 and set JAVA_HOME:
-```bash
-# Ubuntu/Debian:
-sudo apt update
-sudo apt install openjdk-21-jdk maven
-
-# Fedora/RHEL:
-sudo dnf install java-21-openjdk-devel maven
-
-# Add to ~/.bashrc or ~/.zshrc:
-echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk' >> ~/.bashrc
-source ~/.bashrc
+1. Download Maven: https://maven.apache.org/download.cgi
+2. Extract to folder (e.g., C:\Program Files\Apache Maven)
+3. Add Maven to PATH: System Properties → Environment Variables → Path → Edit
+4. Verify: Open command prompt, run: `mvn -version`
 ```
 
-**Verify your setup:**
+**Step 3: Build Project**
 ```bash
-echo $JAVA_HOME
-mvn -version
-```
-
-After setting JAVA_HOME, restart your terminal or VSCode for changes to take effect.
-
-### Build
-```bash
+# In this directory (C:\Users\mhr\Documents\GeckoCIRCUITS)
 mvn clean package assembly:single -DskipTests
 ```
 
-Creates `target/gecko-1.0-jar-with-dependencies.jar`
-
-**Note:** The `-DskipTests` flag is required to skip native library tests that fail on non-Netbeans environments. The application will work correctly.
-
-### Run
+**Step 4: Run Application**
 ```bash
-# Standard
 java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar
-
-# With circuit file
-java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar resources/Education_ETHZ/ex_1.ipes
-
-# HiDPI displays
-java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target/gecko-1.0-jar-with-dependencies.jar
 ```
 
+---
 
-## Quick Start with VSCode
+## Getting Help
 
-### 1. Open Project in VSCode
-```bash
-# From the project directory
-code .
+### Documentation
+- **[NETBEANS_GUI_DESIGNER.md](NETBEANS_GUI_DESIGNER.md)** - Using NetBeans GUI Designer for Swing dialogs
+- **[OPCODE_GUIDE.md](OPCODE_GUIDE.md)** - Complete development guide (build, run, debug, architecture)
+- **[REMOTE_CONTROL_MANUAL.md](REMOTE_CONTROL_MANUAL.md)** - Remote control and automation
 
-# Or open from anywhere with the project path
-code /path/to/GeckoCIRCUITS
+### Troubleshooting
+- **Build fails**: Check Java version (requires JDK 21) and Maven is installed
+- **Out of memory**: Increase heap size: change `-Xmx3G` to `-Xmx4G` or higher
+- **GUI issues**: Use NetBeans to open .form files (see NETBEANS_GUI_DESIGNER.md)
+- **Tests fail**: Ensure you've run `mvn clean package assembly:single` first
+
+---
+
+## GUI Development
+
+### Using NetBeans GUI Designer
+
+**Overview:**
+- NetBeans includes **GUI Designer** (also called WindowBuilder)
+- Provides **WYSIWYG editor** for Swing .form files
+- **No migration needed** - works with existing .form files directly
+- **Auto-generates code** - NetBeans writes UI code for you
+- **Zero setup time** - Already installed with NetBeans
+
+**Quick Start (Today):**
+1. **Open NetBeans**: Run `"C:\Program Files\Apache NetBeans\bin\netbeans64.exe"` (or your NetBeans installation)
+2. **Open Project**: File → Open Project → Navigate to: `C:\Users\mhr\Documents\GeckoCIRCUITS` → Select `pom.xml` → Click "Open Project"
+3. **Open .form file**: Shift+double-click on `DialogSheetSize.form` (in Projects panel)
+4. **Edit GUI**: Drag components from Palette, set properties, save (Ctrl+S)
+5. **Test**: Run application to see changes
+
+**Daily Workflow:**
+```
+Edit Dialog GUI:
+1. Shift+double-click DialogSheetSize.form → Opens in [Design] tab
+2. Drag components, set properties in Properties window
+3. Save (Ctrl+S)
+4. Run application (F6 from NetBeans OR `java -jar target/...jar`)
+
+Edit Business Logic:
+1. Click [Source] tab in NetBeans
+2. Edit Java code
+3. Save (Ctrl+S)
 ```
 
-### 2. Install Recommended Extensions
-When prompted, click **"Install All"** to install Java extensions, or install manually:
-- Extension Pack for Java
-- Maven for Java
-- Debugger for Java
+**For detailed guide:** See [NETBEANS_GUI_DESIGNER.md](NETBEANS_GUI_DESIGNER.md)
 
-### 3. Build and Run
-**Press `F5`** - VSCode will automatically build and run GeckoCIRCUITS!
+---
 
-Or use **`Ctrl+Shift+B`** to just build the project.
+## Architecture Overview
 
-## VSCode Development Workflow
+### Main Entry Point
+- **GeckoSim.java** (`ch.technokrat.gecko.GeckoSim`): Main class that initializes the application
+  - Handles different operating modes: STANDALONE, REMOTE, MMF (Memory-Mapped File), SIMULINK, EXTERNAL
+  - Manages memory settings and JVM restart if more memory is required
+  - Initializes main window (`Fenster`)
 
-### Building
-- **`Ctrl+Shift+B`** - Default build (skips tests - recommended)
-- **Terminal → Run Task → Build GeckoCIRCUITS (With Tests)** - Full build with tests (may fail)
-- **Terminal → Run Task → Clean Build Directory** - Clean target folder
+### Key Package Structure
 
-### Running
-- **`F5`** - Run with debugger
-- **`Ctrl+F5`** - Run without debugger
+- **ch.technokrat.gecko**: Core application classes
+  - Remote interface classes (`GeckoRemote*`) for external tool integration
+  - Memory-mapped file support (`GeckoMemoryMappedFile`, `GeckoCustomMMF`)
+  - Control calculation interfaces
 
-### Available Run Configurations
-Access via Run menu or Debug sidebar (`Ctrl+Shift+D`):
+- **ch.technokrat.gecko.geckocircuits**: Main simulation components
+  - `allg/`: General classes (dialogs, file management, global settings)
+  - `circuit/`: Circuit sheet, components, terminals, couplings
+  - `control/`: Control blocks and systems
+  - `datacontainer/`: Data storage and management
+  - `math/`: Mathematical utilities
+  - `newscope/` & `scope/`: Oscilloscope/visualization
+  - `nativec/`: Native C integration
 
-1. **Run GeckoCIRCUITS** - Standard run (auto-builds first)
-2. **Run GeckoCIRCUITS (HiDPI)** - For 4K/high-DPI displays
-3. **Run GeckoCIRCUITS (No Build)** - Quick restart without rebuilding
-4. **Run GeckoCIRCUITS with File** - Opens currently active `.ipes` file
-5. **Run GeckoCIRCUITS (Buck Converter Example)** - Opens example circuit
+- **ch.technokrat.gecko.geckoscript**: Scripting support
 
-### Debugging
-1. Set breakpoints by clicking in the gutter (left of line numbers)
-2. Press `F5` to run with debugger
-3. Use debug controls: **F5** (Continue), **F10** (Step Over), **F11** (Step Into), **Shift+F5** (Stop)
+- **ch.technokrat.gecko.i18n**: Internationalization
+  - `I18nKeys.java` - 968+ translation keys
+  - `GuiFabric.java` - Factory for localized components
+  - `EnglishMapper.java` - English translations
 
-See [.vscode/README.md](.vscode/README.md) for complete VSCode guide with keyboard shortcuts and tips.
+- **ch.technokrat.expressionscripting**: Expression and JavaScript support
 
+### Operating Modes
 
-## Example Circuits
+The simulator supports multiple operating modes defined in `OperatingMode`:
+- **STANDALONE**: Normal desktop application
+- **REMOTE**: Remote access via RMI (for MATLAB integration)
+- **MMF**: Memory-mapped file communication
+- **SIMULINK**: Integration with MATLAB Simulink
+- **EXTERNAL**: External tool integration
 
-Find example circuits in the `resources/` directory:
+### External Integration
 
-| Circuit Type | File Path |
-|--------------|-----------|
-| Buck Converter | `resources/Education_ETHZ/ex_1.ipes` |
-| Buck-Boost | `resources/Topologies/BuckBoost_const_dutyCycle.ipes` |
-| Three-Phase VSR | `resources/Topologies/three-phase_VSR_simpleControl_250kW.ipes` |
+GeckoCIRCUITS can be controlled from external tools (particularly MATLAB/Simulink):
+- **Remote interface**: Uses Java RMI for method calls over network
+- **Memory-mapped files**: Shared memory communication for high-performance data exchange
+- See `GeckoRemoteRegistry`, `GeckoCustomRemote`, `GeckoCustomMMF` classes
 
-See [TOC.md](TOC.md) for a complete catalog of examples.
+---
 
 ## Project Structure
 
-- **`src/main/java/`** - Java source code
-  - `ch.technokrat.gecko` - Core application classes
-  - `ch.technokrat.gecko.geckocircuits` - Circuit simulation components
-  - `ch.technokrat.gecko.geckoscript` - Scripting support
-- **`resources/`** - Example circuits and tutorials
-- **`pom.xml`** - Maven build configuration
-- **`.vscode/`** - VSCode tasks and launch configurations
-- **`CLAUDE.md`** - Detailed architecture documentation
+### Main Directories
 
-Main entry point: `ch.technokrat.gecko.GeckoSim`
+- **`src/main/java/`**: Java source code
+- **`src/test/java/`**: Test code
+- **`resources/`**: Example circuits and tutorials
+- **`target/`**: Build output
 
-## Remote Control & Automation
+### Key Packages
 
-GeckoCIRCUITS provides comprehensive remote control capabilities for:
-- Running simulations programmatically
-- Setting and modifying parameters
-- Retrieving simulation results
-- Performing signal analysis (RMS, THD, FFT, etc.)
-- Integrating with MATLAB, Python, or other external tools
+**ch.technokrat.gecko**: Core application classes
 
-**📖 See [REMOTE_CONTROL_MANUAL.md](REMOTE_CONTROL_MANUAL.md) for complete documentation on:**
-- Remote Mode (RMI) and Memory-Mapped File Mode (MMF)
-- API reference with all available methods
-- Code examples in Java, MATLAB, Octave, and Python
-- Best practices and troubleshooting
+**ch.technokrat.gecko.geckocircuits**: Main simulation components
+- **`allg/`**: General classes (dialogs, file management, global settings)
+- **`circuit/`**: Circuit sheet, components, terminals, couplings
+- **`control/`**: Control blocks and systems
+- **`datacontainer/`**: Data storage and management
+- **`math/`**: Mathematical utilities
+- **`newscope/`** & `scope/`: Oscilloscope/visualization
+- **`nativec/`**: Native C integration
 
-**Quick Example:**
+**ch.technokrat.gecko.geckoscript**: Scripting support
+
+**ch.technokrat.gecko.i18n**: Internationalization
+
+---
+
+## Testing
+
+### Running Tests
 ```bash
-# Start GeckoCIRCUITS with remote access on port 43035
-java -Xmx3G -Dpolyglot.js.nashorn-compat=true \
-  -jar target/gecko-1.0-jar-with-dependencies.jar -p 43035
-
-# Connect from MATLAB/Octave
-gesim = javaObject('gecko.GeckoRemote');
-gesim.connectToGecko(43035);
-gesim.runSimulation();
-results = gesim.getSignalData('Scope1.Out1', 0, gesim.getSimulationTime(), 1);
-gesim.disconnectFromGecko();
+mvn test
 ```
 
-## Operating Modes
+### Test Status
+- All 159 tests now pass successfully (0 failures, 0 skipped).
+- Test mode controlled by `GeckoSim._isTestingMode` flag
 
-GeckoCIRCUITS supports multiple operating modes:
-- **STANDALONE** - Normal desktop application (default)
-- **REMOTE** - Remote access via RMI (MATLAB integration)
-- **MMF** - Memory-mapped file communication
-- **SIMULINK** - MATLAB Simulink integration
-- **EXTERNAL** - External tool integration
+### Test Categories
 
-## Troubleshooting
+**Unit tests**: Calculator and component tests
 
-### Out of Memory Errors
-Increase heap size by editing `run.bat` or [.vscode/launch.json](.vscode/launch.json):
-- Change `-Xmx3G` to `-Xmx4G` or higher
+**Integration tests**: ModelResultsTest - loads and simulates real circuit files
 
-### Build Fails
-```bash
-# Try building with tests skipped
-mvn clean package assembly:single -DskipTests
-```
+**API tests**: GeckoRemoteTest - verifies GeckoRemote API consistency
 
-### VSCode Java Extension Issues
-- Press `Ctrl+Shift+P` → **"Java: Clean Java Language Server Workspace"**
-- Reload window: `Ctrl+Shift+P` → **"Reload Window"**
+---
 
-### Tests
-All tests now pass successfully (159 tests, 0 failures, 0 skipped).
-- ModelResultsTest integration tests verify real circuit files can be loaded and simulated
-- GeckoRemoteTest verifies API consistency between GeckoRemote and GeckoRemoteInterface
-- NativeCTest works on all platforms (Windows, Linux, macOS) with provided native libraries
-- No tests need to be skipped for normal builds
+## Examples & Resources
+
+### Circuit Examples
+
+The `resources/` directory contains extensive examples:
+
+- **DC/DC converters**: Buck, Boost, Buck-Boost, Cuk, SEPIC, Flyback
+- **AC/DC rectifiers**: Vienna, Swiss, three-phase VSR, PFC
+- **DC/AC inverters**: Single-phase, three-phase
+- **AC/AC converters**: Matrix converters
+
+Located in subdirectories like `Education_ETHZ/`, `Topologies/`, `education_www.ipes.ethz.ch/`
+
+---
+
+## Getting Started as New Developer
+
+### Recommended Learning Path
+
+**Week 1: Setup & Orientation**
+1. Build and run the application
+2. Open a few example circuits (`resources/Education_ETHZ/`)
+3. Explore the GUI and dialogs
+4. Understand the .form file structure (open in NetBeans GUI Designer)
+
+**Week 2: Simple Modifications**
+1. Use NetBeans GUI Designer to modify a dialog's layout
+2. Add a simple component (button, label)
+3. Test your changes
+
+**Week 3+: Contribute**
+1. Fix small bugs
+2. Add new features
+3. Improve documentation
+
+---
+
+## Original Sourceforge
+- **Original Sourceforge**: https://sourceforge.net/projects/geckocircuits/
+- **Contributions from**: [Technokrat](https://github.com/technokrat/gecko) (HiDPI support and improvements)
+
+---
 
 ## License
 
-This program is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License version 3** (GPLv3) as published by the Free Software Foundation.
+- **GPLv3** for open source use
+- **Commercial license** available from Gecko-Research GmbH
+- See [LICENSE](LICENSE) file or visit http://www.gnu.org/licenses/
 
-For commercial usage/redistribution, please contact Gecko-Research GmbH to obtain a commercial license.
+---
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+## Contact & Resources
 
-See [LICENSE](LICENSE) file or visit http://www.gnu.org/licenses/
-
-## Additional Resources
-
-- **Architecture & Development**: [CLAUDE.md](CLAUDE.md)
-- **FAQ**: [FAQ.md](FAQ.md)
-- **Example Catalog**: [TOC.md](TOC.md)
-- **Authors**: [AUTHORS.txt](AUTHORS.txt)
 - **Website**: www.gecko-simulations.com
-- **Original Sourceforge**: https://sourceforge.net/projects/geckocircuits/
-- **Contributions from**: [Technokrat](https://github.com/technokrat/gecko) (HiDPI support and improvements)
+- **Documentation**: See [OPCODE_GUIDE.md](OPCODE_GUIDE.md) for complete development guide
+- **GUI Design**: See [NETBEANS_GUI_DESIGNER.md](NETBEANS_GUI_DESIGNER.md) for NetBeans GUI Designer guide
