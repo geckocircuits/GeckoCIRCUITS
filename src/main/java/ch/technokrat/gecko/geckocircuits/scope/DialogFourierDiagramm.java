@@ -22,6 +22,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,9 +74,9 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
             double rng1, double rng2) {
         super.setModal(true);
         try {
-            java.net.URI uri = java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "gecko.gif");
-            setIconImage((new ImageIcon(uri.toURL())).getImage());
-        } catch (java.net.MalformedURLException e) {
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            setIconImage(new ImageIcon(new URL(picsUrl, "gecko.gif")).getImage());
+        } catch (Exception e) {
         }
         _an = erg[0];
         _bn = erg[1];
@@ -182,31 +183,31 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
     private void baueGUItoolbar() {
         //--------------------
         try {
-            iconON = new ImageIcon[]{
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_off.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_zoomFit2.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_zoomFenster.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_getXYschieber.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_log.png").toURL()), /*, /*
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_zoomDX.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_getXYkreuz.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_drawLine.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_drawText.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_measureDX.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconON_measureDY.png").toURL()),
-                     */};
-            iconOFF = new ImageIcon[]{
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_off.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_zoomFit2.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_zoomFenster.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_getXYschieber.png").toURL()),
-                        new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_log.png").toURL()), /*
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_zoomDX.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_getXYkreuz.png").toURL()),
-                    new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_drawLine.png").toURL()),
-                     new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_measureDX.png").toURL()),
-                     new ImageIcon(java.net.URI.create(GlobalFilePathes.PFAD_PICS_URL + "iconOFF_measureDY.png").toURL()),
-                     */};
+            String[] iconFiles = {"iconON_off.png", "iconON_zoomFit2.png", "iconON_zoomFenster.png", 
+                                  "iconON_getXYschieber.png", "iconON_log.png"};
+            
+            iconON = new ImageIcon[iconFiles.length];
+            for (int i = 0; i < iconFiles.length; i++) {
+                URL iconUrl = DialogFourierDiagramm.class.getResource("/gecko/geckocircuits/allg/" + iconFiles[i]);
+                iconON[i] = new ImageIcon(iconUrl);
+                if (iconON[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
+                    Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, 
+                        "Failed to load icon: " + iconFiles[i]);
+                }
+            }
+            
+            String[] iconFilesOFF = {"iconOFF_off.png", "iconOFF_zoomFit2.png", "iconOFF_zoomFenster.png",
+                                      "iconOFF_getXYschieber.png", "iconOFF_log.png"};
+            
+            iconOFF = new ImageIcon[iconFilesOFF.length];
+            for (int i = 0; i < iconFilesOFF.length; i++) {
+                URL iconUrl = DialogFourierDiagramm.class.getResource("/gecko/geckocircuits/allg/" + iconFilesOFF[i]);
+                iconOFF[i] = new ImageIcon(iconUrl);
+                if (iconOFF[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
+                    Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, 
+                        "Failed to load icon: " + iconFilesOFF[i]);
+                }
+            }
         } catch (Exception e) {
             Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, e.getMessage());
         }
