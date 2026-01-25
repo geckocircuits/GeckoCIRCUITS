@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
+import ch.technokrat.gecko.geckocircuits.api.ISimulationEngine;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractMotor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractVoltageSource;
@@ -30,7 +31,7 @@ import ch.technokrat.gecko.geckocircuits.newscope.ScopeFrame;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimulationsKern {
+public class SimulationsKern implements ISimulationEngine {
 
     private boolean diodenSchaltfehler;
     private double dt, t, tPAUSE;
@@ -83,26 +84,46 @@ public class SimulationsKern {
     };
     public SimulationStatus _simulationStatus = SimulationStatus.NOT_INIT;
 
+    @Override
+    public ISimulationEngine.SimulationStatus getSimulationStatus() {
+        switch (_simulationStatus) {
+            case RUNNING:
+                return ISimulationEngine.SimulationStatus.RUNNING;
+            case PAUSED:
+                return ISimulationEngine.SimulationStatus.PAUSED;
+            case FINISHED:
+                return ISimulationEngine.SimulationStatus.FINISHED;
+            case NOT_INIT:
+            default:
+                return ISimulationEngine.SimulationStatus.NOT_INIT;
+        }
+    }
+
     public SimulationsKern() {
         _thLuDecompCache = new LUDecompositionCache();
         _luDecompCache = new LUDecompositionCache();
     }
 
+    @Override
     public void pauseSimulation() {
     }
 
+    @Override
     public double getZeitAktuell() {
         return t;
     }
 
+    @Override
     public double getTEND() {
         return tEND;
     }
 
+    @Override
     public double getTSTART() {
         return tSTART;
     }
 
+    @Override
     public double getdt() {
         return dt;
     }
@@ -331,7 +352,8 @@ public class SimulationsKern {
         return mindestensEineAktiveSchalthandlung;
     }
 
-    public void runSimulation() {        
+    @Override
+    public void runSimulation() {
         while ((t <= tEND) && (_simulationStatus != _simulationStatus.PAUSED)) {
             simulateOneTimeStep();
             t += dt;
@@ -346,6 +368,7 @@ public class SimulationsKern {
         System.arraycopy(lkmTHERM.p, 0, pTHERM_ALT, 0, pTHERM_ALT.length);
     }
 
+    @Override
     public void simulateOneStep() throws Exception {
         if (t + dt > tEND) {
             throw new Exception("Specified end of simulation reached! Cannot simulate another step.");
@@ -354,6 +377,7 @@ public class SimulationsKern {
         t += dt;
     }
 
+    @Override
     public void simulateTime(double time) throws Exception {
         double simtime = t + time;
         boolean overReach = false;
@@ -371,6 +395,7 @@ public class SimulationsKern {
         }
     }
 
+    @Override
     public void endSim() {
         _simulationStatus = SimulationStatus.FINISHED;
         this.lastUpdateOfScope();
@@ -385,6 +410,7 @@ public class SimulationsKern {
     }
 
     // setze die Anfangsbedingungen entsprechend der letzten Berechnung, wenn CONTINUE gedrueckt wurde -->
+    @Override
     public void setInitialConditionsFromContinue() {
         if ((lkmLK.p.length != pLK_ALT.length) || (lkmTHERM.p.length != pTHERM_ALT.length)) {
             DialogWarningNodeNumber dialogWarningNodeNumber = new DialogWarningNodeNumber();
@@ -395,6 +421,7 @@ public class SimulationsKern {
         lkmTHERM.p = pTHERM_ALT;
     }
 
+    @Override
     public void setZeiten(double tSTART, double tEND, double dt) {
         this.tSTART = tSTART;
         this.tEND = tEND;

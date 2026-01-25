@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
+import ch.technokrat.gecko.geckocircuits.api.IMainWindow;
 import ch.technokrat.gecko.ExternalGeckoCustom;
 import ch.technokrat.gecko.GeckoCustomMMF;
 import ch.technokrat.gecko.GeckoExternal;
@@ -72,7 +73,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
-public final class Fenster extends JFrame implements WindowListener, ActionListener, ComponentListener {
+public final class Fenster extends JFrame implements WindowListener, ActionListener, ComponentListener, IMainWindow {
     
 
     int _simMenuIndex = 2; // simulation menu is third in bar.
@@ -142,11 +143,23 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
      * values before stateady-state analysis >> private double[][][] states, statesAtFileload; private boolean[][] noStates,
      * noStatesAtFileload;
      */
+    @Override
     public boolean isSimulationRunning() {
         return !mItemRun.isEnabled();
     }
 
-    public static String getOpenFileName() {
+    @Override
+    public String getOpenFileName() {
+        return aktuellerDateiName;
+    }
+
+    /**
+     * Static accessor for the current file name.
+     * Provided for backward compatibility with code that calls Fenster.getOpenFileName() statically.
+     *
+     * @return Current file name
+     */
+    public static String getCurrentFileName() {
         return aktuellerDateiName;
     }
 
@@ -162,6 +175,11 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         return false;
     }
 
+    @Override
+    public boolean saveScopeData(String scopeId, String fileName) {
+        return saveZVData(scopeId, fileName);
+    }
+
     public OptimizerParameterData getOptimizerParameterData() {
         return optimizerParameterData;
     }
@@ -174,6 +192,11 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     public void setActivationOfSimulator(boolean simulatorAktiviert) {
         this.simulatorAktiviert = simulatorAktiviert;
         _se.setActivationOfSimulator(simulatorAktiviert);
+    }
+
+    @Override
+    public void setSimulatorEnabled(boolean enabled) {
+        setActivationOfSimulator(enabled);
     }
 
     public void setAppletFiles(String[] datnamExampleApplet) {
@@ -895,9 +918,14 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
          */
     }
 
-    // zur Modifikation der Titelleiste --> wenn Aenderungen noch nicht gespeichert wurden --> 
+    // zur Modifikation der Titelleiste --> wenn Aenderungen noch nicht gespeichert wurden -->
     public void modifiziereTitel() {
         this.setTitle(aktuellerDateiName + "*" + spTitleX + "GeckoCIRCUITS");
+    }
+
+    @Override
+    public void updateWindowTitle() {
+        modifiziereTitel();
     }
 
     // wird aufgerufen, nachdem die Fensterabmessungen bekannt sind:
@@ -945,6 +973,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         DateFormat dFormat = new SimpleDateFormat("yyyy.MM.dd");
     }
 
+    @Override
     public void saveFileAs() {
         if (speicherVorgangLaeuft) {
             return;
@@ -1003,6 +1032,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
     
 
 
+    @Override
     public void saveFile() {
         boolean reworkRelativePaths = false;
         //----------------
@@ -1054,6 +1084,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         this.aktualisierePropertiesRECENT(aktuellerDateiName);
     }
 
+    @Override
     public void createNewFile() {
         optimizerParameterData.clear();
         this.aktuellerDateiName = UNTITLED;
@@ -1068,6 +1099,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         super.setVisible(b);
     }
 
+    @Override
     public void openFileDialog() {
         File currentDirectory = null;
         try {
@@ -1150,6 +1182,7 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         _se.initAdditionalFiles(_se._circuitSheet.getAllElements().getClassFromContainer(AbstractBlockInterface.class));
     }
 
+    @Override
     public void openFile(String dateiName) throws FileNotFoundException {
         _se.resetCircuitSheetsForNewFile();
         GlobalFilePathes.DATNAM = dateiName;
@@ -1636,6 +1669,11 @@ public final class Fenster extends JFrame implements WindowListener, ActionListe
         dialogSim.setLocationRelativeTo(parent);
         dialogSim.setVisible(true);
         //_se._circuitSheet.requestFocus();
+    }
+
+    @Override
+    public void openParameterMenu() {
+        openParameterMenu(this);
     }
 
     private void doAboutDialog() {

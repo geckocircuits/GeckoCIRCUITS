@@ -197,7 +197,7 @@ public class NonLinearDialogPanel extends JPanel {
                 } else if (savedExternalFile != null) {
                     //characteristic has been saved to an external file, and we should not attribute this to the circuit element
                     try {
-                        GeckoFile newFileFromExternal = new GeckoFile(savedExternalFile, GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());
+                        GeckoFile newFileFromExternal = new GeckoFile(savedExternalFile, GeckoFile.StorageType.EXTERNAL, Fenster.getCurrentFileName());
                         ArrayList<GeckoFile> newFile = new ArrayList<GeckoFile>();
                         newFile.add(newFileFromExternal);
                         _nonlinearParent.addFiles(newFile);

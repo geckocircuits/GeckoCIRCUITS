@@ -496,7 +496,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             public Object doOperation(final Object parameterValue) {
 
                 try {
-                    _externalDataFile = new GeckoFile(new File((String) parameterValue), GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());
+                    _externalDataFile = new GeckoFile(new File((String) parameterValue), GeckoFile.StorageType.EXTERNAL, Fenster.getCurrentFileName());
                     _externalDataFile.setUser(getUniqueObjectIdentifier());
                     _datnamXY = (String) parameterValue;
                     Fenster._fileManager.addFile(_externalDataFile);

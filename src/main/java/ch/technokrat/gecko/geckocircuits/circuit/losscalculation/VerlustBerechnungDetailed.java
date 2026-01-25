@@ -282,17 +282,17 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         GeckoFile file;
         //first assume given path is absolute
         try {
-            file = new GeckoFile(new File(fyomu), GeckoFile.StorageType.INTERNAL, Fenster.getOpenFileName());
+            file = new GeckoFile(new File(fyomu), GeckoFile.StorageType.INTERNAL, Fenster.getCurrentFileName());
             System.out.println("try to load file " + file);
             leseDetailVerlusteVonDatei(file);
             _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.DETAILED);
         } catch (FileNotFoundException e) { //if not, see if it is a relative path to the .ipes file location
-            String modelFilePath = Fenster.getOpenFileName();
+            String modelFilePath = Fenster.getCurrentFileName();
             if(!modelFilePath.equals("Untitled")) {
                 modelFilePath = modelFilePath.substring(0, modelFilePath.lastIndexOf(File.separator));
             String newPath = modelFilePath + File.separator + fyomu;
             try {
-                file = new GeckoFile(new File(newPath), GeckoFile.StorageType.INTERNAL, Fenster.getOpenFileName());
+                file = new GeckoFile(new File(newPath), GeckoFile.StorageType.INTERNAL, Fenster.getCurrentFileName());
                 _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.SIMPLE);
             } catch (FileNotFoundException e2) {
                 System.err.println("Loss file " + fyomu + " for component " + _parent.getStringID() + " not found!");
@@ -339,7 +339,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             out.flush();
             out.close();
             //blocks using this loss file can also see the changes
-            newLossFile = new GeckoFile(lossesFile, storageType, Fenster.getOpenFileName());
+            newLossFile = new GeckoFile(lossesFile, storageType, Fenster.getCurrentFileName());
             newLossFile.setUser(_parent.getUniqueObjectIdentifier());
             datnamGemesseneVerluste = fkaku;
         } catch (Exception e) {

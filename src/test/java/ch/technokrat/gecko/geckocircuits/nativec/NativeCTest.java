@@ -14,6 +14,7 @@
 
 package ch.technokrat.gecko.geckocircuits.nativec;
 
+import ch.technokrat.gecko.testutils.PlatformUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.Before;
@@ -25,14 +26,21 @@ import org.junit.rules.ExpectedException;
 
 
 /**
- * Comment: The Native C Test Libraries were compiled on a Windows x86_64 machine 
+ * Comment: The Native C Test Libraries were compiled on a Windows x86_64 machine
  *          with GCC. To use them, you need to run the JUnit test under Windows 64bit.
  *          Otherwise, please recompile them and if necessary edit the fileName.
+ *
+ * Platform Note: These tests are automatically skipped on non-Windows platforms
+ * because the native .dll libraries are Windows-specific. To run on Linux/macOS,
+ * recompile the native libraries for your platform (.so/.dylib) and update the
+ * library name in setUp().
+ *
  * @author DIEHL Controls Ricardo Richter
  */
 public class NativeCTest {
     private static final double DELTA_T = 5e-4;
     private static final double END_TIME = 1;
+
     private NativeCBlock _nativeCBlock;
     private NativeCLibraryFile _libFile;
     String _libFilePath, _libName;
@@ -69,26 +77,39 @@ public class NativeCTest {
     
     @Before
     public void setUp() {
-        try {
-            _libName = "libtestJNI_DLL.dll";
-            // construct an absolute file path to the test library
-            // this is needed for the System.load() to work
-            _libFilePath = constructAbsolutPath(_libName);
-            _libFile = new NativeCLibraryFile(_libFilePath);
-        } catch (Exception exc) {
-            Assert.fail(exc.getMessage());
+        // Only initialize native library paths on Windows (other tests can still run)
+        if (PlatformUtils.IS_WINDOWS) {
+            try {
+                _libName = "libtestJNI_DLL.dll";
+                // construct an absolute file path to the test library
+                // this is needed for the System.load() to work
+                _libFilePath = constructAbsolutPath(_libName);
+                _libFile = new NativeCLibraryFile(_libFilePath);
+            } catch (Exception exc) {
+                Assert.fail(exc.getMessage());
+            }
         }
+    }
+
+    /**
+     * Helper to skip tests that require Windows .dll files.
+     * Uses PlatformUtils for OS detection.
+     */
+    private void assumeWindowsForNativeLibrary() {
+        PlatformUtils.assumeWindows("requires .dll native libraries");
     }
     
     @Test
     public void testNativeCLibraryFile_NotFound() throws FileNotFoundException {
+        // This test validates FileNotFoundException behavior - works on all platforms
         thrown.expect(FileNotFoundException.class);
         thrown.expectMessage("Could not find Library File");
-        NativeCLibraryFile testLibFile = new NativeCLibraryFile( "..\\.dll");
+        NativeCLibraryFile testLibFile = new NativeCLibraryFile("nonexistent_library.dll");
     }
     
     @Test
     public void testNativeCLibraryFile_Found() {
+        assumeWindowsForNativeLibrary();
         NativeCLibraryFile testLibFile;
         try {
             testLibFile = new NativeCLibraryFile(_libFilePath);
@@ -102,6 +123,7 @@ public class NativeCTest {
     
     @Test
     public void testLoadAndExecuteNativeLibrary() {
+        assumeWindowsForNativeLibrary();
         _nativeCBlock = new NativeCBlock();
         double[][] testInput = {{1, 2, 3, 4, 5}};
         double[][] testOutput = {{0, 0, 0}};
@@ -128,6 +150,7 @@ public class NativeCTest {
     
     @Test
     public void testLoadAndExecuteNLAgain() {
+        assumeWindowsForNativeLibrary();
         // execute again with same library
         testLoadAndExecuteNativeLibrary();
         // test with different library

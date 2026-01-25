@@ -28,6 +28,21 @@ import org.junit.Ignore;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 
+/**
+ * System-level integration tests that execute complete GeckoCIRCUITS simulation models.
+ *
+ * These tests load .ipes model files, run simulations, and validate results.
+ * All tests are IGNORED because they require:
+ * 1. Model files in resources/Topologies/ directory
+ * 2. GUI initialization (GeckoSim.main())
+ * 3. Headless display support or X11 forwarding
+ * 4. Extended execution time for simulation completion
+ *
+ * TODO: Re-enable after establishing integration test infrastructure with:
+ * - Headless mode support
+ * - Test model files in version control
+ * - Separate CI job for integration tests
+ */
 public final class ModelResultsTest{
   private static final String MODELS_PATH = "resources/Topologies/";
 
@@ -43,31 +58,31 @@ public final class ModelResultsTest{
   }
 
   @Test
-  @Ignore
+  @Ignore("Integration test: requires GUI, model files, and headless display support")
   public void threePhaseVSRTest(){
     openRunAssert("ThreePhase-VSR_10kW_thermal.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Integration test: requires GUI, model files, and headless display support")
   public void buckBoostThermal(){
     openRunAssert("BuckBoost_thermal.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Integration test: requires GUI, model files, and headless display support")
   public void thyristorControlAndParameters(){
     openRunAssert("ThyristorControlBlock.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Integration test: requires GUI, model files, and headless display support")
   public void opAmp(){
     openRunAssert("OpAmp.ipes");
   }
 
   @Test
-  @Ignore
+  @Ignore("Integration test: requires GUI, model files, and headless display support")
   public void thyristorCoupling(){
     openRunAssert("ThyristorCoupling.ipes");
   }

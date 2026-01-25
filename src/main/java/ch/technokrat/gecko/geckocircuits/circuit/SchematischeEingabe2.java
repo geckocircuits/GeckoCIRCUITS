@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
+import ch.technokrat.gecko.geckocircuits.api.ICircuitEditor;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
@@ -43,7 +44,7 @@ import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.GroupableUndoManager;
 
-public final class SchematischeEingabe2 implements MouseListener, MouseMotionListener {
+public final class SchematischeEingabe2 implements MouseListener, MouseMotionListener, ICircuitEditor {
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
     private SchematischeEingabeAuswahl2 _sea;
@@ -77,6 +78,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     private long _dragStartTime;
     private static final int EMPTY_BORDER_OFFSET = -5;
 
+    @Override
     public void updateAllComponentReferences() {
         for (ComponentCoupable elem : _circuitSheet.getAllElements().getClassFromContainer(ComponentCoupable.class)) {
             elem.getComponentCoupling().refreshCoupledReferences(getBlockInterfaceComponents());
@@ -172,6 +174,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         return new Point(px, py);
     }
 
+    @Override
     public List<AbstractBlockInterface> getBlockInterfaceComponents() {
         return Collections.unmodifiableList(_circuitSheet.getAllElements().getClassFromContainer(AbstractBlockInterface.class));
     }
@@ -398,6 +401,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         return true;
     }
 
+    @Override
     public void selectAll() {
         _selectedComponents.clear();
         _selectedComponents.addAll(_visibleCircuitSheet.allElements);
@@ -608,6 +612,11 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     public void setActivationOfSimulator(boolean simulatorAktiviert) {
         this.simulatorAktiviert = simulatorAktiviert;
     }
+
+    @Override
+    public void setSimulatorEnabled(boolean enabled) {
+        setActivationOfSimulator(enabled);
+    }
     public static SchematischeEingabe2 Singleton;
 
     // damit man die Titelleiste modifizieren kann, wenn die Aenderungen noch nicht gespeichert sind --> 
@@ -629,12 +638,18 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
 
     }
 
+    @Override
     public void resetModelModified() {
         this.zustandGeaendert = false;
     }
 
     public boolean getZustandGeaendert() {
         return this.zustandGeaendert;
+    }
+
+    @Override
+    public boolean isModelModified() {
+        return getZustandGeaendert();
     }
 
     public void setzeFont(int fontSize, String fontTyp) {
@@ -645,6 +660,11 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         _circuitSheet.repaint();
     }
 
+    @Override
+    public void setFont(int fontSize, String fontType) {
+        setzeFont(fontSize, fontType);
+    }
+
     //=======================================================
     // hier werden alle Aenderungen im SchematicEntry fuer die Undo/Redo-Funktionalitaet registriert -->
     // (wird natuerlich auch von den Dialogen aus angerufen)
@@ -653,6 +673,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         setDirtyFlag();
     }
 
+    @Override
     public void setDirtyFlag() {
         zustandGeaendert = true;
         _visibleCircuitSheet.repaint();
@@ -669,6 +690,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         Fenster._scripter.initExtraFiles();
     }
 
+    @Override
     public void resetCircuitSheetsForNewFile() {
         for (AbstractCircuitSheetComponent comp : _circuitSheet.getAllElements().toArray(new AbstractCircuitSheetComponent[0])) {
             comp.deleteComponent();
@@ -738,6 +760,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         return netzliste;
     }
 
+    @Override
     public List<AbstractCircuitBlockInterface> getElementLK() {
         LinkedList<AbstractCircuitBlockInterface> returnValue = new LinkedList<AbstractCircuitBlockInterface>();
         List<AbstractCircuitBlockInterface> allBlocks = _circuitSheet.getAllElements().getClassFromContainer(AbstractCircuitBlockInterface.class);
@@ -754,10 +777,12 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         return returnValue;
     }
 
+    @Override
     public List<RegelBlock> getElementCONTROL() {
         return Collections.unmodifiableList(_circuitSheet.getAllElements().getClassFromContainer(RegelBlock.class));
     }
 
+    @Override
     public List<AbstractCircuitBlockInterface> getElementTHERM() {
         LinkedList<AbstractCircuitBlockInterface> toFilter = new LinkedList<AbstractCircuitBlockInterface>();
         toFilter.addAll(_circuitSheet.getAllElements().getClassFromContainer(AbstractCircuitBlockInterface.class));
@@ -1018,6 +1043,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         }
     }
 
+    @Override
     public void deselect() {
         switch (_mouseMoveMode) {
             case SELECT_WINDOW: // pressing escape during dragging the selection window:                
@@ -1529,6 +1555,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         }
     }
 
+    @Override
     public void deleteSelectedComponents() {
         _elementsJustInitialized = false;
         deleteAllComponents(_selectedComponents);
@@ -1573,6 +1600,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     }
 
     //for GeckoSCRIPT
+    @Override
     public void deleteComponent(final AbstractBlockInterface component) {
         component.deleteComponent();
         this.setDirtyFlag();
@@ -1632,6 +1660,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
     // 
     // (1) Ein THERM-Namen wurde umbenannt --> FLOW - Messungen muessen angepasst werden --> 
     // 
+    @Override
     public void updateComponentCouplings(final String nameVorher, final String neuerName) {
         for (ComponentCoupable element : _circuitSheet.getAllElements().getClassFromContainer(ComponentCoupable.class)) {
             final ComponentCoupling coupling = ((ComponentCoupable) element).getComponentCoupling();
@@ -1943,6 +1972,7 @@ public final class SchematischeEingabe2 implements MouseListener, MouseMotionLis
         }
     }
 
+    @Override
     public void setAntialiasing(final boolean selected) {
         antialiasing = selected;
         _visibleCircuitSheet.repaint();

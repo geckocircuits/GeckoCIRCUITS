@@ -36,8 +36,16 @@ public class GeckoRemoteTest {
 
    
 
+    /**
+     * Tests all static methods in GeckoRemote via reflection proxy.
+     *
+     * IGNORED: Requires complex RMI/proxy setup that is not available in CI environment.
+     * This test exercises the remote interface by creating a dummy proxy and invoking
+     * all static methods. Requires GeckoRemote proxy infrastructure to be initialized.
+     * TODO: Re-enable once remote API testing infrastructure is established.
+     */
     @Test
-    @Ignore
+    @Ignore("Requires RMI proxy infrastructure not available in CI environment")
     public void testCallAllGeckoRemoteStaticMethods() {
         final GeckoRemoteTestingDummy testingDummy = new GeckoRemoteTestingDummy();   
         
@@ -103,8 +111,15 @@ public class GeckoRemoteTest {
         }
     }
 
+    /**
+     * Verifies all GeckoRemoteInterface methods have corresponding static methods in GeckoRemote.
+     *
+     * IGNORED: Test performs reflection checks on interface/class structure. Currently
+     * requires RMI infrastructure and throws exceptions when classes are not fully loaded.
+     * TODO: Re-enable once remote API testing infrastructure is established.
+     */
     @Test
-    @Ignore
+    @Ignore("Requires RMI infrastructure and full class loading")
     public void testMethodsAvailableNonStaticToStatic() {
 
         final List<Method> staticMethods = getAllRelevantStaticMethods();
@@ -144,8 +159,15 @@ public class GeckoRemoteTest {
         //System.out.println(" found " + foundCounter + " not found " + notFoundCounter);
     }
 
+    /**
+     * Verifies all static methods in GeckoRemote have corresponding interface methods.
+     *
+     * IGNORED: Test performs reflection checks on interface/class structure. Currently
+     * requires RMI infrastructure and throws exceptions when classes are not fully loaded.
+     * TODO: Re-enable once remote API testing infrastructure is established.
+     */
     @Test
-    @Ignore
+    @Ignore("Requires RMI infrastructure and full class loading")
     public void testMethodsAvailableStaticToNonStatic() {
 
         int foundCounter = 0;
