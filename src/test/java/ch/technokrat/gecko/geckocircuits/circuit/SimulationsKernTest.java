@@ -134,4 +134,103 @@ public class SimulationsKernTest {
         // kern2 should still be NOT_INIT
         assertEquals(SimulationStatus.NOT_INIT, kern2._simulationStatus);
     }
+
+    // === Additional tests for getSimulationStatus() ===
+
+    @Test
+    public void testGetSimulationStatus_NotInit() {
+        simulationsKern._simulationStatus = SimulationStatus.NOT_INIT;
+        assertEquals("Should return NOT_INIT",
+                ch.technokrat.gecko.geckocircuits.api.ISimulationEngine.SimulationStatus.NOT_INIT,
+                simulationsKern.getSimulationStatus());
+    }
+
+    @Test
+    public void testGetSimulationStatus_Running() {
+        simulationsKern._simulationStatus = SimulationStatus.RUNNING;
+        assertEquals("Should return RUNNING",
+                ch.technokrat.gecko.geckocircuits.api.ISimulationEngine.SimulationStatus.RUNNING,
+                simulationsKern.getSimulationStatus());
+    }
+
+    @Test
+    public void testGetSimulationStatus_Paused() {
+        simulationsKern._simulationStatus = SimulationStatus.PAUSED;
+        assertEquals("Should return PAUSED",
+                ch.technokrat.gecko.geckocircuits.api.ISimulationEngine.SimulationStatus.PAUSED,
+                simulationsKern.getSimulationStatus());
+    }
+
+    @Test
+    public void testGetSimulationStatus_Finished() {
+        simulationsKern._simulationStatus = SimulationStatus.FINISHED;
+        assertEquals("Should return FINISHED",
+                ch.technokrat.gecko.geckocircuits.api.ISimulationEngine.SimulationStatus.FINISHED,
+                simulationsKern.getSimulationStatus());
+    }
+
+    // === Tests for time step precision ===
+
+    @Test
+    public void testSetZeiten_VerySmallTimeStep() {
+        double tStart = 0.0;
+        double tEnd = 1e-3;
+        double dt = 1e-12; // Picosecond time step
+
+        simulationsKern.setZeiten(tStart, tEnd, dt);
+
+        assertEquals("Very small dt should be preserved", dt, simulationsKern.getdt(), 1e-20);
+    }
+
+    @Test
+    public void testSetZeiten_LargeTimeValues() {
+        double tStart = 1000.0;
+        double tEnd = 2000.0;
+        double dt = 1e-3;
+
+        simulationsKern.setZeiten(tStart, tEnd, dt);
+
+        assertEquals(tStart, simulationsKern.getTSTART(), 1e-10);
+        assertEquals(tEnd, simulationsKern.getTEND(), 1e-10);
+        assertEquals(dt, simulationsKern.getdt(), 1e-15);
+    }
+
+    // === Tests for simulation status transitions ===
+
+    @Test
+    public void testStatusTransition_NotInitToRunning() {
+        assertEquals(SimulationStatus.NOT_INIT, simulationsKern._simulationStatus);
+        simulationsKern._simulationStatus = SimulationStatus.RUNNING;
+        assertEquals(SimulationStatus.RUNNING, simulationsKern._simulationStatus);
+    }
+
+    @Test
+    public void testStatusTransition_RunningToPaused() {
+        simulationsKern._simulationStatus = SimulationStatus.RUNNING;
+        simulationsKern._simulationStatus = SimulationStatus.PAUSED;
+        assertEquals(SimulationStatus.PAUSED, simulationsKern._simulationStatus);
+    }
+
+    @Test
+    public void testStatusTransition_RunningToFinished() {
+        simulationsKern._simulationStatus = SimulationStatus.RUNNING;
+        simulationsKern._simulationStatus = SimulationStatus.FINISHED;
+        assertEquals(SimulationStatus.FINISHED, simulationsKern._simulationStatus);
+    }
+
+    // === Tests for getTimeStep (external interface) ===
+
+    @Test
+    public void testGetTimeStep_ReturnsCorrectValue() {
+        simulationsKern.setZeiten(0.0, 1.0, 2.5e-6);
+        assertEquals("getTimeStep should return dt", 2.5e-6, simulationsKern.getTimeStep(), 1e-15);
+    }
+
+    // === Test implements interface ===
+
+    @Test
+    public void testImplementsISimulationEngine() {
+        assertTrue("SimulationsKern should implement ISimulationEngine",
+                simulationsKern instanceof ch.technokrat.gecko.geckocircuits.api.ISimulationEngine);
+    }
 }

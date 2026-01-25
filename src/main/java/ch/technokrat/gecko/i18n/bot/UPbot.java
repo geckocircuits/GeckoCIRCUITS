@@ -38,10 +38,6 @@ public class UPbot {
      * -Throws an exception if communication with the wiki failed.
      */
     private static MediaWikiBot initBot() throws Exception {
-            // print DEBUG messages in console if DEBUG_MODE is turned on
-            if (InitParameters.DEBUG_MODE) {
-                org.apache.log4j.BasicConfigurator.configure(); // configure log4j
-            }
             progress = Math.min(progress + 2, 99); // update progress
             MediaWikiBot b = new MediaWikiBot(InitParameters.WIKI_URL);
             progress = Math.min(progress + 2, 99); // update progress
