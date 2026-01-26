@@ -1,0 +1,341 @@
+{
+  "primary_keywords": {
+    "description": "High-volume, competitive keywords for power electronics domain",
+    "keywords": [
+      {
+        "term": "power electronics simulation",
+        "search_intent": "informational",
+        "volume": "high",
+        "difficulty": "medium",
+        "use_cases": ["product pages", "technical articles", "comparisons"]
+      },
+      {
+        "term": "circuit simulation software",
+        "search_intent": "commercial",
+        "volume": "high",
+        "difficulty": "high",
+        "use_cases": ["landing pages", "product comparisons", "reviews"]
+      },
+      {
+        "term": "legacy code refactoring",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "medium",
+        "use_cases": ["technical articles", "case studies", "tutorials"]
+      },
+      {
+        "term": "Java modernization",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "medium",
+        "use_cases": ["technical guides", "case studies", "consulting pages"]
+      },
+      {
+        "term": "REST API development",
+        "search_intent": "informational",
+        "volume": "high",
+        "difficulty": "high",
+        "use_cases": ["technical articles", "tutorials", "documentation"]
+      }
+    ]
+  },
+  "secondary_keywords": {
+    "description": "Medium-volume, targetable keywords with better conversion potential",
+    "keywords": [
+      {
+        "term": "GeckoCIRCUITS",
+        "search_intent": "navigational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["all content", "brand building"]
+      },
+      {
+        "term": "PLECS alternative",
+        "search_intent": "commercial",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["comparison articles", "product pages", "competitive content"]
+      },
+      {
+        "term": "open source circuit simulation",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "low",
+        "use_cases": ["product positioning", "educational content", "community building"]
+      },
+      {
+        "term": "Spring Boot integration",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "medium",
+        "use_cases": ["technical tutorials", "integration guides"]
+      },
+      {
+        "term": "test coverage strategy",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "low",
+        "use_cases": ["methodology articles", "case studies", "best practices"]
+      },
+      {
+        "term": "incremental refactoring",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["strategy articles", "case studies", "consulting content"]
+      }
+    ]
+  },
+  "technical_keywords": {
+    "description": "Industry-specific technical terms for power electronics professionals",
+    "keywords": [
+      {
+        "term": "matrix stamping",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "low",
+        "use_cases": ["deep technical articles", "algorithm explanations"]
+      },
+      {
+        "term": "SPICE simulation",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "medium",
+        "use_cases": ["technical content", "product descriptions"]
+      },
+      {
+        "term": "FFT signal analysis",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["signal processing articles", "feature descriptions"]
+      },
+      {
+        "term": "THD harmonics",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["signal analysis content", "technical specifications"]
+      },
+      {
+        "term": "CISPR16 compliance",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "low",
+        "use_cases": ["EMC content", "standards compliance articles"]
+      },
+      {
+        "term": "WebSocket real-time updates",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "medium",
+        "use_cases": ["architecture articles", "implementation guides"]
+      },
+      {
+        "term": "God class refactoring",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "low",
+        "use_cases": ["refactoring articles", "code quality content"]
+      },
+      {
+        "term": "interface extraction pattern",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "low",
+        "use_cases": ["design pattern articles", "refactoring guides"]
+      }
+    ]
+  },
+  "pain_point_keywords": {
+    "description": "Problem-focused keywords that capture developer pain points",
+    "keywords": [
+      {
+        "term": "legacy Java codebase",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["problem-solution articles", "case studies"]
+      },
+      {
+        "term": "monolithic application refactoring",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["architecture articles", "modernization strategies"]
+      },
+      {
+        "term": "desktop application modernization",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["migration guides", "strategy articles"]
+      },
+      {
+        "term": "test-driven refactoring",
+        "search_intent": "informational",
+        "volume": "low",
+        "difficulty": "low",
+        "use_cases": ["methodology articles", "tutorials"]
+      },
+      {
+        "term": "Maven dependency hell",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "low",
+        "use_cases": ["troubleshooting articles", "setup guides"]
+      },
+      {
+        "term": "technical debt management",
+        "search_intent": "informational",
+        "volume": "medium",
+        "difficulty": "medium",
+        "use_cases": ["strategy articles", "leadership content"]
+      }
+    ]
+  },
+  "long_tail_keywords": {
+    "description": "Low-volume, high-intent long-tail phrases for specific queries",
+    "keywords": [
+      {
+        "term": "how to refactor God class without rewrite",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["how-to guides", "refactoring tutorials"]
+      },
+      {
+        "term": "Spring Boot on legacy Java 8",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["integration guides", "compatibility articles"]
+      },
+      {
+        "term": "power electronics simulation REST API",
+        "search_intent": "commercial",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["product features", "API documentation"]
+      },
+      {
+        "term": "test coverage for legacy code",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["testing strategies", "case studies"]
+      },
+      {
+        "term": "PLECS vs open source alternatives",
+        "search_intent": "commercial",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["comparison articles", "buyer guides"]
+      },
+      {
+        "term": "Java parameter names compilation flag",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["troubleshooting guides", "configuration tips"]
+      },
+      {
+        "term": "incremental modernization strategy legacy systems",
+        "search_intent": "informational",
+        "volume": "very low",
+        "difficulty": "very low",
+        "use_cases": ["strategy articles", "consulting content"]
+      }
+    ]
+  },
+  "linkedin_hashtags": {
+    "description": "Hashtags for LinkedIn posts organized by category",
+    "broad": [
+      "#PowerElectronics",
+      "#CircuitSimulation",
+      "#ElectricalEngineering",
+      "#EmbeddedSystems",
+      "#ControlSystems"
+    ],
+    "software_engineering": [
+      "#LegacyCode",
+      "#Refactoring",
+      "#TechDebt",
+      "#SoftwareArchitecture",
+      "#TestDrivenDevelopment",
+      "#CleanCode"
+    ],
+    "technology_specific": [
+      "#Java",
+      "#SpringBoot",
+      "#RestAPI",
+      "#WebSocket",
+      "#OpenSource",
+      "#Maven"
+    ],
+    "niche": [
+      "#PLECS",
+      "#SPICE",
+      "#GeckoCIRCUITS",
+      "#SimulationSoftware",
+      "#EngineeringSoftware"
+    ],
+    "business_strategy": [
+      "#EngineeringLeadership",
+      "#TechnicalDebt",
+      "#ModernizationStrategy",
+      "#DigitalTransformation"
+    ]
+  },
+  "content_templates": {
+    "description": "Recommended keyword combinations for different content types",
+    "test_coverage_article": {
+      "primary": "legacy code refactoring",
+      "secondary": ["test coverage strategy", "test-driven refactoring"],
+      "technical": ["JUnit", "JaCoCo"],
+      "long_tail": "test coverage for legacy code"
+    },
+    "rest_api_article": {
+      "primary": "REST API development",
+      "secondary": ["Spring Boot integration", "Java modernization"],
+      "technical": ["Spring Boot", "REST API"],
+      "long_tail": "Spring Boot on legacy Java 8"
+    },
+    "strategic_pivot_article": {
+      "primary": "legacy code refactoring",
+      "secondary": ["incremental refactoring", "desktop application modernization"],
+      "pain_point": "monolithic application refactoring",
+      "long_tail": "incremental modernization strategy legacy systems"
+    },
+    "god_class_article": {
+      "primary": "legacy code refactoring",
+      "secondary": ["incremental refactoring"],
+      "technical": ["God class refactoring", "interface extraction pattern"],
+      "long_tail": "how to refactor God class without rewrite"
+    },
+    "signal_analysis_article": {
+      "primary": "power electronics simulation",
+      "secondary": ["PLECS alternative", "GeckoCIRCUITS"],
+      "technical": ["FFT signal analysis", "THD harmonics", "CISPR16 compliance"]
+    },
+    "product_strategy_article": {
+      "primary": "circuit simulation software",
+      "secondary": ["open source circuit simulation", "PLECS alternative"],
+      "long_tail": "PLECS vs open source alternatives"
+    },
+    "websocket_article": {
+      "primary": "REST API development",
+      "secondary": ["Java modernization"],
+      "technical": ["WebSocket real-time updates", "STOMP"],
+      "long_tail": "power electronics simulation REST API"
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2026-01-26",
+    "purpose": "SEO keyword cache for GeckoCIRCUITS content marketing",
+    "target_audience": "Power electronics R&D professionals",
+    "business_goals": ["subscriptions", "consulting_leads", "hiring", "product_adoption"],
+    "token_savings": "Estimated 200 tokens per article by avoiding keyword research repetition"
+  }
+}

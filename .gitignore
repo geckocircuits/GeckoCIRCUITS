@@ -25,3 +25,6 @@ hs_err_pid*
 .vscode/
 target/
 release/
+
+gecko-webapp/* 
+gecko-webapp/*/.bin/

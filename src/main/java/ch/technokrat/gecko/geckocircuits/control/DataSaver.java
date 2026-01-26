@@ -44,6 +44,8 @@ public final class DataSaver extends Observable implements Observer {
     private boolean _hasCounterValue = false;
     private static final int MAX_FILE_COUNTER = 1000;
     private final ReglerSaveData _regler;
+    private final FileNameGenerator _fileNameGenerator = new FileNameGenerator();
+    private final SignalValidator _signalValidator = new SignalValidator();
 
     public DataSaver(final AbstractDataContainer data, ReglerSaveData regler) {
         super();
@@ -87,29 +89,12 @@ public final class DataSaver extends Observable implements Observer {
         }
     }
 
+    /**
+     * Finds a free file name by delegating to FileNameGenerator.
+     * @deprecated Use _fileNameGenerator.findFreeFileName() directly
+     */
     private String findFreeFile(final String origFile) {
-        if (!new File(origFile).exists()) {
-            return origFile;
-        }
-
-        int dotIndex = origFile.lastIndexOf('.');
-        if (dotIndex < 1) {
-            dotIndex = origFile.length() - 1;
-        }
-        int underscoreIndex = origFile.lastIndexOf('_');
-
-        if (underscoreIndex < 1) {
-            underscoreIndex = dotIndex;
-        }
-
-        for (int counter = 0; counter < MAX_FILE_COUNTER; counter++) {
-            final String newFileName = origFile.substring(0, underscoreIndex) + "_" + counter + origFile.substring(dotIndex);
-            final File newFile = new File(newFileName);
-            if (!newFile.exists()) {
-                return newFileName;
-            }
-        }
-        return origFile;
+        return _fileNameGenerator.findFreeFileName(origFile);
     }
 
     private void initSettings() {
@@ -288,47 +273,41 @@ public final class DataSaver extends Observable implements Observer {
         abstract void printTransposedData() throws IOException;
 
         /**
-         * Sometimes, when renaming signals, the "connection" to the right index
-         * is lost. Here, we search for a signal with the right name. If it is
-         * not found, we output a warning signal and continue with the old
-         * index.
-         *
-         * @param _settings
-         * @param _data
+         * Validates and corrects signal indices using SignalValidator.
+         * If a signal name doesn't match its index, attempts to find the correct index.
+         * Throws exception if signal cannot be found.
          */
         private void compareAndCorrectSignalNamesIndices() throws SignalMissingException {
             final List<String> originalNames = _settings.getSelectedNames();
-
-            // loop: check if wrong signals are connected
-            for (int i = 0; i < originalNames.size(); i++) {
-                final String origName = originalNames.get(i);
-
-                String dataSignalName = "";
-                int signalIndex = _settings.getSelectedSignalIndices().get(i);
-                if (signalIndex < _data.getRowLength()) {
-                    dataSignalName = _data.getSignalName(signalIndex);
-                }
-
-                if (!origName.equals(dataSignalName)) {
-                    for (int j = 0; j < _data.getRowLength(); j++) {
-                        final String realName = _data.getSignalName(j);
-                        if (realName.equals(origName)) { // if the original name is found at another position, just
-                            // repair the wroing index/connection.                                                        
-                            _settings.setSelectedSignal(j, i);
-                        }
+            final List<Integer> indices = _settings.getSelectedSignalIndices();
+            
+            SignalValidator.ValidationResult result = 
+                _signalValidator.validateSignals(originalNames, indices, _data);
+            
+            // Apply corrections
+            if (result.hasCorrections()) {
+                // Re-validate after corrections to update indices
+                for (int i = 0; i < originalNames.size(); i++) {
+                    String name = originalNames.get(i);
+                    int correctedIndex = _signalValidator.findSignalIndexByName(name, _data);
+                    if (correctedIndex >= 0) {
+                        _settings.setSelectedSignal(correctedIndex, i);
                     }
                 }
-
-                int newSignalIndex = _settings.getSelectedSignalIndices().get(i);
-
-                if (newSignalIndex >= _data.getRowLength()
-                        || !_data.getSignalName(newSignalIndex).equals(origName)) {
-                    _settings.removeSignal(i);
-                    throw new SignalMissingException("The signal \"" + origName + "\" is not available as scope input in the\n"
-                            + "simulation model. The signal \"" + origName + "\" was removed from\n"
-                            + "the selection.");
-
+            }
+            
+            // Check if validation failed
+            if (!result.isValid()) {
+                // Remove invalid signals and throw exception
+                for (int i = originalNames.size() - 1; i >= 0; i--) {
+                    String name = originalNames.get(i);
+                    int index = indices.get(i);
+                    if (index >= _data.getRowLength() || 
+                        !_data.getSignalName(index).equals(name)) {
+                        _settings.removeSignal(i);
+                    }
                 }
+                throw new SignalMissingException(result.getErrorMessage());
             }
         }
     }

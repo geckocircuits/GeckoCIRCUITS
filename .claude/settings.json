@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn *)",
+      "Bash(find *)",
+      "Bash(tree *)",
+      "Bash(chmod *)",
+      "Bash(python3 *)",
+      "Bash(java *)",
+      "Bash(snap *)",
+      "Bash(tar *)",
+      "Bash(~/apache-maven-3.9.5/bin/mvn --version)",
+      "Bash(export PATH=~/apache-maven-3.9.5/bin:$PATH)",
+      "Bash(export *)",
+      "Bash(xargs cat *)",
+      "Bash(wc *)",
+      "Bash(grep *)",
+      "Bash(sed *)",
+      "Edit",
+      "Write",
+      "Read",
+      "Glob",
+      "Grep"
+    ]
+  }
+}
