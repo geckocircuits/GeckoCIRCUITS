@@ -35,16 +35,22 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
     
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidArrayLoops"})
     void calculateYOUT(final double time, final double deltaT, final double[][] inputSignals,
-            final double[][] outputSignals) throws Exception {        
+            final double[][] outputSignals) throws Exception {
+        if (_compiledInstance == null) {
+            throw new IllegalStateException("Java block compilation failed - cannot simulate. Check error logs for details.");
+        }
 
         final double[][] outValue = _compiledInstance.calculateYOUT(inputSignals, time, deltaT);
         checkOutputsForNANorINFValues(outputSignals);
     }
     
     public double[][] getOutputVectorFromBlock() {
+        if (_compiledInstance == null) {
+            throw new IllegalStateException("Java block compilation failed - cannot get output. Check error logs for details.");
+        }
         return _compiledInstance.getOutputSignal();
     }
-    
+
     private void checkOutputsForNANorINFValues(double[][] ausgangssignal) {
         for (int i = 0; i < ausgangssignal.length; i++) {
             if (ausgangssignal[i] != ausgangssignal[i]) {
@@ -55,6 +61,9 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
 
     @Override
     protected void doInitialize(double[][] xIN, double[][] yOUT) {
+        if (_compiledInstance == null) {
+            throw new IllegalStateException("Java block compilation failed - cannot initialize. Check error logs for details.");
+        }
         _compiledInstance.init();
     }
 
@@ -64,22 +73,22 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
             _classNameFileMap = _compileObject.getClassNameFileMap();
 
             final ClassLoader classLoader = new JavaBlockClassLoader(_classNameFileMap);
-            final Class clazz = Class.forName(_compileObject.getClassName(), false, classLoader);
+            final Class<?> clazz = Class.forName(_compileObject.getClassName(), false, classLoader);
 
             try {
                 _compiledInstance = (ControlCalculatableMatrix) clazz.newInstance();
-                
+
             } catch (NoClassDefFoundError err) {
-                err.printStackTrace();
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
             } catch (InstantiationException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "SecurityException while creating Java block instance: " + ex.getMessage(), ex);
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
         }
     }
 

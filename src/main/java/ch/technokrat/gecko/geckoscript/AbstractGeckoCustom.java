@@ -376,6 +376,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
      */
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void setLossFile(final String elementName, final String lossFileName) throws FileNotFoundException {
 
         AbstractBlockInterface circuit_elem = IDStringDialog.getComponentByName(elementName);
@@ -389,6 +390,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void setNonLinear(final String elementName, final String characteristicFileName)
             throws FileNotFoundException {
         AbstractBlockInterface circuit_elem = IDStringDialog.getComponentByName(elementName);
@@ -545,8 +547,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double[] getSignalCharacteristics(final String scopeName, final int scopePort,
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double[] getSignalCharacteristics(final String scopeName, final int scopePort,
             final double startTime, final double endTime) {
         try {
             return _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
@@ -556,8 +559,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double getAvg(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getAvg(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[0];
@@ -568,8 +572,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double getRMS(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getRMS(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[1];
@@ -579,8 +584,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double getTHD(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getTHD(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[2];
@@ -590,8 +596,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double getMin(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getMin(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[3];
@@ -601,8 +608,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double getMax(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getMax(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[4];
@@ -612,8 +620,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public double getRipple(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getRipple(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[5];
@@ -623,8 +632,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double getKlirr(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getKlirr(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[6];
@@ -634,8 +644,9 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public double getShape(final String scopeName, final int scopePort, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public double getShape(final String scopeName, final int scopePort, final double startTime, final double endTime) {
         try {
             final double[] characteristics = _circuit.getSignalCharacteristics(scopeName, scopePort, startTime, endTime);
             return characteristics[7];
@@ -645,48 +656,57 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
     }
 
-    @Override
-    public final double[] getSignalCharacteristics(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double[] getSignalCharacteristics(final String scopeName, final double startTime, final double endTime) {
         return getSignalCharacteristics(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getAvg(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getAvg(final String scopeName, final double startTime, final double endTime) {
         return getAvg(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getRMS(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getRMS(final String scopeName, final double startTime, final double endTime) {
         return getRMS(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getMin(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getMin(final String scopeName, final double startTime, final double endTime) {
         return getMin(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getMax(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getMax(final String scopeName, final double startTime, final double endTime) {
         return getMax(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getTHD(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getTHD(final String scopeName, final double startTime, final double endTime) {
         return getTHD(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getShape(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getShape(final String scopeName, final double startTime, final double endTime) {
         return getShape(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getKlirr(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getKlirr(final String scopeName, final double startTime, final double endTime) {
         return getKlirr(scopeName, 0, startTime, endTime);
     }
 
-    @Override
-    public final double getRipple(final String scopeName, final double startTime, final double endTime) {
+     @Override
+     @SuppressWarnings("deprecation")
+     public final double getRipple(final String scopeName, final double startTime, final double endTime) {
         return getRipple(scopeName, 0, startTime, endTime);
     }
 
@@ -839,6 +859,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     private final static double DEFAULT_TARGET_MEAN_PCT_DIFF = 0.005;
 
     @Override
+    @SuppressWarnings("deprecation")
     public final void initSteadyStateDetection(final String[] stateVariables, final double[] frequencies,
             final double deltaT, final double simulationTime) {
         _steadyStateDt = deltaT;
@@ -973,6 +994,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public final double[] simulateUntilSteadyState(final boolean supressMessages) {
         if (!_steadyStateInitialized) {
             writerOutputErrorLn("Steady state detection is not initialized! Please call initSteadyStateDetection() with appropriate arguments first!");
@@ -1380,12 +1402,14 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void delete(final String elementName) {
         deleteComponent(elementName);
     }
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public final void create(final String elementType, final String elementName, final int xPosition, final int yPosition) {
         createComponent(elementType, elementName, xPosition, yPosition);
     }
@@ -1454,7 +1478,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
             throw new ArrayIndexOutOfBoundsException(errorMessage);
         } else {
             try {
-                _circuit.setElementNodeLabel(parentElement, StartOrStopNode.START_NODE.START_NODE, nodeIndex, nodeName);
+                _circuit.setElementNodeLabel(parentElement, StartOrStopNode.START_NODE, nodeIndex, nodeName);
             } catch (Exception e) {
                 writerOutputErrorLn("ERROR setting node label for " + elementName + ": " + e.getMessage());
                 throw new RuntimeException(e);
@@ -1498,7 +1522,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
                 throw new ArrayIndexOutOfBoundsException(errorMessage);
             } else {
                 try {
-                    return _circuit.getElementNodeLabel(parentElement, StartOrStopNode.START_NODE.START_NODE, nodeIndex);
+                    return _circuit.getElementNodeLabel(parentElement, StartOrStopNode.START_NODE, nodeIndex);
                 } catch (Exception e) {
                     writerOutputErrorLn("ERROR setting node label for " + elementName + ": " + e.getMessage());
                     throw new RuntimeException(e);
@@ -1637,6 +1661,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public long getSessionID() {
         // implementation only needed for remote connection, not here!
         return -1; //this is never a session ID - see above
@@ -1699,6 +1724,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     @Override
     @Deprecated
+    @SuppressWarnings("deprecation")
     public float[] realFFT(final float[] timeValues) {
         return floatFFT(timeValues);
     }
@@ -1729,6 +1755,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public String[] getParametersNames(final String componentName) {
         return getAccessibleParameters(componentName);
     }

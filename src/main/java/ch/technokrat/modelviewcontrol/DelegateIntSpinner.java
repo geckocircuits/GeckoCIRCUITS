@@ -19,8 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeListener;
-import ch.technokrat.modelviewcontrol.IGenericMVCView;
-import ch.technokrat.modelviewcontrol.ModelMVC;
 
 /**
  *

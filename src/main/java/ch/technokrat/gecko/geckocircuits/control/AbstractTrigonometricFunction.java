@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
 abstract class AbstractTrigonometricFunction extends AbstractReglerSingleInputSingleOutput {

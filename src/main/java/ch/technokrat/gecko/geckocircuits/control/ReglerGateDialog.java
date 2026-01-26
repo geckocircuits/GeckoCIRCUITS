@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-class ReglerGateDialog extends DialogElementCONTROL {
+class ReglerGateDialog extends DialogElementCONTROL<ReglerGate> {
 
     public ReglerGateDialog(final ReglerGate reglerGate) {
         super(reglerGate);

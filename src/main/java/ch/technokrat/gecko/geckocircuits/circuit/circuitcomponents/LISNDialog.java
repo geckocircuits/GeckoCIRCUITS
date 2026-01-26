@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.net.URL;
+import java.net.URI;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -45,7 +45,7 @@ class LISNDialog extends DialogElementLK {
                 try {
                     g.setColor(Color.white);
                     g.fillRect(0, 0, 999, 999);
-                    Image img = (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "lisn.png"))).getImage();
+                    Image img = (new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "lisn.png").toURL())).getImage();
                     g.drawImage(img, 10, 0, new JFrame());
                 } catch (Exception e) {
                     System.out.println(e + "   srthrszhj5shj");

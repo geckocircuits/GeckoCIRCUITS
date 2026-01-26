@@ -13,8 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlInput;
@@ -195,7 +194,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     }
 
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ntorder"), toExternals.indexOf(this));
+        ProjectData.appendAsString(ascii.append("\ntorder"), toExternals.indexOf(this));
     }
 
     @Override

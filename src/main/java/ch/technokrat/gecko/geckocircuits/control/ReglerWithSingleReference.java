@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupling;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public abstract class ReglerWithSingleReference extends RegelBlock implements Co
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
 
-        if (!SchematischeEingabe2._controlDisplayMode.showParameter) {
+        if (!SchematicEditor2._controlDisplayMode.showParameter) {
             return;
         }
 

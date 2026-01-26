@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import java.util.Random;
 
 public class UniqueObjectIdentifer {
@@ -52,6 +52,6 @@ public class UniqueObjectIdentifer {
     }
 
     public void exportASCII(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nuniqueObjectIdentifier"), identifier);        
+        ProjectData.appendAsString(ascii.append("\nuniqueObjectIdentifier"), identifier);        
     }                
 }

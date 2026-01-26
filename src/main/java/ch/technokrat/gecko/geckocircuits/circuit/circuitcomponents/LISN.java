@@ -13,6 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Window;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
@@ -21,13 +28,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.ComponentDirection;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativeFixedDirection;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 // LISN-Netzwerk fuer EMV-Messungen 
 // Leistungskreis-Induktivitaet koppelbar ueber M (im Gegensatz dazu kann L nicht gekoppelt werden)
@@ -36,9 +36,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(LISN.class, "LISN", I18nKeys.LISN, I18nKeys.LINE_IMPEDANCE_STABILIZATION_NETWORK);
         
     private AbstractBlockInterface[] qLK;
-    private AbstractTerminal intern1, intern2, intern3, intern7, intern8, intern9;
-    
-    private double Lin = 50e-6, Lout = 300e-9, Rout = 20e-3, Cgnd = 250e-9, Rgnd = 50;
+    private final AbstractTerminal intern1, intern2, intern3, intern7, intern8, intern9;
+
+    private final double Lin = 50e-6, Lout = 300e-9, Rout = 20e-3, Cgnd = 250e-9, Rgnd = 50;
     private InductorWOCoupling _Lin1;
     private InductorWOCoupling _Lin2;
     private InductorWOCoupling _Lin3;
@@ -55,6 +55,7 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     private AbstractCapacitor _CGnd2;
     private AbstractCapacitor _CGnd3;
     
+    @SuppressWarnings("overridable-method-call-in-constructor")
     public LISN() {
         super();
         setComponentDirection(ComponentDirection.NORTH_SOUTH);
@@ -80,8 +81,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         intern9 = new TerminalRelativeFixedDirection(this, 0, 1);
               
         this.setzeSubcircuit(false);
-    }        
+    }
 
+    @Override
     public void setzeParameterZustandswerteAufNULL() {
         // set all u and i to zero >>
         _Lin1.parameter[2] = 0;
@@ -123,6 +125,7 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     }                       
     
     
+    @SuppressWarnings("unused")
     private void setzeSubcircuit(boolean elementVonDateiGeladen) {
         qLK = new AbstractBlockInterface[15];
         //----------------
@@ -170,7 +173,7 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         
         // 3x Ausgangswiderstand (Konverter-seitig) --> 
         //if (!elementVonDateiGeladen) {
-        //    SchematischeEingabe2.staticZaehlerLKelementeINIT[CircuitTyp.LK_R]++;
+        //    SchematicEditor2.staticZaehlerLKelementeINIT[CircuitTyp.LK_R]++;
         //}
         _Rout1 = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);
         _Rout2 = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);
@@ -242,7 +245,6 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
         restoreOrigTransformation(graphics);
-        int x = getSheetPosition().x;
         int y = getSheetPosition().y;
 
         int x1 = XIN.get(0).getPosition().x;
@@ -289,34 +291,20 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     protected void drawForeground(final Graphics2D graphics) {
         graphics.drawRect((int) (-dpix * 2.5), (int) (-dpix * 1.5), (int) (dpix * 4.0), (int) (dpix * 4.0));
         restoreOrigTransformation(graphics);
-        //g.drawString("LISN", (int)(dpix*x)-10, (int)(dpix*(y-0.0))); 
+        //g.drawString("LISN", (int)(dpix*x)-10, (int)(dpix*(y-0.0)));
         graphics.setColor(Color.magenta);
         int x = getSheetPosition().x;
         int y = getSheetPosition().y;
 
-        int x1 = XIN.get(0).getPosition().x;
         int y1 = XIN.get(0).getPosition().y;
-        int x2 = XIN.get(1).getPosition().x;
-        int y2 = XIN.get(1).getPosition().y;        
-        int x3 = XIN.get(2).getPosition().x;
+        int y2 = XIN.get(1).getPosition().y;
         int y3 = XIN.get(2).getPosition().y;
-        
-        int x4 = YOUT.get(0).getPosition().x;
-        int y4 = YOUT.get(0).getPosition().y;
-        int x5 = YOUT.get(1).getPosition().x;
-        int y5 = YOUT.get(1).getPosition().y;
-        int x6 = YOUT.get(2).getPosition().x;
-        int y6 = YOUT.get(2).getPosition().y;
-        
+
         int x7 = YOUT.get(3).getPosition().x;
-        int y7 = YOUT.get(3).getPosition().y;
         int x8 = YOUT.get(4).getPosition().x;
-        int y8 = YOUT.get(4).getPosition().y;
         int x9 = YOUT.get(5).getPosition().x;
-        int y9 = YOUT.get(5).getPosition().y;
         int x10 = YOUT.get(6).getPosition().x;
-        int y10 = YOUT.get(6).getPosition().y;
-        
+
         graphics.drawString("R", (int) (dpix * (x - 2.5)) + 2, (int) (dpix * y1) + 5);
         graphics.drawString("S", (int) (dpix * (x - 2.5)) + 2, (int) (dpix * y2) + 5);
         graphics.drawString("T", (int) (dpix * (x - 2.5)) + 2, (int) (dpix * y3) + 5);
@@ -353,7 +341,8 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     }
     
     @Override
+    @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);        
+        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);
     }
 }

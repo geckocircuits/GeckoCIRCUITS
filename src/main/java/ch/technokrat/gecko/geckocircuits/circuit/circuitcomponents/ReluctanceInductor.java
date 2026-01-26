@@ -24,7 +24,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePositionReluctance;
@@ -243,7 +243,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
     protected void drawForeground(final Graphics2D g2d) {
         final Color origColor = g2d.getColor();
         final double radiusQ = getRadiusQ();
-        if (SchematischeEingabe2._lkDisplayMode.showFlowSymbol) {
+        if (SchematicEditor2._lkDisplayMode.showFlowSymbol) {
             this.defineFlowSymbol(getComponentDirection(), g2d);
         }
 

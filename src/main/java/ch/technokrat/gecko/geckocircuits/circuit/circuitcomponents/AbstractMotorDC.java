@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentDirection;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -125,7 +125,7 @@ abstract class AbstractMotorDC extends AbstractMotor {
         graphics.fillRect((int) (-dpix * BLOCK_SYMB_X), (int) (-dpix * BLOCK_SYMB_Y), (int) (dpix * 2 * BLOCK_SYMB_X), (int) (dpix * 2 * BLOCK_SYMB_Y));
         // connector between Anchor clamps
         graphics.drawLine(XPOS_LEFT_TERM * dpix, 0, XPOS_RIGHT_TERM * dpix, 0);
-        if (SchematischeEingabe2._lkDisplayMode.showFlowSymbol) {
+        if (SchematicEditor2._lkDisplayMode.showFlowSymbol) {
             this.defineFlowSymbol(getComponentDirection(), graphics);
         }
     }    

@@ -19,28 +19,23 @@ import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- * Abstract base test class for single-input math function calculators.
- *
- * IGNORED at class level: This is an abstract base class that provides common test
- * infrastructure for concrete single-input math function tests (e.g., sin, cos, ln).
- * The @Ignore prevents JUnit from attempting to instantiate and run this abstract
- * class directly. Concrete subclasses extend this class and provide actual test
- * implementations that DO run.
- */
-@Ignore("Abstract base class - concrete subclasses run the actual tests")
+@Ignore
 public abstract class AbstractSimpleMathFunctionTest {
     private static final double TEST_DT = 1e-9;
     private AbstractControlCalculatable _controlCalculatable;    
 
     @Before
     public final void setUp() {
-            _controlCalculatable = calculatorFabric();            
-            _controlCalculatable._inputSignal[0] = new double[1];
-            assert _controlCalculatable._inputSignal.length == 1;
-            assert _controlCalculatable._outputSignal.length == 1;
-            assert _controlCalculatable._inputSignal[0] != null;
-            assert _controlCalculatable._outputSignal[0] != null;            
+        _controlCalculatable = calculatorFabric();
+        // Initialize both input and output signals
+        _controlCalculatable._inputSignal[0] = new double[1];
+        _controlCalculatable._inputSignal[0][0] = 0;
+        _controlCalculatable._outputSignal[0][0] = 0;
+
+        assert _controlCalculatable._inputSignal.length == 1;
+        assert _controlCalculatable._outputSignal.length == 1;
+        assert _controlCalculatable._inputSignal[0] != null;
+        assert _controlCalculatable._outputSignal[0] != null;
     }
     
     @After

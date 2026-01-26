@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 public final class DiagramSettings {
@@ -46,8 +46,8 @@ public final class DiagramSettings {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nnameDiagram"), _nameDiagram);
-        DatenSpeicher.appendAsString(ascii.append("\nyWeightDiagram"), _yWeightDiagram);        
+        ProjectData.appendAsString(ascii.append("\nnameDiagram"), _nameDiagram);
+        ProjectData.appendAsString(ascii.append("\nyWeightDiagram"), _yWeightDiagram);        
     }
 
     void importASCII(final TokenMap diagramSettingsMap) {

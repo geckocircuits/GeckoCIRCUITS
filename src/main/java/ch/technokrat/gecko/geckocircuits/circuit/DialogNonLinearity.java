@@ -14,33 +14,14 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
-import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
-import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
-import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
-import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
-import ch.technokrat.gecko.geckocircuits.newscope.GraferV4;
-import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
-import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
 
-import ch.technokrat.gecko.i18n.GuiFabric;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.net.URL;
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.net.URI;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.io.File;
-import java.util.ArrayList;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 
 public class DialogNonLinearity extends GeckoDialog {    
     private final NonLinearDialogPanel _content;
@@ -50,7 +31,7 @@ public class DialogNonLinearity extends GeckoDialog {
         _content = new NonLinearDialogPanel(this, elementLK, yAxisLog);        
         setContentPane(_content);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            this.setIconImage((new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "gecko.gif").toURL())).getImage());
         } catch (Exception e) {
         }
         

@@ -13,9 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -32,13 +30,8 @@ public final class ReglerU_ZI extends RegelBlock {
     
     private int tnX;  // Nummer der Terminals fuer Signal-Anschluss
     private String[] header;
-    
-    private static SchematischeEingabe2 _se;
+
     private static double br = 1.4, da = 0.4;
-    
-    public static void setReferenzAufSchematischEingabe(SchematischeEingabe2 se) {
-        _se = se;
-    }
 
     @Override
     protected final Window openDialogWindow() {
@@ -110,24 +103,24 @@ public final class ReglerU_ZI extends RegelBlock {
     }            
 
     @Override
-    protected void exportAsciiIndividual(StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nscale1"), ((Float) _uziDisplay.jSpinnerLength1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale2"), ((Float) _uziDisplay.jSpinnerLength2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale3"), ((Float) _uziDisplay.jSpinnerZ1.getValue()).toString());
+    protected void exportAsciiIndividual(StringBuffer ascii) {
+        ProjectData.appendAsString(ascii.append("\nscale1"), ((Number) _uziDisplay.jSpinnerLength1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale2"), ((Number) _uziDisplay.jSpinnerLength2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale3"), ((Number) _uziDisplay.jSpinnerZ1.getValue()).toString());
 
-        DatenSpeicher.appendAsString(ascii.append("\naverage1"), ((Float) _uziDisplay.jSpinnerAverage1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage2"), ((Float) _uziDisplay.jSpinnerAverage2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage3"), ((Float) _uziDisplay.jSpinnerZ2.getValue()).toString());
-        
+        ProjectData.appendAsString(ascii.append("\naverage1"), ((Number) _uziDisplay.jSpinnerAverage1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage2"), ((Number) _uziDisplay.jSpinnerAverage2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage3"), ((Number) _uziDisplay.jSpinnerZ2.getValue()).toString());
+
     }
 
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        _uziDisplay.jSpinnerLength1.setValue(Double.valueOf(tokenMap.readDataLine("scale1", (Float) _uziDisplay.jSpinnerLength1.getValue())));
-        _uziDisplay.jSpinnerLength2.setValue(Double.valueOf(tokenMap.readDataLine("scale2", (Float) _uziDisplay.jSpinnerLength2.getValue())));
-        _uziDisplay.jSpinnerZ1.setValue(Double.valueOf(tokenMap.readDataLine("scale3", (Float) _uziDisplay.jSpinnerZ1.getValue())));
-        _uziDisplay.jSpinnerAverage1.setValue(Double.valueOf(tokenMap.readDataLine("average1", (Float) _uziDisplay.jSpinnerAverage1.getValue())));
-        _uziDisplay.jSpinnerAverage2.setValue(Double.valueOf(tokenMap.readDataLine("average2", (Float) _uziDisplay.jSpinnerAverage2.getValue())));
-        _uziDisplay.jSpinnerZ2.setValue(Double.valueOf(tokenMap.readDataLine("average3", (Float) _uziDisplay.jSpinnerZ2.getValue())));
+        _uziDisplay.jSpinnerLength1.setValue(tokenMap.readDataLine("scale1", ((Number) _uziDisplay.jSpinnerLength1.getValue()).floatValue()));
+        _uziDisplay.jSpinnerLength2.setValue(tokenMap.readDataLine("scale2", ((Number) _uziDisplay.jSpinnerLength2.getValue()).floatValue()));
+        _uziDisplay.jSpinnerZ1.setValue(tokenMap.readDataLine("scale3", ((Number) _uziDisplay.jSpinnerZ1.getValue()).floatValue()));
+        _uziDisplay.jSpinnerAverage1.setValue(tokenMap.readDataLine("average1", ((Number) _uziDisplay.jSpinnerAverage1.getValue()).floatValue()));
+        _uziDisplay.jSpinnerAverage2.setValue(tokenMap.readDataLine("average2", ((Number) _uziDisplay.jSpinnerAverage2.getValue()).floatValue()));
+        _uziDisplay.jSpinnerZ2.setValue(tokenMap.readDataLine("average3", ((Number) _uziDisplay.jSpinnerZ2.getValue()).floatValue()));
     }
 }

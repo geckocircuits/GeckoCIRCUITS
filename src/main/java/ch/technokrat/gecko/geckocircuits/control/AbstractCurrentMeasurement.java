@@ -21,7 +21,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ThermPvChip;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.NothingToDoCalculator;
 import java.awt.Window;
-import java.util.List;
 
 public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReference {
 

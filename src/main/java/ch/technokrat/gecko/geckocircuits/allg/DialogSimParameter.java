@@ -42,19 +42,20 @@ public class DialogSimParameter extends JDialog implements ActionListener {
     private double _dt, _tDuration, _tPause;
     private SolverSettings _solverSettings;
     private FormatJTextField[] _tf;
-    private static final TechFormat TECH_FORMAT = new TechFormat();
     private static final int COLS = 6;
     private double _tPre = -1;
     private double _dtPre = -1;
     private String[] _solverOptions = {"Backward Euler", "Trapezoidal", "Gear-Shichman"};
     private int _solvertype;
-    private JComboBox _dropdownSolvSel = new JComboBox(_solverOptions);
+    private JComboBox<String> _dropdownSolvSel = new JComboBox<>(_solverOptions);
 
     public DialogSimParameter(final Frame owner, final SolverSettings callback) {
         super(owner, true);
         
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception e) {
         }
         this._solverSettings = callback;
@@ -63,7 +64,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
         _tPause = callback._tPAUSE.getValue();
         _tPre = callback._T_pre.getValue();
         _dtPre = callback._dt_pre.getValue();
-        _solvertype = Fenster._solverSettings.SOLVER_TYPE.getValue().getOldGeckoIndex();
+        _solvertype = MainWindow._solverSettings.SOLVER_TYPE.getValue().getOldGeckoIndex();
         _tf = new FormatJTextField[9];
         for (int i1 = 0; i1 < _tf.length; i1++) {
             _tf[i1] = new FormatJTextField();

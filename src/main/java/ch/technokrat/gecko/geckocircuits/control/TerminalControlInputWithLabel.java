@@ -49,7 +49,7 @@ class TerminalControlInputWithLabel extends TerminalControlInput {
     
     public static int getYFontPosition(final AbstractTerminal terminal, final Graphics2D graphics) {
         final int fontHeightThird = graphics.getFontMetrics().getHeight() / 3;         
-        return (int) (terminal._parentElement.dpix * terminal.getPosition().y) + fontHeightThird-1;        
+        return (int) (AbstractBlockInterface.dpix * terminal.getPosition().y) + fontHeightThird-1;
     }
     
     

@@ -32,7 +32,7 @@ public class GlobalFilePathes {
     // Pfad und Name der aktuellen Datei fuer die Schaltungssimulation (*.ipes):
     public static String DATNAM;
     // Pfad und Name der beim letzten Mal geladenen Datei fuer die Schaltungssimulation (*.ipes):
-    // --> ist wichtig, wenn die Pfadstruktur geaendert wurde --> damit werden lokale Pfade aktualisiert, siehe DatenSpeicher.lokalisiereRelativenPfad()
+    // --> ist wichtig, wenn die Pfadstruktur geaendert wurde --> damit werden lokale Pfade aktualisiert, siehe ProjectData.lokalisiereRelativenPfad()
     public static String DATNAM_NOT_DEFINED = "not_defined";
         
     // this is the file path from where the original ipes file was loades. Be cautious, here:

@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 /**
@@ -25,8 +25,8 @@ public final class PowerAnalysisSettings {
     int[] _powerAnalCurrentIndices = new int[]{-1, -1, -1};
 
     void exportIndividualControl(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\npowerAnalCurIndices"), _powerAnalCurrentIndices);
-        DatenSpeicher.appendAsString(ascii.append("\npowerAnalVoltIndices"), _powerAnalVoltageIndices);
+        ProjectData.appendAsString(ascii.append("\npowerAnalCurIndices"), _powerAnalCurrentIndices);
+        ProjectData.appendAsString(ascii.append("\npowerAnalVoltIndices"), _powerAnalVoltageIndices);
     }
 
     void importIndividualControl(final TokenMap settingsMap) {

@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
@@ -126,7 +126,7 @@ public abstract class AbstractDiagram extends JPanel {
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
 
-        DatenSpeicher.appendAsString(ascii.append("\ndiagramType"), getDiagramTypeString());
+        ProjectData.appendAsString(ascii.append("\ndiagramType"), getDiagramTypeString());
         ascii.append("\n<xAxis>");
         _xAxis.exportIndividualCONTROL(ascii);
         ascii.append("\n<\\xAxis>\n");

@@ -26,7 +26,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-class ReglerViewMotDialog extends DialogElementCONTROL {
+class ReglerViewMotDialog extends DialogElementCONTROL<ReglerVIEWMOT> {
 
     public ReglerViewMotDialog(final ReglerVIEWMOT aThis) {
         super(aThis);
@@ -49,7 +49,7 @@ class ReglerViewMotDialog extends DialogElementCONTROL {
 
         //
         if (labelListeElementLK2.size() > 0) {
-            final JComboBox combo = new JComboBox();
+            final JComboBox<String> combo = new JComboBox<>();
             for (String label : labelListeElementLK2) { 
                 combo.addItem(label);
             }

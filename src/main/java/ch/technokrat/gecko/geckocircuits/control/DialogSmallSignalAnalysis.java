@@ -17,7 +17,6 @@ import ch.technokrat.gecko.GeckoExternal;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.circuit.ControlSourceType;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.SmallSignalCalculator;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
@@ -27,8 +26,6 @@ import ch.technokrat.gecko.geckocircuits.newscope.GraferV4;
 import ch.technokrat.gecko.geckocircuits.newscope.NiceScale;
 import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
 import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
-import ch.technokrat.gecko.i18n.GuiFabric;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -37,13 +34,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
 import javax.swing.border.TitledBorder;
 
 public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallSignalAnalysis> {
@@ -173,6 +167,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     }
 
     @Override
+    @SuppressWarnings({"unchecked", "varargs"})
     public JPanel createParameterPanel(UserParameter<? extends Number>... parameters) {
         JPanel returnValue = super.createParameterPanel(parameters); //To change body of generated methods, choose Tools | Templates.
         Object formatField = returnValue.getComponent(1);

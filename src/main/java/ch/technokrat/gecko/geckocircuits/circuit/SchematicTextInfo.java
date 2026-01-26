@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -110,8 +110,8 @@ public final class SchematicTextInfo {
     }
 
     public void exportASCII(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
-        DatenSpeicher.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
+        ProjectData.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
+        ProjectData.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
     }
 
     void absetzenText(final Point position) {
@@ -161,8 +161,8 @@ public final class SchematicTextInfo {
 
         final FontRenderContext frc = graphics.getFontRenderContext();
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        if (SchematischeEingabe2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
-            _yTxtKlickMin = _yTxtKlickMin - SchematischeEingabe2.DY_ZEILENABSTAND_TXT;
+        if (SchematicEditor2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
+            _yTxtKlickMin = _yTxtKlickMin - SchematicEditor2.DY_ZEILENABSTAND_TXT;
         }
 
         int counter = 0;
@@ -182,8 +182,6 @@ public final class SchematicTextInfo {
         _yTxtKlickMax = (int) (dpix * (yPos + _dyTxt + _lyTxt));
         _xTxtKlickMax = (int) (dpix * (xPos + _dxTxt + _maxLengthText));
 
-        final int rectHeight = _yTxtKlickMax - _yTxtKlickMin;
-        final int rectWidth = _xTxtKlickMax - _xTxtKlickMin;
         //g.drawRect(_xTxtKlickMin, getYTxtKlickMin(), rectWidth, rectHeight);
     }
 

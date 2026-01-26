@@ -16,7 +16,6 @@ package ch.technokrat.modelviewcontrol;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
-import java.util.*;
 
 /**
  * A generic MVC framework. This seems to be very usefull when the MVC paradigma
@@ -44,11 +43,9 @@ public abstract class ModelMVCGeneric<T> implements Serializable{
   public void addModelListener(final ActionListener listener){
 
     if(listeners == null){
-      //listeners = new HashSet<ActionListener>();
       listeners = new WeakListModel();
     }
 
-    //this.listeners.add(listener);
     this.listeners.addElement(listener);
   }
 
@@ -58,7 +55,6 @@ public abstract class ModelMVCGeneric<T> implements Serializable{
    * @param listener instance of ListenerMVCGeneric
    */
   public void removeModelListener(final ActionListener listener){
-    //this.listeners.remove(listener);
     listeners.removeElement(listener);
   }
 
@@ -74,10 +70,6 @@ public abstract class ModelMVCGeneric<T> implements Serializable{
     for(int i = 0; i < listeners.getSize(); i++){
       notifyModelListener((ActionListener)listeners.getElementAt(i), source);
     }
-
-//        for (final ActionListener listener : this.listeners) {
-//            notifyModelListener(listener, source);
-//        }
   }
 
   /**
@@ -118,12 +110,12 @@ public abstract class ModelMVCGeneric<T> implements Serializable{
     this._value = value;
     if(value instanceof Double) {
         double dVal = (Double) value;
-        if (dVal != dVal) {
+        if (Double.isNaN(dVal)) {
             @SuppressWarnings("unchecked")
-            T safeValue = (T) Double.valueOf(1);
-            this._value = safeValue;
+            T replacementValue = (T) Double.valueOf(1.0);
+            this._value = replacementValue;
         }
-    }      
+    }
     notifyModelListeners(this);
 
   }

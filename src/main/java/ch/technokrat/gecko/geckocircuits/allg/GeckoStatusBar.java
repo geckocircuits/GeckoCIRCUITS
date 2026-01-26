@@ -18,6 +18,7 @@ import ch.technokrat.gecko.GeckoRemoteRegistry;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
+import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerValuesSettable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.*;
@@ -47,11 +48,11 @@ public class GeckoStatusBar extends JPanel {
     private static MemoryWarning _memoryWarning;
     private static boolean _showMemoryWarning = true;
     private double _runningPercentage;
-    private final Fenster _fenster;
+    private final MainWindow _fenster;
     private final GeckoProgressPanel _jPanelProgress;
     private Font font = calculateLabelFont();
 
-    GeckoStatusBar(String ti_ReadySim, final Fenster fenster) {
+    GeckoStatusBar(String ti_ReadySim, final MainWindow fenster) {
         _fenster = fenster;
         TimerTask task = new TimerTask() {
             public void run() {
@@ -70,7 +71,7 @@ public class GeckoStatusBar extends JPanel {
                                 _portLabelButton.setForeground(Color.ORANGE);
                                 _portLabelButton.setToolTipText("GeckoREMOTE " + I18nKeys.LISTENING_AT_PORT + " " + GeckoRemoteRegistry.getRemoteAccessPort());
                             } else {
-                                _portLabelButton.setText(I18nKeys.CONNECTION_TEST_FAILED.LISTENING_AT_PORT.getTranslation() + " : " + GeckoRemoteRegistry.getRemoteAccessPort());
+                                _portLabelButton.setText(I18nKeys.LISTENING_AT_PORT.getTranslation() + " : " + GeckoRemoteRegistry.getRemoteAccessPort());
                                 _portLabelButton.setForeground(Color.RED);
                             }
                         }
@@ -202,6 +203,12 @@ public class GeckoStatusBar extends JPanel {
         DataContainerValuesSettable dc = NetzlisteCONTROL.globalData;
         if (dc == null) {
             return;
+        }
+        if (dc instanceof ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) {
+            ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer adc = (ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) dc;
+            if (adc.getContainerStatus() == ContainerStatus.DELETED) {
+                return;
+            }
         }
         // 20 MB for the program itself!
         try {

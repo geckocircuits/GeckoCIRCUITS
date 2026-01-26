@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.*;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -30,7 +29,6 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public abstract class RegelBlock extends AbstractBlockInterface implements Serializable {
 
@@ -214,14 +212,14 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         for (int i = 0; i < XIN.size(); i++) {
             shiftLabelsIn[i] = XIN.get(i).getHasDoubleValue();
         }
-        DatenSpeicher.appendAsString(ascii.append("\nshiftLabelsIn"), shiftLabelsIn);
+        ProjectData.appendAsString(ascii.append("\nshiftLabelsIn"), shiftLabelsIn);
 
         boolean[] shiftLabelsOut = new boolean[YOUT.size()];
         for (int i = 0; i < YOUT.size(); i++) {
             shiftLabelsOut[i] = YOUT.get(i).getHasDoubleValue();
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nshiftLabelsOut"), shiftLabelsOut);
+        ProjectData.appendAsString(ascii.append("\nshiftLabelsOut"), shiftLabelsOut);
     }
 
     @Override
@@ -386,7 +384,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     @Override
     public final ElementDisplayProperties getDisplayProperties() {
-        return SchematischeEingabe2._controlDisplayMode;
+        return SchematicEditor2._controlDisplayMode;
     }
 
     final void setActiveCalculator(final AbstractControlCalculatable calc) {

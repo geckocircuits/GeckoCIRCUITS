@@ -49,7 +49,7 @@ public final class ControlTypeInfo extends AbstractTypeInfo {
     @Override
     public AbstractBlockInterface fabric() {
         try {
-            return _typeClass.newInstance();
+            return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
             System.err.println("error: " + _typeClass);
             ex.printStackTrace();

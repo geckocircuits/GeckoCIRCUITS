@@ -17,6 +17,7 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.GeckoFileable;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
 
     private final GeckoFileable _geckoFileable;
     private GeckoFileManagerWindow _fileManagerWindow;
-    private final DefaultListModel _extraFiles = new DefaultListModel();
+    private final DefaultListModel<GeckoFile> _extraFiles = new DefaultListModel<>();
 
     private final ListSelectionListener _listSelectionListener = new ListSelectionListener() {
 
@@ -52,9 +53,12 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
     public ExtraFilesWindow(final GeckoFileable geckoFileable) {
         super();
         try {
-            this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception ex) {
-            Logger.getLogger(ExtraFilesWindow.class.getName()).log(Level.INFO, "could not load image icon!");            
+            Logger.getLogger(ExtraFilesWindow.class.getName()).log(Level.INFO, "could not load image icon!");
         }
 
         _geckoFileable = geckoFileable;
@@ -236,7 +240,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
     private javax.swing.JButton jButtonAddNewFiles;
     private javax.swing.JButton jButtonOK;
     private javax.swing.JButton jButtonRemoveSelected;
-    private javax.swing.JList jListExtraSourceFiles;
+    private javax.swing.JList<GeckoFile> jListExtraSourceFiles;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane2;

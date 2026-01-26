@@ -38,6 +38,7 @@ import ch.technokrat.modelviewcontrol.ModelMVC;
  *
  * @author andreas
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class UserParameter<T> {
 
     private final List<String> _unit;
@@ -150,7 +151,7 @@ public final class UserParameter<T> {
         return getFromMultipleValues(_longName);
     }
 
-    private <T> T getFromMultipleValues(List<T> list) {
+    private <U> U getFromMultipleValues(List<U> list) {
         try {
             if (_typeMap == null || _typeMap.isEmpty() || list.size() == 1) {
                 return list.get(0);
@@ -174,7 +175,7 @@ public final class UserParameter<T> {
 
     public T getValue() {
         if (!_nameOpt.isEmpty() && _value.getValue() instanceof Number) {            
-            Double returnValue = (Double) Fenster.optimizerParameterData.getNumberFromNameWOException(_nameOpt);
+            Double returnValue = (Double) MainWindow.optimizerParameterData.getNumberFromNameWOException(_nameOpt);
             if(_value.getValue() instanceof Integer) {
                 return (T) (Integer) returnValue.intValue();
             } else {
@@ -234,7 +235,7 @@ public final class UserParameter<T> {
 
     public double getDoubleValue() {
         if (!_nameOpt.isEmpty()) {
-                return Fenster.optimizerParameterData.getNumberFromNameWOException(_nameOpt);
+                return MainWindow.optimizerParameterData.getNumberFromNameWOException(_nameOpt);
         }
 
         if (_value.getValue() instanceof Number) {
@@ -489,35 +490,35 @@ public final class UserParameter<T> {
         
         final String nameOptString = getNameOpt();
         if(!getNameOpt().isEmpty()) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifierNameOpt), nameOptString);
+            ProjectData.appendAsString(ascii.append("\n" + _identifierNameOpt), nameOptString);
         }
         
         if (value instanceof Double) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), (Double) value);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), (Double) value);
             return;
         }
         if (value instanceof Boolean) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), (Boolean) value);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), (Boolean) value);
             return;
         }
 
         if (value instanceof Integer) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), (Integer) value);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), (Integer) value);
             return;
         }
 
         if (value instanceof ControlSourceType) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((ControlSourceType) value).getOldGeckoID());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((ControlSourceType) value).getOldGeckoID());
             return;
         }
 
         if (value instanceof CircuitSourceType) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((CircuitSourceType) value).getOldGeckoID());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((CircuitSourceType) value).getOldGeckoID());
             return;
         }
         
         if (value instanceof SSAShape) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((SSAShape) value).ordinal());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((SSAShape) value).ordinal());
             return;
         }
         
@@ -528,12 +529,12 @@ public final class UserParameter<T> {
             if(writeString.contains("\n")) {                
                 writeString = writeString.replaceAll("\n", "\\\\n");                                
             }
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), writeString);
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), writeString);
             return;
         }
 
         if (value instanceof Color) {
-            DatenSpeicher.appendAsString(ascii.append("\n" + _identifier), ((Color) value).getRGB());
+            ProjectData.appendAsString(ascii.append("\n" + _identifier), ((Color) value).getRGB());
             return;
         }                
 
@@ -622,7 +623,6 @@ public final class UserParameter<T> {
         private String _identifier;
         private final T _initialValue;
         private List<ConnectorType> _connectorTypeMap;
-        private ConnectorType _activeDomain;
         private final List<String> _units = new ArrayList<String>();
         private final List<String> _shortNames = new ArrayList<String>();
         private final List<String> _alternativeShortNames = new ArrayList<String>();
@@ -643,38 +643,38 @@ public final class UserParameter<T> {
             _initialValue = initialValue;
         }
 
-        public UserParameter.Builder showWhenEnumValueIsSet(UserParameter<? extends Enum> enumParameter, Enum enumValue) {
+        public Builder<T> showWhenEnumValueIsSet(UserParameter<? extends Enum> enumParameter, Enum enumValue) {
             _enumConditionParameter = enumParameter;
             _enumConditionValue = enumValue;
             return this;
         }
-        
-        public UserParameter.Builder showInTextInfo(final TextInfoType textInfoType) {
+
+        public Builder<T> showInTextInfo(final TextInfoType textInfoType) {
             _textInfoType = textInfoType;
             return this;
         }
 
-        public UserParameter.Builder unit(final String... units) {
+        public Builder<T> unit(final String... units) {
             assert units.length > 0;
             Collections.addAll(_units, units);
             return this;
         }
 
-        public UserParameter.Builder arrayIndex(final AbstractBlockInterface parameterBlock, final int index) {
+        public Builder<T> arrayIndex(final AbstractBlockInterface parameterBlock, final int index) {
             _index = index;
             _paramterableObject = parameterBlock;
             return this;
         }
 
-        public UserParameter.Builder longName(final I18nKeys name, final I18nKeys... additionalNames) {
+        public Builder<T> longName(final I18nKeys name, final I18nKeys... additionalNames) {
             _longNames.add(name.getTranslation());
             for(I18nKeys additionalName : additionalNames) {
                 _longNames.add(additionalName.getTranslation());
-            }            
+            }
             return this;
         }
 
-        public UserParameter.Builder shortName(final String... shortNames) {
+        public Builder<T> shortName(final String... shortNames) {
             assert shortNames.length > 0;
             Collections.addAll(_shortNames, shortNames);
             return this;
@@ -687,12 +687,12 @@ public final class UserParameter<T> {
          * @param additionalAlternativeNames
          * @return 
          */
-        public UserParameter.Builder addAlternativeShortName(final String... additionalAlternativeNames) {            
+        public Builder<T> addAlternativeShortName(final String... additionalAlternativeNames) {
             Collections.addAll(_alternativeShortNames, additionalAlternativeNames);
             return this;
         }
 
-        public UserParameter.Builder mapDomains(final ConnectorType... connectorTypes) {
+        public Builder<T> mapDomains(final ConnectorType... connectorTypes) {
             assert connectorTypes.length > 0;
             this._connectorTypeMap = new ArrayList<ConnectorType>();            
             Collections.addAll(_connectorTypeMap, connectorTypes);
@@ -700,7 +700,7 @@ public final class UserParameter<T> {
         }
 
         public UserParameter<T> build() {
-            UserParameter returnValue = new UserParameter<T>(this);
+            UserParameter<T> returnValue = new UserParameter<T>(this);
             if (returnValue._parameterableObject != null) {
                 returnValue._parameterableObject.registerParameter(returnValue);
             }

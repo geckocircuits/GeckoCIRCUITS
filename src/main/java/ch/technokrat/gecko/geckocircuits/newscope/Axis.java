@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -598,7 +598,7 @@ public final class Axis {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\naxisType"), _axisType.getCode());
+        ProjectData.appendAsString(ascii.append("\naxisType"), _axisType.getCode());
         _axisTickSettings.exportIndividualCONTROL(ascii);
         _axisGridSettings.exportIndividualCONTROL(ascii);
         _axisSettings.exportIndividualCONTROL(ascii);

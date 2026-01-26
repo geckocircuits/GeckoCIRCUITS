@@ -37,9 +37,8 @@ public final class TerminalRelativeFixedDirection extends AbstractTerminal {
         return getPointFromDirection(_fixedDirection, _parentElement.getSheetPosition(), _posX, _posY);
     }           
     
-    public static Point getPointFromDirection(final ComponentDirection direction, final Point center, 
-            final int posX, final int posY) {                
-        final int _termDist = 5;
+    public static Point getPointFromDirection(final ComponentDirection direction, final Point center,
+            final int posX, final int posY) {
         int x1 = center.x, y1 = center.y;
         switch (direction) {
             case NORTH_SOUTH:

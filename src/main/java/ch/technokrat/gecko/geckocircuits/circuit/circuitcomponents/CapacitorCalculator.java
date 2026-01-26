@@ -16,8 +16,9 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public final class CapacitorCalculator extends CircuitComponent implements AStampable, BStampable,
-        DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
+         DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
 
     //private final LKreisC _lkCap;
     public static boolean initCapacitor = false;
@@ -27,6 +28,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     // ok, this is a "public" variable... bad, but useful here
     public static boolean capError = false;
     private int _z;
+    // Note: _bVector is used at line 207 in registerBVector(), IDE warning is false positive
     private BVector _bVector;
     private boolean _isNonLinear = false;
     private CapacitanceCharacteristic _NonLinearCapacitance;

@@ -16,8 +16,8 @@ package ch.technokrat.gecko.geckocircuits.control.javablock;
 import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.SystemOutputRedirect;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -28,7 +28,6 @@ import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.SpecialNameVisible;
 import ch.technokrat.gecko.geckocircuits.control.VariableTerminalNumber;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time;
 import ch.technokrat.gecko.geckocircuits.control.calculators.InitializableAtSimulationStart;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -37,7 +36,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +54,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerJavaFunction.class, "JAVA", I18nKeys.JAVA_FUNCTION);
     private final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
     private final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
-    private CodeWindow _codeWindow;
+    private CodeWindowModern _codeWindow;
 
     final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzXIN", 3).
@@ -344,7 +342,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             for (String hash : _additionalFilesHashKeys) {
                 hashValue = Long.valueOf(hash);
                 try {
-                    file = Fenster._fileManager.getFile(hashValue);
+                    file = MainWindow._fileManager.getFile(hashValue);
                     _javaBlock._additionalSourceFiles.add(file);
                 } catch (Exception e) {
                     fileMissing = true;
@@ -485,8 +483,8 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         _javaBlock.exportIndividualCONTROL(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
-        DatenSpeicher.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
+        ProjectData.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
+        ProjectData.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
         _variableBusWidth.exportAsciiIndividual(ascii);
     }
 
@@ -541,7 +539,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         for (GeckoFile newFile : newFiles) {
             _javaBlock._additionalSourceFiles.add(newFile);
             newFile.setUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.addFile(newFile);
+            MainWindow._fileManager.addFile(newFile);
         }
         _codeWindow.addNewExtraFiles(newFiles);
     }
@@ -551,7 +549,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         for (GeckoFile removedFile : filesToRemove) {
             _javaBlock._additionalSourceFiles.remove(removedFile);
             removedFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(removedFile);
+            MainWindow._fileManager.maintain(removedFile);
         }
 
         if (_codeWindow != null) {
@@ -630,9 +628,9 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         } else {
-            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden 
+            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden
             if (_codeWindow == null) {
-                _codeWindow = new CodeWindow(this, _outputStringBuffer);
+                _codeWindow = new CodeWindowModern(this, _outputStringBuffer);
                 _codeWindow.loadSourcesText();
             } else {
                 if (_codeWindow.isVisible()) {

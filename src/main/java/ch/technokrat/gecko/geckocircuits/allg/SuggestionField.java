@@ -37,10 +37,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -51,7 +48,7 @@ public final class SuggestionField extends JTextField {
 
     private static final long serialVersionUID = 1756202080423312153L;
     private final JDialog _dialog;
-    private JList _list;
+    private JList<String> _list;
     private List<String> _data = new ArrayList<String>();
     private final List<String> _suggestions = new ArrayList<String>();
     private InterruptableMatcher _matcher;
@@ -148,7 +145,7 @@ public final class SuggestionField extends JTextField {
         this._dialog.setUndecorated(true);
         this._dialog.setFocusableWindowState(false);
         this._dialog.setFocusable(false);
-        this._list = new JList();
+        this._list = new JList<>();
         _list.setFixedCellWidth(160);
         this._list.addMouseListener(new MouseListener() {
             private int selected;
@@ -232,7 +229,7 @@ public final class SuggestionField extends JTextField {
         }
         Collections.sort(data);
         this._data = data;
-        this._list.setListData(data.toArray());
+        this._list.setListData(data.toArray(new String[0]));
         return true;
     }
 
@@ -340,7 +337,7 @@ public final class SuggestionField extends JTextField {
         public void run() {
             try {
                 SuggestionField.this.setFont(SuggestionField.this._busy);
-                Iterator it = SuggestionField.this._suggestions.iterator();
+                Iterator<String> it = SuggestionField.this._suggestions.iterator();
                 String word = SuggestionField.this.getText();
                 while (it.hasNext()) {
                     if (this.stop) {
@@ -359,7 +356,7 @@ public final class SuggestionField extends JTextField {
 
                 SuggestionField.this.setFont(SuggestionField.this._regular);
                 if (SuggestionField.this._suggestions.size() > 0) {
-                    SuggestionField.this._list.setListData(SuggestionField.this._suggestions.toArray());
+                    SuggestionField.this._list.setListData(SuggestionField.this._suggestions.toArray(new String[0]));
                     SuggestionField.this._list.setSelectedIndex(0);
                     SuggestionField.this._list.ensureIndexIsVisible(0);
                     SuggestionField.this._dialog.setVisible(true);

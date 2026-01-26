@@ -13,8 +13,8 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -342,13 +342,13 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             _scopeSettings.exportASCII(appendLater);
             super.exportAsciiIndividual(appendLater);
             appendLater.append("\ntn");
-            DatenSpeicher.appendAsString(appendLater.append("\nisShowName"), _isShowName);
+            ProjectData.appendAsString(appendLater.append("\nisShowName"), _isShowName);
 
             _saveLoadSignalNames = new String[_zvDatenRAM.getRowLength()];
             for (int i = 0; i < _zvDatenRAM.getRowLength(); i++) {
                 _saveLoadSignalNames[i] = _zvDatenRAM.getSignalName(i);
             }
-            DatenSpeicher.appendAsString(appendLater.append("\nsavedSignalNames"), _saveLoadSignalNames);
+            ProjectData.appendAsString(appendLater.append("\nsavedSignalNames"), _saveLoadSignalNames);
 
             _meanSignals.exportIndividualCONTROL(appendLater);
             appendLater.append("\n<ScopeSettings>\n");
@@ -403,9 +403,6 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             importScopeSettings(scopeMap);
         }
 
-        if (Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
-            _scopeFrame.setVisible(true);
-        }
     }
 
     //for use with GeckoSCRIPT - get waveform characteristics for a particular channel
@@ -472,7 +469,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         _scopeFrame.clearZVDaten();
         _scopeFrame._scope.setDataContainer(_zvDatenRAM);
         //------------
-        // jedesmal, wenn ein neues SCOPE-Fenster 'laeuft', beginnt die ZV-Datenspeicherung von Neuem
+        // jedesmal, wenn ein neues SCOPE-MainWindow 'laeuft', beginnt die ZV-Datenspeicherung von Neuem
         if (_waveformChar != null) {
             _waveformChar.setInvalid();
         }

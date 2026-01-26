@@ -13,13 +13,12 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.geckocircuits.control.ReglerGate;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.undo.CannotRedoException;
@@ -184,14 +183,14 @@ public final class ComponentCoupling {
     }
 
     public void exportASCII(StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\ncoupledReferenceID"), _coupledIdentifiers);
+        ProjectData.appendAsString(ascii.append("\ncoupledReferenceID"), _coupledIdentifiers);
         /**
          * careful: this is used fore restoring connections, when copy export ->
          * import is used!
          */
-        DatenSpeicher.appendAsString(ascii.append("\ncopyCoupledReferenceID"), _coupledIdentifiers);
-        DatenSpeicher.appendAsString(ascii.append("\ninternalIndex"), _internalStringIndex);
-        DatenSpeicher.appendAsString(ascii.append("\ninternalString"), _internalString);
+        ProjectData.appendAsString(ascii.append("\ncopyCoupledReferenceID"), _coupledIdentifiers);
+        ProjectData.appendAsString(ascii.append("\ninternalIndex"), _internalStringIndex);
+        ProjectData.appendAsString(ascii.append("\ninternalString"), _internalString);
     }
 
     public void refreshCoupledReferences(final List<? extends AbstractCircuitSheetComponent> allSheetElements) {

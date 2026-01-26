@@ -17,10 +17,9 @@ package ch.technokrat.gecko.geckocircuits.nativec;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindow;
+import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindowModern;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 import ch.technokrat.gecko.i18n.GuiFabric;
-import ch.technokrat.gecko.i18n.LangInit;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -38,7 +37,6 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -58,7 +56,7 @@ public class NativeCDialog extends GeckoDialog {
     private final DefaultListModel _fileList;
     private final Container _con;
     private final JButton jButtonOK = GuiFabric.getJButton(I18nKeys.OK);
-    private final JList jListLibFiles;
+    private final JList<String> jListLibFiles;
     private final JButton jButtonOpenFile = GuiFabric.getJButton(I18nKeys.ADD_NEW);
     private final JButton jButtonRemoveSelection = GuiFabric.getJButton(I18nKeys.REMOVE_SELECTION);
     
@@ -138,7 +136,7 @@ public class NativeCDialog extends GeckoDialog {
                         _regNCObj.setNewNameChecked(_selectedLibFile.getFile().getName());
                     }
                     catch (NameAlreadyExistsException exc) {
-                        Logger.getLogger(CodeWindow.class.getName()).log(Level.SEVERE, null, exc);
+                        Logger.getLogger(CodeWindowModern.class.getName()).log(Level.SEVERE, null, exc);
                         JOptionPane.showMessageDialog(null, "Seems like the selected Native Library is already used by another block!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }

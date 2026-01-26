@@ -15,7 +15,6 @@ package ch.technokrat.gecko;
 
 import ch.technokrat.gecko.geckoscript.AbstractGeckoCustom;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
-import java.rmi.RemoteException;
 
 /**
  *

@@ -19,7 +19,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractMotor
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractVoltageSource;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCurrentSource;
 import ch.technokrat.gecko.geckocircuits.allg.DialogWarningNodeNumber;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInductor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import ch.technokrat.gecko.geckocircuits.control.*;
@@ -413,7 +413,6 @@ public class SimulationsKern implements ISimulationEngine {
     @Override
     public void setInitialConditionsFromContinue() {
         if ((lkmLK.p.length != pLK_ALT.length) || (lkmTHERM.p.length != pTHERM_ALT.length)) {
-            DialogWarningNodeNumber dialogWarningNodeNumber = new DialogWarningNodeNumber();
             //System.out.println("Warning: Node-Number has been changed!");
             return;
         }
@@ -485,14 +484,14 @@ public class SimulationsKern implements ISimulationEngine {
         //
         // Leistungskreis:
         if (getAnfangsbedVomDialogfenster) {
-            lkmLK = new LKMatrices(Fenster._solverSettings.SOLVER_TYPE.getValue());
-            lkmLK.initMatrizen(nl, getAnfangsbedVomDialogfenster, true, Fenster._solverSettings.SOLVER_TYPE.getValue());  // pALT= new double[..];   iALT= new double[..];
+            lkmLK = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
+            lkmLK.initMatrizen(nl, getAnfangsbedVomDialogfenster, true, MainWindow._solverSettings.SOLVER_TYPE.getValue());  // pALT= new double[..];   iALT= new double[..];
             lkmLK.schreibeMatrix_A(dt, tAktuell, false);
 
             //
             // thermischer Kreis:
-            lkmTHERM = new LKMatrices(Fenster._solverSettings.SOLVER_TYPE.getValue());
-            lkmTHERM.initMatrizen((NetListLK) thermNL, getAnfangsbedVomDialogfenster, false, Fenster._solverSettings.SOLVER_TYPE.getValue());
+            lkmTHERM = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
+            lkmTHERM.initMatrizen((NetListLK) thermNL, getAnfangsbedVomDialogfenster, false, MainWindow._solverSettings.SOLVER_TYPE.getValue());
             lkmTHERM.schreibeMatrix_A(dt, tAktuell, false);
         }
         //=============================

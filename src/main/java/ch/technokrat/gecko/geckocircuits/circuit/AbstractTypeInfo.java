@@ -16,14 +16,11 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
-import ch.technokrat.gecko.geckocircuits.control.ControlTyp;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class AbstractTypeInfo {        
     
@@ -131,7 +128,7 @@ public abstract class AbstractTypeInfo {
     
     public static final AbstractBlockInterface fabricNew(final AbstractTypeInfo typ) {        
         final AbstractBlockInterface returnValue = typ.fabric();
-        returnValue.setParentCircuitSheet(SchematischeEingabe2.Singleton._visibleCircuitSheet);
+        returnValue.setParentCircuitSheet(SchematicEditor2.Singleton._visibleCircuitSheet);
         returnValue.doOperationAfterNewConstruction();
         return returnValue;
     }

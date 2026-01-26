@@ -44,13 +44,13 @@ public enum ConnectorType {
             case LK:
             case RELUCTANCE:
             case LK_AND_RELUCTANCE:
-                return SchematischeEingabe2._lkDisplayMode;
+                return SchematicEditor2._lkDisplayMode;
             case CONTROL:
-                return SchematischeEingabe2._controlDisplayMode;
+                return SchematicEditor2._controlDisplayMode;
             case THERMAL:
-                return SchematischeEingabe2._controlDisplayMode;
+                return SchematicEditor2._controlDisplayMode;
             default:
-                return SchematischeEingabe2._lkDisplayMode;
+                return SchematicEditor2._lkDisplayMode;
         }        
     }
 

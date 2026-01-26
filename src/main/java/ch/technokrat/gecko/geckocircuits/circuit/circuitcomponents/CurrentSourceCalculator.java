@@ -15,13 +15,11 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.TimeFunction;
 import ch.technokrat.gecko.geckocircuits.circuit.TimeFunctionConstant;
-import java.util.ArrayList;
 
 
-public class CurrentSourceCalculator extends CircuitComponent implements AStampable, BStampable, HistoryUpdatable {
+public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSource> implements AStampable, BStampable, HistoryUpdatable {
 
     private TimeFunction _function;
-    private ArrayList<BStampable> _stampUpdateList;
 
     public CurrentSourceCalculator(final AbstractCurrentSource parent) {
         super(parent);

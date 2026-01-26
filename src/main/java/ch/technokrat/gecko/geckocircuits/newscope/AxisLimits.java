@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import java.util.Stack;
 
@@ -219,10 +219,10 @@ final class AxisLimits {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nisAutoEnabled"), _isAutoEnabled);
-        DatenSpeicher.appendAsString(ascii.append("\nisUserScale"), _userScale);
-        DatenSpeicher.appendAsString(ascii.append("\nisSymmetricZero"), _isCommonZero);
-        DatenSpeicher.appendAsString(ascii.append("\nvalueScale"), _valueScaleLocal);
+        ProjectData.appendAsString(ascii.append("\nisAutoEnabled"), _isAutoEnabled);
+        ProjectData.appendAsString(ascii.append("\nisUserScale"), _userScale);
+        ProjectData.appendAsString(ascii.append("\nisSymmetricZero"), _isCommonZero);
+        ProjectData.appendAsString(ascii.append("\nvalueScale"), _valueScaleLocal);
     }
 
     void importASCII(final TokenMap axisMap) {

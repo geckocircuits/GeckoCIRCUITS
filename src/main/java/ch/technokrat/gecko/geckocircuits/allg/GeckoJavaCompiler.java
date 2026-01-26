@@ -63,12 +63,12 @@ public class GeckoJavaCompiler {
     };
     private COMPILESTATUS _compileStatus = COMPILESTATUS.NOT_COMPILED;
     //-------------------------------------------------------------------
-    private Fenster gecko;
+    private MainWindow gecko;
 
     public GeckoJavaCompiler() {
     }
 
-    public void setGecko(Fenster gecko) {
+    public void setGecko(MainWindow gecko) {
         this.gecko = gecko;
     }
 
@@ -157,7 +157,7 @@ public class GeckoJavaCompiler {
             appendSourcLine(" * Source created on " + new Date());
             appendSourcLine(" */");
             appendSourcLine("public class " + className + " { ");
-            appendSourcLine("\nprivate static Fenster GECKO;\n");
+            appendSourcLine("\nprivate static MainWindow GECKO;\n");
             appendSourcLine("// static variables: ");
             //-------------
             reader = new BufferedReader(new StringReader(_javaStaticVariables));
@@ -171,7 +171,7 @@ public class GeckoJavaCompiler {
                 appendSourcLine("\t\t" + strLine);
             }
             appendSourcLine("}");
-            appendSourcLine("    public static void _setGecko (Fenster gecko) throws Exception { GECKO=gecko; }");
+            appendSourcLine("    public static void _setGecko (MainWindow gecko) throws Exception { GECKO=gecko; }");
             appendSourcLine("    public static void run_script () throws Exception {");
             appendSourcLine("// Your code here:");
             appendSourcLine("// ****************** your code segment **********************");
@@ -261,7 +261,6 @@ public class GeckoJavaCompiler {
             String cp1 = _workingDirectory;
             String cp2 = cp0 + "/build/classes";
             String cp3 = GlobalFilePathes.PFAD_JAR_HOME + "GeckoCIRCUITS.jar";
-            String cp4 = "GeckoCIRCUITS.jar";
             opt.add(cp0 + ";" + cp1 + ";" + cp2 + ";" + cp3 + ";");
             //System.out.println("options --> \n"+cp0+"\n"+cp1+"\n"+cp2+"\n"+cp3+"\n----");
 
@@ -271,7 +270,7 @@ public class GeckoJavaCompiler {
 
             if (!task.call()) {
                 //------------------
-                for (Diagnostic dm : diagnostics.getDiagnostics()) {
+                for (Diagnostic<?> dm : diagnostics.getDiagnostics()) {
                     compilerWriter.println(dm);
                 }
                 _compileStatus = COMPILESTATUS.COMPILE_ERROR;
@@ -297,9 +296,9 @@ public class GeckoJavaCompiler {
                 };
 
                 Class<?> c = Class.forName(_className, false, cl);
-                Class clazz = c;// Class.forName(_className, true, urlCl);                
+                Class<?> clazz = c;// Class.forName(_className, true, urlCl);                
 
-                Class[] partypes = new Class[0];
+                Class<?>[] partypes = new Class<?>[0];
                 try {
                     //---------
                     _run_script = clazz.getMethod("run_script", partypes);
@@ -313,7 +312,7 @@ public class GeckoJavaCompiler {
                 } catch (SecurityException ex) {
                     Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                Class[] partypes2 = new Class[1];
+                Class<?>[] partypes2 = new Class<?>[1];
                 partypes2[0] = gecko.getClass();
                 try {
                     //---------
@@ -392,7 +391,7 @@ public class GeckoJavaCompiler {
 
     public void test() {
         this.setSourceCode("double cc=5;\nSystem.out.println(\"javaSourceCode --> \"+cc+\"   xx=\"+GeckoSim.xx);\n");
-        this.setImportCode("import ch.technokrat.gecko.GeckoSim;\nimport ch.technokrat.gecko.geckocircuits.allg.Fenster;\n");
+        this.setImportCode("import ch.technokrat.gecko.GeckoSim;\nimport ch.technokrat.gecko.geckocircuits.allg.MainWindow;\n");
         this.setStaticInitCode("//staticCode");
         //-------
         try {

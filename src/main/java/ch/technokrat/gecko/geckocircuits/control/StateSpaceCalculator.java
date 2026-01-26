@@ -157,11 +157,10 @@ public final class StateSpaceCalculator {
     }
     
     void initializeWithNewDt(final double deltaT) {
-         double deltaTOld = _deltaT;
          calculateMatrixA(deltaT);
-            
+
          //TODO: for differentiation (using _stateVariables._xOLD and _stateVariables._xNEW
-         // the stepwidth-change is not yet implemented correctly!         
+         // the stepwidth-change is not yet implemented correctly!
     }
 
     StateVariables getStateVariables() {

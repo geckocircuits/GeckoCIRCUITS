@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 /**
@@ -72,8 +72,8 @@ public final class AxisDesignSettings implements LineSettable{
   }
 
   void exportIndividualCONTROL(final StringBuffer ascii){
-    DatenSpeicher.appendAsString(ascii.append("\naxisColor"), _axisColor.code());
-    DatenSpeicher.appendAsString(ascii.append("\naxisStroke"), _axisStyle.code());
-    DatenSpeicher.appendAsString(ascii.append("\naxisCaption"), _axisCaption);
+    ProjectData.appendAsString(ascii.append("\naxisColor"), _axisColor.code());
+    ProjectData.appendAsString(ascii.append("\naxisStroke"), _axisStyle.code());
+    ProjectData.appendAsString(ascii.append("\naxisCaption"), _axisCaption);
   }
 }

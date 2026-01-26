@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.control.Point;
@@ -39,9 +39,9 @@ public abstract class AbstractCircuitSheetComponent {
             public void actionPerformed(ActionEvent e) {
                 dpix = dpixValue.getValue();
                 try {
-                    SchematischeEingabe2.Singleton.setNewScaling(dpix);
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.revalidate();
-                    SchematischeEingabe2.Singleton._visibleCircuitSheet.repaint();
+                    SchematicEditor2.Singleton.setNewScaling(dpix);
+                    SchematicEditor2.Singleton._visibleCircuitSheet.revalidate();
+                    SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
                 } catch (NullPointerException ex) {
                     System.err.println(ex.getMessage());
                 }
@@ -175,13 +175,13 @@ public abstract class AbstractCircuitSheetComponent {
     }
 
     public void exportASCII(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
+        ProjectData.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
 
         if (getParentCircuitSheet() instanceof SubCircuitSheet) {
-            DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"),
+            ProjectData.appendAsString(ascii.append("\nparentSheetIdentifier"),
                     ((SubCircuitSheet) _parentCircuitSheet)._subBlock.getUniqueObjectIdentifier());
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nparentSheetIdentifier"), (long) 0);
+            ProjectData.appendAsString(ascii.append("\nparentSheetIdentifier"), (long) 0);
         }
 
     }
@@ -231,7 +231,7 @@ public abstract class AbstractCircuitSheetComponent {
             SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
             setParentCircuitSheet(rootBlock._myCircuitSheet);
         } else {            
-            setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
+            setParentCircuitSheet(SchematicEditor2.Singleton._circuitSheet);
         }
 
 
@@ -259,7 +259,7 @@ public abstract class AbstractCircuitSheetComponent {
             SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
             setParentCircuitSheet(rootBlock._myCircuitSheet);
         } else {            
-            setParentCircuitSheet(SchematischeEingabe2.Singleton._circuitSheet);
+            setParentCircuitSheet(SchematicEditor2.Singleton._circuitSheet);
         }
 
 
