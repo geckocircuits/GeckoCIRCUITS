@@ -13,18 +13,9 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.circuit.DialogNonLinearity;
-import ch.technokrat.gecko.i18n.GuiFabric;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
 
 class ResistorDialog extends DialogElementLK<AbstractResistor> {
 
@@ -34,11 +25,9 @@ class ResistorDialog extends DialogElementLK<AbstractResistor> {
 
     @Override
     protected void baueGUIIndividual() {
-        JPanel pIN = createParameterPanel(element._resistance);        
-        
-        
-        final FormatJTextField capacitanceField = tf.get(0);
-                
+        JPanel pIN = createParameterPanel(element._resistance);
+
+
         final JPanel pINyC = new JPanel();
         pINyC.setLayout(new BorderLayout());
         pINyC.add(pIN, BorderLayout.NORTH);

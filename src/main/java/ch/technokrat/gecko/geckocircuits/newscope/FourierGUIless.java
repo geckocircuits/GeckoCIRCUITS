@@ -17,7 +17,6 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
-import javax.swing.JOptionPane;
 
 public final class FourierGUIless {
     private final AbstractDataContainer _worksheet;

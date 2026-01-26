@@ -46,7 +46,6 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
                 + "\n";
         
     private final OptimizerParameterData _optData;
-    private List<AbstractBlockInterface> _elements;
     private Map<String, Integer> _numberOfUsedParamemters = new HashMap<String, Integer>();
     private JTabbedPane tabber;
     private JTextArea jtaHLP;
@@ -56,7 +55,6 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
     public DialogOptimizerParameterSettings(OptimizerParameterData optData, List<AbstractBlockInterface> e) {
         super(GeckoSim._win, true);
         _optData = optData;
-        _elements = e;
         for(AbstractBlockInterface block : e) {
             for(UserParameter<? extends Object> parameter : block.getRegisteredParameters()) {
                 String nameOpt = parameter.getNameOpt();

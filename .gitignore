@@ -22,9 +22,40 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-.vscode/
+# Maven build output
 target/
+
+# Native installer output
 release/
 
-gecko-webapp/* 
-gecko-webapp/*/.bin/
+
+
+# Claude Code workspace files
+.claude/
+
+# Eclipse IDE files
+.classpath
+.project
+.settings/
+
+
+/.factorypath
+/abstractgeckocustom_warnings_new.txt
+/add_suppressions.sed
+/all_warnings_current.txt
+/all_warnings_fixed.txt
+/all_warnings.txt
+/CHANGES_SUMMARY.txt
+/check_file.bat
+/check_file.sh
+/collect_warnings.bat
+/collect_warnings.sh
+/current_warnings.txt
+/filter_warnings.bat
+/filter_warnings.sh
+/fix_deprecation.sh
+/FIX_PROPOSAL_AbstractGeckoCustom.md
+/RENAME_SUMMARY.md
+/WARNINGS_GUIDE.md
+/warnings_summary.txt
+/warnings-full.txt

@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import java.util.HashMap;
 import java.util.Map;

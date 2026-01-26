@@ -23,7 +23,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.PostCalculatable;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalFixedPositionInvisible;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalTwoPortRelativeFixedDirection;
@@ -204,7 +204,7 @@ public final class ThermPvChip extends AbstractCircuitBlockInterface implements 
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        if (SchematischeEingabe2._thermDisplayMode.showParameter) {
+        if (SchematicEditor2._thermDisplayMode.showParameter) {
 
             final AbstractCircuitBlockInterface coupledElement =
                     (AbstractCircuitBlockInterface) getComponentCoupling()._coupledElements[0];

@@ -15,8 +15,6 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Calculates the characteristic values of a datacontainer, e.g. average, rms,

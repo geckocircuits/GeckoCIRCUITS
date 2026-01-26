@@ -57,8 +57,8 @@ public abstract class AbstractTerminal implements TerminalInterface {
 
     public void paintLabelString(final Graphics2D graphics) {
         if (!_label.getLabelString().isEmpty()) {
-            graphics.drawString(_label.getLabelString(), (int) (_parentElement.dpix * getPosition().x) + DX_IN,
-                    (int) (_parentElement.dpix * getPosition().y) + DY_TEXT);
+            graphics.drawString(_label.getLabelString(), (int) (AbstractCircuitSheetComponent.dpix * getPosition().x) + DX_IN,
+                    (int) (AbstractCircuitSheetComponent.dpix * getPosition().y) + DY_TEXT);
         }
     }
 

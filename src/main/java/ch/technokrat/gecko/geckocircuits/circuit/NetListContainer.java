@@ -22,7 +22,7 @@ public class NetListContainer {
     public final NetListLK _nlLK;
     public final NetListLK _nlTH;
     
-    public static NetListContainer fabricStartSimulation(final SchematischeEingabe2 schematicEntry, SimulationsKern simKern) {        
+    public static NetListContainer fabricStartSimulation(final SchematicEditor2 schematicEntry, SimulationsKern simKern) {        
         schematicEntry.checkNameOptParameters();               
         NetzlisteAllg nlC1 = NetzlisteAllg.fabricNetzlistDisabledParentSubsRemoved(schematicEntry.getConnection(ConnectorType.CONTROL), schematicEntry.getElementCONTROL());
         NetListLK nlL = schematicEntry.getNetzliste(ConnectorType.LK_AND_RELUCTANCE);
@@ -45,7 +45,7 @@ public class NetListContainer {
         return new NetListContainer(nlC, nlL, nlT);
     }
     
-    public static NetListContainer fabricContinueSimulation(final SchematischeEingabe2 schematicEntry, SimulationsKern simKern,
+    public static NetListContainer fabricContinueSimulation(final SchematicEditor2 schematicEntry, SimulationsKern simKern,
             NetListContainer oldNetlist) {
         schematicEntry.checkNameOptParameters();               
         return new NetListContainer(NetzlisteCONTROL.FabricContinueSimulation(oldNetlist._nlControl), oldNetlist._nlLK, oldNetlist._nlTH);

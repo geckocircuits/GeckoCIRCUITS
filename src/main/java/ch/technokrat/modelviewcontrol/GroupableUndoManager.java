@@ -14,7 +14,6 @@
 package ch.technokrat.modelviewcontrol;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;

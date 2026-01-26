@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import java.util.Random;
 
 /**
  *

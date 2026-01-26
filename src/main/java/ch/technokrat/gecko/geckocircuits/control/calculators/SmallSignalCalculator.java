@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.IsDtChangeSensitive;
 import ch.technokrat.gecko.geckocircuits.control.SSAShape;
-import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time;
 import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractSignalCalculator.TWO_PI;
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 import ch.technokrat.gecko.geckocircuits.newscope.FFTLibrary;

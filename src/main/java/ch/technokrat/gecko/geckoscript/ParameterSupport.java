@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckoscript;
 
-import ch.technokrat.gecko.Documentation;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
@@ -27,14 +26,13 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
-import javax.swing.plaf.basic.BasicTreeUI;
 
 public class ParameterSupport extends javax.swing.JFrame {
 
     private final List<List<AbstractBlockInterface>> _allComponents;
     private final DefaultListModel _availableParametersModel = new DefaultListModel();
-    private final DefaultListModel _selectBlockTypeModel = new DefaultListModel();
-    private final DefaultListModel _availableBlocksModel;
+    private final DefaultListModel<AbstractTypeInfo> _selectBlockTypeModel = new DefaultListModel<>();
+    private final DefaultListModel<AbstractBlockInterface> _availableBlocksModel;
 
     public ParameterSupport(final SimulationAccess circuit) {
         super();
@@ -65,7 +63,7 @@ public class ParameterSupport extends javax.swing.JFrame {
 
         
         _listAvailableParameters.setModel(_availableParametersModel);
-        _availableBlocksModel = new DefaultListModel();
+        _availableBlocksModel = new DefaultListModel<>();
         _listAvailableBlocks.setModel(_availableBlocksModel);       
         _listAvailableParameters.setCellRenderer(new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(

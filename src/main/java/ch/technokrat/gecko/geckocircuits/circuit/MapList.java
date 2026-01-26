@@ -26,12 +26,12 @@ import java.util.Map.Entry;
  */
 public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
 
-    private final Class[] registeredTypes = new Class[]{
+    private final Class<?>[] registeredTypes = new Class<?>[]{
         AbstractCircuitBlockInterface.class, RegelBlock.class, AbstractSpecialBlock.class, TextFieldBlock.class,
         ComponentCoupable.class, PotentialCoupable.class, 
         AbstractBlockInterface.class, Verbindung.class, SubcircuitBlock.class
     };
-    private final Map<Class, ArrayList> classMap = new HashMap<Class, ArrayList>();
+    private final Map<Class<?>, ArrayList> classMap = new HashMap<Class<?>, ArrayList>();
 
     @Override
     public void clear() {
@@ -41,8 +41,8 @@ public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
 
     @Override
     public boolean remove(Object o) {
-        for (Entry<Class, ArrayList> entry : classMap.entrySet()) {
-            ArrayList list = entry.getValue();
+        for (Entry<Class<?>, ArrayList> entry : classMap.entrySet()) {
+            ArrayList<?> list = entry.getValue();
             if (list.contains(o)) {
                 list.remove(o);
             }
@@ -68,12 +68,12 @@ public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
     public boolean add(AbstractCircuitSheetComponent toAdd) {
         assert toAdd != null;
 
-        for (Class type : registeredTypes) {
+        for (Class<?> type : registeredTypes) {
             if (type.isInstance(toAdd)) {
                 if (classMap.containsKey(type)) {
                     classMap.get(type).add(toAdd);
                 } else {
-                    ArrayList newList = new ArrayList();
+                    ArrayList newList = new ArrayList<>();
                     newList.add(toAdd);
                     classMap.put(type, newList);
                 }

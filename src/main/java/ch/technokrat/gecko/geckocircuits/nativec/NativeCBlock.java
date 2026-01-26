@@ -74,7 +74,9 @@ public class NativeCBlock {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause().printStackTrace();
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
             return false;
         }
     }

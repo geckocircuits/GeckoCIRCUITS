@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -212,9 +212,9 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
             outputNameOpts[i] = _data.get(i)._frequency.getNameOpt();
         }
         
-        DatenSpeicher.appendAsString(ascii.append("\noutputTypes"), outputTypes);
-        DatenSpeicher.appendAsString(ascii.append("\noutputFrequencies"), outputFreqs);
-        DatenSpeicher.appendAsString(ascii.append("\nfrequenciesNameOpt"), outputNameOpts);
+        ProjectData.appendAsString(ascii.append("\noutputTypes"), outputTypes);
+        ProjectData.appendAsString(ascii.append("\noutputFrequencies"), outputFreqs);
+        ProjectData.appendAsString(ascii.append("\nfrequenciesNameOpt"), outputNameOpts);
 
     }
 

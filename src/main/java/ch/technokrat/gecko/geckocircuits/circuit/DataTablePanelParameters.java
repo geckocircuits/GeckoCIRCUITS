@@ -251,7 +251,7 @@ public class DataTablePanelParameters extends JPanel {
          * then the last column would contain text ("true"/"false"),
          * rather than a check box.
          */
-        public Class getColumnClass(final int column) {
+        public Class<?> getColumnClass(final int column) {
             if (column == 0) {
                 return String.class;
             } else {

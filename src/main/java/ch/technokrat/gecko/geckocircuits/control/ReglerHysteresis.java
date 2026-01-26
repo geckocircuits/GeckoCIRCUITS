@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlInput;
@@ -99,7 +98,7 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
         final Color origColor = graphics.getColor();
         if (_useExternal.getValue()) {
             graphics.drawLine(xPos * dpix, (int) ((yPos + 1 / 2.0) * dpix), xPos * dpix, (yPos + 2) * dpix);
-            //int dy = (int) (SchematischeEingabe2.foCONTROL.getStringBounds("xxx", frc).getHeight() * 0.25);
+            //int dy = (int) (SchematicEditor2.foCONTROL.getStringBounds("xxx", frc).getHeight() * 0.25);
             graphics.setColor(GlobalColors.farbeInBearbeitungCONTROL);
             //XIN[1] = new Point((int) xe1, (int) ye1);
             graphics.drawString("h", (int) (dpix * xPos) + 1 + 2, (int) (dpix * (yPos + 2)) + 1 + 2);

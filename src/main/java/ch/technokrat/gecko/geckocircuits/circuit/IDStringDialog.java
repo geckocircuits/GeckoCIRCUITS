@@ -304,7 +304,7 @@ public final class IDStringDialog {
             }
         }
 
-        CircuitSheet parent = SchematischeEingabe2.Singleton._circuitSheet.findSubCircuit(searchName);
+        CircuitSheet parent = SchematicEditor2.Singleton._circuitSheet.findSubCircuit(searchName);
         if (parent == null) {
             throw new RuntimeException("Could not find subcircuit component with name: " + searchName);
         }

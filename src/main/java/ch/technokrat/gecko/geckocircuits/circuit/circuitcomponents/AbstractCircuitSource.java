@@ -23,11 +23,15 @@ import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupling;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
+// Note: Static imports below ARE used in this file. IDE reports them as unused
+// because some code uses fully qualified names (CircuitSourceType.CONSTANT)
+// while other code uses the static import style (CONSTANT). Both styles are
+// used throughout the class.
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_DC;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUERT;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIN;
 import static ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface.tcf;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -202,7 +206,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
         super.addTextInfoParameters(); //To change body of generated methods, choose Tools | Templates.
         addTextInfoErrorReference();
 
-        if (!SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (!SchematicEditor2._lkDisplayMode.showParameter) {
             return;
         }
 
@@ -235,7 +239,6 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
     public void addTextInfoErrorReference() {
         if ((sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT)
                 || (sourceType.getValue() == CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY)) {
-            int index = -1;
             if (sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT) {
                 final String couplingLabel = getPotentialCoupling().getLabels()[0];
                 if (couplingLabel == null || couplingLabel.isEmpty()) {

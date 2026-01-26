@@ -26,8 +26,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
@@ -38,8 +36,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> extends GeckoDialog
         implements Schliessable, WindowListener {
@@ -47,7 +43,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
     final List<UserParameter<? extends Number>> registeredParameters = new ArrayList<UserParameter<? extends Number>>();
     private static final int TEXT_FIELD_LENGTH = 10;
     public static final int NO_TF_COLS = 6;
-    private SchematischeEingabe2 _se;  // callback fuer registerChange()        
+    private SchematicEditor2 _se;  // callback fuer registerChange()        
     public final T element;
     public String _originalName;
     public final List<FormatJTextField> tf = new ArrayList<FormatJTextField>();
@@ -67,7 +63,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         super(parent, modal);
         this.element = element;
         setGeckoIconImage();
-        _se = SchematischeEingabe2.Singleton;
+        _se = SchematicEditor2.Singleton;
         this.addWindowListener(this);
 
         JLabel labNam = labelFabric("Name: ");
@@ -230,7 +226,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
             } else {
                 element.setNewNameCheckedUndoable(tfNam.getText());
             }
-            SchematischeEingabe2.Singleton.updateComponentCouplings(_originalName, tfNam.getText());
+            SchematicEditor2.Singleton.updateComponentCouplings(_originalName, tfNam.getText());
         } catch (NameAlreadyExistsException ex) {
             JOptionPane.showMessageDialog(this,
                     "Object name: " + tfNam.getText() + " is already in use!",
@@ -313,6 +309,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         registeredParameters.remove(index);
     }
 
+    @SuppressWarnings({"unchecked", "varargs"})
     public JPanel createParameterPanel(final UserParameter<? extends Number>... parameters) {
         JPanel pPD = new JPanel();
         pPD.setLayout(new GridLayout(parameters.length + 1, 2));

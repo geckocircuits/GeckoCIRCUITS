@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.SaveViewFrame;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -28,7 +28,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -142,7 +142,10 @@ public final class ScopeFrame extends javax.swing.JFrame{
     initComponents();
 
     try{
-      this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+      URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+      // Fix for Java 21: use URL constructor instead of URI.toURL()
+      URL gifUrl = new URL(picsUrl, "gecko.gif");
+      this.setIconImage(new ImageIcon(gifUrl).getImage());
     }catch(Exception e){
       e.printStackTrace();
     }
@@ -172,13 +175,13 @@ public final class ScopeFrame extends javax.swing.JFrame{
   public void exportIndividualCONTROL(final StringBuffer ascii){
     _scope.exportInvidualControl(ascii);
     _powerAnalysisSettings.exportIndividualControl(ascii);
-    DatenSpeicher.appendAsString(ascii.append("\nwindowWidth"), _windowWidth);
-    DatenSpeicher.appendAsString(ascii.append("\nwindowHeight"), _windowHeight);
+    ProjectData.appendAsString(ascii.append("\nwindowWidth"), _windowWidth);
+    ProjectData.appendAsString(ascii.append("\nwindowHeight"), _windowHeight);
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenWidth"), screenSize.width);
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenHeight"), screenSize.height);
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenPosX"), _positionPoint.x);
-    DatenSpeicher.appendAsString(ascii.append("\nsaveScreenPosY"), _positionPoint.y);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenWidth"), screenSize.width);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenHeight"), screenSize.height);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenPosX"), _positionPoint.x);
+    ProjectData.appendAsString(ascii.append("\nsaveScreenPosY"), _positionPoint.y);
   }
 
   public void importIndividualCONTROL(final TokenMap settingsMap){
@@ -330,7 +333,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
     });
     jMenuScopeData.add(jMenuItemScopeSettings);
 
-    jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItemExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     jMenuItemExit.setText("Exit");
     jMenuItemExit.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -343,7 +346,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
 
     jMenuGraphs.setText("Graphs");
 
-    jMenuItemSignalGraph.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
+    jMenuItemSignalGraph.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_DOWN_MASK));
     jMenuItemSignalGraph.setText("Signal - Graph");
     jMenuItemSignalGraph.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {

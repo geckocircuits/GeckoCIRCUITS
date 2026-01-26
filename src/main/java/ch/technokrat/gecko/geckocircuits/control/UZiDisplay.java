@@ -17,8 +17,6 @@ import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 
-import javax.swing.ImageIcon;
-import java.net.URL;
 
 /*
  * SpaceVectorDisplay.java
@@ -85,7 +83,7 @@ public class UZiDisplay extends GeckoDialog {
 
             u *= 140;
             current *= -140;
-            float average = (Float) _average.getValue();
+            float average = ((Number) _average.getValue()).floatValue();
             if (average > 0) {
                 averageSpan = (int) (average * 1E-6 / _timeStep);
                 averageHistoryRe[(int) counter % HISTORY_BUFFER_SIZE] = (float) u;
@@ -110,8 +108,8 @@ public class UZiDisplay extends GeckoDialog {
             old_spaceVectorRealPos = spaceVectorRealPos;
             old_spaceVectorImagPos = spaceVectorImagPos;
 
-            spaceVectorRealPos = (int) ((Float) _length.getValue() * spaceVectorReal);
-            spaceVectorImagPos = (int) ((Float) _length.getValue() * spaceVectorImag * (Float) _zSpinner.getValue());
+            spaceVectorRealPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorReal);
+            spaceVectorImagPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorImag * ((Number) _zSpinner.getValue()).floatValue());
 
             if (old_spaceVectorImagPos != spaceVectorImagPos || old_spaceVectorRealPos != spaceVectorRealPos) {
                 offGraph.setColor(_paintColor);

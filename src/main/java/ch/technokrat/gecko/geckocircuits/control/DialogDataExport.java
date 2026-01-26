@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GetJarPath;
 import ch.technokrat.gecko.geckocircuits.control.ReglerSaveData.OutputType;
@@ -23,7 +23,6 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.DataIndexItem;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataTableFrame;
 import ch.technokrat.gecko.geckocircuits.datacontainer.HeaderSymbol;
 import ch.technokrat.gecko.geckocircuits.datacontainer.TextSeparator;
-import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -58,7 +57,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jSpinnerDigits.setValue(_reglerDataSave._significDigits.getValue());
         _dataSaver = _parentDataSaver;
 
-        jTextArea1.setText(Fenster.aktuellerDateiName.replace(".ipes", "CISPR.txt"));
+        jTextArea1.setText(MainWindow.aktuellerDateiName.replace(".ipes", "CISPR.txt"));
 
         if (_containers.size() == 1) {
             jLabelFilter.setVisible(false);
@@ -101,21 +100,21 @@ public final class DialogDataExport extends javax.swing.JDialog {
         
         final List<String> selectedStrings = _reglerDataSave.getSelectedNames();
         final int rowLength = container.getRowLength();
-        ((DefaultListModel) jListAvailable.getModel()).clear();
+        ((DefaultListModel<DataIndexItem>) jListAvailable.getModel()).clear();
         for (int i = 0; i < rowLength; i++) {
             final DataIndexItem listItem = new DataIndexItem(i, container.getSignalName(i));
             if (!selectedStrings.contains(listItem.toString())) {
-                ((DefaultListModel) jListAvailable.getModel()).addElement(listItem);
+                ((DefaultListModel<DataIndexItem>) jListAvailable.getModel()).addElement(listItem);
             }
 
         }
 
         // here, it is important that we keep the order of the selected elements!
-        ((DefaultListModel) jListSelected.getModel()).clear();
+        ((DefaultListModel<DataIndexItem>) jListSelected.getModel()).clear();
         for (int i = 0; i < selectedStrings.size(); i++) {
             final DataIndexItem listItem = new DataIndexItem(i, selectedStrings.get(i));
             if (selectedStrings.contains(listItem.toString())) {
-                ((DefaultListModel) jListSelected.getModel()).addElement(listItem);
+                ((DefaultListModel<DataIndexItem>) jListSelected.getModel()).addElement(listItem);
             }
 
         }        
@@ -878,8 +877,8 @@ public final class DialogDataExport extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelFilter;
-    private javax.swing.JList jListAvailable;
-    private javax.swing.JList jListSelected;
+    private javax.swing.JList<DataIndexItem> jListAvailable;
+    private javax.swing.JList<DataIndexItem> jListSelected;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

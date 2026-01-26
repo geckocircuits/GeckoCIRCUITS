@@ -21,7 +21,6 @@ import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

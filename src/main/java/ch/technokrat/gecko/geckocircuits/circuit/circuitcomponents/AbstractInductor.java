@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.PostCalculatable;

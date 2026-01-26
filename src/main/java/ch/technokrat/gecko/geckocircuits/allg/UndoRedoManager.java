@@ -14,11 +14,8 @@
 package ch.technokrat.gecko.geckocircuits.allg;
 
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.zip.InflaterInputStream;
-import java.util.zip.DeflaterOutputStream;
 
 public class UndoRedoManager {
 

@@ -337,6 +337,9 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
             }
 
             for (int i = fromJunk; i < toJunk; i++) {
+                if (i >= _data.size()) {
+                    break;
+                }
                 final DataJunk junk = _data.get(i);
                 final HiLoData compare = junk.getHiLoValue(calculateRow, 0, maximumTimeIndex);
                 if (compare != null) {

@@ -13,12 +13,10 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
-import ch.technokrat.gecko.geckocircuits.allg.OperatingMode;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2.MouseMoveMode;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2.MouseMoveMode;
 import ch.technokrat.gecko.geckocircuits.control.Point;
 import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.TextFieldBlock;
@@ -28,8 +26,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.*;
 import javax.swing.JPanel;
 import javax.swing.JViewport;
@@ -44,7 +40,7 @@ public class CircuitSheet extends JPanel {
             return super.add(toAdd);
         }
     };
-    public final SchematischeEingabe2 _se;
+    public final SchematicEditor2 _se;
     public final WorksheetSize _worksheetSize;
     /**
      * the nodes which should be highlighted due to a string search
@@ -55,7 +51,7 @@ public class CircuitSheet extends JPanel {
      */
     public static Set<Point> _showNodes = new HashSet<Point>();
 
-    public CircuitSheet(final SchematischeEingabe2 se) {
+    public CircuitSheet(final SchematicEditor2 se) {
         _se = se;
         _worksheetSize = new WorksheetSize(this);
         setLayout(null);
@@ -67,8 +63,7 @@ public class CircuitSheet extends JPanel {
      */
     public void drawCircuitSheet(java.awt.Graphics2D g2d) {
         final JViewport viewport = ((JViewport) this.getParent().getParent());        
-        // as applet, the SVG jar is not available!
-        if(!Fenster.IS_APPLET && g2d instanceof SVGGraphics2D) {
+        if(g2d instanceof SVGGraphics2D) {
             return; // don't paint the pixels points for exporting to images!
         }
         Rectangle visibleRect = viewport.getViewRect();
@@ -86,14 +81,12 @@ public class CircuitSheet extends JPanel {
         int startY = visibleRect.y / dpix - 1;
         int stopX = startX + visibleRect.width / dpix + 2;
         int stopY = startY + visibleRect.height / dpix + 2;
-        int noPoints = 0;
 
         for (int ix = Math.max(0, startX); ix < Math.min(_worksheetSize.getSizeX(), stopX); ix++) {
             for (int iy = Math.max(0, startY); iy < Math.min(_worksheetSize.getSizeY(), stopY); iy++) {
                 int xPos = dpix * ix;
                 int yPos = dpix * iy;
                 g2d.drawLine(xPos, yPos, xPos, yPos);
-                noPoints++;
             }
         }
     }
@@ -635,7 +628,7 @@ public class CircuitSheet extends JPanel {
     }
 
     public void doSetVisibleAction() {
-        Fenster._northPanel.removeAll();
-        Fenster._northPanel.revalidate();
+        MainWindow._northPanel.removeAll();
+        MainWindow._northPanel.revalidate();
     }
 }

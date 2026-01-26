@@ -18,7 +18,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupling;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupling;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.NothingToDoCalculator;
@@ -61,7 +61,7 @@ public abstract class AbstractPotentialMeasurement extends RegelBlock implements
         final String label1 = getPotentialCoupling().getLabels()[0];
         final String label2 = getPotentialCoupling().getLabels()[1];
         
-        if (SchematischeEingabe2._controlDisplayMode.showParameter) {
+        if (SchematicEditor2._controlDisplayMode.showParameter) {
             String parStr = label1 + " @ " + label2;
             if ((label1.isEmpty() || label2.isEmpty())
                     && (coupledElement == null)) {

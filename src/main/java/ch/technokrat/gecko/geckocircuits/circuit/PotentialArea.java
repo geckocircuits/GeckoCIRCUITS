@@ -131,7 +131,7 @@ public final class PotentialArea {
         return _potentialLabel;
     }
 
-    // is used in SchematischeEingabe2 to get all nodes of elements for showing the connections --> 
+    // is used in SchematicEditor2 to get all nodes of elements for showing the connections --> 
     public List<Point> getAllElementKnotenXY(final List<? extends AbstractBlockInterface> elements,
             final CircuitSheet circuitSheet) {
         final List<Point> returnValue = new ArrayList<Point>();

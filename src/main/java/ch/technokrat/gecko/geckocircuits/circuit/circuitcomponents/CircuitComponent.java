@@ -13,10 +13,9 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractTwoPortLKreisBlock;
 
 /**
  *
@@ -63,7 +62,7 @@ public abstract class CircuitComponent<T extends AbstractTwoPortLKreisBlock> {
         _term1 = parent.XIN.get(0);
         _term2 = parent.YOUT.get(0);        
         var_history = new double[steps_saved][9];        
-        _solverType = Fenster._solverSettings.SOLVER_TYPE.getValue();
+        _solverType = MainWindow._solverSettings.SOLVER_TYPE.getValue();
     }
     
     public double getOldCurrent() {

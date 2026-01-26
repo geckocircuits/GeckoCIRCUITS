@@ -13,14 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.ExtremumType;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.FlankType;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.IterationDirection;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
@@ -665,7 +664,7 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
 
     public void exportInvidualControl(StringBuffer ascii) {
         boolean isSelected = jToggleButtonAuto.isSelected();
-        DatenSpeicher.appendAsString(ascii.append("\nisAutoScaleWindowOn"), isSelected);
+        ProjectData.appendAsString(ascii.append("\nisAutoScaleWindowOn"), isSelected);
     }
 
     public void importIndividualCONTROL(final TokenMap settingsMap) {

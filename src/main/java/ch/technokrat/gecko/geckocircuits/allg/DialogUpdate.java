@@ -16,6 +16,8 @@ package ch.technokrat.gecko.geckocircuits.allg;
 import ch.technokrat.gecko.GeckoSim;
 import java.io.*;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
@@ -128,7 +130,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
 
     private void loadGeckoUpdateData(final String urlString) {
         try {
-            final URL geckoReleaseURL = new URL(urlString);
+            final URL geckoReleaseURL = new URI(urlString).toURL();
             final URLConnection urlConnection = geckoReleaseURL.openConnection();
             urlConnection.setConnectTimeout(TIMEOUT_MILLIS);
 
@@ -155,7 +157,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
 
         } catch (SocketTimeoutException timeoutException) {
             setErrorMessage();
-        } catch (IOException exception) {
+        } catch (IOException | URISyntaxException exception) {
             setErrorMessage();
         }
     }
@@ -364,7 +366,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
         }
 
         try {
-            final URL url = new URL("http://www.gecko-simulations.com/GeckoCIRCUITS/GeckoCIRCUITS.zip");
+            final URL url = new URI("http://www.gecko-simulations.com/GeckoCIRCUITS/GeckoCIRCUITS.zip").toURL();
             final URLConnection urlconnection = url.openConnection();
             if (urlconnection != null) {
                 jButtonGetUpdateOS.setText("Downloading update...");
@@ -387,7 +389,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
                 jButtonGetUpdateOS.setText("Download finished!");
             }
 
-        } catch (IOException ex) {
+        } catch (IOException | URISyntaxException ex) {
             Logger.getLogger(DialogUpdate.class.getName()).log(Level.SEVERE, null, ex);
             jButtonGetUpdateOS.setText("Download failed!");
         } catch (Throwable error) {

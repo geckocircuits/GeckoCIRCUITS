@@ -14,10 +14,8 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossComponent;
 import java.awt.*;
@@ -81,7 +79,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
 
         Collections.sort(selectionList, ALPHABETIC_SORT);
 
-        final JComboBox combo = new JComboBox();
+        final JComboBox<String> combo = new JComboBox<>();
 
         int comboSelectionIndex = -1;
         for (int i = 0; i < selectionList.size(); i++) {

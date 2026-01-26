@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.OperatingMode;
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 import java.io.FileNotFoundException;
@@ -101,8 +101,8 @@ public class GeckoExternal {
 
     protected static void checkExternal() {
         if (external == null) {
-            external = new ExternalGeckoCustom(Fenster._scripter);
-            Fenster._external = external;
+            external = new ExternalGeckoCustom(MainWindow._scripter);
+            MainWindow._external = external;
         }
     }
 

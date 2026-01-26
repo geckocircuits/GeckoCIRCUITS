@@ -32,8 +32,8 @@ import javax.swing.event.ListSelectionListener;
 @SuppressWarnings({"PMD.TooManyFields", "PMD.TooManyMethods", "PMD.CyclomaticComplexity"})
 public final class DialogTransferFunction extends javax.swing.JFrame {
 
-    private final DefaultListModel _nomModel = new DefaultListModel();
-    private final DefaultListModel _deNomModel = new DefaultListModel();
+    private final DefaultListModel<ComplexPrinter> _nomModel = new DefaultListModel<ComplexPrinter>();
+    private final DefaultListModel<ComplexPrinter> _deNomModel = new DefaultListModel<ComplexPrinter>();
     private final ReglerTransferFunction _reglerTF;
     private boolean _inPolynomialMode = false;
     private final RegelBlock _elementControl;
@@ -220,7 +220,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         
         if(denominator.isEmpty()) {
             final List<Double> constValue = new ArrayList<Double>();
-            constValue.add(Double.valueOf(1));
+            constValue.add(1.0);
             jTextFieldPoly.setDenominatorText(PolynomTools.getPolynomString(constValue));
         } else  {
             jTextFieldPoly.setDenominatorText(PolynomTools.getPolynomString(denominator));
@@ -228,7 +228,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         
         if(numerator.isEmpty()) {
             final List<Double> constValue = new ArrayList<Double>();
-            constValue.add(Double.valueOf(1));
+            constValue.add(1.0);
             jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(constValue));
         } else {
             jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(numerator));        
@@ -294,7 +294,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         jButtonOK = new javax.swing.JButton();
         jPanelNumerator = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListNom = new javax.swing.JList();
+        jListNom = new javax.swing.JList<ComplexPrinter>();
         jButtonAddNom = new javax.swing.JButton();
         jTFInsertNumberRe = new javax.swing.JTextField();
         jButtonDelNom = new javax.swing.JButton();
@@ -306,7 +306,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         jTFInsertDeNum = new javax.swing.JTextField();
         jButtonDelNom1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListDenom = new javax.swing.JList();
+        jListDenom = new javax.swing.JList<ComplexPrinter>();
         jButtonAddDenom = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabelPoleImag = new javax.swing.JLabel();
@@ -807,8 +807,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelConst;
     private javax.swing.JLabel jLabelPoleImag;
     private javax.swing.JLabel jLabelZeroIm;
-    private javax.swing.JList jListDenom;
-    private javax.swing.JList jListNom;
+    private javax.swing.JList<ComplexPrinter> jListDenom;
+    private javax.swing.JList<ComplexPrinter> jListNom;
     private javax.swing.JPanel jPanelDenominator;
     private javax.swing.JPanel jPanelNumerator;
     private javax.swing.JRadioButton jRadButtPoleMode;

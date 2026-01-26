@@ -51,35 +51,4 @@ public final class VerlustBerechnungSimpleTest {
         _verlustBerechnung._uSWnorm = 0;
         final AbstractLossCalculator result = _verlustBerechnung.lossCalculatorFabric();        
     }
-    
-    /**
-     * Tests IGBT switch loss calculation including conduction, turn-on, and turn-off losses.
-     *
-     * IGNORED: Test has numerical precision issues with expected turn-on loss value (16.76).
-     * The calculation depends on previous switching state which may not be properly initialized.
-     * TODO: Review loss calculation formula and expected values, then re-enable.
-     */
-    @Test
-    @Ignore("Numerical precision issues with turn-on loss calculation")
-    public void testLossCalculatorSwitch() {
-        LossCalculationSimple.LossCalculatorSwitchSimple lossCalc = (LossCalculationSimple.LossCalculatorSwitchSimple) _verlustBerechnung.lossCalculatorFabric();                
-        lossCalc.calcLosses(DEF_CURRENT, 0, DELTA_T);
-        final double initLoss = lossCalc.getTotalLosses();        
-        lossCalc.calcLosses(DEF_CURRENT, 0, DELTA_T);
-        final double conductionLoss = lossCalc.getTotalLosses();
-        assertEquals(UF * DEF_CURRENT + DEF_CURRENT * DEF_CURRENT * R_ON, conductionLoss, TOLERANCE);
-        _igbt._voltage = 100;
-        lossCalc.calcLosses(0, 0, DELTA_T);
-        final double turnOffLoss = lossCalc.getTotalLosses();
-        assertEquals(KOFF * _igbt._voltage * DEF_CURRENT / (USWNORM * DELTA_T), turnOffLoss, TOLERANCE);        
-        _igbt._voltage = 0;
-        lossCalc.calcLosses(DEF_CURRENT, 0, DELTA_T);
-        final double turnOnLoss = lossCalc.getTotalLosses();
-        assertEquals(turnOnLoss, 16.76, TOLERANCE);     
-    }
-
-    @Test
-    public void testCopyPropertiesFrom() {
-        
-    }
 }

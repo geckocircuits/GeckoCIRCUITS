@@ -15,10 +15,10 @@
 package ch.technokrat.gecko.geckoscript;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoRuntimeException;
 import ch.technokrat.gecko.geckocircuits.control.javablock.AbstractCompileObject;
-import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindow;
+import ch.technokrat.gecko.geckocircuits.control.javablock.CodeWindowModern;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileObject;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileObjectNull;
 import ch.technokrat.gecko.geckocircuits.control.javablock.CompileStatus;
@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
 
 /**
@@ -82,8 +81,6 @@ public class CompileScript {
     }
     
     static void compile(final ScriptWindow sw) {
-        if(Fenster.IS_APPLET) return;
-        
         if(GeckoSim.compiler_toolsjar_missing) {
               JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             sw._compMessagesTextArea.setText("Compilar library tools.jar is missing in the ./lib directory!");
@@ -127,7 +124,7 @@ public class CompileScript {
             }
             sw.addSourceLine("");
             if (sw._advancedOption) {
-                sw.addSourceLine("    public " + sw._className + "(SimulationAccess simaccess, JTextArea outputArea, HashMap element_map) {");
+                sw.addSourceLine("    public " + sw._className + "(SimulationAccess simaccess, JTextArea outputArea, HashMap<String, Object> element_map) {");
             } else {
                 sw.addSourceLine("    public " + sw._className + "(SimulationAccess simaccess, JTextArea outputArea) {");
             }
@@ -172,7 +169,7 @@ public class CompileScript {
 
             if (_compileObject.getCompileStatus() != CompileStatus.COMPILED_SUCCESSFULL) {                
                 sw._compileStatus = CompileStatus.COMPILE_ERROR;                
-                sw.compilerMessages = CodeWindow.checkForOldCompiler(sw.compilerMessages);
+                sw.compilerMessages = CodeWindowModern.checkForOldCompiler(sw.compilerMessages);
             } else {
                 sw._compileStatus = CompileStatus.COMPILED_SUCCESSFULL;                                
             }

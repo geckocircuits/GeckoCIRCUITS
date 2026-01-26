@@ -15,7 +15,8 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import javax.swing.ImageIcon; 
-import java.net.URL; 
+import java.net.URI;
+import java.net.URL;
 
 
 /*
@@ -32,8 +33,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,12 +86,12 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
         private JSpinner _average;
         private int averageSpan = 1;
         
-        private void setSpaceVector(final double r, final double s, double t) {            
-            
+        private void setSpaceVector(final double r, final double s, double t) {
+
             double re = 2 / 3.0 * (r - 0.5 * s - 0.5 * t);
             double im = -2 / 3.0 * (+0.5 * SQRT3 * s - 0.5 * SQRT3 * t);
-            
-            float average = (Float) _average.getValue();
+
+            float average = ((Number) _average.getValue()).floatValue();
             if( average > 0) {
                 averageSpan = (int) (average * 1E-6 / _timeStep);
                 if(averageSpan > HISTORY_BUFFER_SIZE) {
@@ -122,8 +121,8 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
             old_spaceVectorRealPos = spaceVectorRealPos;
             old_spaceVectorImagPos = spaceVectorImagPos;
 
-            spaceVectorRealPos = (int) ((Float) _length.getValue() * spaceVectorReal);
-            spaceVectorImagPos = (int) ((Float) _length.getValue() * spaceVectorImag);
+            spaceVectorRealPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorReal);
+            spaceVectorImagPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorImag);
 
             if (old_spaceVectorImagPos != spaceVectorImagPos || old_spaceVectorRealPos != spaceVectorRealPos) {
                 offGraph.setColor(_paintColor);
@@ -167,7 +166,12 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
 
     /** Creates new form SpaceVectorDisplay */
     public SpaceVectorDisplay(RegelBlock regelBlock) {
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception ex) {}
+        try {
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
+        } catch (Exception ex) {}
         initComponents();
 
         if(regelBlock instanceof ReglerSpaceVector) {

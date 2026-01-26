@@ -25,7 +25,6 @@ import java.lang.StringBuilder;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import ch.technokrat.gecko.i18n.translationtoolbox.TranslationDialog;
-import ch.technokrat.gecko.i18n.LangInit;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public class UPbot {
@@ -38,6 +37,12 @@ public class UPbot {
      * -Throws an exception if communication with the wiki failed.
      */
     private static MediaWikiBot initBot() throws Exception {
+            // print DEBUG messages in console if DEBUG_MODE is turned on
+            if (InitParameters.DEBUG_MODE) {
+                org.apache.logging.log4j.core.config.Configurator.setRootLevel(
+                    org.apache.logging.log4j.Level.DEBUG
+                ); // configure log4j2
+            }
             progress = Math.min(progress + 2, 99); // update progress
             MediaWikiBot b = new MediaWikiBot(InitParameters.WIKI_URL);
             progress = Math.min(progress + 2, 99); // update progress

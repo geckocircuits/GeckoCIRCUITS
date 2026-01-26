@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerMeanWrapper;
 import java.util.ArrayList;
@@ -43,8 +43,8 @@ public final class DefinedMeanSignals{
     final int[] tmpSignalIndices = this.getSignalIndices();
     final double[] tmpSignalTimes = this.getSignalTimes();
 
-    DatenSpeicher.appendAsString(ascii.append("\navgIndices"), tmpSignalIndices);
-    DatenSpeicher.appendAsString(ascii.append("\navgValues"), tmpSignalTimes);
+    ProjectData.appendAsString(ascii.append("\navgIndices"), tmpSignalIndices);
+    ProjectData.appendAsString(ascii.append("\navgValues"), tmpSignalTimes);
   }
 
   public void importIndividualCONTROL(final TokenMap tokenMap){

@@ -18,7 +18,6 @@ import ch.technokrat.gecko.GeckoRuntimeException;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GetJarPath;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileObject.Kind;
 import javax.tools.*;
 // CHECKSTYLE:ON
 
@@ -160,21 +158,31 @@ public final class CompileObject extends AbstractCompileObject {
     private JavaCompiler findCompiler() {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
-        if (compiler == null) { // this fixes the java 1.7 compilation problem
+        if (compiler != null) {
+            Logger.getLogger(CompileObject.class.getName()).log(Level.INFO, "Java Compiler found: " + compiler.getClass().getName());
+        } else {
+            Logger.getLogger(CompileObject.class.getName()).log(Level.SEVERE, "Java Compiler not found via ToolProvider, trying fallback...");
+            
+            // this fixes the java 1.7 compilation problem
             try {
                 try {
                     compiler = (JavaCompiler) Class.forName("com.sun.tools.javac.api.JavacTool").newInstance();
+                    Logger.getLogger(CompileObject.class.getName()).log(Level.INFO, "Java Compiler found via fallback: " + compiler.getClass().getName());
                 } catch (InstantiationException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException in fallback compiler", ex);
                 } catch (IllegalAccessException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException in fallback compiler", ex);
                 }
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException in fallback compiler", ex);
             }
 
             if (compiler == null) {
-                _compilerWriter.append("No Java compiler found. Aborting");
+                _compilerWriter.append("\nERROR: No Java compiler found!\n");
+                _compilerWriter.append("JDK is required (JRE is not sufficient).\n");
+                _compilerWriter.append("Current Java version: " + System.getProperty("java.version") + "\n");
+                _compilerWriter.append("Java vendor: " + System.getProperty("java.vendor") + "\n");
+                _compilerWriter.append("Java home: " + System.getProperty("java.home") + "\n");
                 JOptionPane.showMessageDialog(null, _compilerMessage, "Error!",
                         JOptionPane.ERROR_MESSAGE);
                 throw new GeckoRuntimeException("Could not find compiler.");

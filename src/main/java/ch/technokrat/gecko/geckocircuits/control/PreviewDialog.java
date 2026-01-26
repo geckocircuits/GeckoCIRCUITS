@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
+import java.net.URI;
 import java.net.URL;
 import java.text.NumberFormat;
 import javax.swing.ImageIcon;
@@ -24,16 +25,19 @@ abstract class PreviewDialog extends JDialog {
     final NumberFormat nf = NumberFormat.getNumberInstance();
     
     protected PreviewDialog(final JDialog parent) {
-        super(parent);        
+        super(parent);
         try {
-            setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         getContentPane().add(createComponent());
         pack();
-        setResizable(false);        
-        setLocation(parent.getLocationOnScreen().x + parent.getWidth(), parent.getLocationOnScreen().y);        
+        setResizable(false);
+        setLocation(parent.getLocationOnScreen().x + parent.getWidth(), parent.getLocationOnScreen().y);
     }           
     
     abstract JComponent createComponent();

@@ -43,7 +43,7 @@ import org.w3c.dom.Document;
 
 public final class SaveViewFrame extends GeckoDialog {
 
-    private static final Float JPG_QUALITY = 0.8f;
+    private static final Float JPG_QUALITY = 0.8f;  // Float literal autoboxing
     private static final float GREY_RED = 0.212671f;
     private static final float GREY_GREEN = 0.715160f;
     private static final float GREY_BLUE = 0.072169f;
@@ -597,7 +597,7 @@ public final class SaveViewFrame extends GeckoDialog {
 
         @Override
         public boolean accept(final File file) {
-            // Auch Unterverzeichnisse anzeigen
+            // Also display subdirectories
             if (file.isDirectory()) {
                 return true;
             }
@@ -676,7 +676,7 @@ public final class SaveViewFrame extends GeckoDialog {
 
             // Set the transcoding hints.
             // Create the transcoder input.
-            final String svgURI = svgFile.toURL().toString();
+            final String svgURI = svgFile.toURI().toURL().toString();
             final TranscoderInput input = new TranscoderInput(svgURI);
 
             // Create the transcoder output.            
@@ -720,7 +720,7 @@ public final class SaveViewFrame extends GeckoDialog {
     }
 
     private void scaleSvgImageIfNecessary(final SVGGraphics2D svgGenerator) {
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         switch (selectedFileType) {
             case PDF:
                 break;
@@ -736,7 +736,7 @@ public final class SaveViewFrame extends GeckoDialog {
     private void createGifImage() throws FileNotFoundException, IOException {
         final int height = _viewPanel.getHeight();
         final int width = _viewPanel.getWidth();
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         final BufferedImage img = new BufferedImage((int) (scaling * width),
                 (int) (scaling * height), BufferedImage.TYPE_INT_RGB);
         final Graphics2D g2d = (Graphics2D) img.getGraphics();
@@ -774,7 +774,7 @@ public final class SaveViewFrame extends GeckoDialog {
         final int height = _viewPanel.getHeight();
         final int width = _viewPanel.getWidth();
 
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         switch (selectedFileType) {
             case PDF:
                 returnValue = new PDFTranscoder();
@@ -790,8 +790,8 @@ public final class SaveViewFrame extends GeckoDialog {
                 assert false : "no transcoder available:  " + selectedFileType;
                 return null;
         }
-        returnValue.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, Float.valueOf(scaling * width));
-        returnValue.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, Float.valueOf(scaling * height));
+        returnValue.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, scaling * width);
+        returnValue.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, scaling * height);
         return returnValue;
     }
 }

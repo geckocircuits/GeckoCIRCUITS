@@ -13,14 +13,12 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.Documentation;
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.Enabled;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.datacontainer.*;
@@ -168,8 +166,8 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
         _selectedSignalIndices.remove(removeIndex);
     }
 
-    private String findInitialFile() {        
-        if (!Fenster.IS_APPLET && GlobalFilePathes.DATNAM != null) {
+    private String findInitialFile() {
+        if (GlobalFilePathes.DATNAM != null) {
             File ipesFile = new File(GlobalFilePathes.DATNAM);
             String parentDirectory = ipesFile.getParent();
             int testCounter = 1;
@@ -234,7 +232,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
             }
         }
 
-        SchematischeEingabe2.Singleton._circuitSheet.repaint();
+        SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
     @Override
@@ -244,13 +242,13 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
+        ProjectData.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
                 new String[_selectedSignalNames.size()]));
-        DatenSpeicher.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
-        DatenSpeicher.appendAsString(ascii.append("\nitemSeparator"), _itemSeparator.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nheaderSymbol"), _headerSymbol.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nsaveModus"), _saveModus.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nfileOverwrite"), _fileOverwrite.ordinal());
+        ProjectData.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
+        ProjectData.appendAsString(ascii.append("\nitemSeparator"), _itemSeparator.ordinal());
+        ProjectData.appendAsString(ascii.append("\nheaderSymbol"), _headerSymbol.ordinal());
+        ProjectData.appendAsString(ascii.append("\nsaveModus"), _saveModus.ordinal());
+        ProjectData.appendAsString(ascii.append("\nfileOverwrite"), _fileOverwrite.ordinal());
     }
 
     @Override

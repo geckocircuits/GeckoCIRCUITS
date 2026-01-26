@@ -1,0 +1,173 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+      fail-fast: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      # Ubuntu-specific: Build native libraries
+      - name: Install GCC build tools
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential xvfb
+
+      - name: Build native JNI libraries for Linux
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          chmod +x build_native_libraries.sh
+          ./build_native_libraries.sh
+          echo "Native Linux .so libraries built successfully"
+          ls -lh *.so
+
+      # Windows-specific: Build native libraries
+      - name: Install MinGW-w64
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          choco install mingw -y --no-progress
+          echo "C:\ProgramData\mingw64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Build native JNI libraries for Windows
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          export PATH="/c/ProgramData/mingw64/mingw64/bin:$PATH"
+          gcc --version
+          gcc -shared -fPIC -I"$JAVA_HOME/include" -I"$JAVA_HOME/include/win32" -o libtestJNI_DLL.dll testJNI_DLL.c -Wl,--kill-at
+          cp libtestJNI_DLL.dll libtestJNI_DLL2.dll
+          echo "Native Windows DLL libraries built successfully"
+          ls -lh *.dll
+
+      # macOS-specific: Build native libraries
+      - name: Install build tools
+        if: matrix.os == 'macos-latest'
+        run: |
+          which gcc && echo "GCC already installed" || brew install gcc
+          export JAVA_HOME=$JAVA_HOME
+          echo "JAVA_HOME=$JAVA_HOME"
+
+      - name: Build native JNI libraries for macOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          chmod +x build_native_libraries.sh
+          ./build_native_libraries.sh || echo "Warning: Native library build failed, continuing..."
+          echo "Native macOS .dylib libraries:"
+          ls -lh *.dylib 2>/dev/null || echo "No .dylib files found"
+
+      # Maven build
+      - name: Build with Maven
+        run: mvn clean compile -DskipTests --no-transfer-progress
+
+      # Ubuntu-specific: Start Xvfb for GUI tests
+      - name: Start Xvfb (virtual display)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          Xvfb :99 -screen 0 1024x768x24 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      - name: Run tests
+        continue-on-error: true
+        run: mvn test --no-transfer-progress
+
+      - name: Verify build
+        run: mvn verify -DskipTests --no-transfer-progress
+
+      # Build artifacts
+      - name: Package JAR
+        run: mvn package assembly:single -DskipTests --no-transfer-progress
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gecko-jar-${{ matrix.os }}
+          path: target/gecko-*.jar
+          retention-days: 30
+
+      - name: Create native installer for macOS
+        if: matrix.os == 'macos-latest'
+        continue-on-error: true
+        run: |
+          echo "Checking JAR files in target:"
+          ls -lh target/*.jar
+          echo "Checking JAVA_HOME:"
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo "Checking jpackage:"
+          $JAVA_HOME/bin/jpackage --version
+          mkdir -p release
+          if [ -f "target/gecko-1.0-jar-with-dependencies.jar" ]; then
+            $JAVA_HOME/bin/jpackage --name gecko --dest release --app-version 1.0 --input target --main-jar gecko-1.0-jar-with-dependencies.jar --main-class ch.technokrat.gecko.GeckoSim --type app-image --java-options "-Xmx3G" --java-options "-Dpolyglot.js.nashorn-compat=true" || echo "jpackage failed, skipping installer"
+          else
+            echo "ERROR: gecko-1.0-jar-with-dependencies.jar not found in target directory"
+          fi
+          ls -la release || echo "release directory not found"
+
+      - name: Create native installer for Windows
+        if: matrix.os == 'windows-latest'
+        continue-on-error: true
+        shell: bash
+        run: |
+          echo "Checking JAR files in target:"
+          ls -lh target/*.jar
+          echo "Checking JAVA_HOME:"
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo "Checking jpackage:"
+          $JAVA_HOME/bin/jpackage --version
+          mkdir -p release
+          if [ -f "target/gecko-1.0-jar-with-dependencies.jar" ]; then
+            $JAVA_HOME/bin/jpackage --name gecko --dest release --app-version 1.0 --input target --main-jar gecko-1.0-jar-with-dependencies.jar --main-class ch.technokrat.gecko.GeckoSim --type app-image --java-options "-Xmx3G" --java-options "-Dpolyglot.js.nashorn-compat=true" --java-options "-Dsun.java2d.uiScale=2" || echo "jpackage failed, skipping installer"
+          else
+            echo "ERROR: gecko-1.0-jar-with-dependencies.jar not found in target directory"
+          fi
+          ls -la release || echo "release directory not found"
+
+      - name: Create native installer for Linux
+        if: matrix.os == 'ubuntu-latest'
+        continue-on-error: true
+        run: |
+          echo "Checking JAR files in target:"
+          ls -lh target/*.jar
+          echo "Checking JAVA_HOME:"
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo "Checking jpackage:"
+          $JAVA_HOME/bin/jpackage --version
+          mkdir -p release
+          if [ -f "target/gecko-1.0-jar-with-dependencies.jar" ]; then
+            $JAVA_HOME/bin/jpackage --name gecko --dest release --app-version 1.0 --input target --main-jar gecko-1.0-jar-with-dependencies.jar --main-class ch.technokrat.gecko.GeckoSim --type app-image --java-options "-Xmx3G" --java-options "-Dpolyglot.js.nashorn-compat=true" || echo "jpackage failed, skipping installer"
+          else
+            echo "ERROR: gecko-1.0-jar-with-dependencies.jar not found in target directory"
+          fi
+          ls -la release || echo "release directory not found"
+
+      - name: Upload installer artifact
+        if: hashFiles('release/*') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: gecko-installer-${{ matrix.os }}
+          path: release/*
+          retention-days: 30

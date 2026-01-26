@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("removal")  // AccessControlException is deprecated but required for legacy applet security
 final class JavaMemoryRestart {
 
     private static final int MINIMUM_MEM_MB = 128;
@@ -97,11 +98,13 @@ final class JavaMemoryRestart {
         class SearchRunnable implements Runnable {
 
             public boolean readyStringFound = false;
+            public volatile boolean shouldStop = false;
 
             @Override
             public void run() {
                 try {
-                    for (String line = stdBufRead.readLine(); line != null; line = stdBufRead.readLine()) {
+                    String line;
+                    while (!shouldStop && (line = stdBufRead.readLine()) != null) {
                         if (line.startsWith("GeckoCIRCUITS is ready")) {
                             readyStringFound = true;
                             return;
@@ -114,25 +117,26 @@ final class JavaMemoryRestart {
         }
         SearchRunnable searchRunnable = new SearchRunnable();
 
-
-        Runnable errPrintRunnable = new Runnable() {
+        class ErrorPrintRunnable implements Runnable {
+            public volatile boolean shouldStop = false;
             @Override
             public void run() {
                 try {
-                    for (String line = errBufRead.readLine(); line != null; line = errBufRead.readLine()) {
+                    String line;
+                    while (!shouldStop && (line = errBufRead.readLine()) != null) {
                         System.err.println(line);
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        };
-
+        }
+        ErrorPrintRunnable errorPrintRunnable = new ErrorPrintRunnable();
 
         final Thread searchThread = new Thread(searchRunnable);
         searchThread.start();
 
-        final Thread errPrintThread = new Thread(errPrintRunnable);
+        final Thread errPrintThread = new Thread(errorPrintRunnable);
         errPrintThread.start();
 
         try {
@@ -145,9 +149,13 @@ final class JavaMemoryRestart {
         }
         if (!searchRunnable.readyStringFound) {
             System.err.println("Timeout, probably GeckoCIRCUITS was not started properly.");
-            searchThread.stop();
+            errorPrintRunnable.shouldStop = true;
+            errPrintThread.interrupt();
+            searchRunnable.shouldStop = true;
+            searchThread.interrupt();
         }
-        errPrintThread.stop();
+        errorPrintRunnable.shouldStop = true;
+        errPrintThread.interrupt();
         return searchRunnable.readyStringFound;
     }
 

@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
@@ -25,7 +25,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.PostCalculatable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupling;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
@@ -138,7 +138,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        if (!SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (!SchematicEditor2._lkDisplayMode.showParameter) {
             return;
         }
 
@@ -235,7 +235,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     @Override
     protected void importIndividual(TokenMap tokenMap) {
         super.importIndividual(tokenMap);
-        if(DatenSpeicher.readFileVersion < 170) { 
+        if(ProjectData.readFileVersion < 170) { 
             // backwards compatibility: before version 1.70, the 
             // machines could not be rotated!
             setComponentDirection(ComponentDirection.NORTH_SOUTH);            

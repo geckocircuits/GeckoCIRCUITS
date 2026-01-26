@@ -13,69 +13,69 @@
  */
 package ch.technokrat.gecko.geckocircuits.scope;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.net.URL;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ComponentEvent;
-import java.awt.Event;
-import javax.swing.KeyStroke;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-import javax.swing.JToolBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.JDialog;
-import java.net.URL;
-import java.util.StringTokenizer;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+@SuppressWarnings({"deprecation", "serial", "this-escape"})
 public class DialogFourierDiagramm extends JDialog implements ComponentListener {
 
     //-------------------
-    private JTabbedPane tabber;
-    private FourierDiagramm[] diag;
+    private JTabbedPane tabbedPane;
+    private FourierDiagramm[] diagrams;
     private DisplayFourierWorksheet[] sheet;
-    private FourierKurvenRekonstruktion[] rekonstruktion;
+    private FourierKurvenRekonstruktion[] reconstructions;
     //
-    private AbstractDataContainer _worksheet;
-    private double[][] _cn, _jn, _an, _bn;
-    private double _f1;
-    private int _nMin;
-    private double _rng1, _rng2;
-    private boolean[] _signalFourierAnalysiert;
+    private final AbstractDataContainer _worksheet;
+    private final double[][] _cn, _jn, _an, _bn;
+    private final double _f1;
+    private final int _nMin;
+    private final double _rng1, _rng2;
+    private final boolean[] _signalFourierAnalysiert;
     //
-    private int mausModus = GraferImplementation.MAUSMODUS_NIX;
-    private int iconONnummerALT = 0;
+    private int mouseMode = GraferImplementation.MAUSMODUS_NIX;
+    private int previousActiveIconIndex = 0;
     //-------------------
     private ImageIcon[] iconOFF, iconON;
-    private JButton[] jbMaus;
-    private JToolBar jtb1;
-    private JMenuItem mItemF3, mItemF5;
+    private JButton[] mouseButtons;
+    private JToolBar toolBar;
+    private JMenuItem mItemF3;
     //-----------------------
 
     public DialogFourierDiagramm(
             double[][][] erg, boolean[] sngFourierAnalysiert, int nMin, double f1, AbstractDataContainer worksheet,
             double rng1, double rng2) {
         super.setModal(true);
-        addComponentListener(this);
         try {
-            setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            setIconImage(new ImageIcon(new URL(picsUrl, "gecko.gif")).getImage());
         } catch (Exception e) {
         }
         _an = erg[0];
@@ -89,121 +89,90 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         _rng2 = rng2;
         _worksheet = worksheet;
 
-        setTitle(" " + "Diagram Fourier-Transform");
+        setTitle("Fourier Transform Diagram");
         getContentPane().setLayout(new BorderLayout());
-        baueGUItoolbar();
+        buildToolbar();
         baueGUI();
         pack();
+        addComponentListener(this);
     }
 
     private void baueGUI() {
-        tabber = new JTabbedPane();
-        diag = new FourierDiagramm[_worksheet.getRowLength()+1];
+        tabbedPane = new JTabbedPane();
+        diagrams = new FourierDiagramm[_worksheet.getRowLength()+1];
         sheet = new DisplayFourierWorksheet[_worksheet.getRowLength()+1];
-        rekonstruktion = new FourierKurvenRekonstruktion[_worksheet.getRowLength()+1];
+        reconstructions = new FourierKurvenRekonstruktion[_worksheet.getRowLength()+1];
         //
         for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
             if (_signalFourierAnalysiert[i1]) {
                 JPanel jpSg = new JPanel();
                 jpSg.setLayout(new BorderLayout());
-                JTabbedPane tabberLok = new JTabbedPane();
+                JTabbedPane localTabbedPane = new JTabbedPane();
                 //---------
-                diag[i1 - 1] = new FourierDiagramm(_cn[i1 - 1], _nMin, _f1); 
-                tabberLok.addTab("Fourier Analysis", diag[i1 - 1]); 
+                diagrams[i1 - 1] = new FourierDiagramm(_cn[i1 - 1], _nMin, _f1);
+                localTabbedPane.addTab("Fourier Analysis", diagrams[i1 - 1]);
                 sheet[i1 - 1] = new DisplayFourierWorksheet(_cn[i1 - 1], _jn[i1 - 1], _nMin);
-                tabberLok.addTab("Worksheet Data", sheet[i1 - 1]);
-                rekonstruktion[i1 - 1] = new FourierKurvenRekonstruktion(_an[i1 - 1], _bn[i1 - 1], _nMin, _f1, _worksheet, i1, _rng1, _rng2);
-                tabberLok.addTab("Reconstruction", rekonstruktion[i1 - 1]);
+                localTabbedPane.addTab("Worksheet Data", sheet[i1 - 1]);
+                reconstructions[i1 - 1] = new FourierKurvenRekonstruktion(_an[i1 - 1], _bn[i1 - 1], _nMin, _f1, _worksheet, i1, _rng1, _rng2);
+                localTabbedPane.addTab("Reconstruction", reconstructions[i1 - 1]);
                 //---------
-                jpSg.add(tabberLok, BorderLayout.CENTER);
-                tabber.addTab(_worksheet.getSignalName(i1-1) + " ", jpSg);
+                jpSg.add(localTabbedPane, BorderLayout.CENTER);
+                tabbedPane.addTab(_worksheet.getSignalName(i1-1) + " ", jpSg);
             }
         }
         //------------------------
-        JPanel jpIN = new JPanel();  // User-Input:  n-Bereich-Einschraenkung, OK usw ...
+        JPanel jpIN = new JPanel();  // User-Input: n-range restriction, OK, etc.
         //------------------------
         Container con = this.getContentPane();
         con.setLayout(new BorderLayout());
-        con.add(tabber, BorderLayout.CENTER);
+        con.add(tabbedPane, BorderLayout.CENTER);
         con.add(jpIN, BorderLayout.SOUTH);
-        con.add(jtb1, BorderLayout.WEST);
+        con.add(toolBar, BorderLayout.WEST);
         //=======================================
-        final JDialog ich = this;  // Selbstreferenz
-        final FileFilter filter = new FileFilter() {
-
-            public boolean accept(File f) {
-                if (f.isDirectory()) {
-                    return true;
-                }
-                if (f.getName().endsWith(".dat")) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            public String getDescription() {
-                return new String("Data File, Space-Spr. (*.dat)");
-            }
-        };
         //-----------
         JMenu dataMenu = GuiFabric.getJMenu(I18nKeys.FILE);
         mItemF3 = GuiFabric.getJMenuItem(I18nKeys.WRITE_DATA_TO_FILE);
         mItemF3.setMnemonic(KeyEvent.VK_S);
-        mItemF3.addActionListener(new ActionListener() {
+        mItemF3.addActionListener((ActionEvent ae) -> {
+            GeckoFileChooser fileChooser = GeckoFileChooser.createSimpleSaveFileChooser(".dat", DialogFourierDiagramm.this);
+            if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
+                return;
+            }
 
-            public void actionPerformed(ActionEvent ae) {
-                //------------------------------
-                GeckoFileChooser fileChooser = GeckoFileChooser.createSimpleSaveFileChooser(".dat", DialogFourierDiagramm.this);
-                if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
-                    return;
+            StringBuffer sb = new StringBuffer();
+            sb.append("N ");
+            for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
+                if (_signalFourierAnalysiert[i1]) {
+                    sb.append(_worksheet.getSignalName(i1-1) + "_cN " + _worksheet.getSignalName(i1-1) + "_phiN[rad] ");
                 }
-                
-                //------------------
-                // zuerst die Signal-Namen in der obersten Zeile -->
-                StringBuffer sb = new StringBuffer();
-                sb.append("N ");
-                for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
-                    if (_signalFourierAnalysiert[i1]) {
-                        sb.append(_worksheet.getSignalName(i1-1) + "_cN " + _worksheet.getSignalName(i1-1) + "_phiN[rad] ");
+            }
+            sb.append("\n");
+            for (int i1 = 0; i1 < _cn[0].length; i1++) {
+                sb.append(i1 + " ");
+                for (int i2 = 1; i2 < _worksheet.getRowLength()+1; i2++) {
+                    if (_signalFourierAnalysiert[i2]) {
+                        sb.append(_cn[i2 - 1][i1] + " " + _jn[i2 - 1][i1] + " ");
                     }
+
                 }
                 sb.append("\n");
-                // jetzt die zugehoerigen Daten in allen folgenden Zeilen -->
-                for (int i1 = 0; i1 < _cn[0].length; i1++) {
-                    sb.append(i1 + " ");
-                    for (int i2 = 1; i2 < _worksheet.getRowLength()+1; i2++) {
-                        if (_signalFourierAnalysiert[i2]) {
-                            sb.append(_cn[i2 - 1][i1] + " " + _jn[i2 - 1][i1] + " ");
-                        }
-
-                    }
-                    sb.append("\n");
-                }
-                // ... und jetzt abspeichern -->
-                try {
-                    BufferedWriter fkaku = new BufferedWriter(new FileWriter(fileChooser.getFileWithCheckedEnding()));
-                    fkaku.write(sb.toString());
-                    fkaku.flush();
-                    fkaku.close();
-                } catch (Exception e) {
-                    System.out.println(e + "   qe90r8gn03g8q");
-                }
-                //------------------------------
+            }
+            try {
+                BufferedWriter fkaku = new BufferedWriter(new FileWriter(fileChooser.getFileWithCheckedEnding()));
+                fkaku.write(sb.toString());
+                fkaku.flush();
+                fkaku.close();
+            } catch (Exception e) {
+                System.out.println(e + "   qe90r8gn03g8q");
             }
         });
         JMenuItem mItemF5 = GuiFabric.getJMenuItem(I18nKeys.EXIT);
         mItemF5.setMnemonic(KeyEvent.VK_X);
-        mItemF5.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent ae) {
-                DialogFourierDiagramm.this.dispose();
-            }
-        });
+        mItemF5.addActionListener((ActionEvent ae) -> DialogFourierDiagramm.this.dispose());
         dataMenu.add(mItemF3);
-        mItemF3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+        mItemF3.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         dataMenu.add(mItemF5);
-        mItemF5.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK));
+        mItemF5.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK));
         //
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(dataMenu);
@@ -211,67 +180,61 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         //=======================================
     }
 
-    private void baueGUItoolbar() {
+    private void buildToolbar() {
         //--------------------
         try {
-            iconON = new ImageIcon[]{
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_off.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_zoomFit2.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_zoomFenster.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_getXYschieber.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconON_log.png")), /*, /*
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_zoomDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_getXYkreuz.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_drawLine.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_drawText.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_measureDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconON_measureDY.png")),
-                     */};
-            iconOFF = new ImageIcon[]{
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_off.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_zoomFit2.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_zoomFenster.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_getXYschieber.png")),
-                        new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "iconOFF_log.png")), /*
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_zoomDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_getXYkreuz.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_drawLine.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_drawText.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_measureDX.png")),
-                    new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"iconOFF_measureDY.png")),
-                     */};
+            String[] iconFiles = {"iconON_off.png", "iconON_zoomFit2.png", "iconON_zoomFenster.png",
+                                  "iconON_getXYschieber.png", "iconON_log.png"};
+
+            iconON = new ImageIcon[iconFiles.length];
+            for (int i = 0; i < iconFiles.length; i++) {
+                URL iconUrl = DialogFourierDiagramm.class.getResource("/gecko/geckocircuits/allg/" + iconFiles[i]);
+                iconON[i] = new ImageIcon(iconUrl);
+                if (iconON[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
+                    Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING,
+                        "Failed to load icon: " + iconFiles[i]);
+                }
+            }
+
+            String[] iconFilesOFF = {"iconOFF_off.png", "iconOFF_zoomFit2.png", "iconOFF_zoomFenster.png",
+                                      "iconOFF_getXYschieber.png", "iconOFF_log.png"};
+
+            iconOFF = new ImageIcon[iconFilesOFF.length];
+            for (int i = 0; i < iconFilesOFF.length; i++) {
+                URL iconUrl = DialogFourierDiagramm.class.getResource("/gecko/geckocircuits/allg/" + iconFilesOFF[i]);
+                iconOFF[i] = new ImageIcon(iconUrl);
+                if (iconOFF[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
+                    Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING,
+                        "Failed to load icon: " + iconFilesOFF[i]);
+                }
+            }
         } catch (Exception e) {
             Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, e.getMessage());
         }
         //
-        jbMaus = new JButton[iconOFF.length];
-        for (int i1 = 0; i1 < jbMaus.length; i1++) {
-            jbMaus[i1] = new JButton();
-            jbMaus[i1].setIcon(iconOFF[i1]);
-            jbMaus[i1].setActionCommand("mausModus " + i1);
-            jbMaus[i1].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent actionEvent) {
-                    aktualisiereMausModus(actionEvent);
-                }
-            });
+        mouseButtons = new JButton[iconOFF.length];
+        for (int i1 = 0; i1 < mouseButtons.length; i1++) {
+            mouseButtons[i1] = new JButton();
+            mouseButtons[i1].setIcon(iconOFF[i1]);
+            mouseButtons[i1].setActionCommand("mouseMode " + i1);
+            mouseButtons[i1].addActionListener((final ActionEvent actionEvent) -> updateMouseMode(actionEvent));
 
             //--------------------
             switch (i1) {
                 case 0:
-                    jbMaus[i1].setToolTipText("Deactivate mouse");
+                    mouseButtons[i1].setToolTipText("Deactivate mouse");
                     break;
                 case 1:
-                    jbMaus[i1].setToolTipText("Autoscale");
+                    mouseButtons[i1].setToolTipText("Autoscale");
                     break;
                 case 2:
-                    jbMaus[i1].setToolTipText("Zoom rectangle");
+                    mouseButtons[i1].setToolTipText("Zoom rectangle");
                     break;
                 case 3:
-                    jbMaus[i1].setToolTipText("Set slider for X/Y-values");
+                    mouseButtons[i1].setToolTipText("Set slider for X/Y-values");
                     break;
                 case 4:
-                    jbMaus[i1].setToolTipText("set logarithmic y-axis");
+                    mouseButtons[i1].setToolTipText("set logarithmic y-axis");
                     break;
                 default:
                     Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, "Error: 49ugnw3grjgtfzj");
@@ -279,88 +242,88 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
             }
             //--------------------
         }
-        jbMaus[0].setIcon(iconON[0]);  // default: Maus deaktiviert
-        
+        mouseButtons[0].setIcon(iconON[0]);  // default: Mouse deactivated
+
         //--------------------
-        jtb1 = new JToolBar("Mouse Options");
-        jtb1.setOrientation(JToolBar.VERTICAL);
-        jtb1.setFloatable(false);
-        for (int i1 = 0; i1 < jbMaus.length; i1++) {
-            jtb1.add(jbMaus[i1]);
+        toolBar = new JToolBar("Mouse Options");
+        toolBar.setOrientation(JToolBar.VERTICAL);
+        toolBar.setFloatable(false);
+        for (int i1 = 0; i1 < mouseButtons.length; i1++) {
+            toolBar.add(mouseButtons[i1]);
         }
         //--------------------
     }
 
-    private int yAchseTyp = GraferV3.ACHSE_LIN;
+    private int yAxisType = GraferV3.ACHSE_LIN;
 
-    private void aktualisiereMausModus(final ActionEvent actionEvent) {
+    private void updateMouseMode(final ActionEvent actionEvent) {
         //--------------------
-        // alten Zustand speichern: 
-        int mausModusALT = -1;
+        // save previous state:
+        int previousMouseMode = -1;
         //--------------------
         final StringTokenizer stk = new StringTokenizer(actionEvent.getActionCommand(), " ");
         stk.nextToken();
-        final int indexKnopfGedrueckt = Integer.valueOf(stk.nextToken());
-        for (int i1 = 0; i1 < jbMaus.length; i1++) {
-            jbMaus[i1].setIcon(iconOFF[i1]);
+        final int buttonPressedIndex = Integer.valueOf(stk.nextToken());
+        for (int i1 = 0; i1 < mouseButtons.length; i1++) {
+            mouseButtons[i1].setIcon(iconOFF[i1]);
         }
-        jbMaus[indexKnopfGedrueckt].setIcon(iconON[indexKnopfGedrueckt]);
+        mouseButtons[buttonPressedIndex].setIcon(iconON[buttonPressedIndex]);
         //--------------------
-        switch (indexKnopfGedrueckt) {
+        switch (buttonPressedIndex) {
             case 0:
-                mausModus = GraferImplementation.MAUSMODUS_NIX;
+                mouseMode = GraferImplementation.MAUSMODUS_NIX;
                 break;
             case 1:
-                mausModusALT = mausModus;
-                mausModus = GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT;
+                previousMouseMode = mouseMode;
+                mouseMode = GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT;
                 break;
             case 2:
-                mausModus = GraferImplementation.MAUSMODUS_ZOOM_FENSTER;
+                mouseMode = GraferImplementation.MAUSMODUS_ZOOM_FENSTER;
                 break;
             case 3:
-                mausModus = GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER;
+                mouseMode = GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER;
                 break;
             case 4:
-                if(yAchseTyp == GraferV3.ACHSE_LIN) {
-                   yAchseTyp = GraferV3.ACHSE_LOG;
-                   jbMaus[4].setIcon(iconON[4]);
+                if(yAxisType == GraferV3.ACHSE_LIN) {
+                   yAxisType = GraferV3.ACHSE_LOG;
+                   mouseButtons[4].setIcon(iconON[4]);
                 } else {
-                    yAchseTyp = GraferV3.ACHSE_LIN;
-                    jbMaus[4].setIcon(iconOFF[4]);
+                    yAxisType = GraferV3.ACHSE_LIN;
+                    mouseButtons[4].setIcon(iconOFF[4]);
                 }
 
-                for (int i = 0; i < diag.length; i++) {
-                    if (diag[i] != null) {
-                        diag[i].setzeAchsenTyp(new int[]{GraferV3.ACHSE_LIN}, new int[]{yAchseTyp});
-                        diag[i].repaint();
+                for (int i = 0; i < diagrams.length; i++) {
+                    if (diagrams[i] != null) {
+                        diagrams[i].setzeAchsenTyp(new int[]{GraferV3.ACHSE_LIN}, new int[]{yAxisType});
+                        diagrams[i].repaint();
                     }
-                    
+
 
                 }
-                
+
                 break;
             default:
-                Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, "Fehler: 98n3gweggtq5t");                
+                Logger.getLogger(DialogFourierDiagramm.class.getName()).log(Level.WARNING, "Error: 98n3gweggtq5t");
                 break;
         }
         for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
             if (_signalFourierAnalysiert[i1]) {
-                diag[i1 - 1].setMausModus(mausModus);
-                rekonstruktion[i1 - 1].setMausModus(mausModus);
+                diagrams[i1 - 1].setMausModus(mouseMode);
+                reconstructions[i1 - 1].setMausModus(mouseMode);
             }
         }
-        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-            mausModus = mausModusALT;
-            jbMaus[1].setIcon(iconOFF[1]);
-            jbMaus[iconONnummerALT].setIcon(iconON[iconONnummerALT]);
+        if (mouseMode == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+            mouseMode = previousMouseMode;
+            mouseButtons[1].setIcon(iconOFF[1]);
+            mouseButtons[previousActiveIconIndex].setIcon(iconON[previousActiveIconIndex]);
             for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
                 if (_signalFourierAnalysiert[i1]) {
-                    diag[i1 - 1].setMausModus(mausModus);
-                    rekonstruktion[i1 - 1].setMausModus(mausModus);
+                    diagrams[i1 - 1].setMausModus(mouseMode);
+                    reconstructions[i1 - 1].setMausModus(mouseMode);
                 }
             }
         } else {
-            iconONnummerALT = indexKnopfGedrueckt;
+            previousActiveIconIndex = buttonPressedIndex;
         }
     }
 
@@ -368,27 +331,27 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
     public void componentResized(final ComponentEvent compEvent) {
         for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
             if (_signalFourierAnalysiert[i1]) {
-                diag[i1 - 1].resize();
-                diag[i1 - 1].repaint();
-                rekonstruktion[i1 - 1].resize();
-                rekonstruktion[i1 - 1].repaint();
+                diagrams[i1 - 1].resize();
+                diagrams[i1 - 1].repaint();
+                reconstructions[i1 - 1].resize();
+                reconstructions[i1 - 1].repaint();
             }
         }
     }
 
     @Override
     public void componentMoved(final ComponentEvent compEvent) {
-        // nothing todo here
+        // nothing to do here
     }
 
     @Override
     public void componentShown(final ComponentEvent compEvent) {
-        // nothing todo here
+        // nothing to do here
     }
 
     @Override
     public void componentHidden(final ComponentEvent compEvent) {
-        // nothing todo here
+        // nothing to do here
     }
 }
 
