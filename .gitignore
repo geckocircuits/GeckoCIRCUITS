@@ -28,10 +28,14 @@ target/
 # Native installer output
 release/
 
-
+./gecko
 
 # Claude Code workspace files
 .claude/
+
+# Folders not part of main branch structure
+gecko-webapp/
+otherGeckoCIRCUITS/
 
 # Eclipse IDE files
 .classpath
