@@ -32,9 +32,7 @@ public final class ReglerPOW extends RegelBlock {
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new AbstractControlCalculatable(1, 1) {
-
-            @Override
+        return new AbstractControlCalculatable(2, 1) {
             public void berechneYOUT(final double deltaT) {
                 _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
             }

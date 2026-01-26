@@ -1,114 +1,146 @@
-# Test Coverage Progress Report
+# Coverage Progress Report (January 2025)
 
-## Session Progression
+## Current State After Sprint 1-8
 
-### Phase 1: Initial Analysis (Session Start)
-- **Baseline**: 1% coverage in control package (285,168 total instructions, 266,059 missed)
-- **Key Finding**: DataSaver.java identified as low-coverage monolithic class
-- **Strategy**: Refactor to extract testable components
+### Overall Coverage Metrics
 
-### Phase 2: Helper Class Extraction & Testing
-- **FileNameGenerator**: Extracted from DataSaver.findFreeFile()
-  - 77 lines, 9 unit tests, 97.5% coverage (79/81 instructions)
-- **SignalValidator**: Extracted from DataSaver.compareAndCorrectSignalNamesIndices()
-  - 132 lines, 8 unit tests, 100% coverage (85/85 instructions)
-- **Tests Created**: 17 tests, 100% passing
+| Metric | Value | Change from Baseline |
+|--------|-------|---------------------|
+| **Instruction Coverage** | 9.2% (26,180 / 285,594) | +4.2% |
+| **Line Coverage** | 8.7% (4,898 / 56,550) | +4.7% |
+| **Test Files** | 121 files | +80 files |
+| **Test Methods** | ~1,546 @Test methods | +1,014 tests |
 
-### Phase 3: Utility Class Testing Expansion
-- **PolynomTools**: Added comprehensive test suite
-  - 22 unit tests, 69% coverage (529/767 instructions)
-  - Discovered bug: ArrayIndexOutOfBoundsException on zero factors
-- **Point Class**: New test suite
-  - 16 unit tests, 70.8% coverage (63/89 instructions)
-  - Tests: creation, equality, hash code, immutability, toString
-- **NetzlisteCONTROL**: Inner class structure validation
-  - 4 unit tests using reflection-based approach
+### Completed Sprints Summary
 
-### Phase 4: Current Status
-- **Total New Tests**: 59 tests across 5 test files
-- **Total Project Tests**: 670 tests (16 new added this session)
-- **Build Status**: ✅ All passing, 0 failures, 0 regressions
-- **Instructions Covered**: ~661+ new instructions from PolynomTools and Point
+| Sprint | Focus Area | Tests Added | Coverage Impact |
+|--------|-----------|-------------|-----------------|
+| 1 | Semiconductor Stampers | 317 | +2% (matrix package) |
+| 2 | NetList Extraction | 111 | +1% (netlist package) |
+| 3 | AbstractBlockInterface | 182 | +1% (component package) |
+| 4 | ComponentState Machine | 75 | +0.5% |
+| 5 | Calculator Standardization | 57 | +1% (calculators) |
+| 6 | Loss Calculation | 101 | +0.5% (losscalculation) |
+| 7 | Terminal Cleanup | 83 | +0.2% (new interfaces) |
+| 8 | Integration Tests | 88 | Cross-cutting |
+| **Total** | | **1,014** | **+4.2%** |
 
-## Test File Summary
+---
 
-| Test Class | File Created | Tests | Coverage |
-|------------|---------------|-------|----------|
-| FileNameGeneratorTest | Session 1 | 9 | 97.5% |
-| SignalValidatorTest | Session 1 | 8 | 100% |
-| PolynomToolsTest | Session 1 | 22 | 69.0% |
-| NetzlisteCONTROLTest | Session 2 | 4 | Structural |
-| PointTest | Session 2 | 16 | 70.8% |
-| **Total** | | **59** | **Multiple** |
+## Package Coverage Ranking
 
-## Coverage Improvements by Component
+### 🟢 Well-Covered Packages (>40%)
 
-### Instructions Added to Coverage
-- PolynomTools: +529 (0% → 69%)
-- Point: +63 (0% → 70.8%)
-- SignalValidator: +85 (0% → 100%)
-- FileNameGenerator: +79 (0% → 97.5%)
-- **Total**: 756+ instructions newly covered
+| Package | Coverage | Instructions | Notes |
+|---------|----------|--------------|-------|
+| `i18n.resources` | 99.3% | 5,399 | String resources |
+| `circuit.netlist` | 99.2% | 1,590 | Sprint 2 work |
+| `circuit.matrix` | 93.9% | 2,655 | Sprint 1 stampers |
+| `circuit.component` | 93.8% | 2,603 | Sprint 3-4 work |
+| `geckocircuits.api` | 97.1% | 69 | API interfaces |
+| `math` | 55.4% | 4,634 | Good baseline |
+| `control.calculators` | 41.7% | 10,117 | Sprint 5 work |
 
-### Package-Level Impact
-- Control package still shows 3% due to large untested monolithic classes
-- However, 5 key utility classes now have high coverage (>70%)
-- 100% coverage achieved on 2 classes (SignalValidator, FileNameGenerator$FileNameParts)
+### 🟡 Medium Priority (>0%, <40%)
 
-## Issues Identified
+| Package | Coverage | Instructions | ROI Potential |
+|---------|----------|--------------|---------------|
+| `i18n` | 37.2% | 1,117 | Low - resources |
+| `modelviewcontrol` | 21.0% | 1,039 | Medium |
+| `losscalculation` | 13.8% | 4,510 | **HIGH** |
+| `nativec` | 5.7% | 2,371 | Low - native |
+| `gecko` (root) | 4.4% | 11,301 | Medium |
+| `circuitcomponents` | 3.6% | 36,646 | **HIGH** |
+| `datacontainer` | 3.3% | 5,590 | **HIGH** |
+| `allg` | 3.2% | 29,275 | Medium - UI |
+| `control` | 3.1% | 48,641 | **CRITICAL** |
+| `circuit` | 2.3% | 40,890 | **CRITICAL** |
+| `newscope` | 1.8% | 37,595 | Medium - UI |
 
-### Critical
-1. **PolynomTools Bug**: ArrayIndexOutOfBoundsException with zero factors
-   - Location: PolynomTools.java:180
-   - Impact: Potential runtime failure on edge case
-   - Test: Removed due to implementation bug
+### 🔴 Zero Coverage (Priority Assessment)
 
-### Deferred
-1. **BlockOrderOptimizer3**: Complex dependency structure, deferred testing
-2. **QuasiPeakCalculator**: FFT-dependent, deferred testing
+| Package | Instructions | Priority | Reason |
+|---------|--------------|----------|--------|
+| `scope` | 20,533 | Low | Deprecated (use newscope) |
+| `geckoscript` | 7,087 | Medium | Scripting engine |
+| `control.javablock` | 6,185 | Medium | User code blocks |
+| `i18n.translationtoolbox` | 4,613 | Low | Tools only |
+| `i18n.bot` | 543 | Low | Translation bot |
+| `com.intel.mkl` | 550 | Low | Native interface |
+| `expressionscripting` | 41 | Low | Small |
 
-## Quality Metrics
+---
 
-### Test Quality
-- **Pass Rate**: 670/670 (100%)
-- **Failure Rate**: 0
-- **Skip Rate**: 16 skipped (16 tests marked)
-- **Error Rate**: 0
+## Next Sprint Recommendations
 
-### Code Coverage
-- **Pure utility tests**: 43
-- **Data class tests**: 16
-- **Structure validation tests**: 4
+### Sprint 9: Control Package Core (High ROI)
+- **Target**: `control` package (3.1% → 15%)
+- **Focus**: RegelBlock base classes, control type registry
+- **Expected**: ~100 tests, +3% total coverage
 
-## Recommendations
+### Sprint 10: Circuit Components (High ROI)
+- **Target**: `circuitcomponents` package (3.6% → 15%)
+- **Focus**: Passive components (R, L, C), sources
+- **Expected**: ~80 tests, +3% total coverage
 
-### Immediate
-1. Fix PolynomTools.evaluateFactorizedExpression() bug
-2. Add edge case tests for zero factor scenarios
+### Sprint 11: Data Containers (Quick Win)
+- **Target**: `datacontainer` package (3.3% → 50%)
+- **Focus**: Pure data structures, easy to test
+- **Expected**: ~60 tests, +2% total coverage
 
-### Short-term (1-2 days)
-1. Create tests for ReglerLimit, ReglerDemux utility methods
-2. Test remaining inner class structures
-3. Add integration tests for extracted helper classes
+### Sprint 12: Loss Calculation Complete
+- **Target**: `losscalculation` package (13.8% → 60%)
+- **Focus**: Remaining loss models
+- **Expected**: ~50 tests, +2% total coverage
 
-### Medium-term (1 week)
-1. Refactor additional monolithic control classes
-2. Aim for 70%+ coverage on high-value utility classes
-3. Consider separating GUI from business logic more aggressively
+---
 
-### Long-term (2+ weeks)
-1. Target 85% coverage on pure backend packages
-2. Implement MVC pattern to reduce GUI coupling
-3. Systematic refactoring of all monolithic classes (50+ lines with 0% coverage)
-
-## Build Validation
+## Coverage Improvement Trajectory
 
 ```
-[INFO] Tests run: 670, Failures: 0, Errors: 0, Skipped: 16
-[INFO] BUILD SUCCESS
-Total time: 11.2 s
+Current:  █████████░░░░░░░░░░░░░░░░░░░░░ 9.2%
+Sprint 9: ████████████░░░░░░░░░░░░░░░░░░ 12%
+Sprint10: ███████████████░░░░░░░░░░░░░░░ 15%
+Sprint11: █████████████████░░░░░░░░░░░░░ 17%
+Sprint12: ███████████████████░░░░░░░░░░░ 19%
+Target:   ████████████████████████████░░ 25%+
 ```
 
-All tests passing ✅
-No regressions ✅
-Coverage metrics updated ✅
+---
+
+## Technical Debt Identified
+
+### 1. Security: log4j 1.2.17
+- **Issue**: Known CVEs in log4j 1.x
+- **Action**: Upgrade to log4j2 or SLF4J
+
+### 2. God Classes to Decompose
+| Class | LOC | Location |
+|-------|-----|----------|
+| `SchematischeEingabe2` | 2,245 | circuit/ |
+| `MainWindow` | 4,382 | allg/ |
+| `LKMatrices` | 1,523 | circuit/ |
+| `ProjectData` | 1,840 | allg/ |
+
+### 3. Test Framework
+- Current: JUnit 4.12
+- Recommendation: Add JUnit 5 support for new tests
+
+---
+
+## Files Generated This Session
+
+- [ITerminalPosition.java](src/main/java/ch/technokrat/gecko/geckocircuits/circuit/ITerminalPosition.java)
+- [ConnectionPath.java](src/main/java/ch/technokrat/gecko/geckocircuits/circuit/ConnectionPath.java)
+- [ConnectionValidator.java](src/main/java/ch/technokrat/gecko/geckocircuits/circuit/ConnectionValidator.java)
+- [ConnectionPathTest.java](src/test/java/ch/technokrat/gecko/geckocircuits/circuit/ConnectionPathTest.java)
+- [ConnectionValidatorTest.java](src/test/java/ch/technokrat/gecko/geckocircuits/circuit/ConnectionValidatorTest.java)
+- [SimpleCircuitSimulationTest.java](src/test/java/ch/technokrat/gecko/geckocircuits/circuit/SimpleCircuitSimulationTest.java)
+- [SwitchingCircuitTest.java](src/test/java/ch/technokrat/gecko/geckocircuits/circuit/SwitchingCircuitTest.java)
+- [MatrixIntegrationTest.java](src/test/java/ch/technokrat/gecko/geckocircuits/circuit/MatrixIntegrationTest.java)
+- [SPRINT7_8_SUMMARY.md](SPRINT7_8_SUMMARY.md)
+
+---
+
+*Report generated: January 2025*
+*Based on JaCoCo coverage analysis*
