@@ -98,7 +98,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(10, 20)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(10, anchor.x);
         assertEquals(20, anchor.y);
@@ -111,7 +111,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(15, 25)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(15, anchor.x);
         assertEquals(25, anchor.y);
@@ -124,7 +124,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(15, 25)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(15, anchor.x);
         assertEquals(25, anchor.y);
@@ -137,7 +137,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(-15, -25)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(Integer.MAX_VALUE, anchor.x);
         assertEquals(Integer.MAX_VALUE, anchor.y);
@@ -147,7 +147,7 @@ public class ComponentPositionerTest {
     public void testFindAnchorPoint_EmptyList() {
         List<TestPositionProvider> positions = new ArrayList<>();
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(Integer.MAX_VALUE, anchor.x);
         assertEquals(Integer.MAX_VALUE, anchor.y);
@@ -155,7 +155,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testFindAnchorPoint_NullList() {
-        Point anchor = positioner.findAnchorPoint(null);
+        GridPoint anchor = positioner.findAnchorPoint(null);
 
         assertEquals(Integer.MAX_VALUE, anchor.x);
         assertEquals(Integer.MAX_VALUE, anchor.y);
@@ -168,7 +168,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(10, 10)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(0, anchor.x);
         assertEquals(0, anchor.y);
@@ -178,11 +178,11 @@ public class ComponentPositionerTest {
     public void testFindAnchorPoint_NullPositionInList() {
         List<TestPositionProvider> positions = Arrays.asList(
                 new TestPositionProvider(10, 20),
-                new TestPositionProvider((Point) null),
+                new TestPositionProvider((GridPoint) null),
                 new TestPositionProvider(5, 15)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(5, anchor.x);
         assertEquals(15, anchor.y);
@@ -192,13 +192,13 @@ public class ComponentPositionerTest {
 
     @Test
     public void testFindAnchorPointFromPoints_Basic() {
-        List<Point> points = Arrays.asList(
-                new Point(15, 25),
-                new Point(5, 30),
-                new Point(20, 10)
+        List<GridPoint> points = Arrays.asList(
+                new GridPoint(15, 25),
+                new GridPoint(5, 30),
+                new GridPoint(20, 10)
         );
 
-        Point anchor = positioner.findAnchorPointFromPoints(points);
+        GridPoint anchor = positioner.findAnchorPointFromPoints(points);
 
         assertEquals(5, anchor.x);
         assertEquals(10, anchor.y);
@@ -206,7 +206,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testFindAnchorPointFromPoints_EmptyList() {
-        Point anchor = positioner.findAnchorPointFromPoints(new ArrayList<>());
+        GridPoint anchor = positioner.findAnchorPointFromPoints(new ArrayList<>());
 
         assertEquals(Integer.MAX_VALUE, anchor.x);
         assertEquals(Integer.MAX_VALUE, anchor.y);
@@ -214,7 +214,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testFindAnchorPointFromPoints_Null() {
-        Point anchor = positioner.findAnchorPointFromPoints(null);
+        GridPoint anchor = positioner.findAnchorPointFromPoints(null);
 
         assertEquals(Integer.MAX_VALUE, anchor.x);
         assertEquals(Integer.MAX_VALUE, anchor.y);
@@ -224,7 +224,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testPixelToGrid_ExactGridPoint() {
-        Point grid = positioner.pixelToGrid(100, 200, 10);
+        GridPoint grid = positioner.pixelToGrid(100, 200, 10);
 
         assertEquals(10, grid.x);
         assertEquals(20, grid.y);
@@ -233,7 +233,7 @@ public class ComponentPositionerTest {
     @Test
     public void testPixelToGrid_NoSnap() {
         // 95 / 10 = 9.5, which doesn't snap to 10
-        Point grid = positioner.pixelToGrid(95, 195, 10);
+        GridPoint grid = positioner.pixelToGrid(95, 195, 10);
 
         assertEquals(9, grid.x);
         assertEquals(19, grid.y);
@@ -242,7 +242,7 @@ public class ComponentPositionerTest {
     @Test
     public void testPixelToGrid_SnapToNextLine() {
         // 96 / 10 = 9.6, which is within 0.5 of 10, so snaps
-        Point grid = positioner.pixelToGrid(96, 196, 10, 0.5);
+        GridPoint grid = positioner.pixelToGrid(96, 196, 10, 0.5);
 
         assertEquals(10, grid.x);
         assertEquals(20, grid.y);
@@ -251,7 +251,7 @@ public class ComponentPositionerTest {
     @Test
     public void testPixelToGrid_CustomClickRadius() {
         // With radius 0.4, 97/10=9.7 should snap (distance to 10 is 0.3 < 0.4)
-        Point grid = positioner.pixelToGrid(97, 197, 10, 0.4);
+        GridPoint grid = positioner.pixelToGrid(97, 197, 10, 0.4);
 
         assertEquals(10, grid.x);
         assertEquals(20, grid.y);
@@ -260,7 +260,7 @@ public class ComponentPositionerTest {
     @Test
     public void testPixelToGrid_CustomClickRadius_NoSnap() {
         // With radius 0.2, 97/10=9.7 should NOT snap (0.3 > 0.2)
-        Point grid = positioner.pixelToGrid(97, 197, 10, 0.2);
+        GridPoint grid = positioner.pixelToGrid(97, 197, 10, 0.2);
 
         assertEquals(9, grid.x);
         assertEquals(19, grid.y);
@@ -268,7 +268,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testPixelToGrid_ZeroPixels() {
-        Point grid = positioner.pixelToGrid(0, 0, 10);
+        GridPoint grid = positioner.pixelToGrid(0, 0, 10);
 
         assertEquals(0, grid.x);
         assertEquals(0, grid.y);
@@ -276,7 +276,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testPixelToGrid_LargeValues() {
-        Point grid = positioner.pixelToGrid(1000000, 2000000, 100);
+        GridPoint grid = positioner.pixelToGrid(1000000, 2000000, 100);
 
         assertEquals(10000, grid.x);
         assertEquals(20000, grid.y);
@@ -296,7 +296,7 @@ public class ComponentPositionerTest {
     public void testPixelToGrid_DefaultClickRadius() {
         // Should use DEFAULT_CLICK_RADIUS (0.5)
         // 96/10 = 9.6, distance to 10 is 0.4 < 0.5, so snaps
-        Point grid = positioner.pixelToGrid(96, 96, 10);
+        GridPoint grid = positioner.pixelToGrid(96, 96, 10);
 
         assertEquals(10, grid.x);
         assertEquals(10, grid.y);
@@ -306,7 +306,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateMoveDelta_Basic() {
-        Point delta = positioner.calculateMoveDelta(new Point(15, 25), new Point(10, 20));
+        GridPoint delta = positioner.calculateMoveDelta(new GridPoint(15, 25), new GridPoint(10, 20));
 
         assertEquals(5, delta.x);
         assertEquals(5, delta.y);
@@ -314,7 +314,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateMoveDelta_Negative() {
-        Point delta = positioner.calculateMoveDelta(new Point(5, 10), new Point(15, 25));
+        GridPoint delta = positioner.calculateMoveDelta(new GridPoint(5, 10), new GridPoint(15, 25));
 
         assertEquals(-10, delta.x);
         assertEquals(-15, delta.y);
@@ -322,7 +322,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateMoveDelta_Zero() {
-        Point delta = positioner.calculateMoveDelta(new Point(10, 20), new Point(10, 20));
+        GridPoint delta = positioner.calculateMoveDelta(new GridPoint(10, 20), new GridPoint(10, 20));
 
         assertEquals(0, delta.x);
         assertEquals(0, delta.y);
@@ -330,7 +330,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateMoveDelta_NullCurrent() {
-        Point delta = positioner.calculateMoveDelta(null, new Point(10, 20));
+        GridPoint delta = positioner.calculateMoveDelta(null, new GridPoint(10, 20));
 
         assertEquals(0, delta.x);
         assertEquals(0, delta.y);
@@ -338,7 +338,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateMoveDelta_NullStart() {
-        Point delta = positioner.calculateMoveDelta(new Point(10, 20), null);
+        GridPoint delta = positioner.calculateMoveDelta(new GridPoint(10, 20), null);
 
         assertEquals(0, delta.x);
         assertEquals(0, delta.y);
@@ -346,7 +346,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateMoveDelta_BothNull() {
-        Point delta = positioner.calculateMoveDelta(null, null);
+        GridPoint delta = positioner.calculateMoveDelta(null, null);
 
         assertEquals(0, delta.x);
         assertEquals(0, delta.y);
@@ -417,8 +417,8 @@ public class ComponentPositionerTest {
     @Test
     public void testCalculateBoundingBox_AllNullPositions() {
         List<TestPositionProvider> positions = Arrays.asList(
-                new TestPositionProvider((Point) null),
-                new TestPositionProvider((Point) null)
+                new TestPositionProvider((GridPoint) null),
+                new TestPositionProvider((GridPoint) null)
         );
 
         assertNull(positioner.calculateBoundingBox(positions));
@@ -429,36 +429,36 @@ public class ComponentPositionerTest {
     @Test
     public void testIsPointInRectangle_Inside() {
         assertTrue(positioner.isPointInRectangle(
-                new Point(15, 25),
-                new Point(10, 20),
-                new Point(30, 40)
+                new GridPoint(15, 25),
+                new GridPoint(10, 20),
+                new GridPoint(30, 40)
         ));
     }
 
     @Test
     public void testIsPointInRectangle_OnBoundary() {
         assertTrue(positioner.isPointInRectangle(
-                new Point(10, 20),  // On corner
-                new Point(10, 20),
-                new Point(30, 40)
+                new GridPoint(10, 20),  // On corner
+                new GridPoint(10, 20),
+                new GridPoint(30, 40)
         ));
     }
 
     @Test
     public void testIsPointInRectangle_OnEdge() {
         assertTrue(positioner.isPointInRectangle(
-                new Point(20, 20),  // On top edge
-                new Point(10, 20),
-                new Point(30, 40)
+                new GridPoint(20, 20),  // On top edge
+                new GridPoint(10, 20),
+                new GridPoint(30, 40)
         ));
     }
 
     @Test
     public void testIsPointInRectangle_Outside() {
         assertFalse(positioner.isPointInRectangle(
-                new Point(5, 25),  // Outside to the left
-                new Point(10, 20),
-                new Point(30, 40)
+                new GridPoint(5, 25),  // Outside to the left
+                new GridPoint(10, 20),
+                new GridPoint(30, 40)
         ));
     }
 
@@ -466,9 +466,9 @@ public class ComponentPositionerTest {
     public void testIsPointInRectangle_ReversedCorners() {
         // Should work even if corners are specified in different order
         assertTrue(positioner.isPointInRectangle(
-                new Point(15, 25),
-                new Point(30, 40),  // Bottom-right first
-                new Point(10, 20)   // Top-left second
+                new GridPoint(15, 25),
+                new GridPoint(30, 40),  // Bottom-right first
+                new GridPoint(10, 20)   // Top-left second
         ));
     }
 
@@ -476,17 +476,17 @@ public class ComponentPositionerTest {
     public void testIsPointInRectangle_NullPoint() {
         assertFalse(positioner.isPointInRectangle(
                 null,
-                new Point(10, 20),
-                new Point(30, 40)
+                new GridPoint(10, 20),
+                new GridPoint(30, 40)
         ));
     }
 
     @Test
     public void testIsPointInRectangle_NullCorner() {
         assertFalse(positioner.isPointInRectangle(
-                new Point(15, 25),
+                new GridPoint(15, 25),
                 null,
-                new Point(30, 40)
+                new GridPoint(30, 40)
         ));
     }
 
@@ -494,7 +494,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testTranslatePoint_Basic() {
-        Point result = positioner.translatePoint(new Point(10, 20), 5, 10);
+        GridPoint result = positioner.translatePoint(new GridPoint(10, 20), 5, 10);
 
         assertEquals(15, result.x);
         assertEquals(30, result.y);
@@ -502,7 +502,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testTranslatePoint_NegativeDelta() {
-        Point result = positioner.translatePoint(new Point(10, 20), -5, -10);
+        GridPoint result = positioner.translatePoint(new GridPoint(10, 20), -5, -10);
 
         assertEquals(5, result.x);
         assertEquals(10, result.y);
@@ -510,7 +510,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testTranslatePoint_ZeroDelta() {
-        Point result = positioner.translatePoint(new Point(10, 20), 0, 0);
+        GridPoint result = positioner.translatePoint(new GridPoint(10, 20), 0, 0);
 
         assertEquals(10, result.x);
         assertEquals(20, result.y);
@@ -518,7 +518,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testTranslatePoint_NullOriginal() {
-        Point result = positioner.translatePoint(null, 5, 10);
+        GridPoint result = positioner.translatePoint(null, 5, 10);
 
         assertEquals(5, result.x);
         assertEquals(10, result.y);
@@ -532,7 +532,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(10, 20)
         );
 
-        Point center = positioner.findCenterPoint(positions);
+        GridPoint center = positioner.findCenterPoint(positions);
 
         assertNotNull(center);
         assertEquals(10, center.x);
@@ -546,7 +546,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(20, 40)
         );
 
-        Point center = positioner.findCenterPoint(positions);
+        GridPoint center = positioner.findCenterPoint(positions);
 
         assertNotNull(center);
         assertEquals(10, center.x);
@@ -568,8 +568,8 @@ public class ComponentPositionerTest {
     @Test
     public void testCalculateManhattanDistance_Basic() {
         int distance = positioner.calculateManhattanDistance(
-                new Point(0, 0),
-                new Point(3, 4)
+                new GridPoint(0, 0),
+                new GridPoint(3, 4)
         );
 
         assertEquals(7, distance);  // |3| + |4|
@@ -578,8 +578,8 @@ public class ComponentPositionerTest {
     @Test
     public void testCalculateManhattanDistance_SamePoint() {
         int distance = positioner.calculateManhattanDistance(
-                new Point(10, 20),
-                new Point(10, 20)
+                new GridPoint(10, 20),
+                new GridPoint(10, 20)
         );
 
         assertEquals(0, distance);
@@ -588,8 +588,8 @@ public class ComponentPositionerTest {
     @Test
     public void testCalculateManhattanDistance_NegativeCoordinates() {
         int distance = positioner.calculateManhattanDistance(
-                new Point(-5, -10),
-                new Point(5, 10)
+                new GridPoint(-5, -10),
+                new GridPoint(5, 10)
         );
 
         assertEquals(30, distance);  // |10| + |20|
@@ -597,8 +597,8 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateManhattanDistance_NullPoint() {
-        assertEquals(0, positioner.calculateManhattanDistance(null, new Point(5, 10)));
-        assertEquals(0, positioner.calculateManhattanDistance(new Point(5, 10), null));
+        assertEquals(0, positioner.calculateManhattanDistance(null, new GridPoint(5, 10)));
+        assertEquals(0, positioner.calculateManhattanDistance(new GridPoint(5, 10), null));
     }
 
     // ========== calculateEuclideanDistance tests ==========
@@ -606,8 +606,8 @@ public class ComponentPositionerTest {
     @Test
     public void testCalculateEuclideanDistance_345Triangle() {
         double distance = positioner.calculateEuclideanDistance(
-                new Point(0, 0),
-                new Point(3, 4)
+                new GridPoint(0, 0),
+                new GridPoint(3, 4)
         );
 
         assertEquals(5.0, distance, 0.0001);
@@ -616,8 +616,8 @@ public class ComponentPositionerTest {
     @Test
     public void testCalculateEuclideanDistance_SamePoint() {
         double distance = positioner.calculateEuclideanDistance(
-                new Point(10, 20),
-                new Point(10, 20)
+                new GridPoint(10, 20),
+                new GridPoint(10, 20)
         );
 
         assertEquals(0.0, distance, 0.0001);
@@ -625,15 +625,15 @@ public class ComponentPositionerTest {
 
     @Test
     public void testCalculateEuclideanDistance_NullPoint() {
-        assertEquals(0.0, positioner.calculateEuclideanDistance(null, new Point(5, 10)), 0.0001);
-        assertEquals(0.0, positioner.calculateEuclideanDistance(new Point(5, 10), null), 0.0001);
+        assertEquals(0.0, positioner.calculateEuclideanDistance(null, new GridPoint(5, 10)), 0.0001);
+        assertEquals(0.0, positioner.calculateEuclideanDistance(new GridPoint(5, 10), null), 0.0001);
     }
 
     // ========== snapToGrid tests ==========
 
     @Test
     public void testSnapToGrid_ExactGridPoint() {
-        Point snapped = positioner.snapToGrid(new Point(20, 30), 10);
+        GridPoint snapped = positioner.snapToGrid(new GridPoint(20, 30), 10);
 
         assertEquals(20, snapped.x);
         assertEquals(30, snapped.y);
@@ -641,7 +641,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testSnapToGrid_RoundDown() {
-        Point snapped = positioner.snapToGrid(new Point(24, 34), 10);
+        GridPoint snapped = positioner.snapToGrid(new GridPoint(24, 34), 10);
 
         assertEquals(20, snapped.x);
         assertEquals(30, snapped.y);
@@ -649,7 +649,7 @@ public class ComponentPositionerTest {
 
     @Test
     public void testSnapToGrid_RoundUp() {
-        Point snapped = positioner.snapToGrid(new Point(26, 36), 10);
+        GridPoint snapped = positioner.snapToGrid(new GridPoint(26, 36), 10);
 
         assertEquals(30, snapped.x);
         assertEquals(40, snapped.y);
@@ -662,8 +662,8 @@ public class ComponentPositionerTest {
 
     @Test
     public void testSnapToGrid_ZeroGridSize() {
-        Point original = new Point(25, 35);
-        Point result = positioner.snapToGrid(original, 0);
+        GridPoint original = new GridPoint(25, 35);
+        GridPoint result = positioner.snapToGrid(original, 0);
         assertEquals(original, result);
     }
 
@@ -671,9 +671,9 @@ public class ComponentPositionerTest {
 
     @Test
     public void testNormalizeRectangle_AlreadyNormalized() {
-        Point[] result = positioner.normalizeRectangle(
-                new Point(10, 20),
-                new Point(30, 40)
+        GridPoint[] result = positioner.normalizeRectangle(
+                new GridPoint(10, 20),
+                new GridPoint(30, 40)
         );
 
         assertEquals(10, result[0].x);
@@ -684,9 +684,9 @@ public class ComponentPositionerTest {
 
     @Test
     public void testNormalizeRectangle_Reversed() {
-        Point[] result = positioner.normalizeRectangle(
-                new Point(30, 40),
-                new Point(10, 20)
+        GridPoint[] result = positioner.normalizeRectangle(
+                new GridPoint(30, 40),
+                new GridPoint(10, 20)
         );
 
         assertEquals(10, result[0].x);
@@ -698,9 +698,9 @@ public class ComponentPositionerTest {
     @Test
     public void testNormalizeRectangle_MixedCorners() {
         // Top-right and bottom-left corners
-        Point[] result = positioner.normalizeRectangle(
-                new Point(30, 20),
-                new Point(10, 40)
+        GridPoint[] result = positioner.normalizeRectangle(
+                new GridPoint(30, 20),
+                new GridPoint(10, 40)
         );
 
         assertEquals(10, result[0].x);
@@ -711,9 +711,9 @@ public class ComponentPositionerTest {
 
     @Test
     public void testNormalizeRectangle_NullCorner() {
-        Point[] result = positioner.normalizeRectangle(
+        GridPoint[] result = positioner.normalizeRectangle(
                 null,
-                new Point(10, 20)
+                new GridPoint(10, 20)
         );
 
         assertNull(result[0]);
@@ -729,7 +729,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(100, 200)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
         assertEquals(100, anchor.x);
         assertEquals(200, anchor.y);
 

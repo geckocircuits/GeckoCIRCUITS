@@ -87,7 +87,7 @@ class CorePackageValidationTest {
         "CircuitLabel.java",
         "CircuitSheet.java",
         "ComponentCoupling.java",
-        "ComponentPositioner.java",
+        // ComponentPositioner.java - NOW GUI-FREE (uses GridPoint)
         "ConnectorType.java",
         "DataTablePanel.java",
         "DataTablePanelParameters.java",
@@ -120,7 +120,7 @@ class CorePackageValidationTest {
         "TerminalVerbindung.java",
         "ToolBar.java",
         "Verbindung.java",
-        "WirePathCalculator.java",
+        // WirePathCalculator.java - NOW GUI-FREE (uses GridPoint)
         "WorksheetSize.java"
     );
     
@@ -204,9 +204,10 @@ class CorePackageValidationTest {
     }
     
     @Test
-    @DisplayName("circuit main package GUI-free classes remain GUI-free (54/95)")
+    @DisplayName("circuit main package GUI-free classes remain GUI-free (57/96)")
     void circuitMainPackageGuiFreeClassesRemainGuiFree() throws IOException {
         // Verify the circuit package's GUI-free classes don't gain GUI imports
+        // Updated: ComponentPositioner and WirePathCalculator now GUI-free (use GridPoint)
         List<String> violations = getGuiViolationsExcluding(
             "circuit", 
             CIRCUIT_GUI_CLASSES

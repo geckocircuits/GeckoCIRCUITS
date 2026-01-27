@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +34,8 @@ import java.util.List;
  *
  * All methods are stateless and operate on input parameters, making them
  * easy to test without GUI dependencies.
+ * 
+ * Note: This class is GUI-free - it uses GridPoint instead of java.awt.Point.
  *
  * @author GeckoCIRCUITS Team
  * @see SchematicEditor2
@@ -46,9 +47,9 @@ public class WirePathCalculator {
      * Represents a calculated wire path between two points.
      */
     public static class WirePath {
-        private final Point start;
-        private final Point end;
-        private final List<Point> intermediatePoints;
+        private final GridPoint start;
+        private final GridPoint end;
+        private final List<GridPoint> intermediatePoints;
         private final boolean horizontalFirst;
 
         /**
@@ -59,41 +60,41 @@ public class WirePathCalculator {
          * @param intermediatePoints list of points between start and end
          * @param horizontalFirst true if path goes horizontal first
          */
-        public WirePath(Point start, Point end, List<Point> intermediatePoints, boolean horizontalFirst) {
-            this.start = new Point(start);
-            this.end = new Point(end);
+        public WirePath(GridPoint start, GridPoint end, List<GridPoint> intermediatePoints, boolean horizontalFirst) {
+            this.start = new GridPoint(start);
+            this.end = new GridPoint(end);
             this.intermediatePoints = new ArrayList<>(intermediatePoints);
             this.horizontalFirst = horizontalFirst;
         }
 
-        public Point getStart() {
-            return new Point(start);
+        public GridPoint getStart() {
+            return new GridPoint(start);
         }
 
-        public Point getEnd() {
-            return new Point(end);
+        public GridPoint getEnd() {
+            return new GridPoint(end);
         }
 
         /**
          * Returns all points in order: start, intermediate points, end.
          */
-        public List<Point> getAllPoints() {
-            List<Point> allPoints = new ArrayList<>();
-            allPoints.add(new Point(start));
-            for (Point p : intermediatePoints) {
-                allPoints.add(new Point(p));
+        public List<GridPoint> getAllPoints() {
+            List<GridPoint> allPoints = new ArrayList<>();
+            allPoints.add(new GridPoint(start));
+            for (GridPoint p : intermediatePoints) {
+                allPoints.add(new GridPoint(p));
             }
-            allPoints.add(new Point(end));
+            allPoints.add(new GridPoint(end));
             return allPoints;
         }
 
         /**
          * Returns only intermediate points (excluding start and end).
          */
-        public List<Point> getIntermediatePoints() {
-            List<Point> points = new ArrayList<>();
-            for (Point p : intermediatePoints) {
-                points.add(new Point(p));
+        public List<GridPoint> getIntermediatePoints() {
+            List<GridPoint> points = new ArrayList<>();
+            for (GridPoint p : intermediatePoints) {
+                points.add(new GridPoint(p));
             }
             return points;
         }
@@ -123,14 +124,14 @@ public class WirePathCalculator {
         /**
          * Returns the corner point of an L-shaped path, or null for direct lines.
          */
-        public Point getCornerPoint() {
+        public GridPoint getCornerPoint() {
             if (start.x == end.x || start.y == end.y) {
                 return null;  // No corner for direct lines
             }
             if (horizontalFirst) {
-                return new Point(end.x, start.y);
+                return new GridPoint(end.x, start.y);
             } else {
-                return new Point(start.x, end.y);
+                return new GridPoint(start.x, end.y);
             }
         }
     }
@@ -146,7 +147,7 @@ public class WirePathCalculator {
      * @return the calculated wire path
      */
     public WirePath calculatePath(int xStart, int yStart, int xEnd, int yEnd, boolean horizontalFirst) {
-        return calculatePath(new Point(xStart, yStart), new Point(xEnd, yEnd), horizontalFirst);
+        return calculatePath(new GridPoint(xStart, yStart), new GridPoint(xEnd, yEnd), horizontalFirst);
     }
 
     /**
@@ -157,12 +158,12 @@ public class WirePathCalculator {
      * @param horizontalFirst if true, path goes horizontal first; otherwise vertical first
      * @return the calculated wire path
      */
-    public WirePath calculatePath(Point start, Point end, boolean horizontalFirst) {
+    public WirePath calculatePath(GridPoint start, GridPoint end, boolean horizontalFirst) {
         if (start == null || end == null) {
             throw new IllegalArgumentException("Start and end points cannot be null");
         }
 
-        List<Point> intermediatePoints = new ArrayList<>();
+        List<GridPoint> intermediatePoints = new ArrayList<>();
 
         int xLength = end.x - start.x;
         int yLength = end.y - start.y;
@@ -175,23 +176,23 @@ public class WirePathCalculator {
         if (horizontalFirst) {
             // Move horizontally first
             while (Math.abs(i - xLength) > 0) {
-                intermediatePoints.add(new Point(start.x + i, start.y + j));
+                intermediatePoints.add(new GridPoint(start.x + i, start.y + j));
                 i += xDir;
             }
             // Then move vertically
             while (Math.abs(j - yLength) > 0) {
-                intermediatePoints.add(new Point(start.x + i, start.y + j));
+                intermediatePoints.add(new GridPoint(start.x + i, start.y + j));
                 j += yDir;
             }
         } else {
             // Move vertically first
             while (Math.abs(j - yLength) > 0) {
-                intermediatePoints.add(new Point(start.x + i, start.y + j));
+                intermediatePoints.add(new GridPoint(start.x + i, start.y + j));
                 j += yDir;
             }
             // Then move horizontally
             while (Math.abs(i - xLength) > 0) {
-                intermediatePoints.add(new Point(start.x + i, start.y + j));
+                intermediatePoints.add(new GridPoint(start.x + i, start.y + j));
                 i += xDir;
             }
         }
@@ -213,7 +214,7 @@ public class WirePathCalculator {
      * @param horizontalFirst if true, path goes horizontal first
      * @return list of intermediate points forming the path
      */
-    public List<Point> calculatePathPoints(int xStart, int yStart, int xEnd, int yEnd, boolean horizontalFirst) {
+    public List<GridPoint> calculatePathPoints(int xStart, int yStart, int xEnd, int yEnd, boolean horizontalFirst) {
         WirePath path = calculatePath(xStart, yStart, xEnd, yEnd, horizontalFirst);
         return path.getIntermediatePoints();
     }
@@ -225,7 +226,7 @@ public class WirePathCalculator {
      * @param end the ending point
      * @return the wire path (with empty intermediate points if aligned)
      */
-    public WirePath calculateDirectPath(Point start, Point end) {
+    public WirePath calculateDirectPath(GridPoint start, GridPoint end) {
         if (start == null || end == null) {
             throw new IllegalArgumentException("Start and end points cannot be null");
         }
@@ -246,7 +247,7 @@ public class WirePathCalculator {
      * @param end the ending point
      * @return true if points are aligned (same X or Y coordinate)
      */
-    public boolean isDirectPath(Point start, Point end) {
+    public boolean isDirectPath(GridPoint start, GridPoint end) {
         if (start == null || end == null) {
             return false;
         }
@@ -264,20 +265,20 @@ public class WirePathCalculator {
      * @param gridSize the size of each grid cell in pixels (dpix)
      * @return array of points forming the pen shape [tip, upper, right, lower]
      */
-    public Point[] calculateWirePenShape(int gridX, int gridY, int gridSize) {
-        Point[] penPoints = new Point[4];
+    public GridPoint[] calculateWirePenShape(int gridX, int gridY, int gridSize) {
+        GridPoint[] penPoints = new GridPoint[4];
 
         // Pen tip at grid position
-        penPoints[0] = new Point(gridSize * gridX, gridSize * gridY);
+        penPoints[0] = new GridPoint(gridSize * gridX, gridSize * gridY);
 
         // Upper point (above and to the right)
-        penPoints[1] = new Point((int)(gridSize * (gridX + 0.4)), (int)(gridSize * (gridY - 1.5)));
+        penPoints[1] = new GridPoint((int)(gridSize * (gridX + 0.4)), (int)(gridSize * (gridY - 1.5)));
 
         // Right point (further right)
-        penPoints[2] = new Point((int)(gridSize * (gridX + 0.7)), (int)(gridSize * (gridY - 1.5)));
+        penPoints[2] = new GridPoint((int)(gridSize * (gridX + 0.7)), (int)(gridSize * (gridY - 1.5)));
 
         // Lower point (slightly right of tip)
-        penPoints[3] = new Point((int)(gridSize * (gridX + 0.1)), gridSize * gridY);
+        penPoints[3] = new GridPoint((int)(gridSize * (gridX + 0.1)), gridSize * gridY);
 
         return penPoints;
     }
@@ -315,14 +316,14 @@ public class WirePathCalculator {
      * @param points the list of points forming the path
      * @return true if all segments are orthogonal
      */
-    public boolean isOrthogonalPath(List<Point> points) {
+    public boolean isOrthogonalPath(List<GridPoint> points) {
         if (points == null || points.size() < 2) {
             return true;  // Empty or single point is considered orthogonal
         }
 
         for (int i = 0; i < points.size() - 1; i++) {
-            Point current = points.get(i);
-            Point next = points.get(i + 1);
+            GridPoint current = points.get(i);
+            GridPoint next = points.get(i + 1);
 
             // Each segment must be either horizontal or vertical
             if (current.x != next.x && current.y != next.y) {
@@ -339,16 +340,16 @@ public class WirePathCalculator {
      * @param points the list of points forming the path
      * @return the number of corners/turns in the path
      */
-    public int countCorners(List<Point> points) {
+    public int countCorners(List<GridPoint> points) {
         if (points == null || points.size() < 3) {
             return 0;
         }
 
         int corners = 0;
         for (int i = 1; i < points.size() - 1; i++) {
-            Point prev = points.get(i - 1);
-            Point current = points.get(i);
-            Point next = points.get(i + 1);
+            GridPoint prev = points.get(i - 1);
+            GridPoint current = points.get(i);
+            GridPoint next = points.get(i + 1);
 
             // Check if direction changes at this point
             boolean prevHorizontal = (prev.y == current.y);
@@ -370,29 +371,29 @@ public class WirePathCalculator {
      * @param points the original list of points
      * @return simplified list with redundant points removed
      */
-    public List<Point> simplifyPath(List<Point> points) {
+    public List<GridPoint> simplifyPath(List<GridPoint> points) {
         if (points == null || points.size() <= 2) {
             return points == null ? Collections.emptyList() : new ArrayList<>(points);
         }
 
-        List<Point> simplified = new ArrayList<>();
-        simplified.add(new Point(points.get(0)));
+        List<GridPoint> simplified = new ArrayList<>();
+        simplified.add(new GridPoint(points.get(0)));
 
         for (int i = 1; i < points.size() - 1; i++) {
-            Point prev = points.get(i - 1);
-            Point current = points.get(i);
-            Point next = points.get(i + 1);
+            GridPoint prev = points.get(i - 1);
+            GridPoint current = points.get(i);
+            GridPoint next = points.get(i + 1);
 
             // Keep point if it's a corner (direction changes)
             boolean prevHorizontal = (prev.y == current.y);
             boolean nextHorizontal = (current.y == next.y);
 
             if (prevHorizontal != nextHorizontal) {
-                simplified.add(new Point(current));
+                simplified.add(new GridPoint(current));
             }
         }
 
-        simplified.add(new Point(points.get(points.size() - 1)));
+        simplified.add(new GridPoint(points.get(points.size() - 1)));
         return simplified;
     }
 
@@ -402,15 +403,15 @@ public class WirePathCalculator {
      * @param points the list of points forming the path
      * @return total Manhattan distance of all segments
      */
-    public int calculatePathLength(List<Point> points) {
+    public int calculatePathLength(List<GridPoint> points) {
         if (points == null || points.size() < 2) {
             return 0;
         }
 
         int totalLength = 0;
         for (int i = 0; i < points.size() - 1; i++) {
-            Point current = points.get(i);
-            Point next = points.get(i + 1);
+            GridPoint current = points.get(i);
+            GridPoint next = points.get(i + 1);
             totalLength += Math.abs(next.x - current.x) + Math.abs(next.y - current.y);
         }
 
