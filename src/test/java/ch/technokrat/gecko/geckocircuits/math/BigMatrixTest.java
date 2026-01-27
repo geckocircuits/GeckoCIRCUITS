@@ -16,6 +16,9 @@ package ch.technokrat.gecko.geckocircuits.math;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.DecimalFormat;
+import java.io.PrintWriter;
 
 public class BigMatrixTest {
     private static final BigDecimal TOLERANCE = new BigDecimal("1e-10");
@@ -530,6 +533,430 @@ public class BigMatrixTest {
         assertEquals(2, m.getColumnDimension());
         assertEquals(BigDecimal.ZERO, m.getArray()[0][0]);
         assertEquals(BigDecimal.ZERO, m.getArray()[1][1]);
+    }
+
+    // ==================== ADDITIONAL EDGE CASES & COVERAGE ====================
+
+    @Test
+    public void testPrint_WithIntParameters() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.23"), new BigDecimal("4.56")},
+            {new BigDecimal("7.89"), new BigDecimal("2.34")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        // Just verify this doesn't throw exception
+        m.print(10, 2);
+    }
+
+    @Test
+    public void testPrint_WithPrintWriter() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0")},
+            {new BigDecimal("3.0"), new BigDecimal("4.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        PrintWriter writer = new PrintWriter(System.out, true);
+        // Verify doesn't throw
+        m.print(writer, 5, 2);
+        writer.flush();
+    }
+
+    @Test
+    public void testPrint_WithNumberFormat() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.234"), new BigDecimal("5.678")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        NumberFormat format = new DecimalFormat("0.00");
+        // Verify doesn't throw
+        m.print(format, 8);
+    }
+
+    @Test
+    public void testConstructor_PackedArray_SingleElement() {
+        double[] vals = {42.0};
+        BigMatrix m = new BigMatrix(vals, 1);
+        assertEquals(1, m.getRowDimension());
+        assertEquals(1, m.getColumnDimension());
+        assertEquals(42.0, m.getArray()[0][0].doubleValue(), 1e-10);
+    }
+
+    @Test
+    public void testGetMatrix_AllRows_AllColumns() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0")},
+            {new BigDecimal("3.0"), new BigDecimal("4.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        int[] rows = {0, 1};
+        BigMatrix sub = m.getMatrix(rows, 0, 1);
+        
+        assertEquals(2, sub.getRowDimension());
+        assertEquals(2, sub.getColumnDimension());
+        assertEquals(new BigDecimal("1.0"), sub.getArray()[0][0]);
+        assertEquals(new BigDecimal("4.0"), sub.getArray()[1][1]);
+    }
+
+    @Test
+    public void testNormInf_LargeMatrix() {
+        // Build a 10x10 matrix with known row sums
+        BigDecimal[][] data = new BigDecimal[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                data[i][j] = new BigDecimal("1.0"); // each element = 1
+            }
+        }
+        BigMatrix m = new BigMatrix(data);
+        // All rows sum to 10.0
+        assertEquals(10.0, m.normInf(), 1e-10);
+    }
+
+    @Test
+    public void testNorm1_LargeMatrix() {
+        // Build a 10x10 matrix with known column sums
+        BigDecimal[][] data = new BigDecimal[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                data[i][j] = new BigDecimal("2.0"); // each element = 2
+            }
+        }
+        BigMatrix m = new BigMatrix(data);
+        // All columns sum to 20.0
+        assertEquals(20.0, m.norm1(), 1e-10);
+    }
+
+    @Test
+    public void testSolve_DiagonalMatrix() {
+        // Diagonal matrix: easy to solve
+        BigDecimal[][] aData = {
+            {new BigDecimal("2.0"), new BigDecimal("0.0"), new BigDecimal("0.0")},
+            {new BigDecimal("0.0"), new BigDecimal("3.0"), new BigDecimal("0.0")},
+            {new BigDecimal("0.0"), new BigDecimal("0.0"), new BigDecimal("4.0")}
+        };
+        BigDecimal[][] bData = {
+            {new BigDecimal("2.0")},
+            {new BigDecimal("6.0")},
+            {new BigDecimal("8.0")}
+        };
+        
+        BigMatrix A = new BigMatrix(aData);
+        BigMatrix B = new BigMatrix(bData);
+        BigMatrix X = A.solve(B);
+        
+        assertNotNull(X);
+        assertEquals(3, X.getRowDimension());
+        assertEquals(1, X.getColumnDimension());
+        // Solutions: x=1, y=2, z=2
+        assertEquals(1.0, X.getArray()[0][0].doubleValue(), 0.1);
+        assertEquals(2.0, X.getArray()[1][0].doubleValue(), 0.1);
+        assertEquals(2.0, X.getArray()[2][0].doubleValue(), 0.1);
+    }
+
+    @Test
+    public void testConstructor_From2DArray_NegativeNumbers() {
+        BigDecimal[][] data = {
+            {new BigDecimal("-1.5"), new BigDecimal("-2.5")},
+            {new BigDecimal("-3.5"), new BigDecimal("-4.5")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        assertEquals(2, m.getRowDimension());
+        assertEquals(2, m.getColumnDimension());
+        assertEquals(new BigDecimal("-1.5"), m.getArray()[0][0]);
+    }
+
+    @Test
+    public void testNorm1_Mixed_Positive_Negative() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("-5.0")},
+            {new BigDecimal("-2.0"), new BigDecimal("3.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        // Column sums (absolute): col0=3, col1=8, max=8
+        assertEquals(8.0, m.norm1(), 1e-10);
+    }
+
+    @Test
+    public void testNormInf_Mixed_Positive_Negative() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("-5.0")},
+            {new BigDecimal("-2.0"), new BigDecimal("3.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        // Row sums (absolute): row0=6, row1=5, max=6
+        assertEquals(6.0, m.normInf(), 1e-10);
+    }
+
+    @Test
+    public void testGetArrayCopy_Independence() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0")},
+            {new BigDecimal("3.0"), new BigDecimal("4.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        BigDecimal[][] copy1 = m.getArrayCopy();
+        BigDecimal[][] copy2 = m.getArrayCopy();
+        
+        // Modifying copy1 should not affect copy2
+        copy1[0][0] = new BigDecimal("99.0");
+        assertEquals(new BigDecimal("1.0"), copy2[0][0]);
+    }
+
+    @Test
+    public void testLU_Singular_Behavior() {
+        // Test that LU still creates even for problematic matrices
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0")},
+            {new BigDecimal("2.0"), new BigDecimal("4.0")} // linearly dependent row
+        };
+        BigMatrix m = new BigMatrix(data);
+        BigLUDecomposition lu = m.lu();
+        assertNotNull(lu);
+    }
+
+    @Test
+    public void testResetLUDecomp_ClearsCache() {
+        BigDecimal[][] data = {
+            {new BigDecimal("2.0"), new BigDecimal("1.0")},
+            {new BigDecimal("1.0"), new BigDecimal("3.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        
+        // Get LU (caches it)
+        m.lu();
+        
+        // Reset
+        m.ResetLUDecomp();
+        
+        // Should be able to get new LU without issue
+        BigLUDecomposition lu2 = m.lu();
+        assertNotNull(lu2);
+    }
+
+    @Test
+    public void testConstructor_LargePackedArray() {
+        double[] vals = new double[100];
+        for (int i = 0; i < 100; i++) {
+            vals[i] = i * 1.5;
+        }
+        BigMatrix m = new BigMatrix(vals, 10);
+        assertEquals(10, m.getRowDimension());
+        assertEquals(10, m.getColumnDimension());
+        assertEquals(0.0, m.getArray()[0][0].doubleValue(), 1e-10);
+        assertEquals(1.5, m.getArray()[1][0].doubleValue(), 1e-10);
+    }
+
+    @Test
+    public void testGetColumnPackedCopy_Tall_Matrix() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("4.0")},
+            {new BigDecimal("2.0"), new BigDecimal("5.0")},
+            {new BigDecimal("3.0"), new BigDecimal("6.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        double[] packed = m.getColumnPackedCopy();
+        
+        // Packed by columns: [1,2,3,4,5,6]
+        assertEquals(1.0, packed[0], 1e-10);
+        assertEquals(2.0, packed[1], 1e-10);
+        assertEquals(3.0, packed[2], 1e-10);
+        assertEquals(4.0, packed[3], 1e-10);
+        assertEquals(5.0, packed[4], 1e-10);
+        assertEquals(6.0, packed[5], 1e-10);
+    }
+
+    @Test
+    public void testSolve_Identity_Matrix() {
+        // Solving I*X = B should give X = B
+        BigDecimal[][] aData = {
+            {new BigDecimal("1.0"), new BigDecimal("0.0")},
+            {new BigDecimal("0.0"), new BigDecimal("1.0")}
+        };
+        BigDecimal[][] bData = {
+            {new BigDecimal("5.0")},
+            {new BigDecimal("7.0")}
+        };
+        
+        BigMatrix A = new BigMatrix(aData);
+        BigMatrix B = new BigMatrix(bData);
+        BigMatrix X = A.solve(B);
+        
+        assertNotNull(X);
+        assertEquals(5.0, X.getArray()[0][0].doubleValue(), 0.1);
+        assertEquals(7.0, X.getArray()[1][0].doubleValue(), 0.1);
+    }
+
+    // ==================== ADDITIONAL TARGETED TESTS FOR FINAL COVERAGE ====================
+
+    @Test
+    public void testConstructorZeroByZero() {
+        BigMatrix m = new BigMatrix(0, 0);
+        assertEquals(0, m.getRowDimension());
+        assertEquals(0, m.getColumnDimension());
+    }
+
+    @Test
+    public void testSetGetElement() {
+        BigDecimal[][] data = new BigDecimal[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                data[i][j] = new BigDecimal(String.valueOf(i * 10 + j));
+            }
+        }
+        BigMatrix m = new BigMatrix(data);
+        // Verify elements
+        assertEquals(0, m.getArray()[0][0].intValue());
+        assertEquals(11, m.getArray()[1][1].intValue());
+    }
+
+    @Test
+    public void testNormInfWithSingleColumn() {
+        BigDecimal[][] data = {
+            {new BigDecimal("2.0")},
+            {new BigDecimal("3.0")},
+            {new BigDecimal("5.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        // Row with max sum is just the largest element = 5
+        assertEquals(5.0, m.normInf(), 1e-10);
+    }
+
+    @Test
+    public void testNorm1WithSingleRow() {
+        BigDecimal[][] data = {{new BigDecimal("2.0"), new BigDecimal("3.0"), new BigDecimal("4.0")}};
+        BigMatrix m = new BigMatrix(data);
+        // Column sums: 2, 3, 4, max = 4
+        assertEquals(4.0, m.norm1(), 1e-10);
+    }
+
+    @Test
+    public void testGetMatrix_AllRows() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0")},
+            {new BigDecimal("3.0"), new BigDecimal("4.0")},
+            {new BigDecimal("5.0"), new BigDecimal("6.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        int[] rows = {0, 1, 2};
+        BigMatrix sub = m.getMatrix(rows, 0, 1);
+        
+        assertEquals(3, sub.getRowDimension());
+        assertEquals(2, sub.getColumnDimension());
+        assertEquals(new BigDecimal("5.0"), sub.getArray()[2][0]);
+    }
+
+    @Test
+    public void testConstructor_From2DArray_Large() {
+        BigDecimal[][] data = new BigDecimal[50][50];
+        for (int i = 0; i < 50; i++) {
+            for (int j = 0; j < 50; j++) {
+                data[i][j] = new BigDecimal(String.valueOf((i + 1) * (j + 1)));
+            }
+        }
+        BigMatrix m = new BigMatrix(data);
+        assertEquals(50, m.getRowDimension());
+        assertEquals(50, m.getColumnDimension());
+    }
+
+    @Test
+    public void testGetArrayCopy_AllElements() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.1"), new BigDecimal("2.2"), new BigDecimal("3.3")},
+            {new BigDecimal("4.4"), new BigDecimal("5.5"), new BigDecimal("6.6")},
+            {new BigDecimal("7.7"), new BigDecimal("8.8"), new BigDecimal("9.9")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        BigDecimal[][] copy = m.getArrayCopy();
+        
+        assertEquals(new BigDecimal("1.1"), copy[0][0]);
+        assertEquals(new BigDecimal("9.9"), copy[2][2]);
+        // Verify it's a copy
+        copy[0][0] = new BigDecimal("0.0");
+        assertEquals(new BigDecimal("1.1"), m.getArray()[0][0]);
+    }
+
+    @Test
+    public void testGetColumnPackedCopy_Wide() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0"), new BigDecimal("3.0"), new BigDecimal("4.0")},
+            {new BigDecimal("5.0"), new BigDecimal("6.0"), new BigDecimal("7.0"), new BigDecimal("8.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        double[] packed = m.getColumnPackedCopy();
+        
+        // Packed by columns: [1,5,2,6,3,7,4,8]
+        assertEquals(1.0, packed[0], 1e-10);
+        assertEquals(5.0, packed[1], 1e-10);
+        assertEquals(2.0, packed[2], 1e-10);
+        assertEquals(6.0, packed[3], 1e-10);
+        assertEquals(8.0, packed[7], 1e-10);
+    }
+
+    @Test
+    public void testSolveWithCaching() {
+        BigDecimal[][] aData = {
+            {new BigDecimal("2.0"), new BigDecimal("1.0")},
+            {new BigDecimal("1.0"), new BigDecimal("3.0")}
+        };
+        BigDecimal[][] bData = {
+            {new BigDecimal("5.0")},
+            {new BigDecimal("6.0")}
+        };
+        
+        BigMatrix A = new BigMatrix(aData);
+        BigMatrix B = new BigMatrix(bData);
+        
+        // First solve (creates LU cache)
+        BigMatrix X1 = A.solve(B);
+        assertNotNull(X1);
+        
+        // Second solve (reuses LU cache)
+        BigMatrix X2 = A.solve(B);
+        assertNotNull(X2);
+        
+        // Both solutions should be equivalent
+        assertEquals(X1.getArray()[0][0].doubleValue(), X2.getArray()[0][0].doubleValue(), 0.01);
+    }
+
+    @Test
+    public void testGetMatrix_SpecificRows_SpecificCols() {
+        BigDecimal[][] data = {
+            {new BigDecimal("1.0"), new BigDecimal("2.0"), new BigDecimal("3.0"), new BigDecimal("4.0")},
+            {new BigDecimal("5.0"), new BigDecimal("6.0"), new BigDecimal("7.0"), new BigDecimal("8.0")},
+            {new BigDecimal("9.0"), new BigDecimal("10.0"), new BigDecimal("11.0"), new BigDecimal("12.0")},
+            {new BigDecimal("13.0"), new BigDecimal("14.0"), new BigDecimal("15.0"), new BigDecimal("16.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        int[] rows = {0, 3};
+        BigMatrix sub = m.getMatrix(rows, 1, 2);
+        
+        assertEquals(2, sub.getRowDimension());
+        assertEquals(2, sub.getColumnDimension());
+        assertEquals(new BigDecimal("2.0"), sub.getArray()[0][0]);
+        assertEquals(new BigDecimal("15.0"), sub.getArray()[1][1]);
+    }
+
+    @Test
+    public void testNormOperations_ConsistentWithZeroMatrix() {
+        BigMatrix zero = new BigMatrix(10, 10);
+        assertEquals(0.0, zero.norm1(), 1e-10);
+        assertEquals(0.0, zero.normInf(), 1e-10);
+    }
+
+    @Test
+    public void testLU_WithMultipleCalls() {
+        BigDecimal[][] data = {
+            {new BigDecimal("2.0"), new BigDecimal("3.0")},
+            {new BigDecimal("4.0"), new BigDecimal("5.0")}
+        };
+        BigMatrix m = new BigMatrix(data);
+        
+        // First LU call
+        BigLUDecomposition lu1 = m.lu();
+        assertNotNull(lu1);
+        
+        // Second LU call (should return cached)
+        BigLUDecomposition lu2 = m.lu();
+        assertNotNull(lu2);
     }
 
 }

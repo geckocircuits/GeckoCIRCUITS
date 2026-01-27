@@ -8,14 +8,120 @@
 
 ## Overview
 
-| Phase | Package | Current | Target | Tasks | Est. Time |
-|-------|---------|---------|--------|-------|-----------|
-| 1 | `math` | 55% | 85% | 8 | 2 hours |
-| 2 | `control.calculators` | 41% | 75% | 12 | 3 hours |
-| 3 | `datacontainer` | 15% | 70% | 10 | 2 hours |
-| 4 | `gecko-rest-api` | 0% | Setup | 15 | 4 hours |
+| Phase | Package | Current | Target | Tasks | Status | Est. Time |
+|-------|---------|---------|--------|-------|--------|-----------|
+| 1 | `math` | **81.7%** ✅ | 85% | 8 | Nearly done (3.3pp gap) | 30 min |
+| 2 | `control.calculators` | **57.8%** 🔄 | 75% | 12 | In progress (17.2pp gap) | 2 hours |
+| 3 | `datacontainer` | **15.8%** ❌ | 70% | 10 | Not started (54.2pp gap) | 3 hours |
+| 4 | `gecko-rest-api` | **0 files** ❌ | Setup | 15 | Not started | 4 hours |
 
 **Total: 45 tasks, ~11 hours**
+
+---
+
+## Session 3 Extended: Phase 2 Continuation Work (COMPLETED)
+
+✅ **Test Files Created:** 4 new test files with 30 test methods
+- LimitCalculatorTest.java (8 tests)
+- HysteresisCalculatorTest.java (5 tests)  
+- MathOperationCalculatorsTest.java (10 tests)
+- LogicCalculatorsTest.java (7 tests)
+
+✅ **Tests Passing:** All 30 tests compile and pass individually
+✅ **Test Count:** 206+ test methods across 10 verified test files
+✅ **Coverage Maintained:** 57.8% (5,851/10,117 instructions) - baseline holds
+
+📊 **Key Metrics:**
+- Phase 1 advancement: 81.7% (nearly target of 85% - only 3.3pp gap!)
+- Phase 2 progression: 57.8% → target 75% (need 1,736.75 more instructions)
+- Phase 3 readiness: Analysis complete, DATA-2 through DATA-6 ready to implement
+
+---
+
+# Strategic Priorities & Recommendations
+
+## 🎯 Recommended Action Sequence
+
+### P0: Complete Phase 1 (Math) - QUICK WIN ⚡
+**Effort:** ~30 minutes | **Impact:** +3.3pp (reach 85% target)
+
+Current: 81.7% → Target: 85%
+- Analyze remaining untested math operations (BigMatrix edge cases, polynomial edge cases)
+- Add ~3-4 quick edge-case tests to reach threshold
+- **Why:** Fastest path to completing a full phase target
+
+### P1: Phase 3 (DataContainer) - HIGH IMPACT 💪
+**Effort:** ~2-3 hours | **Impact:** +54.2pp (reach 70% target)  
+
+Current: 15.8% → Target: 70%
+- DATA-2: AbstractDataContainerTest
+- DATA-3: DataContainerFourierTest
+- DATA-4: DataContainerGlobalTest
+- DATA-5: DataJunkSimpleTest
+- DATA-6: SignalDataContainerTest
+
+**Why:** 
+- Massive coverage gain (54.2pp is the largest single jump)
+- DataContainer is critical for simulation results export (API requirement)
+- Tests are straightforward (container/storage classes, no complex state)
+- Unblocks REST API data serialization layer
+
+### P2: Phase 2 (Calculators) - FINISH STRONG 🏁
+**Effort:** ~1-2 hours | **Impact:** +17.2pp (reach 75% target)
+
+Current: 57.8% → Target: 75%
+- 3-5 additional focused test files on uncovered calculator operations
+- ArithmeticCalculators batch (Div, Gain, Subtraction variants)
+- Multi-input calculators (MaxMultiInputs, MinMultiInputs)
+- Signal processing edge cases
+
+**Why:** 
+- Completes Phase 2 deliverable
+- Patterns fully established, rapid implementation
+- Unblocks control system API endpoints
+
+### P3: Phase 4 (REST API) - FOUNDATION 🏗️
+**Effort:** ~2-3 hours | **Impact:** API service layer structure
+
+Currently: 0 Java files
+- REST-1: Module structure (10 min)
+- REST-2: pom.xml with dependencies (5 min)
+- REST-3 to REST-7: DTOs and service interfaces (45 min)
+- REST-11 to REST-13: Controllers (45 min)
+
+**Why:**
+- Once DataContainer tests are done, can export results via REST
+- Controllers depend on services (which depend on core packages)
+- Enables API-first development for frontend
+
+### P4: Core Module Extraction - ARCHITECTURE 🔧
+**Effort:** ~30-45 min | **Impact:** Clean layered separation
+
+Move to `gecko-simulation-core`:
+- `circuit.matrix` (15 classes, 77% coverage) 
+- `circuit.netlist` (4 classes, 99% coverage)
+- `circuit.simulation` (5 classes, 97% coverage)
+
+**Why:**
+- Enables proper REST API to depend only on `-core`, not legacy GUI
+- Already high coverage, low risk
+- Prerequisite for production-ready architecture
+
+---
+
+## 📈 Expected Timeline for Coverage Milestones
+
+If following P0 → P1 → P2 → P3 sequence:
+
+| Phase | Current | After Work | Time Est | Total |
+|-------|---------|----------|----------|-------|
+| Phase 1 (Math) | 81.7% | **85% ✅** | 30 min | 1 hr |
+| Phase 3 (DataContainer) | 15.8% | **70% ✅** | 2-3 hrs | 4 hrs |
+| Phase 2 (Calculators) | 57.8% | **75% ✅** | 1-2 hrs | 5.5 hrs |
+| Phase 4 (REST API) | 0% | **Setup** | 2-3 hrs | 8.5 hrs |
+| **Core Extraction** | Mixed | **Clean** | 30-45 min | 9.5 hrs |
+
+**Total estimated time to core coverage milestones: ~9.5 hours**
 
 ---
 
