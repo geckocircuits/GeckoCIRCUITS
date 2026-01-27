@@ -84,28 +84,23 @@ class CorePackageValidationTest {
         "AbstractBlockInterface.java",
         "AbstractCircuitSheetComponent.java",
         "AbstractTerminal.java",
-        "CircuitLabel.java",
+        "AwtGraphicsAdapter.java",  // Bridge to AWT Graphics (intentional AWT dependency)
         "CircuitSheet.java",
-        "ComponentCoupling.java",
-        // ComponentPositioner.java - NOW GUI-FREE (uses GridPoint)
-        "ConnectorType.java",
         "DataTablePanel.java",
         "DataTablePanelParameters.java",
         "DialogCircuitComponent.java",
         "DialogGlobalTerminal.java",
         "DialogModule.java",
         "DialogNonLinearity.java",
+        "GeckoUndoableEditAdapter.java",  // Bridge to Swing undo manager (intentional Swing dependency)
         "IDStringDialog.java",
-        "InvisibleEdit.java",
         "KnotenLabel.java",
         "MyTableCellEditor.java",
         "MyTableCellRenderer.java",
         "NonLinearDialogPanel.java",
-        "PotentialCoupling.java",
         "SchematicComponentSelection2.java",
         "SchematicEditor2.java",
         "SchematicTextInfo.java",
-        "SubCircuitTerminable.java",
         "TerminalControl.java",
         "TerminalControlBidirectional.java",
         "TerminalControlInput.java",
@@ -120,7 +115,17 @@ class CorePackageValidationTest {
         "TerminalVerbindung.java",
         "ToolBar.java",
         "Verbindung.java",
+        // GUI-free as of Sprint 15:
+        // ComponentPositioner.java - NOW GUI-FREE (uses GridPoint)
+        // ConnectorType.java - NOW GUI-FREE (uses int RGB)
+        // SubCircuitTerminable.java - NOW GUI-FREE (uses int RGB)
+        // InvisibleEdit.java - NOW GUI-FREE (uses GeckoUndoableEdit)
+        // CircuitLabel.java - NOW GUI-FREE (uses GeckoUndoableEdit)
+        // ComponentCoupling.java - NOW GUI-FREE (uses GeckoUndoableEdit)
+        // PotentialCoupling.java - NOW GUI-FREE (uses GeckoUndoableEdit)
         // WirePathCalculator.java - NOW GUI-FREE (uses GridPoint)
+        // GeckoGraphics.java - NOW GUI-FREE (pure interface)
+        // Drawable.java - NOW GUI-FREE (pure interface)
         "WorksheetSize.java"
     );
     
@@ -204,10 +209,12 @@ class CorePackageValidationTest {
     }
     
     @Test
-    @DisplayName("circuit main package GUI-free classes remain GUI-free (57/96)")
+    @DisplayName("circuit main package GUI-free classes remain GUI-free (63/96)")
     void circuitMainPackageGuiFreeClassesRemainGuiFree() throws IOException {
         // Verify the circuit package's GUI-free classes don't gain GUI imports
-        // Updated: ComponentPositioner and WirePathCalculator now GUI-free (use GridPoint)
+        // Updated Sprint 15: Added 6 GUI-free classes (ConnectorType, SubCircuitTerminable, 
+        // InvisibleEdit, CircuitLabel, ComponentCoupling, PotentialCoupling)
+        // Total GUI-free: 63/96 (65.6%)
         List<String> violations = getGuiViolationsExcluding(
             "circuit", 
             CIRCUIT_GUI_CLASSES
@@ -220,9 +227,12 @@ class CorePackageValidationTest {
     }
     
     @Test
-    @DisplayName("circuit main package has expected file count (96 classes)")
+    @DisplayName("circuit main package has expected file count (101 classes)")
     void circuitMainPackageFileCount() throws IOException {
-        assertPackageFileCount("circuit", 93, 99);  // 96 ± 3
+        // Updated Sprint 15: Added new interfaces (GeckoGraphics, GeckoUndoableEdit, 
+        // Drawable) and adapters (AwtGraphicsAdapter, GeckoUndoableEditAdapter)
+        // Previous: 96 files, Now: 101 files
+        assertPackageFileCount("circuit", 99, 105);  // 101 ± 3
     }
     
     @Test

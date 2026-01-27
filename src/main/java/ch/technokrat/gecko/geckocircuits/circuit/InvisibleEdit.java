@@ -13,9 +13,16 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import javax.swing.undo.UndoableEdit;
-
-public abstract class InvisibleEdit implements UndoableEdit {
+/**
+ * GUI-free abstract class for edits that should not appear in the undo menu.
+ * 
+ * Implements GeckoUndoableEdit to work in headless environments,
+ * while maintaining backward compatibility with Swing via adaptation.
+ * 
+ * @author GeckoCIRCUITS Team
+ * @since Sprint 15 - GUI-free refactoring
+ */
+public abstract class InvisibleEdit implements GeckoUndoableEdit {
 
     @Override
     public final boolean canUndo() {
@@ -34,12 +41,12 @@ public abstract class InvisibleEdit implements UndoableEdit {
     }
 
     @Override
-    public final boolean addEdit(final UndoableEdit anEdit) {
+    public final boolean addEdit(final GeckoUndoableEdit anEdit) {
         return false;
     }
 
     @Override
-    public final boolean replaceEdit(final UndoableEdit anEdit) {
+    public final boolean replaceEdit(final GeckoUndoableEdit anEdit) {
         return false;
     }
 

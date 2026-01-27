@@ -181,4 +181,13 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     public EnumTerminalLocation getTerminalLocation() {
         return _wrapped.getTerminalLocation();
     }
+    
+    @Override
+    public int getForeGroundColorRgb() {
+        java.awt.Color c = getForeGroundColor();
+        if (c == null) {
+            return 0x000000;
+        }
+        return (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
+    }
 }

@@ -21,9 +21,6 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
 public final class ComponentCoupling {
@@ -118,7 +115,7 @@ public final class ComponentCoupling {
         }
         
         final CouplingUndoableEdit edit = new CouplingUndoableEdit(_coupledElements[index], element, index, true);
-        AbstractUndoGenericModel.undoManager.addEdit(edit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(edit));
         setNewCouplingElement(index, element);
         
     }
@@ -129,7 +126,7 @@ public final class ComponentCoupling {
         }                
 
         final CouplingUndoableEdit edit = new CouplingUndoableEdit(_coupledElements[index], element, index, false);
-        AbstractUndoGenericModel.undoManager.addEdit(edit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(edit));
         setNewCouplingElement(index, element);
     }
 
@@ -387,7 +384,7 @@ public final class ComponentCoupling {
        return returnValue;
     }
 
-    private class CouplingUndoableEdit implements UndoableEdit {
+    private class CouplingUndoableEdit implements GeckoUndoableEdit {
 
         final boolean _isSignificant;
         private final int _index;
@@ -403,7 +400,7 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public void undo() throws CannotUndoException {            
+        public void undo() throws IllegalStateException {            
             setNewCouplingElement(_index, _oldReference);
         }
 
@@ -413,7 +410,7 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public void redo() throws CannotRedoException {
+        public void redo() throws IllegalStateException {
             setNewCouplingElement(_index, _newReference);
         }
 
@@ -428,12 +425,12 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public boolean addEdit(UndoableEdit anEdit) {
+        public boolean addEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 
         @Override
-        public boolean replaceEdit(UndoableEdit anEdit) {
+        public boolean replaceEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 

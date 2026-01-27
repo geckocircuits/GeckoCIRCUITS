@@ -19,9 +19,6 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
 public class PotentialCoupling {
@@ -43,7 +40,7 @@ public class PotentialCoupling {
             return;
         }
         ReferencedLabelChange undoEdit = new ReferencedLabelChange(oldLabel, newLabel, i, false);
-        AbstractUndoGenericModel.undoManager.addEdit(undoEdit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(undoEdit));
         _parent.getParameterString()[_stringIDIndices[i]] = newLabel;
     }
 
@@ -53,7 +50,7 @@ public class PotentialCoupling {
             return;
         }
         ReferencedLabelChange undoEdit = new ReferencedLabelChange(oldLabel, newLabel, i, true);
-        AbstractUndoGenericModel.undoManager.addEdit(undoEdit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(undoEdit));
         _parent.getParameterString()[_stringIDIndices[i]] = newLabel;
     }
 
@@ -122,7 +119,7 @@ public class PotentialCoupling {
         return _potentialType;
     }
 
-    private class ReferencedLabelChange implements UndoableEdit {
+    private class ReferencedLabelChange implements GeckoUndoableEdit {
 
         final boolean _isSignificant;
         private final String _oldLabel;
@@ -138,7 +135,7 @@ public class PotentialCoupling {
         }
 
         @Override
-        public void undo() throws CannotUndoException {
+        public void undo() throws IllegalStateException {
             _parent.getParameterString()[_stringIDIndices[_index]] = _oldLabel;
         }
 
@@ -148,7 +145,7 @@ public class PotentialCoupling {
         }
 
         @Override
-        public void redo() throws CannotRedoException {
+        public void redo() throws IllegalStateException {
             _parent.getParameterString()[_stringIDIndices[_index]] = _newLabel;
         }
 
@@ -163,12 +160,12 @@ public class PotentialCoupling {
         }
 
         @Override
-        public boolean addEdit(UndoableEdit anEdit) {
+        public boolean addEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 
         @Override
-        public boolean replaceEdit(UndoableEdit anEdit) {
+        public boolean replaceEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 
