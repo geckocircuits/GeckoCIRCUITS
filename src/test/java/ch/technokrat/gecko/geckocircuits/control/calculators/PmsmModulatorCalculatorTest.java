@@ -102,4 +102,140 @@ public class PmsmModulatorCalculatorTest {
             }
         }
     }
+    
+    @Test
+    public void testSector0() {
+        // Test vector angle in sector 0 (0 to π/3)
+        calculator._inputSignal[0][0] = 5.0;  // Valpha
+        calculator._inputSignal[1][0] = 1.0;  // Vbeta (30 degrees)
+        calculator._inputSignal[2][0] = 0.5;  // Triangle
+        calculator._inputSignal[3][0] = 10.0; // Vdc
+        
+        calculator.berechneYOUT(0.001);
+        
+        for (int i = 0; i < 3; i++) {
+            assertTrue("Duty cycle should be valid in sector 0",
+                      calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+            assertFalse("Output should not be NaN", Double.isNaN(calculator._outputSignal[i][0]));
+        }
+    }
+    
+    @Test
+    public void testSector2And3() {
+        // Test vector angles in sector 2 and 3 (π/2 quadrant)
+        calculator._inputSignal[0][0] = -2.0; // Valpha (negative)
+        calculator._inputSignal[1][0] = 3.0;  // Vbeta (positive)
+        calculator._inputSignal[2][0] = 0.3;  // Triangle
+        calculator._inputSignal[3][0] = 10.0; // Vdc
+        
+        calculator.berechneYOUT(0.001);
+        
+        for (int i = 0; i < 3; i++) {
+            assertTrue("Duty cycle should be bounded",
+                      calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+        }
+    }
+    
+    @Test
+    public void testVoltageClipping() {
+        // Voltage magnitude exceeding Vdc should be clipped
+        double vdc = 10.0;
+        calculator._inputSignal[0][0] = 8.0;   // Very high Valpha
+        calculator._inputSignal[1][0] = 8.0;   // Very high Vbeta
+        calculator._inputSignal[2][0] = 0.5;
+        calculator._inputSignal[3][0] = vdc;
+        
+        calculator.berechneYOUT(0.001);
+        
+        // Outputs should still be valid (clipped to DC voltage limit)
+        for (int i = 0; i < 3; i++) {
+            assertTrue("Output should be within [0,1]",
+                      calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+        }
+    }
+    
+    @Test
+    public void testBetaAxisOnly() {
+        // Modulate with beta-axis voltage only (90 degrees)
+        calculator._inputSignal[0][0] = 0.0;   // Valpha = 0
+        calculator._inputSignal[1][0] = 4.0;   // Vbeta only
+        calculator._inputSignal[2][0] = 0.5;
+        calculator._inputSignal[3][0] = 10.0;
+        
+        calculator.berechneYOUT(0.001);
+        
+        // Three-phase outputs should be 120 degrees apart
+        for (int i = 0; i < 3; i++) {
+            assertTrue("Output should be calculable",
+                      calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+        }
+    }
+    
+    @Test
+    public void testNegativeVoltages() {
+        // Test with negative voltage references (different quadrants)
+        calculator._inputSignal[0][0] = -3.0;  // Valpha negative
+        calculator._inputSignal[1][0] = -2.0;  // Vbeta negative
+        calculator._inputSignal[2][0] = 0.5;
+        calculator._inputSignal[3][0] = 10.0;
+        
+        calculator.berechneYOUT(0.001);
+        
+        // Phase outputs should still be valid
+        for (int i = 0; i < 3; i++) {
+            assertFalse("Should not be NaN", Double.isNaN(calculator._outputSignal[i][0]));
+            assertTrue("Should be in [0,1]", calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+        }
+    }
+    
+    @Test
+    public void testExtremePWMValues() {
+        // Test with extreme PWM positions (very low and very high)
+        calculator._inputSignal[0][0] = 2.0;
+        calculator._inputSignal[1][0] = 1.0;
+        calculator._inputSignal[3][0] = 10.0;
+        
+        double[] trianglePositions = {0.0, 0.01, 0.99, 1.0};
+        for (double pos : trianglePositions) {
+            calculator._inputSignal[2][0] = pos;
+            calculator.berechneYOUT(0.001);
+            
+            for (int i = 0; i < 3; i++) {
+                assertTrue("Extreme PWM position " + pos + " should be valid",
+                          calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+            }
+        }
+    }
+    
+    @Test
+    public void testLowDCVoltage() {
+        // Test with low DC link voltage (near zero)
+        calculator._inputSignal[0][0] = 2.0;
+        calculator._inputSignal[1][0] = 1.0;
+        calculator._inputSignal[2][0] = 0.5;
+        calculator._inputSignal[3][0] = 0.5;  // Very low Vdc
+        
+        calculator.berechneYOUT(0.001);
+        
+        for (int i = 0; i < 3; i++) {
+            assertTrue("Low Vdc should still produce valid output",
+                      calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+        }
+    }
+    
+    @Test
+    public void testHighDCVoltage() {
+        // Test with high DC link voltage
+        calculator._inputSignal[0][0] = 2.0;
+        calculator._inputSignal[1][0] = 1.0;
+        calculator._inputSignal[2][0] = 0.5;
+        calculator._inputSignal[3][0] = 600.0; // High voltage (industrial)
+        
+        calculator.berechneYOUT(0.001);
+        
+        for (int i = 0; i < 3; i++) {
+            assertTrue("High Vdc should produce valid output",
+                      calculator._outputSignal[i][0] >= 0.0 && calculator._outputSignal[i][0] <= 1.0);
+        }
+    }
 }

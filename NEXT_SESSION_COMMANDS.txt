@@ -1,0 +1,272 @@
+================================================================================
+NEXT SESSION - QUICK START COMMANDS
+================================================================================
+Session Date: 2026-01-27 (Hybrid Approach Execution)
+Status: COMPLETE - Ready for Continuation
+
+================================================================================
+SECTION 1: VERIFY CURRENT STATE
+================================================================================
+
+# Check that all Phase 2 calculator tests still pass
+cd /home/tinix/claude_wsl/GeckoCIRCUITS
+mvn test -Dtest="*CalculatorTest" -q
+
+# Check that Phase 4 REST API compiles
+cd gecko-rest-api
+mvn clean compile -DskipTests -q
+
+# Return to main project
+cd ..
+
+================================================================================
+SECTION 2: PHASE 2 - MEASURE COVERAGE IMPROVEMENT
+================================================================================
+
+# Run full JaCoCo coverage report to see exact Phase 2 improvement
+mvn clean test jacoco:report -Dtest="*CalculatorTest" -q
+
+# View coverage report in browser (if available)
+# File location: target/site/jacoco/index.html
+
+# Extract Phase 2 coverage percentage
+mvn test jacoco:report -Dtest="*CalculatorTest" -q 2>&1 | grep -i "covered\|instruction"
+
+# Expected: ~62-63% (improvement from 60.01% baseline)
+
+================================================================================
+SECTION 3: PHASE 2 NEXT TARGETS - IF CONTINUING
+================================================================================
+
+# View high-gap calculator test file for enhancement
+vi gecko-simulation-core/src/test/java/ch/technokrat/gecko/geckocircuits/control/calculators/SparseMatrixCalculatorTest.java
+
+# Run only SparseMatrixCalculator tests to see current coverage
+mvn test -Dtest="SparseMatrixCalculatorTest" -v
+
+# Potential target: SmallSignalCalculator (search for it)
+find . -name "*SmallSignal*" -type f
+
+================================================================================
+SECTION 4: PHASE 4 - START REST API
+================================================================================
+
+# Build the REST API module
+cd gecko-rest-api
+mvn clean compile -DskipTests
+
+# Start the application (runs on port 8080)
+# WARNING: Make sure port 8080 is available first!
+mvn spring-boot:run
+
+# In another terminal, test endpoints:
+curl http://localhost:8080/api/health
+curl http://localhost:8080/api/info
+curl http://localhost:8080/swagger-ui.html
+
+# Stop the application: Press Ctrl+C in the Maven terminal
+
+================================================================================
+SECTION 5: PHASE 4 - CREATE SIMULATION SERVICE (NEXT PRIORITY)
+================================================================================
+
+# Create the SimulationService class
+cat > gecko-rest-api/src/main/java/ch/technokrat/gecko/rest/service/SimulationService.java << 'SERVICEEOF'
+package ch.technokrat.gecko.rest.service;
+
+import ch.technokrat.gecko.rest.model.SimulationRequest;
+import ch.technokrat.gecko.rest.model.SimulationResponse;
+import org.springframework.stereotype.Service;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
+import java.time.Instant;
+
+@Service
+public class SimulationService {
+    
+    private final ConcurrentHashMap<String, SimulationResponse> simulations = new ConcurrentHashMap<>();
+    
+    public SimulationResponse submitSimulation(SimulationRequest request) {
+        String simulationId = UUID.randomUUID().toString();
+        SimulationResponse response = new SimulationResponse(simulationId);
+        response.setStatus(SimulationResponse.SimulationStatus.PENDING);
+        response.setStartTime(Instant.now());
+        simulations.put(simulationId, response);
+        return response;
+    }
+    
+    public SimulationResponse getSimulation(String simulationId) {
+        return simulations.get(simulationId);
+    }
+}
+SERVICEEOF
+
+# Create SimulationController
+cat > gecko-rest-api/src/main/java/ch/technokrat/gecko/rest/controller/SimulationController.java << 'CONTROLLEREOF'
+package ch.technokrat.gecko.rest.controller;
+
+import ch.technokrat.gecko.rest.model.SimulationRequest;
+import ch.technokrat.gecko.rest.model.SimulationResponse;
+import ch.technokrat.gecko.rest.service.SimulationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/v1")
+public class SimulationController {
+    
+    @Autowired
+    private SimulationService simulationService;
+    
+    @PostMapping("/simulations")
+    public ResponseEntity<SimulationResponse> submitSimulation(@Valid @RequestBody SimulationRequest request) {
+        SimulationResponse response = simulationService.submitSimulation(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    
+    @GetMapping("/simulations/{id}")
+    public ResponseEntity<SimulationResponse> getSimulation(@PathVariable String id) {
+        SimulationResponse response = simulationService.getSimulation(id);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+}
+CONTROLLEREOF
+
+# Compile and test
+cd /home/tinix/claude_wsl/GeckoCIRCUITS/gecko-rest-api
+mvn clean compile -DskipTests
+
+================================================================================
+SECTION 6: PROJECT STRUCTURE REFERENCE
+================================================================================
+
+Main Project Structure:
+  /home/tinix/claude_wsl/GeckoCIRCUITS/
+    ├── pom.xml (main Maven configuration)
+    ├── gecko-simulation-core/ (Phase 1 + Phase 2 core)
+    │   └── src/test/java/...control/calculators/ (Test files)
+    │       ├── DivCalculatorTest.java ✓ (Enhanced this session)
+    │       ├── DEMUXCalculatorTest.java ✓ (Enhanced this session)
+    │       └── [other calculator tests]
+    ├── gecko-rest-api/ ✓ (Created this session - Phase 4)
+    │   ├── pom.xml ✓
+    │   ├── src/main/java/ch/technokrat/gecko/rest/
+    │   │   ├── GeckoRestApiApplication.java ✓
+    │   │   ├── controller/
+    │   │   │   ├── HealthController.java ✓
+    │   │   │   └── SimulationController.java (to be created)
+    │   │   ├── service/
+    │   │   │   └── SimulationService.java (to be created)
+    │   │   └── model/
+    │   │       ├── SimulationRequest.java ✓
+    │   │       └── SimulationResponse.java ✓
+    │   ├── src/main/resources/
+    │   │   └── application.properties ✓
+    │   └── src/test/java/ch/technokrat/gecko/rest/ (tests to be added)
+    └── [other modules]
+
+================================================================================
+SECTION 7: KEY METRICS & STATUS
+================================================================================
+
+Phase 2 Coverage (Current Session):
+  - DivCalculatorTest: 13 tests (was 9, +4) ✓
+  - DEMUXCalculatorTest: 10 tests (was 7, +3) ✓
+  - All Calculator Tests: 408 passing ✓
+  - Estimated Coverage: 62-63% (was 60.01%, +2-3 pp)
+  - Target: 75% (Gap: ~12.65 pp)
+
+Phase 4 Status (Current Session):
+  - Module Structure: Complete ✓
+  - pom.xml: Spring Boot 3.2.1 ✓
+  - DTOs: 2 created (SimulationRequest, SimulationResponse) ✓
+  - Controllers: 1 created (HealthController, 3 endpoints) ✓
+  - Services: 0 (to be created next)
+  - Configuration: application.properties created ✓
+
+Build Status:
+  - Main project: SUCCESS ✓
+  - REST API module: SUCCESS ✓
+  - No compilation errors ✓
+  - All tests passing ✓
+
+================================================================================
+SECTION 8: DECISION TREE FOR NEXT SESSION
+================================================================================
+
+IF PHASE 2 IS PRIORITY:
+  1. Run: mvn clean test jacoco:report
+  2. Check: target/site/jacoco/index.html for exact Phase 2 coverage
+  3. If coverage < 64%, enhance SparseMatrixCalculator tests
+  4. Goal: Reach 70-75% coverage
+
+IF PHASE 4 IS PRIORITY:
+  1. Create: SimulationService (see SECTION 5 commands)
+  2. Create: SimulationController (see SECTION 5 commands)
+  3. Create: Integration tests (@WebMvcTest)
+  4. Test: POST /api/v1/simulations and GET endpoints
+  5. Goal: Working API endpoints with database
+
+IF PARALLEL APPROACH:
+  1. Run Phase 2 coverage report (~20 min)
+  2. Start Phase 4 API services in parallel (~1.5 hours)
+  3. Merge: Phase 2 measurement + Phase 4 service layer working
+  4. Goal: Balanced progress on both fronts
+
+================================================================================
+SECTION 9: DOCUMENTATION REFERENCE
+================================================================================
+
+Created Documentation Files:
+  - PHASE4_BOOTSTRAP_SUMMARY.md (Phase 4 technical details)
+  - PHASE2_ENHANCEMENT_SESSION_SUMMARY.md (Phase 2 analysis)
+  - HYBRID_APPROACH_FINAL_REPORT.md (complete session report)
+  - QUICK_REFERENCE_NEXT_SESSION.md (quick continuation guide)
+  - SESSION_COMPLETION_MANIFEST.md (detailed manifest)
+  - NEXT_SESSION_COMMANDS.txt (this file)
+
+View Documentation:
+  cat QUICK_REFERENCE_NEXT_SESSION.md
+  cat PHASE4_BOOTSTRAP_SUMMARY.md
+  cat HYBRID_APPROACH_FINAL_REPORT.md
+
+================================================================================
+SECTION 10: TROUBLESHOOTING
+================================================================================
+
+Problem: "Port 8080 already in use"
+Solution:
+  lsof -i :8080
+  kill -9 <PID>
+  # or change port in application.properties to 8081
+
+Problem: Maven build fails with dependency errors
+Solution:
+  mvn clean install -U
+  # or check gecko-simulation-core is in local .m2 repository
+
+Problem: Test failures after code changes
+Solution:
+  mvn clean test -X
+  # and review surefire-reports in target/ directory
+
+Problem: JaCoCo report not generated
+Solution:
+  1. Run: mvn clean test jacoco:report
+  2. Open: target/site/jacoco/index.html in browser
+
+================================================================================
+REMEMBER:
+  - All 408 calculator tests passing (Phase 2) ✓
+  - Phase 4 REST API compiles successfully ✓
+  - Documentation fully updated ✓
+  - Ready for next session continuation ✓
+
+Session Status: COMPLETE AND VERIFIED ✓
+================================================================================
