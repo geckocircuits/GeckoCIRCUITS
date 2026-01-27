@@ -227,12 +227,14 @@ class CorePackageValidationTest {
     }
     
     @Test
-    @DisplayName("circuit main package has expected file count (101 classes)")
+    @DisplayName("circuit main package has expected file count (112 classes)")
     void circuitMainPackageFileCount() throws IOException {
-        // Updated Sprint 15: Added new interfaces (GeckoGraphics, GeckoUndoableEdit, 
-        // Drawable) and adapters (AwtGraphicsAdapter, GeckoUndoableEditAdapter)
-        // Previous: 96 files, Now: 101 files
-        assertPackageFileCount("circuit", 99, 105);  // 101 ± 3
+        // Updated Phase 4 Option D: Added 9 Core classes (ICircuitCalculator, 
+        // CircuitComponentCore, AbstractResistorCore, AbstractInductorCore, 
+        // AbstractCapacitorCore, AbstractCurrentSourceCore, AbstractVoltageSourceCore, 
+        // AbstractSwitchCore, AbstractMotorCore)
+        // Previous: 99-105 files, Now: 112 files
+        assertPackageFileCount("circuit", 110, 115);  // 112 ± 3
     }
     
     @Test
