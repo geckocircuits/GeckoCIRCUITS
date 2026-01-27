@@ -413,4 +413,203 @@ public class MatrixTest {
         assertEquals(2.0, result.get(1, 0), TOLERANCE);
         assertEquals(2.0, result.get(1, 1), TOLERANCE);
     }
+
+    // ==================== ADDITIONAL EDGE CASE TESTS ====================
+
+    @Test
+    public void testToString_NonNull() {
+        double[][] data = {{1, 2}, {3, 4}};
+        Matrix m = new Matrix(data);
+        String str = m.toString();
+        assertNotNull(str);
+        assertTrue(str.length() > 0);
+    }
+
+    @Test
+    public void testToString_ContainsData() {
+        double[][] data = {{1.5, 2.5}};
+        Matrix m = new Matrix(data);
+        String str = m.toString();
+        // Should contain numeric representation
+        assertTrue(str.contains("1") || str.contains("2"));
+    }
+
+    @Test
+    public void testInverse_3x3() {
+        double[][] data = {{1, 0, 1}, {2, 1, 0}, {0, 1, 1}};
+        Matrix m = new Matrix(data);
+        Matrix inv = m.inverse();
+
+        // Verify m * inv = I
+        Matrix product = m.times(inv);
+        Matrix identity = Matrix.identity(3, 3);
+        
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                assertEquals(identity.get(i, j), product.get(i, j), 1e-9);
+            }
+        }
+    }
+
+    @Test
+    public void testTrace_2x2() {
+        double[][] data = {{2, 3}, {5, 7}};
+        Matrix m = new Matrix(data);
+        double trace = m.trace();
+        assertEquals(9.0, trace, TOLERANCE);
+    }
+
+    @Test
+    public void testTrace_DiagonalMatrix() {
+        double[][] data = {{1, 0, 0}, {0, 2, 0}, {0, 0, 3}};
+        Matrix m = new Matrix(data);
+        double trace = m.trace();
+        assertEquals(6.0, trace, TOLERANCE);
+    }
+
+    @Test
+    public void testTrace_Zero() {
+        Matrix zero = new Matrix(3, 3);
+        double trace = zero.trace();
+        assertEquals(0.0, trace, TOLERANCE);
+    }
+
+    @Test
+    public void testArrayTimes() {
+        double[][] data1 = {{1, 2}, {3, 4}};
+        double[][] data2 = {{2, 2}, {3, 3}};
+        Matrix m1 = new Matrix(data1);
+        Matrix m2 = new Matrix(data2);
+        Matrix result = m1.arrayTimes(m2);
+
+        assertEquals(2.0, result.get(0, 0), TOLERANCE);
+        assertEquals(4.0, result.get(0, 1), TOLERANCE);
+        assertEquals(9.0, result.get(1, 0), TOLERANCE);
+        assertEquals(12.0, result.get(1, 1), TOLERANCE);
+    }
+
+    @Test
+    public void testArrayRightDivide() {
+        double[][] data1 = {{4, 6}, {8, 10}};
+        double[][] data2 = {{2, 2}, {4, 5}};
+        Matrix m1 = new Matrix(data1);
+        Matrix m2 = new Matrix(data2);
+        Matrix result = m1.arrayRightDivide(m2);
+
+        assertEquals(2.0, result.get(0, 0), TOLERANCE);
+        assertEquals(3.0, result.get(0, 1), TOLERANCE);
+        assertEquals(2.0, result.get(1, 0), TOLERANCE);
+        assertEquals(2.0, result.get(1, 1), TOLERANCE);
+    }
+
+    @Test
+    public void testArrayLeftDivide() {
+        double[][] data1 = {{2, 2}, {4, 5}};
+        double[][] data2 = {{4, 6}, {8, 10}};
+        Matrix m1 = new Matrix(data1);
+        Matrix m2 = new Matrix(data2);
+        Matrix result = m1.arrayLeftDivide(m2);
+
+        // Element-wise: data2 / data1
+        assertEquals(2.0, result.get(0, 0), TOLERANCE);
+        assertEquals(3.0, result.get(0, 1), TOLERANCE);
+    }
+
+    @Test
+    public void testTimes_ScalarMultiplication() {
+        double[][] data = {{1, 2}, {3, 4}};
+        Matrix m = new Matrix(data);
+        Matrix result = m.times(2.0);
+
+        assertEquals(2.0, result.get(0, 0), TOLERANCE);
+        assertEquals(4.0, result.get(0, 1), TOLERANCE);
+        assertEquals(6.0, result.get(1, 0), TOLERANCE);
+        assertEquals(8.0, result.get(1, 1), TOLERANCE);
+    }
+
+    @Test
+    public void testGetMatrix_ByRowColumnIndices() {
+        double[][] data = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
+        Matrix m = new Matrix(data);
+        int[] rows = {0, 2};
+        int[] cols = {1, 3};
+        Matrix sub = m.getMatrix(rows, cols);
+
+        assertEquals(2, sub.getRowDimension());
+        assertEquals(2, sub.getColumnDimension());
+        assertEquals(2.0, sub.get(0, 0), TOLERANCE);
+        assertEquals(4.0, sub.get(0, 1), TOLERANCE);
+        assertEquals(10.0, sub.get(1, 0), TOLERANCE);
+        assertEquals(12.0, sub.get(1, 1), TOLERANCE);
+    }
+
+    @Test
+    public void testGetMatrix_ByRowIndices() {
+        double[][] data = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        Matrix m = new Matrix(data);
+        int[] rows = {1};
+        Matrix sub = m.getMatrix(rows, 0, 2);
+
+        assertEquals(1, sub.getRowDimension());
+        assertEquals(3, sub.getColumnDimension());
+        assertEquals(4.0, sub.get(0, 0), TOLERANCE);
+        assertEquals(5.0, sub.get(0, 1), TOLERANCE);
+        assertEquals(6.0, sub.get(0, 2), TOLERANCE);
+    }
+
+    @Test
+    public void testGetMatrixByRowRange() {
+        double[][] data = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        Matrix m = new Matrix(data);
+        Matrix sub = m.getMatrix(0, 1, 0, 2);
+
+        assertEquals(2, sub.getRowDimension());
+        assertEquals(3, sub.getColumnDimension());
+    }
+
+    @Test
+    public void testGetRowPackedCopy() {
+        double[][] data = {{1, 2}, {3, 4}, {5, 6}};
+        Matrix m = new Matrix(data);
+        double[] packed = m.getRowPackedCopy();
+
+        assertEquals(6, packed.length);
+        assertEquals(1.0, packed[0], TOLERANCE);
+        assertEquals(2.0, packed[1], TOLERANCE);
+        assertEquals(3.0, packed[2], TOLERANCE);
+    }
+
+    @Test
+    public void testGetColumnPackedCopy() {
+        double[][] data = {{1, 2}, {3, 4}, {5, 6}};
+        Matrix m = new Matrix(data);
+        double[] packed = m.getColumnPackedCopy();
+
+        assertEquals(6, packed.length);
+        assertEquals(1.0, packed[0], TOLERANCE);
+        assertEquals(3.0, packed[1], TOLERANCE);
+        assertEquals(5.0, packed[2], TOLERANCE);
+    }
+
+    @Test
+    public void testDeterminant_NonSquareThrowsException() {
+        double[][] data = {{1, 2, 3}, {4, 5, 6}};
+        Matrix m = new Matrix(data);
+        
+        // Non-square matrix should throw exception
+        try {
+            m.det();
+            fail("Should throw exception for non-square matrix");
+        } catch (Exception e) {
+            // Expected
+        }
+    }
+
+    @Test
+    public void testDeterminant_1x1() {
+        double[][] data = {{5}};
+        Matrix m = new Matrix(data);
+        double det = m.det();
+        assertEquals(5.0, det, TOLERANCE);
+    }
 }

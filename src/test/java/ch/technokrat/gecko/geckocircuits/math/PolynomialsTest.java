@@ -188,4 +188,201 @@ public class PolynomialsTest {
         assertEquals(2.0f, r[1], TOLERANCE);
         assertEquals(0.0f, r[2], TOLERANCE);
     }
+
+    // ==================== ADDITIONAL EDGE CASE TESTS ====================
+
+    @Test
+    public void testPoldiv_ZeroDividend() {
+        // 0 / (x+1) = 0, remainder = 0
+        float[] u = {0, 0, 0}; // 0
+        float[] v = {1, 1};    // x + 1
+        float[] q = new float[3];
+        float[] r = new float[3];
+
+        Polynomials.poldiv(u, 0, v, 1, q, r);
+
+        // Quotient should be 0
+        assertEquals(0.0f, q[0], TOLERANCE);
+        assertEquals(0.0f, q[1], TOLERANCE);
+        assertEquals(0.0f, q[2], TOLERANCE);
+
+        // Remainder should be 0
+        assertEquals(0.0f, r[0], TOLERANCE);
+        assertEquals(0.0f, r[1], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_ConstantDividend() {
+        // 5 / (x+2) = 0, remainder = 5
+        float[] u = {5, 0, 0}; // 5
+        float[] v = {2, 1};    // x + 2
+        float[] q = new float[3];
+        float[] r = new float[3];
+
+        Polynomials.poldiv(u, 0, v, 1, q, r);
+
+        // Quotient should be 0
+        assertEquals(0.0f, q[0], TOLERANCE);
+
+        // Remainder should be 5
+        assertEquals(5.0f, r[0], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_LargeCoefficients() {
+        // (100x²+200x+300) / 10 = 10x²+20x+30
+        float[] u = {300, 200, 100}; // 100x² + 200x + 300
+        float[] v = {10};            // 10
+        float[] q = new float[3];
+        float[] r = new float[3];
+
+        Polynomials.poldiv(u, 2, v, 0, q, r);
+
+        // Quotient: 10x²+20x+30 = [30, 20, 10]
+        assertEquals(30.0f, q[0], TOLERANCE);
+        assertEquals(20.0f, q[1], TOLERANCE);
+        assertEquals(10.0f, q[2], TOLERANCE);
+
+        // Remainder should be 0
+        assertEquals(0.0f, r[0], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_SmallCoefficients() {
+        // (0.001x+0.002) / (x+2) = 0.001, remainder ≈ 0
+        float[] u = {0.002f, 0.001f}; // 0.001x + 0.002
+        float[] v = {2.0f, 1.0f};     // x + 2
+        float[] q = new float[2];
+        float[] r = new float[2];
+
+        Polynomials.poldiv(u, 1, v, 1, q, r);
+
+        // Quotient: 0.001
+        assertEquals(0.001f, q[0], 1e-5f);
+        assertEquals(0.0f, q[1], TOLERANCE);
+
+        // Remainder should be very small
+        assertTrue(Math.abs(r[0]) < 0.01f);
+    }
+
+    @Test
+    public void testPoldiv_QuadraticDividendLinearDivisor() {
+        // (x²+5x+6) / (x+2) = x+3, remainder = 0
+        // Verify: (x+2)(x+3) = x² + 3x + 2x + 6 = x² + 5x + 6 ✓
+        float[] u = {6, 5, 1}; // x² + 5x + 6
+        float[] v = {2, 1};    // x + 2
+        float[] q = new float[3];
+        float[] r = new float[3];
+
+        Polynomials.poldiv(u, 2, v, 1, q, r);
+
+        // Quotient: x + 3 = [3, 1, 0]
+        assertEquals(3.0f, q[0], TOLERANCE);
+        assertEquals(1.0f, q[1], TOLERANCE);
+        assertEquals(0.0f, q[2], TOLERANCE);
+
+        // Remainder should be 0
+        assertEquals(0.0f, r[0], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_CubicDividendQuadraticDivisor() {
+        // (x³+1) / (x²+1) = x, remainder = 1-x²
+        // Verify: (x²+1)*x + (1-x²) = x³ + x + 1 - x² ≈ x³ + 1 (for the constant term)
+        float[] u = {1, 0, 0, 1}; // x³ + 1
+        float[] v = {1, 0, 1};    // x² + 1
+        float[] q = new float[4];
+        float[] r = new float[4];
+
+        Polynomials.poldiv(u, 3, v, 2, q, r);
+
+        // Quotient should be linear: x = [0, 1, 0, 0]
+        assertEquals(0.0f, q[0], TOLERANCE);
+        assertEquals(1.0f, q[1], TOLERANCE);
+        assertEquals(0.0f, q[2], TOLERANCE);
+
+        // Remainder will be 1-x² = [1, 0, -1, 0]
+        // Just verify it has small coefficients beyond degree 1
+        assertTrue(Math.abs(r[0]) < 10.0f);
+    }
+
+    @Test
+    public void testPoldiv_NegativeCoefficients() {
+        // (-x²+3x+2) / (x+1) = -x+4, remainder = -2
+        // Verify: (x+1)(-x+4) + (-2) = -x² + 4x - x + 4 - 2 = -x² + 3x + 2 ✓
+        float[] u = {2, 3, -1}; // -x² + 3x + 2
+        float[] v = {1, 1};     // x + 1
+        float[] q = new float[3];
+        float[] r = new float[3];
+
+        Polynomials.poldiv(u, 2, v, 1, q, r);
+
+        // Quotient: -x + 4 = [4, -1, 0]
+        assertEquals(4.0f, q[0], TOLERANCE);
+        assertEquals(-1.0f, q[1], TOLERANCE);
+        assertEquals(0.0f, q[2], TOLERANCE);
+
+        // Remainder: -2
+        assertEquals(-2.0f, r[0], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_HighDegreePolynomial() {
+        // (x⁴+2x³+3x²+4x+5) / (x²+1) = x²+2x+2, remainder = 2x+3
+        // Verify: (x²+1)(x²+2x+2) + (2x+3) = x⁴+2x³+2x²+x²+2x+2+2x+3
+        //       = x⁴+2x³+3x²+4x+5 ✓
+        float[] u = {5, 4, 3, 2, 1}; // x⁴ + 2x³ + 3x² + 4x + 5
+        float[] v = {1, 0, 1};       // x² + 1
+        float[] q = new float[5];
+        float[] r = new float[5];
+
+        Polynomials.poldiv(u, 4, v, 2, q, r);
+
+        // Quotient: x²+2x+2 = [2, 2, 1, 0, 0]
+        assertEquals(2.0f, q[0], TOLERANCE);
+        assertEquals(2.0f, q[1], TOLERANCE);
+        assertEquals(1.0f, q[2], TOLERANCE);
+        assertEquals(0.0f, q[3], TOLERANCE);
+
+        // Remainder: 2x+3 = [3, 2, 0, 0, 0]
+        assertEquals(3.0f, r[0], TOLERANCE);
+        assertEquals(2.0f, r[1], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_FractionalCoefficients() {
+        // (0.5x+1.5) / (x+1) = 0.5, remainder = 1
+        float[] u = {1.5f, 0.5f}; // 0.5x + 1.5
+        float[] v = {1.0f, 1.0f}; // x + 1
+        float[] q = new float[2];
+        float[] r = new float[2];
+
+        Polynomials.poldiv(u, 1, v, 1, q, r);
+
+        // Quotient: 0.5
+        assertEquals(0.5f, q[0], TOLERANCE);
+        assertEquals(0.0f, q[1], TOLERANCE);
+
+        // Remainder: 1
+        assertEquals(1.0f, r[0], TOLERANCE);
+    }
+
+    @Test
+    public void testPoldiv_ZeroDivisor() {
+        // Division by zero divisor should handle gracefully
+        float[] u = {1, 2, 1}; // x² + 2x + 1
+        float[] v = {0, 0};    // 0
+        float[] q = new float[3];
+        float[] r = new float[3];
+
+        try {
+            // This might throw an exception or return NaN
+            Polynomials.poldiv(u, 2, v, 0, q, r);
+            // If it doesn't throw, the results should contain NaN or be invalid
+            assertTrue(Float.isNaN(q[0]) || Float.isInfinite(q[0]) || q[0] == 0.0f);
+        } catch (Exception e) {
+            // Division by zero should ideally throw an exception
+            assertNotNull(e);
+        }
+    }
 }

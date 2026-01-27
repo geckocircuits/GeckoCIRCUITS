@@ -254,4 +254,177 @@ public class NComplexTest {
         assertNotNull(result);
         assertTrue(result.contains("i"));
     }
+
+    // ==================== ADDITIONAL EDGE CASE TESTS ====================
+
+    @Test
+    public void testDiv_ByZero() {
+        // Division by zero should handle gracefully (may return NaN or Infinity)
+        NComplex a = new NComplex(4.0f, 2.0f);
+        NComplex zero = new NComplex(0.0f, 0.0f);
+        NComplex result = NComplex.div(a, zero);
+        assertNotNull(result);
+        // Result should be infinity or NaN
+        assertTrue(Float.isInfinite(result.getRe()) || Float.isNaN(result.getRe()) ||
+                   Float.isInfinite(result.getIm()) || Float.isNaN(result.getIm()));
+    }
+
+    @Test
+    public void testMul_PureImaginaryNumbers() {
+        // i * i = -1
+        NComplex i1 = new NComplex(0.0f, 1.0f);
+        NComplex i2 = new NComplex(0.0f, 1.0f);
+        NComplex result = NComplex.mul(i1, i2);
+        assertEquals(-1.0f, result.getRe(), TOLERANCE);
+        assertEquals(0.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testMul_PureImaginaryWithReal() {
+        // (2i) * (3+4i) = 6i + 8i² = 6i - 8 = -8 + 6i
+        NComplex a = new NComplex(0.0f, 2.0f);
+        NComplex b = new NComplex(3.0f, 4.0f);
+        NComplex result = NComplex.mul(a, b);
+        assertEquals(-8.0f, result.getRe(), TOLERANCE);
+        assertEquals(6.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testAbs_VeryLargeNumbers() {
+        // |1e6 + 1e6i| = sqrt(1e12 + 1e12) = sqrt(2e12)
+        NComplex a = new NComplex(1e6f, 1e6f);
+        float result = NComplex.abs(a);
+        assertEquals((float)Math.sqrt(2e12), result, 1e5f);
+    }
+
+    @Test
+    public void testAbs_VerySmallNumbers() {
+        // |1e-6 + 1e-6i| = sqrt(1e-12 + 1e-12)
+        NComplex a = new NComplex(1e-6f, 1e-6f);
+        float result = NComplex.abs(a);
+        assertTrue(result > 0);
+        assertTrue(result < 1e-5f);
+    }
+
+    @Test
+    public void testEquals_WithZero() {
+        NComplex a = new NComplex(0.0f, 0.0f);
+        NComplex b = new NComplex(0.0f, 0.0f);
+        assertTrue(a.equals(b));
+    }
+
+    @Test
+    public void testEquals_RealOnlyDifferent() {
+        NComplex a = new NComplex(5.0f, 0.0f);
+        NComplex b = new NComplex(3.0f, 0.0f);
+        assertFalse(a.equals(b));
+    }
+
+    @Test
+    public void testHashCode_DifferentValues() {
+        NComplex a = new NComplex(3.0f, 4.0f);
+        NComplex b = new NComplex(5.0f, 6.0f);
+        // Different values should (usually) have different hash codes
+        // Though hash collisions are possible, they should be rare
+        assertNotEquals(a.hashCode(), b.hashCode());
+    }
+
+    @Test
+    public void testSqrt_PureRealPositive() {
+        // sqrt(4.0) = 2.0
+        NComplex a = new NComplex(4.0f, 0.0f);
+        NComplex result = NComplex.sqrt(a);
+        assertEquals(2.0f, result.getRe(), TOLERANCE);
+        assertEquals(0.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testSqrt_ComplexNumber_Verification() {
+        // Test by squaring the result to verify correctness
+        NComplex a = new NComplex(2.0f, 3.0f);
+        NComplex sqrtA = NComplex.sqrt(a);
+        NComplex squared = NComplex.mul(sqrtA, sqrtA);
+        
+        // squared should equal a (within tolerance)
+        assertEquals(a.getRe(), squared.getRe(), 0.01f);
+        assertEquals(a.getIm(), squared.getIm(), 0.01f);
+    }
+
+    @Test
+    public void testConj_RealOnly() {
+        NComplex a = new NComplex(5.0f, 0.0f);
+        NComplex result = NComplex.conj(a);
+        assertEquals(5.0f, result.getRe(), TOLERANCE);
+        assertEquals(0.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testConj_NegativeImaginary() {
+        NComplex a = new NComplex(3.0f, -4.0f);
+        NComplex result = NComplex.conj(a);
+        assertEquals(3.0f, result.getRe(), TOLERANCE);
+        assertEquals(4.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testRCmul_ByZero() {
+        NComplex a = new NComplex(2.0f, 3.0f);
+        NComplex result = NComplex.RCmul(0.0f, a);
+        assertEquals(0.0f, result.getRe(), TOLERANCE);
+        assertEquals(0.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testRCmul_ByOne() {
+        NComplex a = new NComplex(2.0f, 3.0f);
+        NComplex result = NComplex.RCmul(1.0f, a);
+        assertEquals(2.0f, result.getRe(), TOLERANCE);
+        assertEquals(3.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testRCmul_ByNegative() {
+        NComplex a = new NComplex(2.0f, 3.0f);
+        NComplex result = NComplex.RCmul(-1.0f, a);
+        assertEquals(-2.0f, result.getRe(), TOLERANCE);
+        assertEquals(-3.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testDiv_RealByComplex() {
+        // 4 / (1+i) = 4(1-i) / 2 = 2(1-i) = 2-2i
+        NComplex a = new NComplex(4.0f, 0.0f);
+        NComplex b = new NComplex(1.0f, 1.0f);
+        NComplex result = NComplex.div(a, b);
+        assertEquals(2.0f, result.getRe(), TOLERANCE);
+        assertEquals(-2.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testDiv_SelfDivision() {
+        // z / z = 1
+        NComplex a = new NComplex(3.0f, 4.0f);
+        NComplex result = NComplex.div(a, a);
+        assertEquals(1.0f, result.getRe(), TOLERANCE);
+        assertEquals(0.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testSub_ZeroResult() {
+        // 5+3i - 5-3i = 0
+        NComplex a = new NComplex(5.0f, 3.0f);
+        NComplex b = new NComplex(5.0f, 3.0f);
+        NComplex result = NComplex.sub(a, b);
+        assertEquals(0.0f, result.getRe(), TOLERANCE);
+        assertEquals(0.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testNicePrint_Zero() {
+        NComplex a = new NComplex(0.0f, 0.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        // Should contain representation of zero
+        assertTrue(result.length() > 0);
+    }
 }
