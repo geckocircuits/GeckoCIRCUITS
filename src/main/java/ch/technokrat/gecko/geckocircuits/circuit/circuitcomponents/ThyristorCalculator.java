@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitchCalculator.NEARLY_ZERO_R;
-import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitComponent.disturbanceValue;
+import static ch.technokrat.gecko.geckocircuits.circuit.CircuitComponentCore.disturbanceValue;
 
 
 public class ThyristorCalculator extends AbstractSwitchCalculator implements CurrentCalculatable {

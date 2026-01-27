@@ -227,7 +227,7 @@ public class CoupledInductorsGroup implements AStampable, CurrentCalculatable {
     }
     
     private SolverType getSolverType() {
-        return _allInductors.get(0)._solverType;
+        return _allInductors.get(0).getSolverType();
     }
     
     //to make the TRZ solver work - yes, ugly, should be redone better!

@@ -65,8 +65,8 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
 
     public void doPostProcess(double dt, double time) {
         // aus dem internen Subcircuit -->
-        double ia = - _la._current;  // Ankerstrom
-        double ie = _le._current;  // Erregerstrom
+        double ia = - _la.getCurrent();  // Ankerstrom
+        double ie = _le.getCurrent();  // Erregerstrom
 
         // Motor-Gleichungen durchrechnen -->
         phi = _le.getInductance() / _Ne * ie;  // Erregerfluss
