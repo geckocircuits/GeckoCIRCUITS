@@ -241,11 +241,13 @@ Target: 85% instruction coverage
 
 # PHASE 2: Control Calculators (41% → 75%)
 
-## Current State
+## Current State (Session 3 Extended)
 - **Location:** `src/main/java/ch/technokrat/gecko/geckocircuits/control/calculators/`
 - **Core Extracted:** 64 calculators already in `gecko-simulation-core`
-- **Existing Tests:** Multiple test files
-- **GUI Dependencies:** 2 classes (DEMUXCalculator, SpaceVectorCalculator)
+- **Existing Tests:** Multiple test files (**176 tests passing**, up from 161)
+- **Current Coverage:** **57.8%** (5,851/10,117 instructions) - up from 42.1%
+- **Gap to Target:** **17.2 percentage points** (need 1,736 more covered instructions)
+- **GUI Dependencies:** 2 classes (SmallSignalCalculator, SpaceVectorCalculator)
 
 ## Tasks
 
