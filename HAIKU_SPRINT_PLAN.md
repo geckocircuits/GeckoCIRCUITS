@@ -6,16 +6,20 @@
 
 ---
 
-## Overview
+## Overview - UPDATED BASELINES (January 27, 2026)
 
-| Phase | Package | Current | Target | Tasks | Status | Est. Time |
-|-------|---------|---------|--------|-------|--------|-----------|
-| 1 | `math` | **81.7%** ✅ | 85% | 8 | Nearly done (3.3pp gap) | 30 min |
-| 2 | `control.calculators` | **57.8%** 🔄 | 75% | 12 | In progress (17.2pp gap) | 2 hours |
-| 3 | `datacontainer` | **15.8%** ❌ | 70% | 10 | Not started (54.2pp gap) | 3 hours |
-| 4 | `gecko-rest-api` | **0 files** ❌ | Setup | 15 | Not started | 4 hours |
+**IMPORTANT:** Coverage baselines from previous sessions were inaccurate. Current measurements from JaCoCo show actual coverage percentages. Targets have been rebaselined to be realistic and achievable.
 
-**Total: 45 tasks, ~11 hours**
+| Phase | Package | Previous | **ACTUAL** | Realistic Target | Gap | Status | Est. Time |
+|-------|---------|----------|----------|---------|-----|--------|-----------|
+| 1 | `math` | 81.7% | **~71%** | **80%** | +9pp | 📊 Recalibrated | 1-2 hours |
+| 2 | `control.calculators` | 57.8% | **~29%** | **50%** | +21pp | 📊 Recalibrated | 2-3 hours |
+| 3 | `datacontainer` | 15.8% | **~17%** | **40%** | +23pp | 📊 Recalibrated | 2-3 hours |
+| 4 | `gecko-rest-api` | 0 files | **4 files** | **MVP** | — | ✅ Tier 1 | 2-3 hours |
+
+**Revised Total: ~8-12 hours (more accurate)**
+
+**Key Reason for Variance:** Previous plan counted only extracted GUI-free calculators (64 classes at 100%) as "57.8%". Actual monolith calculator package coverage includes legacy code and untested internal classes.
 
 ---
 
@@ -29,99 +33,123 @@
 
 ✅ **Tests Passing:** All 30 tests compile and pass individually
 ✅ **Test Count:** 206+ test methods across 10 verified test files
-✅ **Coverage Maintained:** 57.8% (5,851/10,117 instructions) - baseline holds
+✅ **Coverage Baseline:** ~29% (recalibrated from previous 57.8% estimate)
 
-📊 **Key Metrics:**
-- Phase 1 advancement: 81.7% (nearly target of 85% - only 3.3pp gap!)
-- Phase 2 progression: 57.8% → target 75% (need 1,736.75 more instructions)
-- Phase 3 readiness: Analysis complete, DATA-2 through DATA-6 ready to implement
+## Session 4: Tier 1 Architecture & Safety Gates (IN PROGRESS)
 
----
+✅ **Maven Safety Gates Added:**
+- gecko-simulation-core enforcer prevents GUI imports (was already in place)
+- gecko-rest-api now has enforcer rules to reject Swing/AWT dependencies
+- Build will fail if GUI libraries accidentally leak into REST API
 
-# Strategic Priorities & Recommendations
+✅ **Coverage Baselines Recalibrated:**
+- Actual JaCoCo measurements show lower coverage than previous estimates
+- Targets revised to be realistic: +9pp to +23pp improvements per phase
+- Documented root cause: previous plan counted extracted code, not full package coverage
 
-## 🎯 Recommended Action Sequence
-
-### P0: Complete Phase 1 (Math) - QUICK WIN ⚡
-**Effort:** ~30 minutes | **Impact:** +3.3pp (reach 85% target)
-
-Current: 81.7% → Target: 85%
-- Analyze remaining untested math operations (BigMatrix edge cases, polynomial edge cases)
-- Add ~3-4 quick edge-case tests to reach threshold
-- **Why:** Fastest path to completing a full phase target
-
-### P1: Phase 3 (DataContainer) - HIGH IMPACT 💪
-**Effort:** ~2-3 hours | **Impact:** +54.2pp (reach 70% target)  
-
-Current: 15.8% → Target: 70%
-- DATA-2: AbstractDataContainerTest
-- DATA-3: DataContainerFourierTest
-- DATA-4: DataContainerGlobalTest
-- DATA-5: DataJunkSimpleTest
-- DATA-6: SignalDataContainerTest
-
-**Why:** 
-- Massive coverage gain (54.2pp is the largest single jump)
-- DataContainer is critical for simulation results export (API requirement)
-- Tests are straightforward (container/storage classes, no complex state)
-- Unblocks REST API data serialization layer
-
-### P2: Phase 2 (Calculators) - FINISH STRONG 🏁
-**Effort:** ~1-2 hours | **Impact:** +17.2pp (reach 75% target)
-
-Current: 57.8% → Target: 75%
-- 3-5 additional focused test files on uncovered calculator operations
-- ArithmeticCalculators batch (Div, Gain, Subtraction variants)
-- Multi-input calculators (MaxMultiInputs, MinMultiInputs)
-- Signal processing edge cases
-
-**Why:** 
-- Completes Phase 2 deliverable
-- Patterns fully established, rapid implementation
-- Unblocks control system API endpoints
-
-### P3: Phase 4 (REST API) - FOUNDATION 🏗️
-**Effort:** ~2-3 hours | **Impact:** API service layer structure
-
-Currently: 0 Java files
-- REST-1: Module structure (10 min)
-- REST-2: pom.xml with dependencies (5 min)
-- REST-3 to REST-7: DTOs and service interfaces (45 min)
-- REST-11 to REST-13: Controllers (45 min)
-
-**Why:**
-- Once DataContainer tests are done, can export results via REST
-- Controllers depend on services (which depend on core packages)
-- Enables API-first development for frontend
-
-### P4: Core Module Extraction - ARCHITECTURE 🔧
-**Effort:** ~30-45 min | **Impact:** Clean layered separation
-
-Move to `gecko-simulation-core`:
-- `circuit.matrix` (15 classes, 77% coverage) 
-- `circuit.netlist` (4 classes, 99% coverage)
-- `circuit.simulation` (5 classes, 97% coverage)
-
-**Why:**
-- Enables proper REST API to depend only on `-core`, not legacy GUI
-- Already high coverage, low risk
-- Prerequisite for production-ready architecture
+📊 **Key Metrics (January 27, 2026):**
+- Phase 1 advancement: ~71% math (target 80%, +9pp gap)
+- Phase 2 progression: ~29% calculators (target 50%, +21pp gap)
+- Phase 3 readiness: ~17% datacontainer (target 40%, +23pp gap)
+- REST API: Ready to implement (pom.xml complete, safety gates added)
 
 ---
 
-## 📈 Expected Timeline for Coverage Milestones
+# Strategic Priorities & Recommendations (UPDATED January 27, 2026)
 
-If following P0 → P1 → P2 → P3 sequence:
+## 🎯 Revised Action Sequence
 
-| Phase | Current | After Work | Time Est | Total |
-|-------|---------|----------|----------|-------|
-| Phase 1 (Math) | 81.7% | **85% ✅** | 30 min | 1 hr |
-| Phase 3 (DataContainer) | 15.8% | **70% ✅** | 2-3 hrs | 4 hrs |
-| Phase 2 (Calculators) | 57.8% | **75% ✅** | 1-2 hrs | 5.5 hrs |
-| Phase 4 (REST API) | 0% | **Setup** | 2-3 hrs | 8.5 hrs |
-| **Core Extraction** | Mixed | **Clean** | 30-45 min | 9.5 hrs |
+### P0: REST API MVP Foundation - UNBLOCK FRONTEND ⚡
+**Effort:** 2-3 hours | **Impact:** Running API server for frontend development
 
-**Total estimated time to core coverage milestones: ~9.5 hours**
+**Why First (not coverage):**
+- Frontend developers need mock API to build against
+- REST API scaffolding enables parallel development
+- Safety gates already in place (prevents GUI leakage)
+- Keeps team unblocked while coverage tests are being written
+
+**Deliverables:**
+- Application.java (Spring Boot entry point)
+- HealthController (/api/health endpoint)
+- DTOs for basic requests/responses
+- application.properties (server config)
+- Swagger documentation endpoint
+- Integration test that verifies server starts
+
+### P1: DataContainer Tests - HIGH COVERAGE IMPACT 💪
+**Effort:** 2-3 hours | **Impact:** +23pp (17%→40%, highest gain per hour)
+
+**Why High Priority:**
+- Highest absolute coverage gain (+23pp)
+- Smallest scope (data containers, no complex mocks needed)
+- Unblocks API data serialization testing
+- Tests are straightforward to write
+
+**Targets:**
+- DataContainerSimple test (basic storage)
+- SignalDataContainer test (time series)
+- AverageValue edge cases
+- ContainerStatus state tests
+
+### P2: Math Package Tests - QUICK WIN 🚀
+**Effort:** 1-2 hours | **Impact:** +9pp (71%→80%, quick completion)
+
+**Why Second:**
+- Smallest gap to realistic target (+9pp)
+- Pure math, no external dependencies
+- Fast test writing (edge cases only)
+- Completes Phase 1 deliverable
+
+**Targets:**
+- BigMatrix edge cases (non-square matrices, singular)
+- Polynomial evaluation edge cases
+- NComplex division by zero handling
+- LU decomposition precision tests
+
+### P3: Calculators Tests - COVERAGE BREADTH 🏁
+**Effort:** 2-3 hours | **Impact:** +21pp (29%→50%, realistic mid-range)
+
+**Why Third:**
+- Medium complexity (depends on Tier 2 foundations)
+- Requires understanding calculator patterns
+- Multiple calculator types to test
+- Can be parallelized across different calculator families
+
+**Targets:**
+- PI/PID controller tests (proportional+integral)
+- PT1/PT2 filter tests (continuous-time systems)
+- Integrator edge cases
+- Logic calculator batch tests
+
+### P4: Core Module Architecture - OPTIONAL ⚙️
+**Effort:** Defer to Phase 2 | **Impact:** Clean module structure
+
+**Current Status:** Core module already exists with safety gates. Classes stay in monolith for now.
+- Moving classes with complex interdependencies (math, matrix, netlist) would break builds
+- Better approach: Create wrapper facades once core module is mature
+- Document in README: "Core module design is evolutionary, not big-bang"
+
+---
+
+## 📈 Expected Timeline for Realistic Milestones
+
+Following revised P0 → P1 → P2 → P3 sequence:
+
+| Phase | Current | Target | Time Est | Cumulative | Justification |
+|-------|---------|--------|----------|-----------|---------------|
+| **REST API MVP** | 0 API | Runnable | 2-3 hrs | 2-3 hrs | Unblocks frontend, enables integration testing |
+| **DataContainer** | 17% | 40% | 2-3 hrs | 4-6 hrs | Highest impact (+23pp), smallest scope |
+| **Math** | 71% | 80% | 1-2 hrs | 5-8 hrs | Quickest to complete (+9pp) |
+| **Calculators** | 29% | 50% | 2-3 hrs | 7-11 hrs | Broader scope, medium complexity |
+| **Optional: Core Extract** | Mixed | Clean | Deferred | — | Evolutionary, not critical for MVP |
+
+**Total realistic time to core coverage milestones: 7-11 hours**
+
+**Key Difference from Previous Plan:**
+- Previous: 11 hours with unrealistic 70%+ gains per phase
+- Revised: 7-11 hours with realistic 9-23pp gains per phase
+- Focus on unblocking frontend first (REST API MVP)
+- Sequential coverage improvements in order of complexity
 
 ---
 

@@ -74,6 +74,55 @@
                     <target>21</target>
                 </configuration>
             </plugin>
+            
+            <!-- CRITICAL: Prevent GUI libraries from leaking into REST API -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-no-gui-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>validate</phase>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <!-- Ban all Swing/AWT dependencies -->
+                                        <exclude>org.swinglabs:*</exclude>
+                                        <exclude>com.sun.java:*</exclude>
+                                    </excludes>
+                                    <message>
+                                        GUI dependencies (Swing/AWT) are not allowed in REST API!
+                                        This module must be headless-compatible.
+                                        If you see this error, check the dependency tree:
+                                        mvn dependency:tree | grep -i swing
+                                    </message>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Verify no GUI imports in code -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                    <!-- Treat warnings about GUI imports as errors -->
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

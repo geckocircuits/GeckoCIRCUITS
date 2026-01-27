@@ -1,5 +1,10 @@
 package ch.technokrat.gecko.rest.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Health", description = "Health check and API information endpoints")
 public class HealthController {
 
     @Value("${app.version:1.0.0}")
@@ -26,6 +32,9 @@ public class HealthController {
      * @return Health status and version information
      */
     @GetMapping("/health")
+    @Operation(summary = "Health check", description = "Check API health status")
+    @ApiResponse(responseCode = "200", description = "API is healthy",
+            content = @Content(schema = @Schema(example = "{\"status\":\"UP\",\"version\":\"1.0.0\"}")))
     public Map<String, String> health() {
         Map<String, String> response = new HashMap<>();
         response.put("status", "UP");
@@ -38,6 +47,8 @@ public class HealthController {
      * @return Application metadata
      */
     @GetMapping("/info")
+    @Operation(summary = "API information", description = "Get API metadata and version info")
+    @ApiResponse(responseCode = "200", description = "API information")
     public Map<String, String> info() {
         Map<String, String> response = new HashMap<>();
         response.put("name", "GeckoCIRCUITS REST API");
@@ -52,6 +63,8 @@ public class HealthController {
      * @return OpenAPI/Swagger documentation info
      */
     @GetMapping("/docs")
+    @Operation(summary = "Documentation links", description = "Get links to API documentation")
+    @ApiResponse(responseCode = "200", description = "Documentation endpoints")
     public Map<String, String> docs() {
         Map<String, String> response = new HashMap<>();
         response.put("swagger-ui", "/swagger-ui.html");
