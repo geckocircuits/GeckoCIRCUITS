@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import java.awt.Point;
 import java.util.*;
 
 /**
@@ -29,6 +28,8 @@ import java.util.*;
  *
  * All methods are stateless and operate on input parameters, making them
  * easy to test without GUI dependencies.
+ * 
+ * Note: This class is GUI-free - it uses GridPoint instead of java.awt.Point.
  *
  * @author GeckoCIRCUITS Team
  * @see SchematicEditor2
@@ -47,7 +48,7 @@ public class ComponentPositioner {
          * Returns the position of this object.
          * @return the position point
          */
-        Point getPosition();
+        GridPoint getPosition();
     }
 
     /**
@@ -62,16 +63,16 @@ public class ComponentPositioner {
      * @param positions collection of position providers
      * @return the upper-left anchor point, or (MAX_VALUE, MAX_VALUE) if no valid positions
      */
-    public Point findAnchorPoint(Collection<? extends PositionProvider> positions) {
+    public GridPoint findAnchorPoint(Collection<? extends PositionProvider> positions) {
         if (positions == null || positions.isEmpty()) {
-            return new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+            return new GridPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
         }
 
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
 
         for (PositionProvider provider : positions) {
-            Point point = provider.getPosition();
+            GridPoint point = provider.getPosition();
             if (point == null) {
                 continue;
             }
@@ -85,24 +86,24 @@ public class ComponentPositioner {
             minY = Math.min(minY, point.y);
         }
 
-        return new Point(minX, minY);
+        return new GridPoint(minX, minY);
     }
 
     /**
-     * Finds the anchor point for a list of raw Point objects.
+     * Finds the anchor point for a list of raw GridPoint objects.
      *
      * @param points list of position points
      * @return the upper-left anchor point
      */
-    public Point findAnchorPointFromPoints(List<Point> points) {
+    public GridPoint findAnchorPointFromPoints(List<GridPoint> points) {
         if (points == null || points.isEmpty()) {
-            return new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+            return new GridPoint(Integer.MAX_VALUE, Integer.MAX_VALUE);
         }
 
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
 
-        for (Point point : points) {
+        for (GridPoint point : points) {
             if (point == null) {
                 continue;
             }
@@ -116,7 +117,7 @@ public class ComponentPositioner {
             minY = Math.min(minY, point.y);
         }
 
-        return new Point(minX, minY);
+        return new GridPoint(minX, minY);
     }
 
     /**
@@ -129,7 +130,7 @@ public class ComponentPositioner {
      * @param gridSize the size of each grid cell in pixels
      * @return the grid coordinates
      */
-    public Point pixelToGrid(int pixelX, int pixelY, int gridSize) {
+    public GridPoint pixelToGrid(int pixelX, int pixelY, int gridSize) {
         return pixelToGrid(pixelX, pixelY, gridSize, DEFAULT_CLICK_RADIUS);
     }
 
@@ -145,7 +146,7 @@ public class ComponentPositioner {
      * @param clickRadius the snap radius (0.0 to 1.0, as fraction of grid size)
      * @return the grid coordinates
      */
-    public Point pixelToGrid(int pixelX, int pixelY, int gridSize, double clickRadius) {
+    public GridPoint pixelToGrid(int pixelX, int pixelY, int gridSize, double clickRadius) {
         if (gridSize <= 0) {
             throw new IllegalArgumentException("Grid size must be positive: " + gridSize);
         }
@@ -165,7 +166,7 @@ public class ComponentPositioner {
             gridY++;
         }
 
-        return new Point(gridX, gridY);
+        return new GridPoint(gridX, gridY);
     }
 
     /**
@@ -175,11 +176,11 @@ public class ComponentPositioner {
      * @param startPosition the starting position (anchor)
      * @return the delta (currentPosition - startPosition)
      */
-    public Point calculateMoveDelta(Point currentPosition, Point startPosition) {
+    public GridPoint calculateMoveDelta(GridPoint currentPosition, GridPoint startPosition) {
         if (currentPosition == null || startPosition == null) {
-            return new Point(0, 0);
+            return new GridPoint(0, 0);
         }
-        return new Point(
+        return new GridPoint(
                 currentPosition.x - startPosition.x,
                 currentPosition.y - startPosition.y
         );
@@ -203,7 +204,7 @@ public class ComponentPositioner {
         boolean hasValidPoints = false;
 
         for (PositionProvider provider : positions) {
-            Point point = provider.getPosition();
+            GridPoint point = provider.getPosition();
             if (point == null) {
                 continue;
             }
@@ -232,7 +233,7 @@ public class ComponentPositioner {
      * @param corner2 opposite corner of the rectangle
      * @return true if the point is within the rectangle (inclusive)
      */
-    public boolean isPointInRectangle(Point point, Point corner1, Point corner2) {
+    public boolean isPointInRectangle(GridPoint point, GridPoint corner1, GridPoint corner2) {
         if (point == null || corner1 == null || corner2 == null) {
             return false;
         }
@@ -253,11 +254,11 @@ public class ComponentPositioner {
      * @param deltaY the Y translation
      * @return a new point with the translation applied
      */
-    public Point translatePoint(Point original, int deltaX, int deltaY) {
+    public GridPoint translatePoint(GridPoint original, int deltaX, int deltaY) {
         if (original == null) {
-            return new Point(deltaX, deltaY);
+            return new GridPoint(deltaX, deltaY);
         }
-        return new Point(original.x + deltaX, original.y + deltaY);
+        return new GridPoint(original.x + deltaX, original.y + deltaY);
     }
 
     /**
@@ -266,13 +267,13 @@ public class ComponentPositioner {
      * @param positions collection of position providers
      * @return the center point, or null if no valid positions
      */
-    public Point findCenterPoint(Collection<? extends PositionProvider> positions) {
+    public GridPoint findCenterPoint(Collection<? extends PositionProvider> positions) {
         int[] bounds = calculateBoundingBox(positions);
         if (bounds == null) {
             return null;
         }
 
-        return new Point(
+        return new GridPoint(
                 (bounds[0] + bounds[2]) / 2,  // (minX + maxX) / 2
                 (bounds[1] + bounds[3]) / 2   // (minY + maxY) / 2
         );
@@ -285,7 +286,7 @@ public class ComponentPositioner {
      * @param point2 second point
      * @return the Manhattan distance (|dx| + |dy|) in grid units
      */
-    public int calculateManhattanDistance(Point point1, Point point2) {
+    public int calculateManhattanDistance(GridPoint point1, GridPoint point2) {
         if (point1 == null || point2 == null) {
             return 0;
         }
@@ -299,7 +300,7 @@ public class ComponentPositioner {
      * @param point2 second point
      * @return the Euclidean distance
      */
-    public double calculateEuclideanDistance(Point point1, Point point2) {
+    public double calculateEuclideanDistance(GridPoint point1, GridPoint point2) {
         if (point1 == null || point2 == null) {
             return 0.0;
         }
@@ -315,7 +316,7 @@ public class ComponentPositioner {
      * @param gridSize the grid size
      * @return the snapped point
      */
-    public Point snapToGrid(Point point, int gridSize) {
+    public GridPoint snapToGrid(GridPoint point, int gridSize) {
         if (point == null || gridSize <= 0) {
             return point;
         }
@@ -323,7 +324,7 @@ public class ComponentPositioner {
         int snappedX = Math.round((float) point.x / gridSize) * gridSize;
         int snappedY = Math.round((float) point.y / gridSize) * gridSize;
 
-        return new Point(snappedX, snappedY);
+        return new GridPoint(snappedX, snappedY);
     }
 
     /**
@@ -333,20 +334,20 @@ public class ComponentPositioner {
      * @param corner2 second corner (will become bottom-right)
      * @return array of [topLeft, bottomRight]
      */
-    public Point[] normalizeRectangle(Point corner1, Point corner2) {
+    public GridPoint[] normalizeRectangle(GridPoint corner1, GridPoint corner2) {
         if (corner1 == null || corner2 == null) {
-            return new Point[]{corner1, corner2};
+            return new GridPoint[]{corner1, corner2};
         }
 
-        Point topLeft = new Point(
+        GridPoint topLeft = new GridPoint(
                 Math.min(corner1.x, corner2.x),
                 Math.min(corner1.y, corner2.y)
         );
-        Point bottomRight = new Point(
+        GridPoint bottomRight = new GridPoint(
                 Math.max(corner1.x, corner2.x),
                 Math.max(corner1.y, corner2.y)
         );
 
-        return new Point[]{topLeft, bottomRight};
+        return new GridPoint[]{topLeft, bottomRight};
     }
 }

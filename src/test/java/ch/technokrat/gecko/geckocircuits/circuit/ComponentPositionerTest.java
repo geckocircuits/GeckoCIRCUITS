@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.Point;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -47,18 +46,18 @@ public class ComponentPositionerTest {
     // ========== PositionProvider implementation for testing ==========
 
     private static class TestPositionProvider implements ComponentPositioner.PositionProvider {
-        private final Point position;
+        private final GridPoint position;
 
         TestPositionProvider(int x, int y) {
-            this.position = new Point(x, y);
+            this.position = new GridPoint(x, y);
         }
 
-        TestPositionProvider(Point p) {
+        TestPositionProvider(GridPoint p) {
             this.position = p;
         }
 
         @Override
-        public Point getPosition() {
+        public GridPoint getPosition() {
             return position;
         }
     }
@@ -71,7 +70,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(10, 20)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(10, anchor.x);
         assertEquals(20, anchor.y);
@@ -85,7 +84,7 @@ public class ComponentPositionerTest {
                 new TestPositionProvider(20, 10)
         );
 
-        Point anchor = positioner.findAnchorPoint(positions);
+        GridPoint anchor = positioner.findAnchorPoint(positions);
 
         assertEquals(5, anchor.x);
         assertEquals(10, anchor.y);
