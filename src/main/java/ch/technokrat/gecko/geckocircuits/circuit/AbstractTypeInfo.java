@@ -22,7 +22,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractTypeInfo {        
+/**
+ * Type information with GUI/I18n support.
+ * Extends TypeInfoCore to add internationalization and description fields.
+ * Maintains registry of all component types.
+ */
+public abstract class AbstractTypeInfo extends TypeInfoCore {        
     
     static Map<Class<? extends AbstractBlockInterface>, AbstractComponentTyp> _classEnumMap = new HashMap<Class<? extends AbstractBlockInterface>, AbstractComponentTyp>();
     static Map<Class<? extends AbstractBlockInterface>, AbstractTypeInfo> _classTypeMap = new HashMap<Class<? extends AbstractBlockInterface>, AbstractTypeInfo>();
@@ -36,7 +41,7 @@ public abstract class AbstractTypeInfo {
         @Override
         public boolean add(final String insertTest) {
             assert !this.contains(insertTest) : " Error: ID String is used multiple times: " + insertTest;
-            return super.add(insertTest); //To change body of generated methods, choose Tools | Templates.
+            return super.add(insertTest);
         }
     };
     static Set<AbstractComponentTyp> _allRegisteredComponentEnums = new HashSet<AbstractComponentTyp>();
@@ -52,20 +57,15 @@ public abstract class AbstractTypeInfo {
         } else {
             throw new RuntimeException("Error: a component with type \"" + elementType + "\" does not exist!");
         }
-        
     }
     
     public final I18nKeys _typeDescription;
     public final I18nKeys _typeDescriptionVerbose;    
-    public final String _fixedIDString;
-    public final Class<? extends AbstractBlockInterface> _typeClass;
-    public AbstractComponentTyp _parentType;
 
     public AbstractTypeInfo(final Class<? extends AbstractBlockInterface> typeClass, final String idString, final I18nKeys typeDescription, final I18nKeys typeDescriptionVerbose) {
+        super(typeClass, idString);
         _typeDescription = typeDescription;
         _typeDescriptionVerbose = typeDescriptionVerbose;
-        _fixedIDString = idString;
-        _typeClass = typeClass;
         _classTypeMap.put(_typeClass, this);
         _stringTypeMap.put(idString, this);                
         _allRegisteredTypeInfos.add(this);
@@ -75,8 +75,6 @@ public abstract class AbstractTypeInfo {
     public AbstractTypeInfo(final Class<? extends AbstractBlockInterface> typeClass, final String idString, final I18nKeys typeDescription) {
         this(typeClass, idString, typeDescription, typeDescription);
     }
-    
-    public abstract ConnectorType getSimulationDomain();
     
     public void doConsistencyCheck() {                        
         assert !_fixedIDString.isEmpty();                
@@ -93,7 +91,7 @@ public abstract class AbstractTypeInfo {
     public static AbstractComponentTyp getTypeEnumFromClass(Class<? extends AbstractBlockInterface> aClass) {
         return _classEnumMap.get(aClass);
     }
-            
+    
     public void addParentEnum(final AbstractComponentTyp parentType) {
         assert !_allRegisteredComponentEnums.contains(parentType);                
         _allRegisteredComponentEnums.add(parentType);
@@ -103,9 +101,7 @@ public abstract class AbstractTypeInfo {
         if(!_exportImportEnumMap.containsKey(this.getExportImportCharacters())) {
             _exportImportEnumMap.put(this.getExportImportCharacters(), parentType);        
         }         
-
     }
-    
 
     public static AbstractTypeInfo getTypeFromString(final String elementType) {
         if(_stringTypeMap.containsKey(elementType)) {
@@ -114,18 +110,26 @@ public abstract class AbstractTypeInfo {
             throw new IllegalArgumentException("String type " + elementType + " could not be found!");
         }
     }
-        
+    
+    public abstract ConnectorType getSimulationDomain();
+    
     public abstract AbstractBlockInterface fabric();
     
     public abstract String getExportImportCharacters();
-    public abstract String getSaveIdentifier(); 
+    public abstract String getSaveIdentifier();
     
+    /**
+     * Factory method to create components from file with deserialization
+     */
     public static final AbstractBlockInterface fabricFromFile(final AbstractComponentTyp typ, TokenMap tokenMap) {        
         final AbstractBlockInterface returnValue = typ.getTypeInfo().fabric();
         returnValue.importASCII(tokenMap);        
         return returnValue;
     }
     
+    /**
+     * Factory method to create new component instance and initialize
+     */
     public static final AbstractBlockInterface fabricNew(final AbstractTypeInfo typ) {        
         final AbstractBlockInterface returnValue = typ.fabric();
         returnValue.setParentCircuitSheet(SchematicEditor2.Singleton._visibleCircuitSheet);
@@ -133,11 +137,14 @@ public abstract class AbstractTypeInfo {
         return returnValue;
     }
     
+    /**
+     * Factory method for hidden sub-components
+     */
     public static AbstractCircuitBlockInterface fabricHiddenSub(final AbstractComponentTyp typ,
             final AbstractCircuitSheetComponent parent) {
         final AbstractCircuitBlockInterface returnValue = (AbstractCircuitBlockInterface) typ.getTypeInfo().fabric();
         returnValue.setParent(parent);
         return returnValue;
     }
-    
 }
+

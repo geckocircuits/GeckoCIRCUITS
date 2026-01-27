@@ -14,22 +14,21 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
+import ch.technokrat.gecko.geckocircuits.circuit.TypeInfoCore;
+import ch.technokrat.gecko.geckocircuits.circuit.SpecialTyp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Circuit type information with GUI/I18n support.
- * Extends AbstractTypeInfo to add internationalization for circuit-specific types.
+ * Core circuit type information - NO GUI/I18n dependencies.
+ * Pure circuit component type registration logic.
  */
-public abstract class AbstractCircuitTypeInfo extends AbstractTypeInfo {
+public abstract class AbstractCircuitTypeInfoCore extends TypeInfoCore {
 
-    public AbstractCircuitTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription) {
-        super(typeClass, idString, typeDescription);
+    public AbstractCircuitTypeInfoCore(Class<? extends AbstractBlockInterface> typeClass, String idString) {
+        super(typeClass, idString);
     }
-
-    public AbstractCircuitTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription, I18nKeys typeDescriptionVerbose) {
-        super(typeClass, idString, typeDescription, typeDescriptionVerbose);
-    }            
 
     @Override
     public final String getExportImportCharacters() {
@@ -48,7 +47,13 @@ public abstract class AbstractCircuitTypeInfo extends AbstractTypeInfo {
         } catch (Throwable ex) {
             System.err.println("error: " + _typeClass);
             ex.printStackTrace();
+            Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    @Override
+    public ConnectorType getSimulationDomain() {
+        return ConnectorType.LK;
     }
 }

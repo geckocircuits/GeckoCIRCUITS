@@ -14,21 +14,16 @@
 
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTypeInfo;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTypeInfoCore;
 
 /**
- * Concrete circuit type information with GUI/I18n support.
- * Combines pure circuit type logic with internationalization.
+ * Concrete circuit type information - NO GUI/I18n dependencies.
+ * Pure circuit component type, extractable to gecko-simulation-core.
  */
-public class CircuitTypeInfo extends AbstractCircuitTypeInfo {
+public class CircuitTypeInfoCore extends AbstractCircuitTypeInfoCore {
 
-    public CircuitTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription) {
-        super(typeClass, idString, typeDescription);
-    }
-
-    public CircuitTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription, I18nKeys typeDescriptionVerbose) {
-        super(typeClass, idString, typeDescription, typeDescriptionVerbose);
+    public CircuitTypeInfoCore(Class<? extends AbstractBlockInterface> typeClass, String idString) {
+        super(typeClass, idString);
     }
 
     @Override
