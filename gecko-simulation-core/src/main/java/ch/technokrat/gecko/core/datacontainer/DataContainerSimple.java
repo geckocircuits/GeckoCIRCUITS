@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,11 +13,7 @@
  */
 package ch.technokrat.gecko.core.datacontainer;
 
-import ch.technokrat.gecko.geckocircuits.newscope.AbstractTimeSerie;
-import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
-import ch.technokrat.gecko.geckocircuits.newscope.NiceScale;
-import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesArray;
-import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesConstantDt;
+// GUI-free imports - using core module classes instead of newscope
 
 public class DataContainerSimple extends AbstractDataContainer implements DataContainerValuesSettable {
     protected float[][] _data;
