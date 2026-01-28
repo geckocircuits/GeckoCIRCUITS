@@ -28,7 +28,7 @@ public class OperatingModeTest {
     @Test
     public void testAllEnumValues_Exist() {
         OperatingMode[] values = OperatingMode.values();
-        assertEquals(5, values.length);
+        assertEquals(6, values.length);
     }
 
     @Test
@@ -54,6 +54,11 @@ public class OperatingModeTest {
     @Test
     public void testMMF_Exists() {
         assertNotNull(OperatingMode.MMF);
+    }
+
+    @Test
+    public void testHeadless_Exists() {
+        assertNotNull(OperatingMode.HEADLESS);
     }
 
     // ====================================================
@@ -85,6 +90,11 @@ public class OperatingModeTest {
         assertEquals(OperatingMode.MMF, OperatingMode.valueOf("MMF"));
     }
 
+    @Test
+    public void testValueOf_Headless() {
+        assertEquals(OperatingMode.HEADLESS, OperatingMode.valueOf("HEADLESS"));
+    }
+
     // ====================================================
     // Ordinal Tests
     // ====================================================
@@ -114,6 +124,11 @@ public class OperatingModeTest {
         assertEquals(4, OperatingMode.MMF.ordinal());
     }
 
+    @Test
+    public void testOrdinal_HeadlessIsFive() {
+        assertEquals(5, OperatingMode.HEADLESS.ordinal());
+    }
+
     // ====================================================
     // Name Tests
     // ====================================================
@@ -141,6 +156,11 @@ public class OperatingModeTest {
     @Test
     public void testName_MMF() {
         assertEquals("MMF", OperatingMode.MMF.name());
+    }
+
+    @Test
+    public void testName_Headless() {
+        assertEquals("HEADLESS", OperatingMode.HEADLESS.name());
     }
 
     // ====================================================
@@ -178,7 +198,7 @@ public class OperatingModeTest {
             assertNotNull(mode);
             count++;
         }
-        assertEquals(5, count);
+        assertEquals(6, count);
     }
 
     // ====================================================

@@ -15,9 +15,16 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 public enum OperatingMode {
 
+    /** Standard desktop GUI application */
     STANDALONE,
+    /** MATLAB/Simulink integration mode */
     SIMULINK,
+    /** External tool integration mode */
     EXTERNAL,
-    REMOTE,    
-    MMF
+    /** RMI-based remote control mode */
+    REMOTE,
+    /** Memory-mapped file communication mode */
+    MMF,
+    /** Headless mode for REST API, CLI, and batch processing - NO GUI */
+    HEADLESS
 }
