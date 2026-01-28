@@ -29,6 +29,13 @@
     </properties>
 
     <dependencies>
+        <!-- JTransforms for FFT operations (pure math, no GUI) -->
+        <dependency>
+            <groupId>edu.emory.mathcs</groupId>
+            <artifactId>JTransforms</artifactId>
+            <version>2.4</version>
+        </dependency>
+
         <!-- Test dependencies only -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
