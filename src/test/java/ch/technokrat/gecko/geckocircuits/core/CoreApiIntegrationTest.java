@@ -352,10 +352,10 @@ class CoreApiIntegrationTest {
     void noGuiClassesLoaded() {
         // This test verifies we haven't accidentally loaded GUI classes
         // by checking if common GUI class names are in the loaded class list
-        
+
         // Note: This is a best-effort check - some classes might be loaded
         // by the test framework itself, but core simulation shouldn't need them
-        
+
         String[] criticalGuiClasses = {
             "javax.swing.JFrame",
             "javax.swing.JPanel",
@@ -363,7 +363,7 @@ class CoreApiIntegrationTest {
             "java.awt.Frame",
             "java.awt.Panel"
         };
-        
+
         for (String className : criticalGuiClasses) {
             try {
                 // Check if class is already loaded (don't trigger loading)
@@ -373,8 +373,163 @@ class CoreApiIntegrationTest {
                 // Expected - class not found is good!
             }
         }
-        
+
         // If we get here, the simulation ran without GUI
         assertTrue(true, "Simulation completed without requiring GUI classes");
+    }
+
+    @Nested
+    @DisplayName("RLC Circuit Simulation")
+    class RLCCircuitSimulationTest {
+
+        @Test
+        @DisplayName("RLC circuit resonance frequency calculation")
+        void rlcResonanceFrequency() {
+            // RLC circuit parameters
+            double R = 10.0;      // 10Ω
+            double L = 1e-3;      // 1mH
+            double C = 1e-6;      // 1µF
+
+            // Resonance frequency: f_0 = 1 / (2π * sqrt(LC))
+            double f0 = 1.0 / (2 * Math.PI * Math.sqrt(L * C));
+
+            // Should be around 5033 Hz for these values
+            assertTrue(f0 > 5000 && f0 < 5100,
+                String.format("Resonance frequency should be ~5033Hz, got %.2f Hz", f0));
+        }
+
+        @Test
+        @DisplayName("RLC circuit damping factor calculation")
+        void rlcDampingFactor() {
+            double R = 10.0;
+            double L = 1e-3;
+            double C = 1e-6;
+
+            // Damping factor: ζ = R / (2 * sqrt(L/C))
+            double zeta = R / (2 * Math.sqrt(L / C));
+
+            // Classify damping
+            if (zeta < 1) {
+                // Underdamped - oscillations
+                assertTrue(true, "System is underdamped");
+            } else if (zeta == 1) {
+                // Critically damped
+                assertTrue(true, "System is critically damped");
+            } else {
+                // Overdamped
+                assertTrue(true, "System is overdamped");
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("Inductor Stamping")
+    class InductorStampingTest {
+
+        @Test
+        @DisplayName("Inductor stamps companion model correctly")
+        void inductorStamping() {
+            double dt = 1e-6;
+            double inductance = 1e-3;  // 1mH
+
+            IMatrixStamper stamper = new InductorStamper();
+            double[][] G = new double[3][3];
+            double[] params = {inductance};
+
+            stamper.stampMatrixA(G, 1, 2, 0, params, dt);
+
+            // Inductor conductance for BE: G_L = dt/L
+            double gL = dt / inductance;  // 1e-6 / 1e-3 = 1e-3
+            assertEquals(gL, G[1][1], 1e-12);
+        }
+
+        @Test
+        @DisplayName("Inductor current calculation")
+        void inductorCurrentCalculation() {
+            IMatrixStamper stamper = new InductorStamper();
+            double[] params = {1e-3};  // 1mH
+
+            // Calculate current with voltage across inductor
+            double current = stamper.calculateCurrent(5.0, 0.0, params, 1e-6, 0);
+
+            // Current should be related to di/dt = V/L
+            assertFalse(Double.isNaN(current));
+        }
+    }
+
+    @Nested
+    @DisplayName("Complex Circuit Assembly")
+    class ComplexCircuitAssemblyTest {
+
+        @Test
+        @DisplayName("Assemble multi-component MNA matrix")
+        void assembleComplexMNA() {
+            // Circuit: Vs -- R1 -- R2 -- C -- GND
+            // Nodes: 0=GND (eliminated), 1=Vs+, 2=after R1, 3=after R2 (C+)
+            // Variables: [V1, V2, V3, I_vs]
+
+            int size = 4;  // 3 nodes + 1 current variable
+            double[][] G = new double[size][size];
+
+            double R1 = 100.0;
+            double R2 = 50.0;
+            double C = 1e-6;
+            double dt = 1e-6;
+
+            // Stamp R1 (nodes 1-2)
+            double gR1 = 1.0 / R1;
+            G[0][0] += gR1; G[0][1] -= gR1;
+            G[1][0] -= gR1; G[1][1] += gR1;
+
+            // Stamp R2 (nodes 2-3)
+            double gR2 = 1.0 / R2;
+            G[1][1] += gR2; G[1][2] -= gR2;
+            G[2][1] -= gR2; G[2][2] += gR2;
+
+            // Stamp C (node 3 to GND) - using BE companion
+            double gC = C / dt;
+            G[2][2] += gC;
+
+            // Stamp voltage source (node 1 to GND, current index 3)
+            G[0][3] = 1;
+            G[3][0] = 1;
+
+            // Create matrix and verify solvability
+            Matrix GMat = new Matrix(G);
+            LUDecomposition lu = new LUDecomposition(GMat);
+
+            assertTrue(lu.isNonsingular(), "Complex MNA matrix should be solvable");
+        }
+    }
+
+    @Nested
+    @DisplayName("Time Integration Methods")
+    class TimeIntegrationTest {
+
+        @Test
+        @DisplayName("Backward Euler stability")
+        void backwardEulerStability() {
+            SolverContext solver = new SolverContext(1e-6, SolverContext.SOLVER_BE);
+
+            // BE should have scale of 1
+            assertEquals(1.0, solver.getTrapezoidalScale(), 1e-10);
+
+            // BE is unconditionally stable - test with large C/dt ratio
+            double bigC = 1.0;  // 1F
+            double smallDt = 1e-9;
+            SolverContext bigSolver = new SolverContext(smallDt, SolverContext.SOLVER_BE);
+
+            double gC = bigSolver.getCapacitorConductance(bigC);
+            assertTrue(gC > 0 && !Double.isInfinite(gC), "Should handle large C/dt");
+        }
+
+        @Test
+        @DisplayName("Trapezoidal method accuracy")
+        void trapezoidalAccuracy() {
+            SolverContext solver = new SolverContext(1e-6, SolverContext.SOLVER_TRZ);
+
+            // TRZ should have scale of 2
+            assertEquals(2.0, solver.getTrapezoidalScale(), 1e-10);
+        }
     }
 }

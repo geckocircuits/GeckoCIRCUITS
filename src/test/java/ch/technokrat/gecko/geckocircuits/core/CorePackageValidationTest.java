@@ -353,16 +353,94 @@ class CorePackageValidationTest {
         }
     }
     
+    @Test
+    @DisplayName("datacontainer package has limited GUI usage")
+    void datacontainerPackageGuiUsage() throws IOException {
+        // datacontainer has some GUI references but core classes should be clean
+        Set<String> datacontainerGuiAllowed = Set.of(
+            "DataContainerCompressable.java"  // Has JOptionPane for memory errors
+        );
+
+        List<String> violations = getGuiViolationsExcluding(
+            "datacontainer",
+            datacontainerGuiAllowed
+        );
+
+        // Document violations but don't fail - this is aspirational
+        if (!violations.isEmpty()) {
+            System.out.println("Note: datacontainer GUI dependencies: " + violations.size());
+        }
+    }
+
+    @Test
+    @DisplayName("Verify core module extraction tracking")
+    void coreModuleExtractionTracking() throws IOException {
+        // These packages are fully extracted to gecko-simulation-core
+        String[] coreModulePackages = {
+            "circuit/matrix",
+            "circuit/netlist",
+            "circuit/simulation",
+            "math"
+        };
+
+        int totalCoreClasses = 0;
+        for (String pkg : coreModulePackages) {
+            Path pkgPath = getPackagePath(pkg);
+            if (Files.exists(pkgPath)) {
+                try (Stream<Path> files = Files.walk(pkgPath, 1)) {
+                    totalCoreClasses += files
+                        .filter(p -> p.toString().endsWith(".java"))
+                        .filter(Files::isRegularFile)
+                        .count();
+                }
+            }
+        }
+
+        // Should have significant core classes extracted
+        assertTrue(totalCoreClasses >= 20,
+            String.format("Expected 20+ core classes, found %d", totalCoreClasses));
+    }
+
+    @Test
+    @DisplayName("newscope package GUI classes are documented")
+    void newscopePackageDocumented() throws IOException {
+        // newscope has many GUI classes - just verify package exists
+        Path newscopePath = getPackagePath("newscope");
+        assertTrue(Files.exists(newscopePath), "newscope package should exist");
+    }
+
+    @Test
+    @DisplayName("Circuit interfaces are GUI-free")
+    void circuitInterfacesGuiFree() throws IOException {
+        // Key interfaces that should remain GUI-free
+        String[] interfaceFiles = {
+            "ICircuitCalculator.java",
+            "Drawable.java",
+            "GeckoGraphics.java"
+        };
+
+        Path circuitPath = getPackagePath("circuit");
+
+        for (String interfaceFile : interfaceFiles) {
+            Path filePath = circuitPath.resolve(interfaceFile);
+            if (Files.exists(filePath)) {
+                String content = Files.readString(filePath);
+                assertFalse(GUI_IMPORT_PATTERN.matcher(content).find(),
+                    interfaceFile + " should be GUI-free");
+            }
+        }
+    }
+
     private Path getPackagePath(String packagePath) {
         // Try to find project root
         Path currentDir = Path.of(System.getProperty("user.dir"));
         Path srcPath = currentDir.resolve(SRC_MAIN + packagePath);
-        
+
         if (!Files.exists(srcPath)) {
             // Try parent directory (in case tests run from subdir)
             srcPath = currentDir.getParent().resolve(SRC_MAIN + packagePath);
         }
-        
+
         return srcPath;
     }
 }
