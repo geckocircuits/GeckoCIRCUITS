@@ -44,5 +44,15 @@ public enum SolverType {
         assert false;
         return SolverType.SOLVER_BE;
     }
-    
+
+    /**
+     * Alias for getFromOldGeckoIndex for cleaner API.
+     *
+     * @param oldIndex the legacy index value
+     * @return the corresponding SolverType
+     */
+    public static SolverType fromOldGeckoIndex(final int oldIndex) {
+        return getFromOldGeckoIndex(oldIndex);
+    }
+
 }

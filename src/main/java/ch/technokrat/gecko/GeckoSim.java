@@ -49,6 +49,11 @@ import javax.swing.UIManager;
  * - MMF - Memory-mapped file communication
  * - SIMULINK - MATLAB Simulink integration
  * - EXTERNAL - External tool integration
+ * - HEADLESS - No GUI, for REST API, CLI, and batch processing
+ *
+ * To run in HEADLESS mode, use one of:
+ * - System property: java -Doperatingmode=HEADLESS -jar gecko.jar
+ * - Command line flag: java -jar gecko.jar -headless
  */
 public class GeckoSim {
 
@@ -95,7 +100,27 @@ public class GeckoSim {
     }
 
     public static void main(final String[] args) {
-        if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF) {
+        // Check for operating mode from system property
+        String modeProperty = System.getProperty("operatingmode");
+        if (modeProperty != null) {
+            try {
+                operatingmode = OperatingMode.valueOf(modeProperty.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                System.err.println("Invalid operating mode: " + modeProperty);
+            }
+        }
+
+        // Also check command line args for -headless flag
+        for (String arg : args) {
+            if ("-headless".equalsIgnoreCase(arg) || "--headless".equalsIgnoreCase(arg)) {
+                operatingmode = OperatingMode.HEADLESS;
+                break;
+            }
+        }
+
+        // Skip GUI initialization for non-GUI modes
+        if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF
+                && operatingmode != OperatingMode.HEADLESS) {
             setDefaultFonts();
         }
         Locale.setDefault(Locale.ENGLISH);
@@ -103,8 +128,19 @@ public class GeckoSim {
 
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
 
-        if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF) {
+        if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF
+                && operatingmode != OperatingMode.HEADLESS) {
             System.out.println("Starting GeckoCIRCUITS...");
+        }
+
+        // Handle HEADLESS mode - skip all GUI initialization
+        if (operatingmode == OperatingMode.HEADLESS) {
+            System.out.println("GeckoCIRCUITS running in HEADLESS mode");
+            loadApplicationProperties();
+            mainLoaded = true;
+            System.out.println("GeckoCIRCUITS HEADLESS is ready");
+            // Headless mode exits here - the REST API or CLI should handle further processing
+            return;
         }
 
         if (testIfBrandedVersion()) {
