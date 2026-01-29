@@ -118,9 +118,8 @@ public class LUDecompositionCache {
             }
 
             AbstractCachedMatrix removed = _cachedMatrices.remove(oldestKey);
-            memoryBytes -= removed.calculateMemoryRequirement();
-
             if (removed != null) {
+                memoryBytes -= removed.calculateMemoryRequirement();
                 removed.deleteCache();
             }
 

@@ -31,17 +31,16 @@ public final class NiceScale {
     
 
     public NiceScale(final HiLoData minMaxData, boolean isXAxis) {
-        assert minMaxData.isValidNumber();
-
         double SMALL_INCREASE = 1.001;
         if(isXAxis) {
             SMALL_INCREASE = 1.0;
         }
-        
+
         float min = -1;
         float max = 1;
 
         if (minMaxData != null) {
+            assert minMaxData.isValidNumber();
             min = minMaxData._yLo;
             max = minMaxData._yHi;
         }

@@ -97,7 +97,6 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         y5 = y4 + d;
         y6 = y5 + d;
         y7 = y6 + 2 * d;
-        y8 = y7 + d;
         double xLokal = LG * fDR * tLokal;
         switch (seIN) {
             case 1:

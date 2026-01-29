@@ -303,13 +303,11 @@ public class GeckoJavaCompiler {
                 try {
                     //---------
                     _run_script = clazz.getMethod("run_script", partypes);
-                    if (_run_script == null) {
-                        System.err.println("could not set extern Java code method (_run_script)!");
-                        _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-                    }
                     //---------
                 } catch (NoSuchMethodException ex) {
                     Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println("could not set extern Java code method (_run_script)!");
+                    _compileStatus = COMPILESTATUS.COMPILE_ERROR;
                 } catch (SecurityException ex) {
                     Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -318,13 +316,11 @@ public class GeckoJavaCompiler {
                 try {
                     //---------
                     _setGecko = clazz.getMethod("_setGecko", partypes2);
-                    if (_setGecko == null) {
-                        System.err.println("could not set extern Java code method (_setGecko)!");
-                        _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-                    }
                     //---------
                 } catch (NoSuchMethodException ex) {
                     Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println("could not set extern Java code method (_setGecko)!");
+                    _compileStatus = COMPILESTATUS.COMPILE_ERROR;
                 } catch (SecurityException ex) {
                     Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
                 }

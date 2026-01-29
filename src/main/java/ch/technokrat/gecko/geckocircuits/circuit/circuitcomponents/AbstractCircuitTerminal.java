@@ -140,9 +140,6 @@ public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterf
     @Override
     public int getForeGroundColorRgb() {
         java.awt.Color c = super.getForeGroundColor();
-        if (c == null) {
-            return 0x000000;
-        }
         return (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
     }
     

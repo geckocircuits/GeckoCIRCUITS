@@ -391,14 +391,14 @@ public class SimulationAccess implements GeckoFileable {
         }
 
         final ConnectorType terminalType = terminal.getCategory();
-        
-               
+
+
         final CircuitLabel label = terminal.getLabelObject();
-        final String oldLabel = label.getLabelString();        
+        final String oldLabel = label.getLabelString();
         label.setLabelFromUserDialog(labelName);
-                
-        final NetzlisteAllg netzlisteAllg1 = NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);        
-                                        
+
+        NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);
+
         se.updateRenamedLabel(oldLabel, labelName, terminalType);                
         se.setDirtyFlag();
     }

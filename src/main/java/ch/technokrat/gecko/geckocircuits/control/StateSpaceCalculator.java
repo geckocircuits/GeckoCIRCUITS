@@ -228,11 +228,14 @@ public final class StateSpaceCalculator {
             case MAX_DEGREE_DIFF:
                 resultValue += _leadingPolynom[2] * (_stateVariables._xNEW
                         - 2 * _stateVariables._xOLD + _stateVariables._xOLDOLD) / deltaT; // second derivative
+                // fall through
             case 2:
-                double toAdd = _leadingPolynom[1] * (_stateVariables._xNEW - _stateVariables._xOLD) / deltaT; // first derivative                
+                double toAdd = _leadingPolynom[1] * (_stateVariables._xNEW - _stateVariables._xOLD) / deltaT; // first derivative
                 resultValue += toAdd;
+                // fall through
             case 1:
                 resultValue += xIN[0][0] * _leadingPolynom[0]; // proportional part
+                // fall through
             case 0:
                 break;
             default:

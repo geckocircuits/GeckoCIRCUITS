@@ -1073,14 +1073,12 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         this.setzeKurveIndexWorksheetKolonnenXY(indexWsXY);
         //
         //=====================================
-        int[] crvAchsenTypLok = new int[kurvenanzahl];  // Fuer jeden Matrix-Eintrag gibt es einen eindeutigen Achsen-Typ (X oder Y oder Y2)
         int[] crvLineStyleLok = new int[kurvenanzahl];
         int[] crvLineColorLok = new int[kurvenanzahl];
         final double[] crvTransparencyLok = new double[kurvenanzahl];
         for (int i1 = 0; i1 < kurvenanzahl; i1++) {
             final int im1 = (int) (indexDerKurveInDerMatrix[i1] / 1000);
             final int im2 = (int) (indexDerKurveInDerMatrix[i1] % 1000);
-            crvAchsenTypLok[i1] = crvAchsenTyp[im1][im2];
             crvLineStyleLok[i1] = crvLineStyle[im1][im2];
             crvLineColorLok[i1] = crvLineColor[im1][im2];
             crvTransparencyLok[i1] = crvTransparency[im1][im2];

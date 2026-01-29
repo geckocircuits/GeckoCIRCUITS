@@ -198,14 +198,16 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (_mmf == null) {
                 System.out.println("You have no existing connections to GeckoCIRCUITS");
             } else {
+                final String fileName = _mmf.getFileName();
                 _mmf.disconnect(sessionID);
                 sessionID = NO_SESSION_ID;
-                System.out.println("You have been disconnected from the GeckoCIRCUITS instance at file" + _mmf.getFileName());
+                System.out.println("You have been disconnected from the GeckoCIRCUITS instance at file" + fileName);
                 _mmf = null;
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Error disconnecting from GeckoCIRCUITS instance at file " + _mmf.getFileName()
+            final String fileName = (_mmf != null) ? _mmf.getFileName() : "unknown";
+            throw new RuntimeException("Error disconnecting from GeckoCIRCUITS instance at file " + fileName
                     + "\nTo force a (potentially one-sided) disconnect, please call forceDisconnectFromGecko().\n"+e.getMessage(), e);
         }
     }
@@ -253,6 +255,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (_mmf == null) {
                 System.out.println("You have no existing connections to GeckoCIRCUITS");
             } else {
+                final String fileName = _mmf.getFileName();
                 _mmf.shutdown(sessionID);
                 sessionID = NO_SESSION_ID;
                 System.out.println("GeckoCIRCUITS has been shutdown.");
@@ -260,7 +263,8 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Error disconnecting from GeckoCIRCUITS instance at file " + _mmf.getFileName()
+            final String fileName = (_mmf != null) ? _mmf.getFileName() : "unknown";
+            throw new RuntimeException("Error disconnecting from GeckoCIRCUITS instance at file " + fileName
                     + "\nTo force a (potentially one-sided) disconnect, please call forceDisconnectFromGecko().\n"+e.getMessage(), e);
         }
 

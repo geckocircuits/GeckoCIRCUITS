@@ -1437,7 +1437,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         try {
 
             final AbstractTypeInfo elemTyp = AbstractTypeInfo.getFromComponentName(elementType);
-            AbstractBlockInterface parentElement = _circuit.createNewElement(elemTyp, elementName, xPosition, yPosition);
+            _circuit.createNewElement(elemTyp, elementName, xPosition, yPosition);
         } catch (Exception e) {
             writerOutputErrorLn("ERROR creating new element " + elementName + ": " + e.getMessage());
             e.printStackTrace();

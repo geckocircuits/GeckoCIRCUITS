@@ -243,6 +243,7 @@ public final class SchematicTextInfo {
                         if (properties.showParameter) {
                             addNonNullUserParameter(par);
                         }
+                        break;
                     case SHOW_NEVER:
                         break;
                     default:

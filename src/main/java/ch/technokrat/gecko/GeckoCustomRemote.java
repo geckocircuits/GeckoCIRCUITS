@@ -35,14 +35,13 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
 
     private boolean _free = true; //denotes if this instance of GeckoCIRCUITS is free for a remote connection
     private static long _lastSessionIDActive = 0;
-    public static Map<Long,CallbackClientInterface> clients;
-    
+    public static Map<Long,CallbackClientInterface> clients = new HashMap<Long,CallbackClientInterface>();
+
     private boolean _acceptsExtraConnections = false; //denotes if this instance of GeckoCIRCUITS allows more than one client to connect
     private int _numberOfExtraConnectionsAccepted = 0; //denotes how many additional clients (besides the first one) this instance of GeckoCIRCUITS will accept
 
     public GeckoCustomRemote(final SimulationAccess access) {
         super(access, null);
-        clients = new HashMap<Long,CallbackClientInterface>();        
     }
 
     public static void printErrorLn(final String message) {

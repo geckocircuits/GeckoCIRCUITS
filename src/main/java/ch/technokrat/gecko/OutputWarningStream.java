@@ -26,7 +26,7 @@ public final class OutputWarningStream extends BufferedOutputStream {
     private boolean _verbosityWarnShown = false;
     private static final long DEFAULT_WARN_SIZE = 50000000;
     private static long warningBytesSize = DEFAULT_WARN_SIZE;
-    private static long byteCounter = 0;
+    private static volatile long byteCounter = 0;
     private boolean _isOriginalOutput = true;
     @SuppressWarnings("PMD")
     private StringBuffer _alternativeOutput;

@@ -55,7 +55,6 @@ public class SubCircuitSheet extends CircuitSheet {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                MainWindow win = SchematicEditor2.Singleton.win;                
                 SchematicEditor2.Singleton.setNewVisibleCircuitSheet(_subBlock.getParentCircuitSheet());
             }
         });

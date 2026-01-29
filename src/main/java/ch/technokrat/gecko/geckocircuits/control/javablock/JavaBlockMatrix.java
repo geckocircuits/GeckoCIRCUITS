@@ -40,7 +40,7 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
             throw new IllegalStateException("Java block compilation failed - cannot simulate. Check error logs for details.");
         }
 
-        final double[][] outValue = _compiledInstance.calculateYOUT(inputSignals, time, deltaT);
+        _compiledInstance.calculateYOUT(inputSignals, time, deltaT);
         checkOutputsForNANorINFValues(outputSignals);
     }
     

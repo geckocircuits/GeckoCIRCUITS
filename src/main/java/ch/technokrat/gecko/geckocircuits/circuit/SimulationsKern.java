@@ -368,6 +368,9 @@ public class SimulationsKern implements ISimulationEngine {
                         par[8] = 0;  // --> on, Schwelle '0.5' fuer Umschalten
                     }
                     break;
+                default:
+                    // No switch action needed for other circuit types
+                    break;
             }
         }
         return mindestensEineAktiveSchalthandlung;

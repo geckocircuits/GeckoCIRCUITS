@@ -209,12 +209,14 @@ public final class CompileObject extends AbstractCompileObject {
         final String jarFilePath = GetJarPath.getJarPath();
         if (jarFilePath != null) {
             final File directory = new File(jarFilePath + "/lib/");
-            if (directory.isDirectory() && directory.isAbsolute()) {                
+            if (directory.isDirectory() && directory.isAbsolute()) {
                 final File[] children = directory.listFiles();
-                for (File file : children) {
-                    if (file.getName().endsWith(".jar")) {
-                        classPathString.append(javaSeparator);
-                        classPathString.append(file.getAbsolutePath());
+                if (children != null) {
+                    for (File file : children) {
+                        if (file.getName().endsWith(".jar")) {
+                            classPathString.append(javaSeparator);
+                            classPathString.append(file.getAbsolutePath());
+                        }
                     }
                 }
             }
