@@ -28,7 +28,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.URI;
-import java.net.URISyntaxException; 
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -237,14 +238,14 @@ public class GeckoJavaCompiler {
                 }
 
                 public void write(byte[] b, int off, int len) {
-                    compilerMessage += new String(b).substring(off, len);
+                    compilerMessage += new String(b, StandardCharsets.UTF_8).substring(off, len);
                     
                 }
 
                 public void write(int b) {
                 }
             };
-            PrintWriter compilerWriter = new PrintWriter(outStream, true);
+            PrintWriter compilerWriter = new PrintWriter(outStream, true, StandardCharsets.UTF_8);
 
             // Compile --> 
 

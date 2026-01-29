@@ -24,8 +24,8 @@ import javax.script.ScriptException;
 
 public class CallBackTest {
 
-    private static ScriptEngineManager mgr = new ScriptEngineManager();
-    public static ScriptEngine engine = mgr.getEngineByName("JavaScript");
+    private static final ScriptEngineManager mgr = new ScriptEngineManager();
+    public static final ScriptEngine engine = mgr.getEngineByName("JavaScript");
     
     public static void main(String[] args) {
         try {

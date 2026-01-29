@@ -15,6 +15,7 @@ package ch.technokrat.gecko;
 
 import ch.technokrat.gecko.geckocircuits.allg.GetJarPath;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,8 +83,8 @@ final class JavaMemoryRestart {
                 final InputStream errInputStream = proc.getErrorStream();
                 // check you have received an status code 200 to indicate ok
                 // get the encoding from the Content-TYpe header
-                final BufferedReader bufRead = new BufferedReader(new InputStreamReader(inputStream));
-                final BufferedReader errBufRead = new BufferedReader(new InputStreamReader(errInputStream));
+                final BufferedReader bufRead = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                final BufferedReader errBufRead = new BufferedReader(new InputStreamReader(errInputStream, StandardCharsets.UTF_8));
                 return searchForReadyString(bufRead, errBufRead);
 
             } catch (IOException ex) {

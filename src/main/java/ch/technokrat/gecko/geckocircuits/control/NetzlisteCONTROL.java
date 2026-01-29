@@ -89,7 +89,6 @@ public final class NetzlisteCONTROL {
         final NetzlisteCONTROL nlC = new NetzlisteCONTROL();
         nlC.connectPotentialLabels(nlA);
         nlC.optimiereAbarbeitungsListe();
-        List<RegelBlock> optimizedList = new ArrayList<RegelBlock>();
         return Arrays.asList(nlC._orderedControlBlocks);
     }
 

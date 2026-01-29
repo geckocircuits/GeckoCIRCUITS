@@ -24,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -216,7 +217,7 @@ public class GeckoSim {
         if (testIfBrandedVersion()) {
             try {
                 InputStream is = GeckoSim.class.getResourceAsStream("/brand.ipes");
-                _win.openFile(new BufferedReader(new InputStreamReader(new GZIPInputStream(is))));
+                _win.openFile(new BufferedReader(new InputStreamReader(new GZIPInputStream(is), StandardCharsets.UTF_8)));
             } catch (IOException e) {
                 e.printStackTrace();
             }

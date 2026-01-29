@@ -118,7 +118,7 @@ public final class SchematicTextInfo {
         final int dpix = AbstractCircuitSheetComponent.dpix;
         _dxTxt = (_txtKlickPoint.x - _element.getSheetPosition().x) + position.x * 1.0 / dpix - _txtKlickPoint.x;
         _dyTxt = (_txtKlickPoint.y - _element.getSheetPosition().y) + position.y * 1.0 / dpix - _txtKlickPoint.y;
-        if(_dxTxt != _dxTxtBeforeMove && _dxTxt != _dxTxtBeforeMove) {
+        if(_dxTxt != _dxTxtBeforeMove || _dyTxt != _dyTxtBeforeMove) {
             final MoveTextFieldUndoAction undoAction = new MoveTextFieldUndoAction(_dxTxtBeforeMove, _dyTxtBeforeMove, _dxTxt, _dyTxt);
             AbstractUndoGenericModel.undoManager.addEdit(undoAction);
         }

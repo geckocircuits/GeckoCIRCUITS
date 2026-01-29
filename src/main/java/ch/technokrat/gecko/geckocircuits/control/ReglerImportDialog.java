@@ -65,24 +65,6 @@ class ReglerImportDialog extends DialogElementCONTROL<ReglerSignalSource>{
          * jlIN3.setFont(TxtI.ti_Font_A); jlIN3.setForeground(GlobalColors.LAB_COLOR_DIALOG_1); //jpIMPORT.add(jlIN3);
          */
         JButton jbImport = GuiFabric.getJButton(I18nKeys.IMPORT_DATA);
-        final DialogElementCONTROL ich = this;
-        final FileFilter filter = new FileFilter() {
-            public boolean accept(File f) {
-                if (f.isDirectory()) {
-                    return true;
-                }
-                if ((f.getName().endsWith(".txt")) || (f.getName().endsWith(".dat"))) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            public String getDescription() {
-                return new String("Data File, Space-Spr. (*.dat, *.txt)");
-            }
-        };
-        //-----------
         jbImport.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
 

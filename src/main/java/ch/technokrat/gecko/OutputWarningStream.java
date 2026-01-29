@@ -17,6 +17,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
 
 public final class OutputWarningStream extends BufferedOutputStream {
@@ -42,7 +43,7 @@ public final class OutputWarningStream extends BufferedOutputStream {
 
     @Override
     public void write(final byte[] bytes) throws IOException {
-        final String aString = new String(bytes);
+        final String aString = new String(bytes, StandardCharsets.UTF_8);
         if (_isOriginalOutput) {
             _ps.append(aString);
         } else {
@@ -55,7 +56,7 @@ public final class OutputWarningStream extends BufferedOutputStream {
 
     @Override
     public void write(final byte[] bytes, final int off, final int len) throws IOException {
-        final String aString = new String(bytes, off, len);
+        final String aString = new String(bytes, off, len, StandardCharsets.UTF_8);
         byteCounter += bytes.length;
         if (_isOriginalOutput) {
             _ps.append(aString);

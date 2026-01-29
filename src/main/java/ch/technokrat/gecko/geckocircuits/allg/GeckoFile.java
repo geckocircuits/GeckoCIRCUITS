@@ -17,6 +17,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -440,9 +441,9 @@ public final class GeckoFile {
     public String getContentsString() {
         String fileContents;
         if (_storageStrategy.getStorageType() == StorageType.EXTERNAL) {
-            fileContents = new String(readFileIntoMemory());
+            fileContents = new String(readFileIntoMemory(), StandardCharsets.UTF_8);
         } else {
-            fileContents = new String(_fileContents);
+            fileContents = new String(_fileContents, StandardCharsets.UTF_8);
         }
         return fileContents;
     }
@@ -491,7 +492,7 @@ public final class GeckoFile {
     }
 
     public InputStreamReader getInputStreamReader() {
-        return new InputStreamReader(getInputStream());
+        return new InputStreamReader(getInputStream(), StandardCharsets.UTF_8);
     }
 
     public BufferedReader getBufferedReader() {

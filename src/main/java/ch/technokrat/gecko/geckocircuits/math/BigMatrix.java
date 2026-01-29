@@ -22,6 +22,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.nio.charset.StandardCharsets;
 import java.io.StreamTokenizer;
 import java.math.BigDecimal;
 //import Jama.util.*;
@@ -563,7 +564,7 @@ public class BigMatrix implements java.io.Serializable {
    */
 
    public void print (int w, int d) {
-      print(new PrintWriter(System.out,true),w,d); }
+      print(new PrintWriter(System.out, true, StandardCharsets.UTF_8),w,d); }
 
    /** Print the matrix to the output stream.   Line the elements up in
      * columns with a Fortran-like 'Fw.d' style format.
@@ -593,7 +594,7 @@ public class BigMatrix implements java.io.Serializable {
    */
 
    public void print (NumberFormat format, int width) {
-      print(new PrintWriter(System.out,true),format,width); }
+      print(new PrintWriter(System.out, true, StandardCharsets.UTF_8),format,width); }
 
    // DecimalFormat is a little disappointing coming from Fortran or C's printf.
    // Since it doesn't pad on the left, the elements will come out different

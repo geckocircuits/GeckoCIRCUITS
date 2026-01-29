@@ -17,6 +17,7 @@ import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.NetworkInterface;
@@ -70,10 +71,10 @@ public class GeckoRemoteRegistry {
         
         if (isRemoteEnabled() && oldPortNumber != newPortNumber) {
             unbindExistingRegistry();
-            GeckoSim.applicationProps.setProperty(PROPERTIES_KEY, ((Integer) newPortNumber).toString());    
+            GeckoSim.applicationProps.setProperty(PROPERTIES_KEY, String.valueOf(newPortNumber));
             enableRemotePort();
         } else {
-            GeckoSim.applicationProps.setProperty(PROPERTIES_KEY, ((Integer) newPortNumber).toString());                        
+            GeckoSim.applicationProps.setProperty(PROPERTIES_KEY, String.valueOf(newPortNumber));
         }        
         if(oldPortNumber != newPortNumber) {                        
             GeckoSim.saveProperties();
@@ -188,7 +189,7 @@ public class GeckoRemoteRegistry {
     public static String getExternalIPAddress() throws MalformedURLException, IOException {
         //ask a site to get the IP seen on the internet
         URL getMyIP = new URL(_ipQuerySite);
-        BufferedReader in = new BufferedReader(new InputStreamReader(getMyIP.openStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(getMyIP.openStream(), StandardCharsets.UTF_8));
         final String ip = in.readLine(); //the IP is the first line of the page
         return ip;
     }

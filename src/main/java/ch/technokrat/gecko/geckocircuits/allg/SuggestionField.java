@@ -203,7 +203,7 @@ public final class SuggestionField extends JTextField {
                         SuggestionField.this._list.ensureIndexIsVisible(SuggestionField.this._list.getSelectedIndex() - 1);
                         return;
                     }
-                    if (((e.getKeyCode() == 10 ? 1 : 0) & (SuggestionField.this._list.getSelectedIndex() != -1 ? 1 : 0) & (SuggestionField.this._suggestions.size() > 0 ? 1 : 0)) != 0) {
+                    if (e.getKeyCode() == 10 && SuggestionField.this._list.getSelectedIndex() != -1 && SuggestionField.this._suggestions.size() > 0) {
                         SuggestionField.this.setText((String) SuggestionField.this._list.getSelectedValue());
                         SuggestionField.this._lastChosenExistingVariable = SuggestionField.this._list.getSelectedValue().toString();
                         SuggestionField.this.fireActionEvent();

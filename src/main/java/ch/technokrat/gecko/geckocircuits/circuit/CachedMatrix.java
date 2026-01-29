@@ -133,7 +133,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
             }
 
             // Compute multipliers.
-            if (j < _nn & _LUDecomp[j][j] != 0.0) {
+            if (j < _nn && _LUDecomp[j][j] != 0.0) {
                 for (int i = j + 1; i < _nn; i++) {
                     _LUDecomp[i][j] /= _LUDecomp[j][j];
                 }

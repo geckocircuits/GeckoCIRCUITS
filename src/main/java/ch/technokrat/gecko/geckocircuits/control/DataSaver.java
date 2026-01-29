@@ -17,6 +17,7 @@ import ch.technokrat.gecko.geckocircuits.control.ReglerSaveData;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Observable;
@@ -388,7 +389,7 @@ public final class DataSaver extends Observable implements Observer {
 
         @Override
         void initStream() throws IOException {
-            _bufferedWriter = new BufferedWriter(new FileWriter(_file));
+            _bufferedWriter = new BufferedWriter(new FileWriter(_file, StandardCharsets.UTF_8));
             if (_settings._printHeader.getValue() && !_settings._transposeData.getValue()) {
                 printHeader(_data);
             }

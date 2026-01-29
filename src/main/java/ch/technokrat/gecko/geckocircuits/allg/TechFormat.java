@@ -69,7 +69,7 @@ public class TechFormat implements Serializable {
         int z1 = (int) z;  // before the decimal point
         double hz = this.exp10(anzDigits);
         int z2 = (int) Math.round((z - z1) * hz);  // after the decimal point
-        if (z2 / hz == 1) {
+        if (Math.abs(z2 / hz - 1) < 1e-10) {
             z1 += 1;
             z2 = 0;
         }  // numeric overflow

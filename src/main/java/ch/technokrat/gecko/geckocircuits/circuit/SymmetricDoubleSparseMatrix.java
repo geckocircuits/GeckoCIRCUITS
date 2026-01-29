@@ -83,14 +83,12 @@ public class SymmetricDoubleSparseMatrix {
         if (rowEntriesValue.containsKey(row)) {
             HashMap<Integer, Double> roweValues = rowEntriesValue.get(row);
             if (roweValues.containsKey(column)) {
-                roweValues.remove(roweValues.get(column));
+                roweValues.remove(column);
                 HashSet<Integer> rows = rowEntries.get(row);
-                HashMap<Integer, Double> rowsValue = rowEntriesValue.get(row);
-                rowsValue.remove(column);
                 rows.remove(column);
                 if (rows.isEmpty()) {
-                    rowEntries.remove(rows);
-                    rowEntriesValue.remove(rowsValue);
+                    rowEntries.remove(row);
+                    rowEntriesValue.remove(row);
                 }
             }
         }

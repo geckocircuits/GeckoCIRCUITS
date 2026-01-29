@@ -20,6 +20,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.nio.charset.StandardCharsets;
 import java.io.StreamTokenizer;
 //import Jama.util.*;
 
@@ -813,7 +814,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     @param d    Number of digits after the decimal.
      */
     public void print(int w, int d) {
-        print(new PrintWriter(System.out, true), w, d);
+        print(new PrintWriter(System.out, true, StandardCharsets.UTF_8), w, d);
     }
 
     /** Print the matrix to the output stream.   Line the elements up in
@@ -842,7 +843,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(NumberFormat format, int width) {
-        print(new PrintWriter(System.out, true), format, width);
+        print(new PrintWriter(System.out, true, StandardCharsets.UTF_8), format, width);
     }
 
     // DecimalFormat is a little disappointing coming from Fortran or C's printf.
