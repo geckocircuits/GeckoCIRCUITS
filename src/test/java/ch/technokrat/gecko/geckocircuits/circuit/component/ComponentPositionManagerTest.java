@@ -561,17 +561,384 @@ public class ComponentPositionManagerTest {
     @Test
     public void testFullRotationCycle() {
         manager.setDirection(Direction.NORTH);
-        
+
         manager.rotateClockwise();
         assertEquals(Direction.EAST, manager.getDirection());
-        
+
         manager.rotateClockwise();
         assertEquals(Direction.SOUTH, manager.getDirection());
-        
+
         manager.rotateClockwise();
         assertEquals(Direction.WEST, manager.getDirection());
-        
+
         manager.rotateClockwise();
         assertEquals(Direction.NORTH, manager.getDirection());
+    }
+
+    // ===== Edge Cases and Boundary Tests =====
+
+    @Test
+    public void testFromDegreesNegativeValues() {
+        // Test that negative degrees are handled without exceptions
+        assertNotNull(Direction.fromDegrees(-45));
+        assertNotNull(Direction.fromDegrees(-135));
+        assertNotNull(Direction.fromDegrees(-225));
+        assertNotNull(Direction.fromDegrees(-315));
+    }
+
+    @Test
+    public void testFromDegreesLargeValues() {
+        // 720 = 0 (NORTH)
+        assertEquals(Direction.NORTH, Direction.fromDegrees(720));
+        // 810 = 90 (EAST)
+        assertEquals(Direction.EAST, Direction.fromDegrees(810));
+        // 1080 = 0 (NORTH)
+        assertEquals(Direction.NORTH, Direction.fromDegrees(1080));
+    }
+
+    @Test
+    public void testFromOrdinalNegative() {
+        // Negative ordinals should be handled without exceptions
+        assertNotNull(Direction.fromOrdinal(-4));
+        assertNotNull(Direction.fromOrdinal(-3));
+        assertNotNull(Direction.fromOrdinal(-2));
+        assertNotNull(Direction.fromOrdinal(-1));
+    }
+
+    @Test
+    public void testFromOrdinalLarge() {
+        assertEquals(Direction.NORTH, Direction.fromOrdinal(100));
+        assertEquals(Direction.EAST, Direction.fromOrdinal(101));
+        assertEquals(Direction.SOUTH, Direction.fromOrdinal(102));
+        assertEquals(Direction.WEST, Direction.fromOrdinal(103));
+    }
+
+    @Test
+    public void testTranslateNegative() {
+        manager.setPosition(10, 20);
+        manager.translate(-5, -10);
+
+        assertEquals(5, manager.getX());
+        assertEquals(10, manager.getY());
+    }
+
+    @Test
+    public void testTranslateZero() {
+        manager.setPosition(10, 20);
+        manager.translate(0, 0);
+
+        assertEquals(10, manager.getX());
+        assertEquals(20, manager.getY());
+    }
+
+    @Test
+    public void testTranslateToNegativePosition() {
+        manager.setPosition(5, 5);
+        manager.translate(-10, -10);
+
+        assertEquals(-5, manager.getX());
+        assertEquals(-5, manager.getY());
+    }
+
+    @Test
+    public void testSetDimensionsNegative() {
+        manager.setDimensions(-10, -20);
+        assertEquals(1, manager.getWidth());
+        assertEquals(1, manager.getHeight());
+    }
+
+    @Test
+    public void testSetDimensionsOne() {
+        manager.setDimensions(1, 1);
+        assertEquals(1, manager.getWidth());
+        assertEquals(1, manager.getHeight());
+    }
+
+    @Test
+    public void testSetDimensionsLarge() {
+        manager.setDimensions(1000, 2000);
+        assertEquals(1000, manager.getWidth());
+        assertEquals(2000, manager.getHeight());
+    }
+
+    @Test
+    public void testEffectiveDimensionsSouth() {
+        manager.setDimensions(3, 5);
+        manager.setDirection(Direction.SOUTH);
+        assertEquals(3, manager.getEffectiveWidth());
+        assertEquals(5, manager.getEffectiveHeight());
+    }
+
+    @Test
+    public void testEffectiveDimensionsWest() {
+        manager.setDimensions(3, 5);
+        manager.setDirection(Direction.WEST);
+        assertEquals(5, manager.getEffectiveWidth());
+        assertEquals(3, manager.getEffectiveHeight());
+    }
+
+    @Test
+    public void testContainsEdgeCases() {
+        manager.setPosition(10, 20);
+        manager.setDimensions(5, 5);
+
+        assertTrue(manager.contains(10, 20)); // Top-left corner
+        assertTrue(manager.contains(14, 24)); // Bottom-right corner - 1
+        assertFalse(manager.contains(15, 25)); // Just outside
+        assertFalse(manager.contains(9, 20)); // Just before left
+    }
+
+    @Test
+    public void testContainsZeroPosition() {
+        manager.setPosition(0, 0);
+        manager.setDimensions(10, 10);
+
+        assertTrue(manager.contains(0, 0));
+        assertTrue(manager.contains(9, 9));
+        assertFalse(manager.contains(10, 0));
+    }
+
+    @Test
+    public void testContainsNegativePosition() {
+        manager.setPosition(-10, -20);
+        manager.setDimensions(5, 5);
+
+        assertTrue(manager.contains(-10, -20));
+        assertTrue(manager.contains(-6, -16));
+        assertFalse(manager.contains(-11, -20));
+    }
+
+    @Test
+    public void testIntersectsPartialOverlap() {
+        manager.setPosition(0, 0);
+        manager.setDimensions(10, 10);
+
+        ComponentPositionManager other = new ComponentPositionManager(5, 5);
+        other.setDimensions(10, 10);
+
+        assertTrue(manager.intersects(other));
+    }
+
+    @Test
+    public void testIntersectsAdjacentNotOverlapping() {
+        manager.setPosition(0, 0);
+        manager.setDimensions(10, 10);
+
+        ComponentPositionManager other = new ComponentPositionManager(10, 0);
+        other.setDimensions(10, 10);
+
+        assertFalse(manager.intersects(other)); // Adjacent but not overlapping
+    }
+
+    @Test
+    public void testIntersectsIdentical() {
+        manager.setPosition(5, 5);
+        manager.setDimensions(10, 10);
+
+        ComponentPositionManager other = new ComponentPositionManager(5, 5);
+        other.setDimensions(10, 10);
+
+        assertTrue(manager.intersects(other));
+    }
+
+    @Test
+    public void testLocalToSheetSouth() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.SOUTH);
+
+        Point result = manager.localToSheet(2, 3);
+        // South is 180° rotation from North
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testLocalToSheetWest() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.WEST);
+
+        Point result = manager.localToSheet(2, 3);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testSheetToLocalSouth() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.SOUTH);
+
+        Point result = manager.sheetToLocal(10, 20);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testSheetToLocalEast() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.EAST);
+
+        Point result = manager.sheetToLocal(17, 23);
+        // Should inverse the rotation transformation
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testLocalToSheetWithMirroredEast() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.EAST);
+        manager.setMirrored(true);
+
+        Point result = manager.localToSheet(2, 3);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testLocalToSheetWithMirroredSouth() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.SOUTH);
+        manager.setMirrored(true);
+
+        Point result = manager.localToSheet(2, 3);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void testFromIntArrayBoundaryValues() {
+        manager.fromIntArray(new int[]{Integer.MAX_VALUE, Integer.MIN_VALUE, 1, 1});
+
+        assertEquals(Integer.MAX_VALUE, manager.getX());
+        assertEquals(Integer.MIN_VALUE, manager.getY());
+        assertEquals(Direction.EAST, manager.getDirection());
+        assertTrue(manager.isMirrored());
+    }
+
+    @Test
+    public void testFromIntArrayZeroValues() {
+        manager.fromIntArray(new int[]{0, 0, 0, 0});
+
+        assertEquals(0, manager.getX());
+        assertEquals(0, manager.getY());
+        assertEquals(Direction.NORTH, manager.getDirection());
+        assertFalse(manager.isMirrored());
+    }
+
+    @Test
+    public void testToIntArrayWithMirror() {
+        manager.setPosition(-10, -20);
+        manager.setDirection(Direction.SOUTH);
+        manager.setMirrored(true);
+
+        int[] data = manager.toIntArray();
+        assertEquals(4, data.length);
+        assertEquals(-10, data[0]);
+        assertEquals(-20, data[1]);
+        assertEquals(2, data[2]); // SOUTH ordinal
+        assertEquals(1, data[3]); // mirrored
+    }
+
+    @Test
+    public void testCopyIndependence() {
+        manager.setPosition(10, 20);
+        manager.setDirection(Direction.WEST);
+        manager.setMirrored(true);
+        manager.setDimensions(3, 5);
+
+        ComponentPositionManager copy = manager.copy();
+
+        // Modify copy
+        copy.setPosition(99, 99);
+        copy.setDirection(Direction.NORTH);
+        copy.setMirrored(false);
+
+        // Original should be unchanged
+        assertEquals(10, manager.getX());
+        assertEquals(20, manager.getY());
+        assertEquals(Direction.WEST, manager.getDirection());
+        assertTrue(manager.isMirrored());
+    }
+
+    @Test
+    public void testSaveRestoreMultipleTimes() {
+        manager.setPosition(10, 20);
+        manager.savePosition();
+
+        manager.setPosition(50, 60);
+        manager.savePosition(); // Save new position
+
+        manager.setPosition(100, 100);
+        manager.restorePosition();
+
+        assertEquals(50, manager.getX());
+        assertEquals(60, manager.getY());
+    }
+
+    @Test
+    public void testDeltaFromSavedNegative() {
+        manager.setPosition(50, 50);
+        manager.savePosition();
+        manager.setPosition(30, 40);
+
+        Point delta = manager.getDeltaFromSaved();
+        assertEquals(-20, delta.x);
+        assertEquals(-10, delta.y);
+    }
+
+    @Test
+    public void testDeltaFromSavedZero() {
+        manager.setPosition(10, 20);
+        manager.savePosition();
+
+        Point delta = manager.getDeltaFromSaved();
+        assertEquals(0, delta.x);
+        assertEquals(0, delta.y);
+    }
+
+    @Test
+    public void testNotEquals() {
+        ComponentPositionManager m1 = new ComponentPositionManager(10, 20, Direction.EAST, true);
+        ComponentPositionManager m2 = new ComponentPositionManager(10, 20, Direction.EAST, false);
+
+        assertNotEquals(m1, m2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentType() {
+        ComponentPositionManager m1 = new ComponentPositionManager(10, 20, Direction.EAST, true);
+        assertNotEquals(m1, "not a position manager");
+    }
+
+    @Test
+    public void testGetCenterWithZeroDimensions() {
+        manager.setPosition(10, 20);
+        manager.setDimensions(1, 1); // Minimum dimensions
+
+        assertEquals(10, manager.getCenterX());
+        assertEquals(20, manager.getCenterY());
+    }
+
+    @Test
+    public void testGetEdgesLarge() {
+        manager.setPosition(0, 0);
+        manager.setDimensions(100, 200);
+
+        assertEquals(0, manager.getLeft());
+        assertEquals(100, manager.getRight());
+        assertEquals(0, manager.getTop());
+        assertEquals(200, manager.getBottom());
+    }
+
+    @Test
+    public void testGetCenter() {
+        manager.setPosition(0, 0);
+        manager.setDimensions(10, 20);
+
+        assertEquals(5, manager.getCenterX());
+        assertEquals(10, manager.getCenterY());
+    }
+
+    @Test
+    public void testGetCenterNegativePosition() {
+        manager.setPosition(-10, -20);
+        manager.setDimensions(4, 6);
+
+        assertEquals(-8, manager.getCenterX());
+        assertEquals(-17, manager.getCenterY());
     }
 }

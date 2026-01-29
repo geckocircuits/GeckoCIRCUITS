@@ -348,11 +348,181 @@ public class ParameterRegistryTest {
     @Test
     public void testCaseInsensitiveLookup() {
         registry.register(new SimpleParameter("Resistance", 1000.0));
-        
+
         // All these should find the same parameter
         assertEquals(1000.0, registry.getValue("Resistance"), 1e-10);
         assertEquals(1000.0, registry.getValue("RESISTANCE"), 1e-10);
         assertEquals(1000.0, registry.getValue("resistance"), 1e-10);
         assertEquals(1000.0, registry.getValue("ReSiStAnCe"), 1e-10);
+    }
+
+    // ===== Edge Cases and Boundary Tests =====
+
+    @Test
+    public void testRegisterMultipleSameName() {
+        SimpleParameter r1 = new SimpleParameter("R", 100.0);
+        SimpleParameter r2 = new SimpleParameter("R", 200.0);
+        registry.register(r1);
+        registry.register(r2);
+
+        assertEquals(2, registry.size());
+        // Second registration overwrites the first in the map
+        assertEquals(200.0, registry.getValue("R"), 1e-10);
+    }
+
+    @Test
+    public void testFindByAlternativeNameNull() {
+        assertNull(registry.findByAlternativeName(null));
+    }
+
+    @Test
+    public void testFindByAnyNameNull() {
+        assertNull(registry.findByAnyName(null));
+    }
+
+    @Test
+    public void testParameterWithEmptyShortName() {
+        SimpleParameter p = new SimpleParameter("", 100.0);
+        registry.register(p);
+
+        assertEquals(1, registry.size());
+        assertNull(registry.findByShortName(""));
+    }
+
+    @Test
+    public void testParameterWithEmptyAlternativeName() {
+        SimpleParameter p = new SimpleParameter("R", 100.0).withAlternativeName("");
+        registry.register(p);
+
+        assertEquals(1, registry.size());
+        assertNull(registry.findByAlternativeName(""));
+    }
+
+    @Test
+    public void testGetAllValuesEmpty() {
+        double[] values = registry.getAllValues();
+        assertEquals(0, values.length);
+    }
+
+    @Test
+    public void testGetAllShortNamesWithEmptyNames() {
+        registry.register(new SimpleParameter("", 100.0));
+        registry.register(new SimpleParameter("L", 50.0));
+
+        List<String> names = registry.getAllShortNames();
+        assertEquals(1, names.size()); // Empty name filtered out
+        assertEquals("L", names.get(0));
+    }
+
+    @Test
+    public void testGetAllLongNamesNull() {
+        registry.register(new SimpleParameter("R", 100.0)); // No long name
+
+        List<String> names = registry.getAllLongNames();
+        assertEquals(0, names.size());
+    }
+
+    @Test
+    public void testGetAllUnitsWithNulls() {
+        registry.register(new SimpleParameter("R", "Resistance", null, 100.0));
+        registry.register(new SimpleParameter("L", "Inductance", "H", 50.0));
+
+        List<String> units = registry.getAllUnits();
+        assertEquals(2, units.size());
+        assertEquals("", units.get(0)); // Null converted to empty string
+        assertEquals("H", units.get(1));
+    }
+
+    @Test
+    public void testToMapEmpty() {
+        Map<String, Double> map = registry.toMap();
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    public void testToMapWithEmptyShortNames() {
+        registry.register(new SimpleParameter("", 100.0));
+        registry.register(new SimpleParameter("L", 50.0));
+
+        Map<String, Double> map = registry.toMap();
+        assertEquals(1, map.size()); // Empty name filtered out
+        assertEquals(50.0, map.get("L"), 1e-10);
+    }
+
+    @Test
+    public void testValidateRequiredEmpty() {
+        List<String> missing = registry.validateRequired(new ArrayList<>());
+        assertTrue(missing.isEmpty());
+    }
+
+    @Test
+    public void testValidateRequiredAllMissing() {
+        List<String> missing = registry.validateRequired(Arrays.asList("R", "L", "C"));
+        assertEquals(3, missing.size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetAllValuesEmpty() {
+        registry.register(new SimpleParameter("R", 100.0));
+        registry.setAllValues(new double[0]); // Size mismatch
+    }
+
+    @Test
+    public void testClearMultipleTimes() {
+        registry.register(new SimpleParameter("R", 100.0));
+        registry.clear();
+        assertTrue(registry.isEmpty());
+
+        registry.clear(); // Clear again
+        assertTrue(registry.isEmpty());
+    }
+
+    @Test
+    public void testUnregisterAndReregister() {
+        SimpleParameter r = new SimpleParameter("R", 100.0);
+        registry.register(r);
+        registry.unregister(r);
+
+        // Re-register
+        registry.register(r);
+        assertEquals(1, registry.size());
+        assertEquals(100.0, registry.getValue("R"), 1e-10);
+    }
+
+    @Test
+    public void testMultipleParametersSameLongName() {
+        registry.register(new SimpleParameter("R1", "Resistance", "Ohm", 100.0));
+        registry.register(new SimpleParameter("R2", "Resistance", "Ohm", 200.0));
+
+        assertEquals(2, registry.size());
+        List<String> longNames = registry.getAllLongNames();
+        assertEquals(2, longNames.size());
+    }
+
+    @Test
+    public void testSetValueByAlternativeName() {
+        registry.register(new SimpleParameter("R", 100.0).withAlternativeName("Res"));
+        registry.setValue("Res", 200.0);
+
+        assertEquals(200.0, registry.getValue("R"), 1e-10);
+    }
+
+    @Test
+    public void testToStringEmpty() {
+        String str = registry.toString();
+        assertTrue(str.contains("ParameterRegistry"));
+        assertTrue(str.contains("count=0"));
+    }
+
+    @Test
+    public void testToStringMultipleWithUnits() {
+        registry.register(new SimpleParameter("R", "Res", "Ohm", 100.0));
+        registry.register(new SimpleParameter("L", "Ind", "H", 0.01));
+
+        String str = registry.toString();
+        assertTrue(str.contains("R"));
+        assertTrue(str.contains("100"));
+        assertTrue(str.contains("Ohm"));
+        assertTrue(str.contains("L"));
     }
 }

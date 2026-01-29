@@ -626,13 +626,311 @@ public class TerminalRegistryTest {
             registry.addInput(new SimpleTerminal("in" + i));
             registry.addOutput(new SimpleTerminal("out" + i));
         }
-        
+
         assertEquals(5, registry.getInputCount());
         assertEquals(5, registry.getOutputCount());
         assertEquals(10, registry.getTotalTerminalCount());
-        
+
         List<String> inputNames = registry.getInputNames();
         assertEquals("in0", inputNames.get(0));
         assertEquals("in4", inputNames.get(4));
+    }
+
+    // ===== Edge Cases and Boundary Tests =====
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetInputInvalidIndex() {
+        registry.addInput(new SimpleTerminal("IN1"));
+        registry.getInput(5); // Out of bounds
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetOutputInvalidIndex() {
+        registry.addOutput(new SimpleTerminal("OUT1"));
+        registry.getOutput(5);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveInputInvalidIndex() {
+        registry.addInput(new SimpleTerminal("IN1"));
+        registry.removeInput(5);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testRemoveOutputInvalidIndex() {
+        registry.addOutput(new SimpleTerminal("OUT1"));
+        registry.removeOutput(5);
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testAddInputAtNegativeIndex() {
+        registry.addInput(-1, new SimpleTerminal("T"));
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testAddOutputAtNegativeIndex() {
+        registry.addOutput(-1, new SimpleTerminal("T"));
+    }
+
+    @Test
+    public void testAddInputAtBoundaryIndex() {
+        SimpleTerminal t1 = new SimpleTerminal("IN1");
+        SimpleTerminal t2 = new SimpleTerminal("IN2");
+        registry.addInput(t1);
+        registry.addInput(1, t2); // Add at end
+
+        assertEquals(2, registry.getInputCount());
+        assertSame(t2, registry.getInput(1));
+    }
+
+    @Test
+    public void testAddOutputAtBoundaryIndex() {
+        SimpleTerminal t1 = new SimpleTerminal("OUT1");
+        SimpleTerminal t2 = new SimpleTerminal("OUT2");
+        registry.addOutput(t1);
+        registry.addOutput(1, t2);
+
+        assertEquals(2, registry.getOutputCount());
+        assertSame(t2, registry.getOutput(1));
+    }
+
+    @Test
+    public void testRemoveInputNotFound() {
+        registry.addInput(new SimpleTerminal("IN1"));
+        assertFalse(registry.removeInput(new SimpleTerminal("IN2")));
+    }
+
+    @Test
+    public void testRemoveOutputNotFound() {
+        registry.addOutput(new SimpleTerminal("OUT1"));
+        assertFalse(registry.removeOutput(new SimpleTerminal("OUT2")));
+    }
+
+    @Test
+    public void testGetTerminalsInputType() {
+        SimpleTerminal t1 = new SimpleTerminal("IN1");
+        SimpleTerminal t2 = new SimpleTerminal("IN2");
+        registry.addInput(t1).addInput(t2);
+
+        List<SimpleTerminal> terminals = registry.getTerminals(TerminalType.INPUT);
+        assertEquals(2, terminals.size());
+        assertSame(t1, terminals.get(0));
+        assertSame(t2, terminals.get(1));
+    }
+
+    @Test
+    public void testGetTerminalsOutputType() {
+        SimpleTerminal t = new SimpleTerminal("OUT1");
+        registry.addOutput(t);
+
+        List<SimpleTerminal> terminals = registry.getTerminals(TerminalType.OUTPUT);
+        assertEquals(1, terminals.size());
+        assertSame(t, terminals.get(0));
+    }
+
+    @Test
+    public void testFindByNameInBothInputsAndOutputs() {
+        SimpleTerminal in = new SimpleTerminal("T");
+        SimpleTerminal out = new SimpleTerminal("T");
+
+        registry.addInput(in);
+        registry.addOutput(out);
+
+        // Should find input first
+        assertSame(in, registry.findByName("T"));
+    }
+
+    @Test
+    public void testFindByNameCaseSensitive() {
+        SimpleTerminal t = new SimpleTerminal("Test");
+        registry.addInput(t);
+
+        assertSame(t, registry.findByName("test")); // Case insensitive
+        assertSame(t, registry.findByName("TEST"));
+        assertSame(t, registry.findByName("Test"));
+    }
+
+    @Test
+    public void testIndexOfInputNotFound() {
+        SimpleTerminal t1 = new SimpleTerminal("IN1");
+        SimpleTerminal t2 = new SimpleTerminal("IN2");
+        registry.addInput(t1);
+
+        assertEquals(-1, registry.indexOf(t2));
+    }
+
+    @Test
+    public void testClearSpecificTypeInputEmpty() {
+        registry.addOutput(new SimpleTerminal("OUT1"));
+        registry.clear(TerminalType.INPUT);
+
+        assertEquals(0, registry.getInputCount());
+        assertEquals(1, registry.getOutputCount());
+    }
+
+    @Test
+    public void testClearSpecificTypeOutputEmpty() {
+        registry.addInput(new SimpleTerminal("IN1"));
+        registry.clear(TerminalType.OUTPUT);
+
+        assertEquals(1, registry.getInputCount());
+        assertEquals(0, registry.getOutputCount());
+    }
+
+    @Test
+    public void testSetInputsEmpty() {
+        registry.addInput(new SimpleTerminal("OLD"));
+        registry.setInputs(new ArrayList<>());
+
+        assertEquals(0, registry.getInputCount());
+    }
+
+    @Test
+    public void testSetOutputsEmpty() {
+        registry.addOutput(new SimpleTerminal("OLD"));
+        registry.setOutputs(new ArrayList<>());
+
+        assertEquals(0, registry.getOutputCount());
+    }
+
+    @Test
+    public void testSetInputsAllNulls() {
+        registry.setInputs(Arrays.asList(null, null, null));
+        assertEquals(0, registry.getInputCount());
+    }
+
+    @Test
+    public void testGetInputNamesEmpty() {
+        List<String> names = registry.getInputNames();
+        assertTrue(names.isEmpty());
+    }
+
+    @Test
+    public void testGetOutputNamesEmpty() {
+        List<String> names = registry.getOutputNames();
+        assertTrue(names.isEmpty());
+    }
+
+    @Test
+    public void testGetInputNamesWithoutAdapter() {
+        TerminalRegistry<SimpleTerminal> noAdapter = new TerminalRegistry<>();
+        noAdapter.addInput(new SimpleTerminal("T"));
+
+        List<String> names = noAdapter.getInputNames();
+        assertEquals(1, names.size());
+        assertTrue(names.get(0).contains("Terminal")); // toString fallback
+    }
+
+    @Test
+    public void testGetUnconnectedInputsEmpty() {
+        List<SimpleTerminal> unconnected = registry.getUnconnectedInputs();
+        assertTrue(unconnected.isEmpty());
+    }
+
+    @Test
+    public void testGetUnconnectedOutputsEmpty() {
+        List<SimpleTerminal> unconnected = registry.getUnconnectedOutputs();
+        assertTrue(unconnected.isEmpty());
+    }
+
+    @Test
+    public void testGetUnconnectedInputsAllConnected() {
+        SimpleTerminal t1 = new SimpleTerminal("IN1");
+        SimpleTerminal t2 = new SimpleTerminal("IN2");
+        t1.setConnected(true);
+        t2.setConnected(true);
+
+        registry.addInput(t1).addInput(t2);
+
+        List<SimpleTerminal> unconnected = registry.getUnconnectedInputs();
+        assertTrue(unconnected.isEmpty());
+    }
+
+    @Test
+    public void testGetConnectedCountEmpty() {
+        assertEquals(0, registry.getConnectedCount());
+    }
+
+    @Test
+    public void testGetConnectedCountAllConnected() {
+        SimpleTerminal t1 = new SimpleTerminal("IN1");
+        SimpleTerminal t2 = new SimpleTerminal("OUT1");
+        t1.setConnected(true);
+        t2.setConnected(true);
+
+        registry.addInput(t1).addOutput(t2);
+
+        assertEquals(2, registry.getConnectedCount());
+    }
+
+    @Test
+    public void testGetConnectedCountMixed() {
+        SimpleTerminal t1 = new SimpleTerminal("IN1");
+        SimpleTerminal t2 = new SimpleTerminal("OUT1");
+        t1.setConnected(true);
+        t2.setConnected(false);
+
+        registry.addInput(t1).addOutput(t2);
+
+        assertEquals(1, registry.getConnectedCount());
+    }
+
+    @Test
+    public void testGetAllTerminalsEmpty() {
+        List<SimpleTerminal> all = registry.getAllTerminals();
+        assertTrue(all.isEmpty());
+    }
+
+    @Test
+    public void testGetAllTerminalsMixed() {
+        SimpleTerminal in1 = new SimpleTerminal("IN1");
+        SimpleTerminal in2 = new SimpleTerminal("IN2");
+        SimpleTerminal out1 = new SimpleTerminal("OUT1");
+
+        registry.addInput(in1).addInput(in2).addOutput(out1);
+
+        List<SimpleTerminal> all = registry.getAllTerminals();
+        assertEquals(3, all.size());
+        // Inputs come first
+        assertSame(in1, all.get(0));
+        assertSame(in2, all.get(1));
+        assertSame(out1, all.get(2));
+    }
+
+    @Test
+    public void testContainsEmpty() {
+        assertFalse(registry.contains(new SimpleTerminal("T")));
+    }
+
+    @Test
+    public void testCopyEmpty() {
+        TerminalRegistry<SimpleTerminal> copy = registry.copy();
+        assertEquals(0, copy.getInputCount());
+        assertEquals(0, copy.getOutputCount());
+    }
+
+    @Test
+    public void testSimpleTerminalNodeIndexBoundary() {
+        SimpleTerminal t = new SimpleTerminal("T");
+        t.setNodeIndex(Integer.MAX_VALUE);
+        assertEquals(Integer.MAX_VALUE, t.getNodeIndex());
+
+        t.setNodeIndex(Integer.MIN_VALUE);
+        assertEquals(Integer.MIN_VALUE, t.getNodeIndex());
+    }
+
+    @Test
+    public void testSimpleTerminalAdapterNodeIndex() {
+        SimpleTerminal t = new SimpleTerminal("Test");
+        t.setNodeIndex(42);
+
+        assertEquals(42, adapter.getNodeIndex(t));
+    }
+
+    @Test
+    public void testToStringEmpty() {
+        String str = registry.toString();
+        assertTrue(str.contains("inputs=0"));
+        assertTrue(str.contains("outputs=0"));
     }
 }

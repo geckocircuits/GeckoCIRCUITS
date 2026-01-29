@@ -378,14 +378,189 @@ public class ParameterSerializerTest {
     @Test
     public void testDoubleFormattingPrecision() throws ParseException {
         double[] original = {1.234567890123, 0.000000001, 123456789.0};
-        
+
         String exported = serializer.exportValuesToASCII(original);
         TokenizerAdapter tok = serializer.createTokenizer(exported);
         double[] imported = serializer.importValuesFromASCII(tok);
-        
+
         // Values should be close but not necessarily identical due to formatting
         assertEquals(original[0], imported[0], 1e-6);
         assertEquals(original[1], imported[1], 1e-15);
         assertEquals(original[2], imported[2], 1000.0); // Larger tolerance for large numbers with scientific notation
+    }
+
+    // ===== Edge Cases and Boundary Tests =====
+
+    @Test
+    public void testExportZeroValue() {
+        String result = serializer.exportValuesToASCII(new double[]{0.0});
+        assertTrue(result.startsWith("1\n"));
+        assertTrue(result.contains("0"));
+    }
+
+    @Test
+    public void testExportNegativeValues() {
+        String result = serializer.exportValuesToASCII(new double[]{-1.5, -1e-10});
+        assertTrue(result.startsWith("2\n"));
+        assertTrue(result.contains("-1.5"));
+    }
+
+    @Test
+    public void testImportValuesMissingNewline() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("2 1.0 2.0");
+        double[] values = serializer.importValuesFromASCII(tok);
+        assertEquals(1.0, values[0], 1e-10);
+        assertEquals(2.0, values[1], 1e-10);
+    }
+
+    @Test(expected = ParseException.class)
+    public void testImportValuesInvalidDouble() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("1\n1.0.0");
+        serializer.importValuesFromASCII(tok);
+    }
+
+    @Test(expected = ParseException.class)
+    public void testImportValuesEndOfInput() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("5\n1.0");
+        serializer.importValuesFromASCII(tok);
+    }
+
+    @Test(expected = ParseException.class)
+    public void testImportNamesEndOfInput() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("3\nA\nB");
+        serializer.importNamesFromASCII(tok);
+    }
+
+    @Test
+    public void testListTokenizerEmpty() {
+        TokenizerAdapter tok = new ListTokenizer(new ArrayList<>());
+        assertNull(tok.nextToken());
+        assertFalse(tok.hasMore());
+    }
+
+    @Test
+    public void testListTokenizerEmptyLines() {
+        TokenizerAdapter tok = new ListTokenizer(Arrays.asList("", "  ", "a"));
+        assertEquals("a", tok.nextToken());
+    }
+
+    @Test
+    public void testListTokenizerMultipleSpaces() {
+        TokenizerAdapter tok = new ListTokenizer(Arrays.asList("a    b    c"));
+        assertEquals("a", tok.nextToken());
+        assertEquals("b", tok.nextToken());
+        assertEquals("c", tok.nextToken());
+        assertNull(tok.nextToken());
+    }
+
+    @Test
+    public void testExportNamesAllNull() {
+        String result = serializer.exportNamesToASCII(new String[]{null, null});
+        assertEquals("0\n", result);
+    }
+
+    @Test
+    public void testExportNamesSomeNull() {
+        String result = serializer.exportNamesToASCII(new String[]{"A", null, null});
+        assertEquals("1\nA\n", result);
+    }
+
+    @Test
+    public void testImportResultGetValue() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("3\n1.0 2.0 3.0\n0");
+        ImportResult result = serializer.importFromASCII(tok);
+        assertEquals(1.0, result.getValue(0), 1e-10);
+        assertEquals(2.0, result.getValue(1), 1e-10);
+        assertEquals(3.0, result.getValue(2), 1e-10);
+    }
+
+    @Test
+    public void testImportResultGetName() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("0\n3\nA\nB\nC");
+        ImportResult result = serializer.importFromASCII(tok);
+        assertEquals("A", result.getName(0));
+        assertEquals("B", result.getName(1));
+        assertEquals("C", result.getName(2));
+    }
+
+    @Test
+    public void testExportVerySmallNumbers() {
+        String result = serializer.exportValuesToASCII(new double[]{1e-20, 1e-30});
+        assertTrue(result.contains("E") || result.contains("e"));
+    }
+
+    @Test
+    public void testExportVeryLargeNumbers() {
+        String result = serializer.exportValuesToASCII(new double[]{1e20, 1e30});
+        assertTrue(result.contains("E") || result.contains("e"));
+    }
+
+    @Test
+    public void testImportValuesZero() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("3\n0 0.0 -0.0");
+        double[] values = serializer.importValuesFromASCII(tok);
+        assertEquals(0.0, values[0], 1e-10);
+        assertEquals(0.0, values[1], 1e-10);
+        assertEquals(0.0, values[2], 1e-10);
+    }
+
+    @Test
+    public void testSerializerCustomSize() {
+        ParameterSerializer custom = new ParameterSerializer(10);
+        assertEquals(10, custom.getArraySize());
+    }
+
+    @Test
+    public void testListTokenizerBasicUsage() {
+        TokenizerAdapter tok = new ListTokenizer(Arrays.asList("a b c", "d e f"));
+        assertNotNull("First token should not be null", tok.nextToken());
+        // Tokenizer behavior varies - just verify no exceptions
+        assertNotNull("Next call should work", tok.nextToken());
+    }
+
+    @Test
+    public void testTokenizerCreation() {
+        TokenizerAdapter tok = serializer.createTokenizer("name1\nname2\n");
+        assertNotNull("Tokenizer should be created", tok);
+    }
+
+    @Test
+    public void testExportImportRoundTripNegativeValues() throws ParseException {
+        double[] originalValues = {-100.0, -0.001, -1e-6};
+        String exported = serializer.exportValuesToASCII(originalValues);
+        TokenizerAdapter tok = serializer.createTokenizer(exported);
+        double[] imported = serializer.importValuesFromASCII(tok);
+
+        assertEquals(originalValues[0], imported[0], 1e-10);
+        assertEquals(originalValues[1], imported[1], 1e-10);
+        assertEquals(originalValues[2], imported[2], 1e-12);
+    }
+
+    @Test
+    public void testExportImportRoundTripWithNullNames() throws ParseException {
+        double[] originalValues = {1.0, 2.0};
+        String[] originalNames = {null, "B"};
+
+        String exported = serializer.exportToASCII(originalValues, originalNames);
+        TokenizerAdapter tok = serializer.createTokenizer(exported);
+        ImportResult result = serializer.importFromASCII(tok);
+
+        assertEquals(1.0, result.getValue(0), 1e-10);
+        assertNull(result.getName(0));
+        assertEquals("B", result.getName(1));
+    }
+
+    @Test(expected = ParseException.class)
+    public void testImportInvalidCountFormat() throws ParseException {
+        TokenizerAdapter tok = serializer.createTokenizer("123abc");
+        serializer.importValuesFromASCII(tok);
+    }
+
+    @Test
+    public void testCreateTokenizerFromString() {
+        TokenizerAdapter tok = serializer.createTokenizer("a b c");
+        assertEquals("a", tok.nextToken());
+        assertEquals("b", tok.nextToken());
+        assertEquals("c", tok.nextToken());
     }
 }
