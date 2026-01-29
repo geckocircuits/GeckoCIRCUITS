@@ -459,4 +459,159 @@ public class SparseMatrixCalculatorExtendedTest {
                        Double.isInfinite(calculator._outputSignal[i][0]));
         }
     }
+
+    // =================== TIME-VARYING SECTOR TESTS ===================
+    // These tests vary xLokal to cover different branches in setPulseWidths
+
+    @Test
+    public void testSector1TimeEvolution() {
+        setThreePhaseInputVoltages(10.0, -5.0, -8.0);  // seIN=1
+        setOutputParameters(100.0, 50.0, 50.0, 0.0);  // seOUT=1
+
+        // Run many time steps to cover different xLokal values
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector1 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector2TimeEvolution() {
+        setThreePhaseInputVoltages(10.0, 5.0, -15.0);  // seIN=2
+        setOutputParameters(100.0, 50.0, 50.0, Math.PI/6);  // seOUT=2
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector2 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector3TimeEvolution() {
+        setThreePhaseInputVoltages(5.0, 10.0, -15.0);  // seIN=3
+        setOutputParameters(100.0, 50.0, 50.0, Math.PI/3);  // seOUT=3
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector3 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector4TimeEvolution() {
+        setThreePhaseInputVoltages(-5.0, 13.0, -8.0);  // seIN=4
+        setOutputParameters(100.0, 50.0, 50.0, Math.PI/2);  // seOUT=4
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector4 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector5TimeEvolution() {
+        setThreePhaseInputVoltages(-8.0, 13.0, -5.0);  // seIN=5
+        setOutputParameters(100.0, 50.0, 50.0, 2*Math.PI/3);  // seOUT=5
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector5 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector6TimeEvolution() {
+        setThreePhaseInputVoltages(-15.0, 10.0, 5.0);  // seIN=6
+        setOutputParameters(100.0, 50.0, 50.0, 5*Math.PI/6);  // seOUT=6
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector6 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector7TimeEvolution() {
+        setThreePhaseInputVoltages(-15.0, 5.0, 10.0);  // seIN=7
+        setOutputParameters(100.0, 50.0, 50.0, Math.PI);  // seOUT=7
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector7 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector8TimeEvolution() {
+        setThreePhaseInputVoltages(-10.0, -5.0, 15.0);  // seIN=8
+        setOutputParameters(100.0, 50.0, 50.0, 7*Math.PI/6);  // seOUT=8
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector8 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector9TimeEvolution() {
+        setThreePhaseInputVoltages(-5.0, -10.0, 15.0);  // seIN=9
+        setOutputParameters(100.0, 50.0, 50.0, 4*Math.PI/3);  // seOUT=9
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector9 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector10TimeEvolution() {
+        setThreePhaseInputVoltages(5.0, -15.0, 10.0);  // seIN=10
+        setOutputParameters(100.0, 50.0, 50.0, 3*Math.PI/2);  // seOUT=10
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector10 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector11TimeEvolution() {
+        setThreePhaseInputVoltages(10.0, -15.0, 5.0);  // seIN=11
+        setOutputParameters(100.0, 50.0, 50.0, 5*Math.PI/3);  // seOUT=11
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector11 time step " + i);
+        }
+    }
+
+    @Test
+    public void testSector12TimeEvolution() {
+        setThreePhaseInputVoltages(15.0, -10.0, -5.0);  // seIN=12
+        setOutputParameters(100.0, 50.0, 50.0, 11*Math.PI/6);  // seOUT=12
+
+        for (int i = 0; i < 200; i++) {
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Sector12 time step " + i);
+        }
+    }
+
+    @Test
+    public void testContinuousThreePhaseSimulation() {
+        // Simulate continuous 3-phase AC input rotating through all sectors
+        double omega = 2 * Math.PI * 50;  // 50Hz
+
+        for (int step = 0; step < 1000; step++) {
+            double t = step * DELTA_T;
+            double ur = 100.0 * Math.sin(omega * t);
+            double us = 100.0 * Math.sin(omega * t - 2*Math.PI/3);
+            double ut = 100.0 * Math.sin(omega * t + 2*Math.PI/3);
+
+            setThreePhaseInputVoltages(ur, us, ut);
+            setOutputParameters(100.0, 50.0, 25.0, omega * t);
+
+            calculator.berechneYOUT(DELTA_T);
+            assertValidOutputs("Continuous step " + step);
+        }
+    }
 }

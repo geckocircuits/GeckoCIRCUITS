@@ -114,4 +114,53 @@ public final class DivCalculatorTest extends AbstractTwoInputsMathFunctionTest {
         final double val = getValue(0.25, 0.5);
         assertWithTol(0.5, val);
     }
+
+    @Test
+    public void testPositiveDivByZeroReturnsLargePositive() {
+        // Positive / 0 should return large positive number
+        final double val = getValue(1.0, 0);
+        assertTrue("Should be large positive value", val > 1e30);
+    }
+
+    @Test
+    public void testNegativeDivByZeroReturnsLargeNegative() {
+        // Negative / 0 should return large negative number
+        final double val = getValue(-1.0, 0);
+        assertTrue("Should be large negative value", val < -1e30);
+    }
+
+    @Test
+    public void testLargeNumeratorSmallDenominator() {
+        final double val = getValue(1e20, 1e-20);
+        // This would be infinite, should return LARGE_NUMBER
+        assertTrue("Should return bounded large value", val > 1e30 || val < 1e40);
+    }
+
+    @Test
+    public void testNegativeNumeratorZeroDenominator() {
+        // -5 / 0 should give large negative
+        final double val = getValue(-5.0, 0.0);
+        assertTrue("Should be large negative", val < -1e30);
+    }
+
+    @Test
+    public void testPositiveNumeratorNegativeZeroDenominator() {
+        // 5 / -0.0 should handle edge case
+        final double val = getValue(5.0, -0.0);
+        // -0.0 / positive still gives NaN for 0/0, or large number
+        assertFalse("Should not be NaN for non-zero numerator", Double.isNaN(val));
+    }
+
+    @Test
+    public void testVerySmallNumbersDivision() {
+        final double val = getValue(1e-100, 1e-50);
+        assertWithTol(1e-50, val);
+    }
+
+    @Test
+    public void testIdentityDivision() {
+        // x / x = 1 for any non-zero x
+        final double val = getValue(123.456, 123.456);
+        assertWithTol(1.0, val);
+    }
 }

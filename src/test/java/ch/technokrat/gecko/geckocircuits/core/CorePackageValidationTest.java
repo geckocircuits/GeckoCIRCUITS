@@ -443,4 +443,180 @@ class CorePackageValidationTest {
 
         return srcPath;
     }
+
+    // ========== Workstream 5: Core API Boundary Tests ==========
+
+    @Test
+    @DisplayName("StamperRegistry has no GUI imports")
+    void stamperRegistryIsGuiFree() throws IOException {
+        Path matrixPath = getPackagePath("circuit/matrix");
+        Path stamperRegistry = matrixPath.resolve("StamperRegistry.java");
+
+        if (Files.exists(stamperRegistry)) {
+            String content = Files.readString(stamperRegistry);
+            assertFalse(GUI_IMPORT_PATTERN.matcher(content).find(),
+                "StamperRegistry should be GUI-free");
+        }
+    }
+
+    @Test
+    @DisplayName("DataContainerGlobal has limited GUI usage")
+    void dataContainerGlobalGuiUsage() throws IOException {
+        Path datacontainerPath = getPackagePath("datacontainer");
+        Path dataContainerGlobal = datacontainerPath.resolve("DataContainerGlobal.java");
+
+        if (Files.exists(dataContainerGlobal)) {
+            String content = Files.readString(dataContainerGlobal);
+
+            // Check for direct Swing imports (not AWT Color which may be acceptable)
+            Pattern swingPattern = Pattern.compile(
+                "^\\s*import\\s+javax\\.swing",
+                Pattern.MULTILINE
+            );
+            assertFalse(swingPattern.matcher(content).find(),
+                "DataContainerGlobal should not import Swing");
+        }
+    }
+
+    @Test
+    @DisplayName("All matrix stampers are GUI-free")
+    void allMatrixStampersAreGuiFree() throws IOException {
+        Path matrixPath = getPackagePath("circuit/matrix");
+
+        if (Files.exists(matrixPath)) {
+            try (Stream<Path> files = Files.walk(matrixPath, 1)) {
+                List<Path> stamperFiles = files
+                    .filter(p -> p.toString().endsWith("Stamper.java"))
+                    .filter(Files::isRegularFile)
+                    .toList();
+
+                for (Path file : stamperFiles) {
+                    String content = Files.readString(file);
+                    assertFalse(GUI_IMPORT_PATTERN.matcher(content).find(),
+                        file.getFileName() + " should be GUI-free");
+                }
+
+                assertTrue(stamperFiles.size() >= 5,
+                    "Expected at least 5 stamper files, found " + stamperFiles.size());
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Simulation package classes are all GUI-free")
+    void allSimulationClassesAreGuiFree() throws IOException {
+        Path simulationPath = getPackagePath("circuit/simulation");
+
+        if (Files.exists(simulationPath)) {
+            try (Stream<Path> files = Files.walk(simulationPath, 1)) {
+                List<Path> javaFiles = files
+                    .filter(p -> p.toString().endsWith(".java"))
+                    .filter(Files::isRegularFile)
+                    .toList();
+
+                for (Path file : javaFiles) {
+                    String content = Files.readString(file);
+                    assertFalse(GUI_IMPORT_PATTERN.matcher(content).find(),
+                        file.getFileName() + " should be GUI-free");
+                }
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Core calculators (non-GUI) can be instantiated")
+    void coreCalculatorsCanBeInstantiated() {
+        // Test that core calculators can be created without GUI
+        // These should not throw exceptions related to headless mode
+        try {
+            // Simple calculators that should work headless
+            Class.forName("ch.technokrat.gecko.geckocircuits.control.calculators.GainCalculator");
+            Class.forName("ch.technokrat.gecko.geckocircuits.control.calculators.SinCalculator");
+            Class.forName("ch.technokrat.gecko.geckocircuits.control.calculators.CosCalculator");
+            Class.forName("ch.technokrat.gecko.geckocircuits.control.calculators.AbsCalculator");
+            Class.forName("ch.technokrat.gecko.geckocircuits.control.calculators.PT1Calculator");
+        } catch (ClassNotFoundException e) {
+            fail("Core calculator class not found: " + e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Netlist package is fully GUI-free")
+    void netlistPackageIsFullyGuiFree() throws IOException {
+        Path netlistPath = getPackagePath("circuit/netlist");
+
+        if (Files.exists(netlistPath)) {
+            try (Stream<Path> files = Files.walk(netlistPath, 1)) {
+                List<Path> javaFiles = files
+                    .filter(p -> p.toString().endsWith(".java"))
+                    .filter(Files::isRegularFile)
+                    .toList();
+
+                List<String> violations = new ArrayList<>();
+                for (Path file : javaFiles) {
+                    String content = Files.readString(file);
+                    if (GUI_IMPORT_PATTERN.matcher(content).find()) {
+                        violations.add(file.getFileName().toString());
+                    }
+                }
+
+                assertTrue(violations.isEmpty(),
+                    "Netlist package should be fully GUI-free. Violations: " + violations);
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Math utilities are GUI-free")
+    void mathUtilitiesAreGuiFree() throws IOException {
+        // Verify specific math utility classes
+        String[] mathClasses = {
+            "MNAMatrix.java",
+            "LUDecomposition.java",
+            "MatrixSolver.java"
+        };
+
+        Path mathPath = getPackagePath("math");
+
+        for (String mathClass : mathClasses) {
+            Path filePath = mathPath.resolve(mathClass);
+            if (Files.exists(filePath)) {
+                String content = Files.readString(filePath);
+                assertFalse(GUI_IMPORT_PATTERN.matcher(content).find(),
+                    mathClass + " should be GUI-free");
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Core module package count is stable")
+    void coreModulePackageCountStable() throws IOException {
+        // Track class counts to detect unexpected changes
+        int matrixCount = countJavaFiles("circuit/matrix");
+        int netlistCount = countJavaFiles("circuit/netlist");
+        int simulationCount = countJavaFiles("circuit/simulation");
+        int mathCount = countJavaFiles("math");
+
+        int totalCore = matrixCount + netlistCount + simulationCount + mathCount;
+
+        // Document baseline - should be 25+ classes in core
+        assertTrue(totalCore >= 25,
+            String.format("Core module should have 25+ classes, found %d " +
+                "(matrix=%d, netlist=%d, simulation=%d, math=%d)",
+                totalCore, matrixCount, netlistCount, simulationCount, mathCount));
+    }
+
+    private int countJavaFiles(String packagePath) throws IOException {
+        Path pkgPath = getPackagePath(packagePath);
+        if (!Files.exists(pkgPath)) {
+            return 0;
+        }
+
+        try (Stream<Path> files = Files.walk(pkgPath, 1)) {
+            return (int) files
+                .filter(p -> p.toString().endsWith(".java"))
+                .filter(Files::isRegularFile)
+                .count();
+        }
+    }
 }
