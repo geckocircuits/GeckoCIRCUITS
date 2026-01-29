@@ -172,7 +172,7 @@ public final class SimulationRunner {
 
 		for (AbstractBlockInterface block : _se.getElementCONTROL()) {
 			if (block instanceof ReglerOSZI) {
-				((ReglerOSZI) block).setSimulationTimeBoundaries(SimulationsKern.tSTART, SimulationsKern.tEND);
+				((ReglerOSZI) block).setSimulationTimeBoundaries(simKern.getTSTART(), simKern.getTEND());
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public final class SimulationRunner {
 			try {
 				for (AbstractBlockInterface block : _se.getElementCONTROL()) {
 					if (block instanceof ReglerOSZI) {
-						((ReglerOSZI) block).setSimulationTimeBoundaries(SimulationsKern.tSTART, SimulationsKern.tEND);
+						((ReglerOSZI) block).setSimulationTimeBoundaries(simKern.getTSTART(), simKern.getTEND());
 					}
 				}
 

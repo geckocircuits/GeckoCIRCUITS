@@ -27,8 +27,8 @@ public abstract class AbstractSwitchCalculator extends CircuitComponent implemen
     protected double _rDt = DEFAULT_R_OFF;
     protected double _uForward = DEFAULT_U_FORWARD;
 
-    public static boolean switchAction = false;
-    public static boolean switchActionOccurred = false;
+    public static volatile boolean switchAction = false;
+    public static volatile boolean switchActionOccurred = false;
     protected BVector _bVector;
 
 

@@ -19,6 +19,7 @@ import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -224,7 +225,7 @@ public abstract class AbstractJavaBlock {
     private void saveSourcesForDebug(final String className, final String sourceCode) {
         FileWriter fstream = null;
         try {
-            fstream = new FileWriter("/home/andy/tmp/" + className + ".java");
+            fstream = new FileWriter("/home/andy/tmp/" + className + ".java", StandardCharsets.UTF_8);
             BufferedWriter out = new BufferedWriter(fstream);
             out.write(sourceCode);
             out.close();

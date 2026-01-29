@@ -104,16 +104,19 @@ public class SimulationsKernTest {
     }
 
     @Test
-    public void testSetZeiten_PreservesStaticNature() {
-        // tSTART and tEND are static fields - verify behavior
+    public void testSetZeiten_UpdatesStaticAccessors() {
+        // tSTART and tEND are now instance fields with static accessors for backward compatibility
         SimulationsKern kern1 = new SimulationsKern();
-        SimulationsKern kern2 = new SimulationsKern();
 
         kern1.setZeiten(0.0, 5.0, 1e-6);
 
-        // Since tSTART and tEND are static, kern2 should see the same values
-        assertEquals(5.0, kern2.getTEND(), 1e-15);
-        assertEquals(0.0, kern2.getTSTART(), 1e-15);
+        // Instance methods return instance values
+        assertEquals(5.0, kern1.getTEND(), 1e-15);
+        assertEquals(0.0, kern1.getTSTART(), 1e-15);
+
+        // Static accessors provide backward compatibility
+        assertEquals(5.0, SimulationsKern.getStaticTEND(), 1e-15);
+        assertEquals(0.0, SimulationsKern.getStaticTSTART(), 1e-15);
     }
 
     @Test

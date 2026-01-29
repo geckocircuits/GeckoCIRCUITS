@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -487,8 +488,8 @@ implements Operationable, Nonlinearable {
     
     //writes a non-linear characteristic to file
     public static File writeNonLinearCharacteristicToFile(double[][] data, File nonLinFile) throws java.io.IOException {
-        
-        BufferedWriter out = new BufferedWriter(new java.io.FileWriter(nonLinFile));
+
+        BufferedWriter out = new BufferedWriter(new java.io.FileWriter(nonLinFile, StandardCharsets.UTF_8));
         for (int i = 0; i < data[0].length; i++) {
             out.write(data[0][i] + " " + data[1][i] + "\n");
         }
@@ -522,7 +523,7 @@ implements Operationable, Nonlinearable {
     public byte[] writeNonLinearCharacteristicToBytes() {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(baos));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8));
             for (int i = 0; i < nonlinearData[0].length; i++) {
                 out.write(nonlinearData[0][i] + " " + nonlinearData[1][i] + "\n");
             }

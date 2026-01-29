@@ -70,10 +70,10 @@ public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
         super.setzeParameterZustandswerteAufNULL();
         _magnetizingInductance = _magnetizingInductancePar.getValue();
         psisd0 = initialStatorFluxD.getValue();
-        psisd = psisd;
+        psisd = psisd0;
         psisq0 = initialStatorFluxQ.getValue();
-        psisq = psisq0;        
-        isd0 = isa;        
+        psisq = psisq0;
+        isd0 = isa;
     }    
 
     @Override

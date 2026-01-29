@@ -201,7 +201,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         @Override
         public void doInit(final double deltaT) {
             try {
-                _zvDatenRam = DataContainerSimple.fabricConstantDtTimeSeries(1, (int) ((SimulationsKern.tEND - SimulationsKern.tSTART) / deltaT)
+                _zvDatenRam = DataContainerSimple.fabricConstantDtTimeSeries(1, (int) ((SimulationsKern.getStaticTEND() - SimulationsKern.getStaticTSTART()) / deltaT)
                         + DATA_INDEX_ADD);
             } catch (java.lang.OutOfMemoryError err) {
                 _zvDatenRam = null;

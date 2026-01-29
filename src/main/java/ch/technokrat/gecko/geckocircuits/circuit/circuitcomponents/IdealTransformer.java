@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 public class IdealTransformer extends AbstractCircuitBlockInterface implements HiddenSubCircuitable, CurrentMeasurable, DirectVoltageMeasurable {
 
     private static final double HEIGHT = 0.8;
-    public static AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealTransformer.class, "Trans", I18nKeys.IDEAL_TRANSFORMER);
+    public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealTransformer.class, "Trans", I18nKeys.IDEAL_TRANSFORMER);
     final UserParameter<Double> _windingsRatio = UserParameter.Builder.
             <Double>start("windingsRatio", 5.0).
             longName(I18nKeys.RATIO_OF_WINDINGS).

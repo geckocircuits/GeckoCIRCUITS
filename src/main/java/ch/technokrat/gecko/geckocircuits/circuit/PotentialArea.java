@@ -244,11 +244,11 @@ public final class PotentialArea {
             _potentialLabel = label1;
         }
 
-        if (pot1._potentialCircuitSheet == pot2._potentialCircuitSheet) {
-            _potentialCircuitSheet = pot1._potentialCircuitSheet;
-        } else {
+        if (pot1._potentialCircuitSheet != pot2._potentialCircuitSheet) {
             _potentialCircuitSheet = null;
         }
+        // Note: If sheets are equal, _potentialCircuitSheet is already set to pot1._potentialCircuitSheet
+        // since this method is called on pot1 (this == pot1)
 
         _highesPriority = LabelPriority.getHighesPriority(pot1._highesPriority, pot2._highesPriority);
 

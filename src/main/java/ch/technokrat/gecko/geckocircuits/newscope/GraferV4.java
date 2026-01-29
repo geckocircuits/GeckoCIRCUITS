@@ -324,7 +324,7 @@ public final class GraferV4 extends JPanel {
                         NiceScale xNiceScale = new NiceScale(HiLoData.hiLoDataFabric((float) startTime, (float) endTime), true);
                         HiLoData niceLimits = xNiceScale.getNiceLimits();
 
-                        if (Math.abs(SimulationsKern.tEND - endTime) / Math.abs(SimulationsKern.tEND + endTime) > 0.01) {
+                        if (Math.abs(SimulationsKern.getStaticTEND() - endTime) / Math.abs(SimulationsKern.getStaticTEND() + endTime) > 0.01) {
                             setSimulationTimeBoundaries(startTime, niceLimits._yHi);
                         } else {
                             setSimulationTimeBoundaries(startTime, endTime);

@@ -84,17 +84,16 @@ public enum CircuitTyp implements AbstractComponentTyp {
     public int getTypeNumber() {
         return _intValue;
     }
-    private static Map<Integer, CircuitTyp> _backwardMap;
+    private static final Map<Integer, CircuitTyp> _backwardMap;
+
+    static {
+        _backwardMap = new HashMap<Integer, CircuitTyp>();
+        for (CircuitTyp typ : values()) {
+            _backwardMap.put(typ._intValue, typ);
+        }
+    }
 
     public static CircuitTyp getFromIntNumber(final int intNumber) {
-
-        if (_backwardMap == null) {
-            _backwardMap = new HashMap<Integer, CircuitTyp>();
-            for (CircuitTyp typ : values()) {
-                _backwardMap.put(typ._intValue, typ);
-            }
-        }
-
         if (_backwardMap.containsKey(intNumber)) {
             return _backwardMap.get(intNumber);
         }

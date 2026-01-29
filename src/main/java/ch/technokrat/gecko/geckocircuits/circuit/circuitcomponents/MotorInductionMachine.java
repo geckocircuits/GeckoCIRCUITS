@@ -23,10 +23,10 @@ import java.awt.Window;
 import java.util.Arrays;
 import java.util.List;
 
-// Maschinenmodell 
-// Asynchronmaschine allg. 
+// Maschinenmodell
+// Asynchronmaschine allg.
 public final class MotorInductionMachine extends AbstractMotorIM {
-    public static AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorInductionMachine.class, "IM", I18nKeys.INDUCTION_MACHINE);
+    public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorInductionMachine.class, "IM", I18nKeys.INDUCTION_MACHINE);
 
     private int drMpix = 3;
     private double Lls = 1e-3;

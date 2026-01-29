@@ -36,7 +36,7 @@ public final class MotorSmRound extends AbstractMotorSM {
     private static final int INIT_STAT_FLUX_Q_INDEX = 38;
     private static final double INIT_DAMPER_RES_Q2_VALUE = 0.2;
     private static final double INIT_LEAKAGE_INDUCTANCE_Q2 = 0.002;
-    public static AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorSmRound.class, "SM-RO", I18nKeys.SM_RO, I18nKeys.ROUND_ROTOR_SYNCHRONOUS_MACHINE);
+    public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorSmRound.class, "SM-RO", I18nKeys.SM_RO, I18nKeys.ROUND_ROTOR_SYNCHRONOUS_MACHINE);
     private double _damperResistanceQ2;
     
     final UserParameter<Double> _damperResistanceQ2_par = UserParameter.Builder.

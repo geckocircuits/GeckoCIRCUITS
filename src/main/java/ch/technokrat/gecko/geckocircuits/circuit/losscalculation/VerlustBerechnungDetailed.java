@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -175,10 +176,10 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         // Datei einlesen -->
         List<String> datVec = new ArrayList<String>();
         //
-        // GZIP-Format (March 2009) - ganz neu! --> 
+        // GZIP-Format (March 2009) - ganz neu! -->
         try {
             GZIPInputStream in1 = new GZIPInputStream(newLossFile.getInputStream());
-            BufferedReader in = new BufferedReader(new InputStreamReader(in1));
+            BufferedReader in = new BufferedReader(new InputStreamReader(in1, StandardCharsets.UTF_8));
             String z = null;
             while ((z = in.readLine()) != null) {
                 datVec.add(z);
@@ -188,7 +189,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             // neue gezipte Version -->
             try {
                 InflaterInputStream in1 = new InflaterInputStream(newLossFile.getInputStream());
-                BufferedReader in = new BufferedReader(new InputStreamReader(in1));
+                BufferedReader in = new BufferedReader(new InputStreamReader(in1, StandardCharsets.UTF_8));
                 String z = null;
                 while ((z = in.readLine()) != null) {
                     datVec.add(z);
@@ -327,7 +328,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             } else {
                 lossesFile = new File(fkaku);
             }
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(lossesFile)));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(lossesFile), StandardCharsets.UTF_8));
             //
             out.write(ascii.toString());
             out.flush();

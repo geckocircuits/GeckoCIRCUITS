@@ -121,17 +121,16 @@ public enum ControlTyp implements AbstractComponentTyp {
         assert _typeInfo != null;
         _typeInfo.addParentEnum(this);
     }
-    private static Map<Integer, ControlTyp> _backwardMap;
+    private static final Map<Integer, ControlTyp> _backwardMap;
+
+    static {
+        _backwardMap = new HashMap<Integer, ControlTyp>();
+        for (ControlTyp typ : values()) {
+            _backwardMap.put(typ._intValue, typ);
+        }
+    }
 
     public static ControlTyp getFromIntNumber(final int intNumber) {
-
-        if (_backwardMap == null) {
-            _backwardMap = new HashMap<Integer, ControlTyp>();
-            for (ControlTyp typ : values()) {
-                _backwardMap.put(typ._intValue, typ);
-            }
-        }
-
         if (_backwardMap.containsKey(intNumber)) {
             return _backwardMap.get(intNumber);
         }

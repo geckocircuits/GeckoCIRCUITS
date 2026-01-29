@@ -35,7 +35,12 @@ public class SimulationsKern implements ISimulationEngine {
 
     private boolean diodenSchaltfehler;
     private double dt, t, tPAUSE;
-    public static double tSTART, tEND;
+    private double tSTART, tEND;
+
+    // Static fields for backward compatibility with classes that don't have SimulationsKern instance access
+    // These are updated whenever instance fields are set. Use getTSTART()/getTEND() methods when possible.
+    private static volatile double staticTSTART;
+    private static volatile double staticTEND;
     private LKMatrices lkmLK;  // Leistungskreis
     private LKMatrices lkmTHERM;  // thermischer Kreis
     private NetListLK nl;  // Leistungskreis
@@ -115,12 +120,28 @@ public class SimulationsKern implements ISimulationEngine {
 
     @Override
     public double getTEND() {
-        return tEND;
+        return this.tEND;
     }
 
     @Override
     public double getTSTART() {
-        return tSTART;
+        return this.tSTART;
+    }
+
+    /**
+     * Static accessor for backward compatibility with classes that don't have SimulationsKern instance access.
+     * Prefer using instance methods getTSTART()/getTEND() when possible.
+     */
+    public static double getStaticTSTART() {
+        return staticTSTART;
+    }
+
+    /**
+     * Static accessor for backward compatibility with classes that don't have SimulationsKern instance access.
+     * Prefer using instance methods getTSTART()/getTEND() when possible.
+     */
+    public static double getStaticTEND() {
+        return staticTEND;
     }
 
     @Override
@@ -425,6 +446,9 @@ public class SimulationsKern implements ISimulationEngine {
         this.tSTART = tSTART;
         this.tEND = tEND;
         this.dt = dt;
+        // Update static fields for backward compatibility
+        staticTSTART = tSTART;
+        staticTEND = tEND;
     }
 
     public void initSimulation(
@@ -438,6 +462,9 @@ public class SimulationsKern implements ISimulationEngine {
         this.tEND = tEND;
         this.tPAUSE = tPAUSE;
         this.t = tAktuell;
+        // Update static fields for backward compatibility
+        staticTSTART = tSTART;
+        staticTEND = tEND;
         //            
         this.controlNL = nlContainer._nlControl;
         controlNL.doMemorInits(dt);
