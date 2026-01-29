@@ -427,4 +427,331 @@ public class NComplexTest {
         // Should contain representation of zero
         assertTrue(result.length() > 0);
     }
+
+    // ==================== COMPREHENSIVE EDGE CASE ADDITIONS ====================
+
+    @Test
+    public void testNicePrint_RealPositiveImaginaryOne() {
+        // Test im == 1 case (positive imaginary = 1)
+        NComplex a = new NComplex(3.0f, 1.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertTrue(result.contains("+i"));
+    }
+
+    @Test
+    public void testNicePrint_RealNegativeImaginaryNegativeOne() {
+        // Test im == -1 case (negative imaginary = -1)
+        NComplex a = new NComplex(3.0f, -1.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertTrue(result.contains("-i"));
+    }
+
+    @Test
+    public void testNicePrint_RealNegativeImaginaryPositive() {
+        // Test negative real with positive imaginary
+        NComplex a = new NComplex(-5.0f, 3.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertTrue(result.contains("i"));
+    }
+
+    @Test
+    public void testNicePrint_RealNegativeImaginaryNegative() {
+        // Test negative real with negative imaginary
+        NComplex a = new NComplex(-5.0f, -3.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertTrue(result.contains("i"));
+    }
+
+    @Test
+    public void testNicePrint_ImaginaryOnlyPositive() {
+        // Test pure imaginary = 1
+        NComplex a = new NComplex(0.0f, 1.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertEquals("i", result);
+    }
+
+    @Test
+    public void testNicePrint_ImaginaryOnlyNegative() {
+        // Test pure imaginary = -1
+        NComplex a = new NComplex(0.0f, -1.0f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertEquals("-i", result);
+    }
+
+    @Test
+    public void testNicePrint_ImaginaryOnlyOtherValue() {
+        // Test pure imaginary with arbitrary value (not ±1)
+        NComplex a = new NComplex(0.0f, 2.5f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertTrue(result.contains("i"));
+    }
+
+    @Test
+    public void testSqrt_RealNegativeImaginaryZero() {
+        // Additional coverage for sqrt with re < 0 and im >= 0
+        NComplex a = new NComplex(-9.0f, 0.0f);
+        NComplex result = NComplex.sqrt(a);
+        assertNotNull(result);
+        // sqrt(-9) = 3i
+        assertTrue(Math.abs(result.getIm()) > 0);
+    }
+
+    @Test
+    public void testSqrt_RealNegativeImaginaryPositive() {
+        // sqrt with re < 0 and im > 0
+        NComplex a = new NComplex(-1.0f, 1.0f);
+        NComplex result = NComplex.sqrt(a);
+        assertNotNull(result);
+        // Verify by squaring
+        NComplex squared = NComplex.mul(result, result);
+        assertEquals(a.getRe(), squared.getRe(), 0.1f);
+        assertEquals(a.getIm(), squared.getIm(), 0.1f);
+    }
+
+    @Test
+    public void testEquals_SameZero() {
+        // Test equals with both being zero
+        NComplex a = new NComplex(0.0f, 0.0f);
+        NComplex b = new NComplex(0.0f, 0.0f);
+        assertTrue(a.equals(b));
+    }
+
+    @Test
+    public void testEquals_DifferentImaginaryOnly() {
+        // Test equals with different imaginary parts
+        NComplex a = new NComplex(0.0f, 3.0f);
+        NComplex b = new NComplex(0.0f, 5.0f);
+        assertFalse(a.equals(b));
+    }
+
+    @Test
+    public void testMul_NegativeComplexes() {
+        // (-2-3i) * (-1-1i) = 2+2i+3i+3i² = 2+5i-3 = -1+5i
+        NComplex a = new NComplex(-2.0f, -3.0f);
+        NComplex b = new NComplex(-1.0f, -1.0f);
+        NComplex result = NComplex.mul(a, b);
+        assertEquals(-1.0f, result.getRe(), TOLERANCE);
+        assertEquals(5.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testDiv_LargeRealSmallImaginary() {
+        // Division when real part dominates in divisor
+        NComplex a = new NComplex(10.0f, 5.0f);
+        NComplex b = new NComplex(100.0f, 0.1f);
+        NComplex result = NComplex.div(a, b);
+        assertNotNull(result);
+        // Verify inverse relationship
+        NComplex check = NComplex.mul(result, b);
+        assertEquals(a.getRe(), check.getRe(), 0.1f);
+        assertEquals(a.getIm(), check.getIm(), 0.1f);
+    }
+
+    @Test
+    public void testDiv_SmallRealLargeImaginary() {
+        // Division when imaginary part dominates in divisor
+        NComplex a = new NComplex(10.0f, 5.0f);
+        NComplex b = new NComplex(0.1f, 100.0f);
+        NComplex result = NComplex.div(a, b);
+        assertNotNull(result);
+        // Verify inverse relationship
+        NComplex check = NComplex.mul(result, b);
+        assertEquals(a.getRe(), check.getRe(), 0.5f);
+        assertEquals(a.getIm(), check.getIm(), 0.5f);
+    }
+
+    @Test
+    public void testAbs_NegativeRealNegativeImaginary() {
+        // |-3-4i| = sqrt(9+16) = 5
+        NComplex a = new NComplex(-3.0f, -4.0f);
+        float result = NComplex.abs(a);
+        assertEquals(5.0f, result, TOLERANCE);
+    }
+
+    @Test
+    public void testConj_NegativeReal() {
+        NComplex a = new NComplex(-3.0f, 4.0f);
+        NComplex result = NComplex.conj(a);
+        assertEquals(-3.0f, result.getRe(), TOLERANCE);
+        assertEquals(-4.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testConj_NegativeBoth() {
+        NComplex a = new NComplex(-3.0f, -4.0f);
+        NComplex result = NComplex.conj(a);
+        assertEquals(-3.0f, result.getRe(), TOLERANCE);
+        assertEquals(4.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testAdd_NegativeNumbers() {
+        NComplex a = new NComplex(-2.0f, -3.0f);
+        NComplex b = new NComplex(-1.0f, -2.0f);
+        NComplex result = NComplex.add(a, b);
+        assertEquals(-3.0f, result.getRe(), TOLERANCE);
+        assertEquals(-5.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testAdd_MixedSigns() {
+        NComplex a = new NComplex(5.0f, -3.0f);
+        NComplex b = new NComplex(-2.0f, 7.0f);
+        NComplex result = NComplex.add(a, b);
+        assertEquals(3.0f, result.getRe(), TOLERANCE);
+        assertEquals(4.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testSub_NegativeNumbers() {
+        NComplex a = new NComplex(-5.0f, -7.0f);
+        NComplex b = new NComplex(-2.0f, -3.0f);
+        NComplex result = NComplex.sub(a, b);
+        assertEquals(-3.0f, result.getRe(), TOLERANCE);
+        assertEquals(-4.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testSub_MixedSigns() {
+        NComplex a = new NComplex(5.0f, -3.0f);
+        NComplex b = new NComplex(-2.0f, 7.0f);
+        NComplex result = NComplex.sub(a, b);
+        assertEquals(7.0f, result.getRe(), TOLERANCE);
+        assertEquals(-10.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testRCmul_NegativeScalar() {
+        NComplex a = new NComplex(2.0f, 3.0f);
+        NComplex result = NComplex.RCmul(-2.0f, a);
+        assertEquals(-4.0f, result.getRe(), TOLERANCE);
+        assertEquals(-6.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testRCmul_VerySmallScalar() {
+        NComplex a = new NComplex(1000.0f, 2000.0f);
+        NComplex result = NComplex.RCmul(0.001f, a);
+        assertEquals(1.0f, result.getRe(), TOLERANCE);
+        assertEquals(2.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testRCmul_VeryLargeScalar() {
+        NComplex a = new NComplex(0.001f, 0.002f);
+        NComplex result = NComplex.RCmul(1000.0f, a);
+        assertEquals(1.0f, result.getRe(), TOLERANCE);
+        assertEquals(2.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testSqrt_RealPositiveImaginarySmall() {
+        // Case: x >= y (real dominates)
+        NComplex a = new NComplex(16.0f, 0.1f);
+        NComplex result = NComplex.sqrt(a);
+        assertNotNull(result);
+        NComplex squared = NComplex.mul(result, result);
+        assertEquals(a.getRe(), squared.getRe(), 0.1f);
+        assertEquals(a.getIm(), squared.getIm(), 0.1f);
+    }
+
+    @Test
+    public void testSqrt_RealSmallImaginaryLarge() {
+        // Case: x < y (imaginary dominates)
+        NComplex a = new NComplex(0.1f, 16.0f);
+        NComplex result = NComplex.sqrt(a);
+        assertNotNull(result);
+        NComplex squared = NComplex.mul(result, result);
+        assertEquals(a.getRe(), squared.getRe(), 0.1f);
+        assertEquals(a.getIm(), squared.getIm(), 0.1f);
+    }
+
+    @Test
+    public void testToString_Negative() {
+        NComplex a = new NComplex(-3.0f, -4.0f);
+        String result = a.toString();
+        assertTrue(result.contains("-3.0"));
+        assertTrue(result.contains("-4.0"));
+        assertTrue(result.contains("i"));
+    }
+
+    @Test
+    public void testToString_Zero() {
+        NComplex a = new NComplex(0.0f, 0.0f);
+        String result = a.toString();
+        assertTrue(result.contains("0.0"));
+        assertTrue(result.contains("i"));
+    }
+
+    @Test
+    public void testDiv_ImaginaryDominantBothBranches() {
+        // Test where imaginary is dominant and we take the else branch in div
+        NComplex a = new NComplex(5.0f, 10.0f);
+        NComplex b = new NComplex(1.0f, 5.0f);
+        NComplex result = NComplex.div(a, b);
+        assertNotNull(result);
+        NComplex verify = NComplex.mul(result, b);
+        assertEquals(a.getRe(), verify.getRe(), 0.1f);
+        assertEquals(a.getIm(), verify.getIm(), 0.1f);
+    }
+
+    @Test
+    public void testNicePrint_RealImaginaryBothNegativeButNotOne() {
+        // Test the else branch in nicePrint when im < 0 and im != -1
+        NComplex a = new NComplex(3.0f, -2.5f);
+        String result = a.nicePrint();
+        assertNotNull(result);
+        assertTrue(result.contains("i"));
+    }
+
+    @Test
+    public void testEquals_ImaginaryPartDifferent() {
+        // Test partial branch coverage in equals method
+        NComplex a = new NComplex(3.0f, 4.0f);
+        NComplex b = new NComplex(3.0f, 5.0f);
+        assertFalse(a.equals(b));
+    }
+
+    @Test
+    public void testMul_RealOnlyByComplex() {
+        // (5) * (2+3i) = 10+15i
+        NComplex a = new NComplex(5.0f, 0.0f);
+        NComplex b = new NComplex(2.0f, 3.0f);
+        NComplex result = NComplex.mul(a, b);
+        assertEquals(10.0f, result.getRe(), TOLERANCE);
+        assertEquals(15.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testMul_ComplexByRealOnly() {
+        // (2+3i) * (5) = 10+15i
+        NComplex a = new NComplex(2.0f, 3.0f);
+        NComplex b = new NComplex(5.0f, 0.0f);
+        NComplex result = NComplex.mul(a, b);
+        assertEquals(10.0f, result.getRe(), TOLERANCE);
+        assertEquals(15.0f, result.getIm(), TOLERANCE);
+    }
+
+    @Test
+    public void testAbs_OnlyRealNegative() {
+        // |-5+0i| = 5
+        NComplex a = new NComplex(-5.0f, 0.0f);
+        float result = NComplex.abs(a);
+        assertEquals(5.0f, result, TOLERANCE);
+    }
+
+    @Test
+    public void testAbs_OnlyImaginaryNegative() {
+        // |0-3i| = 3
+        NComplex a = new NComplex(0.0f, -3.0f);
+        float result = NComplex.abs(a);
+        assertEquals(3.0f, result, TOLERANCE);
+    }
 }
