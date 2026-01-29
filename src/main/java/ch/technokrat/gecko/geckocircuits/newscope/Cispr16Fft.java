@@ -30,9 +30,9 @@ public final class Cispr16Fft {
     public double baseFrequency;
 
     public Cispr16Fft(final DataContainerSimple data, final boolean useBlackman) {
-        doResampling(data);        
+        doResampling(data);
         data.deleteDataReference();
-        System.gc();
+        // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
         rescaleAmplitudeToRMS(_zvResampled);        
 
         if (useBlackman) {

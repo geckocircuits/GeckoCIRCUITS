@@ -32,7 +32,7 @@ import java.util.Stack;
 
 public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements VariableTerminalNumber {
 
-    public static List<RegelBlock> fromExternals = new ArrayList<RegelBlock>();
+    public static final List<RegelBlock> fromExternals = new ArrayList<RegelBlock>();
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerFromEXTERNAL.class, "FromEXT", I18nKeys.IMPORT_DATA_FROM_SIMULINK);
     private int _terminalNumber;
     private String _externalName = "name";
@@ -140,7 +140,7 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         for (int i1 = 0; i1 < _terminalNumber; i1++) {
             int xi1 = (int) (dpix * (xPos + 2 * DA_CONST)), yi1 = (int) (dpix * (yPos + 1.0 * i1));
             graphics.setColor(GlobalColors.farbeEXTERNAL_TERMINAL);
-            graphics.drawString(Integer.valueOf(i1 + 1).toString(), xi1 + 8, yi1 + graphics.getFont().getSize() / 2);
+            graphics.drawString(Integer.toString(i1 + 1), xi1 + 8, yi1 + graphics.getFont().getSize() / 2);
             graphics.setColor(origColor);
         }
 

@@ -43,8 +43,10 @@ import javax.swing.JOptionPane;
 
 // TODO: Future developer: This class needs refactoring when you have time and understand the full context.
 
-public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock 
-implements Operationable, Nonlinearable {       
+public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock
+implements Operationable, Nonlinearable {
+
+    private static final Random RANDOM = new Random();       
     
     public final UserParameter<Boolean> _isNonlinear = UserParameter.Builder.
             <Boolean>start("isNonlinear", false).                       
@@ -501,13 +503,12 @@ implements Operationable, Nonlinearable {
     
     
     /**
-     * this is for backwards-compatibility from older versions. Since the 
+     * this is for backwards-compatibility from older versions. Since the
      * file object was not yet created, we create an internal file that
      * contains the nonlinear characterisitc.
-     */    
+     */
     private void createNewInitialInternalFile() {
-        Random rand = new Random();
-        byte randByte = (byte) rand.nextInt();
+        byte randByte = (byte) RANDOM.nextInt();
         File tmpFile = new File(getStringID() + "_" + randByte + getNonlinearFileEnding());
         try {
             byte[] fileContents = writeNonLinearCharacteristicToBytes();

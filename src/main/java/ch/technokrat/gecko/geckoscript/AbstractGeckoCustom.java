@@ -44,6 +44,7 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.util.*;
 import javax.swing.JTextArea;
@@ -63,7 +64,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         if (outputFrame == null) {
             _output = System.out;
         } else {
-            _output = new PrintStream(new TextAreaOutputStream(_outputWindow));
+            _output = new PrintStream(new TextAreaOutputStream(_outputWindow), true, StandardCharsets.UTF_8);
         }
     }
 

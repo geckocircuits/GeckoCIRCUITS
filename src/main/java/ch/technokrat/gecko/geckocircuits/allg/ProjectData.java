@@ -34,6 +34,8 @@ import javax.swing.JOptionPane;
 // Helper class: Format for project data storage
 public class ProjectData implements Serializable {
 
+    private static final Random RANDOM = new Random();
+
     public final List<AbstractCircuitSheetComponent> _allSheetComponents = new ArrayList<AbstractCircuitSheetComponent>();
     public List<SubcircuitBlock> allSubCircuitBlocks = new ArrayList<SubcircuitBlock>();
     private OptimizerParameterData optimizerParameterData;
@@ -181,11 +183,9 @@ public class ProjectData implements Serializable {
 
     private int importASCII(String[] ascii, final boolean isBackupRead) {
         final TokenMap tokenMap = new TokenMap(ascii, true);
-        //tokenMap.makeBlockTokenMap(ascii, true);        
+        //tokenMap.makeBlockTokenMap(ascii, true);
 
-        Random generator = new Random(System.currentTimeMillis());
-
-        int uniqueFileId = generator.nextInt();
+        int uniqueFileId = RANDOM.nextInt();
         if (tokenMap.containsToken("UniqueFileId")) {
             uniqueFileId = tokenMap.readDataLine("UniqueFileId", uniqueFileId);
         }
@@ -684,9 +684,7 @@ public class ProjectData implements Serializable {
      * as well as component references.
      */
     public void shiftComponentReferences() {
-        Random generator = new Random(System.currentTimeMillis());
-
-        long shiftValue = generator.nextLong();
+        long shiftValue = RANDOM.nextLong();
 
         for (AbstractCircuitSheetComponent comp : _allSheetComponents) {
             comp.shiftAllIdentifiers(shiftValue);

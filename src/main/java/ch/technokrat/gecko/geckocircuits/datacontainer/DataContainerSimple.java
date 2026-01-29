@@ -64,7 +64,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     public void deleteDataReference() {
         _data = null;
         _timeSerieArray = null;
-        System.gc();
+        // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
     }
     
     public double getNiceMaximumXValue() {

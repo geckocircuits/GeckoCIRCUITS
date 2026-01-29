@@ -409,14 +409,14 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
         //-------------------
         int xPix = -1, yPix = -1;
         if (xAchseTyp_ == ACHSE_LOG) {
-            xWert = achseXmin_ * Math.pow(10.0, ((xPix - xAchseX_) / sfX_));
+            xPix = xAchseX_ + (int)(sfX_ * Math.log10(xWert / achseXmin_));
         } else if (xAchseTyp_ == ACHSE_LIN) {
-            xWert = achseXmin_ + (xPix - xAchseX_) / sfX_;
+            xPix = xAchseX_ + (int)((xWert - achseXmin_) * sfX_);
         }
         if (yAchseTyp_ == ACHSE_LOG) {
-            yWert = achseYmin_ * Math.pow(10.0, ((yAchseY_ - yPix) / sfY_));
+            yPix = yAchseY_ - (int)(sfY_ * Math.log10(yWert / achseYmin_));
         } else if (yAchseTyp_ == ACHSE_LIN) {
-            yWert = achseYmin_ + (yAchseY_ - yPix) / sfY_;
+            yPix = yAchseY_ - (int)((yWert - achseYmin_) * sfY_);
         }
         return new int[]{xPix, yPix};
         //-------------------

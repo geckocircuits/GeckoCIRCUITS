@@ -46,9 +46,9 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     //---------------------------------
     private static final int TXT_DISTANCE_Y = 10;
     public static final int ANZ_DIAGRAM_MAX = 9;  // Zahl der maximal moeglichen Diagramme in einem SCOPE
-    public static int DX_IN_LINKS = 60, DX_IN_RECHTS = 70;  // links- u. rechtsseitige x-Einrueckung der Achsen in Pixel
-    public static int DY_IN_OBEN = 8, DY_IN_UNTEN = 8;  // y-Einrueckung der Achsen in Pixel von Oben bzw. Unten und y-Abstand zwischen 2 Diagrammen
-    public static int ABSTAND_BESCHRIFTUNG_XACHSE = 35;  // soviel Abstand nach ganz unten gibt es zusaetzlich, damit die x-Achsen-Labels gesetzt werden koennen
+    public static final int DX_IN_LINKS = 60, DX_IN_RECHTS = 70;  // links- u. rechtsseitige x-Einrueckung der Achsen in Pixel
+    public static final int DY_IN_OBEN = 8, DY_IN_UNTEN = 8;  // y-Einrueckung der Achsen in Pixel von Oben bzw. Unten und y-Abstand zwischen 2 Diagrammen
+    public static final int ABSTAND_BESCHRIFTUNG_XACHSE = 35;  // soviel Abstand nach ganz unten gibt es zusaetzlich, damit die x-Achsen-Labels gesetzt werden koennen
     private static final int ANZ_AUTO_TICKS = 5;
     private int x1, x2, y1, y2;  // Rechteck-Koordinaten des Zoom-Fensters
     private boolean angeklicktZoom = false;
@@ -840,7 +840,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
     private void definiereAchsenbegrenzungenImAutoZoom(DataContainer ws) {
         //--------------------------
-        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX], tickAbstandY2 = new double[ANZ_DIAGRAM_MAX];
+        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX];
         //--------------------------
         // zur Effizienz-Steigerung: pro WS-Spalte werden kleinster und groesster Wert bestimmt -->
         final double[] w1 = new double[ws.getRowLength()], w2 = new double[ws.getRowLength()];
@@ -930,7 +930,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     private void definiereAchsenbegrenzungenNumerischeSimulation(double t1, double t2) {
         //--------------------------
         final DataContainer ws = this.worksheetDaten;
-        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX], tickAbstandY2 = new double[ANZ_DIAGRAM_MAX];
+        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX];
         //--------------------------
         // zur Effizienz-Steigerung:
         // pro WS-Spalte werden kleinster und groesster Wert bestimmt -->
@@ -1964,7 +1964,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 xPix = (int) ((xWert - achseXminLok) * sfX_ + xAchseXLok);
             }
             if (yAchseTyp_ == ACHSE_LOG) {
-                yWert = achseYmin_ * Math.pow(10.0, ((yAchseY_ - yPix) / sfY_));
+                yPix = (int) (yAchseY_ - sfY_ * Math.log10(yWert / achseYmin_));
             } else if (yAchseTyp_ == ACHSE_LIN) {
                 yPix = (int) (yAchseY_ - (yWert - achseYmin_) * sfY_);
             }

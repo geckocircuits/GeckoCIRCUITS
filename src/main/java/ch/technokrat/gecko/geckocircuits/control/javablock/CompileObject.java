@@ -228,7 +228,7 @@ public final class CompileObject extends AbstractCompileObject {
     }
 
     public static String findUniqueClassName() {
-        return "tmpJav" + Math.abs(_generator.nextInt());
+        return "tmpJav" + _generator.nextInt(Integer.MAX_VALUE);
     }
 
     private CompilationTask createCompilationTask(final List<GeckoFile> additionalSourceFiles) {

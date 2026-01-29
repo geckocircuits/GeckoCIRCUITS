@@ -103,7 +103,7 @@ public class QuasiPeakCalculator {
 
                 _quasiPeak *= normalizationFactor;
             }
-            System.gc();
+            // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
         } catch (Exception ex) {
             ex.printStackTrace();
         }

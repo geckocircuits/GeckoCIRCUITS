@@ -35,6 +35,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -76,7 +77,7 @@ public class ScriptWindow extends javax.swing.JFrame {
         initComponents();
         _listModel = new DefaultListModel<>();
         jListFunctions.setModel(_listModel);
-        _outputStream = new PrintStream(new TextAreaOutputStream(jTextAreaOutput));
+        _outputStream = new PrintStream(new TextAreaOutputStream(jTextAreaOutput), true, StandardCharsets.UTF_8);
         _categoryModel = new DefaultComboBoxModel<>();
         for (MethodCategory cat : MethodCategory.values()) {
             _categoryModel.addElement(cat);

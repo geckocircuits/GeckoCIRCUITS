@@ -340,7 +340,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             int filesMissing = 0;
 
             for (String hash : _additionalFilesHashKeys) {
-                hashValue = Long.valueOf(hash);
+                hashValue = Long.parseLong(hash);
                 try {
                     file = MainWindow._fileManager.getFile(hashValue);
                     _javaBlock._additionalSourceFiles.add(file);
