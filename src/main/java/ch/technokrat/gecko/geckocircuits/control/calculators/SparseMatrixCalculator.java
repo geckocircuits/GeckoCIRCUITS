@@ -17,6 +17,7 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
  * TODO: this is the biggest mess I have ever seen. Pleas clean anybody up!
  * @author andreas
  */
+@SuppressWarnings({"PMD.AvoidLiteralsInIfConditions", "PMD.AssignmentInOperand"}) // Complex PWM/matrix converter control logic
 public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
 
     
@@ -818,7 +819,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         }
         double ua = k * Math.cos(phiOUT + Math.PI / 6);
         double ub = k * Math.sin(phiOUT);
-        double x1 = 0, x2 = 0;
+        double x1 = 0;
+        double x2 = 0;
         switch (seIN) {
             case 1:
                 x1 = (-2 * ut);
@@ -869,7 +871,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x2 = (-2 * ut);
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("Invalid input sector: " + seIN);
         }
         switch (seOUT) {
             case 1:

@@ -734,8 +734,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
             }
             return luDecomp.solve(B);
         } else {
-            assert false;
-            return null;
+            throw new IllegalArgumentException("Matrix must be square");
         }
     }
 

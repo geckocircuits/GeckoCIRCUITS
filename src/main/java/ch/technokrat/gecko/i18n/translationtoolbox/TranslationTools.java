@@ -44,8 +44,8 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
     private String commentSingle;
     private String commentMultiple;
     private String buttonName = "";
-    
-    private static ProgressMonitor progressMonitor; // Progress Monitor GUI
+
+    private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
     

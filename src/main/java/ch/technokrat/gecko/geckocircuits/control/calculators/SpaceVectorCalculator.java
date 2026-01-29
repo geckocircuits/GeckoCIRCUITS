@@ -26,6 +26,6 @@ public final class SpaceVectorCalculator extends AbstractControlCalculatable {
     
     @Override
     public void berechneYOUT(final double deltaT) {
-        _svd.drawVector(_time, _inputSignal, deltaT);
+        _svd.drawVector(_time, _inputSignal, deltaT); // NOPMD: SpaceVectorDisplay reads-only from _inputSignal
     }
 }

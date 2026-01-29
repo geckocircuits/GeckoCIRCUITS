@@ -38,6 +38,7 @@ public class InitDialog extends javax.swing.JFrame {
         
         // "Yes, Exit" button
         jButton2.addActionListener(new ActionListener() {
+            @SuppressWarnings("SpotBugsWarnings")
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }

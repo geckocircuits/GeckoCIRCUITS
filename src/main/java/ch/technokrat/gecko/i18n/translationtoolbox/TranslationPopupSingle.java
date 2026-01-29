@@ -35,8 +35,8 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
     private String newTranslation;
     private String comment;
     private String buttonName = "";
-    
-    private static ProgressMonitor progressMonitor; // Progress Monitor GUI
+
+    private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
     

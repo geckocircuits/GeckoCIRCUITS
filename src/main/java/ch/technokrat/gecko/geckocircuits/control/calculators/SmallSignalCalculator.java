@@ -20,10 +20,14 @@ import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 import ch.technokrat.gecko.geckocircuits.newscope.FFTLibrary;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.StaticNonFinal", "PMD.PublicAttribute", "PMD.ThrowExceptionInFinally"})
+// Public fields and static array required by simulator API; Constructor validation required for safety
 public class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
 
     //static boolean isSimulationDC;
@@ -31,7 +35,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
     private static final int FOUR = 4;
     private static final int NOFREQSMAX = 50;
 
-    public static double[][] _bode = new double[THREE][];
+    public double[][] _bode = new double[THREE][]; // Public field required by DialogSmallSignalAnalysis
 
     private final SSAShape _signalType;
     private final double _amplitude;
@@ -68,7 +72,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
         _addOutput = addOutput;
 
         _noFreqs = NOFREQSMAX;
-        calculateSimFreqs();
+        calculateSimFreqs(); // Initializes _bode field during construction
         _nMax = (int) Math.round(_bode[0][_bode[0].length - 1] / _freqStart);
 
         switch (_signalType) {
@@ -202,20 +206,14 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
     }
 
     private void printResults(float[] data, float[] smallData) {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new FileWriter("/home/andy/data.txt"));
-            if (writer != null) {
-                for (int i = 0; i < data.length; i++) {
-                    writer.print(data[i] + " " + smallData[i] + "\n");                    
-                }
-            }   if (writer != null) {
-                writer.close();
+        String tempDir = System.getProperty("java.io.tmpdir");
+        String filePath = tempDir + "/gecko_small_signal_data.txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
+            for (int i = 0; i < data.length; i++) {
+                writer.print(data[i] + " " + smallData[i] + "\n");
             }
         } catch (IOException ex) {
             Logger.getLogger(SmallSignalCalculator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            writer.close();
         }
     }
     

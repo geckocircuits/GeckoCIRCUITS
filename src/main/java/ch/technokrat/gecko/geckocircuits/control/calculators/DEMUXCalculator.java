@@ -26,7 +26,7 @@ public final class DEMUXCalculator extends AbstractControlCalculatable implement
     @Override
     public void berechneYOUT(final double deltaT) {
         for (int i = 0; i < _outputSignal.length; i++) {
-            _outputSignal[i][0] = _inputSignal[0][i];  // Signal-Quelle
+            _outputSignal[i][0] = _inputSignal[0][i];  // Signal-Quelle - direct reference required by architecture
         }
     }
 

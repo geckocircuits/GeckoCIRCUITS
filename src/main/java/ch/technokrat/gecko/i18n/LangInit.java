@@ -50,8 +50,8 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
     public static DoubleMap transMap_multiple;
     private static String[] arguments;
     // Applet-Wiki connection status indicator
-    private static boolean connected;
-    private static ProgressMonitor progressMonitor; // Progress Monitor GUI
+    private static volatile boolean connected;
+    private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
 

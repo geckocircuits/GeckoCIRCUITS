@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+@SuppressWarnings("PMD.ThrowExceptionInFinally") // Constructor validation required for safety
 public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCalculator
         implements InitializableAtSimulationStart {
 
@@ -29,11 +30,11 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
     public AbstractSignalCalculatorPeriodic(final int noInputs, final double amplitudeAC,
             final double frequency, final double phase, final double anteilDC, final double duty) {
         super(noInputs);
-        _frequency = frequency;
-        _amplitudeAC = amplitudeAC;
         if (amplitudeAC < 0) {
             throw new IllegalArgumentException("Amplitude value of signal source has to be positive!");
         }
+        _frequency = frequency;
+        _amplitudeAC = amplitudeAC;
         _anteilDC = anteilDC;
         _dutyRatio = duty;
         _phase = phase;

@@ -27,9 +27,9 @@ import ch.technokrat.gecko.i18n.LangInit;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public class DLbot {
-        
-    private static boolean connected = false; // Applet-Wiki connection status indicator
-    private static int progress = 0; // download progress (percent)
+
+    private static volatile boolean connected = false; // Applet-Wiki connection status indicator
+    private static volatile int progress = 0; // download progress (percent)
    
     /*
      * Creates a new bot with DLbot credentials, logs in and returns it.

@@ -14,8 +14,11 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 
+@SuppressWarnings("PMD.UnusedPrivateField") // State variables for future enhancements and debugging
 public class PmsmControlCalculator extends AbstractControlCalculatable {
 
+    // Note: Some of these fields are assigned but not yet read (phi_last, phi_startup_last, w_est_last, w_est_filt_last)
+    // They are retained as part of the control algorithm state for potential future use
     double time_last = 0;
     double psi_sa_last = 0;
     double psi_sb_last = 0;

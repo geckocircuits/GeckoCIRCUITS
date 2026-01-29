@@ -13,24 +13,25 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+@SuppressWarnings("PMD.ArrayIsStoredDirectly") // Output signal reference required by simulator architecture
 public final class SignalCalculatorExternalWrapper extends AbstractControlCalculatable
         implements InitializableAtSimulationStart {
 
     private static final int NO_INPUTS = 5;
     private final AbstractSignalCalculatorPeriodic _wrapped;
 
-    private static final int AMPLITUDE_INDEX = 0;    
+    private static final int AMPLITUDE_INDEX = 0;
     private static final int FREQUENCY_INDEX = 1;
     private static final int OFFSET_INDEX = 2;
     private static final int PHASE_INDEX = 3;
-    private static final int DUTY_INDEX = 4;               
+    private static final int DUTY_INDEX = 4;
     private static final double MAX_DUTY = 0.99999999;
     private static final double MIN_DUTY = 1e-7;
-    
+
     public SignalCalculatorExternalWrapper(final AbstractSignalCalculatorPeriodic toWrap) {
         super(NO_INPUTS, 1);
         _wrapped = toWrap;
-        // connect the output!
+        // connect the output! Reference required by simulator architecture
         _outputSignal[0] = _wrapped._outputSignal[0];
     }
 
@@ -55,9 +56,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
-        if (_wrapped instanceof InitializableAtSimulationStart) {
-            ((InitializableAtSimulationStart) _wrapped).initializeAtSimulationStart(deltaT);
-        }
+        _wrapped.initializeAtSimulationStart(deltaT);
     }
 
     // the following getters and setters are only used in the testing

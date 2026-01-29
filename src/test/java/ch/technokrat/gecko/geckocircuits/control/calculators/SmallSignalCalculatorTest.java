@@ -473,13 +473,13 @@ public class SmallSignalCalculatorTest {
 
     @Test
     public void testBodeArrayInitialization() {
-        // Static _bode array should be initialized
+        // _bode array should be initialized on instance
         SmallSignalCalculator calc = new SmallSignalCalculator(
                 1.0, 100.0, 1000.0, SSAShape.SINE, 2, 1, false);
 
-        assertNotNull("Bode array should be initialized", SmallSignalCalculator._bode);
-        assertEquals("Bode array should have 3 elements", 3, SmallSignalCalculator._bode.length);
-        assertNotNull("Bode frequency array should be set", SmallSignalCalculator._bode[0]);
+        assertNotNull("Bode array should be initialized", calc._bode);
+        assertEquals("Bode array should have 3 elements", 3, calc._bode.length);
+        assertNotNull("Bode frequency array should be set", calc._bode[0]);
     }
 
     @Test

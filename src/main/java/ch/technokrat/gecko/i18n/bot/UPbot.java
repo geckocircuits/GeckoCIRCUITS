@@ -28,9 +28,9 @@ import ch.technokrat.gecko.i18n.translationtoolbox.TranslationDialog;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public class UPbot {
-    
-    private static boolean connected = false; // Applet-Wiki connection status indicator
-    private static int progress = 0; // upload progress (percent)
+
+    private static volatile boolean connected = false; // Applet-Wiki connection status indicator
+    private static volatile int progress = 0; // upload progress (percent)
     
     /*
      * Creates a new bot with UPbot credentials, logs in and returns it.
