@@ -139,7 +139,7 @@ public final class NetzlisteCONTROL {
                     if (potLab[i3].isTerminalOnPotential(endNode)) {
                         ((ControlTerminable) endNode).setNodeNumber(i3);
                         String label = potLab[i3].getLabel();
-                        if (!label.isEmpty() && !_labelNodeMap.containsKey(label)) {
+                        if (!label.isEmpty()) {
                             CircuitSheet circuitSheet = elementsControl.get(i1).getParentCircuitSheet();
                             HashMap<String, IndexConnection> map = null;
                             if (_labelNodeMap.containsKey(circuitSheet)) {
@@ -148,7 +148,9 @@ public final class NetzlisteCONTROL {
                                 map = new HashMap<String, IndexConnection>();
                                 _labelNodeMap.put(circuitSheet, map);
                             }
-                            map.put(label, new IndexConnection(i1, i2));
+                            if (!map.containsKey(label)) {
+                                map.put(label, new IndexConnection(i1, i2));
+                            }
                         }
                     }
                 }

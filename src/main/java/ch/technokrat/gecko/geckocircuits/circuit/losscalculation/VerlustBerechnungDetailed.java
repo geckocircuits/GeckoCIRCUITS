@@ -288,11 +288,12 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             String newPath = modelFilePath + File.separator + fyomu;
             try {
                 file = new GeckoFile(new File(newPath), GeckoFile.StorageType.INTERNAL, MainWindow.getOpenFileName());
+                leseDetailVerlusteVonDatei(file);
                 _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.SIMPLE);
             } catch (FileNotFoundException e2) {
                 System.err.println("Loss file " + fyomu + " for component " + _parent.getStringID() + " not found!");
             }
-            }            
+            }
 
         }
     }

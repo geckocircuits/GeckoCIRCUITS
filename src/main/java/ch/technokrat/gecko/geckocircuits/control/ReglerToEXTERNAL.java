@@ -32,7 +32,8 @@ import java.util.Stack;
 public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Comparable, VariableTerminalNumber {
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerToEXTERNAL.class, "ToEXT", I18nKeys.EXPORT_DATA_TO_SIMULINK);
-    public static final ArrayList<RegelBlock> toExternals = new ArrayList<RegelBlock>();
+    private static final ArrayList<RegelBlock> toExternalsInternal = new ArrayList<>();
+    public static final List<RegelBlock> toExternals = Collections.unmodifiableList(toExternalsInternal);
     private String _externalName = "";
     private static final double WIDTH = 0.3;
     // carful: this variable is only used when the model is read
@@ -43,7 +44,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     public ReglerToEXTERNAL() {
         super(3, 0);
         setInputTerminalNumber(3);  // default: 3 Anschluss nach Aussen
-        toExternals.add(this);
+        toExternalsInternal.add(this);
     }
 
     @Override
@@ -59,12 +60,12 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     @Override
     public void deleteActionIndividual() {
         super.deleteActionIndividual();
-        ReglerToEXTERNAL.toExternals.remove(this);
+        ReglerToEXTERNAL.toExternalsInternal.remove(this);
     }
 
     @Override
     List<RegelBlock> getOrderList() {
-        return toExternals;
+        return toExternalsInternal;
     }
 
     @Override
@@ -112,7 +113,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
 
     public void insertOrderCorrect(final int orderNo) {
         externalOrderNumber = orderNo;
-        Collections.sort(toExternals, new compareOrder());
+        Collections.sort(toExternalsInternal, new compareOrder());
     }
 
     public void setExternalName(final String name) {
@@ -194,7 +195,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     }
 
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        ProjectData.appendAsString(ascii.append("\ntorder"), toExternals.indexOf(this));
+        ProjectData.appendAsString(ascii.append("\ntorder"), toExternalsInternal.indexOf(this));
     }
 
     @Override
@@ -222,5 +223,12 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     @Override
     protected final Window openDialogWindow() {
         return new DialogExternal(this);
+    }
+
+    /**
+     * Clear the list of ToEXTERNAL blocks - used for initialization
+     */
+    public static void clearToExternals() {
+        toExternalsInternal.clear();
     }
 }

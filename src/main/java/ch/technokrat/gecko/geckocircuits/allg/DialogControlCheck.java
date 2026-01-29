@@ -42,11 +42,11 @@ public class DialogControlCheck extends javax.swing.JDialog {
 
             @Override
             public void valueChanged(final ListSelectionEvent event) {                
-                CircuitSheet._findNodes.clear();
+                CircuitSheet.clearFind();
                 int selectionIndex = jListInPort.getSelectedIndex();
                 if(selectionIndex > -1) {
                     final Point showPoint = _nlc._inPortsWithoutConnection.get(selectionIndex).getPosition();
-                    CircuitSheet._findNodes.add(showPoint);                    
+                    CircuitSheet.addFindNode(showPoint);                    
                     SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
                 }                                                
             }
@@ -62,10 +62,10 @@ public class DialogControlCheck extends javax.swing.JDialog {
 
             @Override
             public void valueChanged(final ListSelectionEvent event) {
-                CircuitSheet._findNodes.clear();
+                CircuitSheet.clearFind();
                 int selectionIndex = jListOutPort.getSelectedIndex();
                 if(selectionIndex > -1) {
-                    CircuitSheet._findNodes.add(_nlc._outPortsWithoutConnection.get(selectionIndex).getPosition());
+                    CircuitSheet.addFindNode(_nlc._outPortsWithoutConnection.get(selectionIndex).getPosition());
                     SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
                 }                                
             }

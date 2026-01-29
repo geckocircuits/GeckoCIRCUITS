@@ -171,7 +171,9 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.WARNING, "Failed to load icon image", ex);
+        }
         initComponents();
 
         if(regelBlock instanceof ReglerSpaceVector) {

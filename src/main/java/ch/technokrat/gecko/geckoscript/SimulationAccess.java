@@ -490,7 +490,7 @@ public class SimulationAccess implements GeckoFileable {
                 if (hash.trim().isEmpty()) {
                     continue;
                 }
-                hashValue = Long.valueOf(hash.trim());
+                hashValue = Long.parseLong(hash.trim());
                 try {
                     file = MainWindow._fileManager.getFile(hashValue);
                     _additionalSourceFiles.add(file);

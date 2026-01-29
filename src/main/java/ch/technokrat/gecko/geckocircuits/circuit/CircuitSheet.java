@@ -44,12 +44,23 @@ public class CircuitSheet extends JPanel {
     public final WorksheetSize _worksheetSize;
     /**
      * the nodes which should be highlighted due to a string search
+     * Internal backing set - use accessor methods for external access
      */
-    public static final Set<Point> _findNodes = new HashSet<Point>();
+    private static final Set<Point> _findNodesInternal = new HashSet<>();
+    /**
+     * Unmodifiable view of find nodes for external access
+     */
+    public static final Set<Point> _findNodes = Collections.unmodifiableSet(_findNodesInternal);
+
     /**
      * the nodes shown by the connector-Test.
+     * Internal backing set - use accessor methods for external access
      */
-    public static Set<Point> _showNodes = new HashSet<Point>();
+    private static final Set<Point> _showNodesInternal = new HashSet<>();
+    /**
+     * Unmodifiable view of show nodes for external access
+     */
+    public static final Set<Point> _showNodes = Collections.unmodifiableSet(_showNodesInternal);
 
     public CircuitSheet(final SchematicEditor2 se) {
         _se = se;
@@ -227,7 +238,7 @@ public class CircuitSheet extends JPanel {
 
     public Set<String> findString(final String searchString, final boolean ignoreCase, final boolean startsWith) {
         Set<String> foundStrings = new HashSet<String>();
-        _findNodes.clear();
+        _findNodesInternal.clear();
         foundStrings.addAll(findElementInterface(getLocalSheetComponents(), searchString, ignoreCase, startsWith));
         repaint();
         return foundStrings;
@@ -260,7 +271,7 @@ public class CircuitSheet extends JPanel {
                     AbstractBlockInterface block = (AbstractBlockInterface) elem;
                     if (findFromString(searchString, block.getStringID(), ignoreCase, startsWith)) {
                         Point sheetPos = block.getSheetPosition();
-                        _findNodes.add(sheetPos);
+                        _findNodesInternal.add(sheetPos);
                         foundStrings.add("Component: " + block.getStringID() + " x=" + sheetPos.x + " y=" + sheetPos.y);
                     }
                 }
@@ -270,7 +281,7 @@ public class CircuitSheet extends JPanel {
                         final String labelString = endTerm.getLabelObject().getLabelString();
                         if (findFromString(searchString, labelString, ignoreCase, startsWith)) {
                             Point sheetPos = endTerm.getPosition();
-                            _findNodes.add(sheetPos);
+                            _findNodesInternal.add(sheetPos);
                             if (elem instanceof AbstractBlockInterface) {
                                 foundStrings.add("Label of: " + ((AbstractBlockInterface) elem).getStringID() + " x=" + sheetPos.x + " y=" + sheetPos.y);
                             } else if (elem instanceof Verbindung) {
@@ -310,7 +321,30 @@ public class CircuitSheet extends JPanel {
     }
 
     public static void clearFind() {
-        _findNodes.clear();
+        _findNodesInternal.clear();
+    }
+
+    /**
+     * Add a point to the find nodes collection
+     * @param point the point to add
+     */
+    public static void addFindNode(Point point) {
+        _findNodesInternal.add(point);
+    }
+
+    /**
+     * Clear the show nodes collection
+     */
+    public static void clearShowNodes() {
+        _showNodesInternal.clear();
+    }
+
+    /**
+     * Add a point to the show nodes collection
+     * @param point the point to add
+     */
+    public static void addShowNode(Point point) {
+        _showNodesInternal.add(point);
     }
 
     private boolean selectPotentialNodesToShow(PotentialArea[] pot, Point clickPoint,
@@ -318,11 +352,11 @@ public class CircuitSheet extends JPanel {
         for (PotentialArea potArea : pot) {
             if (potArea.isPointOnPotential(clickPoint)) {
                 for (Point pt : potArea.getAllElementKnotenXY(elements, this)) {
-                    CircuitSheet._showNodes.add(pt);
+                    CircuitSheet._showNodesInternal.add(pt);
                 }
                 for (Verbindung verb : potArea.getAllConnections()) {
                     for (TerminalInterface term : verb.getAllTerminals()) {
-                        CircuitSheet._showNodes.add(term.getPosition());
+                        CircuitSheet._showNodesInternal.add(term.getPosition());
                     }
 
                 }                                            
@@ -335,7 +369,7 @@ public class CircuitSheet extends JPanel {
     public void maus_connectorTest(final Point clickPoint) {
         // damit man nicht (wie unten) beim 'return' vorzeitig aussteigt und eine Verbindung versehentlich
         // im Bearbeitungs-Modus laesst, die folgende kleine Schleife:        
-        CircuitSheet._showNodes.clear();
+        CircuitSheet._showNodesInternal.clear();
 
         List<AbstractBlockInterface> localElementsLK = getLocalComponents(ConnectorType.LK_AND_RELUCTANCE);
         List<AbstractBlockInterface> localElementsTHERM = getLocalComponents(ConnectorType.THERMAL);
@@ -377,7 +411,7 @@ public class CircuitSheet extends JPanel {
             return;
         }
         // no potential found on point!
-        CircuitSheet._showNodes.clear();
+        CircuitSheet._showNodesInternal.clear();
     }
 
     public Set<Verbindung> getConnection(final ConnectorType connectorType) {

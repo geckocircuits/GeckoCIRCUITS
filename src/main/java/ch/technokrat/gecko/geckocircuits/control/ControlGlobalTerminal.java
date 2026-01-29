@@ -23,18 +23,20 @@ import ch.technokrat.gecko.geckocircuits.control.calculators.NothingToDoCalculat
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 import java.awt.Window;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public final class ControlGlobalTerminal extends RegelBlock implements GlobalTerminable {
 
-    public static final Set<ControlGlobalTerminal> ALL_GLOBALS = new HashSet<ControlGlobalTerminal>();
+    private static final Set<ControlGlobalTerminal> ALL_GLOBALS_INTERNAL = new HashSet<>();
+    public static final Set<ControlGlobalTerminal> ALL_GLOBALS = Collections.unmodifiableSet(ALL_GLOBALS_INTERNAL);
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlGlobalTerminal.class,"GLOBAL_CONTROL", I18nKeys.GLOBAL_CONTROL_TERMINAL);
 
     public ControlGlobalTerminal() {
         super();
         XIN.add(new TerminalControlBidirectional(this, 0, 0));
-        ALL_GLOBALS.add(this);
+        ALL_GLOBALS_INTERNAL.add(this);
     }
 
     @Override
@@ -110,7 +112,7 @@ public final class ControlGlobalTerminal extends RegelBlock implements GlobalTer
 
     @Override
     public void deleteActionIndividual() {
-        ALL_GLOBALS.remove(this);
+        ALL_GLOBALS_INTERNAL.remove(this);
     }
 
     @Override
@@ -125,7 +127,7 @@ public final class ControlGlobalTerminal extends RegelBlock implements GlobalTer
 
     @Override
     public Set<? extends GlobalTerminable> getAllGlobalTerminals() {
-        return ALL_GLOBALS;
+        return ALL_GLOBALS_INTERNAL;
     }
 
     @Override

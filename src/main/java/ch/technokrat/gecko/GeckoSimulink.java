@@ -50,8 +50,8 @@ public class GeckoSimulink {
     }
 
     public GeckoSimulink(String filePath) {        
-        ReglerFromEXTERNAL.fromExternals.clear();
-        ReglerToEXTERNAL.toExternals.clear();
+        ReglerFromEXTERNAL.clearFromExternals();
+        ReglerToEXTERNAL.clearToExternals();
         if(!setSimulinkOperatingMode()) {
             GeckoSim.main(new String[]{filePath});        
         }                

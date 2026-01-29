@@ -32,7 +32,8 @@ import java.util.Stack;
 
 public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements VariableTerminalNumber {
 
-    public static final List<RegelBlock> fromExternals = new ArrayList<RegelBlock>();
+    private static final List<RegelBlock> fromExternalsInternal = new ArrayList<>();
+    public static final List<RegelBlock> fromExternals = Collections.unmodifiableList(fromExternalsInternal);
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerFromEXTERNAL.class, "FromEXT", I18nKeys.IMPORT_DATA_FROM_SIMULINK);
     private int _terminalNumber;
     private String _externalName = "name";
@@ -46,7 +47,7 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         super();
         _terminalNumber = 1;  // default: 1 Anschluss bringen Signale von EXTERNAL
         this.setOutputTerminalNumber(_terminalNumber);
-        fromExternals.add(this);
+        fromExternalsInternal.add(this);
     }
 
     @Override
@@ -158,7 +159,7 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
     @Override
     public void deleteActionIndividual() {
         super.deleteActionIndividual();
-        fromExternals.remove(this);
+        fromExternalsInternal.remove(this);
     }
 
     @Override
@@ -172,12 +173,12 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\ntn"), _terminalNumber);
-        ProjectData.appendAsString(ascii.append("\ntorder"), fromExternals.indexOf(this));
+        ProjectData.appendAsString(ascii.append("\ntorder"), fromExternalsInternal.indexOf(this));
     }
 
     @Override
     List<RegelBlock> getOrderList() {
-        return fromExternals;
+        return fromExternalsInternal;
     }
 
     @Override
@@ -208,11 +209,18 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
 
     public void insertOrderCorrect(final int orderNo) {
         externalOrderNumber = orderNo;
-        Collections.sort(fromExternals, new CompareOrder());
+        Collections.sort(fromExternalsInternal, new CompareOrder());
     }
 
     @Override
     protected Window openDialogWindow() {
         return new DialogExternal(this);
+    }
+
+    /**
+     * Clear the list of FromEXTERNAL blocks - used for initialization
+     */
+    public static void clearFromExternals() {
+        fromExternalsInternal.clear();
     }
 }

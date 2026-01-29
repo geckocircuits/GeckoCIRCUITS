@@ -1514,8 +1514,8 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     public final String getInputNodeName(final String elementName, final int nodeIndex) {
         final AbstractBlockInterface parentElement = IDStringDialog.getComponentByName(elementName);
 
-        final Collection<AbstractTerminal> inputPorts = parentElement.XIN;
         if (parentElement != null) {
+            final Collection<AbstractTerminal> inputPorts = parentElement.XIN;
             if (nodeIndex < 0 || nodeIndex >= inputPorts.size()) {
                 String errorMessage = "Invalid input node index " + nodeIndex + "; "
                         + elementName + " has " + inputPorts.size() + " input node(s).";
