@@ -1,134 +1,153 @@
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
+ *
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *  PURPOSE.  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ch.technokrat.gecko.geckocircuits.control;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Unit tests for Point class.
- * Tests an immutable 2D integer point data structure.
+ * Unit tests for immutable Point class.
  */
 public class PointTest {
-    
+
     @Test
-    public void testPointCreation() {
-        Point p = new Point(10, 20);
-        assertEquals("X coordinate should be 10", 10, p.x);
-        assertEquals("Y coordinate should be 20", 20, p.y);
+    public void testPointConstruction() {
+        Point p = new Point(5, 10);
+        assertEquals(5, p.x);
+        assertEquals(10, p.y);
     }
-    
+
     @Test
-    public void testPointZero() {
+    public void testPointWithNegativeCoordinates() {
+        Point p = new Point(-3, -7);
+        assertEquals(-3, p.x);
+        assertEquals(-7, p.y);
+    }
+
+    @Test
+    public void testPointWithZeroCoordinates() {
         Point p = new Point(0, 0);
-        assertEquals("Origin should have x=0", 0, p.x);
-        assertEquals("Origin should have y=0", 0, p.y);
+        assertEquals(0, p.x);
+        assertEquals(0, p.y);
     }
-    
+
     @Test
-    public void testPointNegative() {
-        Point p = new Point(-5, -15);
-        assertEquals("Should handle negative x", -5, p.x);
-        assertEquals("Should handle negative y", -15, p.y);
+    public void testPointEqualsWithSameCoordinates() {
+        Point p1 = new Point(5, 10);
+        Point p2 = new Point(5, 10);
+        assertEquals(p1, p2);
+        assertTrue(p1.equals(p2));
     }
-    
+
     @Test
-    public void testPointLargeValues() {
-        Point p = new Point(Integer.MAX_VALUE, Integer.MIN_VALUE);
-        assertEquals("Should handle max integer", Integer.MAX_VALUE, p.x);
-        assertEquals("Should handle min integer", Integer.MIN_VALUE, p.y);
+    public void testPointNotEqualsWithDifferentX() {
+        Point p1 = new Point(5, 10);
+        Point p2 = new Point(6, 10);
+        assertNotEquals(p1, p2);
+        assertFalse(p1.equals(p2));
     }
-    
+
     @Test
-    public void testPointEquality() {
-        Point p1 = new Point(10, 20);
-        Point p2 = new Point(10, 20);
-        assertEquals("Points with same coordinates should be equal", p1, p2);
+    public void testPointNotEqualsWithDifferentY() {
+        Point p1 = new Point(5, 10);
+        Point p2 = new Point(5, 11);
+        assertNotEquals(p1, p2);
+        assertFalse(p1.equals(p2));
     }
-    
+
     @Test
-    public void testPointInequality() {
-        Point p1 = new Point(10, 20);
-        Point p2 = new Point(10, 21);
-        assertNotEquals("Points with different y should not be equal", p1, p2);
+    public void testPointNotEqualsWithNull() {
+        Point p = new Point(5, 10);
+        assertFalse(p.equals(null));
     }
-    
+
     @Test
-    public void testPointDifferentX() {
-        Point p1 = new Point(10, 20);
-        Point p2 = new Point(11, 20);
-        assertNotEquals("Points with different x should not be equal", p1, p2);
+    public void testPointNotEqualsWithDifferentType() {
+        Point p = new Point(5, 10);
+        assertFalse(p.equals("not a point"));
+        assertFalse(p.equals(5));
     }
-    
+
     @Test
-    public void testPointNotEqualToNull() {
-        Point p = new Point(10, 20);
-        assertNotEquals("Point should not equal null", p, null);
-        assertFalse("Point equals null should return false", p.equals(null));
+    public void testPointHashCodeConsistency() {
+        Point p1 = new Point(5, 10);
+        Point p2 = new Point(5, 10);
+        assertEquals(p1.hashCode(), p2.hashCode());
     }
-    
+
     @Test
-    public void testPointNotEqualToDifferentType() {
-        Point p = new Point(10, 20);
-        assertNotEquals("Point should not equal string", p, "10 20");
-        assertFalse("Point equals different type should return false", p.equals("10 20"));
+    public void testPointHashCodeDifference() {
+        Point p1 = new Point(5, 10);
+        Point p2 = new Point(6, 10);
+        assertNotEquals(p1.hashCode(), p2.hashCode());
     }
-    
-    @Test
-    public void testPointHashCode() {
-        Point p1 = new Point(10, 20);
-        Point p2 = new Point(10, 20);
-        assertEquals("Equal points should have same hash code", p1.hashCode(), p2.hashCode());
-    }
-    
-    @Test
-    public void testPointHashCodeDifferent() {
-        Point p1 = new Point(10, 20);
-        Point p2 = new Point(10, 21);
-        // Hash codes may differ for different points
-        // (not guaranteed but likely)
-        assertTrue("Different points likely have different hash codes", 
-                   p1.hashCode() != p2.hashCode() || true);
-    }
-    
+
     @Test
     public void testPointToString() {
-        Point p = new Point(10, 20);
-        String result = p.toString();
-        assertNotNull("toString should not return null", result);
-        assertTrue("toString should contain x value", result.contains("10"));
-        assertTrue("toString should contain y value", result.contains("20"));
-        assertEquals("toString format should be 'x y'", "10 20", result);
+        Point p = new Point(5, 10);
+        assertEquals("5 10", p.toString());
     }
-    
+
     @Test
-    public void testPointToStringNegative() {
-        Point p = new Point(-5, -15);
-        String result = p.toString();
-        assertEquals("toString format should handle negative", "-5 -15", result);
+    public void testPointToStringWithNegatives() {
+        Point p = new Point(-3, -7);
+        assertEquals("-3 -7", p.toString());
     }
-    
+
     @Test
-    public void testPointToStringZero() {
-        Point p = new Point(0, 0);
-        String result = p.toString();
-        assertEquals("toString format for origin", "0 0", result);
+    public void testDistanceZero() {
+        Point p1 = new Point(5, 10);
+        Point p2 = new Point(5, 10);
+        assertEquals(0.0, p1.distance(p2), 1e-9);
     }
-    
+
+    @Test
+    public void testDistanceSimple() {
+        Point p1 = new Point(0, 0);
+        Point p2 = new Point(3, 4);
+        // 3-4-5 right triangle
+        assertEquals(5.0, p1.distance(p2), 1e-9);
+    }
+
+    @Test
+    public void testDistanceNegativeCoordinates() {
+        Point p1 = new Point(-1, -1);
+        Point p2 = new Point(2, 3);
+        // distance = sqrt((2-(-1))^2 + (3-(-1))^2) = sqrt(9 + 16) = sqrt(25) = 5
+        assertEquals(5.0, p1.distance(p2), 1e-9);
+    }
+
+    @Test
+    public void testDistanceSymmetric() {
+        Point p1 = new Point(1, 2);
+        Point p2 = new Point(4, 6);
+        assertEquals(p1.distance(p2), p2.distance(p1), 1e-9);
+    }
+
     @Test
     public void testPointImmutability() {
-        Point p = new Point(10, 20);
-        // Fields are final, so this test just verifies the contract
-        assertEquals("Point should remain unchanged", 10, p.x);
-        assertEquals("Point should remain unchanged", 20, p.y);
+        Point p = new Point(5, 10);
+        int originalX = p.x;
+        int originalY = p.y;
+        assertEquals(originalX, p.x);
+        assertEquals(originalY, p.y);
     }
-    
+
     @Test
-    public void testMultiplePointsIndependent() {
-        Point p1 = new Point(10, 20);
-        Point p2 = new Point(30, 40);
-        Point p3 = new Point(10, 20);
-        
-        assertEquals("p1 should equal p3", p1, p3);
-        assertNotEquals("p1 should not equal p2", p1, p2);
-        assertEquals("p1 and p3 should still equal after p2 creation", p1, p3);
+    public void testLargeCoordinates() {
+        Point p = new Point(Integer.MAX_VALUE, Integer.MIN_VALUE);
+        assertEquals(Integer.MAX_VALUE, p.x);
+        assertEquals(Integer.MIN_VALUE, p.y);
     }
 }

@@ -1,136 +1,175 @@
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
+ *
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *  PURPOSE.  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package ch.technokrat.gecko.geckocircuits.control;
-
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
+import static org.junit.Assert.*;
 
 /**
- * Unit tests for FileNameGenerator.
+ * Unit tests for FileNameGenerator utility class.
  */
 public class FileNameGeneratorTest {
     
     private FileNameGenerator generator;
-    private List<File> tempFiles;
     private Path tempDir;
-    
+
     @Before
     public void setUp() throws IOException {
         generator = new FileNameGenerator();
-        tempFiles = new ArrayList<>();
-        tempDir = Files.createTempDirectory("gecko_test_");
+        tempDir = Files.createTempDirectory("gecko_test");
     }
-    
+
     @After
-    public void tearDown() {
-        // Clean up temporary files
-        for (File file : tempFiles) {
-            if (file.exists()) {
-                file.delete();
-            }
+    public void tearDown() throws IOException {
+        if (tempDir != null && Files.exists(tempDir)) {
+            Files.walk(tempDir).sorted((a, b) -> -a.compareTo(b))
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);
+                        } catch (IOException e) {
+                            // ignore
+                        }
+                    });
         }
-        tempDir.toFile().delete();
     }
-    
-    private File createTempFile(String name) throws IOException {
-        File file = new File(tempDir.toFile(), name);
-        file.createNewFile();
-        tempFiles.add(file);
-        return file;
-    }
-    
+
     @Test
-    public void testFindFreeFileName_fileDoesNotExist_returnsSame() {
+    public void testFindFreeFileNameNonExistent() {
         String nonExistentFile = tempDir.toString() + "/nonexistent.txt";
         String result = generator.findFreeFileName(nonExistentFile);
-        
-        assertEquals("Should return the same filename when file doesn't exist", 
-                     nonExistentFile, result);
+        assertEquals(nonExistentFile, result);
     }
-    
+
     @Test
-    public void testFindFreeFileName_fileExists_addsNumber() throws IOException {
-        File existingFile = createTempFile("data.txt");
-        String result = generator.findFreeFileName(existingFile.getAbsolutePath());
+    public void testFindFreeFileNameExistent() throws IOException {
+        String baseFile = tempDir.toString() + "/test.txt";
+        Files.createFile(Path.of(baseFile));
         
-        assertTrue("Should add number to filename", result.contains("_0"));
-        assertTrue("Should preserve extension", result.endsWith(".txt"));
-        assertFalse("Generated filename should not exist", new File(result).exists());
+        String result = generator.findFreeFileName(baseFile);
+        assertNotEquals(baseFile, result);
+        assertTrue(result.contains("test_0.txt"));
     }
-    
+
     @Test
-    public void testFindFreeFileName_multipleExist_findsNextFree() throws IOException {
-        // Create base file with underscore naming pattern
-        File file0 = createTempFile("report_data.txt");
-        // Create numbered versions that already exist
-        createTempFile("report_0.txt");
-        createTempFile("report_1.txt");
+    public void testFindFreeFileNameMultipleExistents() throws IOException {
+        String baseFile = tempDir.toString() + "/test.txt";
+        Files.createFile(Path.of(baseFile));
+        Files.createFile(Path.of(tempDir.toString() + "/test_0.txt"));
         
-        String result = generator.findFreeFileName(file0.getAbsolutePath());
-        
-        // The algorithm extracts basename before last underscore
-        // For "report_data.txt", it extracts "report" and creates "report_0.txt" onwards
-        // It will find "report_2.txt" as the next free name
-        assertTrue("Should create a numbered filename", result.contains("report_"));
-        assertFalse("Generated filename should not exist", new File(result).exists());
+        String result = generator.findFreeFileName(baseFile);
+        assertTrue(result.contains("test_1.txt"));
     }
-    
+
     @Test
-    public void testFindFreeFileName_noExtension_handlesCorrectly() throws IOException {
-        File file = createTempFile("datafile");
-        String result = generator.findFreeFileName(file.getAbsolutePath());
+    public void testParseFileNameSimple() {
+        String fileName = "/path/to/file.txt";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
         
-        assertTrue("Should add number even without extension", result.contains("_0"));
+        assertEquals("/path/to/file", parts.baseName);
+        assertEquals(".txt", parts.extension);
     }
-    
+
     @Test
-    public void testGenerateNumberedFileName_correctFormat() {
-        FileNameGenerator.FileNameParts parts = 
-            new FileNameGenerator.FileNameParts("test/data", ".txt");
+    public void testParseFileNameNoExtension() {
+        String fileName = "/path/to/file";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
+        
+        assertEquals("/path/to/file", parts.baseName);
+        assertEquals("", parts.extension);
+    }
+
+    @Test
+    public void testParseFileNameWithUnderscore() {
+        String fileName = "test_file.txt";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
+        
+        assertEquals("test", parts.baseName);
+        assertEquals(".txt", parts.extension);
+    }
+
+    @Test
+    public void testParseFileNameMultipleExtensions() {
+        String fileName = "/path/to/archive.tar.gz";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
+        
+        assertEquals("/path/to/archive.tar", parts.baseName);
+        assertEquals(".gz", parts.extension);
+    }
+
+    @Test
+    public void testParseFileNameWindowsPath() {
+        String fileName = "C:\\Users\\test\\file.txt";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
+        
+        assertEquals("C:\\Users\\test\\file", parts.baseName);
+        assertEquals(".txt", parts.extension);
+    }
+
+    @Test
+    public void testGenerateNumberedFileName() {
+        FileNameGenerator.FileNameParts parts = new FileNameGenerator.FileNameParts("/path/to/file", ".txt");
         
         String result = generator.generateNumberedFileName(parts, 5);
-        
-        assertEquals("Should generate correct numbered filename", 
-                     "test/data_5.txt", result);
+        assertEquals("/path/to/file_5.txt", result);
     }
-    
+
     @Test
-    public void testParseFileName_withExtension() {
-        FileNameGenerator.FileNameParts parts = generator.parseFileName("/path/to/file.txt");
+    public void testGenerateNumberedFileNameZero() {
+        FileNameGenerator.FileNameParts parts = new FileNameGenerator.FileNameParts("test", ".dat");
         
-        assertEquals("Should extract base name", "/path/to/file", parts.baseName);
-        assertEquals("Should extract extension", ".txt", parts.extension);
+        String result = generator.generateNumberedFileName(parts, 0);
+        assertEquals("test_0.dat", result);
     }
-    
+
     @Test
-    public void testParseFileName_withoutExtension() {
-        FileNameGenerator.FileNameParts parts = generator.parseFileName("/path/to/file");
+    public void testGenerateNumberedFileNameLargeNumber() {
+        FileNameGenerator.FileNameParts parts = new FileNameGenerator.FileNameParts("file", "");
         
-        assertEquals("Should use full name as base", "/path/to/file", parts.baseName);
-        assertEquals("Should have empty extension", "", parts.extension);
+        String result = generator.generateNumberedFileName(parts, 999);
+        assertEquals("file_999", result);
     }
-    
+
     @Test
-    public void testParseFileName_withUnderscore_removesTrailing() {
-        FileNameGenerator.FileNameParts parts = generator.parseFileName("/path/data_5.txt");
+    public void testParseFileNameWithoutPath() {
+        String fileName = "myfile.log";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
         
-        assertEquals("Should remove existing number", "/path/data", parts.baseName);
-        assertEquals("Should preserve extension", ".txt", parts.extension);
+        assertEquals("myfile", parts.baseName);
+        assertEquals(".log", parts.extension);
     }
-    
+
     @Test
-    public void testParseFileName_multipleExtensions() {
-        FileNameGenerator.FileNameParts parts = generator.parseFileName("/path/archive.tar.gz");
+    public void testParseFileNameJustDot() {
+        String fileName = "/path/.hidden";
+        FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
         
-        // Should use last dot
-        assertTrue("Should handle multiple dots", parts.baseName.contains(".tar"));
-        assertEquals("Should use last extension", ".gz", parts.extension);
+        // Hidden files in Unix style start with dot, so the dot is index 0
+        assertNotNull(parts.extension);
+    }
+
+    @Test
+    public void testFindFreeFileNameReturnedFileDoesNotExist() throws IOException {
+        String baseFile = tempDir.toString() + "/test.txt";
+        Files.createFile(Path.of(baseFile));
+        
+        String result = generator.findFreeFileName(baseFile);
+        assertFalse(new File(result).exists());
     }
 }
