@@ -53,7 +53,7 @@ public class GeckoRemoteObject {
     private int portNumber;
     GeckoRemoteInterface _wrapped = null;
     GeckoRemoteIntWithoutExc _proxy;
-    private final int NO_SESSION_ID = -2;
+    private static final int NO_SESSION_ID = -2;
     private long sessionID = NO_SESSION_ID;
     private static final String REGISTRY_NAME = "GeckoRemoteInterface";
     private static final String ERROR_STRING = "Error with calling remote method. See nested exception for details.";

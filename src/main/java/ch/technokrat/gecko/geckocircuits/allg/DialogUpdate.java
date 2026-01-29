@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -144,7 +145,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
 
             final BufferedReader bufIN = new BufferedReader(
                     new InputStreamReader(
-                    urlConnection.getInputStream()));
+                    urlConnection.getInputStream(), StandardCharsets.UTF_8));
             final StringBuffer htmlText = new StringBuffer("<html>");
 
             for (String inputLine = bufIN.readLine(); inputLine != null; inputLine = bufIN.readLine()) {

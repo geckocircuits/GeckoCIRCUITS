@@ -21,7 +21,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
          DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
 
     //private final LKreisC _lkCap;
-    public static boolean initCapacitor = false;
+    public static final boolean initCapacitor = false;
     private double _capacitance = 100E-6;
     private double _initialValue = 0;
     private VoltageSourceCalculator initVoltageSource;

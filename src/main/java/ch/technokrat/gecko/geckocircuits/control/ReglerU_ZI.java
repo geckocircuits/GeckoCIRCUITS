@@ -70,7 +70,7 @@ public final class ReglerU_ZI extends RegelBlock {
             header = new String[tnX + 1];
         }
         header[knotenIndex + 1] = q;
-        if (header[knotenIndex + 1].equals(new String(""))) {
+        if (header[knotenIndex + 1].equals("")) {
             header[knotenIndex + 1] = "sg." + (knotenIndex + 1);
         }
     }

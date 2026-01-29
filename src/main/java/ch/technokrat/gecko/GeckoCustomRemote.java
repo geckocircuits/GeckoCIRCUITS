@@ -34,8 +34,8 @@ import java.util.logging.Logger;
 public final class GeckoCustomRemote extends AbstractGeckoCustom implements GeckoRemoteInterface, CallbackServerInterface {
 
     private boolean _free = true; //denotes if this instance of GeckoCIRCUITS is free for a remote connection
-    private static long _lastSessionIDActive = 0;
-    public static Map<Long,CallbackClientInterface> clients = new HashMap<Long,CallbackClientInterface>();
+    private static volatile long _lastSessionIDActive = 0;
+    public static final Map<Long,CallbackClientInterface> clients = new HashMap<Long,CallbackClientInterface>();
 
     private boolean _acceptsExtraConnections = false; //denotes if this instance of GeckoCIRCUITS allows more than one client to connect
     private int _numberOfExtraConnectionsAccepted = 0; //denotes how many additional clients (besides the first one) this instance of GeckoCIRCUITS will accept

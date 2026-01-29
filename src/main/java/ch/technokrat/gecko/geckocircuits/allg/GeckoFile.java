@@ -20,6 +20,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,8 +66,8 @@ public final class GeckoFile {
      */
     private final Set<Long> _usageList = new LinkedHashSet<Long>();
     private final String _extension;
-    private static final double HASH_CONST1 = 5.0;
-    private static final double HASH_CONST2 = 2032.6;
+    private static final int HASH_CONST_BOUND = 10164;
+    private static final Random RANDOM = new Random();
     private AbstractStorageStrategy _storageStrategy;
     private long _lastDiskModification = -1;
 
@@ -327,8 +328,7 @@ public final class GeckoFile {
         final byte[] fileContents = new byte[(int) _file.length()];
         _lastDiskModification = _file.lastModified();
 
-        try {
-            final FileInputStream inStream = new FileInputStream(_file);
+        try (FileInputStream inStream = new FileInputStream(_file)) {
             int offset = 0;
             while (offset < fileContents.length) {
                 final int numRead = inStream.read(fileContents, offset, fileContents.length - offset);
@@ -337,7 +337,6 @@ public final class GeckoFile {
                 }
                 offset += numRead;
             }
-            inStream.close();
         } catch (Exception e) {
             final String errorMessage = "GeckoFile read in file contents: cannot find file. " + e.toString();
             Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, errorMessage);
@@ -356,9 +355,9 @@ public final class GeckoFile {
         long code;
 
         code = _absolutePath.hashCode() + 2 * _relativePath.hashCode()
-                + (int) (HASH_CONST1 * Math.random() * HASH_CONST2 * Math.random());
-        
-       
+                + RANDOM.nextInt(HASH_CONST_BOUND);
+
+
         return code;
     }
 

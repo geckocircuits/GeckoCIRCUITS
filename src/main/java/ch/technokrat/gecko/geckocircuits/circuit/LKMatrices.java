@@ -210,6 +210,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
+                    // fall through
                 case LK_C:
                     // aW = netzliste.parameter[i1][0] / dt;  //  +C/dt
                     //aW = 2 * netzliste.parameter[i1][6] / dt;  //  +C/dt
@@ -245,6 +246,7 @@ public class LKMatrices {
                         a[x][y1] -= gain;
                         a[y][x1] -= gain;
                     }
+                    // fall through
                 case TH_FLOW:
                     // kein Beitrag
                     break;
@@ -440,6 +442,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
+                    // fall through
                 case LK_C:
                     double fac = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
                     //bW = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
@@ -693,6 +696,7 @@ public class LKMatrices {
                     break;
                 case TH_CTH:
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
+                    // fall through
                 case LK_C:
                     double fac = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                     double nonLinearCorrectionCurrent = -fac * netzliste.parameter[i1][10];
@@ -1236,10 +1240,9 @@ public class LKMatrices {
         for (int i1 = 0; i1 < elementANZAHL; i1++) {
             int x = netzliste.knotenX[i1];
             int y = netzliste.knotenY[i1];
-            txt[i1] = new String(
-                    "(id) " + i1 + "\t" + netzliste.eLKneu[i1].getStringID()
+            txt[i1] = "(id) " + i1 + "\t" + netzliste.eLKneu[i1].getStringID()
                     + "\t(" + netzliste.labelListe[netzliste.knotenX[i1]] + " [" + nf.format(p[x])
-                    + "]  -  " + netzliste.labelListe[netzliste.knotenY[i1]] + " [" + nf.format(p[y]) + "]");
+                    + "]  -  " + netzliste.labelListe[netzliste.knotenY[i1]] + " [" + nf.format(p[y]) + "]";
         }
         // sortieren:
         String[] txtSub = new String[txt.length];

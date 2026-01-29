@@ -61,7 +61,7 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
      * Used for diode-behavior, to find a correct on/off state (Diode,
      * Thyristor, IGBT).
      */
-    public static double disturbanceValue;
+    public static final double disturbanceValue = 0.0;
     
     protected final SolverType _solverType;
 

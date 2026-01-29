@@ -242,10 +242,12 @@ public final class DialogMakeExternal extends javax.swing.JDialog {
         } catch (IOException ex) {
             Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                output.close();
-            } catch (IOException ex) {
-                Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         setVisible(false);

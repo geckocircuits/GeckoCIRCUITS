@@ -422,7 +422,9 @@ public class GeckoMemoryMappedFile {
      */
     public void deleteFile() {
         forceDisconnect();
-        _file.delete();
+        if (!_file.delete()) {
+            System.err.println("Warning: Could not delete file: " + _file.getAbsolutePath());
+        }
     }
     
     /**

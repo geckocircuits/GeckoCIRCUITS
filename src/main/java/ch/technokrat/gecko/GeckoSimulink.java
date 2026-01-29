@@ -111,14 +111,14 @@ public class GeckoSimulink {
     public static void external_setInputPortName(int index, String name) {
         if(index < ReglerFromEXTERNAL.fromExternals.size()) {
             ReglerFromEXTERNAL fromExt = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(index);
-            fromExt.setExternalName(new String(name));
-        } 
+            fromExt.setExternalName(name);
+        }
     }
 
     public static void external_setOutputPortName(int index, String name) {
-        if(index < ReglerToEXTERNAL.toExternals.size()) { 
+        if(index < ReglerToEXTERNAL.toExternals.size()) {
             ReglerToEXTERNAL fromExt = (ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(index);
-            fromExt.setExternalName(new String(name));
+            fromExt.setExternalName(name);
         }
     }
 

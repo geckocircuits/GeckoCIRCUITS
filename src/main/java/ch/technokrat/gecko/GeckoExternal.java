@@ -145,19 +145,55 @@ public class GeckoExternal {
     }
 
     public static void setGlobalDoubleMatrix(double[][] matrix) {
-        _globalDoubleMatrix = matrix;
+        if (matrix == null) {
+            _globalDoubleMatrix = null;
+        } else {
+            _globalDoubleMatrix = new double[matrix.length][];
+            for (int i = 0; i < matrix.length; i++) {
+                if (matrix[i] != null) {
+                    _globalDoubleMatrix[i] = matrix[i].clone();
+                }
+            }
+        }
     }
 
     public static void setGlobalFloatMatrix(float[][] matrix) {
-        _globalFloatMatrix = matrix;
+        if (matrix == null) {
+            _globalFloatMatrix = null;
+        } else {
+            _globalFloatMatrix = new float[matrix.length][];
+            for (int i = 0; i < matrix.length; i++) {
+                if (matrix[i] != null) {
+                    _globalFloatMatrix[i] = matrix[i].clone();
+                }
+            }
+        }
     }
 
     public static double[][] getGlobalDoubleMatrix() {
-        return _globalDoubleMatrix;
+        if (_globalDoubleMatrix == null) {
+            return null;
+        }
+        double[][] result = new double[_globalDoubleMatrix.length][];
+        for (int i = 0; i < _globalDoubleMatrix.length; i++) {
+            if (_globalDoubleMatrix[i] != null) {
+                result[i] = _globalDoubleMatrix[i].clone();
+            }
+        }
+        return result;
     }
 
     public static float[][] getGlobalFloatMatrix() {
-        return _globalFloatMatrix;
+        if (_globalFloatMatrix == null) {
+            return null;
+        }
+        float[][] result = new float[_globalFloatMatrix.length][];
+        for (int i = 0; i < _globalFloatMatrix.length; i++) {
+            if (_globalFloatMatrix[i] != null) {
+                result[i] = _globalFloatMatrix[i].clone();
+            }
+        }
+        return result;
     }
         
 

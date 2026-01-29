@@ -31,7 +31,7 @@ public final class OutputWarningStream extends BufferedOutputStream {
     @SuppressWarnings("PMD")
     private StringBuffer _alternativeOutput;
     private static final int MAX_STRING_BUFFER_SIZE = 100000;
-    private static String outputDescription;
+    private static volatile String outputDescription;
     private boolean _ignoreFutureMessages = false;
     private static final int BUFFER_FRACTION = 5; // this means, after cleaning the buffer, 1/5th of the original space is left
     private static final int SEARCH_NEWLINE_CHARS = 200;

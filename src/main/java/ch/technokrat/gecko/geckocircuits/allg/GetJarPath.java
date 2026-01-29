@@ -63,7 +63,7 @@ public class GetJarPath {
      * @param clazz
      */
     public GetJarPath(final Class<?> clazz) {
-        synchronized (this) {
+        synchronized (GetJarPath.class) {
             _refToCallingPackage = clazz;
             _initialized = true;
             setJarPath();

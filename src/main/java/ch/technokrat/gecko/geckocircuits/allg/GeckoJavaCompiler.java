@@ -52,7 +52,7 @@ public class GeckoJavaCompiler {
     private Method _setGecko;
     //----------------------
     private int lineCounter = 0;
-    private String _sourceString = new String();
+    private String _sourceString = "";
     // needed for counting the java block objects;
     private static int _objectCounter = 0;
     private String _className;

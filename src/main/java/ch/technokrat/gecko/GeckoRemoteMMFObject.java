@@ -39,7 +39,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
     }
     
     GeckoMemoryMappedFile _mmf = null;
-    private final int NO_SESSION_ID = -1;
+    private static final int NO_SESSION_ID = -1;
     private long sessionID = NO_SESSION_ID;
     private static final String ERROR_STRING = "Error with calling remote method. See nested exception for details:\n";
     private static String _pathToJava = "";

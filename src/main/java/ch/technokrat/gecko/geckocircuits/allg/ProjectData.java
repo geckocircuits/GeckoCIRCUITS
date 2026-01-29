@@ -201,10 +201,10 @@ public class ProjectData implements Serializable {
             _tDURATION = tokenMap.readDataLine("tDURATION", _tDURATION);
             _dt = tokenMap.readDataLine("dt", _dt);
             String nameString = tokenMap.getLineString("path", "path ");
-            GlobalFilePathes.datnamAbsLoadIPES = nameString.substring((new String("path ").length()));  // wichtig, weil Pfadname Leerzeichen enthalten kann
+            GlobalFilePathes.datnamAbsLoadIPES = nameString.substring(("path ").length());  // wichtig, weil Pfadname Leerzeichen enthalten kann
             fontSize = tokenMap.readDataLine("fontSize", fontSize);
             final String fontString = tokenMap.getLineString("fontTyp", "fontTyp ");
-            _fontTyp = fontString.substring((new String("fontTyp ")).length());  // wichtig, falls FontName Leerzeichen enthaelt!
+            _fontTyp = fontString.substring(("fontTyp ").length());  // wichtig, falls FontName Leerzeichen enthaelt!
             _fensterWidth = tokenMap.readDataLine("fensterWidth", _fensterWidth);
             _fensterHeight = tokenMap.readDataLine("fensterHeight", _fensterHeight);
         }
@@ -675,7 +675,7 @@ public class ProjectData implements Serializable {
             }
         } catch (Exception e) {
         }
-        return new String(GlobalFilePathes.DATNAM_NOT_DEFINED);
+        return GlobalFilePathes.DATNAM_NOT_DEFINED;
     }
 
     /**

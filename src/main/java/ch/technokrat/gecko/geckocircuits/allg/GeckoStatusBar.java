@@ -287,11 +287,11 @@ public class GeckoStatusBar extends JPanel {
         int tmin = (int) (tsec / 60);  // Anzahl Minuten
         tsec -= (tmin * 60);
         if (thour > 0) {
-            displayText += new String(thour + " [h]  " + tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]");
+            displayText += thour + " [h]  " + tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]";
         } else if (tmin > 0) {
-            displayText += new String(tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]");
+            displayText += tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]";
         } else {
-            displayText += new String(cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]");
+            displayText += cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]";
         }
         this.setText(displayText);
     }

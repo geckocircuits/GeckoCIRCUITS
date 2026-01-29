@@ -365,16 +365,17 @@ public class GeckoSim {
         //-----------------------------
         // initialization of property objects. If no applicaton property is found, just use the
         // default property file, which should be within the jar-File
-        try {  // create and load default properties  
+        try {  // create and load default properties
             InputStream is = GeckoSim.class.getResourceAsStream(DEFAULT_PROPERTY_FILE);
             if (is == null) {
                 System.err.println("SEVERE: could not find default properties file, exiting!");
                 System.exit(-1);
             } else {
-                defaultProps = new Properties();
-                defaultProps.load(is);
-                is.close();
-                applicationProps = new Properties(defaultProps);
+                try (InputStream stream = is) {
+                    defaultProps = new Properties();
+                    defaultProps.load(stream);
+                    applicationProps = new Properties(defaultProps);
+                }
             }
 
             // now load properties from last invocation
@@ -390,9 +391,9 @@ public class GeckoSim {
 
                     File existsText = new File(APPLICATION_PROPERTY_FILE);
                     if (existsText.exists()) {
-                        FileInputStream in = new FileInputStream(APPLICATION_PROPERTY_FILE);
-                        applicationProps.load(in);
-                        in.close();
+                        try (FileInputStream in = new FileInputStream(APPLICATION_PROPERTY_FILE)) {
+                            applicationProps.load(in);
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -502,7 +503,6 @@ public class GeckoSim {
     }
 
     public static void saveProperties() {
-        FileOutputStream out = null;
         try {
 
             // bad hack: if property is found in defaultProperties, and not in
@@ -517,9 +517,9 @@ public class GeckoSim {
 
             File file = new File(APPLICATION_PROPERTY_FILE);
             Logger.getLogger(GeckoSim.class.getName()).log(Level.CONFIG, "Saving system properties: " + file.getAbsolutePath());
-            out = new FileOutputStream(file);
-            applicationProps.store(out, "--- GeckoCIRCUITS Property File ---");
-            out.close();
+            try (FileOutputStream out = new FileOutputStream(file)) {
+                applicationProps.store(out, "--- GeckoCIRCUITS Property File ---");
+            }
         } catch (FileNotFoundException fnfe) {
             Logger.getLogger(GeckoSim.class.getName()).log(Level.WARNING, "Could not write property file. Perhaps we do not have file write permissions.", "");
         } catch (IOException ex) {
@@ -535,7 +535,9 @@ public class GeckoSim {
             if (new File(dataFolder).exists()) {
                 final File geckoAppData = new File(dataFolder + "/.GeckoCIRCUITS");
                 if (!geckoAppData.exists()) {
-                    geckoAppData.mkdir();
+                    if (!geckoAppData.mkdir()) {
+                        System.err.println("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
+                    }
                 }
                 if (geckoAppData.exists()) {
                     return geckoAppData;
@@ -547,7 +549,9 @@ public class GeckoSim {
         if (appDataDir.exists()) {
             final File geckoAppData = new File(dataFolder + "/.GeckoCIRCUITS");
             if (!geckoAppData.exists()) {
-                geckoAppData.mkdir();
+                if (!geckoAppData.mkdir()) {
+                    System.err.println("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
+                }
             }
             if (geckoAppData.exists()) {
                 return geckoAppData;

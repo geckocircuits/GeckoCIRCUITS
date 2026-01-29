@@ -62,7 +62,7 @@ public final class ReglerSpaceVector extends RegelBlock {
             header = new String[NO_INPUTS + 1];
         }
         header[knotenIndex + 1] = q;
-        if (header[knotenIndex + 1].equals(new String(""))) {
+        if (header[knotenIndex + 1].equals("")) {
             header[knotenIndex + 1] = "sg." + (knotenIndex + 1);
         }
     }

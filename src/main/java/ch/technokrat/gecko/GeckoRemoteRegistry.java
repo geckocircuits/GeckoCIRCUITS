@@ -189,9 +189,10 @@ public class GeckoRemoteRegistry {
     public static String getExternalIPAddress() throws MalformedURLException, IOException {
         //ask a site to get the IP seen on the internet
         URL getMyIP = new URL(_ipQuerySite);
-        BufferedReader in = new BufferedReader(new InputStreamReader(getMyIP.openStream(), StandardCharsets.UTF_8));
-        final String ip = in.readLine(); //the IP is the first line of the page
-        return ip;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(getMyIP.openStream(), StandardCharsets.UTF_8))) {
+            final String ip = in.readLine(); //the IP is the first line of the page
+            return ip;
+        }
     }
     
     
