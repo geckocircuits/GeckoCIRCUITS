@@ -32,8 +32,6 @@ public class DataJunkSimpleTest {
         try {
             return new DataJunkSimple(startIndex, rows, columns);
         } catch (AssertionError e) {
-            // DataJunkSimple has "assert false" in constructor
-            // This is expected when assertions are enabled
             return null;
         }
     }
@@ -41,7 +39,7 @@ public class DataJunkSimpleTest {
     @Test
     public void testConstructor() {
         DataJunkSimple junk = createJunk(0, 3, 10);
-        if (junk == null) return; // Assertions enabled - skip
+        if (junk == null) return;
         assertNotNull(junk);
     }
 
@@ -68,7 +66,6 @@ public class DataJunkSimpleTest {
     public void testGetJunkSizeInBytes() {
         DataJunkSimple junk = createJunk(0, 2, 5);
         if (junk == null) return;
-        // 2 rows * 5 cols * 4 bytes per float = 40 bytes
         assertEquals(40, junk.getJunkSizeInBytes());
     }
 
@@ -159,7 +156,88 @@ public class DataJunkSimpleTest {
     public void testLargeJunkSize() {
         DataJunkSimple junk = createJunk(0, 10, 100);
         if (junk == null) return;
-        // 10 * 100 * 4 = 4000 bytes
         assertEquals(4000, junk.getJunkSizeInBytes());
+    }
+
+    // ==================== NEW: Coverage Gap Tests ====================
+
+    @Test
+    public void testSetValuesWithOffset() {
+        DataJunkSimple junk = createJunk(10, 2, 5);
+        if (junk == null) return;
+        float[] values = {10.0f, 20.0f};
+        junk.setValues(values, 12);
+        assertEquals(10.0f, junk.getValue(0, 12), 0.001f);
+        assertEquals(20.0f, junk.getValue(1, 12), 0.001f);
+    }
+
+    @Test
+    public void testFloatMaxValue() {
+        DataJunkSimple junk = createJunk(0, 1, 5);
+        if (junk == null) return;
+        junk.setValue(Float.MAX_VALUE, 0, 0);
+        assertEquals(Float.MAX_VALUE, junk.getValue(0, 0), 0.001f);
+    }
+
+    @Test
+    public void testFloatMinValue() {
+        DataJunkSimple junk = createJunk(0, 1, 5);
+        if (junk == null) return;
+        junk.setValue(Float.MIN_VALUE, 0, 0);
+        assertEquals(Float.MIN_VALUE, junk.getValue(0, 0), 0.001f);
+    }
+
+    @Test
+    public void testNaNStorage() {
+        DataJunkSimple junk = createJunk(0, 1, 5);
+        if (junk == null) return;
+        junk.setValue(Float.NaN, 0, 0);
+        assertTrue(Float.isNaN(junk.getValue(0, 0)));
+    }
+
+    @Test
+    public void testPositiveInfinity() {
+        DataJunkSimple junk = createJunk(0, 1, 5);
+        if (junk == null) return;
+        junk.setValue(Float.POSITIVE_INFINITY, 0, 0);
+        assertTrue(Float.isInfinite(junk.getValue(0, 0)));
+    }
+
+    @Test
+    public void testNegativeInfinity() {
+        DataJunkSimple junk = createJunk(0, 1, 5);
+        if (junk == null) return;
+        junk.setValue(Float.NEGATIVE_INFINITY, 0, 0);
+        assertEquals(Float.NEGATIVE_INFINITY, junk.getValue(0, 0), 0.0f);
+    }
+
+    @Test
+    public void testDefaultValuesAreZero() {
+        DataJunkSimple junk = createJunk(0, 2, 5);
+        if (junk == null) return;
+        for (int r = 0; r < 2; r++) {
+            for (int c = 0; c < 5; c++) {
+                assertEquals(0.0f, junk.getValue(r, c), 0.0f);
+            }
+        }
+    }
+
+    @Test
+    public void testSetValuesOverwritesPrevious() {
+        DataJunkSimple junk = createJunk(0, 2, 5);
+        if (junk == null) return;
+        junk.setValue(1.0f, 0, 0);
+        assertEquals(1.0f, junk.getValue(0, 0), 0.001f);
+        junk.setValue(2.0f, 0, 0);
+        assertEquals(2.0f, junk.getValue(0, 0), 0.001f);
+    }
+
+    @Test
+    public void testSingleRowSingleColumn() {
+        DataJunkSimple junk = createJunk(0, 1, 1);
+        if (junk == null) return;
+        junk.setValue(42.0f, 0, 0);
+        assertEquals(42.0f, junk.getValue(0, 0), 0.001f);
+        assertEquals(4, junk.getJunkSizeInBytes());
     }
 }

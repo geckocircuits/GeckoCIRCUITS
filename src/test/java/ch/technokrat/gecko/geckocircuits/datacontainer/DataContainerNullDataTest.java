@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,7 +34,6 @@ public class DataContainerNullDataTest {
 
     @Before
     public void setUp() {
-        // Create sample signal names
         signalNames = new ArrayList<>();
         signalNames.add(new AbstractScopeSignal() {
             @Override
@@ -68,9 +67,7 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testSetNoDataName() {
-        // Set special "no data available" name
         nullContainer.setNoDataName();
-        // Should replace signal names with a single "no data available" entry
         assertNotNull(nullContainer);
     }
 
@@ -78,7 +75,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetHiLoValueReturnsZeroData() {
-        // Null data container always returns zero hi/lo values
         HiLoData hiLo = nullContainer.getHiLoValue(0, 0, 10);
         assertNotNull(hiLo);
         assertEquals(0.0f, hiLo._yLo, EPSILON);
@@ -87,7 +83,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetHiLoValueDifferentRows() {
-        // All rows should return zero
         HiLoData hiLo0 = nullContainer.getHiLoValue(0, 0, 10);
         HiLoData hiLo1 = nullContainer.getHiLoValue(1, 0, 10);
         HiLoData hiLo5 = nullContainer.getHiLoValue(5, 0, 10);
@@ -99,7 +94,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetHiLoValueDifferentRanges() {
-        // Different ranges should all return zero
         HiLoData hiLo1 = nullContainer.getHiLoValue(0, 0, 5);
         HiLoData hiLo2 = nullContainer.getHiLoValue(0, 5, 10);
         HiLoData hiLo3 = nullContainer.getHiLoValue(0, 0, 100);
@@ -119,7 +113,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetAbsoluteMinMaxValueMultipleRows() {
-        // All rows should return non-null values
         HiLoData minMax0 = nullContainer.getAbsoluteMinMaxValue(0);
         HiLoData minMax1 = nullContainer.getAbsoluteMinMaxValue(1);
         HiLoData minMax10 = nullContainer.getAbsoluteMinMaxValue(10);
@@ -133,14 +126,12 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetRowLength() {
-        // Null data container may have zero or undefined row length
         int rowLength = nullContainer.getRowLength();
         assertTrue(rowLength >= 0);
     }
 
     @Test
     public void testGetRowLengthConsistency() {
-        // Should return consistent value
         int length1 = nullContainer.getRowLength();
         int length2 = nullContainer.getRowLength();
         assertEquals(length1, length2);
@@ -150,7 +141,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetSignalName() {
-        // Should be able to get signal names if provided
         String signalName = nullContainer.getSignalName(0);
         assertNotNull(signalName);
     }
@@ -168,7 +158,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testGetValue() {
-        // Null data container should return 0 for any access
         float value = nullContainer.getValue(0, 0);
         assertEquals(0.0f, value, EPSILON);
     }
@@ -205,7 +194,6 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testConsistentZeroValues() {
-        // Multiple accesses should return zero consistently
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 10; col++) {
                 float value = nullContainer.getValue(row, col);
@@ -216,14 +204,12 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testNoExceptionOnLargeIndices() {
-        // Should handle large indices gracefully
         float value = nullContainer.getValue(1000, 10000);
         assertEquals(0.0f, value, EPSILON);
     }
 
     @Test
     public void testConsistentHiLoAcrossMultipleRows() {
-        // HiLoData should be consistent across multiple rows
         for (int row = 0; row < 3; row++) {
             HiLoData hiLo = nullContainer.getHiLoValue(row, 0, 100);
             assertEquals(0.0f, hiLo._yLo, EPSILON);
@@ -241,10 +227,8 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testSetContainerStatusAndRetrieve() {
-        // Test that we can set and retrieve a status
         ContainerStatus initialStatus = nullContainer.getContainerStatus();
         assertNotNull(initialStatus);
-        // Status should be retrievable
         assertEquals(initialStatus, nullContainer.getContainerStatus());
     }
 
@@ -267,11 +251,142 @@ public class DataContainerNullDataTest {
 
     @Test
     public void testMultipleSetNoDataName() {
-        // Setting nodata name multiple times should be safe
         nullContainer.setNoDataName();
         nullContainer.setNoDataName();
-        // Should not crash
         assertNotNull(nullContainer);
+    }
+
+    // ==================== NEW: Coverage Gap Tests ====================
+
+    @Test
+    public void testGetSignalNameFallbackToDefault() {
+        List<AbstractScopeSignal> emptyNameSignals = new ArrayList<>();
+        emptyNameSignals.add(new AbstractScopeSignal() {
+            @Override
+            public String getSignalName() { return ""; }
+        });
+        DataContainerNullData container = new DataContainerNullData(emptyNameSignals);
+        assertEquals("sg.0", container.getSignalName(0));
+    }
+
+    @Test
+    public void testSetNoDataNameSignalName() {
+        nullContainer.setNoDataName();
+        assertEquals("no data available", nullContainer.getSignalName(0));
+    }
+
+    @Test
+    public void testSetNoDataNameRowLength() {
+        nullContainer.setNoDataName();
+        assertEquals(1, nullContainer.getRowLength());
+    }
+
+    @Test
+    public void testGetRowLengthWithSignals() {
+        assertEquals(2, nullContainer.getRowLength());
+    }
+
+    @Test
+    public void testGetRowLengthWithoutInit() {
+        DataContainerNullData emptyContainer = new DataContainerNullData();
+        assertEquals(0, emptyContainer.getRowLength());
+    }
+
+    @Test
+    public void testGetContainerStatusAlwaysNotInitialized() {
+        assertEquals(ContainerStatus.NOT_INITIALIZED, nullContainer.getContainerStatus());
+    }
+
+    @Test
+    public void testSetContainerStatusDeletedDoesNotThrow() {
+        nullContainer.setContainerStatus(ContainerStatus.DELETED);
+    }
+
+    @Test
+    public void testGetTimeValueAlwaysZero() {
+        assertEquals(0.0, nullContainer.getTimeValue(0, 0), 1e-10);
+        assertEquals(0.0, nullContainer.getTimeValue(100, 5), 1e-10);
+    }
+
+    @Test
+    public void testGetMaximumTimeIndexAlwaysZero() {
+        assertEquals(0, nullContainer.getMaximumTimeIndex(0));
+        assertEquals(0, nullContainer.getMaximumTimeIndex(5));
+    }
+
+    @Test
+    public void testFindTimeIndexAlwaysZero() {
+        assertEquals(0, nullContainer.findTimeIndex(0.5, 0));
+        assertEquals(0, nullContainer.findTimeIndex(100.0, 3));
+    }
+
+    @Test
+    public void testIsInvalidNumbersAlwaysFalse() {
+        assertFalse(nullContainer.isInvalidNumbers(0));
+        assertFalse(nullContainer.isInvalidNumbers(1));
+    }
+
+    @Test
+    public void testGetDataValueInIntervalReturnsNull() {
+        assertNull(nullContainer.getDataValueInInterval(0.0, 1.0, 0));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testInsertValuesAtEndThrows() {
+        nullContainer.insertValuesAtEnd(new float[]{1.0f}, 0.0);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetTimeSeriesThrows() {
+        nullContainer.getTimeSeries(0);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetAVGValueInIntervalThrows() {
+        nullContainer.getAVGValueInInterval(0.0, 1.0, 0);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetDataArrayThrows() {
+        nullContainer.getDataArray();
+    }
+
+    @Test
+    public void testGetAbsoluteMinMaxValues() {
+        HiLoData minMax = nullContainer.getAbsoluteMinMaxValue(0);
+        assertEquals(0.0f, minMax._yLo, EPSILON);
+        assertEquals(1.0f, minMax._yHi, EPSILON);
+    }
+
+    @Test
+    public void testGetUsedRAMSizeInMB() {
+        assertEquals(0, nullContainer.getUsedRAMSizeInMB());
+    }
+
+    @Test
+    public void testGetCachedRAMSizeInMB() {
+        assertEquals(0, nullContainer.getCachedRAMSizeInMB());
+    }
+
+    @Test
+    public void testGetXDataName() {
+        assertEquals("t", nullContainer.getXDataName());
+    }
+
+    @Test
+    public void testDefineAvgCalculationNoOp() {
+        nullContainer.defineAvgCalculation(new ArrayList<>());
+    }
+
+    @Test
+    public void testSetAndGetDefinedMeanSignals() {
+        assertNull(nullContainer.getDefinedMeanSignals());
+    }
+
+    @Test
+    public void testGetSignalNameWithValidName() {
+        assertEquals("Signal1", nullContainer.getSignalName(0));
+        assertEquals("Signal2", nullContainer.getSignalName(1));
     }
 
 }

@@ -54,9 +54,12 @@ public final class FileNameGenerator {
         if (dotIndex < 1) {
             dotIndex = fileName.length();
         }
-        
+
+        int lastSepIndex = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+        int filenameStart = lastSepIndex + 1;
+
         int underscoreIndex = fileName.lastIndexOf('_');
-        if (underscoreIndex < 1 || underscoreIndex >= dotIndex) {
+        if (underscoreIndex < filenameStart || underscoreIndex >= dotIndex) {
             underscoreIndex = dotIndex;
         }
         

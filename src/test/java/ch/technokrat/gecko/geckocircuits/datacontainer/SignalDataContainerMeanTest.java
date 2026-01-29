@@ -353,4 +353,45 @@ public class SignalDataContainerMeanTest {
         // (100 + 101) / 2 = 100.5
         assertEquals(100.5, avg1.getAverageValue(), DELTA);
     }
+
+    // ====================================================
+    // SignalDataContainerMean Tests
+    // ====================================================
+
+    @Test
+    public void testSignalDataContainerMeanConstruction() {
+        DataContainerGlobal global = new DataContainerGlobal();
+        global.init(1, new String[]{"V1"}, "t");
+        SignalDataContainerRegular origSignal = new SignalDataContainerRegular(global, 0);
+        java.util.List<Integer> indices = java.util.Arrays.asList(0);
+        ScopeWrapperIndices scopeIndices = new ScopeWrapperIndices(indices, global);
+        DataContainerMeanWrapper meanWrapper = new DataContainerMeanWrapper(global, scopeIndices);
+        SignalDataContainerMean mean = new SignalDataContainerMean(origSignal, meanWrapper, 0);
+        assertNotNull(mean);
+    }
+
+    @Test
+    public void testSignalDataContainerMeanSignalName() {
+        DataContainerGlobal global = new DataContainerGlobal();
+        global.init(1, new String[]{"Voltage"}, "t");
+        SignalDataContainerRegular origSignal = new SignalDataContainerRegular(global, 0);
+        java.util.List<Integer> indices = java.util.Arrays.asList(0);
+        ScopeWrapperIndices scopeIndices = new ScopeWrapperIndices(indices, global);
+        DataContainerMeanWrapper meanWrapper = new DataContainerMeanWrapper(global, scopeIndices);
+        SignalDataContainerMean mean = new SignalDataContainerMean(origSignal, meanWrapper, 0);
+        assertEquals("Voltage_mean", mean.getSignalName());
+    }
+
+    @Test
+    public void testSignalDataContainerMeanDataContainer() {
+        DataContainerGlobal global = new DataContainerGlobal();
+        global.init(1, new String[]{"V1"}, "t");
+        SignalDataContainerRegular origSignal = new SignalDataContainerRegular(global, 0);
+        java.util.List<Integer> indices = java.util.Arrays.asList(0);
+        ScopeWrapperIndices scopeIndices = new ScopeWrapperIndices(indices, global);
+        DataContainerMeanWrapper meanWrapper = new DataContainerMeanWrapper(global, scopeIndices);
+        SignalDataContainerMean mean = new SignalDataContainerMean(origSignal, meanWrapper, 0);
+        assertSame(meanWrapper, mean.getDataContainer());
+        assertEquals(0, mean.getContainerSignalIndex());
+    }
 }
