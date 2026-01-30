@@ -266,7 +266,7 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         //--------------------
         final StringTokenizer stk = new StringTokenizer(actionEvent.getActionCommand(), " ");
         stk.nextToken();
-        final int buttonPressedIndex = Integer.valueOf(stk.nextToken());
+        final int buttonPressedIndex = Integer.parseInt(stk.nextToken());
         for (int i1 = 0; i1 < mouseButtons.length; i1++) {
             mouseButtons[i1].setIcon(iconOFF[i1]);
         }
