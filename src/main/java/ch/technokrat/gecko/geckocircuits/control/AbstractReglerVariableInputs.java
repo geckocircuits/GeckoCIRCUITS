@@ -33,11 +33,13 @@ public abstract class AbstractReglerVariableInputs extends RegelBlock implements
     }
     
     @Override
-    public final void setInputTerminalNumber(final int number) {        
+    public final void setInputTerminalNumber(final int number) {
         super.setInputTerminalNumber(number);
-        if(_inputTerminalNumber != null) {
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
+        if (_inputTerminalNumber != null) {
             _inputTerminalNumber.setValueWithoutUndo(number);
-        }        
+        }
     }
 
     @Override
