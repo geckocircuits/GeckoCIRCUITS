@@ -307,8 +307,8 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
     protected void drawForeground(final Graphics2D graphics) {
         int pkd = (int) (0.4 * dpix);  // Durchmesser des Kopplungspunktes in Pixel
         double pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen
-        graphics.fillOval((int) (dpix * (+pk2) - pkd / 2), (int) (dpix * (-1.4) - pkd / 2), pkd, pkd);
-        graphics.fillOval((int) (dpix * (-pk2) - pkd / 2), (int) (dpix * (+_reversed.getValue() * 1.4) - pkd / 2), pkd, pkd);
+        graphics.fillOval((int) (dpix * (+pk2) - pkd / 2.0), (int) (dpix * (-1.4) - pkd / 2.0), pkd, pkd);
+        graphics.fillOval((int) (dpix * (-pk2) - pkd / 2.0), (int) (dpix * (+_reversed.getValue() * 1.4) - pkd / 2.0), pkd, pkd);
     }
 
     @Override

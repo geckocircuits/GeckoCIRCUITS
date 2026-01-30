@@ -22,7 +22,6 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
 
     private double phi;
     private double emk;
-    private double drehzahl;
     private double omegaALT;
     private double Fr;
     private double omega;
@@ -73,8 +72,6 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
         momentElektr = _cM * phi * ia;  // elektrisches Moment
         omega = (_J / dt * omegaALT + momentElektr - momentLast) / (_J / dt + Fr);
 
-        drehzahl = (60.0 / (2 * Math.PI)) * omega;
-        
         emk = _cM * phi * omega;  // innere Spannung der Maschine
         _timeFunction.setValue(emk);  // DC-Wert der internen WSpg.Quelle
         //if (t==0) System.out.println(t+"   "+dt+"   "+ia+"   "+ie+"   "+momentLast+"   "+phi+"   "+momentElektr+"   "+omega+"   "+drehzahl+"   "+emk+"   omegaALT="+omegaALT+"   J="+J+"   Fr="+Fr);

@@ -151,7 +151,7 @@ public final class HiLoData {
 
         
         for (HiLoData hilo : list) {
-            assert hilo != null : hilo + " list size: " + list.size();
+            assert hilo != null : "Null HiLoData in list, list size: " + list.size();
             
             float compareMax = hilo._yHi;
             float compareMin = hilo._yLo;

@@ -211,7 +211,7 @@ public class TechFormat implements Serializable {
     //===========================================================================
     public String format(String eingabe, int maxNachKomma) {
         double erg = this.fmt(eingabe);
-        if (erg == DUMMY) {
+        if (Math.abs(erg - DUMMY) < 1e-80) {
             throw new NumberFormatException("Invalid number format in 'TechFormat'");
         }
         return this.fmt(erg, maxNachKomma);
@@ -269,7 +269,7 @@ public class TechFormat implements Serializable {
                 }
             }
         }
-        if (erg == DUMMY) {
+        if (Math.abs(erg - DUMMY) < 1e-80) {
             throw new NumberFormatException();
         }
         return erg;

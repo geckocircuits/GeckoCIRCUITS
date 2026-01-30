@@ -295,7 +295,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         FontRenderContext frc = g2d.getFontRenderContext();
         Rectangle2D sb = g2d.getFont().getStringBounds(toDraw, frc);
         int[] points = getAussenabmessungenRechteckEckpunkte();
-        int centerX = (int) ((points[0] + points[2]) / 2 - sb.getWidth() / 2);
+        int centerX = (int) ((points[0] + points[2]) / 2.0 - sb.getWidth() / 2);
         int centerY = (int) ((0.6 * points[1] + 0.4 * points[3]) + sb.getHeight() / 2);
 
         if (secondLine.isEmpty()) {
@@ -305,7 +305,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
             sb = g2d.getFont().getStringBounds(secondLine, frc);
             points = getAussenabmessungenRechteckEckpunkte();
-            centerX = (int) ((points[0] + points[2]) / 2 - sb.getWidth() / 2);
+            centerX = (int) ((points[0] + points[2]) / 2.0 - sb.getWidth() / 2);
             centerY = (int) ((0.6 * points[1] + 0.4 * points[3]) + sb.getHeight() / 2);
             g2d.drawString(secondLine, centerX, centerY + g2d.getFont().getSize() / 2 + 1);
         }

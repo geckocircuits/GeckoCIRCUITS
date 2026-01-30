@@ -259,8 +259,8 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         // Stuetzpunkte der Class A/B-Kurven: 
         final int dx = (int) (dpix * (WIDTH + DA_OFFSET) - a1 - a2), dy = dx;
         final int xk1 = (int) (dpix * (xPos - WIDTH) + a1 + 2);
-        final int xk2 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + dx / 3);
-        final int xk3 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + 2 * dx / 3);
+        final int xk2 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + dx / 3.0);
+        final int xk3 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + 2 * dx / 3.0);
         final int xk4 = (int) (dpix * (xPos + DA_OFFSET) - a1);
         final int yk1 = (int) (dpix * (yPos - DA_OFFSET) + a1 + 2);
         final int yk2 = (int) (dpix * (yPos - DA_OFFSET) + a1 + 2 + 0.2 * dy);

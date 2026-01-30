@@ -174,17 +174,17 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         // Pfeil-Symbol:
         int d1 = 10, d2 = 4, dpfx = 8, dpfy = 3;
         double pf = 2.0;  // Pfeilspitzen-X-Abstand
-        double pfym = posY - WIDTH + XIN.size() / 2;  // Pfeil-Y-Koordinate
+        double pfym = posY - WIDTH + XIN.size() / 2.0;  // Pfeil-Y-Koordinate
         graphics.drawPolygon(new int[]{(int) (dpix * (posX + pf)) - dpfx, (int) (dpix * (posX + pf)) - dpfx,
             (int) (dpix * (posX + pf))}, new int[]{(int) (dpix * pfym) - dpfy, (int) (dpix * pfym) + dpfy, (int) (dpix * pfym)}, 3);
-        graphics.drawString("To", (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2));
+        graphics.drawString("To", (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * pfym - 1.0 * graphics.getFont().getSize() / 2));
         graphics.drawString("EXTERN", (int) (dpix * (posX + WIDTH) + d2),
-                (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2));
+                (int) (dpix * pfym + 3.0 * graphics.getFont().getSize() / 2));
         graphics.drawLine((int) (dpix * (posX + WIDTH)), (int) (dpix * pfym), (int) (dpix * (posX + pf)),
                 (int) (dpix * pfym));  // zum Pfeil gehoerig
         graphics.setColor(Color.black);
         graphics.drawString(_externalName, (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * (1 + pfym)
-                + 3 * graphics.getFont().getSize() / 2));
+                + 3.0 * graphics.getFont().getSize() / 2));
         graphics.setColor(origColor);
 
     }

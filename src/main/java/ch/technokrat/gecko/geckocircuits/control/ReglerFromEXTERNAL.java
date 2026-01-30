@@ -133,21 +133,21 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         double pf = 3.5;  // Pfeilspitzen-X-Abstand
         double pfym = yPos - 0.4 + (1.0 * _terminalNumber) / 2;  // Pfeil-Y-Koordinate
         graphics.drawPolygon(new int[]{(int) (dpix * (xPos - 0.4)) - DPFX, (int) (dpix * (xPos - 0.4)) - DPFX, (int) (dpix * (xPos - 0.4))}, new int[]{(int) (dpix * pfym) - DPFY, (int) (dpix * pfym) + DPFY, (int) (dpix * pfym)}, 3);
-        graphics.drawString("From", (int) (dpix * (xPos - pf)), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2));
-        graphics.drawString("EXTERN", (int) (dpix * (xPos - pf)), (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2));
+        graphics.drawString("From", (int) (dpix * (xPos - pf)), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2.0));
+        graphics.drawString("EXTERN", (int) (dpix * (xPos - pf)), (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2.0));
 
 
         graphics.drawLine((int) (dpix * (xPos - 0.4)), (int) (dpix * pfym), (int) (dpix * (xPos - pf)), (int) (dpix * pfym));  // zum Pfeil gehoerig
         for (int i1 = 0; i1 < _terminalNumber; i1++) {
             int xi1 = (int) (dpix * (xPos + 2 * DA_CONST)), yi1 = (int) (dpix * (yPos + 1.0 * i1));
             graphics.setColor(GlobalColors.farbeEXTERNAL_TERMINAL);
-            graphics.drawString(Integer.toString(i1 + 1), xi1 + 8, yi1 + graphics.getFont().getSize() / 2);
+            graphics.drawString(Integer.toString(i1 + 1), xi1 + 8, (int) (yi1 + graphics.getFont().getSize() / 2.0));
             graphics.setColor(origColor);
         }
 
         graphics.setColor(Color.black);
         graphics.drawString(_externalName, (int) (dpix * (xPos - pf)),
-                (int) (dpix * (1 + pfym) + 3 * graphics.getFont().getSize() / 2));
+                (int) (dpix * (1 + pfym) + 3 * graphics.getFont().getSize() / 2.0));
         graphics.setColor(origColor);
     }
 

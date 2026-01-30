@@ -33,7 +33,6 @@ import java.util.List;
 
 public class SimulationsKern implements ISimulationEngine {
 
-    private boolean diodenSchaltfehler;
     private double dt, t, tPAUSE;
     private double tSTART, tEND;
 
@@ -200,7 +199,7 @@ public class SimulationsKern implements ISimulationEngine {
         double stoergroesse = 1;//0.9999999;
         boolean isNewIteration = false;
 
-        while (diodenSchaltfehler = lkmLK.berechneBauteilStroeme(stoergroesse, dt, t, isNewIteration, switchingErrorCounter)) {
+        while (lkmLK.berechneBauteilStroeme(stoergroesse, dt, t, isNewIteration, switchingErrorCounter)) {
             isNewIteration = true;
             if (switchingErrorCounter > 10000) {
                 //new DialogDiodenError(switchingErrorCounter, t);
@@ -543,8 +542,6 @@ public class SimulationsKern implements ISimulationEngine {
         } else {
             simuliereRegelkreis = true;
         }
-
-        diodenSchaltfehler = false;
     }
 
     public void setScopeMenuesStartStop() {
