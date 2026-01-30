@@ -1451,7 +1451,6 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             return;
         }
 
-        int dpix = AbstractCircuitSheetComponent.dpix;
         // Koordinatenbestimmung mit Snap-Funktion:
         int mx = mouseEvent.getX(), my = mouseEvent.getY();
 

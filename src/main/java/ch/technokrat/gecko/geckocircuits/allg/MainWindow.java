@@ -1999,7 +1999,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             // new version 'gzipped' -->
             try {
                 InflaterInputStream in1 = new InflaterInputStream(new FileInputStream(GlobalFilePathes.DATNAM));
-                BufferedReader in = new BufferedReader(new InputStreamReader(in1));
+                BufferedReader in = new BufferedReader(new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8));
                 Vector<String> datVec = new Vector<>();
                 String z = null;
                 while ((z = in.readLine()) != null) {

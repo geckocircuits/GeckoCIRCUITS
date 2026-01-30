@@ -974,7 +974,6 @@ public class GraferV3 extends JPanel {
                 //
                 int yMinorTicksAnzahl = 10 * (anzTicks + 1);
                 double[] wertTickMinorY_temp = new double[yMinorTicksAnzahl];
-                int[] tickMinorY_temp = new int[yMinorTicksAnzahl];
                 double wertMinor = wertTickY[i1][0] / ((int) (wertTickY[i1][0] / achseYmin[i1]));
                 wertTickMinorY_temp[0] = wertMinor;
                 j = 1;
