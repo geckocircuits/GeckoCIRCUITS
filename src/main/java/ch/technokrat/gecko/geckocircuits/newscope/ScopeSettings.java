@@ -273,10 +273,10 @@ public class ScopeSettings implements Serializable {
                     y1Axis._axisTickSettings.setTickLengthMaj(ORIGjtfYtickLengthMaj[i]);
                     y1Axis._axisTickSettings.setTickLengthMin(ORIGjtfYtickLengthMin[i]);
 
-                    xAxis._axisGridSettings.getColorGridMaj().getFromCode(ORIGjcmXlinCol[i]);
-                    y1Axis._axisGridSettings.getColorGridMaj().getFromCode(ORIGjcmYlinCol[i]);
-                    xAxis._axisGridSettings.getLinStyleMaj().getFromCode(ORIGjcmXlinStyl[i]);
-                    y1Axis._axisGridSettings.getLinStyleMaj().getFromCode(ORIGjcmYlinStyl[i]);
+                    xAxis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(ORIGjcmXlinCol[i]));
+                    y1Axis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(ORIGjcmYlinCol[i]));
+                    xAxis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(ORIGjcmXlinStyl[i]));
+                    y1Axis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(ORIGjcmYlinStyl[i]));
                 }
 
                 int diagNo = 0;

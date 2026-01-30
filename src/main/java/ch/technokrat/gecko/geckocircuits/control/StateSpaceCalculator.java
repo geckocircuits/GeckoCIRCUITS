@@ -79,9 +79,9 @@ public final class StateSpaceCalculator {
         StateVariables(final TokenMap tokenMap) {
 
             _parentHash = tokenMap.readDataLine("parentHash", -1);
-            _xNEW = tokenMap.readDataLine("stateXNEW", _xNEW);
-            _xOLD = tokenMap.readDataLine("stateXOLD", _xOLD);
-            _xOLDOLD = tokenMap.readDataLine("stateXOLDOLD", _xOLDOLD);
+            _xNEW = tokenMap.readDataLine("stateXNEW", 0.0);
+            _xOLD = tokenMap.readDataLine("stateXOLD", 0.0);
+            _xOLDOLD = tokenMap.readDataLine("stateXOLDOLD", 0.0);
             final double[] resultVector = tokenMap.readDataLine("stateResultVector", new double[0]);
             _result = new Matrix(resultVector.length, 1);
             for (int i = 0; i < resultVector.length; i++) {

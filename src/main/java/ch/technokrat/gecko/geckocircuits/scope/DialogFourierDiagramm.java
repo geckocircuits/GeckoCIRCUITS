@@ -21,8 +21,11 @@ import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -158,7 +161,7 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
                 sb.append("\n");
             }
             try {
-                BufferedWriter fkaku = new BufferedWriter(new FileWriter(fileChooser.getFileWithCheckedEnding()));
+                BufferedWriter fkaku = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileChooser.getFileWithCheckedEnding()), StandardCharsets.UTF_8));
                 fkaku.write(sb.toString());
                 fkaku.flush();
                 fkaku.close();

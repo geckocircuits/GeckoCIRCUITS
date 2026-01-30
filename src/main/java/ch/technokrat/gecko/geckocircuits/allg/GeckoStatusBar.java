@@ -204,11 +204,10 @@ public class GeckoStatusBar extends JPanel {
         if (dc == null) {
             return;
         }
-        if (dc instanceof ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) {
-            ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer adc = (ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) dc;
-            if (adc.getContainerStatus() == ContainerStatus.DELETED) {
-                return;
-            }
+        // globalData is always DataContainerGlobal which extends AbstractDataContainer
+        ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer adc = (ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) dc;
+        if (adc.getContainerStatus() == ContainerStatus.DELETED) {
+            return;
         }
         // 20 MB for the program itself!
         try {

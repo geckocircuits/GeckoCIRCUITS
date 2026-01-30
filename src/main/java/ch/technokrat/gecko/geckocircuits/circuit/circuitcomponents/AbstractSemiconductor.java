@@ -109,14 +109,10 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
     }
 
     public List<GeckoFile> getFiles() {
-        if (this instanceof LossCalculatable) {
-            List<GeckoFile> returnValue = new ArrayList<GeckoFile>();
-            GeckoFile lossFile = ((LossProperties) ((LossCalculatable) this).getVerlustBerechnung()).getDetailedLosses().lossFile;
-            returnValue.add(lossFile);
-            return returnValue;
-        } else {
-            return Collections.EMPTY_LIST;
-        }
+        List<GeckoFile> returnValue = new ArrayList<GeckoFile>();
+        GeckoFile lossFile = ((LossProperties) getVerlustBerechnung()).getDetailedLosses().lossFile;
+        returnValue.add(lossFile);
+        return returnValue;
     }
 
     public void removeLocalComponentFiles(List<GeckoFile> filesToRemove) {

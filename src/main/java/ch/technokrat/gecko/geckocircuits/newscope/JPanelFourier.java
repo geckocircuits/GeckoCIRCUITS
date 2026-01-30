@@ -22,6 +22,7 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerFourier;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
@@ -160,7 +161,7 @@ public class JPanelFourier extends javax.swing.JPanel {
         final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
         final File file = new File(fileName);
         try {
-            final FileWriter fileWriter = new FileWriter(file);
+            final FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
             final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for (int i = 0; i < _dataContainer.getMaximumTimeIndex(0); i++) {
                 bufferedWriter.write("" + _dataContainer.getTimeValue(i, 0));

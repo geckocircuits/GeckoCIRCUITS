@@ -159,7 +159,7 @@ public final class GeckoFile {
      * @throws FileNotFoundException
      */
     public GeckoFile(final TokenMap tokenMap, final List<AbstractCircuitSheetComponent> allComponents) throws FileNotFoundException {
-        _separator = tokenMap.readDataLine("fileSep", _separator);        
+        _separator = tokenMap.readDataLine("fileSep", File.separator);        
         _hash = tokenMap.readDataLine("hashValue", -1);
         
         
