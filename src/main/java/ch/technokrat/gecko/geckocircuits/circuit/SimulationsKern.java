@@ -28,9 +28,12 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.CompressorIntMatrix;
 import ch.technokrat.gecko.geckocircuits.datacontainer.IntegerMatrixCache;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ShortMatrixCache;
 import ch.technokrat.gecko.geckocircuits.newscope.ScopeFrame;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Static fields staticTSTART/staticTEND are intentionally written for backward compatibility with legacy code")
 public class SimulationsKern implements ISimulationEngine {
 
     private double dt, t, tPAUSE;
