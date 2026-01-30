@@ -185,14 +185,14 @@ public class GraferV3 extends JPanel {
     }
 
     public void setzeAchsenBegrenzungen(double[] xMin, double[] xMax, boolean[] autoScaleX, double[] yMin, double[] yMax, boolean[] autoScaleY) {
-        this.achseXmin = xMin;
-        this.autoAchseXmin = autoScaleX;
-        this.achseXmax = xMax;
-        this.autoAchseXmax = autoScaleX;
-        this.achseYmin = yMin;        
-        this.autoAchseYmin = autoScaleY;
-        this.achseYmax = yMax;
-        this.autoAchseYmax = autoScaleY;
+        this.achseXmin = Arrays.copyOf(xMin, xMin.length);
+        this.autoAchseXmin = Arrays.copyOf(autoScaleX, autoScaleX.length);
+        this.achseXmax = Arrays.copyOf(xMax, xMax.length);
+        this.autoAchseXmax = Arrays.copyOf(autoScaleX, autoScaleX.length);
+        this.achseYmin = Arrays.copyOf(yMin, yMin.length);
+        this.autoAchseYmin = Arrays.copyOf(autoScaleY, autoScaleY.length);
+        this.achseYmax = Arrays.copyOf(yMax, yMax.length);
+        this.autoAchseYmax = Arrays.copyOf(autoScaleY, autoScaleY.length);
     }
 
     public void setzeAchsenTyp(int[] x, int[] y) {
