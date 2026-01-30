@@ -88,7 +88,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
                 System.out.print(url);
 
                 return Class.forName(name, true, new URLClassLoader(new URL[] { url }));
-            } catch (Exception ex) {
+            } catch (MalformedURLException | ClassNotFoundException ex) {
 
             }
             return null;

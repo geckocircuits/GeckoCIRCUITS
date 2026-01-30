@@ -338,7 +338,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             newLossFile = new GeckoFile(lossesFile, storageType, MainWindow.getOpenFileName());
             newLossFile.setUser(_parent.getUniqueObjectIdentifier());
             datnamGemesseneVerluste = fkaku;
-        } catch (Exception e) {
+        } catch (java.io.IOException e) {
             return false;
         }
         if (newLossFile != null) { //means new loss file was successfully generated
