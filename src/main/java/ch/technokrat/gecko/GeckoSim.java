@@ -15,6 +15,7 @@ package ch.technokrat.gecko;
 
 import ch.technokrat.gecko.geckocircuits.allg.*;
 import ch.technokrat.gecko.i18n.LangInit;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -440,7 +441,7 @@ public class GeckoSim {
                         JOptionPane.ERROR_MESSAGE);
 
                 if (operatingmode == OperatingMode.STANDALONE) {
-                    System.exit(0);
+                    exitDueToIncompatibleJavaVersion();
                 } else if (operatingmode == OperatingMode.SIMULINK || operatingmode == OperatingMode.EXTERNAL) {
                     _win.dispose();
                 }
@@ -450,7 +451,16 @@ public class GeckoSim {
             System.err.println("Could not check java version.");
         }
     }
-    
+
+    /**
+     * Exits the JVM due to incompatible Java version.
+     * This is intentional behavior when the Java version is too old.
+     */
+    @SuppressFBWarnings(value = "DM_EXIT", justification = "Intentional JVM shutdown due to incompatible Java version")
+    private static void exitDueToIncompatibleJavaVersion() {
+        System.exit(0);
+    }
+
     public static boolean scriptEngineAvailable = false;
     
     private void checkIfLibraryIsMissing() {
