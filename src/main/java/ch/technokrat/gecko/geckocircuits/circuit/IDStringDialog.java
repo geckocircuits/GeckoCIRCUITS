@@ -66,7 +66,7 @@ public final class IDStringDialog {
     public static IDStringDialog fabricVariableName(final AbstractBlockInterface parent, final String newName) {
         
         IDStringDialog returnValue = null;        
-        if (_allIDStrings.containsKey(newName) && !_allIDStrings.get(newName).equals(parent)) {
+        if (_allIDStrings.containsKey(newName) && !_allIDStrings.get(newName).contains(parent)) {
             returnValue = new IDStringDialog(parent, findUnusedName(newName));            
         } else {
             returnValue = new IDStringDialog(parent, newName);
