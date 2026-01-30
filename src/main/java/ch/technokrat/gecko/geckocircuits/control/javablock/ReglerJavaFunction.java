@@ -575,18 +575,18 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         while (XIN.size() < number) {
             XIN.add(new TerminalControlInput(this, -2, -XIN.size() + 1));
         }
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
         if (_inputTerminalNumber != null) {
             int newsize = XIN.size();
             if (_inputTerminalNumber.getValue() != newsize) {
                 _inputTerminalNumber.setUserValue(newsize);
             }
         }
-
     }
 
     @Override
     public void setOutputTerminalNumber(final int number) {
-
         while (YOUT.size() > number) {
             YOUT.pop();
         }
@@ -595,6 +595,8 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             YOUT.add(new TerminalControlOutput(this, 2, -YOUT.size() + 1));
         }
 
+        // Null check required because this method may be called from superclass constructor
+        // before _outputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
         if (_outputTerminalNumber != null) {
             int newsize = YOUT.size();
             if (_outputTerminalNumber.getValue() != newsize) {
