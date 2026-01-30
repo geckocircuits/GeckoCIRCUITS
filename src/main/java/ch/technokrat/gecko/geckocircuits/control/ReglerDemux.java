@@ -35,7 +35,7 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
     public ReglerJavaFunction _connectedJavaBlock;
     public int _connectedJavaOutputIndex;
 
-    final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 3).
             longName(I18nKeys.NO_OUTPUT_TERMINALS).
             shortName("numberOutputTerminals").

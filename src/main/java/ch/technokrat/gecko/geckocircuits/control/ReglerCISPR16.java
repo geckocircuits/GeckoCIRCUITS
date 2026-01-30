@@ -33,8 +33,8 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerCISPR16.class, "CISPR16", I18nKeys.EMI_TEST_RECEIVER);
     // alle ZV-Daten nicht komprimiert fuer eventuelle Festplattenspeicherung --> Speicherkritisch
-    DataContainerSimple _zvDatenRam;
-    public final Cispr16Settings _settings = new Cispr16Settings(this);
+    transient DataContainerSimple _zvDatenRam;
+    public final transient Cispr16Settings _settings = new Cispr16Settings(this);
     private TestReceiverWindow _testReceiverCISPR16;
     /**
      * todo: I don't know a better name for "DA" - this comes from Uwe. Maybe it
@@ -44,7 +44,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
     private static final int DI_OFFSET = 3;  // Innen-Rechteck
     private static final double WIDTH = 1.5;
     private static final int DATA_INDEX_ADD = 5;
-    TestReceiverCalculation _testReceiverNew;
+    transient TestReceiverCalculation _testReceiverNew;
 
     public Cispr16Settings getSettings() {
         return _settings;

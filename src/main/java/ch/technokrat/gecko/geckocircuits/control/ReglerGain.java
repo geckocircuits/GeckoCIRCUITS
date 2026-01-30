@@ -27,7 +27,7 @@ public final class ReglerGain extends AbstractReglerSingleInputSingleOutput {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerGain.class, "GAIN", I18nKeys.GAIN);
 
     
-    public final UserParameter<Double> _gain = UserParameter.Builder.<Double>start("k", 1.0).
+    public transient final UserParameter<Double> _gain = UserParameter.Builder.<Double>start("k", 1.0).
             longName(I18nKeys.GAIN).
             shortName("r0").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
