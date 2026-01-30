@@ -217,7 +217,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
 
                 _grafer.refreshComponentPane();
                 baueGUI();
-                jtfWEIG[jtfWEIG.length - 1].setNumberToField(110 / jtfWEIG.length);
+                jtfWEIG[jtfWEIG.length - 1].setNumberToField(110.0 / jtfWEIG.length);
                 modifiedWeightIndex = jtfWEIG.length - 1;
                 setMinimumSize(new Dimension(getWidth(), getHeight()));
                 // die x-Achse wird nur beim untesten Diagramm angezeigt --> Aktualisierung

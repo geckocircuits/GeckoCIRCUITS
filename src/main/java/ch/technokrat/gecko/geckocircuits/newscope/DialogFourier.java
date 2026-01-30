@@ -359,8 +359,8 @@ public class DialogFourier extends JDialog {
 
                 Cispr16Fft.realft(data, 1);
                 for (int n = nMin; n <= nMax; n++) {
-                    an[i2 - 1][n - nMin] = data[2 * n] / (NN / 2);
-                    bn[i2 - 1][n - nMin] = data[2 * n + 1] / (NN / 2);
+                    an[i2 - 1][n - nMin] = data[2 * n] / (NN / 2.0);
+                    bn[i2 - 1][n - nMin] = data[2 * n + 1] / (NN / 2.0);
                 }
             }
         }

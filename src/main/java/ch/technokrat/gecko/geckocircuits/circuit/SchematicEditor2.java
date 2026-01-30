@@ -1658,8 +1658,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         final List<AbstractCircuitSheetComponent> exchangeNew = new ArrayList<AbstractCircuitSheetComponent>();
         final List<TerminalInterface> allTerminals = new ArrayList<TerminalInterface>();
 
-        final Random shiftRandom = new Random(System.currentTimeMillis());
-        final long shiftValue = shiftRandom.nextLong();
+        final long shiftValue = IDStringDialog.rand.nextLong();
 
         for (AbstractCircuitSheetComponent elem : _selectedComponents.toArray(new AbstractCircuitSheetComponent[0])) {
             final AbstractCircuitSheetComponent elementAKTUELL = elem.copyFabric(shiftValue);

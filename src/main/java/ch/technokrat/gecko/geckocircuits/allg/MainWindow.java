@@ -863,7 +863,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             // Compressed data stream --> reduced and unreadable file -->
             // DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
             GZIPOutputStream out1 = new GZIPOutputStream(new FileOutputStream(file));
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1, java.nio.charset.StandardCharsets.UTF_8));
             //            
             out.write(datLK.exportASCII());
             out.flush();
@@ -1838,9 +1838,10 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
     }
 
+    private static final Random FILE_ID_RANDOM = new Random();
+
     private void generateNewFileId() {
-        Random random = new Random(System.currentTimeMillis());
-        uniqueFileID = random.nextInt();
+        uniqueFileID = FILE_ID_RANDOM.nextInt();
     }
 
     private static String getAutoBackupFileName() {
@@ -1976,7 +1977,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             GZIPInputStream in1 = null;
             in1 = new GZIPInputStream(new FileInputStream(dateiName));
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(in1));
+            BufferedReader in = new BufferedReader(new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8));
             Vector<String> datVec = new Vector<>();
             String z = null;
 
