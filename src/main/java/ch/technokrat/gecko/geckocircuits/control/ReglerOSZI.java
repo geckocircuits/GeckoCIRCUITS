@@ -25,6 +25,7 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.ScopeWrapperIndices;
 import ch.technokrat.gecko.geckocircuits.newscope.*;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
@@ -495,6 +496,8 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     }
 
     @Override
+    @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+            justification = "Null checks protect against uninitialized field access from superclass constructor")
     public void setInputTerminalNumber(final int number) {
         while (XIN.size() > number) {
             XIN.pop();
@@ -515,8 +518,6 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         } catch (Exception ex) {
             // Signal number change may fail during initialization - safe to ignore
         }
-
-
     }
 
     @Override
