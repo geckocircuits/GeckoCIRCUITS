@@ -504,8 +504,10 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             XIN.add(new TerminalControlInput(this, TERM_POS_X, -XIN.size()));
         }
 
+        // Null checks required because this method may be called from superclass constructor
+        // before instance fields are initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
         try {
-            if (_grafer != null) {
+            if (_grafer != null && _meanSignals != null && _scopeFrame != null) {
                 _grafer.getManager().defineNewSignalNumber(this, XIN.size(), _meanSignals);
                 _scopeFrame.setNewTerminalNumber(XIN.size());
             }
