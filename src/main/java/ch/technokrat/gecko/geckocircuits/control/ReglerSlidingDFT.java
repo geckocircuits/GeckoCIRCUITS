@@ -34,7 +34,7 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
     private static final double DEFAULT_FREQENCY = 500;
     public static final ControlTypeInfo T_INFO = new ControlTypeInfo(ReglerSlidingDFT.class,"SDFT", I18nKeys.SDFT);
     
-    final UserParameter<Double> _averageSpan = UserParameter.Builder.<Double>start("windowSpan", DEFAULT_WIN_SIZE).
+    transient final UserParameter<Double> _averageSpan = UserParameter.Builder.<Double>start("windowSpan", DEFAULT_WIN_SIZE).
             longName(I18nKeys.AVERAGING_TIME).
             shortName("T").
             unit("sec").
@@ -151,7 +151,7 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
 
     public final class FrequencyData {
         
-        public final UserParameter<Double> _frequency;
+        public transient final UserParameter<Double> _frequency;
         public OutputData _outputData;
 
         public FrequencyData(final double frequency, final OutputData outputData) {

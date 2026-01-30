@@ -115,10 +115,10 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
     private double[][] _xy;  // Importierter ZV (als ASCII-Datei)
     private String _datnamXY = GlobalFilePathes.DATNAM_NOT_DEFINED;
     // for TRI, RECHT-states we simple store variables 'aufsteigend' and '_dreieck'
-    private GeckoFile _externalDataFile = null;
+    private transient GeckoFile _externalDataFile = null;
     private long _externalDataFileHashValue = 0;
     private String[] _labelsBeforeFold;
-    private Stack<TerminalControlInput> _terminalStack = new Stack<TerminalControlInput>();
+    private transient Stack<TerminalControlInput> _terminalStack = new Stack<TerminalControlInput>();
 
     ;
 

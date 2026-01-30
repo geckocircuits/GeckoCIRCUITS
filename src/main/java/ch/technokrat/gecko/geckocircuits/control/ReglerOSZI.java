@@ -45,7 +45,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     private static final int TERM_POS_X = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerOSZI.class, "SCOPE", I18nKeys.SCOPE, I18nKeys.COMPONENT_FOR_DATA_VISUALIZATION);
     
-    final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+    private transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 0).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
@@ -58,7 +58,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             _yKlickMaxTermADD, _yKlickMinTermSUB, _yKlickMaxTermSUB;
     // fuer Zugriff auf SCOPE und die Moeglichkeit zum Update der Labels wenn Terminal-Anzahl geaendert wird
     // alle ZV-Daten nicht komprimiert fuer eventuelle Festplattenspeicherung --> Speicherkritisch
-    private AbstractDataContainer _zvDatenRAM;
+    private transient AbstractDataContainer _zvDatenRAM;
     //for use with GeckoSCRIPT - waveform characteristic
     private transient CharacteristicsCalculator _waveformChar;
     private double _charStart = 0;
@@ -72,14 +72,14 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     private static final int FOUR_CHAN_DEPTH = 4;
     public static final int DEF_TERM_NUMBER = 3;
     //for reading the correct rows from the global DataContainer
-    private ScopeWrapperIndices _scopeWrapperIndices;
+    private transient ScopeWrapperIndices _scopeWrapperIndices;
     private String[] _saveLoadSignalNames;
     private final ScopeSettings _scopeSettings = new ScopeSettings();  // initiale ScopeSettings definieren   ;    
     private final GraferV4 _grafer = new GraferV4(_scopeSettings);
     public ScopeFrame _scopeFrame = new ScopeFrame(_grafer);
     private boolean _isShowName;
-    Stack<AbstractScopeSignal> _scopeInputSignals = new Stack<AbstractScopeSignal>();
-    private final DefinedMeanSignals _meanSignals = new DefinedMeanSignals(_scopeInputSignals);
+    transient Stack<AbstractScopeSignal> _scopeInputSignals = new Stack<AbstractScopeSignal>();
+    private transient final DefinedMeanSignals _meanSignals = new DefinedMeanSignals(_scopeInputSignals);
     
     private static final int DIAMETER = 4;
     private static final double HEIGHT = 0.6;
