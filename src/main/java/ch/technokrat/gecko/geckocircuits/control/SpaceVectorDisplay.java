@@ -105,7 +105,7 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
                 spaceVectorImag = 0;
 
                 for(int i = 0; i < averageSpan; i++) {
-                    int index = ((int) (counter  + 2 * HISTORY_BUFFER_SIZE - i )) % HISTORY_BUFFER_SIZE;
+                    int index = ((int) (counter  + 2L * HISTORY_BUFFER_SIZE - i )) % HISTORY_BUFFER_SIZE;
                     spaceVectorReal += averageHistoryRe[index];
                     spaceVectorImag += averageHistoryIm[index];
                 }

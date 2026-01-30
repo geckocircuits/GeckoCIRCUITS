@@ -34,7 +34,7 @@ public class NetListLK {
     public int[] spgQuelleNr;  // zaehlt nicht nur die SpgQuellen von 1 beginnend aufsteigen, sondern auch die LKOP2-Elemente, wobei Durchmischung mit den SpgQuellen moeglich ist
     public Verbindung[] v;
     public int verbindungANZAHL;
-    public AbstractCircuitBlockInterface[] elements, eLKneu, eLK_M;
+    public AbstractCircuitBlockInterface[] elements, eLKneu;
     public int elementANZAHL, elementANZAHLneu;
     public String[] labelListe;
     //
@@ -248,22 +248,19 @@ public class NetListLK {
     // zB. die im SubCircuit definierten ElementeLK werden in die LK-Netzliste integriert -->
     public final void integriereSubCircuits() {
         Set<AbstractBlockInterface> eLKneuSet = new LinkedHashSet<AbstractBlockInterface>();
-        ArrayList<AbstractCircuitBlockInterface> eLK_M_vec = new ArrayList<AbstractCircuitBlockInterface>();
 
         for (AbstractCircuitBlockInterface elem : elements) {
             if (elem instanceof HiddenSubCircuitable) {
                 // Element wird aufgeloest in seine einzelnen LK-Elemente -->
-                
-                HiddenSubCircuitable subCircuitable = (HiddenSubCircuitable) elem;             
+
+                HiddenSubCircuitable subCircuitable = (HiddenSubCircuitable) elem;
                 if (subCircuitable.includeParentInSimulation()) {
                     eLKneuSet.add(elem);
                 }
-                eLKneuSet.addAll(subCircuitable.getHiddenSubCircuitElements());                
-                
+                eLKneuSet.addAll(subCircuitable.getHiddenSubCircuitElements());
+
             } else {
-                if (elem instanceof MutualInductance) {
-                    eLK_M_vec.add(elem);
-                } else {
+                if (!(elem instanceof MutualInductance)) {
                     eLKneuSet.add(elem);
                 }
             }
@@ -271,7 +268,6 @@ public class NetListLK {
 
         elementANZAHLneu = eLKneuSet.size();
         eLKneu = eLKneuSet.toArray(new AbstractCircuitBlockInterface[eLKneuSet.size()]);
-        eLK_M = eLK_M_vec.toArray(new AbstractCircuitBlockInterface[eLK_M_vec.size()]);
     }
 
     protected void initialisiereMitSubcircuit() {

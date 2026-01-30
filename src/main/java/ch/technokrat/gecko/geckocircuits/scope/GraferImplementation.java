@@ -792,8 +792,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             grL.moveTo(xPix[0], yPix[0]);
             for (int i5 = 1; i5 < _zvCounter; i5++) {
                 if (yPix[i5] != yPix[i5 - 1]) {  // Umschaltvorgang wird in der Mitte zwischen 2 Datenpunkten realisiert --> optische Verbesserung
-                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2, yPix[i5 - 1]);
-                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2, yPix[i5]);
+                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2.0, yPix[i5 - 1]);
+                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2.0, yPix[i5]);
                 }
                 grL.lineTo(xPix[i5], yPix[i5]);
             }
