@@ -196,107 +196,118 @@ public class GraferV3 extends JPanel {
     }
 
     public void setzeAchsenTyp(int[] x, int[] y) {
-        this.xAchseTyp = x;
-        this.yAchseTyp = y;
+        this.xAchseTyp = Arrays.copyOf(x, x.length);
+        this.yAchseTyp = Arrays.copyOf(y, y.length);
     }
 
     public void setzeAchsenFarbe(Color[] fX, Color[] fY) {
-        this.farbeAchsenX = fX;
-        this.farbeAchsenY = fY;
+        this.farbeAchsenX = Arrays.copyOf(fX, fX.length);
+        this.farbeAchsenY = Arrays.copyOf(fY, fY.length);
     }
 
     public void setzeAchsenLinienStil(int[] stilX, int[] stilY) {
-        this.linienStilAchsenX = stilX;
-        this.linienStilAchsenY = stilY;
+        this.linienStilAchsenX = Arrays.copyOf(stilX, stilX.length);
+        this.linienStilAchsenY = Arrays.copyOf(stilY, stilY.length);
     }
     //-----------
 
     public void definiereGridNormalX(int[] zugeordneteXAchse, int[] zugeordneteYAchse) {
-        this.gridNormalX_zugeordneteXAchse = zugeordneteXAchse;
-        this.gridNormalX_zugeordneteYAchse = zugeordneteYAchse;
+        this.gridNormalX_zugeordneteXAchse = Arrays.copyOf(zugeordneteXAchse, zugeordneteXAchse.length);
+        this.gridNormalX_zugeordneteYAchse = Arrays.copyOf(zugeordneteYAchse, zugeordneteYAchse.length);
         if (zugeordneteXAchse.length != zugeordneteYAchse.length) {
             System.out.println("Fehler 45763425n");
         }
     }
 
     public void definiereGridNormalY(int[] zugeordneteXAchse, int[] zugeordneteYAchse) {
-        this.gridNormalY_zugeordneteXAchse = zugeordneteXAchse;
-        this.gridNormalY_zugeordneteYAchse = zugeordneteYAchse;
+        this.gridNormalY_zugeordneteXAchse = Arrays.copyOf(zugeordneteXAchse, zugeordneteXAchse.length);
+        this.gridNormalY_zugeordneteYAchse = Arrays.copyOf(zugeordneteYAchse, zugeordneteYAchse.length);
         if (zugeordneteXAchse.length != zugeordneteYAchse.length) {
             System.out.println("Fehler 908hj4gw4");
         }
     }
 
     public void setzeGridFarben(Color[] farbeGridNormalX, Color[] farbeGridNormalY, Color[] farbeGridNormalXminor, Color[] farbeGridNormalYminor) {
-        this.farbeGridNormalX = farbeGridNormalX;
-        this.farbeGridNormalY = farbeGridNormalY;
-        this.farbeGridNormalXminor = farbeGridNormalXminor;
-        this.farbeGridNormalYminor = farbeGridNormalYminor;
+        this.farbeGridNormalX = Arrays.copyOf(farbeGridNormalX, farbeGridNormalX.length);
+        this.farbeGridNormalY = Arrays.copyOf(farbeGridNormalY, farbeGridNormalY.length);
+        this.farbeGridNormalXminor = Arrays.copyOf(farbeGridNormalXminor, farbeGridNormalXminor.length);
+        this.farbeGridNormalYminor = Arrays.copyOf(farbeGridNormalYminor, farbeGridNormalYminor.length);
     }
 
     public void setzeGridLinienStil(int[] linStilGridNormalX, int[] linStilGridNormalY, int[] linStilGridNormalXminor, int[] linStilGridNormalYminor) {
-        this.linStilGridNormalX = linStilGridNormalX;
-        this.linStilGridNormalY = linStilGridNormalY;
-        this.linStilGridNormalXminor = linStilGridNormalXminor;
-        this.linStilGridNormalYminor = linStilGridNormalYminor;
+        this.linStilGridNormalX = Arrays.copyOf(linStilGridNormalX, linStilGridNormalX.length);
+        this.linStilGridNormalY = Arrays.copyOf(linStilGridNormalY, linStilGridNormalY.length);
+        this.linStilGridNormalXminor = Arrays.copyOf(linStilGridNormalXminor, linStilGridNormalXminor.length);
+        this.linStilGridNormalYminor = Arrays.copyOf(linStilGridNormalYminor, linStilGridNormalYminor.length);
     }
 
     public void showGridLines(int[][] showGridNormalXmajor, int[][] showGridNormalXminor, int[][] showGridNormalYmajor, int[][] showGridNormalYminor) {
-        this.showGridNormalXmajor = showGridNormalXmajor;
-        this.showGridNormalXminor = showGridNormalXminor;
-        this.showGridNormalYmajor = showGridNormalYmajor;
-        this.showGridNormalYminor = showGridNormalYminor;
+        this.showGridNormalXmajor = deepCopy2D(showGridNormalXmajor);
+        this.showGridNormalXminor = deepCopy2D(showGridNormalXminor);
+        this.showGridNormalYmajor = deepCopy2D(showGridNormalYmajor);
+        this.showGridNormalYminor = deepCopy2D(showGridNormalYminor);
+    }
+
+    private static int[][] deepCopy2D(int[][] src) {
+        if (src == null) {
+            return null;
+        }
+        int[][] copy = new int[src.length][];
+        for (int i = 0; i < src.length; i++) {
+            copy[i] = Arrays.copyOf(src[i], src[i].length);
+        }
+        return copy;
     }
     //-----------
 
     public void setzeTickAutoSpacing(boolean[] xTickAutoSpacing, boolean[] yTickAutoSpacing) {
-        this.xTickAutoSpacing = xTickAutoSpacing;
-        this.yTickAutoSpacing = yTickAutoSpacing;
+        this.xTickAutoSpacing = Arrays.copyOf(xTickAutoSpacing, xTickAutoSpacing.length);
+        this.yTickAutoSpacing = Arrays.copyOf(yTickAutoSpacing, yTickAutoSpacing.length);
     }
 
     public void setzeTickSpacing(double[] x, double[] y) {
-        this.xTickSpacing = x;
-        this.yTickSpacing = y;
+        this.xTickSpacing = Arrays.copyOf(x, x.length);
+        this.yTickSpacing = Arrays.copyOf(y, y.length);
     }
 
     public void setzeTickAnzMinor(int[] x, int[] y) {
-        this.xAnzTicksMinor = x;
-        this.yAnzTicksMinor = y;
+        this.xAnzTicksMinor = Arrays.copyOf(x, x.length);
+        this.yAnzTicksMinor = Arrays.copyOf(y, y.length);
     }
 
     public void setzeTickLabelAnzeige(boolean[] xMaj, boolean[] yMaj, boolean[] xMin, boolean[] yMin) {
-        this.zeigeLabelsXmaj = xMaj;
-        this.zeigeLabelsYmaj = yMaj;
-        this.zeigeLabelsXmin = xMin;
-        this.zeigeLabelsYmin = yMin;
+        this.zeigeLabelsXmaj = Arrays.copyOf(xMaj, xMaj.length);
+        this.zeigeLabelsYmaj = Arrays.copyOf(yMaj, yMaj.length);
+        this.zeigeLabelsXmin = Arrays.copyOf(xMin, xMin.length);
+        this.zeigeLabelsYmin = Arrays.copyOf(yMin, yMin.length);
     }
 
     public void setzeTickLaenge(int[] x, int[] y, int[] xMinor, int[] yMinor) {
-        this.xTickLaenge = x;
-        this.yTickLaenge = y;
-        this.xTickLaengeMinor = xMinor;
-        this.yTickLaengeMinor = yMinor;
+        this.xTickLaenge = Arrays.copyOf(x, x.length);
+        this.yTickLaenge = Arrays.copyOf(y, y.length);
+        this.xTickLaengeMinor = Arrays.copyOf(xMinor, xMinor.length);
+        this.yTickLaengeMinor = Arrays.copyOf(yMinor, yMinor.length);
     }
     // - - - - - - - - - - - - -
 
     public void setzeTickAusrichtung(boolean[] x, boolean[] y) {
-        this.zeigeXticksUnten = x;
-        this.zeigeYticksLinks = y;
+        this.zeigeXticksUnten = Arrays.copyOf(x, x.length);
+        this.zeigeYticksLinks = Arrays.copyOf(y, y.length);
     }
 
     public void setzeTickLabelPosition(int[] x, int[] y) {
-        this.posXtickLabels = x;
-        this.posYtickLabels = y;
+        this.posXtickLabels = Arrays.copyOf(x, x.length);
+        this.posYtickLabels = Arrays.copyOf(y, y.length);
     }
 
     public void setzeTickLabelFont(Font[] foX, Font[] foY) {
-        this.foTickLabelX = foX;
-        this.foTickLabelY = foY;
+        this.foTickLabelX = Arrays.copyOf(foX, foX.length);
+        this.foTickLabelY = Arrays.copyOf(foY, foY.length);
     }
 
     public void setzeAchsenBeschriftungen(String[] x, String[] y) {
-        this.xAchseBeschriftung = x;
-        this.yAchseBeschriftung = y;
+        this.xAchseBeschriftung = Arrays.copyOf(x, x.length);
+        this.yAchseBeschriftung = Arrays.copyOf(y, y.length);
     }
     //-------------------------------------
     // (2) setze Kurven:
@@ -307,42 +318,42 @@ public class GraferV3 extends JPanel {
     }
 
     public void setzeZugehoerigkeitKurveAchsen(int[] indexXachse, int[] indexYachse) {
-        this.indexZurKurveGehoerigeXachse = indexXachse;
-        this.indexZurKurveGehoerigeYachse = indexYachse;
+        this.indexZurKurveGehoerigeXachse = Arrays.copyOf(indexXachse, indexXachse.length);
+        this.indexZurKurveGehoerigeYachse = Arrays.copyOf(indexYachse, indexYachse.length);
     }
 
     public void setzeKurveIndexWorksheetKolonnenXY(int[][] iwkXY) {
-        this.kurve_index_worksheetKolonnen_XY = iwkXY;
+        this.kurve_index_worksheetKolonnen_XY = deepCopy2D(iwkXY);
     }
 
     public void setzeKurvePunktSymbolAnzeigen(boolean[] sym, int[] crvSymbFrequ, int[] crvSymbShape, Color[] crvSymbFarbe) {
-        this.kurvenPunktSymbolAnzeigen = sym;
-        this.crvSymbFrequ = crvSymbFrequ;
-        this.crvSymbShape = crvSymbShape;
-        this.crvSymbFarbe = crvSymbFarbe;
+        this.kurvenPunktSymbolAnzeigen = Arrays.copyOf(sym, sym.length);
+        this.crvSymbFrequ = Arrays.copyOf(crvSymbFrequ, crvSymbFrequ.length);
+        this.crvSymbShape = Arrays.copyOf(crvSymbShape, crvSymbShape.length);
+        this.crvSymbFarbe = Arrays.copyOf(crvSymbFarbe, crvSymbFarbe.length);
     }
 
     public void setzeKurveClipping(double[] xmin, double[] xmax, double[] ymin, double[] ymax, int[] clipXmin, int[] clipXmax, int[] clipYmin, int[] clipYmax) {
-        this.kurveClippling_xmin = xmin;
-        this.kurveClippling_xmax = xmax;
-        this.kurveClippling_ymin = ymin;
-        this.kurveClippling_ymax = ymax;  // eventuell manuell definierte konkrete Zahlenwerte
-        this.clipXmin = clipXmin;
-        this.clipXmax = clipXmax;
-        this.clipYmin = clipYmin;
-        this.clipYmax = clipYmax;         // Art des Cilpping --> "AXIS", "NO CLIP", "VALUE"
+        this.kurveClippling_xmin = Arrays.copyOf(xmin, xmin.length);
+        this.kurveClippling_xmax = Arrays.copyOf(xmax, xmax.length);
+        this.kurveClippling_ymin = Arrays.copyOf(ymin, ymin.length);
+        this.kurveClippling_ymax = Arrays.copyOf(ymax, ymax.length);  // eventuell manuell definierte konkrete Zahlenwerte
+        this.clipXmin = Arrays.copyOf(clipXmin, clipXmin.length);
+        this.clipXmax = Arrays.copyOf(clipXmax, clipXmax.length);
+        this.clipYmin = Arrays.copyOf(clipYmin, clipYmin.length);
+        this.clipYmax = Arrays.copyOf(clipYmax, clipYmax.length);         // Art des Cilpping --> "AXIS", "NO CLIP", "VALUE"
     }
 
     public void setzeKurveLinienstil(int[] kurveLinienstil) {
-        this.kurveLinienstil = kurveLinienstil;
+        this.kurveLinienstil = Arrays.copyOf(kurveLinienstil, kurveLinienstil.length);
     }
 
     public void setzeKurveFarbe(Color[] f) {
-        this.kurveFarbe = f;
+        this.kurveFarbe = Arrays.copyOf(f, f.length);
     }
 
     public void setzeKurveTransparenz(double[] trans) {
-        this.kurveTransparenz = trans;
+        this.kurveTransparenz = Arrays.copyOf(trans, trans.length);
     }
     //-------------------------------------
 
