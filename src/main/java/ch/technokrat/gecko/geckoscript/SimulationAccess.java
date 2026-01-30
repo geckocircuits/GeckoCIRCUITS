@@ -322,13 +322,7 @@ public class SimulationAccess implements GeckoFileable {
             //BUT - to update this, we first have to set the new coordinates and then re-paint the component
             //this is too complicated for now, so just give a "buffer zone" around the component and check if position is far enough away from the sides
             //of the sheet
-            int bufferSpace = 3;
-            if (y < bufferSpace || x < bufferSpace || (worksheetSizeY - y) < bufferSpace || (worksheetSizeX - x) < bufferSpace) {
-                valid = true;
-                //throw new Exception("Given position is too close to worksheet sides. Sheet size is " + worksheetSizeX + "x" + worksheetSizeY + " and given new position is " + x + "x" + y + ".");
-            } else {
-                valid = true;
-            }
+            valid = true;
         }
         return valid;
     }

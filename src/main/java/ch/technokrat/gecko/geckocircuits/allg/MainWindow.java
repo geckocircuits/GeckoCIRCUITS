@@ -85,7 +85,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public static String aktuellerDateiName = UNTITLED;  // without path! - only for display in the window title bar (as is common in Windows)
     //--------------------------------------
     private JSplitPane split;
-    public static int seaBREITE = 110;  // width of the 'SchematicComponentSelection2()' component on the right edge
+    public static final int seaBREITE = 110;  // width of the 'SchematicComponentSelection2()' component on the right edge
     public JCheckBoxMenuItem vItemShowParLK, vItemShowFlowLK, vItemShowNameLK, vItemShowTextLineLK;
     public JCheckBoxMenuItem vItemShowParCONTROL, vItemShowNameCONTROL, vItemShowTextLineCONTROL;
     public JCheckBoxMenuItem aliasingCONTROL;
