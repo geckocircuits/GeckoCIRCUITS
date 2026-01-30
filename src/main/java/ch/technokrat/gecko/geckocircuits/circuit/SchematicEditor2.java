@@ -54,9 +54,9 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     //
     private static final double CLICK_RADIUS_RELATIVE = 0.5;  // [0...1]
     // Ansicht: verschiedene Varianten -->
-    public static ElementDisplayProperties _lkDisplayMode = new ElementDisplayProperties();
-    public static ElementDisplayProperties _thermDisplayMode = new ElementDisplayProperties();
-    public static ElementDisplayProperties _controlDisplayMode = new ElementDisplayProperties();
+    public static final ElementDisplayProperties _lkDisplayMode = new ElementDisplayProperties();
+    public static final ElementDisplayProperties _thermDisplayMode = new ElementDisplayProperties();
+    public static final ElementDisplayProperties _controlDisplayMode = new ElementDisplayProperties();
 
     static {
         if (_controlDisplayMode != null) {
@@ -1453,14 +1453,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         int dpix = AbstractCircuitSheetComponent.dpix;
         // Koordinatenbestimmung mit Snap-Funktion:
-        int mx = mouseEvent.getX(), my = mouseEvent.getY(), px = mx / dpix, py = my / dpix;
-        double pxd = mx * 1.0 / dpix, pyd = my * 1.0 / dpix;
-        if (Math.abs((px + 1) - pxd) < CLICK_RADIUS_RELATIVE) {
-            px++;
-        }
-        if (Math.abs((py + 1) - pyd) < CLICK_RADIUS_RELATIVE) {
-            py++;
-        }
+        int mx = mouseEvent.getX(), my = mouseEvent.getY();
+
         //---------------------------
         // Markierungsrechteck, um groessere Bereiche mit der Maus zu definieren:
         if (_mouseMoveMode == MouseMoveMode.SELECT_WINDOW) {
@@ -1753,7 +1747,6 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     public void export_allesImBearbeitungsModus() {
         try {
             final Clipboard clipBoard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
-            final Transferable transferable = clipBoard.getContents(null);
             final String transferString = this.writeSelectedElementsToASCIIString();
             final StringSelection tr1 = new StringSelection(transferString);  // die gewaehlten Elemente als String ins Clipboard schreiben
             clipBoard.setContents(tr1, null);

@@ -94,7 +94,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     private static final int THREE = 3;
     private static final int DEF_IN_TERMS = 3;
     private static final int DEF_OUT_TERMS = 2;
-    private AbstractJavaBlock _javaBlock = new JavaBlockVector(this);
+    private transient AbstractJavaBlock _javaBlock = new JavaBlockVector(this);
     private final Set<String> _additionalFilesHashKeys = new TreeSet();
     private boolean _isConsoleOutput = true;
     private static final int DIAMETER = 4;

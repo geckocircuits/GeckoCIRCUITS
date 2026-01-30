@@ -320,7 +320,6 @@ public class DialogFourier extends JDialog {
 
 
         i1 = startIndex;
-        double dT = rng2 - rng1;
         double dt = worksheet.getTimeValue(i1 + 1, 0) - worksheet.getTimeValue(i1, 0);
         //-------------------
         // Rechnen bis zum Endpunkt:

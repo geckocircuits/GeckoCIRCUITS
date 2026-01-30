@@ -31,7 +31,7 @@ public final class IDStringDialog {
     private final AbstractBlockInterface _parent;
     private String _idString;
     private static Map<String, ArrayList<AbstractBlockInterface>> _allIDStrings = new HashMap<String, ArrayList<AbstractBlockInterface>>();
-    public static Random rand = new Random(System.currentTimeMillis());
+    public static final Random rand = new Random(System.currentTimeMillis());
     public static final int MAX_SEARCH_NUMBER = 10000;
     final List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 

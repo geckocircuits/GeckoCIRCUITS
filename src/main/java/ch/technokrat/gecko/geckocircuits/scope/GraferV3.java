@@ -708,7 +708,6 @@ public class GraferV3 extends JPanel {
                 double xTickSpacingMinor = xTickSpacing[i1] / xAnzTicksMinor[i1];  // Wert zwischen zwei Minor-Ticks auf der x-Achse
                 int xMinorTicksAnzahl = (int) ((achseXmax[i1] - achseXmin[i1]) / xTickSpacingMinor) + 2;
                 double[] wertTickMinorX_temp = new double[xMinorTicksAnzahl];
-                int[] tickMinorX_temp = new int[xMinorTicksAnzahl];
                 double wertMinor = wertTickX[i1][0] - xTickSpacing[i1];
                 j = 0;
                 while (wertMinor < wertTickX[i1][0] - 1.5 * xTickSpacingMinor) {
@@ -888,7 +887,6 @@ public class GraferV3 extends JPanel {
             double yTickSpacingMinor = yTickSpacing[i1] / yAnzTicksMinor[i1];  // Wert zwischen zwei Minor-Ticks auf der y-Achse
             int yMinorTicksAnzahl = (int) ((achseYmax[i1] - achseYmin[i1]) / yTickSpacingMinor) + 2;
             double[] wertTickMinorY_temp = new double[yMinorTicksAnzahl];
-            int[] tickMinorY_temp = new int[yMinorTicksAnzahl];
             double wertMinor = wertTickY[i1][0] - yTickSpacing[i1];
             j = 0;
             while (wertMinor < wertTickY[i1][0] - 1.5 * yTickSpacingMinor) {
