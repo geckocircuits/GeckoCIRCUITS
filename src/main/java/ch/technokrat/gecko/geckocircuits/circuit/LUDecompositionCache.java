@@ -32,7 +32,7 @@ public class LUDecompositionCache {
     private int _cacheHitCounter = 0;
     private int _cacheMissCounter = 0;
     private static final boolean USE_CACHE = true;
-    private static long memoryBytes = 0;
+    private long memoryBytes = 0;
 
     private static final long maxJVMMemory = Runtime.getRuntime().maxMemory();
 
