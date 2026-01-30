@@ -26,12 +26,12 @@ public final class OutputWarningStream extends BufferedOutputStream {
     private boolean _verbosityWarnShown = false;
     private static final long DEFAULT_WARN_SIZE = 50000000;
     private static long warningBytesSize = DEFAULT_WARN_SIZE;
-    private static volatile long byteCounter = 0;
+    private long byteCounter = 0;
     private boolean _isOriginalOutput = true;
     @SuppressWarnings("PMD")
     private StringBuffer _alternativeOutput;
     private static final int MAX_STRING_BUFFER_SIZE = 100000;
-    private static volatile String outputDescription;
+    private String outputDescription;
     private boolean _ignoreFutureMessages = false;
     private static final int BUFFER_FRACTION = 5; // this means, after cleaning the buffer, 1/5th of the original space is left
     private static final int SEARCH_NEWLINE_CHARS = 200;
