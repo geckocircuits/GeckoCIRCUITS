@@ -52,25 +52,25 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         GeckoFileable, Operationable {
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerJavaFunction.class, "JAVA", I18nKeys.JAVA_FUNCTION);
-    private final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
-    private final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
     private CodeWindowModern _codeWindow;
 
-    final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzXIN", 3).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
             arrayIndex(this, -1).
             build();
 
-    final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzYOUT", 2).
             longName(I18nKeys.NO_OUTPUT_TERMINALS).
             shortName("numberOutputTerminals").
             arrayIndex(this, -1).
             build();
 
-    final UserParameter<Boolean> _showName = UserParameter.Builder.
+    transient final UserParameter<Boolean> _showName = UserParameter.Builder.
             <Boolean>start("showName", true).
             longName(I18nKeys.DISPLAY_COMPONENT_NAME_IN_CIRCUIT_SHEET).
             shortName("showName").
@@ -86,7 +86,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
      arrayIndex(this, -1).
      build();
      */
-    final VariableBusWidth _variableBusWidth = new VariableBusWidth(this);
+    transient final VariableBusWidth _variableBusWidth = new VariableBusWidth(this);
 
     @SuppressWarnings("PMD")
     private final StringBuffer _outputStringBuffer = new StringBuffer();

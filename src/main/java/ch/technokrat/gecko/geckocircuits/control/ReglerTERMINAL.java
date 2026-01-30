@@ -27,7 +27,7 @@ import java.util.List;
 
 public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTerminable {                
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTERMINAL.class, "CONTROL_TERMINAL", I18nKeys.CONTROL_TERMINAL);
-    private final TerminalToWrap _wrapped = new TerminalToWrap(this);
+    private transient final TerminalToWrap _wrapped = new TerminalToWrap(this);
     
     public ReglerTERMINAL() {
         super();

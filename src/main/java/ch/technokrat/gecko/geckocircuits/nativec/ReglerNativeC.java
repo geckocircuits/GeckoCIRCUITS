@@ -49,23 +49,23 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerNativeC.class, "C DLL", I18nKeys.C_DLL);
 
-    private final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
-    private final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
     private NativeCDialog _guiWindow;
-    private NativeCBlock _nativeCBlock;
-    private NativeCLibraryFile _libFile;
+    private transient NativeCBlock _nativeCBlock;
+    private transient NativeCLibraryFile _libFile;
     private DefaultListModel _libFileList;
     private static final String PATH_SPLITTER = ";";
-    
-    
-    private final UserParameter<String> _paramSelectedLibName = UserParameter.Builder.<String>start("nativeCLibrary", "null").
+
+
+    transient final UserParameter<String> _paramSelectedLibName = UserParameter.Builder.<String>start("nativeCLibrary", "null").
             longName(I18nKeys.NATIVE_LIB).
             shortName("nativeLib").
             showInTextInfo(TextInfoType.SHOW_NEVER).
             arrayIndex(this, -1).
             build();
-    
-    private final UserParameter<String> _paramLibNames = UserParameter.Builder.<String>start("nativeCLibraries", "null").
+
+    transient final UserParameter<String> _paramLibNames = UserParameter.Builder.<String>start("nativeCLibraries", "null").
             longName(I18nKeys.NATIVE_LIBS).
             shortName("nativeLibs").
             showInTextInfo(TextInfoType.SHOW_NEVER).

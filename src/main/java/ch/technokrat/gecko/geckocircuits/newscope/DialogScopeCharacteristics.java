@@ -153,8 +153,6 @@ public class DialogScopeCharacteristics extends GeckoDialog {
 
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                final double xDef1 = _panelDialRange.getStartTimeValue();
-                final double xDef2 = _panelDialRange.getStopTimeValue();
                 final Thread rechner = new CalculationThread();
                 rechner.setPriority(Thread.MIN_PRIORITY);
                 rechner.start();

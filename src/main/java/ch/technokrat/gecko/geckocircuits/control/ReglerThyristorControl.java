@@ -24,17 +24,17 @@ public final class ReglerThyristorControl extends RegelBlock {
 
     private DialogThyristorControl dtc;
     private static final int TN_Y = 6;  // Nummer der Terminals fuer Signal-Anschluss    
-    final UserParameter<Double> _onTime = UserParameter.Builder.<Double>start("onTime", 4e-3).
+    transient final UserParameter<Double> _onTime = UserParameter.Builder.<Double>start("onTime", 4e-3).
             longName(I18nKeys.GATE_ON_TIME_SEC).
             shortName("ontime").
             arrayIndex(this, -1).
             build();
-    final UserParameter<Double> _initFreq = UserParameter.Builder.<Double>start("initFreq", 50.0).
+    transient final UserParameter<Double> _initFreq = UserParameter.Builder.<Double>start("initFreq", 50.0).
             longName(I18nKeys.INITIAL_FREQUENCY_HZ).
             shortName("initf").
             arrayIndex(this, -1).
             build();
-    final UserParameter<Double> _phaseShift = UserParameter.Builder.<Double>start("phaseShift", 30.0).
+    transient final UserParameter<Double> _phaseShift = UserParameter.Builder.<Double>start("phaseShift", 30.0).
             longName(I18nKeys.PHASE_SHIFT_DEGREES).
             shortName("phase").
             arrayIndex(this, -1).

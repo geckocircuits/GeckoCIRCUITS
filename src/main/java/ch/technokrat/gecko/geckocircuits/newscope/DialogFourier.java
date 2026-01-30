@@ -104,7 +104,6 @@ public class DialogFourier extends JDialog {
 
 
         //
-        int maximumFractionDigits = 9;
         JPanel pHAR = new JPanel();
         pHAR.setLayout(new GridBagLayout());
 

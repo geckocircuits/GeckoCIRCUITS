@@ -41,7 +41,7 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, -1).
             build();
-    List<FrequencyData> _data = new ArrayList<FrequencyData>() {
+    transient List<FrequencyData> _data = new ArrayList<FrequencyData>() {
 
         @Override
         public void clear() {
