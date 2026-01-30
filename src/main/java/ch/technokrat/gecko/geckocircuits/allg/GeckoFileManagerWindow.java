@@ -52,7 +52,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     private FormatJTextField _jlS2;
     private FormatJTextField _jlS2b;
     private javax.swing.JButton _jbS2edit;
-    private final GeckoFileable _geckoFileable;
+    private final transient GeckoFileable _geckoFileable;
 
     /**
      * Creates new form GeckoFileManagerWindow should make a different
