@@ -31,6 +31,8 @@ import java.util.logging.Logger;
  *
  * @author anstupar
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Static _lastSessionIDActive tracks session across instances for callback coordination")
 public final class GeckoCustomRemote extends AbstractGeckoCustom implements GeckoRemoteInterface, CallbackServerInterface {
 
     private boolean _free = true; //denotes if this instance of GeckoCIRCUITS is free for a remote connection
