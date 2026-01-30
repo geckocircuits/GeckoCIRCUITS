@@ -49,6 +49,8 @@ import java.rmi.RemoteException;
 import java.util.*;
 import javax.swing.JTextArea;
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Writes to GeckoSim.operatingmode to set operating mode during remote file open")
 public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
     protected SimulationAccess _circuit;
