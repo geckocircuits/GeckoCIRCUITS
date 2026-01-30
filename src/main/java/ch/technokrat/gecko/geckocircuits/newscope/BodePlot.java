@@ -27,7 +27,7 @@ public class BodePlot extends GeckoDialog {
 
     public GraferV4 _graferNew;
     private NewScope _graferPanel;
-    private final int NUMBER_SIGNALS = 2;
+    private static final int NUMBER_SIGNALS = 2;
     private final String[] SIGNAL_NAMES = new String[]{"Magnitude", "Phase"};
     private DialogConnectSignalsGraphs _diagCON;
     private DataContainerSimple _dataContainer;

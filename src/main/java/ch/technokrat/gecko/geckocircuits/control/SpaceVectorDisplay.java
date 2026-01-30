@@ -44,8 +44,8 @@ import javax.swing.JSpinner;
  */
 public class SpaceVectorDisplay extends javax.swing.JFrame {
     static long counter = 0;
-    final int ORIGINX = 180;
-    final int ORIGINY = 200;
+    static final int ORIGINX = 180;
+    static final int ORIGINY = 200;
     final double SQRT3 = Math.sqrt(3);
     private double _time;
     private double _old_time;

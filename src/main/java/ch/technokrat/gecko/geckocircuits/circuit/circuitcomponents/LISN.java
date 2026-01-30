@@ -38,7 +38,11 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     private AbstractBlockInterface[] qLK;
     private final AbstractTerminal intern1, intern2, intern3, intern7, intern8, intern9;
 
-    private final double Lin = 50e-6, Lout = 300e-9, Rout = 20e-3, Cgnd = 250e-9, Rgnd = 50;
+    private static final double LIN = 50e-6;
+    private static final double LOUT = 300e-9;
+    private static final double ROUT = 20e-3;
+    private static final double CGND = 250e-9;
+    private static final double RGND = 50;
     private InductorWOCoupling _Lin1;
     private InductorWOCoupling _Lin2;
     private InductorWOCoupling _Lin3;
@@ -138,9 +142,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         qLK[1] = _Lin2;
         qLK[2] = _Lin3;
         
-        _Lin1._inductance.setValueWithoutUndo(Lin);
-        _Lin2._inductance.setValueWithoutUndo(Lin);
-        _Lin3._inductance.setValueWithoutUndo(Lin);
+        _Lin1._inductance.setValueWithoutUndo(LIN);
+        _Lin2._inductance.setValueWithoutUndo(LIN);
+        _Lin3._inductance.setValueWithoutUndo(LIN);
         
         
         _Lin1.setInputTerminal(0, XIN.get(0));
@@ -159,9 +163,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         qLK[3] = _Lout1;
         qLK[4] = _Lout2;
         qLK[5] = _Lout3;
-        _Lout1._inductance.setValueWithoutUndo(Lout);
-        _Lout2._inductance.setValueWithoutUndo(Lout);
-        _Lout3._inductance.setValueWithoutUndo(Lout);                
+        _Lout1._inductance.setValueWithoutUndo(LOUT);
+        _Lout2._inductance.setValueWithoutUndo(LOUT);
+        _Lout3._inductance.setValueWithoutUndo(LOUT);                
         
         _Lout1.setInputTerminal(0, intern1);
         _Lout2.setInputTerminal(0, intern2);
@@ -183,9 +187,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         qLK[7] = _Rout2;
         qLK[8] = _Rout3;
         
-        _Rout1._resistance.setValueWithoutUndo(Rout);
-        _Rout2._resistance.setValueWithoutUndo(Rout);
-        _Rout3._resistance.setValueWithoutUndo(Rout);
+        _Rout1._resistance.setValueWithoutUndo(ROUT);
+        _Rout2._resistance.setValueWithoutUndo(ROUT);
+        _Rout3._resistance.setValueWithoutUndo(ROUT);
         
         _Rout1.setOutputTerminal(0, YOUT.get(0));
         _Rout2.setOutputTerminal(0, YOUT.get(1));
@@ -204,9 +208,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
         qLK[10] = _RGnd2;        
         qLK[11] = _RGnd3;
                                 
-        _RGnd1._resistance.setValueWithoutUndo(Rgnd);
-        _RGnd2._resistance.setValueWithoutUndo(Rgnd);
-        _RGnd3._resistance.setValueWithoutUndo(Rgnd);
+        _RGnd1._resistance.setValueWithoutUndo(RGND);
+        _RGnd2._resistance.setValueWithoutUndo(RGND);
+        _RGnd3._resistance.setValueWithoutUndo(RGND);
         
         _RGnd1.setOutputTerminal(0, YOUT.get(3));
         _RGnd2.setOutputTerminal(0, YOUT.get(3));
@@ -229,9 +233,9 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
             elem.getIDStringDialog().setRandomStringID();
         }
         
-        _CGnd1._capacitance.setValueWithoutUndo(Cgnd);
-        _CGnd2._capacitance.setValueWithoutUndo(Cgnd);
-        _CGnd3._capacitance.setValueWithoutUndo(Cgnd);
+        _CGnd1._capacitance.setValueWithoutUndo(CGND);
+        _CGnd2._capacitance.setValueWithoutUndo(CGND);
+        _CGnd3._capacitance.setValueWithoutUndo(CGND);
         
         _CGnd1.setOutputTerminal(0, YOUT.get(4));
         _CGnd2.setOutputTerminal(0, YOUT.get(5));
