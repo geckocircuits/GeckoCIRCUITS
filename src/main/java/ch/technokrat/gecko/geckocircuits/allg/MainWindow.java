@@ -23,6 +23,7 @@ import ch.technokrat.gecko.geckocircuits.newscope.ScopeFrame;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -1690,7 +1691,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
         if (IS_BRANDED) {
             try {
-                System.exit(0);
+                exitApplication();
             } catch (Exception ex) {
                 System.err.println("Cannot exit applet. Setting invisible!");
                 this.setVisible(false);
@@ -1725,7 +1726,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                     // $FALL-THROUGH$
                 case 1: // just exit, without saving
                     if (GeckoSim.operatingmode == OperatingMode.STANDALONE) {
-                        System.exit(0);
+                        exitApplication();
                     }
                     if (GeckoSim.operatingmode == OperatingMode.SIMULINK || GeckoSim.operatingmode == OperatingMode.EXTERNAL) {
                         dispose();
@@ -1737,8 +1738,17 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                     assert false;
             }
         } else {
-            System.exit(0);
+            exitApplication();
         }
+    }
+
+    /**
+     * Exits the application when in standalone mode.
+     * This is intentional behavior for the main window close operation.
+     */
+    @SuppressFBWarnings(value = "DM_EXIT", justification = "Intentional JVM shutdown on user close request")
+    private void exitApplication() {
+        System.exit(0);
     }
 
     public void external_end(long tStartSimulink, long tEndSimulink) {
