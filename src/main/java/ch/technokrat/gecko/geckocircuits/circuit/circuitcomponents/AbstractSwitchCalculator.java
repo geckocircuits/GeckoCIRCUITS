@@ -13,8 +13,11 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings("rawtypes")
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Static flags intentionally written from instance methods for cross-component switch coordination during simulation")
 public abstract class AbstractSwitchCalculator extends CircuitComponent implements AStampable, BStampable {
 
     
@@ -27,6 +30,8 @@ public abstract class AbstractSwitchCalculator extends CircuitComponent implemen
     protected double _rDt = DEFAULT_R_OFF;
     protected double _uForward = DEFAULT_U_FORWARD;
 
+    // Static flags intentionally written from instance methods for cross-component switch coordination.
+    // The volatile modifier ensures visibility across threads.
     public static volatile boolean switchAction = false;
     public static volatile boolean switchActionOccurred = false;
     protected BVector _bVector;
