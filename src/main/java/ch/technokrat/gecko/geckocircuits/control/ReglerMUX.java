@@ -19,6 +19,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlOutput;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.MUXControlCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
@@ -66,6 +67,8 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     
 
     @Override
+    @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+            justification = "Null check protects against uninitialized field access from superclass constructor")
     public void setInputTerminalNumber(final int number) {
         while (XIN.size() > number) {
             XIN.pop();
