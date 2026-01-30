@@ -452,8 +452,12 @@ public class SimulationsKern implements ISimulationEngine {
         this.tEND = tEND;
         this.dt = dt;
         // Update static fields for backward compatibility
-        staticTSTART = tSTART;
-        staticTEND = tEND;
+        updateStaticTimes(tSTART, tEND);
+    }
+
+    private static void updateStaticTimes(double start, double end) {
+        staticTSTART = start;
+        staticTEND = end;
     }
 
     public void initSimulation(
@@ -468,8 +472,7 @@ public class SimulationsKern implements ISimulationEngine {
         this.tPAUSE = tPAUSE;
         this.t = tAktuell;
         // Update static fields for backward compatibility
-        staticTSTART = tSTART;
-        staticTEND = tEND;
+        updateStaticTimes(tSTART, tEND);
         //            
         this.controlNL = nlContainer._nlControl;
         controlNL.doMemorInits(dt);
