@@ -1350,7 +1350,7 @@ public class GraferV3 extends JPanel {
                 alt = unten[i1] - 1;
                 while (z1 < unten[i1]) {
                     unten[i1] -= schritt[i1];
-                    if (unten[i1] == alt) {
+                    if (Math.abs(unten[i1] - alt) < 1e-15) {
                         break;
                     } else {
                         alt = unten[i1];
@@ -1363,7 +1363,7 @@ public class GraferV3 extends JPanel {
                 oben[i1] = schritt[i1] * Math.round(z2 / schritt[i1]);
                 while (z2 > oben[i1]) {
                     oben[i1] += schritt[i1];
-                    if (oben[i1] == alt) {
+                    if (Math.abs(oben[i1] - alt) < 1e-15) {
                         break;
                     } else {
                         alt = oben[i1];
