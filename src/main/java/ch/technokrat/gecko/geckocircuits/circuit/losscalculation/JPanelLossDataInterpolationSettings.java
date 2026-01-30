@@ -34,7 +34,7 @@ class JPanelLossDataInterpolationSettings extends JPanel {
     private final FormatJTextField _jtfTemperature = new FormatJTextField(100);
     private final JPanel _jpTt = new JPanel();
     private final FormatJTextField _jtfVoltage = new FormatJTextField(300);
-    private final ActionListener _createCurveListener = new ActionListener() { 
+    private final transient ActionListener _createCurveListener = new ActionListener() { 
         @Override
         public void actionPerformed(final ActionEvent actionEvent) {
             try {
