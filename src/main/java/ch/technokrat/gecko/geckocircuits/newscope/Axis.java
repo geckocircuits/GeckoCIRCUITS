@@ -296,11 +296,11 @@ public final class Axis {
                     scaleFactor = scaleFactor3;
                     limits = limits3;
                 } else if (scaleFactor == scaleFactor3) {
-                    scaleFactor = scaleFactor;
-                    limits = limits;
+                    scaleFactor = scaleFactor3;
+                    limits = limits3;
                 } else if (scaleFactor == scaleFactor2) {
-                    scaleFactor = scaleFactor;
-                    limits = limits;
+                    scaleFactor = scaleFactor2;
+                    limits = newLimits;
                 }
             }
             double returnValue = signalDirection * (value - limits._yLo) * scaleFactor + directionOrigin;

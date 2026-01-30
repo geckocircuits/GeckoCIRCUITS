@@ -110,10 +110,10 @@ public final class GeckoFile {
         setStorageStrategy(StorageType.INTERNAL);
         _file = fileName;
         _separator = File.separator;
-        _absolutePath = _file.getAbsolutePath();        
+        _absolutePath = _file.getAbsolutePath();
         _relativePath = getRelativePath(_absolutePath, modelFileName);
-        _extension = _absolutePath.substring(_absolutePath.lastIndexOf('.'));        
-        _fileContents = contents;        
+        _extension = _absolutePath.substring(_absolutePath.lastIndexOf('.'));
+        _fileContents = contents != null ? contents.clone() : null;
         _hash = generateHashCode();
     }
 
