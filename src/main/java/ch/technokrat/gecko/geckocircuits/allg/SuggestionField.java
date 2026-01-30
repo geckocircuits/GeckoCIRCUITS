@@ -58,7 +58,7 @@ public final class SuggestionField extends JTextField {
     private String _lastChosenExistingVariable;
     private String _hint;
     private final List<ActionListener> _listeners = new ArrayList<ActionListener>();
-    private SuggestMatcher _suggestMatcher = new ContainsMatcher();
+    private transient SuggestMatcher _suggestMatcher = new ContainsMatcher();
     private boolean _caseSensitive = false;
     private final JScrollPane _scrollPane;
 
