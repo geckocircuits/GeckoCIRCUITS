@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  */
 public class GeckoExternal {
 
-    protected static ExternalGeckoCustom external;
+    protected static volatile ExternalGeckoCustom external;
     private static double[][] _globalDoubleMatrix;
     private static float[][] _globalFloatMatrix;
 
@@ -99,7 +99,7 @@ public class GeckoExternal {
         }
     }
 
-    protected static void checkExternal() {
+    protected static synchronized void checkExternal() {
         if (external == null) {
             external = new ExternalGeckoCustom(MainWindow._scripter);
             MainWindow._external = external;

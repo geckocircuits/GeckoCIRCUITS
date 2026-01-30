@@ -32,6 +32,7 @@ public class TechFormat implements Serializable {
     //------------------------------
     private static final double ln10 = Math.log(10);
     private static final double DUMMY = -1.111222333444555e-77;
+    private static final Random RANDOM = new Random();
     //------------------------------
 
     public TechFormat() {
@@ -331,11 +332,10 @@ public class TechFormat implements Serializable {
         //----------------------------
         // Teste 'formatT()' -->
         System.out.println("Random-Testing 'formatT()' -->");
-        Random random = new Random();
         for (int i1 = 0; i1 < 999999; i1++) {
-            int e1 = 1 + random.nextInt(8);  // [1 ... 8] --> number of digits
-            int e2 = random.nextInt((int) Math.pow(10, e1));  // integer, maximum 8 digits
-            int e3 = random.nextInt(31) - 15;  // [-15 ... +15]
+            int e1 = 1 + RANDOM.nextInt(8);  // [1 ... 8] --> number of digits
+            int e2 = RANDOM.nextInt((int) Math.pow(10, e1));  // integer, maximum 8 digits
+            int e3 = RANDOM.nextInt(31) - 15;  // [-15 ... +15]
             double data = e2 * Math.pow(10, e3);
             double q1 = Double.parseDouble(this.formatT(data, TechFormat.FORMAT_AUTO));
             double ratio = q1 / data;
