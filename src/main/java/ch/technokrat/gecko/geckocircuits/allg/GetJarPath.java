@@ -63,11 +63,13 @@ public class GetJarPath {
      * @param clazz
      */
     public GetJarPath(final Class<?> clazz) {
-        synchronized (GetJarPath.class) {
-            _refToCallingPackage = clazz;
-            _initialized = true;
-            setJarPath();
-        }
+        initializeStatic(clazz);
+    }
+
+    private static synchronized void initializeStatic(final Class<?> clazz) {
+        _refToCallingPackage = clazz;
+        _initialized = true;
+        setJarPath();
     }
 
     /**
@@ -120,7 +122,7 @@ public class GetJarPath {
         return path;
     }
 
-    private void setJarPath() {
+    private static void setJarPath() {
         String path = getJarPathInsideJAR();
 
         // remove preceeding file:-String. Be careful, Linux and Windows require
