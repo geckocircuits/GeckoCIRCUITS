@@ -26,7 +26,7 @@ public final class ReglerPD extends AbstractReglerSingleInputSingleOutput {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerPD.class, "PD", I18nKeys.PD_CONTROL);
 
     // G(s)= a1*s
-    public final UserParameter<Double> _gain = UserParameter.Builder.<Double>start("a1", 1.0).
+    public final transient UserParameter<Double> _gain = UserParameter.Builder.<Double>start("a1", 1.0).
             longName(I18nKeys.DIFFERENTIATOR_COEFFICIENT).
             shortName("a1").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).

@@ -33,7 +33,7 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     // it is not updated when the terminal is changed in the current model.
     private int externalOrderNumber = -1;
 
-    final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 3).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").

@@ -25,19 +25,19 @@ import java.awt.event.ActionListener;
 public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerPI.class, "PI", I18nKeys.PI_CONTROL);
 
-    public final UserParameter<Double> _r0 = UserParameter.Builder.<Double>start("r0", -1.0).
+    public transient final UserParameter<Double> _r0 = UserParameter.Builder.<Double>start("r0", -1.0).
             longName(I18nKeys.GAIN).
             shortName("r0").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 0).
             build();
-    public final UserParameter<Double> _a1 = UserParameter.Builder.<Double>start("a1", -1.0).
+    public transient final UserParameter<Double> _a1 = UserParameter.Builder.<Double>start("a1", -1.0).
             longName(I18nKeys.INTEGRATOR_COEFFICIENT).
             shortName("a1").
             unit("1/sec").
             arrayIndex(this, 1).
             build();
-    public final UserParameter<Double> _TimeConstant = UserParameter.Builder.<Double>start("T_Value", 1.0).
+    public transient final UserParameter<Double> _TimeConstant = UserParameter.Builder.<Double>start("T_Value", 1.0).
             longName(I18nKeys.TIME_CONSTANT).
             unit("sec").
             shortName("T").
