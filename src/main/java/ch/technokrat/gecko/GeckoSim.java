@@ -409,7 +409,7 @@ public class GeckoSim {
     }
 
     private void loadPropertyFile() {
-        //System.out.println("prop= "+GlobalFilePathes.PFAD_JAR_HOME+"GeckoProperties.prp"); 
+        //System.out.println("prop= "+GlobalFilePathes.PFAD_JAR_HOME+"GeckoProperties.prp");
 
         try {
             GlobalFilePathes.RECENT_CIRCUITS_1 = applicationProps.getProperty("RECENT_CIRCUITS_1");
@@ -418,6 +418,7 @@ public class GeckoSim {
             GlobalFilePathes.RECENT_CIRCUITS_4 = applicationProps.getProperty("RECENT_CIRCUITS_4");
 
         } catch (Exception e) {
+            Logger.getLogger(GeckoSim.class.getName()).log(Level.WARNING, "Failed to load recent circuit paths from properties", e);
         }
     }
 

@@ -82,20 +82,13 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
     public void setPulseWidths(double d1, double d2, double d3, double d4, double d5, double da, double db, double fDR) {
         int LG = 1000;  // maximale zeitliche Aufloesung innerhalb der Pulsperiode
-        int y1, y2, y3, y4, y5, y6, x1, x2, xm, dxh;
+        int x1, x2, xm, dxh;
         int x1a = -1, x1b = -1, x1c, x1d, x2a = -1, x2b = -1, x2c, x2d, x3a = -1, x3b = -1, x3c, x3d, x4a = -1, x4b = -1, x4c, x4d, x5a = -1, x5b = -1, x5c, x5d;
         int x6a = -1, x6b = -1, x6c, x6d, x7a = -1, x7b = -1, x7c, x7d, x8a = -1, x8b = -1, x8c, x8d, x9a = -1, x9b = -1, x9c, x9d;
-        int d = 12;
         x1 = 0;
         x2 = LG;
         xm = (x2 + x1) / 2;
         dxh = xm - x1;
-        y1 = 0 + d;
-        y2 = y1 + d;
-        y3 = y2 + d;
-        y4 = y3 + d;
-        y5 = y4 + d;
-        y6 = y5 + d;
         double xLokal = LG * fDR * tLokal;
         switch (seIN) {
             case 1:

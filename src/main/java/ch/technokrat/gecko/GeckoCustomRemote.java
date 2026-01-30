@@ -17,10 +17,10 @@ import ch.technokrat.gecko.geckoscript.AbstractGeckoCustom;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +35,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
 
     private boolean _free = true; //denotes if this instance of GeckoCIRCUITS is free for a remote connection
     private static volatile long _lastSessionIDActive = 0;
-    public static final Map<Long,CallbackClientInterface> clients = new HashMap<Long,CallbackClientInterface>();
+    public static final Map<Long,CallbackClientInterface> clients = new ConcurrentHashMap<>();
 
     private boolean _acceptsExtraConnections = false; //denotes if this instance of GeckoCIRCUITS allows more than one client to connect
     private int _numberOfExtraConnectionsAccepted = 0; //denotes how many additional clients (besides the first one) this instance of GeckoCIRCUITS will accept
