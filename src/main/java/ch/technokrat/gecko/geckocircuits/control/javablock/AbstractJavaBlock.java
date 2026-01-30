@@ -24,8 +24,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AbstractJavaBlock {       
-    
+public abstract class AbstractJavaBlock {
+
     protected final ReglerJavaFunction _reglerJavaBlock;
     protected AbstractCompileObject _compileObject = new CompileObjectNull();
     JavaBlockSource _javaBlockSource = new JavaBlockSource.Builder().build();
@@ -48,7 +48,7 @@ public abstract class AbstractJavaBlock {
         if (!checkIfCompilationRequired()) {
             return;
         }
-        SchematicEditor2.zustandGeaendert = true;
+        SchematicEditor2.setZustandGeaendert(true);
         
         String className = CompileObject.findUniqueClassName();
         String sourceString = SourceFileGenerator.createSourceCode(_javaBlockSource, className, _reglerJavaBlock.YOUT.size(), _reglerJavaBlock._variableBusWidth);
