@@ -40,14 +40,14 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
     private static final String MIN = "min";
     
     
-    final UserParameter<Double> _minLimit = UserParameter.
+    final transient UserParameter<Double> _minLimit = UserParameter.
             Builder.<Double>start("minLimit", -1.0).
             longName(I18nKeys.LOWER_LIMIT).
             shortName(MIN).
             showInTextInfo(TextInfoType.SHOW_WHEN_NON_EXTERNAL).
             arrayIndex(this, 0).
             build();
-    final UserParameter<Double> _maxLimit = UserParameter.
+    final transient UserParameter<Double> _maxLimit = UserParameter.
             Builder.<Double>start("maxLimit", 1.0).
             longName(I18nKeys.UPPER_LIMIT).
             shortName(MAX).
@@ -55,7 +55,7 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
             arrayIndex(this, 1).
             build();
     
-    final UserParameter<Boolean> _isExternalSet = UserParameter.Builder.
+    final transient UserParameter<Boolean> _isExternalSet = UserParameter.Builder.
             <Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
             shortName("useExternal").

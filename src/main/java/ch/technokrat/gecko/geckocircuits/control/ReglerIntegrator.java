@@ -30,25 +30,25 @@ public final class ReglerIntegrator extends RegelBlock {
     private static final int MAX_INDEX = 3;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerIntegrator.class, "INT", I18nKeys.INTEGRATOR);
     
-    public final UserParameter<Double> _a1Val = UserParameter.Builder.<Double>start("a1", 1.0).
+    public final transient UserParameter<Double> _a1Val = UserParameter.Builder.<Double>start("a1", 1.0).
             longName(I18nKeys.INTEGRATOR_COEFFICIENT).
             shortName("a1").
             arrayIndex(this, 0).
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             build();
-    public final UserParameter<Double> _y0Val = UserParameter.Builder.<Double>start("y0", 0.0).
+    public final transient UserParameter<Double> _y0Val = UserParameter.Builder.<Double>start("y0", 0.0).
             longName(I18nKeys.INITIAL_VALUE).
             shortName("y0").
             showInTextInfo(TextInfoType.SHOW_NON_NULL).
             arrayIndex(this, 1).
             build();
-    public final UserParameter<Double> _minLimit = UserParameter.Builder.<Double>start("min", -1.0).
+    public final transient UserParameter<Double> _minLimit = UserParameter.Builder.<Double>start("min", -1.0).
             longName(I18nKeys.LOWER_LIMIT).
             shortName(MIN).
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, MIN_INDEX).
             build();
-    public final UserParameter<Double> _maxLimit = UserParameter.Builder.<Double>start("max", 1.0).
+    public final transient UserParameter<Double> _maxLimit = UserParameter.Builder.<Double>start("max", 1.0).
             longName(I18nKeys.UPPER_LIMIT).
             shortName(MAX).
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).

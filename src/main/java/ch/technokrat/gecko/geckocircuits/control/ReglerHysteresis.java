@@ -38,19 +38,19 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
     private static final int Y_EXTERNAL = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerHysteresis.class, "HYS", I18nKeys.HYSTERESIS);
     
-    public final UserParameter<Double> _hysteresisThreshold = UserParameter.Builder.<Double>start("h", DEF_HYS_THRES).
+    public final transient UserParameter<Double> _hysteresisThreshold = UserParameter.Builder.<Double>start("h", DEF_HYS_THRES).
             longName(I18nKeys.HYSTERESIS_THRESHOLD).
             shortName("h").
             showInTextInfo(TextInfoType.SHOW_WHEN_NON_EXTERNAL).
             arrayIndex(this, 0).
             build();
-    public final UserParameter<Boolean> _useExternal = UserParameter.Builder.<Boolean>start("useExternal", false).
+    public final transient UserParameter<Boolean> _useExternal = UserParameter.Builder.<Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
             shortName("external").
             arrayIndex(this, 1).
             build();
     
-    private TerminalControlInput _stashedTerminal;
+    private transient TerminalControlInput _stashedTerminal;
     
     public ReglerHysteresis() {
         super(1, 1);
