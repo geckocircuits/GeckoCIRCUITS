@@ -74,15 +74,15 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
         while (XIN.size() < number) {
             XIN.add(new TerminalControlInput(this, -2, -XIN.size()));
         }
-        
-        if(_inputTerminalNumber != null) {
+
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
+        if (_inputTerminalNumber != null) {
             int newsize = XIN.size();
-            if(_inputTerminalNumber.getValue() != newsize) {
+            if (_inputTerminalNumber.getValue() != newsize) {
                 _inputTerminalNumber.setUserValue(newsize);
-            }                        
-        }    
-        
-        
+            }
+        }
     }
 
     @Override
