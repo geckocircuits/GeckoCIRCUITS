@@ -25,6 +25,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.RenderingHints;
+import java.util.Arrays;
 import javax.swing.JPanel;
 import java.text.NumberFormat;
 
@@ -175,12 +176,12 @@ public class GraferV3 extends JPanel {
     }
 
     public void setzeAchsenBreiteHoeheX0Y0(int[] b, int[] h, int[] xX, int[] yX, int[] xY, int[] yY) {
-        this.breitePix = b;
-        this.hoehePix = h;
-        this._xAchseX = xX;
-        this._yAchseX = yX;
-        this._xAchseY = xY;
-        this._yAchseY = yY;
+        this.breitePix = Arrays.copyOf(b, b.length);
+        this.hoehePix = Arrays.copyOf(h, h.length);
+        this._xAchseX = Arrays.copyOf(xX, xX.length);
+        this._yAchseX = Arrays.copyOf(yX, yX.length);
+        this._xAchseY = Arrays.copyOf(xY, xY.length);
+        this._yAchseY = Arrays.copyOf(yY, yY.length);
     }
 
     public void setzeAchsenBegrenzungen(double[] xMin, double[] xMax, boolean[] autoScaleX, double[] yMin, double[] yMax, boolean[] autoScaleY) {
