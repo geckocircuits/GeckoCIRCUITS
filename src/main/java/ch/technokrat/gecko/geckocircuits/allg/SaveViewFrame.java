@@ -77,21 +77,7 @@ public final class SaveViewFrame extends GeckoDialog {
         initComponents();
         _viewPanel = saveViewPanel;
 
-        synchronized (this) {
-
-            if (lastUsedFileName.isEmpty()) {
-                lastUsedFileName = GlobalFilePathes.DATNAM;
-                final int pointIndex = lastUsedFileName.lastIndexOf('.');
-                if (pointIndex > 0) {
-                    lastUsedFileName = lastUsedFileName.substring(0, pointIndex);
-                } else {
-                    lastUsedFileName += "image";
-                }
-                lastUsedFileName += ".svg";
-            }
-        }
-
-        jTextFieldFileName.setText(lastUsedFileName);
+        jTextFieldFileName.setText(initializeLastUsedFileName());
 
 
         final ActionListener updateTypeListener = new ActionListener() {
@@ -140,6 +126,21 @@ public final class SaveViewFrame extends GeckoDialog {
                 jRadioButtonSVG.setSelected(true);
         }
     }
+
+    private static synchronized String initializeLastUsedFileName() {
+        if (lastUsedFileName.isEmpty()) {
+            lastUsedFileName = GlobalFilePathes.DATNAM;
+            final int pointIndex = lastUsedFileName.lastIndexOf('.');
+            if (pointIndex > 0) {
+                lastUsedFileName = lastUsedFileName.substring(0, pointIndex);
+            } else {
+                lastUsedFileName += "image";
+            }
+            lastUsedFileName += ".svg";
+        }
+        return lastUsedFileName;
+    }
+
     private static final String JPG_TEXT = "\n JPEG - Joint Photographic Experts Group Image:"
             + "\n\n - Rastered Image format with lossy compression"
             + "\n - Very small image size with best compression"
