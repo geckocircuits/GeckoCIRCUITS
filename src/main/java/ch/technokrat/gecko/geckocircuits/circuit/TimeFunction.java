@@ -16,8 +16,6 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 public abstract class TimeFunction {
 
     protected int _steps_saved;
-    protected boolean stepped_back = false;
-    protected int steps_reversed = 0;
     public static boolean saveHistory = false;
 
     public abstract double calculate(double t, double dt);

@@ -40,8 +40,6 @@ public final class NetzlisteAllg {
      * @param connectors
      * @param components
      */
-    static int counter;
-
     private NetzlisteAllg(final Collection<Verbindung> connectors, final List<? extends AbstractBlockInterface> components) {
         this._connections.addAll(connectors);
         this._allElements = Collections.unmodifiableList(components);

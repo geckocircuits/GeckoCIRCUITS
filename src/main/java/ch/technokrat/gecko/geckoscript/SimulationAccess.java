@@ -456,11 +456,11 @@ public class SimulationAccess implements GeckoFileable {
     }
 
     public String getExtraFilesHashes() {
-        String returnValue = "";
+        StringBuilder sb = new StringBuilder();
         for (GeckoFile gFile : _additionalSourceFiles) {
-            returnValue += gFile.getHashValue();
+            sb.append(gFile.getHashValue());
         }
-        return returnValue;
+        return sb.toString();
     }
 
     public void setExtraFilesHashBlock(final String extraFilesHashString) {
