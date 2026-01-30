@@ -54,7 +54,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
         _r0.addActionListener(_updateTValue);
         _r0.addActionListener(_updateR0Value);
     }
-    private final ActionListener _updateA1Value = new ActionListener() {
+    private final transient ActionListener _updateA1Value = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
             if (_calculator instanceof PICalculator) {
@@ -66,7 +66,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
 
         }
     };
-    private final ActionListener _updateR0Value = new ActionListener() {
+    private final transient ActionListener _updateR0Value = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
             if (_calculator instanceof PICalculator) {
@@ -77,7 +77,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
 
         }
     };
-    private final ActionListener _updateTValue = new ActionListener() {
+    private final transient ActionListener _updateTValue = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
 
