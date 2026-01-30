@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerMUX extends RegelBlock implements VariableTerminalNumber {
+    private static final long serialVersionUID = 1L;
 
     private static final double WIDTH = 0.3;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerMUX.class, "MUX", I18nKeys.CONTROL_MUX);

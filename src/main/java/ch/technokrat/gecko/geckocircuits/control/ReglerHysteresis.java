@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerHysteresis extends RegelBlock implements ControlInputTwoTerminalStateable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * yes, -1 and not +1! with this setting, the output gets +1 when the input is -1, and vice versa.

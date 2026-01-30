@@ -20,6 +20,7 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
 public final class ReglerThyristorControl extends RegelBlock {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerThyristorControl.class, "THYRISTOR_CONTROL", I18nKeys.THYRISTOR_CONTROL);
 
     private DialogThyristorControl dtc;

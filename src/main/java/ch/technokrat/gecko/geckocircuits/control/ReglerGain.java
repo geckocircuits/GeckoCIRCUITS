@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 
 
 public final class ReglerGain extends AbstractReglerSingleInputSingleOutput {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerGain.class, "GAIN", I18nKeys.GAIN);
 
     

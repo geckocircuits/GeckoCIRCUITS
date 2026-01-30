@@ -46,6 +46,7 @@ import javax.swing.JOptionPane;
  * @author andreas
  */
 public final class ReglerNativeC extends RegelBlock implements VariableTerminalNumber {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerNativeC.class, "C DLL", I18nKeys.C_DLL);
 

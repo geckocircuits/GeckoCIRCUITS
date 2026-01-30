@@ -29,6 +29,7 @@ import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
 public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
+    private static final long serialVersionUID = 1L;
 
     private static final double DEFAULT_WIN_SIZE = 1e-5;
     private static final double DEFAULT_FREQENCY = 500;

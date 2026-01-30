@@ -28,6 +28,7 @@ import java.util.List;
 
 public final class ReglerTransferFunction extends AbstractReglerSingleInputSingleOutput
         implements Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTransferFunction.class, "TF", I18nKeys.TRANSFER_FUNKTION_H_S, I18nKeys.DEFINES_A_TRANSFER_FUNCTION);
     private double[] _zeros = new double[MAX_ARRAY_SIZE];

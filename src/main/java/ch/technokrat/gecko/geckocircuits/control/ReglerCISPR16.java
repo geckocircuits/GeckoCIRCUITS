@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 
 public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisible,
         Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerCISPR16.class, "CISPR16", I18nKeys.EMI_TEST_RECEIVER);
     // alle ZV-Daten nicht komprimiert fuer eventuelle Festplattenspeicherung --> Speicherkritisch

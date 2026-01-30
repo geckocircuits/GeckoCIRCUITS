@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerIntegrator extends RegelBlock {
+    private static final long serialVersionUID = 1L;
 
     private static final String MAX = "max";
     private static final String MIN = "min";

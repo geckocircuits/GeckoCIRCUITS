@@ -50,6 +50,7 @@ import javax.swing.JOptionPane;
  */
 public final class ReglerJavaFunction extends RegelBlock implements VariableTerminalNumber, SpecialNameVisible,
         GeckoFileable, Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerJavaFunction.class, "JAVA", I18nKeys.JAVA_FUNCTION);
     private transient final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();

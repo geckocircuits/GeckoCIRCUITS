@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 
 // Helper class: Format for project data storage
 public class ProjectData implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private static final Random RANDOM = new Random();
 

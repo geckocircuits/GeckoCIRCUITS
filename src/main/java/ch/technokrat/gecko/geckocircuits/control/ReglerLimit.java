@@ -28,7 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
 
-public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerminalStateable {    
+public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerminalStateable {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerLimit.class, "LIMIT", I18nKeys.LIMITER);
     
     private static final double Y_STRING_DRAW_OFFSET = 2.2;

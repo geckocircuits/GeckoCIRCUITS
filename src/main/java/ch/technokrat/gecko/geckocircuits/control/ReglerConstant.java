@@ -23,8 +23,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerConstant extends RegelBlock {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerConstant.class, "CONST", I18nKeys.CONSTANT_VALUE);
-    
+
     private static final String CONST_STR = "const";
     
     transient final UserParameter<Double> _constValue = UserParameter.Builder.<Double>start("constantValue", 1.0).

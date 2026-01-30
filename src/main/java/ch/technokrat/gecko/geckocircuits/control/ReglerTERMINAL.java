@@ -25,7 +25,8 @@ import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 
-public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTerminable {                
+public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTerminable {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTERMINAL.class, "CONTROL_TERMINAL", I18nKeys.CONTROL_TERMINAL);
     private transient final TerminalToWrap _wrapped = new TerminalToWrap(this);
     

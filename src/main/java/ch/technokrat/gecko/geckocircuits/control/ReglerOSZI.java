@@ -41,6 +41,7 @@ import java.util.Stack;
  */
 public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumber,
         SpecialNameVisible {
+    private static final long serialVersionUID = 1L;
 
     private static final int TERM_POS_X = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerOSZI.class, "SCOPE", I18nKeys.SCOPE, I18nKeys.COMPONENT_FOR_DATA_VISUALIZATION);

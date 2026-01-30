@@ -33,6 +33,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public final class ReglerSaveData extends RegelBlock implements Operationable {
+    private static final long serialVersionUID = 1L;
 
     final transient UserParameter<Boolean> _printHeader = UserParameter.Builder.
             <Boolean>start("printHeader", true).

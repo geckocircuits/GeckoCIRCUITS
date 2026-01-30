@@ -48,6 +48,7 @@ import javax.swing.JOptionPane;
 
 public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTerminalStateable,
         GeckoFileable, Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSignalSource.class, "SIGNAL", I18nKeys.SIGNAL_SOURCE);
 

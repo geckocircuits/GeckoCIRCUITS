@@ -24,7 +24,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerSmallSignalAnalysis extends RegelBlock {
-    
+    private static final long serialVersionUID = 1L;
+
     private static final double DEFAULT_AMPLITUDE = 0.005;
     private static final double DEFAULT_FREQ_START = 50.0;
     private static final double DEFAULT_FREQ_END = 10000.0;

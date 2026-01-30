@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 // Datenbehaelter fuer eine Messkurve -->
 public class SwitchingLossCurve extends LossCurve implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final double DEFAULT_BLOCKING_VOLTAGE = 300;
 
     final transient UserParameter<Double> _uBlock = UserParameter.Builder.

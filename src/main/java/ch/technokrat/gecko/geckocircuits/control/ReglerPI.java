@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerPI.class, "PI", I18nKeys.PI_CONTROL);
 
     public transient final UserParameter<Double> _r0 = UserParameter.Builder.<Double>start("r0", -1.0).
