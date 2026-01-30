@@ -210,7 +210,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
-                    // fall through
+                // falls through
                 case LK_C:
                     // aW = netzliste.parameter[i1][0] / dt;  //  +C/dt
                     //aW = 2 * netzliste.parameter[i1][6] / dt;  //  +C/dt
@@ -246,7 +246,7 @@ public class LKMatrices {
                         a[x][y1] -= gain;
                         a[y][x1] -= gain;
                     }
-                    // fall through
+                // falls through
                 case TH_FLOW:
                     // kein Beitrag
                     break;
@@ -291,6 +291,9 @@ public class LKMatrices {
                             case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
                                 double gain4 = netzliste.parameter[i1][11];
                                 a[z][z - 1] -= gain4;
+                                break;
+                            default:
+                                // No action needed for other source types
                                 break;
                         }
 
@@ -442,7 +445,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
-                    // fall through
+                // falls through
                 case LK_C:
                     double fac = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
                     //bW = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
@@ -696,7 +699,7 @@ public class LKMatrices {
                     break;
                 case TH_CTH:
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
-                    // fall through
+                // falls through
                 case LK_C:
                     double fac = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                     double nonLinearCorrectionCurrent = -fac * netzliste.parameter[i1][10];
@@ -1115,6 +1118,7 @@ public class LKMatrices {
                             }
                         }
                     }
+                    break;
                 case REL_MMF:
                 case TH_TEMP:
                 case LK_LKOP2:
@@ -1485,6 +1489,9 @@ public class LKMatrices {
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
                             pALT[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]] = netzliste.parameter[i1][10];
+                            break;
+                        default:
+                            // No action needed for other source types
                             break;
                     }
                     //pALT[netzliste.knotenMAX + netzliste.spgQuelleNr[i1] + 1] = 2000;

@@ -224,22 +224,19 @@ public final class StateSpaceCalculator {
 
 
         // Add the (higher) derivative values, if leading polynom is existent.
-        switch (_leadingPolynom.length) {
-            case MAX_DEGREE_DIFF:
-                resultValue += _leadingPolynom[2] * (_stateVariables._xNEW
-                        - 2 * _stateVariables._xOLD + _stateVariables._xOLDOLD) / deltaT; // second derivative
-                // fall through
-            case 2:
-                double toAdd = _leadingPolynom[1] * (_stateVariables._xNEW - _stateVariables._xOLD) / deltaT; // first derivative
-                resultValue += toAdd;
-                // fall through
-            case 1:
-                resultValue += xIN[0][0] * _leadingPolynom[0]; // proportional part
-                // fall through
-            case 0:
-                break;
-            default:
-                assert false;
+        if (_leadingPolynom.length >= MAX_DEGREE_DIFF) {
+            // second derivative
+            resultValue += _leadingPolynom[2] * (_stateVariables._xNEW
+                    - 2 * _stateVariables._xOLD + _stateVariables._xOLDOLD) / deltaT;
+        }
+        if (_leadingPolynom.length >= 2) {
+            // first derivative
+            double toAdd = _leadingPolynom[1] * (_stateVariables._xNEW - _stateVariables._xOLD) / deltaT;
+            resultValue += toAdd;
+        }
+        if (_leadingPolynom.length >= 1) {
+            // proportional part
+            resultValue += xIN[0][0] * _leadingPolynom[0];
         }
 
         outputSignal[0][0] = resultValue;
