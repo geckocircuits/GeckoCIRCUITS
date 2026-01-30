@@ -117,7 +117,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public static ExternalGeckoCustom _external = null;
     public static GeckoCustomMMF _mmf_access = null;
     public final SimulationRunner _simRunner;
-    public final KeyAdapter keyAdapter;
+    public final transient KeyAdapter keyAdapter;
     private static final String spTitleX = "  -  ";
     public static boolean IS_BRANDED = false;
     private SuggestionField _searchTestField;
