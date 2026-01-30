@@ -619,17 +619,25 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         this.win = win;
         _circuitSheet.setPreferredSize(new Dimension(1000, 1000));
 
-        AbstractCircuitSheetComponent.dpix = 16;  // default-Skalierung                
+        initializeDefaultScaling();
         xStift = new int[4];
         yStift = new int[4];
         this.resetCircuitSheetsForNewFile();
 
         _circuitSheet.setDoubleBuffered(true);
-        Singleton = this;
+        setSingleton(this);
 
     }
 
-    public void resetModelModified() {
+    private static void initializeDefaultScaling() {
+        AbstractCircuitSheetComponent.dpix = 16;  // default-Skalierung
+    }
+
+    private static void setSingleton(SchematicEditor2 instance) {
+        Singleton = instance;
+    }
+
+    public static void resetModelModified() {
         zustandGeaendert = false;
     }
 
@@ -638,11 +646,15 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void setzeFont(int fontSize, String fontTyp) {
-        SchematicEditor2.circuitFont = new Font(fontTyp, Font.PLAIN, fontSize);
-        SchematicEditor2.foLKSmall = new Font(fontTyp, Font.PLAIN, fontSize * 2 / 3);
-        int fs = SchematicEditor2.circuitFont.getSize();
-        SchematicEditor2.DY_ZEILENABSTAND_TXT = fs + (fs < 12 ? 2 : 3);
+        setFontStatic(fontSize, fontTyp);
         _circuitSheet.repaint();
+    }
+
+    private static void setFontStatic(int fontSize, String fontTyp) {
+        circuitFont = new Font(fontTyp, Font.PLAIN, fontSize);
+        foLKSmall = new Font(fontTyp, Font.PLAIN, fontSize * 2 / 3);
+        int fs = circuitFont.getSize();
+        DY_ZEILENABSTAND_TXT = fs + (fs < 12 ? 2 : 3);
     }
 
     //=======================================================
@@ -654,9 +666,13 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void setDirtyFlag() {
-        zustandGeaendert = true;
+        setZustandGeaendert(true);
         _visibleCircuitSheet.repaint();
         win.modifiziereTitel();
+    }
+
+    public static void setZustandGeaendert(boolean value) {
+        zustandGeaendert = value;
     }
 
     //for linking up additional files to the blocks
