@@ -1349,9 +1349,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         CircuitSheet parentSheet = _circuitSheet.findSubCircuit(elementName);
         connector.setParentCircuitSheet(parentSheet);
-        if (parentSheet != _circuitSheet) {
-            elementName.substring(elementName.lastIndexOf('#') + 1, elementName.length());
-        }
+        // Intentionally not using substring result - the truncated name was intended for
+        // the commented-out setNewNameChecked call below, which is no longer active
 
         connector.setParentCircuitSheet(parentSheet);
 
