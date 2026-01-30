@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.tools.*;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -54,7 +55,7 @@ public class GeckoJavaCompiler {
     private int lineCounter = 0;
     private String _sourceString = "";
     // needed for counting the java block objects;
-    private static int _objectCounter = 0;
+    private static final AtomicInteger _objectCounter = new AtomicInteger(0);
     private String _className;
     //
 
@@ -206,8 +207,7 @@ public class GeckoJavaCompiler {
             compilerMessage = "starting compilation....\n";
             compilerMessage += "";
 
-            _className = "tmpJav" + _objectCounter;
-            _objectCounter++;
+            _className = "tmpJav" + _objectCounter.getAndIncrement();
             String classFileName = _className + ".java";
 
             createSourceCode(_className);
