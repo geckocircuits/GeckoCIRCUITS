@@ -57,6 +57,8 @@ public class UZiDisplay extends GeckoDialog {
 
         private final JSpinner _zSpinner;
 
+        static final int HISTORY_BUFFER_SIZE = 10000;
+
         public DrawVector(Color arrowColor, Color paintColor, JSpinner length, JSpinner average, JSpinner zSpinner) {
             _arrowColor = arrowColor;
             _paintColor = paintColor;
@@ -64,7 +66,6 @@ public class UZiDisplay extends GeckoDialog {
             _zSpinner = zSpinner;
             _average = average;
         }
-        final int HISTORY_BUFFER_SIZE = 10000;
         float[] averageHistoryRe = new float[HISTORY_BUFFER_SIZE];
         float[] averageHistoryIm = new float[HISTORY_BUFFER_SIZE];
         private Color _arrowColor;

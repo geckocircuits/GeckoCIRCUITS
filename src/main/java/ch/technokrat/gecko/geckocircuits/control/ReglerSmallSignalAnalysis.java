@@ -29,10 +29,10 @@ public final class ReglerSmallSignalAnalysis extends RegelBlock {
     private static final double DEFAULT_FREQ_START = 50.0;
     private static final double DEFAULT_FREQ_END = 10000.0;
     
-    public static final ControlTypeInfo TYPE_INFO = 
+    public static final ControlTypeInfo TYPE_INFO =
             new ControlTypeInfo(ReglerSmallSignalAnalysis.class, "ANALYSIS", I18nKeys.SMALL_SIGNAL_ANALYIS);
-    
-    private final int BLOCK_WIDTH = 6;
+
+    private static final int BLOCK_WIDTH = 6;
     
     final UserParameter<Double> _amplitude = UserParameter.Builder.<Double>start("Amplitude", DEFAULT_AMPLITUDE).
             longName(I18nKeys.AMPLITUDE).
