@@ -33,6 +33,7 @@ public class DialogNonLinearity extends GeckoDialog {
         try {
             this.setIconImage((new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "gecko.gif").toURL())).getImage());
         } catch (Exception e) {
+            // Icon loading is optional - dialog works without it
         }
         
         setPreferredSize(_windowSize);                

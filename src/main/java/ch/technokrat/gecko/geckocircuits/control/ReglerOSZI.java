@@ -511,7 +511,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             }
 
         } catch (Exception ex) {
-            //ex.printStackTrace();
+            // Signal number change may fail during initialization - safe to ignore
         }
 
 

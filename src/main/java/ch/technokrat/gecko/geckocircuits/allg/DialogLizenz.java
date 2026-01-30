@@ -42,7 +42,9 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
             @SuppressWarnings("deprecation")
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage((new ImageIcon(url)).getImage());
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            // Icon loading is optional - dialog works without it
+        }
         this.sbInfoTxt= sbInfoTxt; 
         this.addWindowListener(this);
         this.setTitle(" Licence Information");

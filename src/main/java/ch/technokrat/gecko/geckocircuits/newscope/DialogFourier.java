@@ -69,6 +69,7 @@ public class DialogFourier extends JDialog {
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
+            // Icon loading is optional - dialog works without it
         }
         this.worksheet = worksheet;
         signalFourierAnalysiert = new boolean[worksheet.getRowLength() + 1];
