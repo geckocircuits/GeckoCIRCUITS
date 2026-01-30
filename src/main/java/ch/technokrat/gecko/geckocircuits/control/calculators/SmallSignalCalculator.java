@@ -23,10 +23,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.StaticNonFinal", "PMD.PublicAttribute", "PMD.ThrowExceptionInFinally"})
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Writes to inherited static _time field for shared simulation time state coordination")
 // Public fields and static array required by simulator API; Constructor validation required for safety
 public class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
 
