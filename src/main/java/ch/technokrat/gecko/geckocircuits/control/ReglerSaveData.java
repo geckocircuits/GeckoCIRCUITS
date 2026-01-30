@@ -34,38 +34,38 @@ import java.util.Observer;
 
 public final class ReglerSaveData extends RegelBlock implements Operationable {
 
-    final UserParameter<Boolean> _printHeader = UserParameter.Builder.
-            <Boolean>start("printHeader", true).                       
+    final transient UserParameter<Boolean> _printHeader = UserParameter.Builder.
+            <Boolean>start("printHeader", true).
             longName(I18nKeys.IF_TRUE_PRINT_HEADER).
-            shortName("printHeader").            
+            shortName("printHeader").
             arrayIndex(this, -1).
             build();                               
     
-    final UserParameter<Boolean> _transposeData = UserParameter.Builder.
-            <Boolean>start("transposeData", false).                       
+    final transient UserParameter<Boolean> _transposeData = UserParameter.Builder.
+            <Boolean>start("transposeData", false).
             longName(I18nKeys.IF_TRUE_TRANSPOSE_DATA).
-            shortName("transposeData").            
+            shortName("transposeData").
             arrayIndex(this, -1).
             build();                               
     
-    final UserParameter<Integer> _skipDataPoints = UserParameter.Builder.
-            <Integer>start("skipDataPoints", 1).                       
+    final transient UserParameter<Integer> _skipDataPoints = UserParameter.Builder.
+            <Integer>start("skipDataPoints", 1).
             longName(I18nKeys.SKIP_DATA_POINTS).
-            shortName("skipDataPoints").            
+            shortName("skipDataPoints").
             arrayIndex(this, -1).
             build();             
     
-    final UserParameter<Integer> _significDigits = UserParameter.Builder.
-            <Integer>start("significantDigits", DEFAULT_DIGITS).                       
+    final transient UserParameter<Integer> _significDigits = UserParameter.Builder.
+            <Integer>start("significantDigits", DEFAULT_DIGITS).
             longName(I18nKeys.SIGNIFICANT_DIGITS).
-            shortName("significantDigits").            
+            shortName("significantDigits").
             arrayIndex(this, -1).
             build();     
     
-    final UserParameter<String> _file = UserParameter.Builder.
-            <String>start("filename", findInitialFile()).                  
+    final transient UserParameter<String> _file = UserParameter.Builder.
+            <String>start("filename", findInitialFile()).
             longName(I18nKeys.FILENAME).
-            shortName("fileName").            
+            shortName("fileName").
             arrayIndex(this, -1).
             build();             
     
@@ -73,7 +73,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     private static final int BLOCK_HEIGHT = 3;
     private static final int BLOCK_WIDTH = 6;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSaveData.class, "DataExport", I18nKeys.DATA_EXPORT_TO_FILE);
-    private DataSaver _dataSaver;
+    private transient DataSaver _dataSaver;
     private String _statusTxt = "waiting";
 
     

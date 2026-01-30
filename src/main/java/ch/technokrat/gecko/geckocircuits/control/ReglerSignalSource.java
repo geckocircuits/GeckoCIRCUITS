@@ -55,21 +55,21 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
     private static final int IN_TERM_NUMBER_EXTERNAL = 5;
     private static final int IN_TERM_NUMBER_NORMAL = 0;
     private static final int BLOCK_WIDTH = 3;
-    final UserParameter<ControlSourceType> _typQuelle = UserParameter.Builder.
+    final transient UserParameter<ControlSourceType> _typQuelle = UserParameter.Builder.
             <ControlSourceType>start("typQuelle", ControlSourceType.QUELLE_RECHTECK).
             longName(I18nKeys.TYPE_OF_SIGNAL_SOURCE).
             shortName("type").
             arrayIndex(this, 0).
             build();
     private static final double DEFAULT_AMPLITUDE = 10.0;
-    final UserParameter<Double> _amplitudeAC = UserParameter.Builder.
+    final transient UserParameter<Double> _amplitudeAC = UserParameter.Builder.
             <Double>start("amplitudeAC", DEFAULT_AMPLITUDE).
             longName(I18nKeys.PEAK_AMPLITUDE).
             shortName("amplMAX").
             arrayIndex(this, 1).
             build();
     private static final double DEFAULT_FREQUENCY = 50.0;
-    final UserParameter<Double> _frequency = UserParameter.Builder.
+    final transient UserParameter<Double> _frequency = UserParameter.Builder.
             <Double>start("frequenz", DEFAULT_FREQUENCY).
             longName(I18nKeys.FREQUENCY).
             unit("Hz").
@@ -77,14 +77,14 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             arrayIndex(this, 2).
             build();
     private static final int OFFSET_PAR_INDEX = 3;
-    final UserParameter<Double> _offsetDC = UserParameter.Builder.
+    final transient UserParameter<Double> _offsetDC = UserParameter.Builder.
             <Double>start("anteilDC", 0.0).
             longName(I18nKeys.OFFSET_OF_WAVEFORM_FROM_ZERO).
             shortName("offset").
             arrayIndex(this, OFFSET_PAR_INDEX).
             build();
     private static final int PHASE_PAR_INDEX = 4;
-    final UserParameter<Double> _phase = UserParameter.Builder.
+    final transient UserParameter<Double> _phase = UserParameter.Builder.
             <Double>start(PHASE, 0.0).
             longName(I18nKeys.SIGNAL_PHASE_DELAY).
             shortName(PHASE).
@@ -92,21 +92,21 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             build();
     private static final int DUTY_PAR_INDEX = 5;
     private static final double DEFAULT_DUTY = 0.5;
-    final UserParameter<Double> _dutyRatio = UserParameter.Builder.
+    final transient UserParameter<Double> _dutyRatio = UserParameter.Builder.
             <Double>start("tastverhaeltnis", DEFAULT_DUTY).
             longName(I18nKeys.DUTY_RATIO).
             shortName("d").
             arrayIndex(this, DUTY_PAR_INDEX).
             build();
     private static final int EXTERNAL_PAR_INDEX = 6;
-    final UserParameter<Boolean> _useExternal = UserParameter.Builder.
+    final transient UserParameter<Boolean> _useExternal = UserParameter.Builder.
             <Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
             shortName("useExternal").
             arrayIndex(this, EXTERNAL_PAR_INDEX).
             build();
     private static final int DISP_PAR_INDEX = 7;
-    final UserParameter<Boolean> _displayDetails = UserParameter.Builder.
+    final transient UserParameter<Boolean> _displayDetails = UserParameter.Builder.
             <Boolean>start("displayDetails", false).
             longName(I18nKeys.IF_TRUE_MORE_INFORMATION).
             shortName("display").

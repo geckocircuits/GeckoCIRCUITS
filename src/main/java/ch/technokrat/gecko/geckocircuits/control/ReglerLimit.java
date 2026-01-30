@@ -62,7 +62,7 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
             arrayIndex(this, 2).
             build();
 
-    private final Stack<TerminalControlInput> _stashedTerminals = new Stack<TerminalControlInput>();
+    private transient final Stack<TerminalControlInput> _stashedTerminals = new Stack<TerminalControlInput>();
     
     public ReglerLimit() {
         super(1, 1);
