@@ -68,7 +68,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "MainWindow is effectively a singleton - static fields hold application-wide state that is initialized and managed by the single MainWindow instance")
 public final class MainWindow extends JFrame implements WindowListener, ActionListener, ComponentListener {
     
 
