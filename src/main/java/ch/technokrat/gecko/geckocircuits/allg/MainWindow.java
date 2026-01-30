@@ -1438,7 +1438,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             } else if (befehl.equals(
                     "mItemCheckModel")) {
                 NetzlisteAllg nlA = NetzlisteAllg.fabricNetzlistComplete(_se.getConnection(ConnectorType.CONTROL), _se.getElementCONTROL());
-                new DialogControlCheck(this, true, NetzlisteCONTROL.FabricRunSimulation(nlA)).setVisible(true);
+                new DialogControlCheck(this, true, NetzlisteCONTROL.fabricRunSimulation(nlA)).setVisible(true);
             } else if (befehl.equals("memorySettings")) {
                 new DialogMemory();
 

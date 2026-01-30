@@ -486,7 +486,7 @@ public final class DataSaver extends Observable implements Observer {
         }
     }
 
-    class SignalMissingException extends Exception {
+    static class SignalMissingException extends Exception {
 
         public SignalMissingException(String message) {
             super(message);

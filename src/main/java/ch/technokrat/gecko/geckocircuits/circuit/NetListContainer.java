@@ -28,7 +28,7 @@ public class NetListContainer {
         NetListLK nlL = schematicEntry.getNetzliste(ConnectorType.LK_AND_RELUCTANCE);
         
         NetListLK nlT = schematicEntry.getNetzliste(ConnectorType.THERMAL);
-        NetzlisteCONTROL nlC = NetzlisteCONTROL.FabricRunSimulation(nlC1);
+        NetzlisteCONTROL nlC = NetzlisteCONTROL.fabricRunSimulation(nlC1);
         
         for(AbstractCircuitSheetComponent elem : schematicEntry._circuitSheet.getAllElements()) {
             if(elem instanceof AbstractCircuitBlockInterface) {
@@ -47,8 +47,8 @@ public class NetListContainer {
     
     public static NetListContainer fabricContinueSimulation(final SchematicEditor2 schematicEntry, SimulationsKern simKern,
             NetListContainer oldNetlist) {
-        schematicEntry.checkNameOptParameters();               
-        return new NetListContainer(NetzlisteCONTROL.FabricContinueSimulation(oldNetlist._nlControl), oldNetlist._nlLK, oldNetlist._nlTH);
+        schematicEntry.checkNameOptParameters();
+        return new NetListContainer(NetzlisteCONTROL.fabricContinueSimulation(oldNetlist._nlControl), oldNetlist._nlLK, oldNetlist._nlTH);
     }
     
     

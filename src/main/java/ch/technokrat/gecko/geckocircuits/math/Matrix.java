@@ -198,8 +198,24 @@ public class Matrix implements Cloneable, java.io.Serializable {
 
     /** Clone the Matrix object.
      */
+    @Override
     public Object clone() {
-        return this.copy();
+        try {
+            Matrix cloned = (Matrix) super.clone();
+            // Deep copy the matrix data
+            cloned.A = new double[m][n];
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    cloned.A[i][j] = A[i][j];
+                }
+            }
+            // Reset LU decomposition (not shared with clone)
+            cloned.luDecomp = null;
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            // Should never happen since we implement Cloneable
+            throw new InternalError(e);
+        }
     }
 
     /** Access the internal two-dimensional array.

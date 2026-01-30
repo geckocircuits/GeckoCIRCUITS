@@ -117,7 +117,7 @@ public class CheckBoxList extends JList<String>
     }
 
 
-    class CheckBoxListCellRenderer extends JComponent
+    static class CheckBoxListCellRenderer extends JComponent
         implements ListCellRenderer<Object> {
         DefaultListCellRenderer defaultComp;
         JCheckBox checkbox;

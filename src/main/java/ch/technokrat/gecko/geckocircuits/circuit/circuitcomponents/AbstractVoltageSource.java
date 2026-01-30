@@ -24,7 +24,7 @@ import java.util.List;
 
 public abstract class AbstractVoltageSource extends AbstractCircuitSource {
 
-    public static final String[] SHORT_NAMES_FOR_AMPLITUDE = new String[]{"uMAX", "MMF_MAX", "T_MAX"};
+    static final String[] SHORT_NAMES_FOR_AMPLITUDE = new String[]{"uMAX", "MMF_MAX", "T_MAX"};
     private static final double DEFAULT_AMPLITUDE = 325;
     private static final int LOWER_LIMIT_INDEX = 12;
     private static final int UPPER_LIMIT_INDEX = 13;

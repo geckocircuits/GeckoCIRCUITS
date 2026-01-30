@@ -32,8 +32,6 @@ public class NetListLK {
     public int[][] nodePairDirVoltContSrc;
     public double[][] parameter;  // Bauteilwert; Typus 'sinus', 'dreieck', ... bei Strom/Spg-Quelle; init-Werte iL_ALT und uC_ALT; ...
     public int[] spgQuelleNr;  // zaehlt nicht nur die SpgQuellen von 1 beginnend aufsteigen, sondern auch die LKOP2-Elemente, wobei Durchmischung mit den SpgQuellen moeglich ist
-    protected int[][] gemeinsameKnoten;  // Element-Knoten plus alle Verbindungen, die auf dem gleichen Potential liegen
-    protected int gesamtzahlKnotenNr;
     public Verbindung[] v;
     public int verbindungANZAHL;
     public AbstractCircuitBlockInterface[] elements, eLKneu, eLK_M;
@@ -49,18 +47,9 @@ public class NetListLK {
     private PostCalculatable[] _postCalculatables = new PostCalculatable[0];
     public int[] _singularityEntries = new int[0];
 
-    
+
     public double getSimulationsZeit() {
         return t;
-    }
-    
-
-    public int[][] getGemeinsameKnoten() {
-        return gemeinsameKnoten;
-    }
-
-    public int getGesamtzahlKnotenNr() {
-        return gesamtzahlKnotenNr;
     }
 
     public Verbindung[] getVerbindungen() {

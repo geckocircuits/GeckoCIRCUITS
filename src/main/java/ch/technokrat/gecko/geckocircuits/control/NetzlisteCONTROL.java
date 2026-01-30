@@ -52,7 +52,7 @@ public final class NetzlisteCONTROL {
     private NetzlisteCONTROL() {
     }
 
-    public static NetzlisteCONTROL FabricContinueSimulation(NetzlisteCONTROL previousNetList) {
+    public static NetzlisteCONTROL fabricContinueSimulation(NetzlisteCONTROL previousNetList) {
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.reglerCalc = previousNetList.reglerCalc;
         returnValue._labelNodeMap.putAll(previousNetList._labelNodeMap);
@@ -67,13 +67,13 @@ public final class NetzlisteCONTROL {
         return returnValue;
     }
 
-    public static NetzlisteCONTROL FabricUpdateGui(final NetzlisteAllg nlC) {
+    public static NetzlisteCONTROL fabricUpdateGui(final NetzlisteAllg nlC) {
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.connectPotentialLabels(nlC);
         return returnValue;
     }
 
-    public static NetzlisteCONTROL FabricRunSimulation(final NetzlisteAllg nlC) {
+    public static NetzlisteCONTROL fabricRunSimulation(final NetzlisteAllg nlC) {
         SystemOutputRedirect.reset();
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.connectPotentialLabels(nlC);

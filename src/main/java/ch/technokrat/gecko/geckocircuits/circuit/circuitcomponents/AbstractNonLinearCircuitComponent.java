@@ -71,14 +71,14 @@ implements Operationable, Nonlinearable {
     public long nonLinearCharHashValueForInit = 0;
     public boolean initNonLinFromFile = false;
     public long nonLinearLastModified = -2;
-    public static final double[] NONLIN_CAP_X_DEFAULT = new double[]{0, 100, 300, 400};
-    public static final double[] NONLIN_CAP_Y_DEFAULT = new double[]{1e-7, 0.8e-7, 1.2e-9, 1e-9};    
-    
-    public static final double[] NONLIN_IND_X_DEFAULT = new double[]{0, 10, 15, 30};
-    public static final double[] NONLIN_IND_Y_DEFAULT = new double[]{500e-6, 500e-6, 150e-6, 100e-6};
-    
-    public static final double[] NONLIN_REL_X_DEFAULT = new double[]{0, 100, 300, 400};
-    public static final double[] NONLIN_REL_Y_DEFAULT = new double[]{2, 2, 4, 5};    
+    static final double[] NONLIN_CAP_X_DEFAULT = new double[]{0, 100, 300, 400};
+    static final double[] NONLIN_CAP_Y_DEFAULT = new double[]{1e-7, 0.8e-7, 1.2e-9, 1e-9};
+
+    static final double[] NONLIN_IND_X_DEFAULT = new double[]{0, 10, 15, 30};
+    static final double[] NONLIN_IND_Y_DEFAULT = new double[]{500e-6, 500e-6, 150e-6, 100e-6};
+
+    static final double[] NONLIN_REL_X_DEFAULT = new double[]{0, 100, 300, 400};
+    static final double[] NONLIN_REL_Y_DEFAULT = new double[]{2, 2, 4, 5};    
     
     
     

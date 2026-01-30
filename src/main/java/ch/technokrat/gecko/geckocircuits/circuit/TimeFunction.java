@@ -16,26 +16,11 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 public abstract class TimeFunction {
 
     protected int _steps_saved;
-    protected double[][] var_history;
     protected boolean stepped_back = false;
     protected int steps_reversed = 0;
     public static boolean saveHistory = false;
 
     public abstract double calculate(double t, double dt);
-
-    protected void historyForward()
-    {
-      for (int j = var_history.length - 1; j > 0; j--)
-        for (int i = 0; i < var_history[0].length; i++)
-            var_history[j][i] = var_history[j-1][i];
-    }
-
-    protected void historyBackward()
-    {
-      for (int j = var_history.length - 1; j > 0; j--)
-        for (int i = 0; i < var_history[0].length; i++)
-            var_history[j-1][i] = var_history[j][i];
-    }
 
     public abstract void stepBack();
 

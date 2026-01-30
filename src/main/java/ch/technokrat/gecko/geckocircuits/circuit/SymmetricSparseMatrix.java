@@ -24,12 +24,12 @@ import java.util.Collections;
  */
 public class SymmetricSparseMatrix {
 
-    public double[] Acsr;
+    public double[] acsr;
     double[] AcsrComplex;
     public int[] AI, AIT;
     public int[] AJ, AJT;
     public int[][] columnRowIndices;
-    public double[] Adns;
+    public double[] adns;
     private Paradiso _paradiso;
     private final int _N;
 
@@ -49,11 +49,11 @@ public class SymmetricSparseMatrix {
      */
     public void factorize(final SymmetricDoubleSparseMatrix matrix, final int rows, final int cols) {        
         _paradiso = new Paradiso();                        
-        Paradiso.factorize(Adns, AI, AJ, _N, -2, _paradiso);                        
+        Paradiso.factorize(adns, AI, AJ, _N, -2, _paradiso);                        
     }
 
     public double[] solve(double[] rhs) {        
-        return Paradiso.solve(Adns, AI, AJ, rhs, rhs.length, -2, 1, _paradiso);        
+        return Paradiso.solve(adns, AI, AJ, rhs, rhs.length, -2, 1, _paradiso);        
     }
 
     
@@ -68,7 +68,7 @@ public class SymmetricSparseMatrix {
         // determine number of nonzero entries:
 
         nzmax = matrix.getNumberOfNonZeros();
-        Adns = new double[nzmax];
+        adns = new double[nzmax];
         AI = new int[_N + 1];
         AJ = new int[nzmax];
 
@@ -89,7 +89,7 @@ public class SymmetricSparseMatrix {
                     counter = j;
                     double re = matrix.getValue(i, j);
                     if (re != 0) {
-                        Adns[index] = re;
+                        adns[index] = re;
                         int column = j + 1;
                         int row = i;
                         AJ[index] = column;

@@ -49,8 +49,8 @@ import javax.tools.SimpleJavaFileObject;
  */
 public class CompileScript {
 
-    static protected AbstractCompileObject _compileObject = new CompileObjectNull();
-    protected static Map<String, CompiledClassContainer> _classNameFileMap;
+    static AbstractCompileObject _compileObject = new CompileObjectNull();
+    static Map<String, CompiledClassContainer> _classNameFileMap;
     private static AbstractGeckoCustom _compiledInstance;
     
     static class scriptRAMJavaFileObject extends SimpleJavaFileObject {
