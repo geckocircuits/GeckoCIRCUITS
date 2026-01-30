@@ -80,22 +80,14 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     public int[] xAchsenTyp, yAchsenTyp;  // Linear oder logarithmisch?
     public int[] xAchseFarbe, yAchseFarbe;
     public int[] xAchseStil, yAchseStil;
-    // TODO: the following fields hide Grafer fields, check if it would make a 
-    // problem just to delete it from here!
-    public String[] xAchseBeschriftung, yAchseBeschriftung;
+    // Note: xAchseBeschriftung, yAchseBeschriftung, gridNormal*, linStilGridNormal*,
+    // xTickSpacing, yTickSpacing, xAnzTicksMinor, yAnzTicksMinor, xTickLaenge*, yTickLaenge*,
+    // zeigeLabels* are inherited from GraferV3
     //
-    public int[] gridNormalX_zugeordneteXAchse, gridNormalX_zugeordneteYAchse;
-    public int[] gridNormalY_zugeordneteXAchse, gridNormalY_zugeordneteYAchse;
     public int[] farbeGridNormalX, farbeGridNormalXminor, farbeGridNormalY, farbeGridNormalYminor;
-    public int[] linStilGridNormalX, linStilGridNormalXminor, linStilGridNormalY, linStilGridNormalYminor;
     public boolean[] xShowGridMaj, xShowGridMin, yShowGridMaj, yShowGridMin;
     //
     public boolean[] xTickAutoSpacing, yTickAutoSpacing;
-    public double[] xTickSpacing, yTickSpacing;
-    public int[] xAnzTicksMinor, yAnzTicksMinor;
-    public int[] xTickLaenge, xTickLaengeMinor, yTickLaenge, yTickLaengeMinor;
-    //
-    public boolean[] zeigeLabelsXmaj, zeigeLabelsXmin, zeigeLabelsYmaj, zeigeLabelsYmin;
     //
     private boolean[] zeichneDiagrammUmrandung;  // zu zeichnen, wenn der Grid wegen zu kleiner Darstellung (in Pixelpunkten) abgeschaltet ist 
     //-------------------------
