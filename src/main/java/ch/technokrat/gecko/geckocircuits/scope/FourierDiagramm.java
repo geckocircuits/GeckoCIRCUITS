@@ -240,22 +240,17 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
 
     @Override
     public void mousePressed(final MouseEvent mouseEvent) {
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             x1Zoom = mouseEvent.getX();
             y1Zoom = mouseEvent.getY();
             imDragModus = true;
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
         }
     }
 
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         //-------------------
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             imDragModus = false;
             x2Zoom = mouseEvent.getX();
             y2Zoom = mouseEvent.getY();
@@ -291,7 +286,6 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             this.setzeTickSpacing(new double[]{empfX[4]}, new double[]{empfY[4]});
             repaint();
             //-------------------
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
         }
     }
 

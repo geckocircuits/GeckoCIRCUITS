@@ -312,9 +312,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
 
     public void mouseReleased(MouseEvent me) {
         //-------------------
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             //--------------------------------------
             imDragModus = false;
             x2Zoom = me.getX();
@@ -347,7 +345,6 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
                     new double[]{empfY[0]}, new double[]{empfY[1]}, new boolean[]{true});
             this.setzeTickSpacing(new double[]{empfX[4]}, new double[]{empfY[4]});
             repaint();
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
         }
     }
 
