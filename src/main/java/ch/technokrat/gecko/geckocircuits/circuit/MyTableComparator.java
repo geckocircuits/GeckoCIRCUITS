@@ -28,29 +28,21 @@ class MyTableComparator implements Comparator<List<Double>> {
     @Override
     public int compare(List<Double> o1, List<Double> o2) {
         assert o1.size() == o2.size();
-        if(o1.get(0) == null) {
-            return 1;
-        }
-        if(o2.get(0) == null) {
-            return -1;            
-        }
-        if(o1.get(0) == null && o2.get(0) == 0) {
+        Double d1 = o1.get(0);
+        Double d2 = o2.get(0);
+
+        if(d1 == null && d2 == null) {
             return 0;
         }
-        if(o1.get(0) < o2.get(0)) {
+        if(d1 == null) {
+            return 1;
+        }
+        if(d2 == null) {
             return -1;
         }
-        
-        if(o1.get(0) > o2.get(0)) {
-            return 1;
-        }
-        
-        if((double) o1.get(0) == (double) o2.get(0)) {
-            return 0;
-        }
-                
-        assert false : o1;
-        return -1;
+
+        // Use Double.compare() to correctly handle NaN and infinity
+        return Double.compare(d1, d2);
     }
 
     

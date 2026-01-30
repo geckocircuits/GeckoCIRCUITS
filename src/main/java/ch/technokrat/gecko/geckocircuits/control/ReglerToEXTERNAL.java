@@ -221,6 +221,23 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ReglerToEXTERNAL other = (ReglerToEXTERNAL) obj;
+        return this.externalOrderNumber == other.externalOrderNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(externalOrderNumber);
+    }
+
+    @Override
     protected final Window openDialogWindow() {
         return new DialogExternal(this);
     }

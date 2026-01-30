@@ -552,7 +552,7 @@ public class BigMatrix implements java.io.Serializable {
    }
 
 
-   public void ResetLUDecomp() {
+   public void resetLUDecomp() {
     luDecomp = null;
    }
 

@@ -739,7 +739,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
         }
     }
 
-    public void ResetLUDecomp() {
+    public void resetLUDecomp() {
         luDecomp = null;
     }
 

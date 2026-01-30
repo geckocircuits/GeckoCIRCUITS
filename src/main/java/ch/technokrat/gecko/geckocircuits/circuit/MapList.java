@@ -24,6 +24,7 @@ import java.util.Map.Entry;
  *
  * @author andreas
  */
+@SuppressWarnings("EqualsWhichDoesntCheckParameterClass") // classMap is a derived cache, inherited equals() is correct
 public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
 
     private final Class<?>[] registeredTypes = new Class<?>[]{

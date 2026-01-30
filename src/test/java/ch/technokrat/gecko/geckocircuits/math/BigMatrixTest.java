@@ -471,7 +471,7 @@ public class BigMatrixTest {
         assertNotNull(lu1);
         
         // Reset it
-        A.ResetLUDecomp();
+        A.resetLUDecomp();
         
         // Create new one - should work without error
         BigLUDecomposition lu2 = A.lu();
@@ -725,7 +725,7 @@ public class BigMatrixTest {
         m.lu();
         
         // Reset
-        m.ResetLUDecomp();
+        m.resetLUDecomp();
         
         // Should be able to get new LU without issue
         BigLUDecomposition lu2 = m.lu();

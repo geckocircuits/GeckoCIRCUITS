@@ -94,6 +94,26 @@ public class DataBlock {
             }
             return 0;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            IndexLimit other = (IndexLimit) obj;
+            return _startIndex == other._startIndex && _endIndex == other._endIndex;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = 17;
+            result = 31 * result + _startIndex;
+            result = 31 * result + _endIndex;
+            return result;
+        }
     }
 
     /**
@@ -111,13 +131,39 @@ public class DataBlock {
 
         @Override
         public final int compareTo(final TimeLimit tlim) {
-            if (this._startTime < tlim._startTime && this._endTime < tlim._endTime) {
+            int startComparison = Double.compare(this._startTime, tlim._startTime);
+            int endComparison = Double.compare(this._endTime, tlim._endTime);
+
+            if (startComparison < 0 && endComparison < 0) {
                 return 1;
             }
-            if (this._startTime > tlim._startTime && this._endTime > tlim._endTime) {
+            if (startComparison > 0 && endComparison > 0) {
                 return -1;
             }
             return 0;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            TimeLimit other = (TimeLimit) obj;
+            return Double.compare(_startTime, other._startTime) == 0
+                && Double.compare(_endTime, other._endTime) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            long startBits = Double.doubleToLongBits(_startTime);
+            long endBits = Double.doubleToLongBits(_endTime);
+            int result = 17;
+            result = 31 * result + (int) (startBits ^ (startBits >>> 32));
+            result = 31 * result + (int) (endBits ^ (endBits >>> 32));
+            return result;
         }
     }
     
