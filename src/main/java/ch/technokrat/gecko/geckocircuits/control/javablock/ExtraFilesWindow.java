@@ -38,7 +38,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
     private GeckoFileManagerWindow _fileManagerWindow;
     private final DefaultListModel<GeckoFile> _extraFiles = new DefaultListModel<>();
 
-    private final ListSelectionListener _listSelectionListener = new ListSelectionListener() {
+    private final transient ListSelectionListener _listSelectionListener = new ListSelectionListener() {
 
         @Override
         public void valueChanged(final ListSelectionEvent listSelectionEvent) {
