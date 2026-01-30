@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.swing.ImageIcon; 
 import java.net.URI;
 import java.net.URL;
@@ -42,6 +43,8 @@ import javax.swing.JSpinner;
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Counter is shared across display updates for animation timing")
 public class SpaceVectorDisplay extends javax.swing.JFrame {
     static long counter = 0;
     static final int ORIGINX = 180;
