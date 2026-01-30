@@ -36,9 +36,9 @@ public class ProjectData implements Serializable {
 
     private static final Random RANDOM = new Random();
 
-    public final List<AbstractCircuitSheetComponent> _allSheetComponents = new ArrayList<AbstractCircuitSheetComponent>();
-    public List<SubcircuitBlock> allSubCircuitBlocks = new ArrayList<SubcircuitBlock>();
-    private OptimizerParameterData optimizerParameterData;
+    public transient final List<AbstractCircuitSheetComponent> _allSheetComponents = new ArrayList<AbstractCircuitSheetComponent>();
+    public transient List<SubcircuitBlock> allSubCircuitBlocks = new ArrayList<SubcircuitBlock>();
+    private transient OptimizerParameterData optimizerParameterData;
     public String geckoOpt_code_ascii;
     //------------------
     // Simulationsparameter
@@ -56,14 +56,14 @@ public class ProjectData implements Serializable {
     double _T_pre;
     public int _uniqueFileId;
     //------------------
-    private SimulationAccess _scripter;
+    private transient SimulationAccess _scripter;
     public String _scripterCode = "";
     public String _scripterImports = "";
     public String _scripterDeclarations = "";
     public String _scripterExtraFiles = "";
     public int solverType;
-    private GeckoFileManager _fileManager;
-    public ArrayList<GeckoFile> fileMgrFiles;
+    private transient GeckoFileManager _fileManager;
+    public transient ArrayList<GeckoFile> fileMgrFiles;
     public static int readFileVersion;
     public int sizeX = 30;
     public int sizeY = 30;
@@ -72,7 +72,7 @@ public class ProjectData implements Serializable {
     public static final String NIX = "NIX_NIX_NIX";
     public List<String> _optimizerNames = new ArrayList<String>();
     public List<Double> _optimizerData = new ArrayList<Double>();
-    private OptimizerParameterData _optimizer;
+    private transient OptimizerParameterData _optimizer;
 
     public ProjectData(
             Dimension windowDimension,

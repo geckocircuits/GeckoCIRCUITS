@@ -210,7 +210,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
-                // falls through
+                    // $FALL-THROUGH$
                 case LK_C:
                     // aW = netzliste.parameter[i1][0] / dt;  //  +C/dt
                     //aW = 2 * netzliste.parameter[i1][6] / dt;  //  +C/dt
@@ -445,7 +445,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
-                // falls through
+                    // $FALL-THROUGH$
                 case LK_C:
                     double fac = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
                     //bW = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
@@ -699,7 +699,7 @@ public class LKMatrices {
                     break;
                 case TH_CTH:
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
-                // falls through
+                    // $FALL-THROUGH$
                 case LK_C:
                     double fac = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                     double nonLinearCorrectionCurrent = -fac * netzliste.parameter[i1][10];
