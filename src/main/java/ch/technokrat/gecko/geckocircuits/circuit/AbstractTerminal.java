@@ -18,7 +18,9 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInd
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Terminal exposes label object for configuration")
 public abstract class AbstractTerminal implements TerminalInterface {
 
     protected static final int DX_IN = 3, DX_OUT = DX_IN, DY_TEXT = -3;

@@ -16,8 +16,8 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings("rawtypes")
-@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
-        justification = "Static flags intentionally written from instance methods for cross-component switch coordination during simulation")
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Static flags for switch coordination; public fields for simulation; stores BVector reference")
 public abstract class AbstractSwitchCalculator extends CircuitComponent implements AStampable, BStampable {
 
     

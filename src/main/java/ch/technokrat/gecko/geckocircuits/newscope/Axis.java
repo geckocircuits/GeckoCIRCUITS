@@ -26,8 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Axis stores diagram reference for coordinate transformations")
 public final class Axis {
 
     private static final int HASH_CONSTANT1 = 3;
