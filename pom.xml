@@ -9,9 +9,18 @@
   <version>1.0</version>
 
   <name>gecko</name>
-  <description>A simple gecko.</description>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <description>GeckoCIRCUITS - Power Electronics Circuit Simulator</description>
+  <url>https://github.com/geckocircuits</url>
+
+  <!--
+    Additional modules are located in src/modules/:
+    - gecko-simulation-core: GUI-free simulation engine
+    - gecko-rest-api: REST API built on Spring Boot
+
+    These modules can be built separately:
+      cd src/modules/gecko-simulation-core && mvn clean package
+      cd src/modules/gecko-rest-api && mvn clean package
+  -->
 
   <!-- NOTE: Maven compiler may output INFO-level warnings about deprecated API usage.
        These are informational only and do not affect the build. To suppress these
