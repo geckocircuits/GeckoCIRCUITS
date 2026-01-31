@@ -517,8 +517,8 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
                 _scopeFrame.setNewTerminalNumber(XIN.size());
             }
 
-        } catch (Exception ex) {
-            // Signal number change may fail during initialization - safe to ignore
+        } catch (Exception ex) { // NOPMD
+            // Exception intentionally ignored: Signal number change may fail during initialization - safe to ignore
         }
     }
 

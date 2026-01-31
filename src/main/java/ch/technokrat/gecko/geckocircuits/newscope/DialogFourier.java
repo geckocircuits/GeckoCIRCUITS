@@ -71,8 +71,8 @@ public class DialogFourier extends JDialog {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
-        } catch (Exception e) {
-            // Icon loading is optional - dialog works without it
+        } catch (Exception e) { // NOPMD
+            // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }
         this.worksheet = worksheet;
         signalFourierAnalysiert = new boolean[worksheet.getRowLength() + 1];
