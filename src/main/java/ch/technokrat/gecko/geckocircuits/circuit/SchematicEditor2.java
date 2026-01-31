@@ -305,10 +305,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         if (!foundComponentsForRename.isEmpty()) {
             //Custom button text
-            String renameObject = "";
+            StringBuilder renameBuilder = new StringBuilder();
             for (AbstractBlockInterface getName : foundComponentsForRename) {
-                renameObject += "\n " + getName.getStringID();
+                renameBuilder.append("\n ").append(getName.getStringID());
             }
+            String renameObject = renameBuilder.toString();
             Object[] options = {"Rename components",
                 "Cancel"};
             int n = JOptionPane.showOptionDialog(GeckoSim._win,

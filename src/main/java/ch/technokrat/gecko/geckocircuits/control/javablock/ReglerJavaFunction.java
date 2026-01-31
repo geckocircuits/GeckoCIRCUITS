@@ -48,6 +48,8 @@ import javax.swing.JOptionPane;
  *
  * @author andreas
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+        justification = "_inputTerminalNumber may be read before field initialization when setInputTerminalNumber is called from superclass constructor - handled safely with null checks")
 public final class ReglerJavaFunction extends RegelBlock implements VariableTerminalNumber, SpecialNameVisible,
         GeckoFileable, Operationable {
     private static final long serialVersionUID = 1L;

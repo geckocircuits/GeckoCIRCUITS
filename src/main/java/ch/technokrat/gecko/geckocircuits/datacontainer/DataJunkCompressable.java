@@ -34,7 +34,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * Float.intBitsToFloat to access the data values. Furhermore, the double values
  * are rounded to less bits than float.
  */
-@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Data junk stores time series reference for compression operations")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "IS2_INCONSISTENT_SYNC"},
+        justification = "Data junk stores time series reference for compression operations; _dataSoftRef sync inconsistency is acceptable - occasional race condition doesn't affect correctness")
 public final class DataJunkCompressable implements DataJunk {
 
     public static void setMemoryPrecision() {

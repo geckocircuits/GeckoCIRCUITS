@@ -27,8 +27,8 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.NumberFormat;
 
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "Performance-critical matrix class with direct field access for simulation speed")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SF_SWITCH_FALLTHROUGH"},
+        justification = "Performance-critical matrix class with direct field access for simulation speed; switch fallthroughs in TH_CTH to LK_C are intentional for thermal/electric capacitor handling")
 public class LKMatrices {
 
     private static final double FAST_NULL_R = 1e-9;
