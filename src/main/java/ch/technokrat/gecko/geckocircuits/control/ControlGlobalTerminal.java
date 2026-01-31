@@ -26,7 +26,9 @@ import java.awt.Window;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes unmodifiable set of global terminals for circuit connectivity")
 public final class ControlGlobalTerminal extends RegelBlock implements GlobalTerminable {
 
     private static final Set<ControlGlobalTerminal> ALL_GLOBALS_INTERNAL = new HashSet<>();

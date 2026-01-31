@@ -17,12 +17,14 @@ import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import java.util.HashMap;
 import java.util.Map;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * this is based on the old "typ-Numbers from Uwe... with enums much cleaner!
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Enum exposes type info for component configuration")
 public enum CircuitTyp implements AbstractComponentTyp {
 
     LK_R(1, ResistorCircuit.TYPE_INFO),

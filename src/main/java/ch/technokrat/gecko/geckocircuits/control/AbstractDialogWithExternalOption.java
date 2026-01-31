@@ -19,8 +19,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
-@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
-        justification = "Abstract dialog class - subclasses handle initialization properly")
+@SuppressFBWarnings(value = {"CT_CONSTRUCTOR_THROW", "EI_EXPOSE_REP2"},
+        justification = "Abstract dialog class - subclasses handle initialization; stores element reference")
 public abstract class AbstractDialogWithExternalOption<T extends RegelBlock> extends DialogElementCONTROL<T> {
 
     final JCheckBox _jCheckBoxUseExternal = new JCheckBox("Use external parameters");

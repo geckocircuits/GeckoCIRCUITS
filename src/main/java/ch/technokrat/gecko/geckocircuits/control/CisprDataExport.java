@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores data container reference for export")
 public class CisprDataExport extends GeckoDialog {
 
     private final AbstractDataContainer _dataContainer;

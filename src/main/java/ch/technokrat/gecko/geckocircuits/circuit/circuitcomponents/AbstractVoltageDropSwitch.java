@@ -15,8 +15,9 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes forward voltage drop parameter for configuration")
 public abstract class AbstractVoltageDropSwitch extends AbstractSwitch implements ForwardVoltageDropable {
     UserParameter<Double> _forwardVoltageDrop = UserParameter.Builder.
             <Double>start("forwardVoltageDrop", AbstractSwitch.UF_DEFAULT).                       
