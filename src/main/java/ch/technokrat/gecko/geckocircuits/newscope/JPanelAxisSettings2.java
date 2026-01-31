@@ -14,11 +14,14 @@
 package ch.technokrat.gecko.geckocircuits.newscope;
 
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "NetBeans GUI form generated public checkbox field")
 public class JPanelAxisSettings2 extends javax.swing.JPanel {
 
     private GraferV4 _grafer;

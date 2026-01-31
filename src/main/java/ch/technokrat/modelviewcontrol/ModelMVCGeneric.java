@@ -16,6 +16,7 @@ package ch.technokrat.modelviewcontrol;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * A generic MVC framework. This seems to be very usefull when the MVC paradigma
@@ -27,6 +28,8 @@ import java.io.Serializable;
  * reference from the Listener-List still exists.
  *
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public listeners field for MVC observer registration by subclasses")
 public abstract class ModelMVCGeneric<T> implements Serializable{
   // transient private Set<ActionListener> listeners = new HashSet<ActionListener>();
   transient public WeakListModel listeners = new WeakListModel();

@@ -19,11 +19,14 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import java.awt.BorderLayout;
 import java.util.Stack;
 import javax.swing.JPanel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public grafer for external access to plot data")
 public class BodePlot2 extends JPanel {
     public GraferV4 _graferNew;
     private NewScope _graferPanel;

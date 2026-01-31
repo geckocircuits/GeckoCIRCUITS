@@ -38,7 +38,10 @@ import javax.swing.JDialog;
 import java.net.URI;
 import java.net.URL;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public field for FFT sample count accessed by Fourier analysis components")
 public class DialogFourier extends JDialog {
 
     //-------------

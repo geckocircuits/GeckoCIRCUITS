@@ -16,11 +16,14 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Component;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "NetBeans GUI form generated public fields for external access")
 public class JPanelLineProperties extends javax.swing.JPanel {
 
     private LineSettable _lineSettable;

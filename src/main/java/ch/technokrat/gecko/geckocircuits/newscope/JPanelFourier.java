@@ -26,11 +26,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public grafer for external access to plot data")
 public class JPanelFourier extends javax.swing.JPanel {
     
 

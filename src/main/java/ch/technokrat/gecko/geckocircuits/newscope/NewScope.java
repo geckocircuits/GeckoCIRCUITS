@@ -26,7 +26,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "NetBeans GUI form generated public toolbar field for external access")
 public final class NewScope extends javax.swing.JPanel {
 
     public final List<GraferV4> _grafer = new ArrayList<GraferV4>();

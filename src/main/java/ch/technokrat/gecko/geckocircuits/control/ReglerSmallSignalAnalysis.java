@@ -22,7 +22,10 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public calculator reference for dialog access to last analysis results")
 public final class ReglerSmallSignalAnalysis extends RegelBlock {
     private static final long serialVersionUID = 1L;
 
