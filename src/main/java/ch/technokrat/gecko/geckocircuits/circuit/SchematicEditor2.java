@@ -338,10 +338,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         if (!labelsToRename.isEmpty()) {
             //Custom button text
-            String renameObject = "";
+            StringBuilder renameBuilder2 = new StringBuilder();
             for (String renameLabel : labelsToRename) {
-                renameObject += "\n " + renameLabel;
+                renameBuilder2.append("\n ").append(renameLabel);
             }
+            String renameObject = renameBuilder2.toString();
             Object[] options = {"Rename labels", "Merge without rename",
                 "Cancel"};
             int n = JOptionPane.showOptionDialog(GeckoSim._win,

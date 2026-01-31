@@ -40,8 +40,8 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
-        justification = "Public field for FFT sample count; stores worksheet reference for Fourier analysis")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "DE_MIGHT_IGNORE"},
+        justification = "Public field for FFT sample count; stores worksheet reference for Fourier analysis; icon loading is optional")
 public class DialogFourier extends JDialog {
 
     //-------------
