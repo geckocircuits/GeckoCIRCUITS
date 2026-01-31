@@ -22,10 +22,12 @@ import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.NothingToDoCalculator;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Measurement block must share coupling references for circuit connectivity")
 public abstract class AbstractPotentialMeasurement extends RegelBlock implements ch.technokrat.gecko.geckocircuits.circuit.PotentialCoupable, ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupable {
 
     final PotentialCoupling _potentialLabelCoupling;

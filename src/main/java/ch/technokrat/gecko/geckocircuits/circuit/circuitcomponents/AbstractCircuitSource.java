@@ -40,7 +40,9 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Circuit source must share coupling references for circuit connectivity")
 public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock implements DirectVoltageMeasurable,
         ComponentCoupable, PotentialCoupable, CurrentMeasurable {
 

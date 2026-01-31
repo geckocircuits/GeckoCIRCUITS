@@ -16,11 +16,13 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.control.AbstractPotentialMeasurement;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Potential coupling must share references to parent block for circuit connectivity")
 public class PotentialCoupling {
 
     private final AbstractBlockInterface _parent;

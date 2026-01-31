@@ -14,10 +14,12 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.TimeFunctionConstant;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // TODO: Ath the moment, the machine equations are implemented somewhere else
 // We have to merge the two approaches, soon!
-      
+
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator must share references to inductor calculators for machine simulation")
 public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator implements BStampable, PostProcessable {
 
     private double phi;

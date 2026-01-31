@@ -33,7 +33,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Loss calculation must share references to parent block for circuit integration")
 public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractLossCalculatorFabric {
 
     final AbstractCircuitBlockInterface _parent;
