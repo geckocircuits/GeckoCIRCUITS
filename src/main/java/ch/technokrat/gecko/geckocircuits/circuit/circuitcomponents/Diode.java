@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.List;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "Public diode characteristic for simulation access and matrix operations")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP"},
+        justification = "Public diode characteristic for simulation access; exposes parameters for circuit configuration")
 public final class Diode extends AbstractSemiconductor implements ForwardVoltageDropable {
     static final AbstractTypeInfo TYPE_INFO = 
             new CircuitTypeInfo(Diode.class, "D", I18nKeys.DIODE, I18nKeys.IDEAL_DIODE_WITH_ON_RESISTANCE);

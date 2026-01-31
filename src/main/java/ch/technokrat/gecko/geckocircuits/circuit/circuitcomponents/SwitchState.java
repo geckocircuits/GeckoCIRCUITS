@@ -13,7 +13,10 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 //this class allows us to get information about a switching device's state - when it changed into the present state and what is it
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Switch state must share reference to circuit element for state tracking")
 public class SwitchState {
     
     public enum State {ON, OFF};

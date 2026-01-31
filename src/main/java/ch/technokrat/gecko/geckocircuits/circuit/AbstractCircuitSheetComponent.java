@@ -27,8 +27,8 @@ import java.util.List;
 import ch.technokrat.modelviewcontrol.ModelMVC;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
-        justification = "dpix is intentionally mutable - it is updated by dpixValue listener when user changes circuit scaling")
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "EI_EXPOSE_REP"},
+        justification = "dpix is intentionally mutable; components share parent circuit sheet reference for proper circuit hierarchy")
 public abstract class AbstractCircuitSheetComponent {
 
     public static int dpix;  // Abstand 2er Rasterpunkte in Pixelpunkten                

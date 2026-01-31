@@ -24,6 +24,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * This is the "block"-terminal of the subcuircuit block, which has the terminal
@@ -31,6 +32,7 @@ import java.awt.geom.AffineTransform;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Subcircuit terminal must share references for circuit connectivity")
 public final class TerminalSubCircuitBlock extends AbstractTerminal implements ControlTerminable {
 
     private final SubcircuitBlock _subcircuitBlock;

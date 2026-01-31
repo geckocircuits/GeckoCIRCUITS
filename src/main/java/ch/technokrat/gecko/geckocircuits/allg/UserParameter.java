@@ -33,12 +33,14 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.ModelMVC;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "User parameter builder stores references to parent block for parameter binding")
 public final class UserParameter<T> {
 
     private final List<String> _unit;

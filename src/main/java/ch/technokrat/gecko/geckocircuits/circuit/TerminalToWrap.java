@@ -21,6 +21,7 @@ import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 /**
@@ -29,6 +30,7 @@ import javax.swing.JOptionPane;
  * "beautiful", however DRY: don't repeat yourself!
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Terminal wrapper must share references for circuit connectivity")
 public final class TerminalToWrap {
 
     private final AbstractBlockInterface _parentComponent;

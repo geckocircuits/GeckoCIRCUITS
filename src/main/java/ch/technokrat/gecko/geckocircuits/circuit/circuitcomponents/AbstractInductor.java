@@ -18,11 +18,13 @@ import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.PostCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.Window;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Inductor exposes parameters for nonlinear characteristic configuration")
 public abstract class AbstractInductor extends AbstractNonLinearCircuitComponent
         implements PostCalculatable, CurrentMeasurable, DirectVoltageMeasurable {
 

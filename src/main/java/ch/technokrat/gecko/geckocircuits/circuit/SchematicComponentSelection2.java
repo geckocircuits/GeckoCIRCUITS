@@ -46,7 +46,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Selection panel stores button reference for component selection updates")
 public class SchematicComponentSelection2 extends JTabbedPane {
 
     private static final int MIN_GRID_SIZE = 12;
