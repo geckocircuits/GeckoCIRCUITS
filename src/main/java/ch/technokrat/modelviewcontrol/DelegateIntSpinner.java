@@ -19,12 +19,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @param <M>
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "MVC delegate stores model reference for view-model binding")
 public class DelegateIntSpinner<M extends ModelMVC<Integer>> extends JSpinner
         implements IGenericMVCView<M>, ActionListener {
 

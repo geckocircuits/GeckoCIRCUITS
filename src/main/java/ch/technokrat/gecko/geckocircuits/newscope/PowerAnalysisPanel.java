@@ -30,11 +30,13 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer class reference for power calculations")
 public final class PowerAnalysisPanel extends JPanel {
 
     private final JComboBox<String>[] _comboU = new JComboBox[3];

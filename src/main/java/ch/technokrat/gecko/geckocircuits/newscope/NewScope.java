@@ -28,8 +28,8 @@ import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "NetBeans GUI form generated public toolbar field for external access")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "NetBeans GUI form generated public field; stores Fourier panel reference for visualization")
 public final class NewScope extends javax.swing.JPanel {
 
     public final List<GraferV4> _grafer = new ArrayList<GraferV4>();

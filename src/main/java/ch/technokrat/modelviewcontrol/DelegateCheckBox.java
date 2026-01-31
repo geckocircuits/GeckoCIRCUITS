@@ -18,12 +18,14 @@ package ch.technokrat.modelviewcontrol;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @param <M>
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "MVC delegate stores model reference for view-model binding")
 public class DelegateCheckBox<M extends ModelMVC<Boolean>> extends JCheckBox
     implements IGenericMVCView<M>, ActionListener {
         private static final long serialVersionUID = 159473276254167L;

@@ -28,12 +28,14 @@ import java.awt.RenderingHints;
 import java.util.Arrays;
 import javax.swing.JPanel;
 import java.text.NumberFormat;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /*
  * this is the "old scope", in future, replace with "newScope"
  */
 @SuppressWarnings("serial")
 @Deprecated
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Legacy scope class stores worksheet data for graph visualization")
 public class GraferV3 extends JPanel {
 
     //-------------------------------------

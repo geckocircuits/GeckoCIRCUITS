@@ -32,8 +32,8 @@ import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @Deprecated
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "Legacy graphing class with direct field access for GUI performance")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Legacy graphing class with direct field access; stores worksheet data for scope visualization")
 public final class GraferImplementation extends GraferV3 implements MouseListener, MouseMotionListener {
     // Anzahl der Intervalle auf der x-Achse, in denen Hi- und Lo-Werte zwecks Datenkompression ermittelt werden
     private static final int INTERVALLE_ENTLANG_X = 2000;
