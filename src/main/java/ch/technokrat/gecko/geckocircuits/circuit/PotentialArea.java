@@ -18,6 +18,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInd
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TerminalCircuit;
 import ch.technokrat.gecko.geckocircuits.control.Point;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
 /**
@@ -25,6 +26,8 @@ import java.util.*;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public fields for circuit topology information sharing between netlist components")
 public final class PotentialArea {
 
     private final Set<Point> _pointsSchematic = new LinkedHashSet<Point>();

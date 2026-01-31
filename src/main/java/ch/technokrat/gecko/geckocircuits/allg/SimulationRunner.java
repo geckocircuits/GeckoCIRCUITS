@@ -27,7 +27,10 @@ import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public field for simulation kernel access during running simulation")
 public final class SimulationRunner {
 
 	final MainWindow _mainwindow;

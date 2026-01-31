@@ -57,8 +57,8 @@ import javax.swing.UIManager;
  * - System property: java -Doperatingmode=HEADLESS -jar gecko.jar
  * - Command line flag: java -jar gecko.jar -headless
  */
-@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "MS_SHOULD_BE_FINAL"},
-        justification = "Static fields are intentionally mutable for runtime configuration across different operating modes")
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "MS_SHOULD_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+        justification = "Static fields are intentionally mutable for runtime configuration across different operating modes; public fields used across the application")
 public class GeckoSim {
 
     static long startTime;  // MS_PKGPROTECT: only used within package

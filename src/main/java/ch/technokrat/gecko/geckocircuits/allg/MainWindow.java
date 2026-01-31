@@ -70,8 +70,8 @@ import javax.swing.event.ChangeListener;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "MS_CANNOT_BE_FINAL"},
-        justification = "MainWindow is effectively a singleton - static fields hold application-wide state that is initialized and managed by the single MainWindow instance")
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+        justification = "MainWindow is effectively a singleton - static fields hold application-wide state; public fields for menu item access across UI components")
 public final class MainWindow extends JFrame implements WindowListener, ActionListener, ComponentListener {
 
 

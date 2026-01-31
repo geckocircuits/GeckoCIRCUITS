@@ -15,8 +15,11 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ThermAmbient;
 import ch.technokrat.gecko.geckocircuits.control.Point;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public field for singularity indices shared with matrix operations")
 public final class NetzlisteAllg {
 
     

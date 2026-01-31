@@ -41,7 +41,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Public OK button for external dialog configuration; stores references to parent dialog and component for interaction")
 public class NonLinearDialogPanel extends JPanel {
 
     private static final int BUTTON_HEIGHT = 30;
