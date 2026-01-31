@@ -44,8 +44,8 @@ import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.GroupableUndoManager;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
-        justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access")
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);

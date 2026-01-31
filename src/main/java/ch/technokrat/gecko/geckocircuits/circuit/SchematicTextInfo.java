@@ -29,11 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Class stores block interface reference for text positioning")
 public final class SchematicTextInfo {
 
     private static final TechFormat tcf = new TechFormat();

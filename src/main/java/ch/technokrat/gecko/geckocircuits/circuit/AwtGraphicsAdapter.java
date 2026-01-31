@@ -34,7 +34,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @author GeckoCIRCUITS Team
  * @since Sprint 15 - GUI-free refactoring
  */
-@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Adapter stores Graphics reference for drawing operations")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification = "Adapter stores Graphics reference for drawing operations and exposes it for advanced usage")
 public class AwtGraphicsAdapter implements GeckoGraphics {
     
     private final Graphics2D g;

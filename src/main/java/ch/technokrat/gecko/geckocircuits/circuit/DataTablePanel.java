@@ -25,7 +25,9 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Panel stores column titles array for table display")
 public class DataTablePanel extends JPanel {
 
     private final MyTableModel _tableModel;
