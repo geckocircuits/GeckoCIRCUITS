@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.StaticNonFinal", "PMD.PublicAttribute", "PMD.ThrowExceptionInFinally"})
-@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "PA_PUBLIC_ARRAY_ATTRIBUTE"},
         justification = "Writes to inherited static _time field for simulation coordination; constructor exceptions for invalid shapes; public fields for analysis data sharing")
 // Public fields and static array required by simulator API; Constructor validation required for safety
 public final class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
