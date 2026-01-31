@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 
-public class QuasiPeakCalculator {
+public final class QuasiPeakCalculator {
 
     private static final double A_LOWER_LIMIT = 9000;
     private static final double B_LOWER_LIMIT = 150000;

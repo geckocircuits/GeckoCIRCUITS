@@ -39,7 +39,7 @@ import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-public class ScriptWindow extends javax.swing.JFrame {
+public final class ScriptWindow extends javax.swing.JFrame {
     ExtraFilesWindow _extSourceWindow;
     private boolean _extWindowInit = false;
     SimulationAccess _circuit;

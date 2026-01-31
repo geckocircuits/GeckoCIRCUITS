@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Extension of the ModelMVCGeneric framework. Inheriting from this class, then
@@ -28,6 +29,8 @@ import javax.swing.undo.UndoableEdit;
  * @param <T>
  * @author Andreas Müsing
  */
+@SuppressFBWarnings(value = "MS_MUTABLE_COLLECTION_PKGPROTECT",
+        justification = "globalEventListeners is intentionally public for external registration of global undo/redo event listeners")
 public abstract class AbstractUndoGenericModel<T> extends ModelMVCGeneric<T> implements Serializable{
   private static final long serialVersionUID = 28474838273478583L;
   protected boolean _initialized = false;

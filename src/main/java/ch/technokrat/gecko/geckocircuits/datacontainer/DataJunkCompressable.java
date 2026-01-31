@@ -78,6 +78,8 @@ public final class DataJunkCompressable implements DataJunk {
      * 512 //+ 1024 + 2048
      */
     private static final int DOUBLE_BYTES = 8;
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "MS_MUTABLE_ARRAY",
+            justification = "PRECISIONS array is intentionally public for external configuration of lossy compression levels")
     public static final int[] PRECISIONS = new int[]{-1, -128, -512, -2048};
     private static int precisionField = PRECISIONS[2];
     private final MemoryContainer _container;

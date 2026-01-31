@@ -27,7 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-public class SimulationAccess implements GeckoFileable {
+public final class SimulationAccess implements GeckoFileable {
 
     final static long DUMMY_BLOCK_ID = -1231231987;
     final List<GeckoFile> _additionalSourceFiles = new ArrayList<GeckoFile>();

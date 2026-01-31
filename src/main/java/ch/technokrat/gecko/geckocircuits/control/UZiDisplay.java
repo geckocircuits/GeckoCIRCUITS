@@ -16,6 +16,7 @@ package ch.technokrat.gecko.geckocircuits.control;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 /*
@@ -37,7 +38,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JSpinner;
 
-public class UZiDisplay extends GeckoDialog {
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Constructor exceptions are expected on initialization failure")
+public final class UZiDisplay extends GeckoDialog {
 
     static long counter = 0;
     static final int ORIGINX = 180;

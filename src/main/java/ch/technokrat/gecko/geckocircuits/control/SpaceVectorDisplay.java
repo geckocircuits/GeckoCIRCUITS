@@ -43,9 +43,9 @@ import javax.swing.JSpinner;
  *
  * @author andy
  */
-@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
-        justification = "Counter is shared across display updates for animation timing")
-public class SpaceVectorDisplay extends javax.swing.JFrame {
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW"},
+        justification = "Counter is shared across display updates for animation timing; constructor exceptions are expected on initialization failure")
+public final class SpaceVectorDisplay extends javax.swing.JFrame {
     static long counter = 0;
     static final int ORIGINX = 180;
     static final int ORIGINY = 200;

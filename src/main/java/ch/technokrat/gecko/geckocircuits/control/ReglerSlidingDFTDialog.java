@@ -39,7 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT> {
+final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT> {
 
     private final GridLayout _grid;
     private final Stack<JComboBox<ReglerSlidingDFT.OutputData>> _frequencySelectionList = new Stack<>();

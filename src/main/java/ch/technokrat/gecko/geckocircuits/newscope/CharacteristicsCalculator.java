@@ -15,6 +15,7 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Calculates the characteristic values of a datacontainer, e.g. average, rms,
@@ -23,6 +24,8 @@ import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "MS_EXPOSE_REP",
+        justification = "calculateFabric intentionally returns cached _valueCache instance for performance - callers expect cached object")
 public final class CharacteristicsCalculator {
 
     private static CharacteristicsCalculator _valueCache = null;

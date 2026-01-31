@@ -28,10 +28,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.StaticNonFinal", "PMD.PublicAttribute", "PMD.ThrowExceptionInFinally"})
-@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
-        justification = "Writes to inherited static _time field for shared simulation time state coordination")
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW"},
+        justification = "Writes to inherited static _time field for shared simulation time state coordination; constructor exceptions for invalid signal shapes are intentional")
 // Public fields and static array required by simulator API; Constructor validation required for safety
-public class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
+public final class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
 
     //static boolean isSimulationDC;
     private static final int THREE = 3;

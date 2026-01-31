@@ -25,7 +25,10 @@ import javax.swing.SwingWorker;
 import ch.technokrat.gecko.i18n.bot.DLbot;
 import ch.technokrat.gecko.i18n.resources.EnglishMapper;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
+        justification = "Static fields are intentionally mutable - they store translation maps loaded at runtime based on user language selection")
 public class LangInit extends javax.swing.JDialog implements PropertyChangeListener {
 
     /**

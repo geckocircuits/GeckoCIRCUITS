@@ -13,7 +13,11 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 @SuppressWarnings("PMD.ThrowExceptionInFinally") // Constructor validation required for safety
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Exception is intentional for invalid amplitude - signals must have non-negative amplitude")
 public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCalculator
         implements InitializableAtSimulationStart {
 
