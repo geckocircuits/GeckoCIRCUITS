@@ -40,7 +40,9 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.fop.svg.PDFTranscoder;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores view component reference for image export")
 public final class SaveViewFrame extends GeckoDialog {
 
     private static final Float JPG_QUALITY = 0.8f;  // Float literal autoboxing

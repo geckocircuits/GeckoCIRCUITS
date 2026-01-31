@@ -19,7 +19,9 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Stream stores PrintStream reference for output redirection")
 public final class OutputWarningStream extends BufferedOutputStream {
 
     private final PrintStream _ps;

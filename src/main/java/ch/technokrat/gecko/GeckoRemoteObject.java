@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.net.ServerSocket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -44,6 +45,7 @@ import java.util.logging.Logger;
  *
  */
 @SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.NullAssignment"})
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer reference for RMI invocation")
 public class GeckoRemoteObject {
 
     public GeckoRemoteObject() {        

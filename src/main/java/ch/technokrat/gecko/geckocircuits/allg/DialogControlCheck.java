@@ -20,11 +20,13 @@ import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control netlist reference for port checking")
 public class DialogControlCheck extends javax.swing.JDialog {
     private final NetzlisteCONTROL _nlc;
     

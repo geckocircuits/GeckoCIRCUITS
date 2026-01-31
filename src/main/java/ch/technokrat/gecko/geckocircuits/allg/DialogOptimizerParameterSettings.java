@@ -34,7 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores optimizer data reference for parameter configuration")
 public class DialogOptimizerParameterSettings extends GeckoDialog {
     private static final String TXT_HELP =
                 "\nParameters (name-value pairs) must match the parameters defined in the simulation model, \ne.g. $Rload. "

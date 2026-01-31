@@ -43,7 +43,9 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Field stores suggestion data list for auto-complete")
 public final class SuggestionField extends JTextField {
 
     private static final long serialVersionUID = 1756202080423312153L;

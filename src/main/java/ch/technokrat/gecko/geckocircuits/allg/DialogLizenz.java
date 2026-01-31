@@ -25,13 +25,15 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog; 
+import javax.swing.JDialog;
 import java.net.URL;
 import javax.swing.border.EtchedBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores license text buffer for display")
 public class DialogLizenz extends JDialog implements WindowListener, ActionListener {
     private JButton knOK;
     private StringBuffer sbInfoTxt; 

@@ -38,7 +38,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.tools.*;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.JavaCompiler.CompilationTask;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Compiler stores MainWindow reference for optimization code execution")
 public class GeckoJavaCompiler {
 
     // fields contain source code, that is also saved in the JAVA-object .ipes stuff

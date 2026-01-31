@@ -24,11 +24,13 @@ import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores schematic editor reference for search operations")
 public final class DialogFindInModel extends javax.swing.JDialog {
 
     private final SchematicEditor2 _se;

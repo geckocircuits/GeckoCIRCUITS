@@ -13,10 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores MainWindow reference for simulation control")
 public final class MemoryWarning extends javax.swing.JDialog {
     private final MainWindow _fenster;
 

@@ -13,15 +13,17 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
-import javax.swing.ImageIcon; 
-import javax.swing.JFrame; 
-import java.net.URL; 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import java.net.URL;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores Java compiler reference for optimization code")
 public class DialogJavaCompilerOptimizer extends JFrame {
     
     private GeckoJavaCompiler geckoJavaCompiler;
