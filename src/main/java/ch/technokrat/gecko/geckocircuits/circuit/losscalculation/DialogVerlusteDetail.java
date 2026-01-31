@@ -28,10 +28,13 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_BAD_FIELD",
+        justification = "Dialog is not serialized in this application")
 public final class DialogVerlusteDetail extends GeckoDialog {
 
-    private final VerlustBerechnungDetailed _lossCalculation;
+    private final transient VerlustBerechnungDetailed _lossCalculation;
     private final JPanel _lowerPanel = new JPanel();
     private final JPanel _exitPanel = new JPanel();
     private final DetailedSwitchingLossesPanel _switchingLossPanel = new DetailedSwitchingLossesPanel();

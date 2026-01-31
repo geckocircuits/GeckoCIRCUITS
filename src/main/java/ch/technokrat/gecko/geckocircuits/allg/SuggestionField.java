@@ -45,7 +45,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Field stores suggestion data list for auto-complete")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
+        justification = "Field stores suggestion data list for auto-complete; JTextField is not serialized in this application")
 public final class SuggestionField extends JTextField {
 
     private static final long serialVersionUID = 1756202080423312153L;
@@ -53,7 +54,7 @@ public final class SuggestionField extends JTextField {
     private JList<String> _list;
     private List<String> _data = new ArrayList<String>();
     private final List<String> _suggestions = new ArrayList<String>();
-    private InterruptableMatcher _matcher;
+    private transient InterruptableMatcher _matcher;
     private Font _busy;
     private Font _regular;
     private String _lastWord = "";

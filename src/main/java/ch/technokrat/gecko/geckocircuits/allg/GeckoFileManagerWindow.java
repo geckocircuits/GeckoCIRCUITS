@@ -33,20 +33,21 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author anstupar
  */
-@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog intentionally stores references to external GUI components for interaction")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
+        justification = "Dialog intentionally stores references to external GUI components for interaction; dialog is not serialized")
 public class GeckoFileManagerWindow extends javax.swing.JDialog {
 
-    private VerlustBerechnungDetailed _losses = null;
+    private transient VerlustBerechnungDetailed _losses = null;
     private final String _fileExtension;
     private final String _fileType;
     private final StorageType _newFileType = StorageType.EXTERNAL;
     private final JFileChooser _addFilesDialog = new JFileChooser();
-    private final List<GeckoFile> _newFilesToAdd = new ArrayList<GeckoFile>();
+    private final transient List<GeckoFile> _newFilesToAdd = new ArrayList<GeckoFile>();
     private final DefaultListModel<GeckoFile> _existingFilesList = new DefaultListModel<>();
     private final DefaultListModel<GeckoFile> _selectedFilesList = new DefaultListModel<>();
     private boolean _isLossElement = false;
     private boolean _singleFileOnly = true;
-    private final List<GeckoFile> _filesToRemove = new ArrayList<GeckoFile>();
+    private final transient List<GeckoFile> _filesToRemove = new ArrayList<GeckoFile>();
     private DialogNonLinearity nonLinearDialog = null;
     /**
      * pointing to ElementLKDialog text fields, for setting the loss file
