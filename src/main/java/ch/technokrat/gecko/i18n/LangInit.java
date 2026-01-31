@@ -27,8 +27,8 @@ import ch.technokrat.gecko.i18n.resources.EnglishMapper;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
-        justification = "Static fields are intentionally mutable - they store translation maps loaded at runtime based on user language selection; public fields for application-wide translation access")
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"},
+        justification = "Static fields are intentionally mutable - they store translation maps loaded at runtime based on user language selection; public fields for application-wide translation access; static fields hold singleton-style application state")
 public class LangInit extends javax.swing.JDialog implements PropertyChangeListener {
 
     /**
