@@ -524,12 +524,9 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
 
     private void jButtonSaveZoomActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonSaveZoomActionPerformed
         for (GraferV4 grafer : _grafer) {
-            try {
+            if (grafer != null) {
                 grafer.saveCurrentZoom();
                 jButtonLoadZoom.setEnabled(true);
-            } catch (NullPointerException ex) {
-                Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
-
             }
         }
     }//GEN-LAST:event_jButtonSaveZoomActionPerformed

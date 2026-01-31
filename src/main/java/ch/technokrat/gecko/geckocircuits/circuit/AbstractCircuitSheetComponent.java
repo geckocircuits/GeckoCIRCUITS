@@ -41,12 +41,11 @@ public abstract class AbstractCircuitSheetComponent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dpix = dpixValue.getValue();
-                try {
+                // Check for null before accessing to avoid NullPointerException
+                if (SchematicEditor2.Singleton != null && SchematicEditor2.Singleton._visibleCircuitSheet != null) {
                     SchematicEditor2.Singleton.setNewScaling(dpix);
                     SchematicEditor2.Singleton._visibleCircuitSheet.revalidate();
                     SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
-                } catch (NullPointerException ex) {
-                    System.err.println(ex.getMessage());
                 }
             }
         });

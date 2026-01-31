@@ -1449,10 +1449,10 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
         this.setzeAchsenBreiteHoeheX0Y0(laenge_xAchse, laenge_yAchse, posX_xAchse, posY_xAchse, posX_yAchse, posY_yAchse);
         //-------------
-        try {
+        // Check for null arrays before calling method that uses them
+        if (gridNormalX_zugeordneteXAchse != null && gridNormalX_zugeordneteYAchse != null
+                && xShowGridMaj != null && xShowGridMin != null && breitePix != null) {
             this.blendeEventuellGridLinienAus();
-        } catch (NullPointerException e) {
-            Logger.getLogger(GraferImplementation.class.getName()).log(Level.SEVERE, "Nullpointer-Exception after resizing.");
         }
     }
 

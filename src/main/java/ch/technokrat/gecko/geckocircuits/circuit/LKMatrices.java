@@ -264,44 +264,44 @@ public class LKMatrices {
                         a[z][y] += (-1.0);
                     }
 
-                    try {
-                        switch ((int) netzliste.parameter[i1][0]) {
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
+                    // at initialization nodePairDirectVoltageControlledSource[][] is not defined --> all according values set to zero
+                    switch ((int) netzliste.parameter[i1][0]) {
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
 
-                                if (netzliste.parameter[i1][14] == 0) {
-                                    // voltage is function of node-potentials and, therefore, calculated here in matrix A
+                            if (netzliste.parameter[i1][14] == 0) {
+                                // voltage is function of node-potentials and, therefore, calculated here in matrix A
+                                int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
+                                // Check for null before accessing (nodePairDirVoltContSrc may not be initialized)
+                                if (nodePairDVC != null && nodePairDVC[i1] != null) {
                                     double gain = netzliste.parameter[i1][11];
-                                    int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
                                     int x1 = nodePairDVC[i1][0], y1 = nodePairDVC[i1][1];
                                     a[z][x1] += (-gain);
                                     a[z][y1] += (+gain);
                                 }
+                            }
 
-                                break;
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER_NEW:
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER:
-                                double gain2 = netzliste.parameter[i1][11];
-                                a[z][z] = 1.0 / gain2;
-                                a[z][z - 1] = 1;
-                                break;
-                            case SourceType.QUELLE_DIDTCURRENTCONTROLLED_NEW:
-                            case SourceType.QUELLE_DIDTCURRENTCONTROLLED:
-                                double gain3 = netzliste.parameter[i1][11];
-                                a[z][z + 1] += gain3 / dt;
-                                break;
-                            case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
-                            case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
-                                double gain4 = netzliste.parameter[i1][11];
-                                a[z][z - 1] -= gain4;
-                                break;
-                            default:
-                                // No action needed for other source types
-                                break;
-                        }
-
-                    } catch (NullPointerException npe) {
-                    }  // at initialization nodePairDirectVoltageControlledSource[][] is not defined --> all according values set to zero
+                            break;
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER_NEW:
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER:
+                            double gain2 = netzliste.parameter[i1][11];
+                            a[z][z] = 1.0 / gain2;
+                            a[z][z - 1] = 1;
+                            break;
+                        case SourceType.QUELLE_DIDTCURRENTCONTROLLED_NEW:
+                        case SourceType.QUELLE_DIDTCURRENTCONTROLLED:
+                            double gain3 = netzliste.parameter[i1][11];
+                            a[z][z + 1] += gain3 / dt;
+                            break;
+                        case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
+                        case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
+                            double gain4 = netzliste.parameter[i1][11];
+                            a[z][z - 1] -= gain4;
+                            break;
+                        default:
+                            // No action needed for other source types
+                            break;
+                    }
                     break;
                 case LK_M:
                     // wird in LK_LKOP2 abgehandelt

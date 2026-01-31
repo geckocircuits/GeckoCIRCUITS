@@ -553,14 +553,14 @@ public class SimulationsKern implements ISimulationEngine {
     public void setScopeMenuesStartStop() {
         // ganz am Anfang sofort einmal auffrischen:
         for (int i1 = 0; i1 < c.length; i1++) {
-            try {
-                if (c[i1] instanceof ReglerOSZI) {
-                    ((ReglerOSZI) c[i1])._scopeFrame.setScopeMenueEnabled(true);
+            if (c[i1] instanceof ReglerOSZI) {
+                ReglerOSZI oszi = (ReglerOSZI) c[i1];
+                if (oszi._scopeFrame != null) {
+                    oszi._scopeFrame.setScopeMenueEnabled(true);
                 }
-                if (c[i1] instanceof ReglerCISPR16) {
-                    ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(false);
-                }
-            } catch (NullPointerException e) {
+            }
+            if (c[i1] instanceof ReglerCISPR16) {
+                ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(false);
             }
         }
     }
@@ -814,19 +814,18 @@ public class SimulationsKern implements ISimulationEngine {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
+            // Intentionally ignored: sleep interruption is not critical here
         }  // damit es nicht zu einer 'RacingCondition' mit einer eventuell noch laufenden Aktualisierung aus takteAuffrischungScope() kommt
         //---------------------------
         for (int i1 = 0; i1 < c.length; i1++) {
-            try {
-                if (c[i1] instanceof ReglerOSZI) {
-                    ScopeFrame sf = ((ReglerOSZI) c[i1])._scopeFrame;
+            if (c[i1] instanceof ReglerOSZI) {
+                ScopeFrame sf = ((ReglerOSZI) c[i1])._scopeFrame;
+                if (sf != null) {
                     sf.setScopeMenueEnabled(false);
                 }
-                if (c[i1] instanceof ReglerCISPR16) {
-                    ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(true);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            }
+            if (c[i1] instanceof ReglerCISPR16) {
+                ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(true);
             }
         }
     }

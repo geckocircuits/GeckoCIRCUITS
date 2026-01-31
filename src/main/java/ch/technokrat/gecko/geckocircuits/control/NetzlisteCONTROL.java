@@ -500,16 +500,23 @@ public final class NetzlisteCONTROL {
      * @param time
      */
     private void writeData(final double time) {
-        try {
-            float[] scopeData = globalData.getDataArray();
-            for (int i = 0; i < potIndexArray.length; i++) {
+        // Check for null before accessing (can be null during initialization)
+        if (globalData == null || _allSortedCalculatables == null || potIndexArray == null) {
+            return;
+        }
+        float[] scopeData = globalData.getDataArray();
+        if (scopeData == null) {
+            return;
+        }
+        for (int i = 0; i < potIndexArray.length; i++) {
+            if (potIndexArray[i] != null && _allSortedCalculatables[potIndexArray[i][0]] != null
+                    && _allSortedCalculatables[potIndexArray[i][0]]._inputSignal != null
+                    && _allSortedCalculatables[potIndexArray[i][0]]._inputSignal[potIndexArray[i][1]] != null) {
                 scopeData[i] = (float) _allSortedCalculatables[potIndexArray[i][0]]._inputSignal[potIndexArray[i][1]][0];
             }
-
-            globalData.insertValuesAtEnd(scopeData, time);
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
         }
+
+        globalData.insertValuesAtEnd(scopeData, time);
     }
 
     /**
