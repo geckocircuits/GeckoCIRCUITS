@@ -31,8 +31,8 @@ public class DelegateIntSpinner<M extends ModelMVC<Integer>> extends JSpinner
         implements IGenericMVCView<M>, ActionListener {
 
     private static final long serialVersionUID = 759473276284147L;
-    private ModelMVC<Integer> _model;
-    private ChangeListener _changeListener;
+    private transient ModelMVC<Integer> _model;
+    private transient ChangeListener _changeListener;
 
     /**
      *

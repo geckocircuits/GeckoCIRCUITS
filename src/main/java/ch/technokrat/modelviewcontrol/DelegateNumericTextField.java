@@ -22,8 +22,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class DelegateNumericTextField <M extends ModelMVC<Double>> extends JTextField
         implements IGenericMVCView<M>, ActionListener {
         private static final long serialVersionUID = 759956473825447L;
-        private ActionListener _listener;
-        private ModelMVC<Double> _model;
+        private transient ActionListener _listener;
+        private transient ModelMVC<Double> _model;
 
 
         public DelegateNumericTextField() {

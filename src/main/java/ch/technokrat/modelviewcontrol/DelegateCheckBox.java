@@ -29,8 +29,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class DelegateCheckBox<M extends ModelMVC<Boolean>> extends JCheckBox
     implements IGenericMVCView<M>, ActionListener {
         private static final long serialVersionUID = 159473276254167L;
-        private ModelMVC<Boolean> _model;
-    private ActionListener _listener;
+        private transient ModelMVC<Boolean> _model;
+    private transient ActionListener _listener;
 
      /**
      *
