@@ -29,6 +29,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @param <T>
  * @author Andreas Müsing
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Undo model stores source reference and values for undo/redo operations")
 public abstract class AbstractUndoGenericModel<T> extends ModelMVCGeneric<T> implements Serializable{
   private static final long serialVersionUID = 28474838273478583L;
   protected boolean _initialized = false;

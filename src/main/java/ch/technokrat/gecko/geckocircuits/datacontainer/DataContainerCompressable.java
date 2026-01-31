@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Compresses the stored data with a effective difference compression algorithm
@@ -32,6 +33,7 @@ import java.util.logging.Logger;
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Data container shares mean signals reference for scope integration")
 public final class DataContainerCompressable extends AbstractDataContainer implements DataContainerValuesSettable,
         DataContainerIntegralCalculatable {
 

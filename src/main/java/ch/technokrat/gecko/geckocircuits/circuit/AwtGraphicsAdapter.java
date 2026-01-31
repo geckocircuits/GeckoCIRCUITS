@@ -20,19 +20,21 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Adapter that wraps java.awt.Graphics as GeckoGraphics.
- * 
+ *
  * Use this in GUI code to provide the GeckoGraphics interface to
  * GUI-free drawing classes.
- * 
+ *
  * This is the ONLY class that imports java.awt, acting as a bridge
  * between GUI-free drawing code and Swing rendering.
- * 
+ *
  * @author GeckoCIRCUITS Team
  * @since Sprint 15 - GUI-free refactoring
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Adapter stores Graphics reference for drawing operations")
 public class AwtGraphicsAdapter implements GeckoGraphics {
     
     private final Graphics2D g;

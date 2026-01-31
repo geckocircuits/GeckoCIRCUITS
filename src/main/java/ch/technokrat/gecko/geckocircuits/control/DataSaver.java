@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
  * This class is responsible for saving the simulation data to a data file.
  *
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Data saver stores data container reference for efficient data export")
 public final class DataSaver extends Observable implements Observer {
 
     private final AbstractDataContainer _data;

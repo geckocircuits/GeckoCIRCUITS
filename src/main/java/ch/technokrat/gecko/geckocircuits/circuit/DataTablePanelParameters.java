@@ -29,7 +29,9 @@ import javax.swing.JLabel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Table panel stores column titles and parameter map for table display")
 public class DataTablePanelParameters extends JPanel {
 
     private final DataTablePanelParameters.MyTableModel _tableModel;

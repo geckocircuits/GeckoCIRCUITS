@@ -18,8 +18,8 @@ import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
-        justification = "Static capError flag intentionally written from instance methods for cross-component nonlinear capacitor error coordination during simulation")
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Static capError flag for error coordination; public fields for simulation; stores BVector reference")
 public final class CapacitorCalculator extends CircuitComponent implements AStampable, BStampable,
          DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
 

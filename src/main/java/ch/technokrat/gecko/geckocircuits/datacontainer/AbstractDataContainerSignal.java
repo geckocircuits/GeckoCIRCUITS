@@ -13,10 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Signal must share data container reference for efficient data access")
 public abstract class AbstractDataContainerSignal{
   protected AbstractDataContainer _dataContainer;
   protected int _dataContainerIndex;
