@@ -66,7 +66,8 @@ public final class ScopeFrame extends javax.swing.JFrame{
   private static final int DEFAULT_HEIGHT = 500;
 
   // <editor-fold defaultstate="collapsed" desc="AbstractAction for moving an external signal">
-  private final class MoveExternalSignal extends AbstractAction{
+  private static final class MoveExternalSignal extends AbstractAction{
+    private static final long serialVersionUID = 1L;
     GraferV4 _grafer;
     int _keyCode;
 

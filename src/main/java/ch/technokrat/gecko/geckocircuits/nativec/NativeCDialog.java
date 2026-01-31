@@ -187,7 +187,7 @@ public class NativeCDialog extends GeckoDialog {
                                         _selectedLibFile.setFile((String) _fileList.get(0));
                                         jListLibFiles.setSelectedIndex(0);
                                     } catch (Exception exc) {
-                                        System.err.println(exc.getStackTrace());
+                                        exc.printStackTrace();
                                         JOptionPane.showMessageDialog(null, exc.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }

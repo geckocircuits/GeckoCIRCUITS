@@ -17,6 +17,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircu
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.TextFieldBlock;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -25,6 +26,8 @@ import java.util.Map.Entry;
  * @author andreas
  */
 @SuppressWarnings("EqualsWhichDoesntCheckParameterClass") // classMap is a derived cache, inherited equals() is correct
+@SuppressFBWarnings(value = "EQ_DOESNT_OVERRIDE_EQUALS",
+        justification = "classMap is a derived cache - inherited ArrayList.equals() is correct for semantic equality")
 public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
 
     private final Class<?>[] registeredTypes = new Class<?>[]{
