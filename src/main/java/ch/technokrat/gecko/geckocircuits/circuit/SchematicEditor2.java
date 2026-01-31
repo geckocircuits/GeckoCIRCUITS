@@ -44,8 +44,8 @@ import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.GroupableUndoManager;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
-        justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference")
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "NM_FIELD_NAMING_CONVENTION"},
+        justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference; Singleton name is a widely-used pattern in codebase")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
@@ -130,7 +130,6 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         _visibleCircuitSheet.removeMouseMotionListener(this);
         _visibleCircuitSheet.removeKeyListener(win.keyAdapter);
 
-        _visibleCircuitSheet = _circuitSheet;
         _visibleCircuitSheet = newCircuitSheet;
         _visibleCircuitSheet.doSetVisibleAction();
         final JPanel centerPanel = new JPanel();
@@ -265,10 +264,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         Set<String> problematicLabels = checkForMissingLabelReferencesAfterSheetMove();
         if (!problematicLabels.isEmpty()) {
-            String problematicLabelString = "";
+            StringBuilder problematicLabelBuilder = new StringBuilder();
             for (String tmp : problematicLabels) {
-                problematicLabelString += "\n" + "Label: " + tmp;
+                problematicLabelBuilder.append("\n").append("Label: ").append(tmp);
             }
+            String problematicLabelString = problematicLabelBuilder.toString();
             Object[] options = {"Delete label references",
                 "Cancel"};
             int n = JOptionPane.showOptionDialog(GeckoSim._win,
@@ -580,7 +580,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         public boolean add(AbstractCircuitSheetComponent e) {
 
             boolean returnValue = super.add(e);
-            if (e instanceof AbstractCircuitSheetComponent) {
+            // Parameter e is already of type AbstractCircuitSheetComponent, so null check is sufficient
+            if (e != null) {
                 e.setModus(ComponentState.SELECTED);
             }
             return returnValue;
