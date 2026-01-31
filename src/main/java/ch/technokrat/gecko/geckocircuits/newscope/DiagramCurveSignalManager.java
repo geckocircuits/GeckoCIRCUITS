@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.Stack;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Signal manager must share grafer reference for scope coordination")
 public final class DiagramCurveSignalManager{
   private final List<AbstractDiagram> _diagrams = new ArrayList<AbstractDiagram>();
   

@@ -29,8 +29,8 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "Public field for simulation kernel access during running simulation")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Public field for simulation kernel access; stores references to GUI components for simulation coordination")
 public final class SimulationRunner {
 
 	final MainWindow _mainwindow;

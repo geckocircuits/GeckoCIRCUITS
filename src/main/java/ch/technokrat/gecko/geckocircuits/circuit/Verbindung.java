@@ -28,7 +28,9 @@ import java.util.List;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Connection exposes label and coordinates for circuit rendering and netlist generation")
 public class Verbindung extends AbstractCircuitSheetComponent implements ComponentTerminable, Labable {
 
     private boolean _inMoveMode = false;  // wird nur zur De-selektion mittels ESCAPE verwendet 
