@@ -1726,7 +1726,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             switch (returnOption) {
                 case 0:
                     saveFile();
-                    // $FALL-THROUGH$
+                    /* falls through */
                 case 1: // just exit, without saving
                     if (GeckoSim.operatingmode == OperatingMode.STANDALONE) {
                         exitApplication();
