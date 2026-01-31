@@ -37,11 +37,13 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author Tibor Keresztfalvi
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Scope frame must share grafer reference for scope display")
 public final class ScopeFrame extends javax.swing.JFrame{
   private GraferV4 _grafer;
   private ReglerOSZI _regelBlockOSZI;

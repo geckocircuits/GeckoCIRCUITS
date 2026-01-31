@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.nio.charset.StandardCharsets;
 import java.io.StreamTokenizer;
 import java.math.BigDecimal;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 //import Jama.util.*;
 
 /**
@@ -69,7 +70,7 @@ import java.math.BigDecimal;
 @author The MathWorks, Inc. and the National Institute of Standards and Technology.
 @version 5 August 1998
 */
-
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Matrix exposes internal array for performance in numerical computations")
 public final class BigMatrix implements java.io.Serializable {
 
 /* ------------------------

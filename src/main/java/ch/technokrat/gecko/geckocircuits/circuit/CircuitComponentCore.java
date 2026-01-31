@@ -14,21 +14,23 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Core simulation logic for circuit components.
  * NO GUI IMPORTS - extractable to gecko-simulation-core.
- * 
+ *
  * <p>This abstract class contains all the pure simulation logic extracted from
  * CircuitComponent. It has NO dependencies on java.awt, javax.swing, or any
  * UI-related classes.
- * 
+ *
  * <p>The GUI-specific CircuitComponent class extends this to add rendering
  * and property dialog functionality for the desktop application.
- * 
+ *
  * @author GeckoCIRCUITS Team
  * @since 2.0 (refactored for GUI-free extraction)
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Matrix indices exposed for efficient circuit matrix stamping")
 public abstract class CircuitComponentCore implements ICircuitCalculator {
 
     protected int _portNumber = -1;

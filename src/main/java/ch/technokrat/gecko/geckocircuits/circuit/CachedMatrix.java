@@ -15,7 +15,9 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.ShortArrayCache;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ShortMatrixCache;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Matrix solver returns internal array for performance in tight simulation loops")
 public final class CachedMatrix extends AbstractCachedMatrix {
 
     private double[][] _LUDecomp;

@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.math;
 
 //package Jama;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -66,6 +67,7 @@ double rnorm = r.normInf();
 @author The MathWorks, Inc. and the National Institute of Standards and Technology.
 @version 5 August 1998
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Matrix exposes internal array for performance in numerical computations")
 public final class Matrix implements Cloneable, java.io.Serializable {
 
     /* ------------------------

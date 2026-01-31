@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 import ch.technokrat.gecko.geckocircuits.newscope.*;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Null data container shares references with scope components")
 public final class DataContainerNullData extends AbstractDataContainer implements DataContainerValuesSettable,
                                                                                   DataContainerIntegralCalculatable{
   private List<AbstractScopeSignal> _signalNames;
