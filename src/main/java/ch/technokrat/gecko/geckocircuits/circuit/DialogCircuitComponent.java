@@ -38,8 +38,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
-        justification = "Abstract dialog class - subclasses handle initialization properly")
+@SuppressFBWarnings(value = {"CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+        justification = "Abstract dialog class - subclasses handle initialization properly; public fields for subclass access")
 abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> extends GeckoDialog
         implements Schliessable, WindowListener {
 

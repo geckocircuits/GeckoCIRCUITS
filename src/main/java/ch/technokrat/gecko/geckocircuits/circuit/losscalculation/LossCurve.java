@@ -17,7 +17,10 @@ import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public data array for loss curve data access and serialization")
 public abstract class LossCurve {
     
     public double[][] data;

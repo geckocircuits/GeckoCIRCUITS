@@ -40,9 +40,12 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // TODO: Future developer: This class needs refactoring when you have time and understand the full context.
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public fields for nonlinear characteristic data shared during simulation and file I/O")
 public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock
 implements Operationable, Nonlinearable {
 

@@ -35,7 +35,8 @@ import java.util.Collections;
 import java.util.List;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Motor must share potential coupling reference for circuit connectivity")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+        justification = "Motor must share potential coupling reference for circuit connectivity; mechanical state variables for simulation access")
 public abstract class AbstractMotor extends AbstractCircuitBlockInterface implements PotentialCoupable, HiddenSubCircuitable, PostCalculatable {    
     
     private static final double SIXTY_OVER_TWOPI = 60.0 / (2 * Math.PI);
