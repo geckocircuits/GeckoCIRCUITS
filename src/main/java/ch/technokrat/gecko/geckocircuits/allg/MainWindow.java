@@ -788,6 +788,8 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DB_DUPLICATE_BRANCHES",
+            justification = "Both RECENT_CIRCUITS_4 match and new name require same shift operation")
     private void aktualisierePropertiesRECENT(String datnam) {
         if ((datnam.equals(GlobalFilePathes.RECENT_CIRCUITS_1)) || (datnam.isEmpty())) {
             return;

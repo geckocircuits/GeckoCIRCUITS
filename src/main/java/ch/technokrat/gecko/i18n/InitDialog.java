@@ -39,6 +39,8 @@ public class InitDialog extends javax.swing.JFrame {
         // "Yes, Exit" button
         jButton2.addActionListener(new ActionListener() {
             @SuppressWarnings("SpotBugsWarnings")
+            @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DM_EXIT",
+                    justification = "Intentional JVM shutdown on user exit confirmation")
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }

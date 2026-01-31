@@ -1648,6 +1648,8 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     }
 
     @Override
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DM_EXIT",
+            justification = "Intentional JVM shutdown on user request via remote interface")
     public void shutdown() throws RemoteException {
         System.exit(0);
     }
