@@ -33,7 +33,7 @@ import java.util.*;
  * 
  * @author Sprint 3 refactoring
  */
-public class ParameterSerializer {
+public final class ParameterSerializer {
     
     /** Default parameter array size (matches legacy AbstractBlockInterface). */
     public static final int DEFAULT_ARRAY_SIZE = 40;

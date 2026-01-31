@@ -17,6 +17,7 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,6 +28,8 @@ import java.util.Set;
  * Extends TypeInfoCore to add internationalization and description fields.
  * Maintains registry of all component types.
  */
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Abstract class - subclasses are final or properly designed to handle constructor exceptions")
 public abstract class AbstractTypeInfo extends TypeInfoCore {        
     
     static Map<Class<? extends AbstractBlockInterface>, AbstractComponentTyp> _classEnumMap = new HashMap<Class<? extends AbstractBlockInterface>, AbstractComponentTyp>();

@@ -20,6 +20,7 @@ import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -37,6 +38,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Abstract dialog class - subclasses handle initialization properly")
 abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> extends GeckoDialog
         implements Schliessable, WindowListener {
 

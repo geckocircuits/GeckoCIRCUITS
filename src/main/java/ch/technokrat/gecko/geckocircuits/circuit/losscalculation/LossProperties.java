@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicTextInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -111,6 +112,8 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
         }
     }
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+            justification = "Assertion is design-time check, not runtime exception")
     private class LossCalculatorParallelWrapperWithSplit extends LossCalculatorParallelWrapper
             implements LossCalculationSplittable {
 

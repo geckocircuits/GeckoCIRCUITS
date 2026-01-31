@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import ch.technokrat.gecko.geckocircuits.control.ReglerSaveData;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -246,9 +247,11 @@ public final class DataSaver extends Observable implements Observer {
         }
     }
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+            justification = "Abstract inner class - subclasses properly handle initialization; exception is intentional for missing signals")
     abstract class AbstractLinePrinter {
 
-        final AbstractDataContainer _data;        
+        final AbstractDataContainer _data;
         final File _file;
         final int[] _selectedIndices;
         final ReglerSaveData _settings;

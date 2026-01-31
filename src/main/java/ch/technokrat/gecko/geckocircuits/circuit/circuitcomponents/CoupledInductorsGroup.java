@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 import java.util.List;
 
-public class CoupledInductorsGroup implements AStampable, CurrentCalculatable {
+public final class CoupledInductorsGroup implements AStampable, CurrentCalculatable {
 
     private double[][] inductanceMatrix;
     private double[][] _inverseInductanceMatrix = null;

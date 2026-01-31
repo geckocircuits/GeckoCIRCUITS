@@ -20,7 +20,7 @@ import java.util.ArrayList;
  *
  * @author anstupar
  */
-public class CapacitanceCharacteristic {
+public final class CapacitanceCharacteristic {
 
     private ArrayList<Double> y_val_C;
     private ArrayList<Double> x_val_V;

@@ -13,11 +13,14 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Abstract dialog class - subclasses handle initialization properly")
 public abstract class AbstractDialogWithExternalOption<T extends RegelBlock> extends DialogElementCONTROL<T> {
 
     final JCheckBox _jCheckBoxUseExternal = new JCheckBox("Use external parameters");
