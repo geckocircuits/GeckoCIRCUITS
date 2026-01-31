@@ -22,12 +22,14 @@ import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Our custorm class loader, which allows to load the class files that were compiled internally.
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "ClassLoader stores class map reference for dynamic class loading")
 public final class JavaBlockClassLoader extends URLClassLoader {
     
     private final Map<String, CompiledClassContainer> _classMap;

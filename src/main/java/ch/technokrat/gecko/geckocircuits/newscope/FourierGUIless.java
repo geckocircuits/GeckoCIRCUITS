@@ -17,7 +17,9 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Stores worksheet reference for GUI-less Fourier analysis")
 public final class FourierGUIless {
     private final AbstractDataContainer _worksheet;
     private final String[] _header;

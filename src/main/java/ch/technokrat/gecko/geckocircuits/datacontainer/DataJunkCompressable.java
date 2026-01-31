@@ -21,6 +21,7 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
@@ -33,6 +34,7 @@ import javax.swing.JOptionPane;
  * Float.intBitsToFloat to access the data values. Furhermore, the double values
  * are rounded to less bits than float.
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Data junk stores time series reference for compression operations")
 public final class DataJunkCompressable implements DataJunk {
 
     public static void setMemoryPrecision() {

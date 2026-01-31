@@ -28,7 +28,9 @@ import java.net.URI;
 import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores worksheet and slider values for scope characteristics calculations")
 public class DialogScopeCharacteristics extends GeckoDialog {
 
     private GridBagConstraints _gridBagConst = new GridBagConstraints();

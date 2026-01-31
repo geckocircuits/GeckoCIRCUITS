@@ -22,8 +22,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "NetBeans GUI form generated public fields for external access")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "NetBeans GUI form generated public fields; stores line settable reference for property configuration")
 public class JPanelLineProperties extends javax.swing.JPanel {
 
     private LineSettable _lineSettable;

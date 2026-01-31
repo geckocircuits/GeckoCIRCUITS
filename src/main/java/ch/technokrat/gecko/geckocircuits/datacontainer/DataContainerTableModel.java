@@ -14,7 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 import javax.swing.table.AbstractTableModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Table model stores data container reference for data access")
 public final class DataContainerTableModel extends AbstractTableModel{
   private final AbstractDataContainer _dataContainer;  
   

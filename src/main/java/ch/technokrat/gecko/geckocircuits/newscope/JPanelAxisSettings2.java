@@ -20,8 +20,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "NetBeans GUI form generated public checkbox field")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "NetBeans GUI form generated public field; stores grafer and axis references for settings panel")
 public class JPanelAxisSettings2 extends javax.swing.JPanel {
 
     private GraferV4 _grafer;

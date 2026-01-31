@@ -18,11 +18,13 @@ import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import ch.technokrat.gecko.geckocircuits.newscope.NiceScale;
 import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesArray;
 import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesConstantDt;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Returns time series reference for external data access and visualization")
 public class DataContainerSimple extends AbstractDataContainer implements DataContainerValuesSettable {
 
     // CHECKSTYLE:OFF

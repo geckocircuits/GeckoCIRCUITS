@@ -17,7 +17,9 @@ package ch.technokrat.gecko.geckocircuits.datacontainer;
 import ch.technokrat.gecko.geckocircuits.newscope.AbstractTimeSerie;
 import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesConstantDt;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Returns time series reference for external Fourier analysis and visualization")
 public class DataContainerFourier extends AbstractDataContainer implements DataContainerValuesSettable {
 
     // CHECKSTYLE:OFF

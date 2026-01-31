@@ -27,11 +27,13 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author anstupar
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores GeckoFileable reference for file management operations")
 public final class ExtraFilesWindow extends javax.swing.JDialog {
 
     private final GeckoFileable _geckoFileable;
