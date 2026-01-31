@@ -16,12 +16,14 @@ package ch.technokrat.gecko.geckoscript;
 import java.io.IOException;
 import java.io.OutputStream;
 import javax.swing.JTextArea;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Simple way to "print" to a JTextArea; just say
  * PrintStream out = new PrintStream(new TextAreaOutputStream(myTextArea));
  * Then out.println() et all will all appear in the TextArea.
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Output stream stores text area reference for appending output")
 public final class TextAreaOutputStream extends OutputStream {
 
 	private final JTextArea textArea;

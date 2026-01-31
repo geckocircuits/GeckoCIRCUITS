@@ -16,12 +16,14 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSheet;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
 import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Immutable class, especially the scope input index should never change!
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Signal stores oscilloscope reference for signal name lookup")
 public final class ScopeSignalRegular extends AbstractScopeSignal {
 
     private final int _scopeInputIndex;

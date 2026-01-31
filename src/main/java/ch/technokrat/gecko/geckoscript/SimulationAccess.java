@@ -26,7 +26,9 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Simulation access stores main window reference for GUI interaction")
 public final class SimulationAccess implements GeckoFileable {
 
     final static long DUMMY_BLOCK_ID = -1231231987;

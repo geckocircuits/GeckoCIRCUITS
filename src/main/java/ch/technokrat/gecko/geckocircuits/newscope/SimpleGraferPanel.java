@@ -18,8 +18,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
-        justification = "Assertion is design-time check - no-arg constructor should never be called at runtime")
+@SuppressFBWarnings(value = {"CT_CONSTRUCTOR_THROW", "EI_EXPOSE_REP2"},
+        justification = "Assertion is design-time check; stores grafer reference for panel display")
 public class SimpleGraferPanel extends javax.swing.JPanel {
 
     final GraferV4 _grafer;

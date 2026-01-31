@@ -24,7 +24,9 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Fourier reconstruction stores coefficient arrays for analysis")
 public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListener, MouseMotionListener {
 
     //----------------------------

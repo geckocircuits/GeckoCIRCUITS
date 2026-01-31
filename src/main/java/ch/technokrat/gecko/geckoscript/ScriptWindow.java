@@ -38,7 +38,9 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Script window stores simulation access reference for script execution")
 public final class ScriptWindow extends javax.swing.JFrame {
     ExtraFilesWindow _extSourceWindow;
     private boolean _extWindowInit = false;

@@ -46,8 +46,10 @@ import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"deprecation", "serial", "this-escape"})
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores Fourier data arrays and worksheet reference for analysis")
 public class DialogFourierDiagramm extends JDialog implements ComponentListener {
 
     //-------------------

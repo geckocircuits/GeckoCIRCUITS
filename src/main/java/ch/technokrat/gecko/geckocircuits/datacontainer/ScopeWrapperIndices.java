@@ -16,11 +16,13 @@ package ch.technokrat.gecko.geckocircuits.datacontainer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Wrapper stores global data container reference for index mapping")
 public final class ScopeWrapperIndices {
 
     private final List<Integer> _originalGlobalIndices;
