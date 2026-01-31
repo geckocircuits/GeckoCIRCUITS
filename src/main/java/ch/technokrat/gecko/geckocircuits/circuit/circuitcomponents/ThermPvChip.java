@@ -38,11 +38,13 @@ import java.awt.Window;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Waermequelle: Leit- und Schaltverluste von Leistungshalbleitern
 // --> Messunsg von Strom und Spannung durch LK_D oder LK_S
 // --> Ermittlung der Verluste ueber Datenblattwerte (parameter[] von LK_D und LK_S)
 // --> Realisierung mittels einer signalgesteuerten Stromquelle
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes component coupling for thermal loss calculation")
 public final class ThermPvChip extends AbstractCircuitBlockInterface implements ComponentCoupable, CurrentMeasurable,
         HiddenSubCircuitable, PostCalculatable, DirectVoltageMeasurable {
 

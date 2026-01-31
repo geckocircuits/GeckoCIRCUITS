@@ -29,8 +29,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Leistungskreis-IGBT (Knickkennlinie, Modifikation des THYR)
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes anti-parallel diode for MOSFET circuit model")
 public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable {
     public static final AbstractTypeInfo TYPE_INFO = 
             new CircuitTypeInfo(MOSFET.class, "MOSFET", I18nKeys.MOSFET, I18nKeys.IDEALIZED_METAL_OXIDE_FIELD_EFFECT);

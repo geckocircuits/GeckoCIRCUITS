@@ -19,7 +19,9 @@ import ch.technokrat.gecko.geckocircuits.control.javablock.ReglerJavaFunction;
 import ch.technokrat.gecko.geckocircuits.nativec.ReglerNativeC;
 import java.util.HashMap;
 import java.util.Map;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Enum exposes type info for component configuration")
 public enum ControlTyp implements AbstractComponentTyp {
 
     C_VOLTMETER(1, ReglerVOLT.tinfo),

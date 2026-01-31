@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit.component;
 
 import java.util.*;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Registry for managing component parameters (UserParameter instances).
@@ -41,6 +42,7 @@ import java.util.*;
  * @since Sprint 3 - Circuit Refactoring
  * @param <P> The parameter type (typically UserParameter or a compatible interface)
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Registry stores adapter reference for parameter access")
 public class ParameterRegistry<P> {
     
     /**

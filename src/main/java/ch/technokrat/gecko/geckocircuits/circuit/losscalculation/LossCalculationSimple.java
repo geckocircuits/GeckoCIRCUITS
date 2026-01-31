@@ -15,7 +15,9 @@ package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractSemiconductor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ForwardVoltageDropable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores semiconductor reference for loss calculation")
 public final class LossCalculationSimple implements AbstractLossCalculatorFabric {    
     public static final double UK_DEFAULT_VALUE = 400.0;
         
