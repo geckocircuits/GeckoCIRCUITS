@@ -61,7 +61,7 @@ public class GeckoRemoteObject {
     private boolean doProxyCheck = true;
     private static String _pathToJava = "";
     
-    public class RemoteInvocationHandler implements InvocationHandler {
+    public final class RemoteInvocationHandler implements InvocationHandler {
 
         private final Object object;
         private final Map<Method, Method> _methodMap = new HashMap<Method, Method>();

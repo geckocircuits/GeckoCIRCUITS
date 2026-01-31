@@ -22,7 +22,7 @@ import java.util.Collections;
  * See Intel mkl user's guide for more details
  * 
  */
-public class SymmetricSparseMatrix {
+public final class SymmetricSparseMatrix {
 
     public double[] acsr;
     double[] AcsrComplex;

@@ -61,7 +61,7 @@ public class GeckoRemote {
     private static RemoteInvocationHandler _invocationHandler;
     static boolean doProxyCheck = true;
 
-    public static class RemoteInvocationHandler implements InvocationHandler {
+    public static final class RemoteInvocationHandler implements InvocationHandler {
 
         private final Object object;
         private final Map<Method, Method> _methodMap = new HashMap<Method, Method>();

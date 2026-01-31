@@ -70,7 +70,7 @@ import java.math.BigDecimal;
 @version 5 August 1998
 */
 
-public class BigMatrix implements java.io.Serializable {
+public final class BigMatrix implements java.io.Serializable {
 
 /* ------------------------
    Class variables

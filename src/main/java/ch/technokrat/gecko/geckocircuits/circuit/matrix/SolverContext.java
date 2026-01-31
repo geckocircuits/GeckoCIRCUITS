@@ -27,7 +27,7 @@ package ch.technokrat.gecko.geckocircuits.circuit.matrix;
  *
  * @author GeckoCIRCUITS Team
  */
-public class SolverContext {
+public final class SolverContext {
 
     /** Backward Euler integration method */
     public static final int SOLVER_BE = 0;

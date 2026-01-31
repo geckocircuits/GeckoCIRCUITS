@@ -17,7 +17,7 @@ package ch.technokrat.gecko.geckocircuits.allg;
  *
  * @author andreas
  */
-public class MemoryWarning extends javax.swing.JDialog {
+public final class MemoryWarning extends javax.swing.JDialog {
     private final MainWindow _fenster;
 
     /**

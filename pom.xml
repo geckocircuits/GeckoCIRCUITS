@@ -30,6 +30,13 @@
   </properties>
 
   <dependencies>
+    <!-- SpotBugs annotations for suppressing warnings -->
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>4.8.6</version>
+      <optional>true</optional>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>

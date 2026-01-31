@@ -30,7 +30,7 @@ import java.nio.channels.FileChannel;
  * of GeckoCIRCUITS / GeckoRemote.
  * @author andrija s.
  */
-public class GeckoMemoryMappedFile {
+public final class GeckoMemoryMappedFile {
      
     private final File _file; //the file being used for communication
     private final MappedByteBuffer _mmb; //the memory-mapped byte buffer the file is mapped to

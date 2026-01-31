@@ -18,7 +18,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-public class GeckoFileChooser {
+public final class GeckoFileChooser {
     
     
     private final JFileChooser _fileChooser;

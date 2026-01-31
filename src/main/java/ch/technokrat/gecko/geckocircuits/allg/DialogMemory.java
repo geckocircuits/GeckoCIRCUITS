@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  *
  * @author andy
  */
-public class DialogMemory extends javax.swing.JFrame {
+public final class DialogMemory extends javax.swing.JFrame {
 
     /**
      * Creates new form DialogMemory

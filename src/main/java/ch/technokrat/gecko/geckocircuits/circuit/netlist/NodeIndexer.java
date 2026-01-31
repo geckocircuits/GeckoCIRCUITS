@@ -38,7 +38,7 @@ import java.util.*;
  * @author Extracted from NetListLK
  * @since Sprint 2 - Circuit Refactoring
  */
-public class NodeIndexer {
+public final class NodeIndexer {
     
     /** Node indices for element X terminals (positive/input) */
     private int[] nodeX;

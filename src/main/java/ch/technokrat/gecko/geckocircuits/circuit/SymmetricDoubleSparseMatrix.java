@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class SymmetricDoubleSparseMatrix {
+public final class SymmetricDoubleSparseMatrix {
 
     public HashMap<Integer, HashSet<Integer>> rowEntries = new HashMap<Integer, HashSet<Integer>>();
     public HashMap<Integer, HashMap<Integer, Double>> rowEntriesValue = new HashMap<Integer, HashMap<Integer, Double>>();

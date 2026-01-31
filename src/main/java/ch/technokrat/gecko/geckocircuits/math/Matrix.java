@@ -66,7 +66,7 @@ double rnorm = r.normInf();
 @author The MathWorks, Inc. and the National Institute of Standards and Technology.
 @version 5 August 1998
  */
-public class Matrix implements Cloneable, java.io.Serializable {
+public final class Matrix implements Cloneable, java.io.Serializable {
 
     /* ------------------------
     Class variables
