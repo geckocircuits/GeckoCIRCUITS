@@ -58,14 +58,14 @@ public class GraferV3 extends JPanel {
     public static final int DOTTED_PLAIN = -3333334;
     public static final int DOTTED_FAT = -3333335;
     //
-    public final static Stroke str_SOLID_PLAIN = new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);
-    public final static Stroke str_INVISIBLE = new BasicStroke(0.1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);  // eigentlich unsichtbar
-    public final static Stroke str_SOLID_FAT_1 = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);
-    public final static Stroke str_SOLID_FAT_2 = new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);
-    public final static Stroke str_DOTTED_PLAIN = new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f, new float[]{4, 4}, 0);
-    public final static Stroke str_DOTTED_FAT = new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f, new float[]{4, 4}, 0);
+    public static final Stroke str_SOLID_PLAIN = new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);
+    public static final Stroke str_INVISIBLE = new BasicStroke(0.1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);  // eigentlich unsichtbar
+    public static final Stroke str_SOLID_FAT_1 = new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);
+    public static final Stroke str_SOLID_FAT_2 = new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f);
+    public static final Stroke str_DOTTED_PLAIN = new BasicStroke(1.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f, new float[]{4, 4}, 0);
+    public static final Stroke str_DOTTED_FAT = new BasicStroke(3.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f, new float[]{4, 4}, 0);
     //
-    public static final String[] FARBEN = /*
+    static final String[] FARBEN = /*  // MS_PKGPROTECT: only used within package
              * TxtI.ti_farbe_GraferV3;
              */ new String[]{"black", "red", "green", "blue", "darkgray", "gray", "ligthgray", "white", "magenta", "cyan", "orange", "yellow", "darkgreen"};
     public static final int BLACK = -3444440;

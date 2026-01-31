@@ -70,10 +70,10 @@ import javax.swing.event.ChangeListener;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "MS_CANNOT_BE_FINAL"},
         justification = "MainWindow is effectively a singleton - static fields hold application-wide state that is initialized and managed by the single MainWindow instance")
 public final class MainWindow extends JFrame implements WindowListener, ActionListener, ComponentListener {
-    
+
 
     int _simMenuIndex = 2; // simulation menu is third in bar.
     JMenuBar _menuBar; // to provide dynamic changing of the menu bar, need to make this a member.
@@ -108,7 +108,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     private boolean speicherVorgangLaeuft = false;
     //--------------------------------------
     //-------------------------
-    // simple parameter-set for GeckoOPTIMIZER --> 
+    // simple parameter-set for GeckoOPTIMIZER -->
     public static final OptimizerParameterData optimizerParameterData = new OptimizerParameterData();
     public static final JScrollPane seScroll = new JScrollPane();
     //-------------------------
@@ -125,7 +125,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public static boolean IS_BRANDED = false;
     private SuggestionField _searchTestField;
     public LastComponentButton _lastComponentButton;
-    public final static JPanel _northPanel = new JPanel();
+    public static final JPanel _northPanel = new JPanel();
 
     /*
      * // steady-state analysis >> private int numberOfDomains= 3; // LK=0, THERM=1, CONTR=2 private double Tss=20e-3; // to be

@@ -19,6 +19,8 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
  * @author andreas
  */
 @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.PublicAttribute", "PMD.StaticNonFinal"}) // Public fields required by simulator architecture
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
+        justification = "_time is intentionally mutable - it tracks the current simulation time and is updated during simulation")
 public abstract class AbstractControlCalculatable {
     public static final double SIGNAL_THRESHOLD = 0.5;
     public static double _time = 0; // Shared simulation time state

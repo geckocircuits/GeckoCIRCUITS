@@ -30,8 +30,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Helper class: Format for project data storage
+@SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
+        justification = "readFileVersion is intentionally mutable - it tracks the version of the file being read during deserialization")
 public final class ProjectData implements Serializable {
     private static final long serialVersionUID = 1L;
 

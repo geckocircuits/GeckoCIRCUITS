@@ -25,7 +25,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import ch.technokrat.modelviewcontrol.ModelMVC;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
+        justification = "dpix is intentionally mutable - it is updated by dpixValue listener when user changes circuit scaling")
 public abstract class AbstractCircuitSheetComponent {
 
     public static int dpix;  // Abstand 2er Rasterpunkte in Pixelpunkten                

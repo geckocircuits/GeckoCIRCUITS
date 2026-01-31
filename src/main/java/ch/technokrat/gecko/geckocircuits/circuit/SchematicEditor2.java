@@ -42,7 +42,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.GroupableUndoManager;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
+        justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration and singleton pattern")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
@@ -50,7 +53,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     public MainWindow win;
     //
     private boolean simulatorAktiviert = false;
-    public static boolean zustandGeaendert = false;  // zeigt an, ob 'QuitWithoutSaving' aktiviert werden muss
+    static boolean zustandGeaendert = false;  // MS_PKGPROTECT: only used within package - zeigt an, ob 'QuitWithoutSaving' aktiviert werden muss
     //
     private static final double CLICK_RADIUS_RELATIVE = 0.5;  // [0...1]
     // Ansicht: verschiedene Varianten -->
@@ -65,7 +68,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
     public static Font foLKSmall = new Font("Arial", Font.PLAIN, 8);
     public static Font circuitFont = new Font("Arial", Font.PLAIN, 12);
-    public static int DY_ZEILENABSTAND_TXT = circuitFont.getSize() + 3;  // Parameter, Namen und andere Beschriftungen --> vertikaler Zeilenabstand
+    static int DY_ZEILENABSTAND_TXT = circuitFont.getSize() + 3;  // MS_PKGPROTECT: only used within package - Parameter, Namen und andere Beschriftungen --> vertikaler Zeilenabstand
     // die eigentlichen Elemente (LK, CONTROL, THERM) -->
     //    
     private AbstractBlockInterface _selectedTextFieldToMove;

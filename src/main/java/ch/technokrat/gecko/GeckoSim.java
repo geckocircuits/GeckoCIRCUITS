@@ -57,22 +57,24 @@ import javax.swing.UIManager;
  * - System property: java -Doperatingmode=HEADLESS -jar gecko.jar
  * - Command line flag: java -jar gecko.jar -headless
  */
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "MS_SHOULD_BE_FINAL"},
+        justification = "Static fields are intentionally mutable for runtime configuration across different operating modes")
 public class GeckoSim {
 
-    public static long startTime;
+    static long startTime;  // MS_PKGPROTECT: only used within package
     public static MainWindow _win;
     static GeckoSim _geckoSim;
-    public static boolean _initialShow = true;
+    public static final boolean _initialShow = true;  // MS_SHOULD_BE_FINAL: never modified after init
     public static double xx = 4.67;
     // property stuff
-    public static Properties defaultProps;
+    static Properties defaultProps;  // MS_PKGPROTECT: only used within package
     public static Properties applicationProps;
     public static final String DEFAULT_PROPERTY_FILE = "/defaultProperties.prp";
-    public static String APPLICATION_PROPERTY_FILE;
-    public static boolean mainLoaded = false;
-    public static boolean remoteLoaded = false;
+    static String APPLICATION_PROPERTY_FILE;  // MS_PKGPROTECT: only used within package
+    static boolean mainLoaded = false;  // MS_PKGPROTECT: only used within package
+    static boolean remoteLoaded = false;  // MS_PKGPROTECT: only used within package
     public static boolean remoteLoading = true;
-    public static boolean mmfLoaded = false;
+    static boolean mmfLoaded = false;  // MS_PKGPROTECT: only used within package
     public static boolean mmfLoading = true;
     public static boolean compiler_toolsjar_missing = true;
     /**
@@ -80,7 +82,7 @@ public class GeckoSim {
      * Andy.
      */
     public static boolean _testSuccessful = false;
-    public static boolean _isTestingMode = false;
+    public static final boolean _isTestingMode = false;  // MS_SHOULD_BE_FINAL: test mode flag never changed at runtime
     public static OperatingMode operatingmode = OperatingMode.STANDALONE;  // default
 
     static {
