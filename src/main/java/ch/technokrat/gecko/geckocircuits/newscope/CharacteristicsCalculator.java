@@ -24,8 +24,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
-@SuppressFBWarnings(value = "MS_EXPOSE_REP",
-        justification = "calculateFabric intentionally returns cached _valueCache instance for performance - callers expect cached object")
 public final class CharacteristicsCalculator {
 
     private static CharacteristicsCalculator _valueCache = null;
@@ -302,6 +300,8 @@ public final class CharacteristicsCalculator {
         return CharacteristicsCalculator.calculateFabric(worksheet, rows, rng1, rng2);
     }
 
+    @SuppressFBWarnings(value = "MS_EXPOSE_REP",
+            justification = "Intentionally returns cached _valueCache instance for performance - callers expect cached object")
     public static CharacteristicsCalculator calculateFabric(final AbstractDataContainer worksheet, final int[] rows,
             final double rng1, final double rng2) {
         if (isAlreadyCalculated(worksheet, rows, rng1, rng2)) {

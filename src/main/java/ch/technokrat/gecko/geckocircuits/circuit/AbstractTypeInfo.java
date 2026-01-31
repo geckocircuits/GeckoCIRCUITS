@@ -28,8 +28,8 @@ import java.util.Set;
  * Extends TypeInfoCore to add internationalization and description fields.
  * Maintains registry of all component types.
  */
-@SuppressFBWarnings(value = {"CT_CONSTRUCTOR_THROW", "MS_MUTABLE_COLLECTION_PKGPROTECT"},
-        justification = "Abstract class - subclasses are final; _exportImportEnumMap is intentionally public for component type registration")
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Abstract class - subclasses are final or properly designed to handle constructor exceptions")
 public abstract class AbstractTypeInfo extends TypeInfoCore {
 
     static Map<Class<? extends AbstractBlockInterface>, AbstractComponentTyp> _classEnumMap = new HashMap<Class<? extends AbstractBlockInterface>, AbstractComponentTyp>();
@@ -37,6 +37,8 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
     static Map<String, AbstractTypeInfo> _stringTypeMap = new HashMap<String, AbstractTypeInfo>();
     static Map<AbstractComponentTyp, AbstractTypeInfo> _enumTypeMap = new HashMap<AbstractComponentTyp, AbstractTypeInfo>();
 
+    @SuppressFBWarnings(value = "MS_MUTABLE_COLLECTION_PKGPROTECT",
+            justification = "_exportImportEnumMap is intentionally public for component type registration across packages")
     public static final Map<String, AbstractComponentTyp> _exportImportEnumMap = new HashMap<String, AbstractComponentTyp>();
     
     static Set<Class<? extends AbstractBlockInterface>> _uniqueClassSet = new HashSet<Class<? extends AbstractBlockInterface>>();
