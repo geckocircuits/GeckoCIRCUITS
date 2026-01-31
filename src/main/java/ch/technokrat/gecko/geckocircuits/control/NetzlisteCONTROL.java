@@ -23,7 +23,10 @@ import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalc
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public fields for control block and calculator arrays shared during simulation")
 public final class NetzlisteCONTROL {
 
     public static final DataContainerGlobal globalData = new DataContainerGlobal();

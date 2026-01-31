@@ -28,7 +28,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public data vector for external data exchange with Simulink/external tools")
 public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Comparable, VariableTerminalNumber {
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerToEXTERNAL.class, "ToEXT", I18nKeys.EXPORT_DATA_TO_SIMULINK);

@@ -29,7 +29,10 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public calculator field for simulation access to control block calculators")
 public abstract class RegelBlock extends AbstractBlockInterface implements Serializable {
 
     public final static double[] EMPTY_OUTPUT = new double[]{};
