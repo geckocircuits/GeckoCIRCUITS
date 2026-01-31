@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JPanel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Diagram component intentionally shares mutable UI components with other scope classes")
 public abstract class AbstractDiagram extends JPanel {
 
     public final DiagramSettings _diagramSettings;

@@ -14,7 +14,10 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Calculation result class with public fields for direct access to computed values")
 public final class QuasiPeakCalculator {
 
     private static final double A_LOWER_LIMIT = 9000;

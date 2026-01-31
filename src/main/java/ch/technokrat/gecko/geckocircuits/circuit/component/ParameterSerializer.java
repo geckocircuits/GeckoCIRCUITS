@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit.component;
 
 import java.util.*;
+import java.util.Arrays;
 
 /**
  * Handles serialization and deserialization of component parameters.
@@ -337,24 +338,24 @@ public final class ParameterSerializer {
     public static class ImportResult {
         private final double[] values;
         private final String[] names;
-        
+
         public ImportResult(double[] values, String[] names) {
-            this.values = values;
-            this.names = names;
+            this.values = values != null ? Arrays.copyOf(values, values.length) : null;
+            this.names = names != null ? Arrays.copyOf(names, names.length) : null;
         }
-        
+
         public double[] getValues() {
-            return values;
+            return values != null ? Arrays.copyOf(values, values.length) : null;
         }
-        
+
         public String[] getNames() {
-            return names;
+            return names != null ? Arrays.copyOf(names, names.length) : null;
         }
-        
+
         public double getValue(int index) {
             return values[index];
         }
-        
+
         public String getName(int index) {
             return names[index];
         }

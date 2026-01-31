@@ -16,6 +16,7 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerMeanWrapper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -24,6 +25,7 @@ import java.util.Stack;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Mean signals manager must share references with scope and wrapper components")
 public final class DefinedMeanSignals{
   private final List<ScopeSignalMean> _scopeMeanSignals = new ArrayList<ScopeSignalMean>();
   private DataContainerMeanWrapper _meanWrapper;

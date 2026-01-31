@@ -38,8 +38,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JSpinner;
 
-@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
-        justification = "Constructor exceptions are expected on initialization failure")
+@SuppressFBWarnings(value = {"CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+        justification = "Constructor exceptions are expected on initialization failure; NetBeans GUI form generated public fields")
 public final class UZiDisplay extends GeckoDialog {
 
     static long counter = 0;

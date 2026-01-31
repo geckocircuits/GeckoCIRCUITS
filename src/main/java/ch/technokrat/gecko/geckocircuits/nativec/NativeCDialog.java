@@ -47,11 +47,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * GUI Dialog to load the Native Libraries
  * @author DIEHL Controls Ricardo Richter
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog intentionally stores references to external GUI components for interaction")
 public class NativeCDialog extends GeckoDialog {
     private final DefaultListModel _fileList;
     private final Container _con;

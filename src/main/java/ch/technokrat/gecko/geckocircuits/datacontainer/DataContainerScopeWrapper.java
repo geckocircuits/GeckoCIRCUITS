@@ -15,6 +15,7 @@ package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 //CHECKSTYLE:OFF
 import ch.technokrat.gecko.geckocircuits.newscope.*;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,6 +28,7 @@ import java.util.Observer;
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Wrapper intentionally shares references with wrapped containers for efficient data access")
 public final class DataContainerScopeWrapper extends AbstractDataContainer implements DataContainerIntegralCalculatable {
 
     private final AbstractDataContainer _globalContainer;

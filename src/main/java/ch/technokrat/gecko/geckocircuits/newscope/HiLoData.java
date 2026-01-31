@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 
 /**
@@ -25,6 +26,8 @@ import java.util.List;
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Immutable value object with intentionally public final fields for performance")
 public final class HiLoData {
 
     private static final float LARGE_VALUE = 1E30f;    

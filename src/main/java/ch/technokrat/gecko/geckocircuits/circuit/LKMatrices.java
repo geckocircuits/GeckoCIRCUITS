@@ -24,8 +24,11 @@ import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Circui
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.DiodeCharacteristic;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.NumberFormat;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Performance-critical matrix class with direct field access for simulation speed")
 public class LKMatrices {
 
     private static final double FAST_NULL_R = 1e-9;

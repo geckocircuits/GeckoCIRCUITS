@@ -27,11 +27,13 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author anstupar
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog intentionally stores references to external GUI components for interaction")
 public class GeckoFileManagerWindow extends javax.swing.JDialog {
 
     private VerlustBerechnungDetailed _losses = null;

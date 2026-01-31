@@ -14,11 +14,15 @@
 
 package ch.technokrat.gecko.geckocircuits.scope;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * This is for backward-compatibility with old scope. In future, replace with "newscope":
  * @author andy
  */
 @Deprecated
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Legacy data class with direct field access for performance")
 public class HiLoData {
     public float yLo = 1E30f;
     public float yHi = -1E30f;

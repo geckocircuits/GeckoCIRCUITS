@@ -22,8 +22,11 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.InductorCoupa
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.MutualInductance;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import ch.technokrat.gecko.geckocircuits.control.AbstractPotentialMeasurement;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Performance-critical netlist class with direct field access for simulation speed")
 public class NetListLK {
 
     public int knotenMAX, spgQuelleMAX;  // knotenMAX ... Gesamt-Knotenanzahl minus 'Ground';  spgQuelleMAX ... Summe der SpgQuellen plus LKOP2-Elemente

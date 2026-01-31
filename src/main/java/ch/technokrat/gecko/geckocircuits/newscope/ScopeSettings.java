@@ -20,11 +20,14 @@ package ch.technokrat.gecko.geckocircuits.newscope;
  */
 import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Legacy scope settings with direct field access for GUI compatibility")
 public class ScopeSettings implements Serializable {
 
     public static final int ANZ_DIAGRAM_MAX = 12;
