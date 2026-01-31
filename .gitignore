@@ -35,8 +35,6 @@ release/
 
 # Folders not part of main branch structure
 gecko-webapp/
-otherGeckoCIRCUITS/
-GeckoCIRCUITS/
 
 # Eclipse IDE files
 .classpath
