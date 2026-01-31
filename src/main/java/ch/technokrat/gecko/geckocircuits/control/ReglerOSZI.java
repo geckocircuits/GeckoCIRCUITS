@@ -40,7 +40,8 @@ import java.util.Stack;
  *
  * @author andreas
  */
-@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Scope block exposes data container for efficient simulation data access")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "SE_TRANSIENT_FIELD_NOT_RESTORED"},
+        justification = "Scope block exposes data container for efficient simulation data access; transient fields are repopulated during component initialization")
 public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumber,
         SpecialNameVisible {
     private static final long serialVersionUID = 1L;

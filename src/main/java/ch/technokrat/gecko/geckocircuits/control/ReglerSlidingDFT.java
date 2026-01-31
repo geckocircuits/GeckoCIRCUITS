@@ -29,7 +29,8 @@ import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Stores frequency data list for DFT configuration with undo support")
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_TRANSIENT_FIELD_NOT_RESTORED"},
+        justification = "Stores frequency data list for DFT configuration with undo support; transient fields repopulated during import")
 public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
     private static final long serialVersionUID = 1L;
 

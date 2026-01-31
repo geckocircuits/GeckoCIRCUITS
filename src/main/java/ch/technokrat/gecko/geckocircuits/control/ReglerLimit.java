@@ -27,7 +27,10 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "Transient fields are repopulated during component initialization or import")
 public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerminalStateable {
     private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerLimit.class, "LIMIT", I18nKeys.LIMITER);

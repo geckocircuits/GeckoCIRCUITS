@@ -45,7 +45,10 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "Transient fields are repopulated during component initialization")
 public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTerminalStateable,
         GeckoFileable, Operationable {
     private static final long serialVersionUID = 1L;

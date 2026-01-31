@@ -21,7 +21,10 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "Transient ActionListener fields are re-created after deserialization in constructor")
 public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
     private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerPI.class, "PI", I18nKeys.PI_CONTROL);

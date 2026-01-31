@@ -33,8 +33,8 @@ import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Helper class: Format for project data storage
-@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "EI_EXPOSE_REP2", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
-        justification = "readFileVersion is intentionally mutable; constructor stores external references; public fields for file format serialization compatibility")
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "EI_EXPOSE_REP2", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SE_TRANSIENT_FIELD_NOT_RESTORED"},
+        justification = "readFileVersion is intentionally mutable; constructor stores external references; public fields for file format serialization compatibility; transient fields are repopulated during project load")
 public final class ProjectData implements Serializable {
     private static final long serialVersionUID = 1L;
 
