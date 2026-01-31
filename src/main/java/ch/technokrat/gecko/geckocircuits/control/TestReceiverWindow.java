@@ -790,7 +790,9 @@ public final class TestReceiverWindow extends JFrame {
             dcs1.setSignalName(SIGNAL_NAMES[i], i);
         }
 
-        for (float freq = 150000; freq < 1000000; freq += 50000) {
+        // Use int counter to avoid floating-point precision issues (FL_FLOATS_AS_LOOP_COUNTERS)
+        for (int freqStep = 0; freqStep < 17; freqStep++) {
+            float freq = 150000 + freqStep * 50000;
             float[] values = new float[]{getClassAValue(freq), getClassBValue(freq), Float.NaN, Float.NaN, Float.NaN, Float.NaN, Float.NaN, Float.NaN};
             dcs1.insertValuesAtEnd(values, freq);
         }

@@ -13,11 +13,15 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * TODO: this is the biggest mess I have ever seen. Pleas clean anybody up!
  * @author andreas
  */
 @SuppressWarnings({"PMD.AvoidLiteralsInIfConditions", "PMD.AssignmentInOperand"}) // Complex PWM/matrix converter control logic
+@SuppressFBWarnings(value = "FL_FLOATS_AS_LOOP_COUNTERS",
+        justification = "Phase normalization uses double for precision; bounded while loop prevents infinite iteration")
 public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
 
     
