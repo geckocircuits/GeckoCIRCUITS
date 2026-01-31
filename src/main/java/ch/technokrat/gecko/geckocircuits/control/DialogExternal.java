@@ -25,11 +25,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author Andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control block reference for configuration")
 public class DialogExternal extends javax.swing.JDialog {
 
     private final RegelBlockSimulink _regelBlock;

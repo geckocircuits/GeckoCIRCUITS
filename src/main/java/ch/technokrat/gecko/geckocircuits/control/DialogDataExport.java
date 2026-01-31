@@ -31,11 +31,13 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores references to data containers and saver for export configuration")
 public final class DialogDataExport extends javax.swing.JDialog {
 
     private boolean _txtFormat;

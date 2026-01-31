@@ -28,8 +28,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"PMD.TooManyFields", "PMD.TooManyMethods", "PMD.CyclomaticComplexity"})
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores transfer function and control references for configuration")
 public final class DialogTransferFunction extends javax.swing.JFrame {
 
     private final DefaultListModel<ComplexPrinter> _nomModel = new DefaultListModel<ComplexPrinter>();

@@ -13,7 +13,10 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 @SuppressWarnings("PMD.ArrayIsStoredDirectly") // Output signal reference required by simulator architecture
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Wrapper stores calculator reference for signal delegation")
 public final class SignalCalculatorExternalWrapper extends AbstractControlCalculatable
         implements InitializableAtSimulationStart {
 

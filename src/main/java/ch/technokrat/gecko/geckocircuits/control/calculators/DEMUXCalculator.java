@@ -14,7 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.ReglerDemux;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores parent control block reference for DEMUX operation")
 public final class DEMUXCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
     private final ReglerDemux _parent;
 

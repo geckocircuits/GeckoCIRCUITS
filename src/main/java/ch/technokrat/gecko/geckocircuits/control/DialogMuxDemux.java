@@ -17,7 +17,9 @@ import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control block reference for port configuration")
 public class DialogMuxDemux extends javax.swing.JDialog {
 
     private final RegelBlock _regelBlock;

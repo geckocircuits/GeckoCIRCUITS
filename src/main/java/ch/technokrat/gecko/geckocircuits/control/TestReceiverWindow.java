@@ -38,7 +38,9 @@ import java.util.Set;
 import java.util.Stack;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores CISPR16 control block reference for EMI test receiver calculations")
 public final class TestReceiverWindow extends JFrame {
 
     private static final TechFormat tcf = new TechFormat();

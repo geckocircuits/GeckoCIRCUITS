@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes data container for external EMI analysis and visualization")
 public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisible,
         Operationable {
     private static final long serialVersionUID = 1L;

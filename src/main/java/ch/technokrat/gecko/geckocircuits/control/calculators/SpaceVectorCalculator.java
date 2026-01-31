@@ -14,7 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.SpaceVectorDisplay;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores display reference for space vector visualization")
 public final class SpaceVectorCalculator extends AbstractControlCalculatable {
     private final SpaceVectorDisplay _svd;
     private static final int NO_INPUTS = 9;

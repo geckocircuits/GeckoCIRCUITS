@@ -33,11 +33,13 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author Raffael2
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores data array reference for SSA plot display")
 public final class DialogSSAPlot extends GeckoDialog {
     
     private double[][] _data;

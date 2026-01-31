@@ -18,7 +18,9 @@ import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupling;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes component coupling for external component referencing")
 public abstract class ReglerWithSingleReference extends RegelBlock implements ComponentCoupable {
 
     final ComponentCoupling _coupling = new ComponentCoupling(1, this, new int[]{0});

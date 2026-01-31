@@ -13,10 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores thyristor control reference for parameter configuration")
 public class DialogThyristorControl extends javax.swing.JFrame {
 
     ReglerThyristorControl _thyrControl;
