@@ -42,8 +42,10 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.ModelMVC;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     @SuppressWarnings("rawtypes")
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Block interface exposes terminals and parameters for circuit connectivity and configuration")
     public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
         implements ComponentTerminable {
 

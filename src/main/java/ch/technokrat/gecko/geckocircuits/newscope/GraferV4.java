@@ -27,7 +27,9 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Grafer must share data container and manager references for scope visualization")
 public final class GraferV4 extends JPanel {
 
     private static final long serialVersionUID = 364726123473711L;

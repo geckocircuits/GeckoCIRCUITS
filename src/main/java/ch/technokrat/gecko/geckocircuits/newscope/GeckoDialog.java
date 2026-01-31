@@ -28,11 +28,13 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores parent reference for positioning and modal behavior")
 public class GeckoDialog extends JDialog {
     
 

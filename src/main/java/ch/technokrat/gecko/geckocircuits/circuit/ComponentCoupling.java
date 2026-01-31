@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Component coupling must share references for circuit connectivity")
 public final class ComponentCoupling {
 
     public final AbstractBlockInterface[] _coupledElements;

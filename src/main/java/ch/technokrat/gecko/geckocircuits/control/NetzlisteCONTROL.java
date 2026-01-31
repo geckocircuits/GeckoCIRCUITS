@@ -25,8 +25,8 @@ import java.util.*;
 import java.util.Map.Entry;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "Public fields for control block and calculator arrays shared during simulation")
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP"},
+        justification = "Public fields for control block and calculator arrays shared during simulation; exposes maps for scope data access")
 public final class NetzlisteCONTROL {
 
     public static final DataContainerGlobal globalData = new DataContainerGlobal();

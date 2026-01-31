@@ -16,15 +16,17 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Adapter that wraps a GeckoUndoableEdit as a Swing UndoableEdit.
- * 
+ *
  * Use this in GUI code to integrate GUI-free edits with Swing's UndoManager.
- * 
+ *
  * @author GeckoCIRCUITS Team
  * @since Sprint 15 - GUI-free refactoring
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Adapter must share delegate reference for undo/redo operations")
 public class GeckoUndoableEditAdapter implements UndoableEdit {
     
     private final GeckoUndoableEdit delegate;
