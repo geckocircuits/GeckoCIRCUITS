@@ -82,7 +82,7 @@ public class GeckoSim {
      * Andy.
      */
     public static boolean _testSuccessful = false;
-    public static final boolean _isTestingMode = false;  // MS_SHOULD_BE_FINAL: test mode flag never changed at runtime
+    public static boolean _isTestingMode = false;  // Mutable: set by tests to enable test mode
     public static OperatingMode operatingmode = OperatingMode.STANDALONE;  // default
 
     static {
