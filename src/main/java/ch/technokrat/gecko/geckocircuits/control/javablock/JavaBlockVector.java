@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
 import ch.technokrat.gecko.ControlCalculatable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,17 +83,19 @@ public class JavaBlockVector extends AbstractJavaBlock {
     }
 
     @Override
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
     public void findAndLoadClass() {
         System.out.println("JavaBlockVector.findAndLoadClass() - Loading compiled class...");
         System.out.println("Compilation status: " + _compileObject.getCompileStatus());
         System.out.println("Compiler message: " + _compileObject.getCompilerMessage());
         System.out.println("Class name: " + _compileObject.getClassName());
-        
+
         if (_compileObject.getCompileStatus() != CompileStatus.COMPILED_SUCCESSFULL) {
             System.err.println("ERROR: Compilation was not successful! Status: " + _compileObject.getCompileStatus());
             return;
         }
-        
+
         try {
             _classNameFileMap = _compileObject.getClassNameFileMap();
 

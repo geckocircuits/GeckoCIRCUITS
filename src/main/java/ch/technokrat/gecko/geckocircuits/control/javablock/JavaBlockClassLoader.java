@@ -89,7 +89,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
                 final URL url = new URL("file://" + path + "/");
                 System.out.print(url);
 
-                return Class.forName(name, true, new URLClassLoader(new URL[] { url }));
+                return Class.forName(name, true, createUrlClassLoader(url));
             } catch (MalformedURLException | ClassNotFoundException ex) {
 
             }
@@ -97,5 +97,15 @@ public final class JavaBlockClassLoader extends URLClassLoader {
             // return super.findClass(name);
         }
     }
-    
+
+    /**
+     * Creates a URLClassLoader for dynamic class loading.
+     * The ClassLoader creation outside doPrivileged is intentional for scripting/plugin functionality.
+     */
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
+    private static URLClassLoader createUrlClassLoader(URL url) {
+        return new URLClassLoader(new URL[] { url });
+    }
+
 }

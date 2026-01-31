@@ -15,6 +15,7 @@ package ch.technokrat.gecko.geckocircuits.control.javablock;
 
 import ch.technokrat.gecko.ControlCalculatable;
 import ch.technokrat.gecko.ControlCalculatableMatrix;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,6 +69,8 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
     }
 
     @Override
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
     public void findAndLoadClass() {
         try {
             _classNameFileMap = _compileObject.getClassNameFileMap();

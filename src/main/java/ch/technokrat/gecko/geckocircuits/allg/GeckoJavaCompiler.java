@@ -291,20 +291,9 @@ public class GeckoJavaCompiler {
                 //------------------
                 _compileStatus = COMPILESTATUS.COMPILED_SUCCESSFULL;
                 compilerMessage += "\n \tCOMPILATION FINISHED SUCESSFULLY!";
-                // Try to access the class and run its main method                
+                // Try to access the class and run its main method
 
-                ClassLoader cl = new ClassLoader() {
-
-                    @Override
-                    protected Class<?> findClass(String name) throws ClassNotFoundException {
-                        JavaFileObject jfo = output.get(name);
-                        if (jfo != null) {
-                            byte[] bytes = ((RAMJavaFileObject) jfo).baos.toByteArray();
-                            return defineClass(name, bytes, 0, bytes.length);
-                        }
-                        return super.findClass(name);
-                    }
-                };
+                ClassLoader cl = createDynamicClassLoader(output);
 
                 Class<?> c = Class.forName(_className, false, cl);
                 Class<?> clazz = c;// Class.forName(_className, true, urlCl);                
@@ -394,6 +383,26 @@ public class GeckoJavaCompiler {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Creates a dynamic ClassLoader for loading compiled classes.
+     * The ClassLoader creation outside doPrivileged is intentional for scripting functionality.
+     */
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
+    private static ClassLoader createDynamicClassLoader(final Map<String, JavaFileObject> output) {
+        return new ClassLoader() {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                JavaFileObject jfo = output.get(name);
+                if (jfo != null) {
+                    byte[] bytes = ((RAMJavaFileObject) jfo).baos.toByteArray();
+                    return defineClass(name, bytes, 0, bytes.length);
+                }
+                return super.findClass(name);
+            }
+        };
     }
 
     public void test() {

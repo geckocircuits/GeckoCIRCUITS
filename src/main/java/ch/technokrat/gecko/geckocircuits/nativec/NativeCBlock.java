@@ -14,22 +14,25 @@
 
 package ch.technokrat.gecko.geckocircuits.nativec;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Vector;
 
 /**
  * Used to maintain the Classloader and call Native Functions
- * 
+ *
  * @author DIEHL Controls Ricardo Richter
  */
+@SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+        justification = "ClassLoader creation is intentional for native C code integration")
 public class NativeCBlock {
     NativeCClassLoader _customCClassLoader;
     Class _nativeCWrapperClass;
     InterfaceNativeCWrapper _nativeCWrapperObj;
     private double[] _xINVector;
     private double[] _xOUTVector;
-    
+
     public NativeCBlock () {
         _customCClassLoader = new NativeCClassLoader();
     }

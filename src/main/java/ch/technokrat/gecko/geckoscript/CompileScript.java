@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.tools.SimpleJavaFileObject;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
@@ -189,6 +190,8 @@ public class CompileScript {
     
     
         
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
     public static void findAndLoadClass(ScriptWindow sw) {
         try {
             _classNameFileMap = _compileObject.getClassNameFileMap();
