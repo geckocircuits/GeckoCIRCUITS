@@ -76,23 +76,17 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         return XIN;
     }
 
-    private class compareOrder implements Comparator {
+    private static class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
-        public int compare(final Object compare1, final Object compare2) {
+        public int compare(final RegelBlock compare1, final RegelBlock compare2) {
             if (compare1 instanceof ReglerToEXTERNAL && compare2 instanceof ReglerToEXTERNAL) {
                 final ReglerToEXTERNAL fromExtern1 = (ReglerToEXTERNAL) compare1;
                 final ReglerToEXTERNAL fromExtern2 = (ReglerToEXTERNAL) compare2;
-                if (fromExtern1.externalOrderNumber == fromExtern2.externalOrderNumber) {
-                    return 0;
-                }
-                if (fromExtern1.externalOrderNumber < fromExtern2.externalOrderNumber) {
-                    return -1;
-                }
-                return 1;
+                return Integer.compare(fromExtern1.externalOrderNumber, fromExtern2.externalOrderNumber);
             }
-
-            assert false;
             return 0;
         }
     }
@@ -116,7 +110,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
 
     public void insertOrderCorrect(final int orderNo) {
         externalOrderNumber = orderNo;
-        Collections.sort(toExternalsInternal, new compareOrder());
+        Collections.sort(toExternalsInternal, new CompareOrder());
     }
 
     public void setExternalName(final String name) {

@@ -189,23 +189,17 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         return YOUT;
     }
 
-    private final class CompareOrder implements Comparator {
+    private static final class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
-        public int compare(final Object obj1, final Object obj2) {
+        public int compare(final RegelBlock obj1, final RegelBlock obj2) {
             if (obj1 instanceof ReglerFromEXTERNAL && obj2 instanceof ReglerFromEXTERNAL) {
                 final ReglerFromEXTERNAL toExtern1 = (ReglerFromEXTERNAL) obj1;
                 final ReglerFromEXTERNAL toExtern2 = (ReglerFromEXTERNAL) obj2;
-                if (toExtern1.externalOrderNumber == toExtern2.externalOrderNumber) {
-                    return 0;
-                }
-                if (toExtern1.externalOrderNumber < toExtern2.externalOrderNumber) {
-                    return -1;
-                }
-                return 1;
+                return Integer.compare(toExtern1.externalOrderNumber, toExtern2.externalOrderNumber);
             }
-
-            assert false;
             return 0;
         }
     }

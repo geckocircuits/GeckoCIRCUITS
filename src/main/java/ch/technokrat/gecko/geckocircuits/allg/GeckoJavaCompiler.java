@@ -84,6 +84,14 @@ public class GeckoJavaCompiler {
             } else if (_compileStatus == COMPILESTATUS.COMPILE_ERROR) {
                 return false;
             }
+
+            // Check for null methods before invocation (replaces catching NullPointerException)
+            if (_setGecko == null || _run_script == null) {
+                System.out.println("Error: Could not invoke external Java method!");
+                _compileStatus = COMPILESTATUS.COMPILE_ERROR;
+                return false;
+            }
+
 //            ausgangssignal = (double[]) _externYOUT.invoke(null, new Object[]{xIN, t});
             _setGecko.invoke(null, new Object[]{gecko});
             _run_script.invoke(null);
@@ -92,12 +100,12 @@ public class GeckoJavaCompiler {
             //showMsg("Exception in main: " + ex.getTargetException());
             ex.getTargetException().printStackTrace();  // Exception in the main method that we just tried to run
             return false;
-        } catch (NullPointerException npe) {
-            System.out.println("Error: Could not invoke external Java method!");
-            _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-            return false;
-        } catch (Exception ex) {
+        } catch (IllegalAccessException ex) {
             System.err.println(ex.toString());
+            return false;
+        } catch (IOException ex) {
+            System.err.println("IO error during compilation: " + ex.toString());
+            _compileStatus = COMPILESTATUS.COMPILE_ERROR;
             return false;
         }
         return true;

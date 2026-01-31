@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import java.util.List;
  *
  * @author andy
  */
-class MyTableComparator implements Comparator<List<Double>> {
+class MyTableComparator implements Comparator<List<Double>>, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public MyTableComparator() {
     }
