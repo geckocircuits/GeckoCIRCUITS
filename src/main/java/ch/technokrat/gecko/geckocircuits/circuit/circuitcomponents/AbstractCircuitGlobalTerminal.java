@@ -96,7 +96,8 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
     
     @Override
     public Set<? extends GlobalTerminable> getAllGlobalTerminals() {
-        return ALL_GLOBALS_INTERNAL.get(getTypeEnum());
+        final Set<AbstractCircuitGlobalTerminal> terminals = ALL_GLOBALS_INTERNAL.get(getTypeEnum());
+        return terminals == null ? Collections.emptySet() : Collections.unmodifiableSet(terminals);
     }
 
     @Override
