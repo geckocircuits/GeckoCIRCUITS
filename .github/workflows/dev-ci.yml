@@ -24,8 +24,9 @@ jobs:
         cache: maven
 
     - name: Run tests with coverage
-      # Note: 3 expected test errors in headless environment (NativeCTest, ModelResultsTest)
-      # These are environment-specific and don't indicate real failures
+      # Note: 3 expected test ERRORS in headless environment (NativeCTest, ModelResultsTest)
+      # Maven distinguishes Errors (environment issues) from Failures (assertion failures)
+      # The check below only fails on actual test Failures, not environment Errors
       run: mvn clean verify jacoco:report -Dmaven.test.failure.ignore=true
 
     - name: Check test results

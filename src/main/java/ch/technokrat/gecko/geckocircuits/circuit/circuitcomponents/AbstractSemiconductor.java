@@ -109,6 +109,9 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
     }
 
     public List<GeckoFile> getFiles() {
+        if (!(getVerlustBerechnung() instanceof LossProperties)) {
+            return Collections.emptyList();
+        }
         List<GeckoFile> returnValue = new ArrayList<GeckoFile>();
         GeckoFile lossFile = ((LossProperties) getVerlustBerechnung()).getDetailedLosses().lossFile;
         returnValue.add(lossFile);

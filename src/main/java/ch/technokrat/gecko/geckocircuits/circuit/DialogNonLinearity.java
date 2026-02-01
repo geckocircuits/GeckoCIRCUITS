@@ -20,7 +20,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLi
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.net.URI;
+import java.net.URL;
 import java.awt.Dimension;
 import javax.swing.*;
 
@@ -33,7 +33,7 @@ public class DialogNonLinearity extends GeckoDialog {
         _content = new NonLinearDialogPanel(this, elementLK, yAxisLog);        
         setContentPane(_content);
         try {
-            this.setIconImage((new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "gecko.gif").toURL())).getImage());
+            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
         } catch (Exception e) { // NOPMD
             // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }
