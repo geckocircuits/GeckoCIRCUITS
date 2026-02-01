@@ -28,7 +28,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn package assembly:single
+      # Skip tests - they require X11/GUI and native libraries not available in CI
+      # Tests are run separately by dev-ci.yml and build-test.yml workflows
+      run: mvn package assembly:single -DskipTests
     - name: Create installation package
       run: jpackage --name gecko --dest release --app-version 1.0 --input target --main-jar gecko-1.0-jar-with-dependencies.jar --java-options "-Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2"
 
