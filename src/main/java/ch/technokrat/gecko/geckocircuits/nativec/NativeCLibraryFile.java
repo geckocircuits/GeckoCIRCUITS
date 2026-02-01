@@ -19,10 +19,10 @@ import java.io.FileNotFoundException;
 
 /**
  * Wrapper Class for a Library File that checks if the file exists
- * 
+ *
  * @author DIEHL Controls Ricardo Richter
  */
-public class NativeCLibraryFile {
+public final class NativeCLibraryFile {
     private long _timeStamp;
     private String _libPathName;
     private File _libFile;

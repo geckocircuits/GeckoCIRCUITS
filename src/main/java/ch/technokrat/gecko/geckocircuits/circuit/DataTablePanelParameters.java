@@ -29,7 +29,9 @@ import javax.swing.JLabel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Table panel stores column titles and parameter map for table display")
 public class DataTablePanelParameters extends JPanel {
 
     private final DataTablePanelParameters.MyTableModel _tableModel;
@@ -251,7 +253,7 @@ public class DataTablePanelParameters extends JPanel {
          * then the last column would contain text ("true"/"false"),
          * rather than a check box.
          */
-        public Class getColumnClass(final int column) {
+        public Class<?> getColumnClass(final int column) {
             if (column == 0) {
                 return String.class;
             } else {

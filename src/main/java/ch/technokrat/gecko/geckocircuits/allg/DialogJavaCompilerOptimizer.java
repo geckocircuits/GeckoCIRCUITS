@@ -13,15 +13,17 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
-import javax.swing.ImageIcon; 
-import javax.swing.JFrame; 
-import java.net.URL; 
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import java.net.URL;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores Java compiler reference for optimization code")
 public class DialogJavaCompilerOptimizer extends JFrame {
     
     private GeckoJavaCompiler geckoJavaCompiler;
@@ -89,25 +91,6 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         +"\n// Now we can proceed with the simulation:\n"
         +"GECKO.continueCalculation(); \n" 
         +""; 
-    private String example2= ""
-        +"String[] nameOpt= new String[]{\"$r\",\"$c\"}; \n"
-        +"double rmin=10, rmax=100, r=rmin, cmin=100e-6, cmax=1e-3, c=cmin;\n"
-        +"double[] valueOpt= new double[]{r,c};  \n"
-        +"GECKO.setOptimizerParameterData(nameOpt,valueOpt); \n"
-        +"for (int j1=0;  j1<10;  j1++) {\n"
-        +"    r= rmin +j1/10.0*(rmax-rmin);\n"
-        +"    for (int j2=0;  j2<10;  j2++) {\n"
-        +"        c= cmin +j2/10.0*(cmax-cmin);\n"
-        +"        valueOpt[0]= r;\n"
-        +"        valueOpt[1]= c;\n"
-        +"        GECKO.setSimParameter(1e-6,20e-3,-1);  \n"
-        +"        GECKO.startCalculation(); \n"
-        +"        while (GECKO.isSimulationRunning()) { try { Thread.sleep(500); } catch (Exception ie) {} } \n"
-        +"        double[][] zv= GECKO.getZV(); \n"
-        +"        for (int )"
-        +"    }\n"
-        +"}\n"
-        +""; 
     //--------------
     /*
     --------------
@@ -128,7 +111,13 @@ public class DialogJavaCompilerOptimizer extends JFrame {
     
     
     public DialogJavaCompilerOptimizer (GeckoJavaCompiler geckoJavaCompiler) {
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception ex) {}
+        try {
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
+        } catch (Exception ex) {
+            // Icon loading is optional - dialog works without it
+        }
         this.initComponents();        
         //-------
         this.geckoJavaCompiler= geckoJavaCompiler; 
@@ -448,7 +437,7 @@ private void jButtonExample2ActionPerformed(java.awt.event.ActionEvent evt) {//N
 
 private void jButtonExample1ActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonExample1ActionPerformed
     jTextAreaCode.setText(example1); 
-    jTextAreaImports.setText("import ch.technokrat.gecko.geckocircuits.allg.Fenster;\n");
+    jTextAreaImports.setText("import ch.technokrat.gecko.geckocircuits.allg.MainWindow;\n");
     jTextAreaStaticInit.setText("");
     jTextAreaVariables.setText("");     
 }//GEN-LAST:event_jButtonExample1ActionPerformed

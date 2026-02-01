@@ -13,6 +13,10 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Simple value holder for time function - direct access for performance")
 public class TimeFunctionConstant extends TimeFunction {
 
     public double _value;

@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
@@ -26,9 +25,10 @@ import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 
-public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTerminable {                
+public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTerminable {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTERMINAL.class, "CONTROL_TERMINAL", I18nKeys.CONTROL_TERMINAL);
-    private final TerminalToWrap _wrapped = new TerminalToWrap(this);
+    private transient final TerminalToWrap _wrapped = new TerminalToWrap(this);
     
     public ReglerTERMINAL() {
         super();
@@ -181,5 +181,14 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     @Override
     public EnumTerminalLocation getTerminalLocation() {
         return _wrapped.getTerminalLocation();
+    }
+    
+    @Override
+    public int getForeGroundColorRgb() {
+        java.awt.Color c = getForeGroundColor();
+        if (c == null) {
+            return 0x000000;
+        }
+        return (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
     }
 }

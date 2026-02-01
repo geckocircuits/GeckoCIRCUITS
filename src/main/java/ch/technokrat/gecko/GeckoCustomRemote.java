@@ -17,10 +17,10 @@ import ch.technokrat.gecko.geckoscript.AbstractGeckoCustom;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,18 +31,19 @@ import java.util.logging.Logger;
  *
  * @author anstupar
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Static _lastSessionIDActive tracks session across instances for callback coordination")
 public final class GeckoCustomRemote extends AbstractGeckoCustom implements GeckoRemoteInterface, CallbackServerInterface {
 
     private boolean _free = true; //denotes if this instance of GeckoCIRCUITS is free for a remote connection
-    private static long _lastSessionIDActive = 0;
-    public static Map<Long,CallbackClientInterface> clients;
-    
+    private static volatile long _lastSessionIDActive = 0;
+    public static final Map<Long,CallbackClientInterface> clients = new ConcurrentHashMap<>();
+
     private boolean _acceptsExtraConnections = false; //denotes if this instance of GeckoCIRCUITS allows more than one client to connect
     private int _numberOfExtraConnectionsAccepted = 0; //denotes how many additional clients (besides the first one) this instance of GeckoCIRCUITS will accept
 
     public GeckoCustomRemote(final SimulationAccess access) {
         super(access, null);
-        clients = new HashMap<Long,CallbackClientInterface>();        
     }
 
     public static void printErrorLn(final String message) {

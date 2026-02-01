@@ -52,8 +52,8 @@ public class TerminalControlInput extends TerminalControl {
             xShift = - stringLength;
         }
         if (!_label.getLabelString().isEmpty()) {
-            graphics2D.drawString(_label.getLabelString(), (int) (_parentElement.dpix * getPosition().x) + xShift, 
-                    (int) (_parentElement.dpix * getPosition().y) + DY_TEXT);
+            graphics2D.drawString(_label.getLabelString(), (int) (AbstractCircuitSheetComponent.dpix * getPosition().x) + xShift, 
+                    (int) (AbstractCircuitSheetComponent.dpix * getPosition().y) + DY_TEXT);
         }
     }
     

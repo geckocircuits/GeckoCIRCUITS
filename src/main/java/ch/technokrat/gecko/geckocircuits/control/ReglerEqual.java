@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.EqualCalculatorMultiInput;
 import ch.technokrat.gecko.geckocircuits.control.calculators.EqualCalculatorTwoInputs;

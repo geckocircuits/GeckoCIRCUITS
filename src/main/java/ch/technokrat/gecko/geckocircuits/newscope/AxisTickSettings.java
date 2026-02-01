@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 /**
@@ -81,11 +81,11 @@ final class AxisTickSettings {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nnoMinorTicks"), _anzTicksMinor);
-        DatenSpeicher.appendAsString(ascii.append("\nisShowLabelsMaj"), _showLabelsMaj);        
-        DatenSpeicher.appendAsString(ascii.append("\nisShowLabelsMin"), _showLabelsMin);
-        DatenSpeicher.appendAsString(ascii.append("\ntickLengthMaj"), _tickLengthMaj);
-        DatenSpeicher.appendAsString(ascii.append("\ntickLengthMin"), _tickLengthMin);
+        ProjectData.appendAsString(ascii.append("\nnoMinorTicks"), _anzTicksMinor);
+        ProjectData.appendAsString(ascii.append("\nisShowLabelsMaj"), _showLabelsMaj);        
+        ProjectData.appendAsString(ascii.append("\nisShowLabelsMin"), _showLabelsMin);
+        ProjectData.appendAsString(ascii.append("\ntickLengthMaj"), _tickLengthMaj);
+        ProjectData.appendAsString(ascii.append("\ntickLengthMin"), _tickLengthMin);
     }
 
     void importASCII(final TokenMap axisMap) {                

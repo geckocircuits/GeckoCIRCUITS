@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeckoCIRCUITS WebSocket Client</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: #333;
+        }
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.running {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .log {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-left: 3px solid #007bff;
+            padding-left: 10px;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+            background: #ffe0e0;
+        }
+        .log-entry.success {
+            border-left-color: #28a745;
+            background: #e0ffe0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦎 GeckoCIRCUITS WebSocket Client</h1>
+        <p class="subtitle">Real-time simulation progress monitoring</p>
+
+        <div class="input-group">
+            <label for="wsUrl">WebSocket URL:</label>
+            <input type="text" id="wsUrl" value="http://localhost:8080/ws" />
+        </div>
+
+        <div class="input-group">
+            <label for="simulationId">Simulation ID:</label>
+            <input type="text" id="simulationId" placeholder="Enter simulation ID to monitor" />
+        </div>
+
+        <div>
+            <button id="connectBtn" onclick="connect()">Connect</button>
+            <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+            <button onclick="clearLog()">Clear Log</button>
+        </div>
+
+        <div id="statusContainer" class="status disconnected">
+            Status: Disconnected
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+        </div>
+
+        <div class="log" id="log">
+            <div class="log-entry">Ready to connect...</div>
+        </div>
+    </div>
+
+    <!-- SockJS and STOMP libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+    <script>
+        let stompClient = null;
+        let subscription = null;
+
+        function setStatus(message, className) {
+            const statusEl = document.getElementById('statusContainer');
+            statusEl.textContent = 'Status: ' + message;
+            statusEl.className = 'status ' + className;
+        }
+
+        function addLog(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logEl.appendChild(entry);
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '<div class="log-entry">Log cleared...</div>';
+        }
+
+        function updateProgress(progress, status) {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            progressContainer.style.display = 'block';
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress.toFixed(1) + '%';
+
+            // Change color based on status
+            if (status === 'COMPLETED') {
+                progressFill.style.background = 'linear-gradient(90deg, #4CAF50, #45a049)';
+            } else if (status === 'FAILED') {
+                progressFill.style.background = 'linear-gradient(90deg, #f44336, #da190b)';
+            } else {
+                progressFill.style.background = 'linear-gradient(90deg, #2196F3, #0b7dda)';
+            }
+        }
+
+        function connect() {
+            const wsUrl = document.getElementById('wsUrl').value;
+            const simulationId = document.getElementById('simulationId').value;
+
+            if (!simulationId) {
+                alert('Please enter a simulation ID');
+                return;
+            }
+
+            addLog('Connecting to ' + wsUrl + '...');
+            setStatus('Connecting...', 'disconnected');
+
+            const socket = new SockJS(wsUrl);
+            stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function(frame) {
+                addLog('Connected to WebSocket!', 'success');
+                setStatus('Connected', 'connected');
+
+                document.getElementById('connectBtn').disabled = true;
+                document.getElementById('disconnectBtn').disabled = false;
+
+                // Subscribe to simulation topic
+                const topic = '/topic/simulations/' + simulationId;
+                addLog('Subscribing to ' + topic);
+
+                subscription = stompClient.subscribe(topic, function(message) {
+                    const update = JSON.parse(message.body);
+                    handleProgressUpdate(update);
+                });
+
+                addLog('Subscribed successfully. Waiting for updates...', 'success');
+
+            }, function(error) {
+                addLog('Connection error: ' + error, 'error');
+                setStatus('Connection Failed', 'failed');
+                document.getElementById('connectBtn').disabled = false;
+            });
+        }
+
+        function disconnect() {
+            if (stompClient !== null) {
+                if (subscription !== null) {
+                    subscription.unsubscribe();
+                }
+                stompClient.disconnect();
+            }
+
+            addLog('Disconnected from WebSocket', 'info');
+            setStatus('Disconnected', 'disconnected');
+
+            document.getElementById('connectBtn').disabled = false;
+            document.getElementById('disconnectBtn').disabled = true;
+            document.getElementById('progressContainer').style.display = 'none';
+        }
+
+        function handleProgressUpdate(update) {
+            const { status, progress, updateType, error, currentTime, elapsedMs } = update;
+
+            // Log the update
+            let logMessage = `${updateType}: ${status} - ${progress.toFixed(1)}%`;
+            if (currentTime !== undefined) {
+                logMessage += ` (t=${currentTime.toFixed(6)}s)`;
+            }
+            if (elapsedMs !== undefined) {
+                logMessage += ` [${elapsedMs}ms]`;
+            }
+
+            const logType = updateType === 'ERROR' ? 'error' :
+                           status === 'COMPLETED' ? 'success' : 'info';
+
+            addLog(logMessage, logType);
+
+            // Update progress bar
+            updateProgress(progress, status);
+
+            // Update status
+            if (status === 'RUNNING') {
+                setStatus('Running: ' + progress.toFixed(1) + '%', 'running');
+            } else if (status === 'COMPLETED') {
+                setStatus('Completed!', 'completed');
+            } else if (status === 'FAILED') {
+                setStatus('Failed: ' + (error || 'Unknown error'), 'failed');
+                addLog('Error: ' + error, 'error');
+            } else {
+                setStatus(status, status.toLowerCase());
+            }
+        }
+
+        // Auto-connect if simulation ID in URL params
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const simId = urlParams.get('simulationId');
+            if (simId) {
+                document.getElementById('simulationId').value = simId;
+                addLog('Auto-connecting with simulation ID from URL: ' + simId);
+                setTimeout(connect, 500);
+            }
+        };
+    </script>
+</body>
+</html>

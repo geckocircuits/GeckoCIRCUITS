@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.allg.FormatJTextField;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitLabel;
 import javax.swing.JLabel;
 
-class ReglerTerminalDialog extends DialogElementCONTROL {
+class ReglerTerminalDialog extends DialogElementCONTROL<ReglerTERMINAL> {
 
     private FormatJTextField terminalLabel;
 

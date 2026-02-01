@@ -19,11 +19,13 @@ import ch.technokrat.gecko.geckocircuits.newscope.ScopeSignalMean;
 import ch.technokrat.gecko.geckocircuits.newscope.ScopeSignalRegular;
 import java.util.ArrayList;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Wrapper shares references to wrapped container for efficient mean signal computation")
 public final class DataContainerMeanWrapper extends AbstractDataContainer {
 
     private final AbstractDataContainer _wrapped;

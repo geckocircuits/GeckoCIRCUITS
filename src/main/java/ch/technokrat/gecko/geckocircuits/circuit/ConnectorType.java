@@ -14,11 +14,15 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
-import java.awt.Color;
 
 /**
- *
+ * Enumeration of connector types with associated display properties.
+ * 
+ * This class is GUI-free: it returns color values as RGB integers rather than
+ * java.awt.Color objects. Convert to Color in GUI code if needed.
+ * 
  * @author andreas
+ * @since Sprint 15 - GUI-free refactoring
  */
 public enum ConnectorType {
 
@@ -44,47 +48,84 @@ public enum ConnectorType {
             case LK:
             case RELUCTANCE:
             case LK_AND_RELUCTANCE:
-                return SchematischeEingabe2._lkDisplayMode;
+                return SchematicEditor2._lkDisplayMode;
             case CONTROL:
-                return SchematischeEingabe2._controlDisplayMode;
+                return SchematicEditor2._controlDisplayMode;
             case THERMAL:
-                return SchematischeEingabe2._controlDisplayMode;
+                return SchematicEditor2._controlDisplayMode;
             default:
-                return SchematischeEingabe2._lkDisplayMode;
+                return SchematicEditor2._lkDisplayMode;
         }        
     }
 
-    Color getBackgroundColor() {
+    /**
+     * Get background color as RGB integer value.
+     * To convert to AWT Color: {@code new java.awt.Color(getBackgroundColorRgb())}
+     */
+    int getBackgroundColorRgb() {
         switch (this) {
             case THERMAL:
-                return GlobalColors.farbeElementTHERMHintergrund;
+                return colorToRgb(GlobalColors.farbeElementTHERMHintergrund);
             case LK:
             case LK_AND_RELUCTANCE:
-                return GlobalColors.farbeElementLKHintergrund;
+                return colorToRgb(GlobalColors.farbeElementLKHintergrund);
             case RELUCTANCE:
-                return GlobalColors.farbeElementRELBACKGROUND;            
+                return colorToRgb(GlobalColors.farbeElementRELBACKGROUND);            
             case CONTROL:
-                return GlobalColors.farbeElementCONTROLHintergrund;
+                return colorToRgb(GlobalColors.farbeElementCONTROLHintergrund);
             case NONE:
             default:
-                return Color.lightGray;
+                return 0xD3D3D3; // Color.lightGray as RGB
         }
     }
+    
+    /**
+     * @deprecated Use getBackgroundColorRgb() for GUI-free code.
+     * For GUI layer only - returns AWT Color.
+     */
+    @Deprecated(since = "Sprint 15", forRemoval = true)
+    java.awt.Color getBackgroundColor() {
+        return new java.awt.Color(getBackgroundColorRgb());
+    }
 
-    Color getForeGroundColor() {
+    /**
+     * Get foreground color as RGB integer value.
+     * To convert to AWT Color: {@code new java.awt.Color(getForeGroundColorRgb())}
+     */
+    int getForeGroundColorRgb() {
         switch (this) {
             case THERMAL:
-                return GlobalColors.farbeFertigElementTHERM;
+                return colorToRgb(GlobalColors.farbeFertigElementTHERM);
             case LK:
             case LK_AND_RELUCTANCE:
-                return GlobalColors.farbeFertigElementLK;
+                return colorToRgb(GlobalColors.farbeFertigElementLK);
             case RELUCTANCE:
-                return GlobalColors.farbeFertigElementRELUCTANCE;
+                return colorToRgb(GlobalColors.farbeFertigElementRELUCTANCE);
             case CONTROL:
-                return GlobalColors.farbeFertigElementCONTROL;
+                return colorToRgb(GlobalColors.farbeFertigElementCONTROL);
             case NONE:
             default:
-                return Color.GRAY;            
+                return 0x808080; // Color.GRAY as RGB           
         }
+    }
+    
+    /**
+     * @deprecated Use getForeGroundColorRgb() for GUI-free code.
+     * For GUI layer only - returns AWT Color.
+     */
+    @Deprecated(since = "Sprint 15", forRemoval = true)
+    java.awt.Color getForeGroundColor() {
+        return new java.awt.Color(getForeGroundColorRgb());
+    }
+    
+    /**
+     * Convert java.awt.Color to RGB integer.
+     * Only used during transition; remove this method once GlobalColors is refactored.
+     */
+    private static int colorToRgb(java.awt.Color color) {
+        if (color == null) {
+            return 0x000000;
+        }
+        return (color.getRed() << 16) | (color.getGreen() << 8) | color.getBlue();
     }
 }

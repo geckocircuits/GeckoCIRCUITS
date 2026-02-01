@@ -32,8 +32,6 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.font.FontRenderContext;
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,9 +45,13 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "Transient fields are repopulated during component initialization")
 public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTerminalStateable,
         GeckoFileable, Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSignalSource.class, "SIGNAL", I18nKeys.SIGNAL_SOURCE);
 
@@ -57,21 +59,21 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
     private static final int IN_TERM_NUMBER_EXTERNAL = 5;
     private static final int IN_TERM_NUMBER_NORMAL = 0;
     private static final int BLOCK_WIDTH = 3;
-    final UserParameter<ControlSourceType> _typQuelle = UserParameter.Builder.
+    final transient UserParameter<ControlSourceType> _typQuelle = UserParameter.Builder.
             <ControlSourceType>start("typQuelle", ControlSourceType.QUELLE_RECHTECK).
             longName(I18nKeys.TYPE_OF_SIGNAL_SOURCE).
             shortName("type").
             arrayIndex(this, 0).
             build();
     private static final double DEFAULT_AMPLITUDE = 10.0;
-    final UserParameter<Double> _amplitudeAC = UserParameter.Builder.
+    final transient UserParameter<Double> _amplitudeAC = UserParameter.Builder.
             <Double>start("amplitudeAC", DEFAULT_AMPLITUDE).
             longName(I18nKeys.PEAK_AMPLITUDE).
             shortName("amplMAX").
             arrayIndex(this, 1).
             build();
     private static final double DEFAULT_FREQUENCY = 50.0;
-    final UserParameter<Double> _frequency = UserParameter.Builder.
+    final transient UserParameter<Double> _frequency = UserParameter.Builder.
             <Double>start("frequenz", DEFAULT_FREQUENCY).
             longName(I18nKeys.FREQUENCY).
             unit("Hz").
@@ -79,14 +81,14 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             arrayIndex(this, 2).
             build();
     private static final int OFFSET_PAR_INDEX = 3;
-    final UserParameter<Double> _offsetDC = UserParameter.Builder.
+    final transient UserParameter<Double> _offsetDC = UserParameter.Builder.
             <Double>start("anteilDC", 0.0).
             longName(I18nKeys.OFFSET_OF_WAVEFORM_FROM_ZERO).
             shortName("offset").
             arrayIndex(this, OFFSET_PAR_INDEX).
             build();
     private static final int PHASE_PAR_INDEX = 4;
-    final UserParameter<Double> _phase = UserParameter.Builder.
+    final transient UserParameter<Double> _phase = UserParameter.Builder.
             <Double>start(PHASE, 0.0).
             longName(I18nKeys.SIGNAL_PHASE_DELAY).
             shortName(PHASE).
@@ -94,21 +96,21 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             build();
     private static final int DUTY_PAR_INDEX = 5;
     private static final double DEFAULT_DUTY = 0.5;
-    final UserParameter<Double> _dutyRatio = UserParameter.Builder.
+    final transient UserParameter<Double> _dutyRatio = UserParameter.Builder.
             <Double>start("tastverhaeltnis", DEFAULT_DUTY).
             longName(I18nKeys.DUTY_RATIO).
             shortName("d").
             arrayIndex(this, DUTY_PAR_INDEX).
             build();
     private static final int EXTERNAL_PAR_INDEX = 6;
-    final UserParameter<Boolean> _useExternal = UserParameter.Builder.
+    final transient UserParameter<Boolean> _useExternal = UserParameter.Builder.
             <Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
             shortName("useExternal").
             arrayIndex(this, EXTERNAL_PAR_INDEX).
             build();
     private static final int DISP_PAR_INDEX = 7;
-    final UserParameter<Boolean> _displayDetails = UserParameter.Builder.
+    final transient UserParameter<Boolean> _displayDetails = UserParameter.Builder.
             <Boolean>start("displayDetails", false).
             longName(I18nKeys.IF_TRUE_MORE_INFORMATION).
             shortName("display").
@@ -117,10 +119,10 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
     private double[][] _xy;  // Importierter ZV (als ASCII-Datei)
     private String _datnamXY = GlobalFilePathes.DATNAM_NOT_DEFINED;
     // for TRI, RECHT-states we simple store variables 'aufsteigend' and '_dreieck'
-    private GeckoFile _externalDataFile = null;
+    private transient GeckoFile _externalDataFile = null;
     private long _externalDataFileHashValue = 0;
     private String[] _labelsBeforeFold;
-    private Stack<TerminalControlInput> _terminalStack = new Stack<TerminalControlInput>();
+    private transient Stack<TerminalControlInput> _terminalStack = new Stack<TerminalControlInput>();
 
     ;
 
@@ -343,14 +345,14 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ndatnamXY"), _datnamXY);
+        ProjectData.appendAsString(ascii.append("\ndatnamXY"), _datnamXY);
         if (_externalDataFile == null) {
-            DatenSpeicher.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFileHashValue);
+            ProjectData.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFileHashValue);
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFile.getHashValue());
+            ProjectData.appendAsString(ascii.append("\nexternalDataFileHashValue"), _externalDataFile.getHashValue());
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nversion170"), 1);
+        ProjectData.appendAsString(ascii.append("\nversion170"), 1);
 
     }
 
@@ -374,7 +376,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         if (!_datnamXY.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
             //first check if this is a file loaded from previous versions
             try {
-                _externalDataFile = Fenster._fileManager.getFile(_externalDataFileHashValue);                                                
+                _externalDataFile = MainWindow._fileManager.getFile(_externalDataFileHashValue);                                                
             } catch (FileNotFoundException e) {
                 final String errorMessage = "External data file missing in signal source "
                         + getStringID() + ":\n" + e.getMessage();
@@ -402,11 +404,11 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         //check first if file already exists, and remove it
         if (_externalDataFile != null) {
             _externalDataFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(_externalDataFile);
+            MainWindow._fileManager.maintain(_externalDataFile);
         }
         _externalDataFile = newFiles.get(0);
         _externalDataFile.setUser(getUniqueObjectIdentifier());
-        Fenster._fileManager.addFile(_externalDataFile);
+        MainWindow._fileManager.addFile(_externalDataFile);
         _datnamXY = _externalDataFile.getCurrentAbsolutePath();
     }
 
@@ -416,7 +418,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         //since there is only one file, we just remove it
         if (!filesToRemove.isEmpty() && _externalDataFile != null) {
             _externalDataFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(_externalDataFile);
+            MainWindow._fileManager.maintain(_externalDataFile);
             _externalDataFile = null;
             _datnamXY = GlobalFilePathes.DATNAM_NOT_DEFINED;
         }
@@ -496,10 +498,10 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             public Object doOperation(final Object parameterValue) {
 
                 try {
-                    _externalDataFile = new GeckoFile(new File((String) parameterValue), GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());
+                    _externalDataFile = new GeckoFile(new File((String) parameterValue), GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());
                     _externalDataFile.setUser(getUniqueObjectIdentifier());
                     _datnamXY = (String) parameterValue;
-                    Fenster._fileManager.addFile(_externalDataFile);
+                    MainWindow._fileManager.addFile(_externalDataFile);
                     return true;
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ReglerSignalSource.class.getName()).log(Level.SEVERE, null, ex);

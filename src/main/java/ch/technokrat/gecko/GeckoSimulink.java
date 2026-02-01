@@ -16,8 +16,7 @@ package ch.technokrat.gecko;
 import ch.technokrat.gecko.geckocircuits.allg.OperatingMode;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
-import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.control.ReglerFromEXTERNAL;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
 import ch.technokrat.gecko.geckocircuits.control.ReglerToEXTERNAL;
@@ -51,8 +50,8 @@ public class GeckoSimulink {
     }
 
     public GeckoSimulink(String filePath) {        
-        ReglerFromEXTERNAL.fromExternals.clear();
-        ReglerToEXTERNAL.toExternals.clear();
+        ReglerFromEXTERNAL.clearFromExternals();
+        ReglerToEXTERNAL.clearToExternals();
         if(!setSimulinkOperatingMode()) {
             GeckoSim.main(new String[]{filePath});        
         }                
@@ -76,7 +75,7 @@ public class GeckoSimulink {
         GeckoSim._win._simRunner.external_init(tend);
         tStartSimulink = System.currentTimeMillis();
         
-        for (AbstractBlockInterface block : SchematischeEingabe2.Singleton.getElementCONTROL()) {
+        for (AbstractBlockInterface block : SchematicEditor2.Singleton.getElementCONTROL()) {
                 if (block instanceof ReglerOSZI) {
                     ((ReglerOSZI) block).setSimulationTimeBoundaries(0, tend);
                 }
@@ -112,14 +111,14 @@ public class GeckoSimulink {
     public static void external_setInputPortName(int index, String name) {
         if(index < ReglerFromEXTERNAL.fromExternals.size()) {
             ReglerFromEXTERNAL fromExt = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(index);
-            fromExt.setExternalName(new String(name));
-        } 
+            fromExt.setExternalName(name);
+        }
     }
 
     public static void external_setOutputPortName(int index, String name) {
-        if(index < ReglerToEXTERNAL.toExternals.size()) { 
+        if(index < ReglerToEXTERNAL.toExternals.size()) {
             ReglerToEXTERNAL fromExt = (ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(index);
-            fromExt.setExternalName(new String(name));
+            fromExt.setExternalName(name);
         }
     }
 

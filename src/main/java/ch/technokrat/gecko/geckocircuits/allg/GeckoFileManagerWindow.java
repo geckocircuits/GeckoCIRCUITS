@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.allg;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile.StorageType;
 import ch.technokrat.gecko.geckocircuits.circuit.DialogNonLinearity;
 import ch.technokrat.gecko.geckocircuits.circuit.GeckoFileable;
-import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;
 import java.awt.Color;
 import java.io.File;
@@ -28,24 +27,27 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author anstupar
  */
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
+        justification = "Dialog intentionally stores references to external GUI components for interaction; dialog is not serialized")
 public class GeckoFileManagerWindow extends javax.swing.JDialog {
 
-    private VerlustBerechnungDetailed _losses = null;
+    private transient VerlustBerechnungDetailed _losses = null;
     private final String _fileExtension;
     private final String _fileType;
     private final StorageType _newFileType = StorageType.EXTERNAL;
     private final JFileChooser _addFilesDialog = new JFileChooser();
-    private final List<GeckoFile> _newFilesToAdd = new ArrayList<GeckoFile>();
-    private final DefaultListModel _existingFilesList = new DefaultListModel();
-    private final DefaultListModel _selectedFilesList = new DefaultListModel();
+    private final transient List<GeckoFile> _newFilesToAdd = new ArrayList<GeckoFile>();
+    private final DefaultListModel<GeckoFile> _existingFilesList = new DefaultListModel<>();
+    private final DefaultListModel<GeckoFile> _selectedFilesList = new DefaultListModel<>();
     private boolean _isLossElement = false;
     private boolean _singleFileOnly = true;
-    private final List<GeckoFile> _filesToRemove = new ArrayList<GeckoFile>();
+    private final transient List<GeckoFile> _filesToRemove = new ArrayList<GeckoFile>();
     private DialogNonLinearity nonLinearDialog = null;
     /**
      * pointing to ElementLKDialog text fields, for setting the loss file
@@ -53,7 +55,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     private FormatJTextField _jlS2;
     private FormatJTextField _jlS2b;
     private javax.swing.JButton _jbS2edit;
-    private final GeckoFileable _geckoFileable;
+    private final transient GeckoFileable _geckoFileable;
 
     /**
      * Creates new form GeckoFileManagerWindow should make a different
@@ -103,10 +105,12 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         
     }
 
-    private void init(final List<GeckoFile> alreadyUsedFiles, final String extension) {        
+    private void init(final List<GeckoFile> alreadyUsedFiles, final String extension) {
         super.setModal(true);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
         } catch (Exception ex) {
             System.err.println("could not load image icon!");
         }
@@ -120,7 +124,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         lsmExisting.addListSelectionListener(new GeckoFileExistingListSelectionHandler());
 
 
-        List<GeckoFile> existingFiles = Fenster._fileManager.getFilesByExtension(extension);
+        List<GeckoFile> existingFiles = MainWindow._fileManager.getFilesByExtension(extension);
 
         if (alreadyUsedFiles.size() > 0) {
             existingFiles.removeAll(alreadyUsedFiles);
@@ -139,7 +143,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
 
     private void addNewFileToList(final File newSelectedFile) {
         try {
-            GeckoFile newFile = new GeckoFile(newSelectedFile, _newFileType, Fenster.getOpenFileName());
+            GeckoFile newFile = new GeckoFile(newSelectedFile, _newFileType, MainWindow.getOpenFileName());
             addGeckoFileToList(newFile);
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);
@@ -180,7 +184,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
                 jRadioButtonIsInternalNew.setSelected(false);
             } else {
 
-                Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValues();
+                Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
                 GeckoFile selectedFile = (GeckoFile) selectedFiles[selectedFiles.length - 1];
 
                 if (selectedFile.getStorageType() == StorageType.EXTERNAL) {
@@ -206,7 +210,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
                 jRadioButtonIsInternalExisting.setSelected(false);
             } else {
 
-                Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+                Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
                 GeckoFile selectedFile = (GeckoFile) selectedFiles[selectedFiles.length - 1];
 
                 if (selectedFile.getStorageType() == StorageType.EXTERNAL) {
@@ -238,7 +242,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jButtonRemove = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jListSelectedFilesToAdd = new javax.swing.JList();
+        jListSelectedFilesToAdd = new javax.swing.JList<>();
         jButtonAddNewFile = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jRadioButtonIsExternalNew = new javax.swing.JRadioButton();
@@ -249,7 +253,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jPanel2 = new javax.swing.JPanel();
         jButtonAddSelectedExistingFiles = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jListAvailableFiles = new javax.swing.JList();
+        jListAvailableFiles = new javax.swing.JList<>();
         jPanel5 = new javax.swing.JPanel();
         jRadioButtonIsInternalExisting = new javax.swing.JRadioButton();
         jRadioButtonIsExternalExisting = new javax.swing.JRadioButton();
@@ -535,7 +539,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddSelectedExistingFilesActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAddSelectedExistingFilesActionPerformed
-        Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+        Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
         for (int i = 0; i < selectedFiles.length; i++) {
             addGeckoFileToList((GeckoFile) selectedFiles[i]);
         }
@@ -586,7 +590,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonAddNewFileActionPerformed
 
     private void jRadioButtonIsExternalNewActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsExternalNewActionPerformed
-        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValues();
+        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -600,7 +604,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButtonIsExternalNewActionPerformed
 
     private void jRadioButtonIsInternalNewActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsInternalNewActionPerformed
-        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValues();
+        Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -615,7 +619,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButtonIsInternalNewActionPerformed
 
     private void jRadioButtonIsExternalExistingActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsExternalExistingActionPerformed
-        Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+        Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -629,7 +633,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     }//GEN-LAST:event_jRadioButtonIsExternalExistingActionPerformed
 
     private void jRadioButtonIsInternalExistingActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsInternalExistingActionPerformed
-        Object[] selectedFiles = jListAvailableFiles.getSelectedValues();
+        Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
@@ -704,8 +708,8 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     private javax.swing.JLabel jLabelAlreadyAvailable;
     private javax.swing.JLabel jLabelFileType;
     private javax.swing.JLabel jLabelFileType2;
-    private javax.swing.JList jListAvailableFiles;
-    private javax.swing.JList jListSelectedFilesToAdd;
+    private javax.swing.JList<GeckoFile> jListAvailableFiles;
+    private javax.swing.JList<GeckoFile> jListSelectedFilesToAdd;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

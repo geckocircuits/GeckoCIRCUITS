@@ -18,13 +18,16 @@ package ch.technokrat.gecko.geckocircuits.newscope;
  * compatibility reasons, it is still here. It should be refactored or removed, soon!
  *
  */
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Legacy scope settings with direct field access for GUI compatibility")
 public class ScopeSettings implements Serializable {
 
     public static final int ANZ_DIAGRAM_MAX = 12;
@@ -273,10 +276,10 @@ public class ScopeSettings implements Serializable {
                     y1Axis._axisTickSettings.setTickLengthMaj(ORIGjtfYtickLengthMaj[i]);
                     y1Axis._axisTickSettings.setTickLengthMin(ORIGjtfYtickLengthMin[i]);
 
-                    xAxis._axisGridSettings.getColorGridMaj().getFromCode(ORIGjcmXlinCol[i]);
-                    y1Axis._axisGridSettings.getColorGridMaj().getFromCode(ORIGjcmYlinCol[i]);
-                    xAxis._axisGridSettings.getLinStyleMaj().getFromCode(ORIGjcmXlinStyl[i]);
-                    y1Axis._axisGridSettings.getLinStyleMaj().getFromCode(ORIGjcmYlinStyl[i]);
+                    xAxis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(ORIGjcmXlinCol[i]));
+                    y1Axis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(ORIGjcmYlinCol[i]));
+                    xAxis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(ORIGjcmXlinStyl[i]));
+                    y1Axis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(ORIGjcmYlinStyl[i]));
                 }
 
                 int diagNo = 0;
@@ -316,7 +319,7 @@ public class ScopeSettings implements Serializable {
     //
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<scopeSettings>");
-        DatenSpeicher.appendAsString(ascii.append("\nnoInputSignals"), noInputSignals);
+        ProjectData.appendAsString(ascii.append("\nnoInputSignals"), noInputSignals);
         ascii.append("\n<\\scopeSettings>");
     }
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
  *
  * @author anstupar
  */
-public class CapacitanceCharacteristic {
+public final class CapacitanceCharacteristic {
 
     private ArrayList<Double> y_val_C;
     private ArrayList<Double> x_val_V;
@@ -32,18 +32,11 @@ public class CapacitanceCharacteristic {
         isLogYScale = logscaleY;
         assert nonliny.length == nonlinx.length;
         for (int i = 0; i < nonliny.length; i++) {
-            y_val_C.add(Double.valueOf(nonliny[i]));
+            y_val_C.add(nonliny[i]);
         }
         for (int i = 0; i < nonlinx.length; i++) {
-            x_val_V.add(Double.valueOf(nonlinx[i]));
+            x_val_V.add(nonlinx[i]);
         }
-
-        //System.out.println(x_val_V.toString());
-        //System.out.println(y_val_C.toString());
-
-        /*double[] testval = {10.0, 25.1, 33.7, 58.9, 105.6, 273.54, 352.798, 426.9, 482.8723};
-         for (int i = 0; i < testval.length; i++)
-         System.out.println("" + testval[i] + " " + getCapacitanceAtV(testval[i]));*/
     }
 
     public CapacitanceCharacteristic() {
@@ -79,20 +72,20 @@ public class CapacitanceCharacteristic {
     public void insertVC_point(double V, double C) {
         if (V > x_val_V.get(x_val_V.size() - 1).doubleValue()) {
             //add at end of list if V value is larger than last V value (since list is sorted ascending)
-            x_val_V.add(Double.valueOf(V));
-            y_val_C.add(Double.valueOf(C));
+            x_val_V.add(V);
+            y_val_C.add(C);
         } else if (characteristicContainsVpoint(V) >= 0) {
             //already exists point with this x-value, replace it with new point
             int valuetoreplace_index = characteristicContainsVpoint(V);
-            x_val_V.set(valuetoreplace_index, Double.valueOf(V));
-            y_val_C.set(valuetoreplace_index, Double.valueOf(C));
+            x_val_V.set(valuetoreplace_index, V);
+            y_val_C.set(valuetoreplace_index, C);
         } else {
             //new point that comes somewhere in the middle of the existing list; find place, insert
             for (Double point : x_val_V) {
                 if (point.doubleValue() > V) {
                     int insert_index = x_val_V.indexOf(point);
-                    x_val_V.add(insert_index, Double.valueOf(V));
-                    y_val_C.add(insert_index, Double.valueOf(C));
+                    x_val_V.add(insert_index, V);
+                    y_val_C.add(insert_index, C);
                     break;
                 }
             }

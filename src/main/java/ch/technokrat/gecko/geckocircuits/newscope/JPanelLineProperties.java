@@ -16,11 +16,14 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Component;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "NetBeans GUI form generated public fields; stores line settable reference for property configuration")
 public class JPanelLineProperties extends javax.swing.JPanel {
 
     private LineSettable _lineSettable;
@@ -174,7 +177,7 @@ public class JPanelLineProperties extends javax.swing.JPanel {
     @SuppressWarnings("PMD")
     private void jSpinnerTranspStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerTranspStateChanged
         if (_redrawComponent != null) {
-            _lineSettable.setTransparency((Float) jSpinnerTransp.getValue());
+            _lineSettable.setTransparency(((Number) jSpinnerTransp.getValue()).floatValue());
         }
         repaintComponent();
     }//GEN-LAST:event_jSpinnerTranspStateChanged

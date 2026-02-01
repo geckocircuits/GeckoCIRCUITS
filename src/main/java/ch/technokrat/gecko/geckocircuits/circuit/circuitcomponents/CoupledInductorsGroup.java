@@ -14,9 +14,11 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 
-public class CoupledInductorsGroup implements AStampable, CurrentCalculatable {
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Coupled inductors group must share inductor list reference for proper coupling behavior")
+public final class CoupledInductorsGroup implements AStampable, CurrentCalculatable {
 
     private double[][] inductanceMatrix;
     private double[][] _inverseInductanceMatrix = null;
@@ -227,7 +229,7 @@ public class CoupledInductorsGroup implements AStampable, CurrentCalculatable {
     }
     
     private SolverType getSolverType() {
-        return _allInductors.get(0)._solverType;
+        return _allInductors.get(0).getSolverType();
     }
     
     //to make the TRZ solver work - yes, ugly, should be redone better!

@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -22,6 +23,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Abstract class - subclasses are designed to handle constructor properly")
  abstract class AbstractControlOrderer {
     static final int MAX_ITERATION_COUNT = 10000;    
     

@@ -16,8 +16,8 @@ package ch.technokrat.gecko.geckocircuits.control.javablock;
 import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.SystemOutputRedirect;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -28,7 +28,6 @@ import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.SpecialNameVisible;
 import ch.technokrat.gecko.geckocircuits.control.VariableTerminalNumber;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time;
 import ch.technokrat.gecko.geckocircuits.control.calculators.InitializableAtSimulationStart;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -37,7 +36,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -50,29 +48,32 @@ import javax.swing.JOptionPane;
  *
  * @author andreas
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+        justification = "_inputTerminalNumber may be read before field initialization when setInputTerminalNumber is called from superclass constructor - handled safely with null checks")
 public final class ReglerJavaFunction extends RegelBlock implements VariableTerminalNumber, SpecialNameVisible,
         GeckoFileable, Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerJavaFunction.class, "JAVA", I18nKeys.JAVA_FUNCTION);
-    private final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
-    private final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
-    private CodeWindow _codeWindow;
+    private transient final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
+    private CodeWindowModern _codeWindow;
 
-    final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzXIN", 3).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
             arrayIndex(this, -1).
             build();
 
-    final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzYOUT", 2).
             longName(I18nKeys.NO_OUTPUT_TERMINALS).
             shortName("numberOutputTerminals").
             arrayIndex(this, -1).
             build();
 
-    final UserParameter<Boolean> _showName = UserParameter.Builder.
+    transient final UserParameter<Boolean> _showName = UserParameter.Builder.
             <Boolean>start("showName", true).
             longName(I18nKeys.DISPLAY_COMPONENT_NAME_IN_CIRCUIT_SHEET).
             shortName("showName").
@@ -88,7 +89,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
      arrayIndex(this, -1).
      build();
      */
-    final VariableBusWidth _variableBusWidth = new VariableBusWidth(this);
+    transient final VariableBusWidth _variableBusWidth = new VariableBusWidth(this);
 
     @SuppressWarnings("PMD")
     private final StringBuffer _outputStringBuffer = new StringBuffer();
@@ -96,7 +97,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     private static final int THREE = 3;
     private static final int DEF_IN_TERMS = 3;
     private static final int DEF_OUT_TERMS = 2;
-    private AbstractJavaBlock _javaBlock = new JavaBlockVector(this);
+    private transient AbstractJavaBlock _javaBlock = new JavaBlockVector(this);
     private final Set<String> _additionalFilesHashKeys = new TreeSet();
     private boolean _isConsoleOutput = true;
     private static final int DIAMETER = 4;
@@ -342,9 +343,9 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             int filesMissing = 0;
 
             for (String hash : _additionalFilesHashKeys) {
-                hashValue = Long.valueOf(hash);
+                hashValue = Long.parseLong(hash);
                 try {
-                    file = Fenster._fileManager.getFile(hashValue);
+                    file = MainWindow._fileManager.getFile(hashValue);
                     _javaBlock._additionalSourceFiles.add(file);
                 } catch (Exception e) {
                     fileMissing = true;
@@ -485,8 +486,8 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         _javaBlock.exportIndividualCONTROL(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
-        DatenSpeicher.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
+        ProjectData.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
+        ProjectData.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
         _variableBusWidth.exportAsciiIndividual(ascii);
     }
 
@@ -541,7 +542,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         for (GeckoFile newFile : newFiles) {
             _javaBlock._additionalSourceFiles.add(newFile);
             newFile.setUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.addFile(newFile);
+            MainWindow._fileManager.addFile(newFile);
         }
         _codeWindow.addNewExtraFiles(newFiles);
     }
@@ -551,7 +552,7 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         for (GeckoFile removedFile : filesToRemove) {
             _javaBlock._additionalSourceFiles.remove(removedFile);
             removedFile.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(removedFile);
+            MainWindow._fileManager.maintain(removedFile);
         }
 
         if (_codeWindow != null) {
@@ -576,18 +577,18 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         while (XIN.size() < number) {
             XIN.add(new TerminalControlInput(this, -2, -XIN.size() + 1));
         }
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
         if (_inputTerminalNumber != null) {
             int newsize = XIN.size();
             if (_inputTerminalNumber.getValue() != newsize) {
                 _inputTerminalNumber.setUserValue(newsize);
             }
         }
-
     }
 
     @Override
     public void setOutputTerminalNumber(final int number) {
-
         while (YOUT.size() > number) {
             YOUT.pop();
         }
@@ -596,6 +597,8 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             YOUT.add(new TerminalControlOutput(this, 2, -YOUT.size() + 1));
         }
 
+        // Null check required because this method may be called from superclass constructor
+        // before _outputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
         if (_outputTerminalNumber != null) {
             int newsize = YOUT.size();
             if (_outputTerminalNumber.getValue() != newsize) {
@@ -630,9 +633,9 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
             JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         } else {
-            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden 
+            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden
             if (_codeWindow == null) {
-                _codeWindow = new CodeWindow(this, _outputStringBuffer);
+                _codeWindow = new CodeWindowModern(this, _outputStringBuffer);
                 _codeWindow.loadSourcesText();
             } else {
                 if (_codeWindow.isVisible()) {

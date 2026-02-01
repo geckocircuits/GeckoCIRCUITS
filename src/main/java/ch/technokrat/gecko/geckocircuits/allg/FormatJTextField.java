@@ -20,7 +20,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JTextField;
 import java.text.NumberFormat;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Text field stores line settable reference for display formatting")
 public class FormatJTextField extends JTextField {
 
     public static final double IS_VARIABLE = -1e95;  // GeckoOPTIMIZER

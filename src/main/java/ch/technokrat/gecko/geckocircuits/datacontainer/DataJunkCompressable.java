@@ -21,6 +21,7 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
@@ -33,6 +34,8 @@ import javax.swing.JOptionPane;
  * Float.intBitsToFloat to access the data values. Furhermore, the double values
  * are rounded to less bits than float.
  */
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "IS2_INCONSISTENT_SYNC"},
+        justification = "Data junk stores time series reference for compression operations; _dataSoftRef sync inconsistency is acceptable - occasional race condition doesn't affect correctness")
 public final class DataJunkCompressable implements DataJunk {
 
     public static void setMemoryPrecision() {
@@ -78,6 +81,8 @@ public final class DataJunkCompressable implements DataJunk {
      * 512 //+ 1024 + 2048
      */
     private static final int DOUBLE_BYTES = 8;
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "MS_MUTABLE_ARRAY",
+            justification = "PRECISIONS array is intentionally public for external configuration of lossy compression levels")
     public static final int[] PRECISIONS = new int[]{-1, -128, -512, -2048};
     private static int precisionField = PRECISIONS[2];
     private final MemoryContainer _container;

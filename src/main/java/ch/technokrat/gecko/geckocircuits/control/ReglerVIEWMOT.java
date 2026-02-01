@@ -13,14 +13,15 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.ViewMotorCalculator;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes parameterString for backward compatibility with file import")
 public final class ReglerVIEWMOT extends ReglerWithSingleReference {    
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerVIEWMOT.class, "VIEWMOT", I18nKeys.MACHINE_INTERNAL);
 

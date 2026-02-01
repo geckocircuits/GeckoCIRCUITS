@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
@@ -29,11 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Class stores block interface reference for text positioning")
 public final class SchematicTextInfo {
 
     private static final TechFormat tcf = new TechFormat();
@@ -110,15 +112,15 @@ public final class SchematicTextInfo {
     }
 
     public void exportASCII(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
-        DatenSpeicher.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
+        ProjectData.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
+        ProjectData.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
     }
 
     void absetzenText(final Point position) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
         _dxTxt = (_txtKlickPoint.x - _element.getSheetPosition().x) + position.x * 1.0 / dpix - _txtKlickPoint.x;
         _dyTxt = (_txtKlickPoint.y - _element.getSheetPosition().y) + position.y * 1.0 / dpix - _txtKlickPoint.y;
-        if(_dxTxt != _dxTxtBeforeMove && _dxTxt != _dxTxtBeforeMove) {
+        if(_dxTxt != _dxTxtBeforeMove || _dyTxt != _dyTxtBeforeMove) {
             final MoveTextFieldUndoAction undoAction = new MoveTextFieldUndoAction(_dxTxtBeforeMove, _dyTxtBeforeMove, _dxTxt, _dyTxt);
             AbstractUndoGenericModel.undoManager.addEdit(undoAction);
         }
@@ -161,8 +163,8 @@ public final class SchematicTextInfo {
 
         final FontRenderContext frc = graphics.getFontRenderContext();
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        if (SchematischeEingabe2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
-            _yTxtKlickMin = _yTxtKlickMin - SchematischeEingabe2.DY_ZEILENABSTAND_TXT;
+        if (SchematicEditor2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
+            _yTxtKlickMin = _yTxtKlickMin - SchematicEditor2.DY_ZEILENABSTAND_TXT;
         }
 
         int counter = 0;
@@ -182,8 +184,6 @@ public final class SchematicTextInfo {
         _yTxtKlickMax = (int) (dpix * (yPos + _dyTxt + _lyTxt));
         _xTxtKlickMax = (int) (dpix * (xPos + _dxTxt + _maxLengthText));
 
-        final int rectHeight = _yTxtKlickMax - _yTxtKlickMin;
-        final int rectWidth = _xTxtKlickMax - _xTxtKlickMin;
         //g.drawRect(_xTxtKlickMin, getYTxtKlickMin(), rectWidth, rectHeight);
     }
 
@@ -245,6 +245,7 @@ public final class SchematicTextInfo {
                         if (properties.showParameter) {
                             addNonNullUserParameter(par);
                         }
+                        break;
                     case SHOW_NEVER:
                         break;
                     default:

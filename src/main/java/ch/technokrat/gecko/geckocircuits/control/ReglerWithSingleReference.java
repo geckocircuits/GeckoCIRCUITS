@@ -15,10 +15,12 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupling;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes component coupling for external component referencing")
 public abstract class ReglerWithSingleReference extends RegelBlock implements ComponentCoupable {
 
     final ComponentCoupling _coupling = new ComponentCoupling(1, this, new int[]{0});
@@ -36,7 +38,7 @@ public abstract class ReglerWithSingleReference extends RegelBlock implements Co
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
 
-        if (!SchematischeEingabe2._controlDisplayMode.showParameter) {
+        if (!SchematicEditor2._controlDisplayMode.showParameter) {
             return;
         }
 

@@ -31,7 +31,7 @@ class ReglerSignalSourceDialog extends AbstractDialogWithExternalOption<ReglerSi
     private JCheckBox jCheckBoxShowDetails;  // wieviel Info soll im SchematicEntry angezeigt werden (Uebersicht vs. Info)?
     // Unterdialoge fuer Preview-SIGNAL -->         
     private boolean displayDetails = false;  // wieviel Info soll im SchematicEntry angezeigt werden (Uebersicht vs. Info)?
-    private final JComboBox jComboShape = new JComboBox();    
+    private final JComboBox<ControlSourceType> jComboShape = new JComboBox<>();    
     private final GridBagConstraints gbc = new GridBagConstraints();
     JPanel parameterPanel;
 

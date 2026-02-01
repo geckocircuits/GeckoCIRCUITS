@@ -13,8 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlInput;
@@ -29,11 +28,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public data vector for external data exchange with Simulink/external tools")
 public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Comparable, VariableTerminalNumber {
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerToEXTERNAL.class, "ToEXT", I18nKeys.EXPORT_DATA_TO_SIMULINK);
-    public static final ArrayList<RegelBlock> toExternals = new ArrayList<RegelBlock>();
+    private static final ArrayList<RegelBlock> toExternalsInternal = new ArrayList<>();
+    public static final List<RegelBlock> toExternals = Collections.unmodifiableList(toExternalsInternal);
     private String _externalName = "";
     private static final double WIDTH = 0.3;
     // carful: this variable is only used when the model is read
@@ -44,7 +47,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     public ReglerToEXTERNAL() {
         super(3, 0);
         setInputTerminalNumber(3);  // default: 3 Anschluss nach Aussen
-        toExternals.add(this);
+        toExternalsInternal.add(this);
     }
 
     @Override
@@ -60,12 +63,12 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     @Override
     public void deleteActionIndividual() {
         super.deleteActionIndividual();
-        ReglerToEXTERNAL.toExternals.remove(this);
+        ReglerToEXTERNAL.toExternalsInternal.remove(this);
     }
 
     @Override
     List<RegelBlock> getOrderList() {
-        return toExternals;
+        return toExternalsInternal;
     }
 
     @Override
@@ -73,23 +76,17 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         return XIN;
     }
 
-    private class compareOrder implements Comparator {
+    private static class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
-        public int compare(final Object compare1, final Object compare2) {
+        public int compare(final RegelBlock compare1, final RegelBlock compare2) {
             if (compare1 instanceof ReglerToEXTERNAL && compare2 instanceof ReglerToEXTERNAL) {
                 final ReglerToEXTERNAL fromExtern1 = (ReglerToEXTERNAL) compare1;
                 final ReglerToEXTERNAL fromExtern2 = (ReglerToEXTERNAL) compare2;
-                if (fromExtern1.externalOrderNumber == fromExtern2.externalOrderNumber) {
-                    return 0;
-                }
-                if (fromExtern1.externalOrderNumber < fromExtern2.externalOrderNumber) {
-                    return -1;
-                }
-                return 1;
+                return Integer.compare(fromExtern1.externalOrderNumber, fromExtern2.externalOrderNumber);
             }
-
-            assert false;
             return 0;
         }
     }
@@ -113,7 +110,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
 
     public void insertOrderCorrect(final int orderNo) {
         externalOrderNumber = orderNo;
-        Collections.sort(toExternals, new compareOrder());
+        Collections.sort(toExternalsInternal, new CompareOrder());
     }
 
     public void setExternalName(final String name) {
@@ -174,17 +171,17 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         // Pfeil-Symbol:
         int d1 = 10, d2 = 4, dpfx = 8, dpfy = 3;
         double pf = 2.0;  // Pfeilspitzen-X-Abstand
-        double pfym = posY - WIDTH + XIN.size() / 2;  // Pfeil-Y-Koordinate
+        double pfym = posY - WIDTH + XIN.size() / 2.0;  // Pfeil-Y-Koordinate
         graphics.drawPolygon(new int[]{(int) (dpix * (posX + pf)) - dpfx, (int) (dpix * (posX + pf)) - dpfx,
             (int) (dpix * (posX + pf))}, new int[]{(int) (dpix * pfym) - dpfy, (int) (dpix * pfym) + dpfy, (int) (dpix * pfym)}, 3);
-        graphics.drawString("To", (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2));
+        graphics.drawString("To", (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * pfym - 1.0 * graphics.getFont().getSize() / 2));
         graphics.drawString("EXTERN", (int) (dpix * (posX + WIDTH) + d2),
-                (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2));
+                (int) (dpix * pfym + 3.0 * graphics.getFont().getSize() / 2));
         graphics.drawLine((int) (dpix * (posX + WIDTH)), (int) (dpix * pfym), (int) (dpix * (posX + pf)),
                 (int) (dpix * pfym));  // zum Pfeil gehoerig
         graphics.setColor(Color.black);
         graphics.drawString(_externalName, (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * (1 + pfym)
-                + 3 * graphics.getFont().getSize() / 2));
+                + 3.0 * graphics.getFont().getSize() / 2));
         graphics.setColor(origColor);
 
     }
@@ -195,7 +192,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     }
 
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ntorder"), toExternals.indexOf(this));
+        ProjectData.appendAsString(ascii.append("\ntorder"), toExternalsInternal.indexOf(this));
     }
 
     @Override
@@ -221,7 +218,31 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ReglerToEXTERNAL other = (ReglerToEXTERNAL) obj;
+        return this.externalOrderNumber == other.externalOrderNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(externalOrderNumber);
+    }
+
+    @Override
     protected final Window openDialogWindow() {
         return new DialogExternal(this);
+    }
+
+    /**
+     * Clear the list of ToEXTERNAL blocks - used for initialization
+     */
+    public static void clearToExternals() {
+        toExternalsInternal.clear();
     }
 }

@@ -18,7 +18,9 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInd
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Terminal exposes label object for configuration")
 public abstract class AbstractTerminal implements TerminalInterface {
 
     protected static final int DX_IN = 3, DX_OUT = DX_IN, DY_TEXT = -3;
@@ -57,8 +59,8 @@ public abstract class AbstractTerminal implements TerminalInterface {
 
     public void paintLabelString(final Graphics2D graphics) {
         if (!_label.getLabelString().isEmpty()) {
-            graphics.drawString(_label.getLabelString(), (int) (_parentElement.dpix * getPosition().x) + DX_IN,
-                    (int) (_parentElement.dpix * getPosition().y) + DY_TEXT);
+            graphics.drawString(_label.getLabelString(), (int) (AbstractCircuitSheetComponent.dpix * getPosition().x) + DX_IN,
+                    (int) (AbstractCircuitSheetComponent.dpix * getPosition().y) + DY_TEXT);
         }
     }
 

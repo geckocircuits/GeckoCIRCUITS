@@ -18,13 +18,15 @@ import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCapacitor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractInductor;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractResistor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.InductorCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.MutualInductance;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import ch.technokrat.gecko.geckocircuits.control.AbstractPotentialMeasurement;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Performance-critical netlist class with direct field access for simulation speed")
 public class NetListLK {
 
     public int knotenMAX, spgQuelleMAX;  // knotenMAX ... Gesamt-Knotenanzahl minus 'Ground';  spgQuelleMAX ... Summe der SpgQuellen plus LKOP2-Elemente
@@ -33,11 +35,9 @@ public class NetListLK {
     public int[][] nodePairDirVoltContSrc;
     public double[][] parameter;  // Bauteilwert; Typus 'sinus', 'dreieck', ... bei Strom/Spg-Quelle; init-Werte iL_ALT und uC_ALT; ...
     public int[] spgQuelleNr;  // zaehlt nicht nur die SpgQuellen von 1 beginnend aufsteigen, sondern auch die LKOP2-Elemente, wobei Durchmischung mit den SpgQuellen moeglich ist
-    protected int[][] gemeinsameKnoten;  // Element-Knoten plus alle Verbindungen, die auf dem gleichen Potential liegen
-    protected int gesamtzahlKnotenNr;
     public Verbindung[] v;
     public int verbindungANZAHL;
-    public AbstractCircuitBlockInterface[] elements, eLKneu, eLK_M;
+    public AbstractCircuitBlockInterface[] elements, eLKneu;
     public int elementANZAHL, elementANZAHLneu;
     public String[] labelListe;
     //
@@ -50,18 +50,9 @@ public class NetListLK {
     private PostCalculatable[] _postCalculatables = new PostCalculatable[0];
     public int[] _singularityEntries = new int[0];
 
-    
+
     public double getSimulationsZeit() {
         return t;
-    }
-    
-
-    public int[][] getGemeinsameKnoten() {
-        return gemeinsameKnoten;
-    }
-
-    public int getGesamtzahlKnotenNr() {
-        return gesamtzahlKnotenNr;
     }
 
     public Verbindung[] getVerbindungen() {
@@ -260,22 +251,19 @@ public class NetListLK {
     // zB. die im SubCircuit definierten ElementeLK werden in die LK-Netzliste integriert -->
     public final void integriereSubCircuits() {
         Set<AbstractBlockInterface> eLKneuSet = new LinkedHashSet<AbstractBlockInterface>();
-        ArrayList<AbstractCircuitBlockInterface> eLK_M_vec = new ArrayList<AbstractCircuitBlockInterface>();
 
         for (AbstractCircuitBlockInterface elem : elements) {
             if (elem instanceof HiddenSubCircuitable) {
                 // Element wird aufgeloest in seine einzelnen LK-Elemente -->
-                
-                HiddenSubCircuitable subCircuitable = (HiddenSubCircuitable) elem;             
+
+                HiddenSubCircuitable subCircuitable = (HiddenSubCircuitable) elem;
                 if (subCircuitable.includeParentInSimulation()) {
                     eLKneuSet.add(elem);
                 }
-                eLKneuSet.addAll(subCircuitable.getHiddenSubCircuitElements());                
-                
+                eLKneuSet.addAll(subCircuitable.getHiddenSubCircuitElements());
+
             } else {
-                if (elem instanceof MutualInductance) {
-                    eLK_M_vec.add(elem);
-                } else {
+                if (!(elem instanceof MutualInductance)) {
                     eLKneuSet.add(elem);
                 }
             }
@@ -283,7 +271,6 @@ public class NetListLK {
 
         elementANZAHLneu = eLKneuSet.size();
         eLKneu = eLKneuSet.toArray(new AbstractCircuitBlockInterface[eLKneuSet.size()]);
-        eLK_M = eLK_M_vec.toArray(new AbstractCircuitBlockInterface[eLK_M_vec.size()]);
     }
 
     protected void initialisiereMitSubcircuit() {
@@ -471,7 +458,6 @@ public class NetListLK {
     private void definiere_magnetischeKopplungen_im_LK() {
 
         // M -->   []{ k - xL1(Koord.) - yL1(Koord.) - xL2(Koord.) - yL2(Koord.) - ID-Nr_L1 - ID-Nr_L2 {
-        int maxLc = elementANZAHL;
         List<AbstractMap.SimpleEntry<AbstractCircuitBlockInterface, AbstractCircuitBlockInterface>> kLc = new ArrayList<AbstractMap.SimpleEntry<AbstractCircuitBlockInterface, AbstractCircuitBlockInterface>>();
         List<Double> kM = new ArrayList<Double>();
 

@@ -13,28 +13,31 @@
  */
 package ch.technokrat.gecko.geckocircuits.allg;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.net.URL;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "MS_CANNOT_BE_FINAL",
+        justification = "Static fields are intentionally mutable - they store runtime file paths and recent circuits loaded during application lifecycle")
 public class GlobalFilePathes {
-    // die zuletzt geoeffneten Dateien, RECENT_1 ist der juengste Eintrag 
-    // die Pfade werden in den Properties gespeichert, und beim Programmstart geladen --> 
-    public static String RECENT_CIRCUITS_1 = "", RECENT_CIRCUITS_2 = "", RECENT_CIRCUITS_3 = "", RECENT_CIRCUITS_4 = "";    
+    // die zuletzt geoeffneten Dateien, RECENT_1 ist der juengste Eintrag
+    // die Pfade werden in den Properties gespeichert, und beim Programmstart geladen -->
+    public static String RECENT_CIRCUITS_1 = "", RECENT_CIRCUITS_2 = "", RECENT_CIRCUITS_3 = "", RECENT_CIRCUITS_4 = "";
     //------------------------
     // Pfad fuer die Ablage aller verwendeten Bilder:
     public static URL PFAD_PICS_URL;  // gleich wie 'PFAD_PICS'
-    // Pfad, in dem das aktuelle JAR-File liegt --> 
+    // Pfad, in dem das aktuelle JAR-File liegt -->
     public static String PFAD_JAR_HOME;
-    
+
     // Pfad und Name der aktuellen Datei fuer die Schaltungssimulation (*.ipes):
     public static String DATNAM;
     // Pfad und Name der beim letzten Mal geladenen Datei fuer die Schaltungssimulation (*.ipes):
-    // --> ist wichtig, wenn die Pfadstruktur geaendert wurde --> damit werden lokale Pfade aktualisiert, siehe DatenSpeicher.lokalisiereRelativenPfad()
-    public static String DATNAM_NOT_DEFINED = "not_defined";
-        
+    // --> ist wichtig, wenn die Pfadstruktur geaendert wurde --> damit werden lokale Pfade aktualisiert, siehe ProjectData.lokalisiereRelativenPfad()
+    public static final String DATNAM_NOT_DEFINED = "not_defined";
+
     // this is the file path from where the original ipes file was loades. Be cautious, here:
     // this file path does not change when the user saves the file to another location. It shows
     // only the file path from where the stuff was originally loades.

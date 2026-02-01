@@ -56,7 +56,7 @@ public class DragTest extends JFrame implements DragSourceListener,
     getContentPane().add(new JScrollPane(jl), BorderLayout.CENTER);
 
     ds = new DragSource();
-    DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(jl,
+    ds.createDefaultDragGestureRecognizer(jl,
         DnDConstants.ACTION_COPY, this);
     setVisible(true);
   }

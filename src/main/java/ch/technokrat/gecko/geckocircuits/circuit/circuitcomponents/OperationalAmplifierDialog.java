@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.net.URL;
+import java.net.URI;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -40,7 +40,8 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
 
     }
 
-    protected JTabbedPane createGUI_OPV1() {   
+    @SuppressWarnings({"varargs", "unchecked"})
+    protected JTabbedPane createGUI_OPV1() {
         JPanel mainParameter = createParameterPanel(element.gainValue, element.inputResistance, element.outputResistance, element.frequencyDependency);
         mainParameter.setBorder(new TitledBorder("Main Parameters"));
         
@@ -68,7 +69,7 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
                 try {
                     graphics.setColor(Color.white);
                     graphics.fillRect(0, 0, 999, 999);
-                    Image img = (new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "dialog_opv_model.png"))).getImage();
+                    Image img = (new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "dialog_opv_model.png").toURL())).getImage();
                     graphics.drawImage(img, 10, 10, new JFrame());
                 } catch (Exception e) {
                     System.out.println(e + "   er4b");

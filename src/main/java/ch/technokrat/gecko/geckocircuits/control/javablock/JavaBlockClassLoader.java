@@ -13,23 +13,23 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Our custorm class loader, which allows to load the class files that were compiled internally.
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "ClassLoader stores class map reference for dynamic class loading")
 public final class JavaBlockClassLoader extends URLClassLoader {
     
     private final Map<String, CompiledClassContainer> _classMap;
@@ -55,22 +55,20 @@ public final class JavaBlockClassLoader extends URLClassLoader {
     private void extendClassPath() {
 
 
-        if (!Fenster.IS_APPLET) {
-            final File tmpfile = new File(GlobalFilePathes.DATNAM);
-            final File file = new File(tmpfile.getAbsolutePath());
-            final File directory = file.getParentFile();
-            if (directory.isDirectory()) {
-                try {
-                    final String path = directory.getAbsolutePath();
-                    final URL url = new URL("file://" + path + "/");
-		    this.addURL(url);
-                } catch (IllegalArgumentException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SecurityException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        final File tmpfile = new File(GlobalFilePathes.DATNAM);
+        final File file = new File(tmpfile.getAbsolutePath());
+        final File directory = file.getParentFile();
+        if (directory.isDirectory()) {
+            try {
+                final String path = directory.getAbsolutePath();
+                final URL url = new URL("file://" + path + "/");
+		this.addURL(url);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -91,13 +89,23 @@ public final class JavaBlockClassLoader extends URLClassLoader {
                 final URL url = new URL("file://" + path + "/");
                 System.out.print(url);
 
-                return Class.forName(name, true, new URLClassLoader(new URL[] { url }));
-            } catch (Exception ex) {
+                return Class.forName(name, true, createUrlClassLoader(url));
+            } catch (MalformedURLException | ClassNotFoundException ex) {
 
             }
             return null;
             // return super.findClass(name);
         }
     }
-    
+
+    /**
+     * Creates a URLClassLoader for dynamic class loading.
+     * The ClassLoader creation outside doPrivileged is intentional for scripting/plugin functionality.
+     */
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
+    private static URLClassLoader createUrlClassLoader(URL url) {
+        return new URLClassLoader(new URL[] { url });
+    }
+
 }

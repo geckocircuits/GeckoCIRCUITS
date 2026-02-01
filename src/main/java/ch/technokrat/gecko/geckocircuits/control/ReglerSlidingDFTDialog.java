@@ -30,7 +30,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import javax.swing.BorderFactory;
@@ -40,10 +39,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT> {
+final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT> {
 
     private final GridLayout _grid;
-    private final Stack<JComboBox> _frequencySelectionList = new Stack<JComboBox>();
+    private final Stack<JComboBox<ReglerSlidingDFT.OutputData>> _frequencySelectionList = new Stack<>();
     private final Stack<FormatJTextField> _freqFields = new Stack<FormatJTextField>();
     private final Stack<JLabel> _labels = new Stack<JLabel>();
     private final List<ReglerSlidingDFT.FrequencyData> _originalData;
@@ -139,7 +138,7 @@ class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT> {
     }
 
     private void addComboBox(final OutputData data) {
-        final JComboBox frequencySelectionBox = new JComboBox();
+        final JComboBox<ReglerSlidingDFT.OutputData> frequencySelectionBox = new JComboBox<>();
         Dimension comboDimension = new Dimension(20, 3);
         frequencySelectionBox.setPreferredSize(comboDimension);
         frequencySelectionBox.setMaximumSize(comboDimension);

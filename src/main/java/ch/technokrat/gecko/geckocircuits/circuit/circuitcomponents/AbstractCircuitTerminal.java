@@ -138,6 +138,12 @@ public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterf
     }
     
     @Override
+    public int getForeGroundColorRgb() {
+        java.awt.Color c = super.getForeGroundColor();
+        return (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
+    }
+    
+    @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

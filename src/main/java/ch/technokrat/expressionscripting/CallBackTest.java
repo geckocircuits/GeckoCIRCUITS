@@ -15,20 +15,17 @@
 package ch.technokrat.expressionscripting;
 
 
-import java.applet.Applet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-public class CallBackTest extends Applet {
+public class CallBackTest {
 
-    private static ScriptEngineManager mgr = new ScriptEngineManager();
-    public static ScriptEngine engine = mgr.getEngineByName("JavaScript");
-    private static Bindings _bindings;
+    private static final ScriptEngineManager mgr = new ScriptEngineManager();
+    public static final ScriptEngine engine = mgr.getEngineByName("JavaScript");
     
     public static void main(String[] args) {
         try {

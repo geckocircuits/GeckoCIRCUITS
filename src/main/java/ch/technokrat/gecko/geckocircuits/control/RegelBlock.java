@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.*;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -30,8 +29,10 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public calculator field for simulation access to control block calculators")
 public abstract class RegelBlock extends AbstractBlockInterface implements Serializable {
 
     public final static double[] EMPTY_OUTPUT = new double[]{};
@@ -214,14 +215,14 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         for (int i = 0; i < XIN.size(); i++) {
             shiftLabelsIn[i] = XIN.get(i).getHasDoubleValue();
         }
-        DatenSpeicher.appendAsString(ascii.append("\nshiftLabelsIn"), shiftLabelsIn);
+        ProjectData.appendAsString(ascii.append("\nshiftLabelsIn"), shiftLabelsIn);
 
         boolean[] shiftLabelsOut = new boolean[YOUT.size()];
         for (int i = 0; i < YOUT.size(); i++) {
             shiftLabelsOut[i] = YOUT.get(i).getHasDoubleValue();
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nshiftLabelsOut"), shiftLabelsOut);
+        ProjectData.appendAsString(ascii.append("\nshiftLabelsOut"), shiftLabelsOut);
     }
 
     @Override
@@ -297,7 +298,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         FontRenderContext frc = g2d.getFontRenderContext();
         Rectangle2D sb = g2d.getFont().getStringBounds(toDraw, frc);
         int[] points = getAussenabmessungenRechteckEckpunkte();
-        int centerX = (int) ((points[0] + points[2]) / 2 - sb.getWidth() / 2);
+        int centerX = (int) ((points[0] + points[2]) / 2.0 - sb.getWidth() / 2);
         int centerY = (int) ((0.6 * points[1] + 0.4 * points[3]) + sb.getHeight() / 2);
 
         if (secondLine.isEmpty()) {
@@ -307,7 +308,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
             sb = g2d.getFont().getStringBounds(secondLine, frc);
             points = getAussenabmessungenRechteckEckpunkte();
-            centerX = (int) ((points[0] + points[2]) / 2 - sb.getWidth() / 2);
+            centerX = (int) ((points[0] + points[2]) / 2.0 - sb.getWidth() / 2);
             centerY = (int) ((0.6 * points[1] + 0.4 * points[3]) + sb.getHeight() / 2);
             g2d.drawString(secondLine, centerX, centerY + g2d.getFont().getSize() / 2 + 1);
         }
@@ -386,7 +387,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     @Override
     public final ElementDisplayProperties getDisplayProperties() {
-        return SchematischeEingabe2._controlDisplayMode;
+        return SchematicEditor2._controlDisplayMode;
     }
 
     final void setActiveCalculator(final AbstractControlCalculatable calc) {

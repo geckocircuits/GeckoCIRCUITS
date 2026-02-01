@@ -14,15 +14,16 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.TimeFunctionConstant;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // TODO: Ath the moment, the machine equations are implemented somewhere else
 // We have to merge the two approaches, soon!
-      
+
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator must share references to inductor calculators for machine simulation")
 public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator implements BStampable, PostProcessable {
 
     private double phi;
     private double emk;
-    private double drehzahl;
     private double omegaALT;
     private double Fr;
     private double omega;
@@ -65,16 +66,14 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
 
     public void doPostProcess(double dt, double time) {
         // aus dem internen Subcircuit -->
-        double ia = - _la._current;  // Ankerstrom
-        double ie = _le._current;  // Erregerstrom
+        double ia = - _la.getCurrent();  // Ankerstrom
+        double ie = _le.getCurrent();  // Erregerstrom
 
         // Motor-Gleichungen durchrechnen -->
         phi = _le.getInductance() / _Ne * ie;  // Erregerfluss
         momentElektr = _cM * phi * ia;  // elektrisches Moment
         omega = (_J / dt * omegaALT + momentElektr - momentLast) / (_J / dt + Fr);
 
-        drehzahl = (60.0 / (2 * Math.PI)) * omega;
-        
         emk = _cM * phi * omega;  // innere Spannung der Maschine
         _timeFunction.setValue(emk);  // DC-Wert der internen WSpg.Quelle
         //if (t==0) System.out.println(t+"   "+dt+"   "+ia+"   "+ie+"   "+momentLast+"   "+phi+"   "+momentElektr+"   "+omega+"   "+drehzahl+"   "+emk+"   omegaALT="+omegaALT+"   J="+J+"   Fr="+Fr);

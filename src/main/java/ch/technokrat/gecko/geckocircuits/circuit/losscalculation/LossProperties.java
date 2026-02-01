@@ -13,7 +13,8 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import ch.technokrat.gecko.geckocircuits.circuit.SchematicTextInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
@@ -23,6 +24,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.MOSFET;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SemiconductorLossCalculatable;
 import ch.technokrat.modelviewcontrol.ModelMVC;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Properties stores semiconductor reference for loss calculation")
 public final class LossProperties implements AbstractLossCalculatorFabric {
 
     public final ModelMVC<LossCalculationDetail> _lossType = new ModelMVC<LossCalculationDetail>(LossCalculationDetail.SIMPLE,
@@ -49,7 +51,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
         ascii.append("\n<Verluste>");
 
         _lossCalculationDetailed.exportASCII(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\nverlustTyp"), _lossType.getValue().getOldGeckoCIRCUITSOrdinal());
+        ProjectData.appendAsString(ascii.append("\nverlustTyp"), _lossType.getValue().getOldGeckoCIRCUITSOrdinal());
         ascii.append("\n<\\Verluste>");
     }
 
@@ -111,6 +113,8 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
         }
     }
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+            justification = "Assertion is design-time check, not runtime exception")
     private class LossCalculatorParallelWrapperWithSplit extends LossCalculatorParallelWrapper
             implements LossCalculationSplittable {
 

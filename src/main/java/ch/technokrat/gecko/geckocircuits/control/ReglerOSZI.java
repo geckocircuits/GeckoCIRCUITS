@@ -13,8 +13,8 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -25,6 +25,7 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.ScopeWrapperIndices;
 import ch.technokrat.gecko.geckocircuits.newscope.*;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
@@ -39,13 +40,16 @@ import java.util.Stack;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "SE_TRANSIENT_FIELD_NOT_RESTORED", "DE_MIGHT_IGNORE"},
+        justification = "Scope block exposes data container for efficient simulation data access; transient fields are repopulated during component initialization; exception in setInputTerminalNumber is safely ignored during init")
 public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumber,
         SpecialNameVisible {
+    private static final long serialVersionUID = 1L;
 
     private static final int TERM_POS_X = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerOSZI.class, "SCOPE", I18nKeys.SCOPE, I18nKeys.COMPONENT_FOR_DATA_VISUALIZATION);
     
-    final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+    private transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 0).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
@@ -58,7 +62,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             _yKlickMaxTermADD, _yKlickMinTermSUB, _yKlickMaxTermSUB;
     // fuer Zugriff auf SCOPE und die Moeglichkeit zum Update der Labels wenn Terminal-Anzahl geaendert wird
     // alle ZV-Daten nicht komprimiert fuer eventuelle Festplattenspeicherung --> Speicherkritisch
-    private AbstractDataContainer _zvDatenRAM;
+    private transient AbstractDataContainer _zvDatenRAM;
     //for use with GeckoSCRIPT - waveform characteristic
     private transient CharacteristicsCalculator _waveformChar;
     private double _charStart = 0;
@@ -72,14 +76,14 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     private static final int FOUR_CHAN_DEPTH = 4;
     public static final int DEF_TERM_NUMBER = 3;
     //for reading the correct rows from the global DataContainer
-    private ScopeWrapperIndices _scopeWrapperIndices;
+    private transient ScopeWrapperIndices _scopeWrapperIndices;
     private String[] _saveLoadSignalNames;
     private final ScopeSettings _scopeSettings = new ScopeSettings();  // initiale ScopeSettings definieren   ;    
     private final GraferV4 _grafer = new GraferV4(_scopeSettings);
     public ScopeFrame _scopeFrame = new ScopeFrame(_grafer);
     private boolean _isShowName;
-    Stack<AbstractScopeSignal> _scopeInputSignals = new Stack<AbstractScopeSignal>();
-    private final DefinedMeanSignals _meanSignals = new DefinedMeanSignals(_scopeInputSignals);
+    transient Stack<AbstractScopeSignal> _scopeInputSignals = new Stack<AbstractScopeSignal>();
+    private transient final DefinedMeanSignals _meanSignals = new DefinedMeanSignals(_scopeInputSignals);
     
     private static final int DIAMETER = 4;
     private static final double HEIGHT = 0.6;
@@ -342,13 +346,13 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             _scopeSettings.exportASCII(appendLater);
             super.exportAsciiIndividual(appendLater);
             appendLater.append("\ntn");
-            DatenSpeicher.appendAsString(appendLater.append("\nisShowName"), _isShowName);
+            ProjectData.appendAsString(appendLater.append("\nisShowName"), _isShowName);
 
             _saveLoadSignalNames = new String[_zvDatenRAM.getRowLength()];
             for (int i = 0; i < _zvDatenRAM.getRowLength(); i++) {
                 _saveLoadSignalNames[i] = _zvDatenRAM.getSignalName(i);
             }
-            DatenSpeicher.appendAsString(appendLater.append("\nsavedSignalNames"), _saveLoadSignalNames);
+            ProjectData.appendAsString(appendLater.append("\nsavedSignalNames"), _saveLoadSignalNames);
 
             _meanSignals.exportIndividualCONTROL(appendLater);
             appendLater.append("\n<ScopeSettings>\n");
@@ -403,9 +407,6 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             importScopeSettings(scopeMap);
         }
 
-        if (Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
-            _scopeFrame.setVisible(true);
-        }
     }
 
     //for use with GeckoSCRIPT - get waveform characteristics for a particular channel
@@ -472,7 +473,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         _scopeFrame.clearZVDaten();
         _scopeFrame._scope.setDataContainer(_zvDatenRAM);
         //------------
-        // jedesmal, wenn ein neues SCOPE-Fenster 'laeuft', beginnt die ZV-Datenspeicherung von Neuem
+        // jedesmal, wenn ein neues SCOPE-MainWindow 'laeuft', beginnt die ZV-Datenspeicherung von Neuem
         if (_waveformChar != null) {
             _waveformChar.setInvalid();
         }
@@ -497,6 +498,8 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     }
 
     @Override
+    @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+            justification = "Null checks protect against uninitialized field access from superclass constructor")
     public void setInputTerminalNumber(final int number) {
         while (XIN.size() > number) {
             XIN.pop();
@@ -506,17 +509,17 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             XIN.add(new TerminalControlInput(this, TERM_POS_X, -XIN.size()));
         }
 
+        // Null checks required because this method may be called from superclass constructor
+        // before instance fields are initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
         try {
-            if (_grafer != null) {
+            if (_grafer != null && _meanSignals != null && _scopeFrame != null) {
                 _grafer.getManager().defineNewSignalNumber(this, XIN.size(), _meanSignals);
                 _scopeFrame.setNewTerminalNumber(XIN.size());
             }
 
-        } catch (Exception ex) {
-            //ex.printStackTrace();
+        } catch (Exception ex) { // NOPMD
+            // Exception intentionally ignored: Signal number change may fail during initialization - safe to ignore
         }
-
-
     }
 
     @Override

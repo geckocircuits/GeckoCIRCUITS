@@ -17,11 +17,14 @@ import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LeitverlusteMes
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;
 import java.util.ArrayList;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Active segment field for direct access during simulation iterations")
 public class DiodeCharacteristic {
     private DiodeSegment[] _diodeSegments;
 

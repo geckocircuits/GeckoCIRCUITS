@@ -14,12 +14,15 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 
 public interface Operationable {
 
     List<OperationInterface> getOperationEnumInterfaces();
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+            justification = "Abstract class - assertions are design-time checks for programmer error, not runtime exceptions")
     public abstract class OperationInterface {
 
         final String _operationName;

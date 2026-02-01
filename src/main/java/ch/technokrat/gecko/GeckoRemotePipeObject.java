@@ -40,7 +40,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public GeckoRemotePipeObject(final String methodName, final Object[] methodArguments) {
         _type = GeckoRemotePipeObjectType.METHOD_CALL;
         _methodName = methodName;
-        _methodArguments = methodArguments;
+        _methodArguments = methodArguments != null ? methodArguments.clone() : null;
         _methodReturnValue = null;
         _errorMessage = "";
     }
@@ -128,7 +128,7 @@ public class GeckoRemotePipeObject implements Serializable {
      * @return the arguments of the method associated with this object
      */
     public Object[] getMethodArguments() {
-        return _methodArguments;
+        return _methodArguments != null ? _methodArguments.clone() : null;
     }
     
     /**

@@ -15,6 +15,7 @@ package ch.technokrat.gecko;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -36,9 +37,9 @@ public final class SystemOutputRedirect {
         // this is a "static" behavior class! -> private constructor
     }
     
-    public static void init() {        
-        System.setOut(new PrintStream(WARNING_STREAM));
-        System.setErr(new PrintStream(WARNING_ERR_STREAM));
+    public static void init() {
+        System.setOut(new PrintStream(WARNING_STREAM, true, StandardCharsets.UTF_8));
+        System.setErr(new PrintStream(WARNING_ERR_STREAM, true, StandardCharsets.UTF_8));
     }       
     
     public static void setAlternativeOutput(final StringBuffer stringBuffer, final String description) {

@@ -25,6 +25,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.*;
 
@@ -42,7 +43,10 @@ public final class DialogLabelEingeben extends JDialog {
     public DialogLabelEingeben(final TerminalInterface terminal) {
         super(GeckoSim._win, true);
         try {
-            this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -122,7 +126,7 @@ public final class DialogLabelEingeben extends JDialog {
                 // 'OK'-Knopf oder 'Return'-Taste gedrueckt --> entsprechender Label des Elements wird aktualisiert
                 _label.setLabelFromUserDialog(_textField.getText());                
                 _clickedTerminal.getCircuitSheet().updateRenamedLabel(_originalLabel, _textField.getText(), _conType);
-                SchematischeEingabe2.Singleton.registerChangeWithNetlistUpdate();
+                SchematicEditor2.Singleton.registerChangeWithNetlistUpdate();
                 dispose();
             }
         });

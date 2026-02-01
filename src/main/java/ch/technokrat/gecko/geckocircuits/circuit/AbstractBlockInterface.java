@@ -16,14 +16,12 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.control.ControlTypeInfo;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SemiconductorLossCalculatable;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ThermAmbient;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.control.*;
@@ -44,8 +42,11 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 import ch.technokrat.modelviewcontrol.ModelMVC;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
+    @SuppressWarnings("rawtypes")
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Block interface exposes terminals and parameters for circuit connectivity and configuration")
+    public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
         implements ComponentTerminable {
 
     public List<UserParameter<? extends Object>> registeredParameters = new ArrayList<UserParameter<? extends Object>>();
@@ -353,7 +354,7 @@ public abstract class AbstractBlockInterface extends AbstractCircuitSheetCompone
     public void checkNameOptParameter() {
         for (UserParameter par : getRegisteredParameters()) {
             if (!par.getNameOpt().isEmpty()) {
-                double number = Fenster.optimizerParameterData.getNumberFromName(par.getNameOpt());
+                MainWindow.optimizerParameterData.getNumberFromName(par.getNameOpt());
             }
 
         }
@@ -425,22 +426,22 @@ public abstract class AbstractBlockInterface extends AbstractCircuitSheetCompone
         }
 
 
-        DatenSpeicher.appendAsString(ascii.append("\nlabelAnfangsKnoten"), labelAnfangsKnoten);
-        DatenSpeicher.appendAsString(ascii.append("\nlabelEndKnoten"), labelEndKnoten);
+        ProjectData.appendAsString(ascii.append("\nlabelAnfangsKnoten"), labelAnfangsKnoten);
+        ProjectData.appendAsString(ascii.append("\nlabelEndKnoten"), labelEndKnoten);
         super.exportASCII(ascii);
-        DatenSpeicher.appendAsString(ascii.append("\ntyp"), getTypeEnum().getTypeNumber());
+        ProjectData.appendAsString(ascii.append("\ntyp"), getTypeEnum().getTypeNumber());
         getIdentifier().exportASCII(ascii);
 
-        DatenSpeicher.appendAsString(ascii.append("\nx"), getSheetPosition().x);
-        DatenSpeicher.appendAsString(ascii.append("\ny"), getSheetPosition().y);
-        DatenSpeicher.appendAsString(ascii.append("\nparameter"), parameter);
+        ProjectData.appendAsString(ascii.append("\nx"), getSheetPosition().x);
+        ProjectData.appendAsString(ascii.append("\ny"), getSheetPosition().y);
+        ProjectData.appendAsString(ascii.append("\nparameter"), parameter);
 
-        DatenSpeicher.appendAsString(ascii.append("\nparameterString"), parameterString);
+        ProjectData.appendAsString(ascii.append("\nparameterString"), parameterString);
         updateNameOptArray();
-        DatenSpeicher.appendAsString(ascii.append("\nnameOpt"), nameOpt);
+        ProjectData.appendAsString(ascii.append("\nnameOpt"), nameOpt);
 
-        DatenSpeicher.appendAsString(ascii.append("\norientierung"), getComponentDirection().code());
-        DatenSpeicher.appendAsString(ascii.append("\nidStringDialog"), getStringID());
+        ProjectData.appendAsString(ascii.append("\norientierung"), getComponentDirection().code());
+        ProjectData.appendAsString(ascii.append("\nidStringDialog"), getStringID());
 
         if (this instanceof ComponentCoupable) {
             ((ComponentCoupable) this).getComponentCoupling().exportASCII(ascii);
@@ -728,7 +729,7 @@ public abstract class AbstractBlockInterface extends AbstractCircuitSheetCompone
 
     @Override
     public void paintComponentForeGround(final Graphics2D graphics) {
-        graphics.setFont(SchematischeEingabe2.circuitFont);
+        graphics.setFont(SchematicEditor2.circuitFont);
         graphics.setColor(getForeGroundColor());
 
         for (AbstractTerminal term : XIN) {
@@ -758,7 +759,7 @@ public abstract class AbstractBlockInterface extends AbstractCircuitSheetCompone
 
     @Override
     public void paintGeckoComponent(final Graphics2D graphics) {
-        graphics.setFont(SchematischeEingabe2.circuitFont);
+        graphics.setFont(SchematicEditor2.circuitFont);
         graphics.setColor(getForeGroundColor());
 
         _textInfo.clearParameters();
@@ -979,7 +980,7 @@ public abstract class AbstractBlockInterface extends AbstractCircuitSheetCompone
     @Override
     public void doDoubleClickAction(final Point clickedPoint) {
         final TerminalInterface clickedTerm = clickedTerminal(clickedPoint);
-        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematischeEingabe2.Singleton._visibleCircuitSheet) {
+        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematicEditor2.Singleton._visibleCircuitSheet) {
             final DialogLabelEingeben labelDialog = new DialogLabelEingeben(clickedTerm);
             labelDialog.setVisible(true);
             return;

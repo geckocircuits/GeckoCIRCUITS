@@ -79,9 +79,9 @@ public final class StateSpaceCalculator {
         StateVariables(final TokenMap tokenMap) {
 
             _parentHash = tokenMap.readDataLine("parentHash", -1);
-            _xNEW = tokenMap.readDataLine("stateXNEW", _xNEW);
-            _xOLD = tokenMap.readDataLine("stateXOLD", _xOLD);
-            _xOLDOLD = tokenMap.readDataLine("stateXOLDOLD", _xOLDOLD);
+            _xNEW = tokenMap.readDataLine("stateXNEW", 0.0);
+            _xOLD = tokenMap.readDataLine("stateXOLD", 0.0);
+            _xOLDOLD = tokenMap.readDataLine("stateXOLDOLD", 0.0);
             final double[] resultVector = tokenMap.readDataLine("stateResultVector", new double[0]);
             _result = new Matrix(resultVector.length, 1);
             for (int i = 0; i < resultVector.length; i++) {
@@ -157,11 +157,10 @@ public final class StateSpaceCalculator {
     }
     
     void initializeWithNewDt(final double deltaT) {
-         double deltaTOld = _deltaT;
          calculateMatrixA(deltaT);
-            
+
          //TODO: for differentiation (using _stateVariables._xOLD and _stateVariables._xNEW
-         // the stepwidth-change is not yet implemented correctly!         
+         // the stepwidth-change is not yet implemented correctly!
     }
 
     StateVariables getStateVariables() {
@@ -225,19 +224,19 @@ public final class StateSpaceCalculator {
 
 
         // Add the (higher) derivative values, if leading polynom is existent.
-        switch (_leadingPolynom.length) {
-            case MAX_DEGREE_DIFF:
-                resultValue += _leadingPolynom[2] * (_stateVariables._xNEW
-                        - 2 * _stateVariables._xOLD + _stateVariables._xOLDOLD) / deltaT; // second derivative
-            case 2:
-                double toAdd = _leadingPolynom[1] * (_stateVariables._xNEW - _stateVariables._xOLD) / deltaT; // first derivative                
-                resultValue += toAdd;
-            case 1:
-                resultValue += xIN[0][0] * _leadingPolynom[0]; // proportional part
-            case 0:
-                break;
-            default:
-                assert false;
+        if (_leadingPolynom.length >= MAX_DEGREE_DIFF) {
+            // second derivative
+            resultValue += _leadingPolynom[2] * (_stateVariables._xNEW
+                    - 2 * _stateVariables._xOLD + _stateVariables._xOLDOLD) / deltaT;
+        }
+        if (_leadingPolynom.length >= 2) {
+            // first derivative
+            double toAdd = _leadingPolynom[1] * (_stateVariables._xNEW - _stateVariables._xOLD) / deltaT;
+            resultValue += toAdd;
+        }
+        if (_leadingPolynom.length >= 1) {
+            // proportional part
+            resultValue += xIN[0][0] * _leadingPolynom[0];
         }
 
         outputSignal[0][0] = resultValue;

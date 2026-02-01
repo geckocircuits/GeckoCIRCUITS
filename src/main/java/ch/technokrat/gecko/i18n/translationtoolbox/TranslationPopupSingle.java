@@ -27,7 +27,10 @@ import javax.swing.SwingWorker;
 import ch.technokrat.gecko.i18n.LangInit;
 import ch.technokrat.gecko.i18n.bot.UPbot;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Static progressMonitor is a shared UI component for progress tracking")
 public class TranslationPopupSingle extends javax.swing.JFrame implements PropertyChangeListener {
     
     private boolean confirmed = false;
@@ -35,8 +38,8 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
     private String newTranslation;
     private String comment;
     private String buttonName = "";
-    
-    private static ProgressMonitor progressMonitor; // Progress Monitor GUI
+
+    private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
     

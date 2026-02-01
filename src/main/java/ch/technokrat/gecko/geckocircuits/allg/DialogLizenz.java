@@ -15,37 +15,38 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.i18n.GuiFabric;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.BorderFactory;
-import javax.swing.border.TitledBorder;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog; 
+import javax.swing.JDialog;
 import java.net.URL;
 import javax.swing.border.EtchedBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores license text buffer for display")
 public class DialogLizenz extends JDialog implements WindowListener, ActionListener {
     private JButton knOK;
     private StringBuffer sbInfoTxt; 
 
     public DialogLizenz (StringBuffer sbInfoTxt) {
         super.setModal(true);
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception e) {}
+        try {
+            @SuppressWarnings("deprecation")
+            URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
+            this.setIconImage((new ImageIcon(url)).getImage());
+        } catch (Exception e) {
+            // Icon loading is optional - dialog works without it
+        }
         this.sbInfoTxt= sbInfoTxt; 
         this.addWindowListener(this);
         this.setTitle(" Licence Information");

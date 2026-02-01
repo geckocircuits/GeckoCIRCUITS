@@ -19,6 +19,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlOutput;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.MUXControlCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
@@ -26,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerMUX extends RegelBlock implements VariableTerminalNumber {
+    private static final long serialVersionUID = 1L;
 
     private static final double WIDTH = 0.3;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerMUX.class, "MUX", I18nKeys.CONTROL_MUX);
@@ -33,7 +35,7 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     // it is not updated when the terminal is changed in the current model.
     private int externalOrderNumber = -1;
 
-    final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 3).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
@@ -65,6 +67,8 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     
 
     @Override
+    @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+            justification = "Null check protects against uninitialized field access from superclass constructor")
     public void setInputTerminalNumber(final int number) {
         while (XIN.size() > number) {
             XIN.pop();
@@ -73,15 +77,15 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
         while (XIN.size() < number) {
             XIN.add(new TerminalControlInput(this, -2, -XIN.size()));
         }
-        
-        if(_inputTerminalNumber != null) {
+
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
+        if (_inputTerminalNumber != null) {
             int newsize = XIN.size();
-            if(_inputTerminalNumber.getValue() != newsize) {
+            if (_inputTerminalNumber.getValue() != newsize) {
                 _inputTerminalNumber.setUserValue(newsize);
-            }                        
-        }    
-        
-        
+            }
+        }
     }
 
     @Override

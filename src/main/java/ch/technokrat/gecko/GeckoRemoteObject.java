@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.net.ServerSocket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -44,6 +45,7 @@ import java.util.logging.Logger;
  *
  */
 @SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.NullAssignment"})
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer reference for RMI invocation")
 public class GeckoRemoteObject {
 
     public GeckoRemoteObject() {        
@@ -53,7 +55,7 @@ public class GeckoRemoteObject {
     private int portNumber;
     GeckoRemoteInterface _wrapped = null;
     GeckoRemoteIntWithoutExc _proxy;
-    private final int NO_SESSION_ID = -2;
+    private static final int NO_SESSION_ID = -2;
     private long sessionID = NO_SESSION_ID;
     private static final String REGISTRY_NAME = "GeckoRemoteInterface";
     private static final String ERROR_STRING = "Error with calling remote method. See nested exception for details.";
@@ -61,7 +63,7 @@ public class GeckoRemoteObject {
     private boolean doProxyCheck = true;
     private static String _pathToJava = "";
     
-    public class RemoteInvocationHandler implements InvocationHandler {
+    public final class RemoteInvocationHandler implements InvocationHandler {
 
         private final Object object;
         private final Map<Method, Method> _methodMap = new HashMap<Method, Method>();
@@ -156,7 +158,6 @@ public class GeckoRemoteObject {
     }
 
     public static GeckoRemoteObject connectToGecko() {
-        Fenster.IS_APPLET = false; // this is needed - otherwise we cannot read the properties
         GeckoSim.forceLoadApplicationProperties();
         return connectToExistingInstance(GeckoRemoteRegistry.getRemoteAccessPort());
     }

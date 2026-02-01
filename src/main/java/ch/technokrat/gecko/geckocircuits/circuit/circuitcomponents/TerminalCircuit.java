@@ -15,9 +15,7 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.util.List;
 
 public class TerminalCircuit extends AbstractCircuitTerminal {
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(TerminalCircuit.class, "CIRCUIT_TERMINAL", I18nKeys.CIRCUIT_TERMINAL);            

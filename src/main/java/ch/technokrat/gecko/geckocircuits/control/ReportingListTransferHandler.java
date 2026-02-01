@@ -166,7 +166,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
             _source = (JList) comp;
             _indices = _source.getSelectedIndices();
 
-            final Object[] values = _source.getSelectedValues();
+            final Object[] values = _source.getSelectedValuesList().toArray(new Object[0]);
             if (values == null || values.length == 0) {
                 return null;
             }
@@ -186,7 +186,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
         return COPY_OR_MOVE;
     }
 
-    private List getArrayList(final Transferable transf) {
+    private List<?> getArrayList(final Transferable transf) {
         List returnValue;
         try {
             if (hasLocalArrayListFlavor(transf.getTransferDataFlavors())) {

@@ -13,10 +13,15 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * TODO: this is the biggest mess I have ever seen. Pleas clean anybody up!
  * @author andreas
  */
+@SuppressWarnings({"PMD.AvoidLiteralsInIfConditions", "PMD.AssignmentInOperand"}) // Complex PWM/matrix converter control logic
+@SuppressFBWarnings(value = "FL_FLOATS_AS_LOOP_COUNTERS",
+        justification = "Phase normalization uses double for precision; bounded while loop prevents infinite iteration")
 public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
 
     
@@ -80,24 +85,14 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     }
 
     public void setPulseWidths(double d1, double d2, double d3, double d4, double d5, double da, double db, double fDR) {
-        int LG = 1000;  // maximale zeitliche Aufloesung innerhalb der Pulsperiode 
-        int y1, y2, y3, y4, y5, y6, y7, y8, y9, dh, x1, x2, xm, dxh;
+        int LG = 1000;  // maximale zeitliche Aufloesung innerhalb der Pulsperiode
+        int x1, x2, xm, dxh;
         int x1a = -1, x1b = -1, x1c, x1d, x2a = -1, x2b = -1, x2c, x2d, x3a = -1, x3b = -1, x3c, x3d, x4a = -1, x4b = -1, x4c, x4d, x5a = -1, x5b = -1, x5c, x5d;
         int x6a = -1, x6b = -1, x6c, x6d, x7a = -1, x7b = -1, x7c, x7d, x8a = -1, x8b = -1, x8c, x8d, x9a = -1, x9b = -1, x9c, x9d;
-        int d = 12;
         x1 = 0;
         x2 = LG;
         xm = (x2 + x1) / 2;
         dxh = xm - x1;
-        y1 = 0 + d;
-        y2 = y1 + d;
-        y3 = y2 + d;
-        y4 = y3 + d;
-        y5 = y4 + d;
-        y6 = y5 + d;
-        y7 = y6 + 2 * d;
-        y8 = y7 + d;
-        y9 = y8 + d;
         double xLokal = LG * fDR * tLokal;
         switch (seIN) {
             case 1:
@@ -819,7 +814,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         }
         double ua = k * Math.cos(phiOUT + Math.PI / 6);
         double ub = k * Math.sin(phiOUT);
-        double x1 = 0, x2 = 0;
+        double x1 = 0;
+        double x2 = 0;
         switch (seIN) {
             case 1:
                 x1 = (-2 * ut);
@@ -870,7 +866,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x2 = (-2 * ut);
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("Invalid input sector: " + seIN);
         }
         switch (seOUT) {
             case 1:

@@ -30,15 +30,17 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer class reference for power calculations")
 public final class PowerAnalysisPanel extends JPanel {
 
-    private final JComboBox[] _comboU = new JComboBox[3];
-    private final JComboBox[] _comboI = new JComboBox[3];
+    private final JComboBox<String>[] _comboU = new JComboBox[3];
+    private final JComboBox<String>[] _comboI = new JComboBox[3];
     private FormatJTextField[][] _pqTextFields;  // Textfelder fuer Leistungswerte A und B
     private final TechFormat _cf = new TechFormat();
     private final GridBagConstraints _gbc = new GridBagConstraints();
@@ -173,7 +175,7 @@ public final class PowerAnalysisPanel extends JPanel {
     private void setComboUIActions(final PowerAnalysisSettings powerAnalSettings) {
         for (int i = 0; i < _comboU.length; i++) {
             final int index = i;
-            _comboU[i] = new JComboBox(signalListe);
+            _comboU[i] = new JComboBox<>(signalListe);
 
             if (powerAnalSettings._powerAnalVoltageIndices[i] >= 0) {
                 _comboU[i].setSelectedIndex(powerAnalSettings._powerAnalVoltageIndices[i]);
@@ -186,7 +188,7 @@ public final class PowerAnalysisPanel extends JPanel {
                 }
             });
 
-            _comboI[i] = new JComboBox(signalListe);
+            _comboI[i] = new JComboBox<>(signalListe);
 
             if (powerAnalSettings._powerAnalCurrentIndices[i] >= 0) {
                 _comboI[i].setSelectedIndex(powerAnalSettings._powerAnalCurrentIndices[i]);

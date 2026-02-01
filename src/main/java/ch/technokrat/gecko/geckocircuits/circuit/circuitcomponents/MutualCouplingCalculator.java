@@ -13,9 +13,10 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Coupling calculator must share references to actual inductor objects for proper coupling behavior")
 public class MutualCouplingCalculator {
     private double _M;
     private double _k;

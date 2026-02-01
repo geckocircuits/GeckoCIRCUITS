@@ -15,8 +15,7 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckoscript.GeckoInvalidArgumentException;
-import java.util.Arrays;
-import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Calculates the characteristic values of a datacontainer, e.g. average, rms,
@@ -211,8 +210,7 @@ public final class CharacteristicsCalculator {
         final double totalT = rng2 - rng1;
 
         final int startIndex = worksheet.findTimeIndex(rng1, 0);
-        long tick = System.currentTimeMillis();
-        
+
         for (int i1 = startIndex; i1 < worksheet.getMaximumTimeIndex(0)
                 && worksheet.getTimeValue(i1 + 1, 0) > worksheet.getTimeValue(i1, 0)
                 && worksheet.getTimeValue(i1, 0) < rng2; i1++) {
@@ -302,6 +300,8 @@ public final class CharacteristicsCalculator {
         return CharacteristicsCalculator.calculateFabric(worksheet, rows, rng1, rng2);
     }
 
+    @SuppressFBWarnings(value = "MS_EXPOSE_REP",
+            justification = "Intentionally returns cached _valueCache instance for performance - callers expect cached object")
     public static CharacteristicsCalculator calculateFabric(final AbstractDataContainer worksheet, final int[] rows,
             final double rng1, final double rng2) {
         if (isAlreadyCalculated(worksheet, rows, rng1, rng2)) {

@@ -16,7 +16,6 @@ package ch.technokrat.gecko.geckocircuits.control;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.DataTablePanel;
-import ch.technokrat.gecko.geckocircuits.control.calculators.SmallSignalCalculator;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
@@ -26,6 +25,7 @@ import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -33,14 +33,14 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author Raffael2
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores data array reference for SSA plot display")
 public final class DialogSSAPlot extends GeckoDialog {
-    private static final int BUTTON_HEIGHT = 30;
-    //private static final Dimension BUTTON_DIMENSION = new Dimension(80, BUTTON_HEIGHT);
     
     private double[][] _data;
     //private String _extension = ".txt";
@@ -53,12 +53,16 @@ public final class DialogSSAPlot extends GeckoDialog {
     public DialogSSAPlot(final double[][] data){
         super(GeckoSim._win, true);
         _data = data;
-        
+
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
         }
-        
+
+        @SuppressWarnings("deprecation")
         ScopeSettings settings = new ScopeSettings();
         Dimension windowSize = new Dimension(800, 600);
         setPreferredSize(windowSize);
@@ -105,9 +109,7 @@ public final class DialogSSAPlot extends GeckoDialog {
         JPanel jpCONDdataGes = new JPanel();
         jpCONDdataGes.setLayout(new BorderLayout());
         jpCONDdataGes.add(table, BorderLayout.CENTER);
-        
-        final DialogSSAPlot dialogParent = this;
-        
+
         //========================
         JPanel jpCOND = new JPanel();
         jpCOND.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.LEFT, TitledBorder.TOP));

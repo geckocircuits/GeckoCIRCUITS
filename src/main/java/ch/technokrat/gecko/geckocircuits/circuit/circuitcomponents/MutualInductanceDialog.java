@@ -76,7 +76,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
         System.arraycopy(idListeInduktTemp, 0, idListeInduktLK, 0, anzL);
         //
         if (anzL >= 2) {
-            final JComboBox combo = new JComboBox(labelListeInduktLK);
+            final JComboBox<String> combo = new JComboBox<>(labelListeInduktLK);
             combo.setForeground(GlobalColors.farbeFertigElementLK);
             int indexCombo = -1;
             for (int i1 = 0; i1 < labelListeInduktLK.length; i1++) {
@@ -100,7 +100,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
                     element.setParameter(par);
                 }
             });
-            final JComboBox combo2 = new JComboBox(labelListeInduktLK);
+            final JComboBox<String> combo2 = new JComboBox<>(labelListeInduktLK);
             indexCombo = -1;
             for (int i1 = 0; i1 < labelListeInduktLK.length; i1++) {
                 if (element.getParameterString()[1].equals(labelListeInduktLK[i1])) {

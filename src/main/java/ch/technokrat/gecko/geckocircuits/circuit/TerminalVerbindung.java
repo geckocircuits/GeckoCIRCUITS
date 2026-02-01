@@ -14,6 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.control.Point;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Graphics;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Terminal must share references to parent connection for circuit connectivity")
 public class TerminalVerbindung implements TerminalInterface {
     private final Location _loc;
     private final Verbindung _verb;

@@ -9,28 +9,72 @@
   <version>1.0</version>
 
   <name>gecko</name>
-  <description>A simple gecko.</description>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <description>GeckoCIRCUITS - Power Electronics Circuit Simulator</description>
+  <url>https://github.com/geckocircuits</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  <maven.compiler.source>21</maven.compiler.source>
-  <maven.compiler.target>21</maven.compiler.target>
+  <!--
+    Additional modules are located in src/modules/:
+    - gecko-simulation-core: GUI-free simulation engine
+    - gecko-rest-api: REST API built on Spring Boot
+
+    These modules can be built separately:
+      cd src/modules/gecko-simulation-core && mvn clean package
+      cd src/modules/gecko-rest-api && mvn clean package
+  -->
+
+  <!-- NOTE: Maven compiler may output INFO-level warnings about deprecated API usage.
+       These are informational only and do not affect the build. To suppress these
+       messages during builds, use: mvn -q clean compile (or any other maven goal)
+       The -Xlint:none flag disables javac linting but Maven still reports summary messages. -->
+
+   <properties>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+
+     <!-- Dependency version management for easy updates -->
+     <junit.version>5.11.3</junit.version>
+     <log4j2.version>2.24.3</log4j2.version>
+     <graalvm.version>24.1.1</graalvm.version>
   </properties>
 
   <dependencies>
+    <!-- SpotBugs annotations for suppressing warnings -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <version>4.8.6</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
+    </dependency>
+    <!-- JUnit 4 vintage for legacy tests -->
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.polyglot</groupId>
+      <artifactId>polyglot</artifactId>
+      <version>${graalvm.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.graalvm.polyglot</groupId>
+      <artifactId>js</artifactId>
+      <version>${graalvm.version}</version>
+      <type>pom</type>
     </dependency>
     <!-- https://mvnrepository.com/artifact/de.sciss/syntaxpane -->
     <dependency>
         <groupId>de.sciss</groupId>
         <artifactId>syntaxpane</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
     </dependency>
     <dependency>
       <groupId>edu.emory.mathcs</groupId>
@@ -42,11 +86,16 @@
       <artifactId>jwbf</artifactId>
       <version>3.1.1</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-svggen -->
     <dependency>
@@ -67,12 +116,24 @@
     <dependency>
       <groupId>org.netbeans.external</groupId>
       <artifactId>AbsoluteLayout</artifactId>
-      <version>RELEASE111</version>
+      <version>RELEASE280</version>
     </dependency>
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
-      <version>4.1.0</version>
+      <version>5.18.1</version>
+    </dependency>
+    <dependency>
+        <groupId>com.fifesoft</groupId>
+        <artifactId>rsyntaxtextarea</artifactId>
+        <version>3.3.4</version>
+    </dependency>
+    <!-- Mockito for test mocking -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.11.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -89,7 +150,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.9.0</version>
         </plugin>
         <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
         <plugin>
@@ -98,21 +159,64 @@
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
-	  <configuration>
-	    <source>17</source>
-            <target>17</target>
-        </configuration>
-          <!--version>3.8.0</version-->
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
+          <version>3.13.0</version>
           <configuration>
-            <trimStackTrace>false</trimStackTrace>
+            <source>21</source>
+            <target>21</target>
+            <release>21</release>
+            <compilerArgs>
+              <arg>-Xlint:all</arg>
+            </compilerArgs>
           </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
+          <plugin>
+             <artifactId>maven-surefire-plugin</artifactId>
+           <version>3.5.4</version>
+           <configuration>
+             <trimStackTrace>false</trimStackTrace>
+           </configuration>
+         </plugin>
+         <!-- JaCoCo for test coverage tracking -->
+         <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.13</version>
+           <executions>
+             <execution>
+               <id>prepare-agent</id>
+               <goals>
+                 <goal>prepare-agent</goal>
+               </goals>
+             </execution>
+             <execution>
+               <id>report</id>
+               <phase>test</phase>
+               <goals>
+                 <goal>report</goal>
+               </goals>
+             </execution>
+           </executions>
+          </plugin>
+          <!-- SpotBugs for bug detection -->
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <version>4.8.6.6</version>
+          </plugin>
+          <!-- Checkstyle for style checking -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.5.0</version>
+          </plugin>
+          <!-- PMD for code quality -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.25.0</version>
+          </plugin>
+         <plugin>
+           <artifactId>maven-jar-plugin</artifactId>
           <version>3.0.2</version>
           <configuration>
             <archive>
@@ -131,9 +235,9 @@
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.8.2</version>
         </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.1.1</version>
+         <plugin>
+           <artifactId>maven-assembly-plugin</artifactId>
+           <version>3.8.0</version>
           <configuration>
             <descriptorRefs>
               <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -157,6 +261,28 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.11</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
 <!--
     <plugins>
       <plugin>

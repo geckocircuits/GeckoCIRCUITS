@@ -15,32 +15,33 @@ package ch.technokrat.gecko.geckoscript;
 
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.*;
 import ch.technokrat.gecko.geckocircuits.control.*;
 import ch.technokrat.gecko.geckocircuits.control.DataSaver;
-import ch.technokrat.gecko.geckocircuits.control.javablock.ExtraFilesWindow;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class SimulationAccess implements GeckoFileable {
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "EI_EXPOSE_REP"}, justification = "Simulation access stores main window reference for GUI interaction; returns file list for external access")
+public final class SimulationAccess implements GeckoFileable {
 
     final static long DUMMY_BLOCK_ID = -1231231987;
     final List<GeckoFile> _additionalSourceFiles = new ArrayList<GeckoFile>();
     private boolean _populateFileList = false;
-    private final Set<String> _additionalFilesHashKeys = new TreeSet();
+    private final Set<String> _additionalFilesHashKeys = new TreeSet<>();
 
     private ScriptWindow scriptwindow;
-    public SchematischeEingabe2 se;
-    private Fenster mainWindow;
+    public SchematicEditor2 se;
+    private MainWindow mainWindow;
 
-    public SimulationAccess(final Fenster fenster) {
-        se = SchematischeEingabe2.Singleton;
+    public SimulationAccess(final MainWindow fenster) {
+        se = SchematicEditor2.Singleton;
         mainWindow = fenster;
         assert mainWindow != null;
         try {
@@ -143,16 +144,16 @@ public class SimulationAccess implements GeckoFileable {
     }
 
     private static List<List<AbstractBlockInterface>> doListSort(final List<? extends AbstractBlockInterface> unsorted) {
-        List<List<AbstractBlockInterface>> sortedListofLists = new ArrayList<List<AbstractBlockInterface>>();
-        List<Class> types = new ArrayList<Class>();
-        HashMap<Class, List<AbstractBlockInterface>> listsByType = new HashMap<Class, List<AbstractBlockInterface>>();
+        List<List<AbstractBlockInterface>> sortedListofLists = new ArrayList<>();
+        List<Class<?>> types = new ArrayList<>();
+        HashMap<Class<?>, List<AbstractBlockInterface>> listsByType = new HashMap<>();
         List<AbstractBlockInterface> currentList;
 
         for (AbstractBlockInterface elem : unsorted) {
-            Class elementClass = elem.getClass();
+            Class<?> elementClass = elem.getClass();
             currentList = listsByType.get(elementClass);
             if (currentList == null) {
-                currentList = new ArrayList<AbstractBlockInterface>();
+                currentList = new ArrayList<>();
                 currentList.add(elem);
                 listsByType.put(elementClass, currentList);
                 types.add(elementClass);
@@ -161,7 +162,7 @@ public class SimulationAccess implements GeckoFileable {
             }
         }
 
-        for (Class elemType : types) {
+        for (Class<?> elemType : types) {
             sortedListofLists.add(listsByType.get(elemType));
         }
 
@@ -241,7 +242,7 @@ public class SimulationAccess implements GeckoFileable {
 
     public final void importFromFile(final String fileName, final String importIntoSubcircuit)
             throws FileNotFoundException {
-        Fenster.importComponentsFromFile(fileName, importIntoSubcircuit);
+        MainWindow.importComponentsFromFile(fileName, importIntoSubcircuit);
     }
 
     File getCurrentModelFile() {
@@ -313,8 +314,8 @@ public class SimulationAccess implements GeckoFileable {
              * ElementInterface element,
              */int x, int y) throws Exception {
         boolean valid = false;
-        int worksheetSizeX = Fenster._se._circuitSheet._worksheetSize.getSizeX();
-        int worksheetSizeY = Fenster._se._circuitSheet._worksheetSize.getSizeY();
+        int worksheetSizeX = MainWindow._se._circuitSheet._worksheetSize.getSizeX();
+        int worksheetSizeY = MainWindow._se._circuitSheet._worksheetSize.getSizeY();
         if (x >= worksheetSizeX || y >= worksheetSizeY) {
             throw new Exception("Given position is outside defined drawing area! Sheet size is " + worksheetSizeX + "x" + worksheetSizeY + " and given new position is " + x + "x" + y + ".");
         } else {
@@ -323,13 +324,7 @@ public class SimulationAccess implements GeckoFileable {
             //BUT - to update this, we first have to set the new coordinates and then re-paint the component
             //this is too complicated for now, so just give a "buffer zone" around the component and check if position is far enough away from the sides
             //of the sheet
-            int bufferSpace = 3;
-            if (y < bufferSpace || x < bufferSpace || (worksheetSizeY - y) < bufferSpace || (worksheetSizeX - x) < bufferSpace) {
-                valid = true;
-                //throw new Exception("Given position is too close to worksheet sides. Sheet size is " + worksheetSizeX + "x" + worksheetSizeY + " and given new position is " + x + "x" + y + ".");
-            } else {
-                valid = true;
-            }
+            valid = true;
         }
         return valid;
     }
@@ -392,14 +387,14 @@ public class SimulationAccess implements GeckoFileable {
         }
 
         final ConnectorType terminalType = terminal.getCategory();
-        
-               
+
+
         final CircuitLabel label = terminal.getLabelObject();
-        final String oldLabel = label.getLabelString();        
+        final String oldLabel = label.getLabelString();
         label.setLabelFromUserDialog(labelName);
-                
-        final NetzlisteAllg netzlisteAllg1 = NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);        
-                                        
+
+        NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);
+
         se.updateRenamedLabel(oldLabel, labelName, terminalType);                
         se.setDirtyFlag();
     }
@@ -435,7 +430,7 @@ public class SimulationAccess implements GeckoFileable {
         for (GeckoFile newFile : newFiles) {
             _additionalSourceFiles.add(newFile);
             newFile.setUser(DUMMY_BLOCK_ID);
-            Fenster._fileManager.addFile(newFile);
+            MainWindow._fileManager.addFile(newFile);
         }
         scriptwindow._extSourceWindow.addNewFiles(newFiles);
     }
@@ -450,18 +445,18 @@ public class SimulationAccess implements GeckoFileable {
         for (GeckoFile removedFile : filesToRemove) {
             _additionalSourceFiles.remove(removedFile);
             removedFile.removeUser(DUMMY_BLOCK_ID);
-            Fenster._fileManager.maintain(removedFile);
+            MainWindow._fileManager.maintain(removedFile);
         }
 
         scriptwindow._extSourceWindow.removeFilesFromList(filesToRemove);
     }
 
     public String getExtraFilesHashes() {
-        String returnValue = "";
+        StringBuilder sb = new StringBuilder();
         for (GeckoFile gFile : _additionalSourceFiles) {
-            returnValue += gFile.getHashValue();
+            sb.append(gFile.getHashValue());
         }
-        return returnValue;
+        return sb.toString();
     }
 
     public void setExtraFilesHashBlock(final String extraFilesHashString) {
@@ -491,9 +486,9 @@ public class SimulationAccess implements GeckoFileable {
                 if (hash.trim().isEmpty()) {
                     continue;
                 }
-                hashValue = Long.valueOf(hash.trim());
+                hashValue = Long.parseLong(hash.trim());
                 try {
-                    file = Fenster._fileManager.getFile(hashValue);
+                    file = MainWindow._fileManager.getFile(hashValue);
                     _additionalSourceFiles.add(file);
                 } catch (Exception e) {
                     fileMissing = true;
@@ -512,12 +507,12 @@ public class SimulationAccess implements GeckoFileable {
     }
 
     void setWorksheetSize(int sizeX, int sizeY) {
-        Fenster._se._circuitSheet._worksheetSize.setNewWorksheetSize(sizeX, sizeY);
+        MainWindow._se._circuitSheet._worksheetSize.setNewWorksheetSize(sizeX, sizeY);
     }
 
     int[] getWorksheetSize() {
-        int sizeX = Fenster._se._circuitSheet._worksheetSize.getSizeX();
-        int sizeY = Fenster._se._circuitSheet._worksheetSize.getSizeY();
+        int sizeX = MainWindow._se._circuitSheet._worksheetSize.getSizeX();
+        int sizeY = MainWindow._se._circuitSheet._worksheetSize.getSizeY();
         return new int[]{sizeX, sizeY};
     }
 

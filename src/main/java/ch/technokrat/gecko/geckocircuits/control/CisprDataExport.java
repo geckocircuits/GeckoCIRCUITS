@@ -19,8 +19,11 @@ import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores data container reference for export")
 public class CisprDataExport extends GeckoDialog {
 
     private final AbstractDataContainer _dataContainer;
@@ -235,8 +238,8 @@ public class CisprDataExport extends GeckoDialog {
 
     public static void saveData(final int dataIndex, final AbstractDataContainer dataContainer, final File file,
             final boolean useDBMu) {
-        try {            
-            final FileWriter fileWriter = new FileWriter(file);
+        try {
+            final FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
             final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for (int i = 0; i < dataContainer.getMaximumTimeIndex(0); i++) {
                 float value = dataContainer.getValue(dataIndex, i);

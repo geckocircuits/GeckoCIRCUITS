@@ -27,9 +27,9 @@ import ch.technokrat.gecko.i18n.LangInit;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 public class DLbot {
-        
-    private static boolean connected = false; // Applet-Wiki connection status indicator
-    private static int progress = 0; // download progress (percent)
+
+    private static volatile boolean connected = false; // Applet-Wiki connection status indicator
+    private static volatile int progress = 0; // download progress (percent)
    
     /*
      * Creates a new bot with DLbot credentials, logs in and returns it.
@@ -39,7 +39,9 @@ public class DLbot {
     private static MediaWikiBot initBot() throws Exception {
             // print DEBUG messages in console if DEBUG_MODE is turned on
             if (InitParameters.DEBUG_MODE) {
-                org.apache.log4j.BasicConfigurator.configure(); // configure log4j
+                org.apache.logging.log4j.core.config.Configurator.setRootLevel(
+                    org.apache.logging.log4j.Level.DEBUG
+                ); // configure log4j2
             }
             progress = Math.min(progress + 2, 99); // update progress
             MediaWikiBot b = new MediaWikiBot(InitParameters.WIKI_URL);

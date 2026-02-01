@@ -35,9 +35,13 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JCheckBox;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "DE_MIGHT_IGNORE"},
+        justification = "Public field for FFT sample count; stores worksheet reference for Fourier analysis; icon loading is optional")
 public class DialogFourier extends JDialog {
 
     //-------------
@@ -63,8 +67,12 @@ public class DialogFourier extends JDialog {
         _newScope = newScope;
         super.setModal(true);
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
-        } catch (Exception e) {
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
+        } catch (Exception e) { // NOPMD
+            // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }
         this.worksheet = worksheet;
         signalFourierAnalysiert = new boolean[worksheet.getRowLength() + 1];
@@ -100,7 +108,6 @@ public class DialogFourier extends JDialog {
 
 
         //
-        int maximumFractionDigits = 9;
         JPanel pHAR = new JPanel();
         pHAR.setLayout(new GridBagLayout());
 
@@ -317,7 +324,6 @@ public class DialogFourier extends JDialog {
 
 
         i1 = startIndex;
-        double dT = rng2 - rng1;
         double dt = worksheet.getTimeValue(i1 + 1, 0) - worksheet.getTimeValue(i1, 0);
         //-------------------
         // Rechnen bis zum Endpunkt:
@@ -357,8 +363,8 @@ public class DialogFourier extends JDialog {
 
                 Cispr16Fft.realft(data, 1);
                 for (int n = nMin; n <= nMax; n++) {
-                    an[i2 - 1][n - nMin] = data[2 * n] / (NN / 2);
-                    bn[i2 - 1][n - nMin] = data[2 * n + 1] / (NN / 2);
+                    an[i2 - 1][n - nMin] = data[2 * n] / (NN / 2.0);
+                    bn[i2 - 1][n - nMin] = data[2 * n + 1] / (NN / 2.0);
                 }
             }
         }

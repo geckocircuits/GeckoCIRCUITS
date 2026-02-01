@@ -14,7 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores resistor reference for loss calculation")
 public final class LossCalculatorResistor implements AbstractLossCalculator {
 
     final AbstractCircuitBlockInterface _resistor;

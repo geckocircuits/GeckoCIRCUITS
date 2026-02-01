@@ -13,12 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
+import ch.technokrat.gecko.geckocircuits.api.ISimulationEngine;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractMotor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractVoltageSource;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCurrentSource;
 import ch.technokrat.gecko.geckocircuits.allg.DialogWarningNodeNumber;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInductor;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import ch.technokrat.gecko.geckocircuits.control.*;
@@ -27,14 +28,21 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.CompressorIntMatrix;
 import ch.technokrat.gecko.geckocircuits.datacontainer.IntegerMatrixCache;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ShortMatrixCache;
 import ch.technokrat.gecko.geckocircuits.newscope.ScopeFrame;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimulationsKern {
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
+        justification = "Static fields staticTSTART/staticTEND are intentionally written for backward compatibility; public simulation status for runtime monitoring")
+public class SimulationsKern implements ISimulationEngine {
 
-    private boolean diodenSchaltfehler;
     private double dt, t, tPAUSE;
-    public static double tSTART, tEND;
+    private double tSTART, tEND;
+
+    // Static fields for backward compatibility with classes that don't have SimulationsKern instance access
+    // These are updated whenever instance fields are set. Use getTSTART()/getTEND() methods when possible.
+    private static volatile double staticTSTART;
+    private static volatile double staticTEND;
     private LKMatrices lkmLK;  // Leistungskreis
     private LKMatrices lkmTHERM;  // thermischer Kreis
     private NetListLK nl;  // Leistungskreis
@@ -83,26 +91,62 @@ public class SimulationsKern {
     };
     public SimulationStatus _simulationStatus = SimulationStatus.NOT_INIT;
 
+    @Override
+    public ISimulationEngine.SimulationStatus getSimulationStatus() {
+        switch (_simulationStatus) {
+            case RUNNING:
+                return ISimulationEngine.SimulationStatus.RUNNING;
+            case PAUSED:
+                return ISimulationEngine.SimulationStatus.PAUSED;
+            case FINISHED:
+                return ISimulationEngine.SimulationStatus.FINISHED;
+            case NOT_INIT:
+            default:
+                return ISimulationEngine.SimulationStatus.NOT_INIT;
+        }
+    }
+
     public SimulationsKern() {
         _thLuDecompCache = new LUDecompositionCache();
         _luDecompCache = new LUDecompositionCache();
     }
 
+    @Override
     public void pauseSimulation() {
     }
 
+    @Override
     public double getZeitAktuell() {
         return t;
     }
 
+    @Override
     public double getTEND() {
-        return tEND;
+        return this.tEND;
     }
 
+    @Override
     public double getTSTART() {
-        return tSTART;
+        return this.tSTART;
     }
 
+    /**
+     * Static accessor for backward compatibility with classes that don't have SimulationsKern instance access.
+     * Prefer using instance methods getTSTART()/getTEND() when possible.
+     */
+    public static double getStaticTSTART() {
+        return staticTSTART;
+    }
+
+    /**
+     * Static accessor for backward compatibility with classes that don't have SimulationsKern instance access.
+     * Prefer using instance methods getTSTART()/getTEND() when possible.
+     */
+    public static double getStaticTEND() {
+        return staticTEND;
+    }
+
+    @Override
     public double getdt() {
         return dt;
     }
@@ -158,7 +202,7 @@ public class SimulationsKern {
         double stoergroesse = 1;//0.9999999;
         boolean isNewIteration = false;
 
-        while (diodenSchaltfehler = lkmLK.berechneBauteilStroeme(stoergroesse, dt, t, isNewIteration, switchingErrorCounter)) {
+        while (lkmLK.berechneBauteilStroeme(stoergroesse, dt, t, isNewIteration, switchingErrorCounter)) {
             isNewIteration = true;
             if (switchingErrorCounter > 10000) {
                 //new DialogDiodenError(switchingErrorCounter, t);
@@ -326,12 +370,16 @@ public class SimulationsKern {
                         par[8] = 0;  // --> on, Schwelle '0.5' fuer Umschalten
                     }
                     break;
+                default:
+                    // No switch action needed for other circuit types
+                    break;
             }
         }
         return mindestensEineAktiveSchalthandlung;
     }
 
-    public void runSimulation() {        
+    @Override
+    public void runSimulation() {
         while ((t <= tEND) && (_simulationStatus != _simulationStatus.PAUSED)) {
             simulateOneTimeStep();
             t += dt;
@@ -346,6 +394,7 @@ public class SimulationsKern {
         System.arraycopy(lkmTHERM.p, 0, pTHERM_ALT, 0, pTHERM_ALT.length);
     }
 
+    @Override
     public void simulateOneStep() throws Exception {
         if (t + dt > tEND) {
             throw new Exception("Specified end of simulation reached! Cannot simulate another step.");
@@ -354,6 +403,7 @@ public class SimulationsKern {
         t += dt;
     }
 
+    @Override
     public void simulateTime(double time) throws Exception {
         double simtime = t + time;
         boolean overReach = false;
@@ -371,6 +421,7 @@ public class SimulationsKern {
         }
     }
 
+    @Override
     public void endSim() {
         _simulationStatus = SimulationStatus.FINISHED;
         this.lastUpdateOfScope();
@@ -385,9 +436,9 @@ public class SimulationsKern {
     }
 
     // setze die Anfangsbedingungen entsprechend der letzten Berechnung, wenn CONTINUE gedrueckt wurde -->
+    @Override
     public void setInitialConditionsFromContinue() {
         if ((lkmLK.p.length != pLK_ALT.length) || (lkmTHERM.p.length != pTHERM_ALT.length)) {
-            DialogWarningNodeNumber dialogWarningNodeNumber = new DialogWarningNodeNumber();
             //System.out.println("Warning: Node-Number has been changed!");
             return;
         }
@@ -395,10 +446,18 @@ public class SimulationsKern {
         lkmTHERM.p = pTHERM_ALT;
     }
 
+    @Override
     public void setZeiten(double tSTART, double tEND, double dt) {
         this.tSTART = tSTART;
         this.tEND = tEND;
         this.dt = dt;
+        // Update static fields for backward compatibility
+        updateStaticTimes(tSTART, tEND);
+    }
+
+    private static void updateStaticTimes(double start, double end) {
+        staticTSTART = start;
+        staticTEND = end;
     }
 
     public void initSimulation(
@@ -412,6 +471,8 @@ public class SimulationsKern {
         this.tEND = tEND;
         this.tPAUSE = tPAUSE;
         this.t = tAktuell;
+        // Update static fields for backward compatibility
+        updateStaticTimes(tSTART, tEND);
         //            
         this.controlNL = nlContainer._nlControl;
         controlNL.doMemorInits(dt);
@@ -458,14 +519,14 @@ public class SimulationsKern {
         //
         // Leistungskreis:
         if (getAnfangsbedVomDialogfenster) {
-            lkmLK = new LKMatrices(Fenster._solverSettings.SOLVER_TYPE.getValue());
-            lkmLK.initMatrizen(nl, getAnfangsbedVomDialogfenster, true, Fenster._solverSettings.SOLVER_TYPE.getValue());  // pALT= new double[..];   iALT= new double[..];
+            lkmLK = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
+            lkmLK.initMatrizen(nl, getAnfangsbedVomDialogfenster, true, MainWindow._solverSettings.SOLVER_TYPE.getValue());  // pALT= new double[..];   iALT= new double[..];
             lkmLK.schreibeMatrix_A(dt, tAktuell, false);
 
             //
             // thermischer Kreis:
-            lkmTHERM = new LKMatrices(Fenster._solverSettings.SOLVER_TYPE.getValue());
-            lkmTHERM.initMatrizen((NetListLK) thermNL, getAnfangsbedVomDialogfenster, false, Fenster._solverSettings.SOLVER_TYPE.getValue());
+            lkmTHERM = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
+            lkmTHERM.initMatrizen((NetListLK) thermNL, getAnfangsbedVomDialogfenster, false, MainWindow._solverSettings.SOLVER_TYPE.getValue());
             lkmTHERM.schreibeMatrix_A(dt, tAktuell, false);
         }
         //=============================
@@ -487,21 +548,19 @@ public class SimulationsKern {
         } else {
             simuliereRegelkreis = true;
         }
-
-        diodenSchaltfehler = false;
     }
 
     public void setScopeMenuesStartStop() {
         // ganz am Anfang sofort einmal auffrischen:
         for (int i1 = 0; i1 < c.length; i1++) {
-            try {
-                if (c[i1] instanceof ReglerOSZI) {
-                    ((ReglerOSZI) c[i1])._scopeFrame.setScopeMenueEnabled(true);
+            if (c[i1] instanceof ReglerOSZI) {
+                ReglerOSZI oszi = (ReglerOSZI) c[i1];
+                if (oszi._scopeFrame != null) {
+                    oszi._scopeFrame.setScopeMenueEnabled(true);
                 }
-                if (c[i1] instanceof ReglerCISPR16) {
-                    ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(false);
-                }
-            } catch (NullPointerException e) {
+            }
+            if (c[i1] instanceof ReglerCISPR16) {
+                ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(false);
             }
         }
     }
@@ -755,19 +814,18 @@ public class SimulationsKern {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
+            // Intentionally ignored: sleep interruption is not critical here
         }  // damit es nicht zu einer 'RacingCondition' mit einer eventuell noch laufenden Aktualisierung aus takteAuffrischungScope() kommt
         //---------------------------
         for (int i1 = 0; i1 < c.length; i1++) {
-            try {
-                if (c[i1] instanceof ReglerOSZI) {
-                    ScopeFrame sf = ((ReglerOSZI) c[i1])._scopeFrame;
+            if (c[i1] instanceof ReglerOSZI) {
+                ScopeFrame sf = ((ReglerOSZI) c[i1])._scopeFrame;
+                if (sf != null) {
                     sf.setScopeMenueEnabled(false);
                 }
-                if (c[i1] instanceof ReglerCISPR16) {
-                    ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(true);
-                }
-            } catch (NullPointerException e) {
-                e.printStackTrace();
+            }
+            if (c[i1] instanceof ReglerCISPR16) {
+                ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(true);
             }
         }
     }

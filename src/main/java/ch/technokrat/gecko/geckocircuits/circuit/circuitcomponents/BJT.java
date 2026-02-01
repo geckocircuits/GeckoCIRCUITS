@@ -13,30 +13,28 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
-import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
-import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
-import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
-import ch.technokrat.gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
-import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.Window;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
+import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
+import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
+import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
+import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
+import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
+import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
+import ch.technokrat.gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
+import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
+import ch.technokrat.gecko.i18n.resources.I18nKeys;
+
 // Leistungskreis Idealer Schalter (hoch- oder niederohmiger Widerstand, daher bidirektional)
 // BJT is NOT an AbstractSwitch, since it does not connect to a "control gate"!
 public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCircuitable {
-    private static final double HEIGHT = 0.8;
     
     private static final double DEF_FORWARD_BETA = 100;
     private static final double DEF_BACKWARD_BETA = 60;
@@ -120,11 +118,10 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         super();        
         _collectorTerminal = XIN.get(0);
         _baseTerminal = new TerminalRelativePosition(this, -2, 0);        
-        _emitterTerminal = YOUT.get(0);        
+        _emitterTerminal = YOUT.get(0);
         XIN.add(_baseTerminal);
         //YOUT.add(_baseMidTerminal);
-        double i = 0, u = 0;    // Strom und Spannung eines Zweipols --> wird laufend in 'LKMatrizen' in parameter[] hineingeschrieben
-                
+
         _diode1 = (Diode) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_D, this);
         _diode1.getIDStringDialog().setRandomStringID();        
         _diode1.setOutputTerminal(0, _collectorTerminal);
@@ -238,8 +235,7 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
 
     @Override
     protected void drawForeground(final Graphics2D graphics) {
-        double dd = 0.25, alpha = Math.atan(HEIGHT), ddx = dd * Math.cos(alpha), ddy = dd * Math.sin(alpha);
-        
+
         int[] xPoints = new int[]{(int) -(dpix * 0.5), -dpix / 3, 0};
         int[] yPoints = new int[]{(int) (dpix * 0.8), (int) (dpix * 0.5), dpix};
 

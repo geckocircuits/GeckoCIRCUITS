@@ -13,21 +13,23 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.ExtremumType;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.FlankType;
 import ch.technokrat.gecko.geckocircuits.newscope.SliderUtils.IterationDirection;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.GroupLayout;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "NetBeans GUI form generated public field; stores Fourier panel reference for visualization")
 public final class NewScope extends javax.swing.JPanel {
 
     public final List<GraferV4> _grafer = new ArrayList<GraferV4>();
@@ -522,12 +524,9 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
 
     private void jButtonSaveZoomActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonSaveZoomActionPerformed
         for (GraferV4 grafer : _grafer) {
-            try {
+            if (grafer != null) {
                 grafer.saveCurrentZoom();
                 jButtonLoadZoom.setEnabled(true);
-            } catch (NullPointerException ex) {
-                Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
-
             }
         }
     }//GEN-LAST:event_jButtonSaveZoomActionPerformed
@@ -665,7 +664,7 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
 
     public void exportInvidualControl(StringBuffer ascii) {
         boolean isSelected = jToggleButtonAuto.isSelected();
-        DatenSpeicher.appendAsString(ascii.append("\nisAutoScaleWindowOn"), isSelected);
+        ProjectData.appendAsString(ascii.append("\nisAutoScaleWindowOn"), isSelected);
     }
 
     public void importIndividualCONTROL(final TokenMap settingsMap) {

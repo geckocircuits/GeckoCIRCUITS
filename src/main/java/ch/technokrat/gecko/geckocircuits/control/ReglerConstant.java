@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -24,11 +23,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerConstant extends RegelBlock {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerConstant.class, "CONST", I18nKeys.CONSTANT_VALUE);
-    
+
     private static final String CONST_STR = "const";
     
-    final UserParameter<Double> _constValue = UserParameter.Builder.<Double>start("constantValue", 1.0).
+    transient final UserParameter<Double> _constValue = UserParameter.Builder.<Double>start("constantValue", 1.0).
             longName(I18nKeys.CONSTANT_VALUE).
             shortName(CONST_STR).
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).

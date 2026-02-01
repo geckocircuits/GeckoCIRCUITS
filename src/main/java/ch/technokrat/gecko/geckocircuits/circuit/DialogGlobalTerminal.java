@@ -18,11 +18,13 @@ import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores terminal reference for global connection configuration")
 public class DialogGlobalTerminal extends javax.swing.JDialog {
     private final GlobalTerminable _globalTerminable;
     private final HashSet<GlobalTerminable> _allGlobalTerminals;

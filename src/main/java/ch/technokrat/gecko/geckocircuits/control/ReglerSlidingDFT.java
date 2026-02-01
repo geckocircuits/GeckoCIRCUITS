@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -27,21 +27,25 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_TRANSIENT_FIELD_NOT_RESTORED"},
+        justification = "Stores frequency data list for DFT configuration with undo support; transient fields repopulated during import")
 public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
+    private static final long serialVersionUID = 1L;
 
     private static final double DEFAULT_WIN_SIZE = 1e-5;
     private static final double DEFAULT_FREQENCY = 500;
     public static final ControlTypeInfo T_INFO = new ControlTypeInfo(ReglerSlidingDFT.class,"SDFT", I18nKeys.SDFT);
     
-    final UserParameter<Double> _averageSpan = UserParameter.Builder.<Double>start("windowSpan", DEFAULT_WIN_SIZE).
+    transient final UserParameter<Double> _averageSpan = UserParameter.Builder.<Double>start("windowSpan", DEFAULT_WIN_SIZE).
             longName(I18nKeys.AVERAGING_TIME).
             shortName("T").
             unit("sec").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, -1).
             build();
-    List<FrequencyData> _data = new ArrayList<FrequencyData>() {
+    transient List<FrequencyData> _data = new ArrayList<FrequencyData>() {
 
         @Override
         public void clear() {
@@ -151,7 +155,7 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
 
     public final class FrequencyData {
         
-        public final UserParameter<Double> _frequency;
+        public transient final UserParameter<Double> _frequency;
         public OutputData _outputData;
 
         public FrequencyData(final double frequency, final OutputData outputData) {
@@ -212,9 +216,9 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
             outputNameOpts[i] = _data.get(i)._frequency.getNameOpt();
         }
         
-        DatenSpeicher.appendAsString(ascii.append("\noutputTypes"), outputTypes);
-        DatenSpeicher.appendAsString(ascii.append("\noutputFrequencies"), outputFreqs);
-        DatenSpeicher.appendAsString(ascii.append("\nfrequenciesNameOpt"), outputNameOpts);
+        ProjectData.appendAsString(ascii.append("\noutputTypes"), outputTypes);
+        ProjectData.appendAsString(ascii.append("\noutputFrequencies"), outputFreqs);
+        ProjectData.appendAsString(ascii.append("\nfrequenciesNameOpt"), outputNameOpts);
 
     }
 

@@ -24,10 +24,13 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores worksheet and slider values for scope characteristics calculations")
 public class DialogScopeCharacteristics extends GeckoDialog {
 
     private GridBagConstraints _gridBagConst = new GridBagConstraints();
@@ -87,7 +90,10 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 try {
                     graphics.setColor(java.awt.Color.white);
                     graphics.fillRect(0, 0, RECT_SIZE, RECT_SIZE);  // weisser Hintergrund
-                    java.awt.Image equ1 = new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "equ1.png")).getImage();
+                    URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+                    // Fix for Java 21: use URL constructor instead of URI.toURL()
+                    URL pngUrl = new URL(picsUrl, "equ1.png");
+                    java.awt.Image equ1 = new ImageIcon(pngUrl).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exc) {
                     exc.printStackTrace();
@@ -113,7 +119,10 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 try {
                     graphics.setColor(java.awt.Color.white);
                     graphics.fillRect(0, 0, RECT_SIZE, RECT_SIZE);  // weisser Hintergrund
-                    java.awt.Image equ1 = new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "equ2b.png")).getImage();
+                    URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+                    // Fix for Java 21: use URL constructor instead of URI.toURL()
+                    URL pngUrl = new URL(picsUrl, "equ2b.png");
+                    java.awt.Image equ1 = new ImageIcon(pngUrl).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -146,8 +155,6 @@ public class DialogScopeCharacteristics extends GeckoDialog {
 
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                final double xDef1 = _panelDialRange.getStartTimeValue();
-                final double xDef2 = _panelDialRange.getStopTimeValue();
                 final Thread rechner = new CalculationThread();
                 rechner.setPriority(Thread.MIN_PRIORITY);
                 rechner.start();

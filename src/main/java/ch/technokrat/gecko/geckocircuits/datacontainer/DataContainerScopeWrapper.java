@@ -15,6 +15,7 @@ package ch.technokrat.gecko.geckocircuits.datacontainer;
 
 //CHECKSTYLE:OFF
 import ch.technokrat.gecko.geckocircuits.newscope.*;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,6 +28,7 @@ import java.util.Observer;
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Wrapper intentionally shares references with wrapped containers for efficient data access")
 public final class DataContainerScopeWrapper extends AbstractDataContainer implements DataContainerIntegralCalculatable {
 
     private final AbstractDataContainer _globalContainer;
@@ -36,6 +38,7 @@ public final class DataContainerScopeWrapper extends AbstractDataContainer imple
     private final List<AbstractScopeSignal> _signalsList;
     private final Observer _observer;
 
+    @SuppressWarnings("deprecation")
     public DataContainerScopeWrapper(final AbstractDataContainer globalContainer, final ScopeWrapperIndices indices,
             final DefinedMeanSignals meanSignals, final List<AbstractScopeSignal> signalsList) {
         this._signalsList = signalsList;
@@ -114,7 +117,7 @@ public final class DataContainerScopeWrapper extends AbstractDataContainer imple
     @Override
     public Object getDataValueInInterval(final double intervalStart, final double intervalStop, final int row) {
         AbstractDataContainer container = null;
-        Object returnValue = Float.valueOf(0.0f);
+        Object returnValue = 0.0f;
         if (row < this._scopeIndices.getTotalSignalNumber()) {
             container = this._scopeIndices.getDataContainer(row);
             if (container != null) {

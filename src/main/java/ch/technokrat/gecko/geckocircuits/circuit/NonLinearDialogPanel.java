@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
@@ -41,7 +41,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Public OK button for external dialog configuration; stores references to parent dialog and component for interaction")
 public class NonLinearDialogPanel extends JPanel {
 
     private static final int BUTTON_HEIGHT = 30;
@@ -197,7 +200,7 @@ public class NonLinearDialogPanel extends JPanel {
                 } else if (savedExternalFile != null) {
                     //characteristic has been saved to an external file, and we should not attribute this to the circuit element
                     try {
-                        GeckoFile newFileFromExternal = new GeckoFile(savedExternalFile, GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());
+                        GeckoFile newFileFromExternal = new GeckoFile(savedExternalFile, GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());
                         ArrayList<GeckoFile> newFile = new ArrayList<GeckoFile>();
                         newFile.add(newFileFromExternal);
                         _nonlinearParent.addFiles(newFile);

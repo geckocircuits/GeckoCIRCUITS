@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
@@ -23,8 +23,6 @@ import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossCalculation
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,14 +109,13 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
     }
 
     public List<GeckoFile> getFiles() {
-        if (this instanceof LossCalculatable) {
-            List<GeckoFile> returnValue = new ArrayList<GeckoFile>();
-            GeckoFile lossFile = ((LossProperties) ((LossCalculatable) this).getVerlustBerechnung()).getDetailedLosses().lossFile;
-            returnValue.add(lossFile);
-            return returnValue;
-        } else {
-            return Collections.EMPTY_LIST;
+        if (!(getVerlustBerechnung() instanceof LossProperties)) {
+            return Collections.emptyList();
         }
+        List<GeckoFile> returnValue = new ArrayList<GeckoFile>();
+        GeckoFile lossFile = ((LossProperties) getVerlustBerechnung()).getDetailedLosses().lossFile;
+        returnValue.add(lossFile);
+        return returnValue;
     }
 
     public void removeLocalComponentFiles(List<GeckoFile> filesToRemove) {
@@ -137,7 +134,7 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
 
                 //if it doesn't exist, try first to see if it is in the same directory as the currently open model file
                 if (!lossFile.exists()) {
-                    final File modelFile = new File(Fenster.getOpenFileName());
+                    final File modelFile = new File(MainWindow.getOpenFileName());
                     final String currentModelDirectory = modelFile.getParent();
                     final String correctedFileName = currentModelDirectory + System.getProperty("file.separator") + parameterValue;
                     lossFile = new File(correctedFileName);

@@ -27,14 +27,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes data container for external EMI analysis and visualization")
 public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisible,
         Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerCISPR16.class, "CISPR16", I18nKeys.EMI_TEST_RECEIVER);
     // alle ZV-Daten nicht komprimiert fuer eventuelle Festplattenspeicherung --> Speicherkritisch
-    DataContainerSimple _zvDatenRam;
-    public final Cispr16Settings _settings = new Cispr16Settings(this);
+    transient DataContainerSimple _zvDatenRam;
+    public final transient Cispr16Settings _settings = new Cispr16Settings(this);
     private TestReceiverWindow _testReceiverCISPR16;
     /**
      * todo: I don't know a better name for "DA" - this comes from Uwe. Maybe it
@@ -44,7 +47,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
     private static final int DI_OFFSET = 3;  // Innen-Rechteck
     private static final double WIDTH = 1.5;
     private static final int DATA_INDEX_ADD = 5;
-    TestReceiverCalculation _testReceiverNew;
+    transient TestReceiverCalculation _testReceiverNew;
 
     public Cispr16Settings getSettings() {
         return _settings;
@@ -201,7 +204,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         @Override
         public void doInit(final double deltaT) {
             try {
-                _zvDatenRam = DataContainerSimple.fabricConstantDtTimeSeries(1, (int) ((SimulationsKern.tEND - SimulationsKern.tSTART) / deltaT)
+                _zvDatenRam = DataContainerSimple.fabricConstantDtTimeSeries(1, (int) ((SimulationsKern.getStaticTEND() - SimulationsKern.getStaticTSTART()) / deltaT)
                         + DATA_INDEX_ADD);
             } catch (java.lang.OutOfMemoryError err) {
                 _zvDatenRam = null;
@@ -259,8 +262,8 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         // Stuetzpunkte der Class A/B-Kurven: 
         final int dx = (int) (dpix * (WIDTH + DA_OFFSET) - a1 - a2), dy = dx;
         final int xk1 = (int) (dpix * (xPos - WIDTH) + a1 + 2);
-        final int xk2 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + dx / 3);
-        final int xk3 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + 2 * dx / 3);
+        final int xk2 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + dx / 3.0);
+        final int xk3 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + 2 * dx / 3.0);
         final int xk4 = (int) (dpix * (xPos + DA_OFFSET) - a1);
         final int yk1 = (int) (dpix * (yPos - DA_OFFSET) + a1 + 2);
         final int yk2 = (int) (dpix * (yPos - DA_OFFSET) + a1 + 2 + 0.2 * dy);

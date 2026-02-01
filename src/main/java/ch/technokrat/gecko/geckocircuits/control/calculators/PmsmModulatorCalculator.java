@@ -131,6 +131,8 @@ public final class PmsmModulatorCalculator extends AbstractControlCalculatable {
                 V = pwm2;
                 W = pwm1b;
                 break;
+            default:
+                throw new IllegalArgumentException("Invalid sector: " + sector);
         }
 
         _outputSignal[0][0] = U;

@@ -13,11 +13,14 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
 
+/**
+ * GUI-free model for circuit labels.
+ * 
+ * @author GeckoCIRCUITS Team
+ * @since Sprint 15 - GUI-free refactoring
+ */
 public class CircuitLabel {
     private String _label;      
     private LabelPriority _labelPriority = LabelPriority.NORMAL;
@@ -32,7 +35,7 @@ public class CircuitLabel {
         }        
         if(!_label.equals(newLabel)) {            
             RenameLabelUndoableEdit undoEdit = new RenameLabelUndoableEdit(_label, newLabel, false);
-            AbstractUndoGenericModel.undoManager.addEdit(undoEdit);
+            AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(undoEdit));
         }        
         _label = newLabel;
     }
@@ -69,11 +72,14 @@ public class CircuitLabel {
             return;
         }
         RenameLabelUndoableEdit undoEdit = new RenameLabelUndoableEdit(_label, newLabel, true);
-        AbstractUndoGenericModel.undoManager.addEdit(undoEdit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(undoEdit));
         _label = newLabel;                
     }
     
-    private class RenameLabelUndoableEdit implements UndoableEdit {
+    /**
+     * GUI-free implementation of label rename edit.
+     */
+    private class RenameLabelUndoableEdit implements GeckoUndoableEdit {
         final boolean _isSignificant;        
         private final String _oldLabel;
         private final String _newLabel;
@@ -86,7 +92,7 @@ public class CircuitLabel {
         }
 
         @Override
-        public void undo() throws CannotUndoException {
+        public void undo() throws IllegalStateException {
             _label = _oldLabel;
         }
 
@@ -96,7 +102,7 @@ public class CircuitLabel {
         }
 
         @Override
-        public void redo() throws CannotRedoException {
+        public void redo() throws IllegalStateException {
             _label = _newLabel;
         }
 
@@ -111,12 +117,12 @@ public class CircuitLabel {
         }
 
         @Override
-        public boolean addEdit(UndoableEdit anEdit) {
+        public boolean addEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 
         @Override
-        public boolean replaceEdit(UndoableEdit anEdit) {
+        public boolean replaceEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 

@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
-import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitSource.WIDTH;
 import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.List;
@@ -86,6 +85,7 @@ public abstract class AbstractCurrentSource extends AbstractCircuitSource {
     }
     
     @Override
+    @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new CurrentSourceCalculator(this));
     }

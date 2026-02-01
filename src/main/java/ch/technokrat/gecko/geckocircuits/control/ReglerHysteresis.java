@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlInput;
@@ -29,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public final class ReglerHysteresis extends RegelBlock implements ControlInputTwoTerminalStateable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * yes, -1 and not +1! with this setting, the output gets +1 when the input is -1, and vice versa.
@@ -39,19 +39,19 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
     private static final int Y_EXTERNAL = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerHysteresis.class, "HYS", I18nKeys.HYSTERESIS);
     
-    public final UserParameter<Double> _hysteresisThreshold = UserParameter.Builder.<Double>start("h", DEF_HYS_THRES).
+    public final transient UserParameter<Double> _hysteresisThreshold = UserParameter.Builder.<Double>start("h", DEF_HYS_THRES).
             longName(I18nKeys.HYSTERESIS_THRESHOLD).
             shortName("h").
             showInTextInfo(TextInfoType.SHOW_WHEN_NON_EXTERNAL).
             arrayIndex(this, 0).
             build();
-    public final UserParameter<Boolean> _useExternal = UserParameter.Builder.<Boolean>start("useExternal", false).
+    public final transient UserParameter<Boolean> _useExternal = UserParameter.Builder.<Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
             shortName("external").
             arrayIndex(this, 1).
             build();
     
-    private TerminalControlInput _stashedTerminal;
+    private transient TerminalControlInput _stashedTerminal;
     
     public ReglerHysteresis() {
         super(1, 1);
@@ -99,7 +99,7 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
         final Color origColor = graphics.getColor();
         if (_useExternal.getValue()) {
             graphics.drawLine(xPos * dpix, (int) ((yPos + 1 / 2.0) * dpix), xPos * dpix, (yPos + 2) * dpix);
-            //int dy = (int) (SchematischeEingabe2.foCONTROL.getStringBounds("xxx", frc).getHeight() * 0.25);
+            //int dy = (int) (SchematicEditor2.foCONTROL.getStringBounds("xxx", frc).getHeight() * 0.25);
             graphics.setColor(GlobalColors.farbeInBearbeitungCONTROL);
             //XIN[1] = new Point((int) xe1, (int) ye1);
             graphics.drawString("h", (int) (dpix * xPos) + 1 + 2, (int) (dpix * (yPos + 2)) + 1 + 2);

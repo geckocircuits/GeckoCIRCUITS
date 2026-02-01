@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTerminal;
@@ -29,10 +29,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public data vector for external data exchange with Simulink/external tools")
 public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements VariableTerminalNumber {
 
-    public static List<RegelBlock> fromExternals = new ArrayList<RegelBlock>();
+    private static final List<RegelBlock> fromExternalsInternal = new ArrayList<>();
+    public static final List<RegelBlock> fromExternals = Collections.unmodifiableList(fromExternalsInternal);
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerFromEXTERNAL.class, "FromEXT", I18nKeys.IMPORT_DATA_FROM_SIMULINK);
     private int _terminalNumber;
     private String _externalName = "name";
@@ -46,7 +50,7 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         super();
         _terminalNumber = 1;  // default: 1 Anschluss bringen Signale von EXTERNAL
         this.setOutputTerminalNumber(_terminalNumber);
-        fromExternals.add(this);
+        fromExternalsInternal.add(this);
     }
 
     @Override
@@ -132,21 +136,21 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         double pf = 3.5;  // Pfeilspitzen-X-Abstand
         double pfym = yPos - 0.4 + (1.0 * _terminalNumber) / 2;  // Pfeil-Y-Koordinate
         graphics.drawPolygon(new int[]{(int) (dpix * (xPos - 0.4)) - DPFX, (int) (dpix * (xPos - 0.4)) - DPFX, (int) (dpix * (xPos - 0.4))}, new int[]{(int) (dpix * pfym) - DPFY, (int) (dpix * pfym) + DPFY, (int) (dpix * pfym)}, 3);
-        graphics.drawString("From", (int) (dpix * (xPos - pf)), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2));
-        graphics.drawString("EXTERN", (int) (dpix * (xPos - pf)), (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2));
+        graphics.drawString("From", (int) (dpix * (xPos - pf)), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2.0));
+        graphics.drawString("EXTERN", (int) (dpix * (xPos - pf)), (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2.0));
 
 
         graphics.drawLine((int) (dpix * (xPos - 0.4)), (int) (dpix * pfym), (int) (dpix * (xPos - pf)), (int) (dpix * pfym));  // zum Pfeil gehoerig
         for (int i1 = 0; i1 < _terminalNumber; i1++) {
             int xi1 = (int) (dpix * (xPos + 2 * DA_CONST)), yi1 = (int) (dpix * (yPos + 1.0 * i1));
             graphics.setColor(GlobalColors.farbeEXTERNAL_TERMINAL);
-            graphics.drawString(Integer.valueOf(i1 + 1).toString(), xi1 + 8, yi1 + graphics.getFont().getSize() / 2);
+            graphics.drawString(Integer.toString(i1 + 1), xi1 + 8, (int) (yi1 + graphics.getFont().getSize() / 2.0));
             graphics.setColor(origColor);
         }
 
         graphics.setColor(Color.black);
         graphics.drawString(_externalName, (int) (dpix * (xPos - pf)),
-                (int) (dpix * (1 + pfym) + 3 * graphics.getFont().getSize() / 2));
+                (int) (dpix * (1 + pfym) + 3 * graphics.getFont().getSize() / 2.0));
         graphics.setColor(origColor);
     }
 
@@ -158,7 +162,7 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
     @Override
     public void deleteActionIndividual() {
         super.deleteActionIndividual();
-        fromExternals.remove(this);
+        fromExternalsInternal.remove(this);
     }
 
     @Override
@@ -171,13 +175,13 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\ntn"), _terminalNumber);
-        DatenSpeicher.appendAsString(ascii.append("\ntorder"), fromExternals.indexOf(this));
+        ProjectData.appendAsString(ascii.append("\ntn"), _terminalNumber);
+        ProjectData.appendAsString(ascii.append("\ntorder"), fromExternalsInternal.indexOf(this));
     }
 
     @Override
     List<RegelBlock> getOrderList() {
-        return fromExternals;
+        return fromExternalsInternal;
     }
 
     @Override
@@ -185,34 +189,35 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
         return YOUT;
     }
 
-    private final class CompareOrder implements Comparator {
+    private static final class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         @Override
-        public int compare(final Object obj1, final Object obj2) {
+        public int compare(final RegelBlock obj1, final RegelBlock obj2) {
             if (obj1 instanceof ReglerFromEXTERNAL && obj2 instanceof ReglerFromEXTERNAL) {
                 final ReglerFromEXTERNAL toExtern1 = (ReglerFromEXTERNAL) obj1;
                 final ReglerFromEXTERNAL toExtern2 = (ReglerFromEXTERNAL) obj2;
-                if (toExtern1.externalOrderNumber == toExtern2.externalOrderNumber) {
-                    return 0;
-                }
-                if (toExtern1.externalOrderNumber < toExtern2.externalOrderNumber) {
-                    return -1;
-                }
-                return 1;
+                return Integer.compare(toExtern1.externalOrderNumber, toExtern2.externalOrderNumber);
             }
-
-            assert false;
             return 0;
         }
     }
 
     public void insertOrderCorrect(final int orderNo) {
         externalOrderNumber = orderNo;
-        Collections.sort(fromExternals, new CompareOrder());
+        Collections.sort(fromExternalsInternal, new CompareOrder());
     }
 
     @Override
     protected Window openDialogWindow() {
         return new DialogExternal(this);
+    }
+
+    /**
+     * Clear the list of FromEXTERNAL blocks - used for initialization
+     */
+    public static void clearFromExternals() {
+        fromExternalsInternal.clear();
     }
 }

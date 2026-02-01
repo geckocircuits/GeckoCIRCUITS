@@ -34,7 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores optimizer data reference for parameter configuration")
 public class DialogOptimizerParameterSettings extends GeckoDialog {
     private static final String TXT_HELP =
                 "\nParameters (name-value pairs) must match the parameters defined in the simulation model, \ne.g. $Rload. "
@@ -46,7 +48,6 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
                 + "\n";
         
     private final OptimizerParameterData _optData;
-    private List<AbstractBlockInterface> _elements;
     private Map<String, Integer> _numberOfUsedParamemters = new HashMap<String, Integer>();
     private JTabbedPane tabber;
     private JTextArea jtaHLP;
@@ -56,7 +57,6 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
     public DialogOptimizerParameterSettings(OptimizerParameterData optData, List<AbstractBlockInterface> e) {
         super(GeckoSim._win, true);
         _optData = optData;
-        _elements = e;
         for(AbstractBlockInterface block : e) {
             for(UserParameter<? extends Object> parameter : block.getRegisteredParameters()) {
                 String nameOpt = parameter.getNameOpt();

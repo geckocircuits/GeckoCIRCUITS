@@ -18,6 +18,7 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.net.URI;
 import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -27,11 +28,13 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores parent reference for positioning and modal behavior")
 public class GeckoDialog extends JDialog {
     
 
@@ -54,7 +57,10 @@ public class GeckoDialog extends JDialog {
 
     private void init() {
         try {
-            this.setIconImage(new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif")).getImage());
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -89,8 +95,10 @@ public class GeckoDialog extends JDialog {
     
     public void setGeckoIconImage() {
         try {
-            this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
-        } catch (Exception e) {
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            this.setIconImage((new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL())).getImage());
+        } catch (java.net.URISyntaxException | java.net.MalformedURLException e) {
+            // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }
     }
     

@@ -15,11 +15,13 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import java.awt.Color;
 import javax.swing.JColorChooser;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author muesinga
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores text field block reference for property configuration")
 public class TextFieldDialog extends javax.swing.JDialog {
     private TextFieldBlock _tfb;
     

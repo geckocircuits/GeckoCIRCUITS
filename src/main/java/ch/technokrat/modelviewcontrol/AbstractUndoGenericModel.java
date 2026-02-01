@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Extension of the ModelMVCGeneric framework. Inheriting from this class, then
@@ -28,6 +29,7 @@ import javax.swing.undo.UndoableEdit;
  * @param <T>
  * @author Andreas Müsing
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Undo model stores source reference and values for undo/redo operations")
 public abstract class AbstractUndoGenericModel<T> extends ModelMVCGeneric<T> implements Serializable{
   private static final long serialVersionUID = 28474838273478583L;
   protected boolean _initialized = false;
@@ -41,7 +43,7 @@ public abstract class AbstractUndoGenericModel<T> extends ModelMVCGeneric<T> imp
   /**
    * refer to this undomanager when connecting to GUI undo/redo actions
    */
-  public final static UndoManager undoManager = new GroupableUndoManager();
+  public static final UndoManager undoManager = new GroupableUndoManager();
 
   static{
     undoManager.setLimit(1000);
@@ -53,7 +55,9 @@ public abstract class AbstractUndoGenericModel<T> extends ModelMVCGeneric<T> imp
    * value. Used for e.g. for the undo/redo jMenuItem entries which must be
    * updated whenever something happens
    */
-  public final static Set<ActionListener> globalEventListeners = new HashSet<ActionListener>();
+  @SuppressFBWarnings(value = "MS_MUTABLE_COLLECTION_PKGPROTECT",
+          justification = "globalEventListeners is intentionally public for external registration of global undo/redo event listeners")
+  public static final Set<ActionListener> globalEventListeners = new HashSet<ActionListener>();
 
   /**
    * send a notification to all listeners that are in globalEventListeners.

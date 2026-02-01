@@ -18,7 +18,9 @@ import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import ch.technokrat.gecko.geckocircuits.control.ReglerGate;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Switch exposes loss properties for configuration")
 public abstract class AbstractSwitch extends AbstractSemiconductor implements CurrentMeasurable, DirectVoltageMeasurable {
 
     public static final double UF_DEFAULT = 0.60;

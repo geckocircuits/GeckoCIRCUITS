@@ -14,7 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.control.ReglerOSZI;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

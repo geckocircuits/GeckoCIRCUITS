@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.control.Point;
-import java.awt.Color;
 import java.awt.Graphics;
 
 public final class TerminalTwoPortComponent extends AbstractTerminal {

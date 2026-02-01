@@ -16,12 +16,10 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTypeInfo;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
- * @author andy
+ * Concrete circuit type information with GUI/I18n support.
+ * Combines pure circuit type logic with internationalization.
  */
 public class CircuitTypeInfo extends AbstractCircuitTypeInfo {
 

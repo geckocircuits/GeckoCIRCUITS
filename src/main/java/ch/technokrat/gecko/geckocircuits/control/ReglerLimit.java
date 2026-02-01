@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalControlInput;
@@ -28,8 +27,12 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerminalStateable {    
+@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "Transient fields are repopulated during component initialization or import")
+public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerminalStateable {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerLimit.class, "LIMIT", I18nKeys.LIMITER);
     
     private static final double Y_STRING_DRAW_OFFSET = 2.2;
@@ -41,14 +44,14 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
     private static final String MIN = "min";
     
     
-    final UserParameter<Double> _minLimit = UserParameter.
+    final transient UserParameter<Double> _minLimit = UserParameter.
             Builder.<Double>start("minLimit", -1.0).
             longName(I18nKeys.LOWER_LIMIT).
             shortName(MIN).
             showInTextInfo(TextInfoType.SHOW_WHEN_NON_EXTERNAL).
             arrayIndex(this, 0).
             build();
-    final UserParameter<Double> _maxLimit = UserParameter.
+    final transient UserParameter<Double> _maxLimit = UserParameter.
             Builder.<Double>start("maxLimit", 1.0).
             longName(I18nKeys.UPPER_LIMIT).
             shortName(MAX).
@@ -56,14 +59,14 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
             arrayIndex(this, 1).
             build();
     
-    final UserParameter<Boolean> _isExternalSet = UserParameter.Builder.
+    final transient UserParameter<Boolean> _isExternalSet = UserParameter.Builder.
             <Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
             shortName("useExternal").
             arrayIndex(this, 2).
             build();
 
-    private final Stack<TerminalControlInput> _stashedTerminals = new Stack<TerminalControlInput>();
+    private transient final Stack<TerminalControlInput> _stashedTerminals = new Stack<TerminalControlInput>();
     
     public ReglerLimit() {
         super(1, 1);

@@ -26,12 +26,16 @@ public abstract class AbstractSimpleMathFunctionTest {
 
     @Before
     public final void setUp() {
-            _controlCalculatable = calculatorFabric();            
-            _controlCalculatable._inputSignal[0] = new double[1];
-            assert _controlCalculatable._inputSignal.length == 1;
-            assert _controlCalculatable._outputSignal.length == 1;
-            assert _controlCalculatable._inputSignal[0] != null;
-            assert _controlCalculatable._outputSignal[0] != null;            
+        _controlCalculatable = calculatorFabric();
+        // Initialize both input and output signals
+        _controlCalculatable._inputSignal[0] = new double[1];
+        _controlCalculatable._inputSignal[0][0] = 0;
+        _controlCalculatable._outputSignal[0][0] = 0;
+
+        assert _controlCalculatable._inputSignal.length == 1;
+        assert _controlCalculatable._outputSignal.length == 1;
+        assert _controlCalculatable._inputSignal[0] != null;
+        assert _controlCalculatable._outputSignal[0] != null;
     }
     
     @After

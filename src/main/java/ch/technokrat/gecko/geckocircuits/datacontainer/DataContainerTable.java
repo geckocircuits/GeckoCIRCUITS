@@ -17,7 +17,9 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Panel stores data container reference for table display")
 public class DataContainerTable extends javax.swing.JPanel {
 
     String[] columnName = new String[]{"time", "val1", "val2"};

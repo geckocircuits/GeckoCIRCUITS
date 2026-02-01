@@ -13,7 +13,11 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
- public final class IGBTCalculator extends AbstractSwitchCalculator implements CurrentCalculatable {
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+        justification = "Writes to DiodeCalculator.diodeSwitchError for cross-component state coordination during simulation")
+public final class IGBTCalculator extends AbstractSwitchCalculator implements CurrentCalculatable {
 
 
     public IGBTCalculator(final IGBT parent) {

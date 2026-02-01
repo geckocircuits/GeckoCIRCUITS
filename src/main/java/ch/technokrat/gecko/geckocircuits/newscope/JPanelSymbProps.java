@@ -16,11 +16,13 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Panel stores symbol settable reference for symbol property configuration")
 public class JPanelSymbProps extends javax.swing.JPanel {
 
     private SymbolSettable _symbSettable;

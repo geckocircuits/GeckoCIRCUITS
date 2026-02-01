@@ -15,7 +15,6 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
-import ch.technokrat.gecko.geckocircuits.circuit.ControlSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.SmallSignalCalculator;
@@ -23,26 +22,30 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public calculator reference for dialog access to last analysis results")
 public final class ReglerSmallSignalAnalysis extends RegelBlock {
-    
+    private static final long serialVersionUID = 1L;
+
     private static final double DEFAULT_AMPLITUDE = 0.005;
     private static final double DEFAULT_FREQ_START = 50.0;
     private static final double DEFAULT_FREQ_END = 10000.0;
     
-    public static final ControlTypeInfo TYPE_INFO = 
+    public static final ControlTypeInfo TYPE_INFO =
             new ControlTypeInfo(ReglerSmallSignalAnalysis.class, "ANALYSIS", I18nKeys.SMALL_SIGNAL_ANALYIS);
+
+    private static final int BLOCK_WIDTH = 6;
     
-    private final int BLOCK_WIDTH = 6;
-    
-    final UserParameter<Double> _amplitude = UserParameter.Builder.<Double>start("Amplitude", DEFAULT_AMPLITUDE).
+    transient final UserParameter<Double> _amplitude = UserParameter.Builder.<Double>start("Amplitude", DEFAULT_AMPLITUDE).
             longName(I18nKeys.AMPLITUDE).
             shortName("Ampl").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, -1).
             build();
     
-    final UserParameter<Double> _fBase = UserParameter.Builder.<Double>start("StartFreq", DEFAULT_FREQ_START).
+    transient final UserParameter<Double> _fBase = UserParameter.Builder.<Double>start("StartFreq", DEFAULT_FREQ_START).
             longName(I18nKeys.FREQ_START).
             shortName("fBase").
             unit("Hz").
@@ -50,7 +53,7 @@ public final class ReglerSmallSignalAnalysis extends RegelBlock {
             arrayIndex(this, -1).
             build();
     
-    final UserParameter<Double> _fMax = UserParameter.Builder.<Double>start("EndFreq", DEFAULT_FREQ_END).
+    transient final UserParameter<Double> _fMax = UserParameter.Builder.<Double>start("EndFreq", DEFAULT_FREQ_END).
             longName(I18nKeys.FREQ_END).
             shortName("fMax").
             unit("Hz").
@@ -59,7 +62,7 @@ public final class ReglerSmallSignalAnalysis extends RegelBlock {
             build();        
         
     
-    final UserParameter<SSAShape> _signalType = UserParameter.Builder.<SSAShape>start("signalTypeNew", SSAShape.RECTANGLE).
+    transient final UserParameter<SSAShape> _signalType = UserParameter.Builder.<SSAShape>start("signalTypeNew", SSAShape.RECTANGLE).
             longName(I18nKeys.SIGNALTYPE_SSA).
             shortName("shape").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
@@ -67,17 +70,17 @@ public final class ReglerSmallSignalAnalysis extends RegelBlock {
             build();
         
     
-    public final UserParameter<Boolean> _doAddOutput = UserParameter.Builder.
+    public transient final UserParameter<Boolean> _doAddOutput = UserParameter.Builder.
             <Boolean>start("addOutput", false).
             longName(I18nKeys.IF_TRUE_USE_NONLINEAR_CHARACTERISTIC).
-            shortName("addOutput").            
+            shortName("addOutput").
             arrayIndex(this, -1).
             build();                               
     
     
-    TerminalControlInputWithLabel externalExcitationTerm = new TerminalControlInputWithLabel(this, -4, -2, "excitation");
+    transient TerminalControlInputWithLabel externalExcitationTerm = new TerminalControlInputWithLabel(this, -4, -2, "excitation");
     
-    public SmallSignalCalculator _lastCalculator;
+    public transient SmallSignalCalculator _lastCalculator;
     
     
     public ReglerSmallSignalAnalysis() {

@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 
-class TestReceiverCalculation {                
+final class TestReceiverCalculation {                
     
     private final Cispr16Settings _settings;
     final Cispr16Fft _fftOrig;
