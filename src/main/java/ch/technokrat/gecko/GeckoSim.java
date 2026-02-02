@@ -348,6 +348,17 @@ public class GeckoSim {
 
         if (_initialShow) {
             _win.setVisible(true);
+            // Force repaint for X11/WSL HiDPI rendering issues (blank window on startup)
+            // Delay needed to ensure window is fully realized by window manager
+            javax.swing.Timer resizeTimer = new javax.swing.Timer(100, e -> {
+                java.awt.Dimension size = _win.getSize();
+                _win.setSize(size.width + 1, size.height + 1);
+                _win.setSize(size);
+                _win.revalidate();
+                _win.repaint();
+            });
+            resizeTimer.setRepeats(false);
+            resizeTimer.start();
         }
         _win.setSimulationMenu();
     }
