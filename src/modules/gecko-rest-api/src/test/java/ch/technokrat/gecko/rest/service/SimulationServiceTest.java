@@ -224,14 +224,12 @@ class SimulationServiceTest {
 
     @Test
     void cancelSimulation_updatesStatus() {
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.02, 1e-6);
-        SimulationResponse response = simulationService.submitSimulation(request);
-        String id = response.getSimulationId();
+        String simulationId = "running-sim";
+        SimulationResponse runningResponse = new SimulationResponse(simulationId);
+        runningResponse.setStatus(SimulationStatus.RUNNING);
+        putSimulation(runningResponse);
 
-        // Set to running first
-        simulationService.updateStatus(id, SimulationStatus.RUNNING);
-
-        SimulationResponse cancelled = simulationService.cancelSimulation(id);
+        SimulationResponse cancelled = simulationService.cancelSimulation(simulationId);
 
         assertEquals(SimulationStatus.FAILED, cancelled.getStatus());
         assertEquals("Cancelled by user", cancelled.getErrorMessage());
