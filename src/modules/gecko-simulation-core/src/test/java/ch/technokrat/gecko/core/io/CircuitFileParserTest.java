@@ -164,6 +164,30 @@ class CircuitFileParserTest {
     }
 
     @Test
+    void parse_scripterBlockTokenWithIndentAndTab_isDiscovered() throws Exception {
+        String content = """
+            \t<scripterCode>\t
+            double x = 7.0;
+            \t<\\scripterCode>
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertTrue(model.getScripterCode().contains("double x = 7.0"));
+    }
+
+    @Test
+    void parse_dataContainerSignals_preservesEmptySlotsAndMapsNix() throws Exception {
+        String content = """
+            dataContainerSignals[] //sigA/NIX_NIX_NIX//sigB/
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertArrayEquals(new String[]{"", "", "sigA", "", "", "sigB", ""}, model.getDataContainerSignals());
+    }
+
+    @Test
     void parse_optimizerValuesWithSlashSeparators_keepsNameValueAlignment() throws Exception {
         String content = """
             optimizerName[] /alpha/NIX_NIX_NIX/beta/gamma
