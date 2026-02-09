@@ -1,6 +1,7 @@
 package ch.technokrat.gecko.rest.service;
 
 import ch.technokrat.gecko.core.simulation.SimulationConfig;
+import ch.technokrat.gecko.core.simulation.SimulationResult;
 import ch.technokrat.gecko.rest.model.SimulationRequest;
 import ch.technokrat.gecko.rest.model.SimulationResponse;
 import ch.technokrat.gecko.rest.model.SimulationResponse.SimulationStatus;
@@ -287,6 +288,57 @@ class SimulationServiceTest {
         double progress = simulationService.getSimulationProgress(simulationId);
 
         assertEquals(0.0, progress);
+    }
+
+    @Test
+    void markRunning_onlyTransitionsFromPending() {
+        SimulationResponse pending = new SimulationResponse("pending");
+        pending.setStatus(SimulationStatus.PENDING);
+        assertTrue(simulationService.markRunning(pending));
+        assertEquals(SimulationStatus.RUNNING, pending.getStatus());
+
+        SimulationResponse failed = new SimulationResponse("failed");
+        failed.setStatus(SimulationStatus.FAILED);
+        assertFalse(simulationService.markRunning(failed));
+        assertEquals(SimulationStatus.FAILED, failed.getStatus());
+    }
+
+    @Test
+    void applySuccessfulResult_doesNotOverrideCancelledStatus() {
+        SimulationResponse response = new SimulationResponse("cancelled");
+        response.setStatus(SimulationStatus.FAILED);
+        response.setErrorMessage(SimulationService.CANCELLED_BY_USER);
+
+        SimulationResult result = SimulationResult.builder().build();
+
+        assertFalse(simulationService.applySuccessfulResult(response, result));
+        assertEquals(SimulationStatus.FAILED, response.getStatus());
+        assertEquals(SimulationService.CANCELLED_BY_USER, response.getErrorMessage());
+    }
+
+    @Test
+    void applyFailureResult_doesNotOverrideCancelledStatus() {
+        SimulationResponse response = new SimulationResponse("cancelled");
+        response.setStatus(SimulationStatus.FAILED);
+        response.setErrorMessage(SimulationService.CANCELLED_BY_USER);
+
+        assertFalse(simulationService.applyFailureResult(response, "other failure"));
+        assertEquals(SimulationStatus.FAILED, response.getStatus());
+        assertEquals(SimulationService.CANCELLED_BY_USER, response.getErrorMessage());
+    }
+
+    @Test
+    void applySuccessfulResult_setsCompletedAndClearsError() {
+        SimulationResponse response = new SimulationResponse("success");
+        response.setStatus(SimulationStatus.RUNNING);
+        response.setErrorMessage("previous-error");
+
+        SimulationResult result = SimulationResult.builder().build();
+
+        assertTrue(simulationService.applySuccessfulResult(response, result));
+        assertEquals(SimulationStatus.COMPLETED, response.getStatus());
+        assertNull(response.getErrorMessage());
+        assertNotNull(response.getEndTime());
     }
 
     @SuppressWarnings("unchecked")
