@@ -1,6 +1,8 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.SSAShape;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -499,5 +501,60 @@ public class SmallSignalCalculatorTest {
         calc.initializeAtSimulationStart(0.01); // 10ms
 
         assertTrue("N should be at least 2", calc._N >= 2);
+    }
+
+    @Test
+    public void testTearDownOnPauseHandlesHarmonicOverflow() {
+        SmallSignalCalculator calc = new SmallSignalCalculator(
+                1.0, 1.0, 999.0, SSAShape.SINE, 2, 1, false);
+
+        for (int i = 0; i < calc._inputSignal.length; i++) {
+            calc._inputSignal[i] = new double[]{0};
+        }
+        for (int i = 0; i < calc._outputSignal.length; i++) {
+            calc._outputSignal[i] = new double[]{0};
+        }
+
+        calc.initializeAtSimulationStart(1.0); // Forces very small FFT buffer (_N=2)
+        calc._inputSignal[0][0] = 0.0;
+        calc.berechneYOUT(1.0);
+        calc._inputSignal[0][0] = 1.0;
+        calc.berechneYOUT(1.0);
+
+        calc.tearDownOnPause();
+
+        assertNotNull("Bode magnitude should be computed", calc._bode[1]);
+        assertNotNull("Bode phase should be computed", calc._bode[2]);
+    }
+
+    @Test
+    public void testCalculateBodePhaseWithZeroDenominator() throws Exception {
+        SmallSignalCalculator calc = new SmallSignalCalculator(
+                1.0, 100.0, 100.0, SSAShape.SINE, 2, 1, false);
+
+        calc._bode[0] = new double[]{100.0}; // harmonic = 1
+        setPrivateField(calc, "magnitudeValues", new double[]{0.0, 2.0});
+        setPrivateField(calc, "data_aVals", new double[]{0.0, 3.0});
+        setPrivateField(calc, "data_bVals", new double[]{0.0, 4.0});
+        setPrivateField(calc, "ss_aVals", new double[]{0.0, 1.0});
+        setPrivateField(calc, "ss_bVals", new double[]{0.0, 1.0}); // c*c-d*d == 0
+        setPrivateField(calc, "_N", 4);
+
+        invokePrivateMethod(calc, "calculateBode");
+
+        assertFalse("Phase should not be NaN", Double.isNaN(calc._bode[2][0]));
+        assertFalse("Phase should be finite", Double.isInfinite(calc._bode[2][0]));
+    }
+
+    private static void setPrivateField(Object target, String fieldName, Object value) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
+    }
+
+    private static void invokePrivateMethod(Object target, String methodName) throws Exception {
+        Method method = target.getClass().getDeclaredMethod(methodName);
+        method.setAccessible(true);
+        method.invoke(target);
     }
 }

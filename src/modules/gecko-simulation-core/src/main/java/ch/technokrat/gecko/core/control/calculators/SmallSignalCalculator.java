@@ -36,6 +36,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
     private static final int THREE = 3;
     private static final int NOFREQSMAX = 50;
     private static final double TWO_PI = 2 * Math.PI;
+    private static final double NUMERIC_EPSILON = 1e-12;
 
     /** Bode plot data: [0]=frequencies, [1]=magnitude(dB), [2]=phase(deg) */
     public static double[][] _bode = new double[THREE][];
@@ -236,14 +237,15 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
         FFTLibrary.calculateForwardFFT(ddata);
         FFTLibrary.calculateForwardFFT(dsmallSignalData);
 
-        for (int n = 0; n <= _nMax; n++) {
+        int maxHarmonic = getUsableHarmonicUpperBound();
+        for (int n = 0; n <= maxHarmonic; n++) {
             data_aVals[n] = 2 * ddata[2 * n] / _N;
             data_bVals[n] = 2 * ddata[2 * n + 1] / _N;
             ss_aVals[n] = 2 * dsmallSignalData[2 * n] / _N;
             ss_bVals[n] = 2 * dsmallSignalData[2 * n + 1] / _N;
         }
 
-        for (int n = 0; n <= _nMax; n++) {
+        for (int n = 0; n <= maxHarmonic; n++) {
             if (n == 0) {
                 magnitudeValues[n] = data_aVals[n] / 2.0;
             } else {
@@ -256,26 +258,51 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
     private void calculateBode() {
         _bode[1] = new double[_bode[0].length];
         _bode[2] = new double[_bode[0].length];
+        int maxHarmonic = getUsableHarmonicUpperBound();
 
         for (int p = 0; p < _bode[0].length; p++) {
             int harmonic = (int) Math.round(_bode[0][p] / _freqStart);
+            if (harmonic < 0 || harmonic > maxHarmonic) {
+                _bode[1][p] = Double.NaN;
+                _bode[2][p] = Double.NaN;
+                continue;
+            }
 
             float magnitude = (float) Math.sqrt(ss_bVals[harmonic] * ss_bVals[harmonic]
                     + ss_aVals[harmonic] * ss_aVals[harmonic]);
 
-            _bode[1][p] = 20 * Math.log10(magnitudeValues[harmonic] / magnitude);
+            if (magnitude <= NUMERIC_EPSILON) {
+                _bode[1][p] = Double.NaN;
+            } else {
+                _bode[1][p] = 20 * Math.log10(magnitudeValues[harmonic] / magnitude);
+            }
 
             double a = data_aVals[harmonic];
             double b = data_bVals[harmonic];
             double c = ss_aVals[harmonic];
             double d = ss_bVals[harmonic];
 
-            double x = (a * c + b * d) / (c * c - d * d);
-            double y = (c * b - a * d) / (c * c - d * d);
+            double denominator = c * c - d * d;
+            double xNumerator = a * c + b * d;
+            double yNumerator = c * b - a * d;
+            double x = xNumerator;
+            double y = yNumerator;
+            if (Math.abs(denominator) > NUMERIC_EPSILON) {
+                x = xNumerator / denominator;
+                y = yNumerator / denominator;
+            }
 
-            double phaseAngle = 180 / Math.PI * Math.atan(y / x);
+            double phaseAngle = Math.toDegrees(Math.atan2(y, x));
             _bode[2][p] = phaseAngle;
         }
+    }
+
+    private int getUsableHarmonicUpperBound() {
+        int fftBound = Math.max(0, (_N - 2) / 2);
+        int arrayBound = Math.min(Math.min(data_aVals.length, data_bVals.length),
+                Math.min(ss_aVals.length, ss_bVals.length)) - 1;
+        arrayBound = Math.min(arrayBound, magnitudeValues.length - 1);
+        return Math.min(Math.min(_nMax, fftBound), arrayBound);
     }
 
     private int[] removeDuplicates(final int[] arr, final int noValues) {
