@@ -1,0 +1,53 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0
+                              http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <id>examples</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <baseDirectory>GeckoCIRCUITS-examples</baseDirectory>
+
+    <fileSets>
+        <!-- Tutorial files -->
+        <fileSet>
+            <directory>${project.basedir}/resources/tutorials</directory>
+            <outputDirectory>/tutorials</outputDirectory>
+            <includes>
+                <include>**/*.ipes</include>
+                <include>**/*.pdf</include>
+                <include>**/README.md</include>
+            </includes>
+        </fileSet>
+        <!-- Application examples -->
+        <fileSet>
+            <directory>${project.basedir}/resources/application_examples</directory>
+            <outputDirectory>/application_examples</outputDirectory>
+            <includes>
+                <include>**/*.ipes</include>
+                <include>**/*.pdf</include>
+                <include>**/README.md</include>
+                <include>**/*.PNG</include>
+            </includes>
+        </fileSet>
+        <!-- Articles with circuit files -->
+        <fileSet>
+            <directory>${project.basedir}/resources/articles</directory>
+            <outputDirectory>/articles</outputDirectory>
+            <includes>
+                <include>**/*.ipes</include>
+                <include>**/*.md</include>
+            </includes>
+        </fileSet>
+        <!-- README -->
+        <fileSet>
+            <directory>${project.basedir}/_build</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>README-examples.txt</include>
+            </includes>
+            <filtered>true</filtered>
+        </fileSet>
+    </fileSets>
+</assembly>

@@ -23,7 +23,37 @@ mvn test -Dtest=ClassName
 
 # Run tests with coverage report (output: target/site/jacoco/index.html)
 mvn clean test jacoco:report
+```
 
+## Running GeckoCIRCUITS
+
+### Using Launcher Scripts (Recommended)
+
+Platform-specific launcher scripts are provided in `scripts/`:
+
+```bash
+# Windows
+scripts\run-gecko.bat
+scripts\run-gecko.bat --hidpi              # For 4K displays
+scripts\run-gecko.bat circuit.ipes         # Open circuit file
+
+# Linux
+./scripts/run-gecko-linux.sh
+./scripts/run-gecko-linux.sh --hidpi
+./scripts/run-gecko-linux.sh --headless    # For CI/testing with Xvfb
+
+# macOS
+./scripts/run-gecko-macos.sh
+./scripts/run-gecko-macos.sh --hidpi       # For Retina displays
+
+# WSL (Windows Subsystem for Linux)
+./scripts/run-gecko-wsl.sh
+./scripts/run-gecko-wsl.sh --hidpi
+```
+
+### Manual Execution
+
+```bash
 # Run application
 java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar
 
@@ -33,6 +63,33 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target
 # Load specific circuit file
 java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar path/to/file.ipes
 ```
+
+## Building Distribution Packages
+
+Distribution packages can be built for each platform:
+
+```bash
+# Build all distributions (Windows, Linux, macOS, WSL, Examples)
+mvn clean package -Pdist-all -DskipTests
+
+# Build single platform
+mvn clean package -Pdist-windows -DskipTests
+mvn clean package -Pdist-linux -DskipTests
+mvn clean package -Pdist-macos -DskipTests
+mvn clean package -Pdist-wsl -DskipTests
+mvn clean package -Pdist-examples -DskipTests
+
+# Or use the build script
+./_build/build-distributions.sh          # Build all
+./_build/build-distributions.sh windows  # Single platform
+```
+
+Output packages in `target/`:
+- `GeckoCIRCUITS-1.0-windows.zip` - Windows distribution
+- `GeckoCIRCUITS-1.0-linux.zip` - Linux distribution
+- `GeckoCIRCUITS-1.0-macos.zip` - macOS distribution
+- `GeckoCIRCUITS-1.0-wsl.zip` - WSL distribution (includes setup script)
+- `GeckoCIRCUITS-1.0-examples.zip` - Example circuits and tutorials
 
 ## Architecture
 

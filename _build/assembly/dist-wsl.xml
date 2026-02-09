@@ -1,0 +1,53 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0
+                              http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+    <id>wsl</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <baseDirectory>GeckoCIRCUITS</baseDirectory>
+
+    <fileSets>
+        <!-- Launcher script -->
+        <fileSet>
+            <directory>${project.basedir}/scripts</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>run-gecko-wsl.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <!-- Setup script -->
+        <fileSet>
+            <directory>${project.basedir}/scripts</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>setup-wsl.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+        <!-- README -->
+        <fileSet>
+            <directory>${project.basedir}/_build</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>README-wsl.txt</include>
+            </includes>
+            <filtered>true</filtered>
+            <lineEnding>unix</lineEnding>
+        </fileSet>
+    </fileSets>
+
+    <files>
+        <!-- Fat JAR -->
+        <file>
+            <source>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>GeckoCIRCUITS.jar</destName>
+        </file>
+    </files>
+</assembly>
