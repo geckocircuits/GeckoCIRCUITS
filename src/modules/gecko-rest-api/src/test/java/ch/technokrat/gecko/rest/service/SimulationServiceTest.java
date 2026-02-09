@@ -144,6 +144,22 @@ class SimulationServiceTest {
     }
 
     @Test
+    void getSignalData_returnsDefensiveCopy() {
+        SimulationRequest request = new SimulationRequest("test.ipes", 0.02, 1e-6);
+        SimulationResponse response = simulationService.submitSimulation(request);
+        String id = response.getSimulationId();
+        simulationService.addResults(id, "V_out", new double[]{1.0, 2.0, 3.0});
+
+        double[] firstRead = simulationService.getSignalData(id, "V_out");
+        assertNotNull(firstRead);
+        firstRead[0] = 999.0;
+
+        double[] secondRead = simulationService.getSignalData(id, "V_out");
+        assertNotNull(secondRead);
+        assertEquals(1.0, secondRead[0], 1e-12);
+    }
+
+    @Test
     void getSignalData_nonExistingSignal_returnsNull() {
         SimulationRequest request = new SimulationRequest("test.ipes", 0.02, 1e-6);
         SimulationResponse response = simulationService.submitSimulation(request);

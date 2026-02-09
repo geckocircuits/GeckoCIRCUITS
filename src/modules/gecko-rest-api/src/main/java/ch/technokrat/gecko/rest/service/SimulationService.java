@@ -6,6 +6,7 @@ import ch.technokrat.gecko.core.simulation.SimulationConfig;
 import ch.technokrat.gecko.core.simulation.SimulationResult;
 import ch.technokrat.gecko.rest.model.SimulationRequest;
 import ch.technokrat.gecko.rest.model.SimulationResponse;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -204,8 +205,8 @@ public class SimulationService {
      */
     public double[] getSignalData(String simulationId, String signalName) {
         SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getResults() != null) {
-            return response.getResults().get(signalName);
+        if (response != null) {
+            return response.getResult(signalName);
         }
         return null;
     }
@@ -276,6 +277,11 @@ public class SimulationService {
      */
     public boolean isRunning(String simulationId) {
         return runningEngines.containsKey(simulationId);
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executorService.shutdownNow();
     }
 
     SimulationConfig buildSimulationConfig(SimulationRequest request) {
