@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,6 +19,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Uses MockMvc with a mocked SimulationService.
  */
 @WebMvcTest(SimulationController.class)
+@Import(GlobalExceptionHandler.class)
 class SimulationControllerTest {
 
     @Autowired
@@ -138,8 +142,11 @@ class SimulationControllerTest {
 
     @Test
     void getSignalData_existingSignal_returnsData() throws Exception {
+        testResponse.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
         double[] signalData = new double[]{1.0, 2.0, 3.0, 4.0, 5.0};
 
+        when(simulationService.getSimulation(testSimulationId))
+                .thenReturn(testResponse);
         when(simulationService.getSignalData(testSimulationId, "V_out"))
                 .thenReturn(signalData);
 
@@ -153,12 +160,28 @@ class SimulationControllerTest {
 
     @Test
     void getSignalData_nonExistingSignal_returnsNotFound() throws Exception {
+        testResponse.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
+
+        when(simulationService.getSimulation(testSimulationId))
+                .thenReturn(testResponse);
         when(simulationService.getSignalData(testSimulationId, "nonexistent"))
                 .thenReturn(null);
 
         mockMvc.perform(get("/api/v1/simulations/{id}/results/{signal}", testSimulationId, "nonexistent")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getSignalData_nonCompletedSimulation_returnsTooEarly() throws Exception {
+        testResponse.setStatus(SimulationResponse.SimulationStatus.RUNNING);
+
+        when(simulationService.getSimulation(testSimulationId))
+                .thenReturn(testResponse);
+
+        mockMvc.perform(get("/api/v1/simulations/{id}/results/{signal}", testSimulationId, "V_out")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isTooEarly());
     }
 
     @Test
@@ -307,5 +330,25 @@ class SimulationControllerTest {
                         .param("format", "csv"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(expectedCsv));
+    }
+
+    @Test
+    void exportResults_invalidFormat_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/v1/simulations/{id}/export", testSimulationId)
+                        .param("format", "json"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getSimulation_internalException_hidesExceptionDetails() throws Exception {
+        String internalMessage = "db connection string leaked";
+        when(simulationService.getSimulation(testSimulationId))
+                .thenThrow(new RuntimeException(internalMessage));
+
+        mockMvc.perform(get("/api/v1/simulations/{id}", testSimulationId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("An unexpected error occurred"))
+                .andExpect(content().string(not(containsString(internalMessage))));
     }
 }

@@ -123,11 +123,21 @@ public class SimulationController {
     @Operation(summary = "Get signal data", description = "Retrieve specific signal data from a simulation")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Signal data retrieved"),
+            @ApiResponse(responseCode = "425", description = "Simulation not yet complete"),
             @ApiResponse(responseCode = "404", description = "Simulation or signal not found")
     })
     public ResponseEntity<Map<String, Object>> getSignalData(
             @Parameter(description = "Simulation ID") @PathVariable String simulationId,
             @Parameter(description = "Signal name") @PathVariable String signalName) {
+
+        SimulationResponse response = simulationService.getSimulation(simulationId);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (response.getStatus() != SimulationResponse.SimulationStatus.COMPLETED) {
+            return ResponseEntity.status(HttpStatus.TOO_EARLY).build();
+        }
 
         double[] data = simulationService.getSignalData(simulationId, signalName);
         if (data == null) {
@@ -245,12 +255,17 @@ public class SimulationController {
     @Operation(summary = "Export results", description = "Export simulation results in CSV format")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "CSV export generated"),
+            @ApiResponse(responseCode = "400", description = "Invalid export format"),
             @ApiResponse(responseCode = "404", description = "Simulation not found"),
             @ApiResponse(responseCode = "425", description = "Simulation not yet complete")
     })
     public ResponseEntity<String> exportResults(
             @Parameter(description = "Simulation ID") @PathVariable String simulationId,
             @Parameter(description = "Export format") @RequestParam(defaultValue = "csv") String format) {
+
+        if (!"csv".equalsIgnoreCase(format)) {
+            return ResponseEntity.badRequest().build();
+        }
 
         SimulationResponse response = simulationService.getSimulation(simulationId);
         if (response == null) {
