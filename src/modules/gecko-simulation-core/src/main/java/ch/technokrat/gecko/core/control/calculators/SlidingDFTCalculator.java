@@ -115,7 +115,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
-        _size = (int) Math.round(_averageSpanSecs / deltaT);
+        _size = Math.max(1, (int) Math.round(_averageSpanSecs / deltaT));
         _timeData = new double[_size];
         _freqsReal = new double[_size + 1];
         _freqsImag = new double[_size + 1];
@@ -148,7 +148,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
     @Override
     public void initWithNewDt(final double deltaT) {
         final int oldSize = _size;
-        _size = (int) Math.round(_averageSpanSecs / deltaT);
+        _size = Math.max(1, (int) Math.round(_averageSpanSecs / deltaT));
         final double scalingFactor = 1.0 * _size / oldSize;
         final double[] inRealOld = _timeData;
         final double[] freqsRealOld = _freqsReal;

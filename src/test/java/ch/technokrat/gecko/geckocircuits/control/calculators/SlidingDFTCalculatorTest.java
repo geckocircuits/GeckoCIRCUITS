@@ -273,4 +273,26 @@ public final class SlidingDFTCalculatorTest {
 
         assertFalse("Output should be valid after dt change", Double.isNaN(_sdft._outputSignal[0][0]));
     }
+
+    @Test
+    public void testAverageSpanSmallerThanStepWidth() {
+        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        List<FrequencyData> freqData = new ArrayList<FrequencyData>();
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.ABS));
+
+        SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, 1e-6, freqData);
+        sdft._inputSignal[0] = new double[1];
+
+        double dt = 1e-3;
+        sdft.initializeAtSimulationStart(dt);
+        sdft._inputSignal[0][0] = AMPLITUDE;
+        sdft.berechneYOUT(dt);
+
+        sdft.initWithNewDt(2 * dt);
+        sdft._inputSignal[0][0] = AMPLITUDE;
+        sdft.berechneYOUT(2 * dt);
+
+        assertFalse("Output should be finite", Double.isNaN(sdft._outputSignal[0][0]));
+        assertFalse("Output should be finite", Double.isInfinite(sdft._outputSignal[0][0]));
+    }
 }

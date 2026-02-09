@@ -94,6 +94,24 @@ public class SignalValidatorTest {
         
         assertFalse("Should be invalid due to missing signal", result.isValid());
     }
+
+    @Test
+    public void testValidateSignals_indicesShorterThanNames_correctsMissingIndex() {
+        when(mockData.getRowLength()).thenReturn(2);
+        when(mockData.getSignalName(0)).thenReturn("voltage");
+        when(mockData.getSignalName(1)).thenReturn("current");
+
+        List<String> names = Arrays.asList("voltage", "current");
+        List<Integer> indices = Arrays.asList(0);
+
+        SignalValidator.ValidationResult result =
+            validator.validateSignals(names, indices, mockData);
+
+        assertTrue("Should remain valid", result.isValid());
+        assertTrue("Should report correction", result.hasCorrections());
+        assertTrue("Correction should include fallback index", 
+                result.getCorrectionsMessage().contains("current: -1->1"));
+    }
     
     @Test
     public void testValidateSignals_multipleCorrections() {
