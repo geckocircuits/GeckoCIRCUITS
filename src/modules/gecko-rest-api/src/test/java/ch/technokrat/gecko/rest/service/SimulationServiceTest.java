@@ -341,6 +341,18 @@ class SimulationServiceTest {
         assertNotNull(response.getEndTime());
     }
 
+    @Test
+    void markCancelled_setsCancellationReasonForBlankFailedState() {
+        SimulationResponse response = new SimulationResponse("cancelled-race");
+        response.setStatus(SimulationStatus.FAILED);
+        response.setErrorMessage(null);
+
+        assertTrue(simulationService.markCancelled(response));
+        assertEquals(SimulationStatus.FAILED, response.getStatus());
+        assertEquals(SimulationService.CANCELLED_BY_USER, response.getErrorMessage());
+        assertNotNull(response.getEndTime());
+    }
+
     @SuppressWarnings("unchecked")
     private void putSimulation(SimulationResponse response) {
         try {

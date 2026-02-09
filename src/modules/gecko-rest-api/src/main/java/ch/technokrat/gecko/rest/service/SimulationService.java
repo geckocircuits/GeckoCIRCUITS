@@ -294,6 +294,12 @@ public class SimulationService {
 
     boolean markCancelled(SimulationResponse response) {
         synchronized (response) {
+            if (response.getStatus() == SimulationResponse.SimulationStatus.FAILED
+                    && isBlank(response.getErrorMessage())) {
+                response.setErrorMessage(CANCELLED_BY_USER);
+                response.setEndTime(Instant.now());
+                return true;
+            }
             if (response.getStatus() != SimulationResponse.SimulationStatus.PENDING
                     && response.getStatus() != SimulationResponse.SimulationStatus.RUNNING) {
                 return false;
@@ -347,5 +353,9 @@ public class SimulationService {
     private static boolean isCancelled(SimulationResponse response) {
         return response.getStatus() == SimulationResponse.SimulationStatus.FAILED
                 && CANCELLED_BY_USER.equals(response.getErrorMessage());
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }
