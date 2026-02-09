@@ -196,6 +196,7 @@ public final class DataSaver extends Observable implements Observer {
             default:
                 assert false;
         }
+        _lastSavedDataIndex = -1;
         try {
             _linePrinter.initStream();
         } catch (IOException ex) {
@@ -283,6 +284,7 @@ public final class DataSaver extends Observable implements Observer {
          * Throws exception if signal cannot be found.
          */
         private void compareAndCorrectSignalNamesIndices() throws SignalMissingException {
+            _settings.normalizeSelectedSignalLists();
             final List<String> originalNames = _settings.getSelectedNames();
             final List<Integer> indices = _settings.getSelectedSignalIndices();
             
@@ -306,14 +308,17 @@ public final class DataSaver extends Observable implements Observer {
                 // Remove invalid signals and throw exception
                 for (int i = originalNames.size() - 1; i >= 0; i--) {
                     String name = originalNames.get(i);
-                    int index = indices.get(i);
-                    if (index >= _data.getRowLength() || 
+                    int index = i < indices.size() ? indices.get(i) : -1;
+                    if (index < 0 || index >= _data.getRowLength() || 
                         !_data.getSignalName(index).equals(name)) {
                         _settings.removeSignal(i);
                     }
                 }
+                _settings.normalizeSelectedSignalLists();
                 throw new SignalMissingException(result.getErrorMessage());
             }
+
+            _settings.normalizeSelectedSignalLists();
         }
     }
 
@@ -359,10 +364,10 @@ public final class DataSaver extends Observable implements Observer {
                 _bufferedWriter.write(_separator);
             }
 
-            for (int i = 0; i < maxIndex; i++) {
+            for (int i = 0; i <= maxIndex; i++) {
                 final double timeValue = _data.getTimeValue(i, 0);
                 _bufferedWriter.write(Double.toString(timeValue));
-                if (i < maxIndex - 1) {
+                if (i < maxIndex) {
                     _bufferedWriter.write(_separator);
                 }
 
@@ -377,11 +382,11 @@ public final class DataSaver extends Observable implements Observer {
                     _bufferedWriter.write(_separator);
                 }
 
-                for (int i = 0; i < maxIndex; i++) {
+                for (int i = 0; i <= maxIndex; i++) {
                     final float value = _data.getValue(column, i);
                     final String numberString = getFormatter(value).format(value);
                     _bufferedWriter.write(numberString);
-                    if (i < maxIndex - 1) {
+                    if (i < maxIndex) {
                         _bufferedWriter.write(_separator);
                     }
                 }
@@ -478,12 +483,12 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         void printTransposedData() throws IOException {
             final int maxIndex = _data.getMaximumTimeIndex(0);
-            for (int i = 0; i < maxIndex; i++) {
+            for (int i = 0; i <= maxIndex; i++) {
                 _outputStream.writeDouble(_data.getTimeValue(i, 0));
             }
 
             for (int index : _selectedIndices) {
-                for (int i = 0; i < maxIndex; i++) {
+                for (int i = 0; i <= maxIndex; i++) {
                     _outputStream.writeFloat(_data.getValue(index, i));
                 }
             }
