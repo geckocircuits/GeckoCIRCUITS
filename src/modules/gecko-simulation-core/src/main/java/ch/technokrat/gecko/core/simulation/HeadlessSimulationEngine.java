@@ -16,7 +16,10 @@ package ch.technokrat.gecko.core.simulation;
 import ch.technokrat.gecko.core.allg.SolverSettingsCore;
 import ch.technokrat.gecko.core.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.core.datacontainer.DataContainerGlobal;
+import ch.technokrat.gecko.core.io.CircuitFileParser;
+import ch.technokrat.gecko.core.io.CircuitModel;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -81,6 +84,10 @@ public class HeadlessSimulationEngine {
      * @return the simulation result
      */
     public SimulationResult runSimulation(SimulationConfig config) {
+        if (config == null) {
+            return SimulationResult.failed("Simulation configuration is required");
+        }
+
         if (!state.compareAndSet(EngineState.IDLE, EngineState.RUNNING)) {
             return SimulationResult.failed("Engine is already running a simulation");
         }
@@ -101,20 +108,23 @@ public class HeadlessSimulationEngine {
      * Executes the actual simulation loop.
      */
     private SimulationResult executeSimulation(SimulationConfig config, long startTime) {
+        CircuitModel circuitModel = parseCircuitModel(config);
         SolverSettingsCore settings = config.getSolverSettings();
         double dt = settings.getStepWidth();
         double duration = settings.getSimulationDuration();
+        validateSimulationSettings(dt, duration);
+
         endTime = duration;
         currentTime = 0;
         currentStep = 0;
 
         // Calculate expected number of steps
-        int expectedSteps = (int) Math.ceil(duration / dt);
+        int expectedSteps = calculateExpectedSteps(dt, duration);
 
         // Create data container for results
         // For now, create a simple container with a few test signals
         DataContainerGlobal dataContainer = new DataContainerGlobal();
-        String[] signalNames = {"V_out", "I_in", "P_loss"};
+        String[] signalNames = resolveSignalNames(circuitModel);
         dataContainer.init(signalNames.length, expectedSteps + 1, signalNames, "time [s]");
         dataContainer.setContainerStatus(ContainerStatus.RUNNING);
 
@@ -167,6 +177,8 @@ public class HeadlessSimulationEngine {
                 .simulatedTime(currentTime)
                 .metadata("solver", settings.getSolverType().toString())
                 .metadata("dt", dt)
+                .metadata("circuitFile", config.getCircuitFilePath())
+                .metadata("parameterOverrides", config.getParameterOverrides().size())
                 .build();
     }
 
@@ -175,8 +187,9 @@ public class HeadlessSimulationEngine {
      * The simulation will stop at the next opportunity.
      */
     public void cancel() {
-        cancelRequested.set(true);
-        state.set(EngineState.CANCELLED);
+        if (state.get() == EngineState.RUNNING) {
+            cancelRequested.set(true);
+        }
     }
 
     /**
@@ -249,5 +262,44 @@ public class HeadlessSimulationEngine {
          * @param currentStep current time step number
          */
         void onProgress(double currentTime, double endTime, int currentStep);
+    }
+
+    private static int calculateExpectedSteps(double dt, double duration) {
+        double rawSteps = Math.ceil(duration / dt);
+        if (!Double.isFinite(rawSteps) || rawSteps > Integer.MAX_VALUE - 1) {
+            throw new IllegalArgumentException("Simulation step count is too large");
+        }
+        return Math.max(1, (int) rawSteps);
+    }
+
+    private static void validateSimulationSettings(double dt, double duration) {
+        if (!Double.isFinite(dt) || dt <= 0) {
+            throw new IllegalArgumentException("Step width must be a finite value > 0");
+        }
+        if (!Double.isFinite(duration) || duration <= 0) {
+            throw new IllegalArgumentException("Simulation duration must be a finite value > 0");
+        }
+    }
+
+    private static CircuitModel parseCircuitModel(SimulationConfig config) {
+        String circuitPath = config.getCircuitFilePath();
+        if (circuitPath == null || circuitPath.isBlank()) {
+            return null;
+        }
+
+        CircuitFileParser parser = new CircuitFileParser();
+        try {
+            return parser.parse(circuitPath);
+        } catch (IOException | CircuitFileParser.CircuitParseException ex) {
+            throw new IllegalArgumentException("Unable to parse circuit file '" + circuitPath + "': " + ex.getMessage(), ex);
+        }
+    }
+
+    private static String[] resolveSignalNames(CircuitModel circuitModel) {
+        if (circuitModel != null && circuitModel.getDataContainerSignals() != null
+                && circuitModel.getDataContainerSignals().length > 0) {
+            return circuitModel.getDataContainerSignals();
+        }
+        return new String[] {"V_out", "I_in", "P_loss"};
     }
 }

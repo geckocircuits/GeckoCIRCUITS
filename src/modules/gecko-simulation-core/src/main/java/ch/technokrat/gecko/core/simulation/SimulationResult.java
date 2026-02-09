@@ -194,6 +194,9 @@ public final class SimulationResult {
         if (dataContainer == null || !dataContainer.isInitialized()) {
             return new double[0];
         }
+        if (dataContainer.getRowLength() == 0) {
+            return new double[0];
+        }
 
         int maxIndex = dataContainer.getMaximumTimeIndex(0);
         if (maxIndex < 0) {
