@@ -294,8 +294,9 @@ public class CircuitFileParser {
             int count = Math.min(names.size(), values.size());
             for (int i = 0; i < count; i++) {
                 String name = names.get(i);
-                if (!name.isEmpty() && !name.equals(NIX)) {
-                    model.setOptimizerParameter(name, values.get(i));
+                Double value = values.get(i);
+                if (!name.isEmpty() && !name.equals(NIX) && value != null && !value.isNaN()) {
+                    model.setOptimizerParameter(name, value);
                 }
             }
         }
@@ -409,12 +410,17 @@ public class CircuitFileParser {
             return result;
         }
 
-        String[] parts = arrayPart.split("\\s+");
+        // Accept legacy space-separated data and slash-separated variants.
+        String[] parts = arrayPart.split("[/\\s]+");
         for (String part : parts) {
+            if (part.isEmpty()) {
+                continue;
+            }
             try {
                 result.add(Double.parseDouble(part));
             } catch (NumberFormatException e) {
-                // Skip invalid values
+                // Preserve positional alignment with optimizerName[].
+                result.add(Double.NaN);
             }
         }
 

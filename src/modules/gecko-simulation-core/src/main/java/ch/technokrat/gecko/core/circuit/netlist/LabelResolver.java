@@ -46,7 +46,7 @@ public class LabelResolver {
     private final Map<Integer, String> indexToLabel;
 
     /** Array of labels in order (for compatibility with NetListLK.labelListe) */
-    private final String[] labelList;
+    private String[] labelList;
 
     /**
      * Creates a LabelResolver with no initial labels.
@@ -118,6 +118,9 @@ public class LabelResolver {
         if (labelToIndex.containsKey(label)) {
             int oldIndex = labelToIndex.get(label);
             indexToLabel.remove(oldIndex);
+            if (oldIndex >= 0 && oldIndex < labelList.length) {
+                labelList[oldIndex] = null;
+            }
         }
 
         // Remove old label at this index
@@ -126,8 +129,10 @@ public class LabelResolver {
             labelToIndex.remove(oldLabel);
         }
 
+        ensureLabelListCapacity(index);
         labelToIndex.put(label, index);
         indexToLabel.put(index, label);
+        labelList[index] = label;
     }
 
     /**
@@ -217,6 +222,9 @@ public class LabelResolver {
         Integer index = labelToIndex.remove(label);
         if (index != null) {
             indexToLabel.remove(index);
+            if (index >= 0 && index < labelList.length) {
+                labelList[index] = null;
+            }
             return true;
         }
         return false;
@@ -232,6 +240,9 @@ public class LabelResolver {
         String label = indexToLabel.remove(index);
         if (label != null) {
             labelToIndex.remove(label);
+            if (index >= 0 && index < labelList.length) {
+                labelList[index] = null;
+            }
             return true;
         }
         return false;
@@ -243,6 +254,13 @@ public class LabelResolver {
     public void clear() {
         labelToIndex.clear();
         indexToLabel.clear();
+        labelList = new String[0];
+    }
+
+    private void ensureLabelListCapacity(int index) {
+        if (index >= labelList.length) {
+            labelList = Arrays.copyOf(labelList, index + 1);
+        }
     }
 
     /**
