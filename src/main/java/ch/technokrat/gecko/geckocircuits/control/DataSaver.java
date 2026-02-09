@@ -173,12 +173,16 @@ public final class DataSaver extends Observable implements Observer {
         if (_linePrinter != null) {
             try {
                 _linePrinter.closeStream();
-                _abortSignal = true;
-                Thread.sleep(SLEEP_TIMER);
+                if (_regler._saveModus == ReglerSaveData.SaveModus.DURING_SIMULATION) {
+                    _abortSignal = true;
+                    Thread.sleep(SLEEP_TIMER);
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(DataSaver.class.getName()).log(Level.WARNING, "Error while closing previous data stream", ex);
+            } finally {
+                _linePrinter = null;
             }
         }
 
@@ -407,8 +411,12 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         void closeStream() throws IOException {
             if (_bufferedWriter != null) {
-                _bufferedWriter.flush();
-                _bufferedWriter.close();
+                try {
+                    _bufferedWriter.flush();
+                } finally {
+                    _bufferedWriter.close();
+                    _bufferedWriter = null;
+                }
             }
         }
 
@@ -468,7 +476,11 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         void closeStream() throws IOException {
             if (_outputStream != null) {
-                _outputStream.close();
+                try {
+                    _outputStream.close();
+                } finally {
+                    _outputStream = null;
+                }
             }
         }
 
