@@ -15,7 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -261,9 +264,16 @@ public class SimulationController {
         // Generate CSV
         StringBuilder csv = new StringBuilder();
         Map<String, double[]> results = response.getResults();
+        List<String> columns = new ArrayList<>(results.keySet());
+        columns.sort(Comparator.comparing((String column) -> !"time".equals(column))
+                .thenComparing(Comparator.naturalOrder()));
 
         // Header row
-        csv.append(String.join(",", results.keySet())).append("\n");
+        csv.append(columns.stream()
+                        .map(SimulationController::escapeCsvHeaderValue)
+                        .reduce((left, right) -> left + "," + right)
+                        .orElse(""))
+                .append("\n");
 
         // Data rows
         int maxLength = results.values().stream()
@@ -274,7 +284,7 @@ public class SimulationController {
         for (int i = 0; i < maxLength; i++) {
             StringBuilder row = new StringBuilder();
             boolean first = true;
-            for (String key : results.keySet()) {
+            for (String key : columns) {
                 if (!first) row.append(",");
                 double[] data = results.get(key);
                 if (i < data.length) {
@@ -289,5 +299,18 @@ public class SimulationController {
                 .header("Content-Type", "text/csv")
                 .header("Content-Disposition", "attachment; filename=\"simulation_" + simulationId + ".csv\"")
                 .body(csv.toString());
+    }
+
+    private static String escapeCsvHeaderValue(String headerValue) {
+        if (headerValue == null) {
+            return "";
+        }
+        if (headerValue.contains(",")
+                || headerValue.contains("\"")
+                || headerValue.contains("\n")
+                || headerValue.contains("\r")) {
+            return "\"" + headerValue.replace("\"", "\"\"") + "\"";
+        }
+        return headerValue;
     }
 }

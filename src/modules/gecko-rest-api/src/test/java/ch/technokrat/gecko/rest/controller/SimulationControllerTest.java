@@ -14,11 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -242,6 +242,24 @@ class SimulationControllerTest {
     }
 
     @Test
+    void cancelSimulation_pendingSimulation_returnsOk() throws Exception {
+        testResponse.setStatus(SimulationResponse.SimulationStatus.PENDING);
+        SimulationResponse cancelledResponse = new SimulationResponse(testSimulationId);
+        cancelledResponse.setStatus(SimulationResponse.SimulationStatus.FAILED);
+        cancelledResponse.setErrorMessage("Cancelled by user");
+
+        when(simulationService.getSimulation(testSimulationId))
+                .thenReturn(testResponse);
+        when(simulationService.cancelSimulation(testSimulationId))
+                .thenReturn(cancelledResponse);
+
+        mockMvc.perform(delete("/api/v1/simulations/{id}", testSimulationId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("FAILED"))
+                .andExpect(jsonPath("$.errorMessage").value("Cancelled by user"));
+    }
+
+    @Test
     void cancelSimulation_completedSimulation_returnsConflict() throws Exception {
         testResponse.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
 
@@ -267,5 +285,27 @@ class SimulationControllerTest {
                 .andExpect(header().string("Content-Type", "text/csv"))
                 .andExpect(header().string("Content-Disposition",
                         "attachment; filename=\"simulation_" + testSimulationId + ".csv\""));
+    }
+
+    @Test
+    void exportResults_completedSimulation_ordersAndEscapesCsvHeaders() throws Exception {
+        testResponse.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
+        Map<String, double[]> results = new LinkedHashMap<>();
+        results.put("sig,1", new double[]{3.0, 4.0});
+        results.put("time", new double[]{0.0, 1.0});
+        results.put("sig\"2", new double[]{5.0});
+        testResponse.setResults(results);
+
+        when(simulationService.getSimulation(testSimulationId))
+                .thenReturn(testResponse);
+
+        String expectedCsv = "time,\"sig\"\"2\",\"sig,1\"\n"
+                + "0.0,5.0,3.0\n"
+                + "1.0,,4.0\n";
+
+        mockMvc.perform(post("/api/v1/simulations/{id}/export", testSimulationId)
+                        .param("format", "csv"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedCsv));
     }
 }

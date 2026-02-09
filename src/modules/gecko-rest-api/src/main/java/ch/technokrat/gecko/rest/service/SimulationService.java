@@ -8,7 +8,6 @@ import ch.technokrat.gecko.rest.model.SimulationRequest;
 import ch.technokrat.gecko.rest.model.SimulationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -70,26 +69,7 @@ public class SimulationService {
         response.setStatus(SimulationResponse.SimulationStatus.RUNNING);
 
         try {
-            // Create simulation configuration
-            SimulationConfig config = SimulationConfig.builder()
-                    .circuitFile(request.getCircuitFile())
-                    .stepWidth(request.getTimeStep())
-                    .simulationDuration(request.getSimulationTime())
-                    .solverType(SolverType.SOLVER_BE) // Default to Backward Euler
-                    .build();
-
-            // Apply parameter overrides if provided
-            if (request.getParameters() != null) {
-                for (Map.Entry<String, Double> entry : request.getParameters().entrySet()) {
-                    config = SimulationConfig.builder()
-                            .circuitFile(request.getCircuitFile())
-                            .stepWidth(request.getTimeStep())
-                            .simulationDuration(request.getSimulationTime())
-                            .solverType(SolverType.SOLVER_BE)
-                            .withParameter(entry.getKey(), entry.getValue())
-                            .build();
-                }
-            }
+            SimulationConfig config = buildSimulationConfig(request);
 
             // Create and run the simulation engine
             HeadlessSimulationEngine engine = new HeadlessSimulationEngine();
@@ -170,7 +150,7 @@ public class SimulationService {
     }
 
     /**
-     * Cancel a running simulation.
+     * Cancel a pending or running simulation.
      *
      * @param simulationId Simulation identifier
      * @return Updated simulation response
@@ -184,7 +164,9 @@ public class SimulationService {
         }
 
         SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getStatus() == SimulationResponse.SimulationStatus.RUNNING) {
+        if (response != null
+                && (response.getStatus() == SimulationResponse.SimulationStatus.PENDING
+                || response.getStatus() == SimulationResponse.SimulationStatus.RUNNING)) {
             response.setStatus(SimulationResponse.SimulationStatus.FAILED);
             response.setErrorMessage("Cancelled by user");
             response.setEndTime(Instant.now());
@@ -193,10 +175,10 @@ public class SimulationService {
     }
 
     /**
-     * Get simulation progress for a running simulation.
+     * Get simulation progress.
      *
      * @param simulationId Simulation identifier
-     * @return Progress as a percentage (0-100), or -1 if not running
+     * @return Progress as a percentage (0-100), or -1 if simulation is unknown
      */
     public double getSimulationProgress(String simulationId) {
         HeadlessSimulationEngine engine = runningEngines.get(simulationId);
@@ -204,10 +186,13 @@ public class SimulationService {
             return engine.getProgress() * 100.0;
         }
         SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getStatus() == SimulationResponse.SimulationStatus.COMPLETED) {
+        if (response == null) {
+            return -1;
+        }
+        if (response.getStatus() == SimulationResponse.SimulationStatus.COMPLETED) {
             return 100.0;
         }
-        return -1;
+        return 0.0;
     }
 
     /**
@@ -291,5 +276,19 @@ public class SimulationService {
      */
     public boolean isRunning(String simulationId) {
         return runningEngines.containsKey(simulationId);
+    }
+
+    SimulationConfig buildSimulationConfig(SimulationRequest request) {
+        SimulationConfig.Builder builder = SimulationConfig.builder()
+                .circuitFile(request.getCircuitFile())
+                .stepWidth(request.getTimeStep())
+                .simulationDuration(request.getSimulationTime())
+                .solverType(SolverType.SOLVER_BE); // Default to Backward Euler
+
+        if (request.getParameters() != null) {
+            builder.withParameters(request.getParameters());
+        }
+
+        return builder.build();
     }
 }

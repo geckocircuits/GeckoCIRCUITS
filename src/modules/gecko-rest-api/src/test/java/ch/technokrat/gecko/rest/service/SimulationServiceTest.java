@@ -1,13 +1,15 @@
 package ch.technokrat.gecko.rest.service;
 
+import ch.technokrat.gecko.core.simulation.SimulationConfig;
 import ch.technokrat.gecko.rest.model.SimulationRequest;
 import ch.technokrat.gecko.rest.model.SimulationResponse;
 import ch.technokrat.gecko.rest.model.SimulationResponse.SimulationStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +35,8 @@ class SimulationServiceTest {
 
         assertNotNull(response);
         assertNotNull(response.getSimulationId());
-        assertEquals(SimulationStatus.PENDING, response.getStatus());
+        assertTrue(response.getStatus() == SimulationStatus.PENDING
+                || response.getStatus() == SimulationStatus.RUNNING);
         assertNotNull(response.getStartTime());
     }
 
@@ -153,17 +156,15 @@ class SimulationServiceTest {
 
     @Test
     void getStatistics_returnsCorrectCounts() {
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.02, 1e-6);
-
-        // Submit three simulations
-        SimulationResponse r1 = simulationService.submitSimulation(request);
-        SimulationResponse r2 = simulationService.submitSimulation(request);
-        SimulationResponse r3 = simulationService.submitSimulation(request);
-
-        // Update statuses
-        simulationService.updateStatus(r1.getSimulationId(), SimulationStatus.COMPLETED);
-        simulationService.updateStatus(r2.getSimulationId(), SimulationStatus.FAILED);
-        // r3 remains PENDING
+        SimulationResponse r1 = new SimulationResponse("stats-1");
+        r1.setStatus(SimulationStatus.COMPLETED);
+        SimulationResponse r2 = new SimulationResponse("stats-2");
+        r2.setStatus(SimulationStatus.FAILED);
+        SimulationResponse r3 = new SimulationResponse("stats-3");
+        r3.setStatus(SimulationStatus.PENDING);
+        putSimulation(r1);
+        putSimulation(r2);
+        putSimulation(r3);
 
         Map<SimulationStatus, Long> stats = simulationService.getStatistics();
 
@@ -187,18 +188,13 @@ class SimulationServiceTest {
     }
 
     @Test
-    void getSimulationProgress_completedSimulation_returns100() throws InterruptedException {
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.001, 1e-6);
-        SimulationResponse response = simulationService.submitSimulation(request);
-        String id = response.getSimulationId();
+    void getSimulationProgress_completedSimulation_returns100() {
+        String simulationId = "completed-sim";
+        SimulationResponse completedResponse = new SimulationResponse(simulationId);
+        completedResponse.setStatus(SimulationStatus.COMPLETED);
+        putSimulation(completedResponse);
 
-        // Wait for simulation to complete (short duration)
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        // Update status to completed
-        simulationService.updateStatus(id, SimulationStatus.COMPLETED);
-
-        double progress = simulationService.getSimulationProgress(id);
+        double progress = simulationService.getSimulationProgress(simulationId);
 
         assertEquals(100.0, progress);
     }
@@ -222,5 +218,71 @@ class SimulationServiceTest {
 
         assertEquals(SimulationStatus.FAILED, cancelled.getStatus());
         assertEquals("Cancelled by user", cancelled.getErrorMessage());
+    }
+
+    @Test
+    void buildSimulationConfig_withMultipleParameters_appliesAllOverrides() {
+        SimulationRequest request = new SimulationRequest("test.ipes", 0.02, 1e-6);
+        Map<String, Double> parameters = new HashMap<>();
+        parameters.put("R_load", 12.0);
+        parameters.put("C_dc", 8.5e-6);
+        request.setParameters(parameters);
+
+        SimulationConfig config = simulationService.buildSimulationConfig(request);
+
+        assertEquals(2, config.getParameterOverrides().size());
+        assertEquals(12.0, config.getParameterOverrides().get("R_load"));
+        assertEquals(8.5e-6, config.getParameterOverrides().get("C_dc"));
+    }
+
+    @Test
+    void cancelSimulation_pendingSimulation_updatesStatus() {
+        String simulationId = "pending-sim";
+        SimulationResponse pendingResponse = new SimulationResponse(simulationId);
+        pendingResponse.setStatus(SimulationStatus.PENDING);
+        putSimulation(pendingResponse);
+
+        SimulationResponse cancelled = simulationService.cancelSimulation(simulationId);
+
+        assertEquals(SimulationStatus.FAILED, cancelled.getStatus());
+        assertEquals("Cancelled by user", cancelled.getErrorMessage());
+        assertNotNull(cancelled.getEndTime());
+    }
+
+    @Test
+    void getSimulationProgress_failedSimulation_returnsZero() {
+        String simulationId = "failed-sim";
+        SimulationResponse failedResponse = new SimulationResponse(simulationId);
+        failedResponse.setStatus(SimulationStatus.FAILED);
+        putSimulation(failedResponse);
+
+        double progress = simulationService.getSimulationProgress(simulationId);
+
+        assertEquals(0.0, progress);
+    }
+
+    @Test
+    void getSimulationProgress_pendingSimulation_returnsZero() {
+        String simulationId = "pending-sim";
+        SimulationResponse pendingResponse = new SimulationResponse(simulationId);
+        pendingResponse.setStatus(SimulationStatus.PENDING);
+        putSimulation(pendingResponse);
+
+        double progress = simulationService.getSimulationProgress(simulationId);
+
+        assertEquals(0.0, progress);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void putSimulation(SimulationResponse response) {
+        try {
+            Field storeField = SimulationService.class.getDeclaredField("simulationStore");
+            storeField.setAccessible(true);
+            Map<String, SimulationResponse> store =
+                    (Map<String, SimulationResponse>) storeField.get(simulationService);
+            store.put(response.getSimulationId(), response);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            fail("Unable to populate simulation store for test: " + e.getMessage());
+        }
     }
 }
