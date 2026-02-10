@@ -182,17 +182,25 @@ public class CircuitFileParser {
                 continue;
             }
 
-            char firstChar = line.charAt(0);
-            if (Character.isDigit(firstChar) || Character.isWhitespace(firstChar)) {
+            int tokenStart = 0;
+            while (tokenStart < line.length() && Character.isWhitespace(line.charAt(tokenStart))) {
+                tokenStart++;
+            }
+            if (tokenStart >= line.length()) {
                 continue;
             }
 
-            int spaceIndex = line.indexOf(' ');
-            if (spaceIndex < 1) {
-                spaceIndex = line.length();
+            char firstChar = line.charAt(tokenStart);
+            if (Character.isDigit(firstChar)) {
+                continue;
             }
 
-            String token = line.substring(0, spaceIndex);
+            int tokenEnd = tokenStart;
+            while (tokenEnd < line.length() && !Character.isWhitespace(line.charAt(tokenEnd))) {
+                tokenEnd++;
+            }
+
+            String token = line.substring(tokenStart, tokenEnd);
             if (!map.containsKey(token)) {
                 map.put(token, i);
             }
@@ -291,11 +299,19 @@ public class CircuitFileParser {
             List<String> names = readStringArray(lines, tokenMap, "optimizerName[]");
             List<Double> values = readDoubleArray(lines, tokenMap, "optimizerValue[]");
 
-            int count = Math.min(names.size(), values.size());
+            int nameOffset = 0;
+            // Keep backward compatibility with mixed formats:
+            // names often contain a leading slash slot while space-separated values do not.
+            if (names.size() == values.size() + 1 && !names.isEmpty() && names.get(0).isEmpty()) {
+                nameOffset = 1;
+            }
+
+            int count = Math.min(names.size() - nameOffset, values.size());
             for (int i = 0; i < count; i++) {
-                String name = names.get(i);
-                if (!name.isEmpty() && !name.equals(NIX)) {
-                    model.setOptimizerParameter(name, values.get(i));
+                String name = names.get(i + nameOffset);
+                Double value = values.get(i);
+                if (!name.isEmpty() && !name.equals(NIX) && value != null && !value.isNaN()) {
+                    model.setOptimizerParameter(name, value);
                 }
             }
         }
@@ -377,15 +393,13 @@ public class CircuitFileParser {
             return result;
         }
 
-        String[] parts = arrayPart.split(SEPARATOR_ASCII_STRINGARRAY);
+        String[] parts = arrayPart.split(SEPARATOR_ASCII_STRINGARRAY, -1);
         for (String part : parts) {
             String trimmed = part.trim();
-            if (!trimmed.isEmpty()) {
-                if (trimmed.equals(NIX)) {
-                    result.add("");
-                } else {
-                    result.add(trimmed);
-                }
+            if (trimmed.equals(NIX)) {
+                result.add("");
+            } else {
+                result.add(trimmed);
             }
         }
 
@@ -409,12 +423,26 @@ public class CircuitFileParser {
             return result;
         }
 
-        String[] parts = arrayPart.split("\\s+");
+        String[] parts;
+        if (arrayPart.contains(SEPARATOR_ASCII_STRINGARRAY)) {
+            // Preserve empty slots for index alignment with corresponding string arrays.
+            parts = arrayPart.split(SEPARATOR_ASCII_STRINGARRAY, -1);
+        } else {
+            // Legacy variant with plain whitespace separation.
+            parts = arrayPart.split("\\s+");
+        }
+
         for (String part : parts) {
+            String trimmed = part.trim();
+            if (trimmed.isEmpty()) {
+                result.add(Double.NaN);
+                continue;
+            }
             try {
-                result.add(Double.parseDouble(part));
+                result.add(Double.parseDouble(trimmed));
             } catch (NumberFormatException e) {
-                // Skip invalid values
+                // Preserve positional alignment with optimizerName[].
+                result.add(Double.NaN);
             }
         }
 

@@ -143,7 +143,14 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     void setSelectedSignal(int j, int i) {
-        _selectedSignalIndices.set(i, j);
+        if (i < _selectedSignalIndices.size()) {
+            _selectedSignalIndices.set(i, j);
+            return;
+        }
+        while (_selectedSignalIndices.size() < i) {
+            _selectedSignalIndices.add(-1);
+        }
+        _selectedSignalIndices.add(j);
     }
 
     void setSignalName(final int index, final String dataSignalNameNew) {
@@ -163,8 +170,18 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     void removeSignal(final int removeIndex) {
-        _selectedSignalNames.remove(removeIndex);
-        _selectedSignalIndices.remove(removeIndex);
+        if (removeIndex < _selectedSignalNames.size()) {
+            _selectedSignalNames.remove(removeIndex);
+        }
+        if (removeIndex < _selectedSignalIndices.size()) {
+            _selectedSignalIndices.remove(removeIndex);
+        }
+    }
+
+    void normalizeSelectedSignalLists() {
+        while (_selectedSignalIndices.size() > _selectedSignalNames.size()) {
+            _selectedSignalIndices.remove(_selectedSignalIndices.size() - 1);
+        }
     }
 
     private String findInitialFile() {

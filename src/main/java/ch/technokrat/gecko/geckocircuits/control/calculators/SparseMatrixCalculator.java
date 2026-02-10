@@ -24,6 +24,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Phase normalization uses double for precision; bounded while loop prevents infinite iteration")
 public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
 
+    private static final double NUMERIC_EPSILON = 1e-12;
+    private static final double DEFAULT_DUTY_RATIO = 0.5;
+
     
     // Dedektion eines Pulsperioden-Beginns zur Berechnung --> 
     private double fDRaltalt = 0, fDRalt = 0;
@@ -70,7 +73,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             calculateSwitchingTimes(ur, us, ut, uNmax, uOUTmax, fOUT, phi2);  // Einschaltdauern dOUT=[d1..d5] und dIN=[da,db] werden berechnet 
             neuePulsperiodeBeginnt = false;
         }
-        setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], (1.0 / Tp));  // alle 9 Schaltsignale werden generiert 
+        double switchingFrequency = safeDivide(1.0, Tp, safeDivide(1.0, Tp0, 0.0));
+        setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], switchingFrequency);  // alle 9 Schaltsignale werden generiert 
         tLokal += deltaT;
 
         _outputSignal[0][0] = sRp;
@@ -763,48 +767,49 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     private void calculateSwitchingTimes(double ur, double us, double ut, double uNmax, double uOUTmax, double fOUT, double phi2) {
         switch (seIN) {
             case 1:
-                dIN[0] = -ut / ur;
+                dIN[0] = safeDutyRatio(-ut, ur);
                 break;
             case 2:
-                dIN[0] = -ur / ut;
+                dIN[0] = safeDutyRatio(-ur, ut);
                 break;
             case 3:
-                dIN[0] = -us / ut;
+                dIN[0] = safeDutyRatio(-us, ut);
                 break;
             case 4:
-                dIN[0] = -ut / us;
+                dIN[0] = safeDutyRatio(-ut, us);
                 break;
             case 5:
-                dIN[0] = -ur / us;
+                dIN[0] = safeDutyRatio(-ur, us);
                 break;
             case 6:
-                dIN[0] = -us / ur;
+                dIN[0] = safeDutyRatio(-us, ur);
                 break;
             case 7:
-                dIN[0] = -ut / ur;
+                dIN[0] = safeDutyRatio(-ut, ur);
                 break;
             case 8:
-                dIN[0] = -ur / ut;
+                dIN[0] = safeDutyRatio(-ur, ut);
                 break;
             case 9:
-                dIN[0] = -us / ut;
+                dIN[0] = safeDutyRatio(-us, ut);
                 break;
             case 10:
-                dIN[0] = -ut / us;
+                dIN[0] = safeDutyRatio(-ut, us);
                 break;
             case 11:
-                dIN[0] = -ur / us;
+                dIN[0] = safeDutyRatio(-ur, us);
                 break;
             case 12:
-                dIN[0] = -us / ur;
+                dIN[0] = safeDutyRatio(-us, ur);
                 break;
             default:
                 break;
         }
+        dIN[0] = clampDutyRatio(dIN[0]);
         dIN[1] = 1 - dIN[0];
 
         // Ausgang:
-        double k = 1 / Math.sqrt(3) * uOUTmax / (uNmax * uNmax);  // Ann.: Ideales 3-ph. Spannungsnetz am Eingang
+        double k = safeDivide(uOUTmax, uNmax * uNmax, 0.0) / Math.sqrt(3);  // Ann.: Ideales 3-ph. Spannungsnetz am Eingang
         double phiOUT = 2 * Math.PI * fOUT * _time - Math.PI / 2;  // old version, does not work for PMSM-control 
         if (fOUT <= 0) {
             phiOUT = phi2 - Math.PI / 2;  // phiOUT= thetaEl +dPhiEl -Math.PI/2;  --> improvement EPE 2009
@@ -812,8 +817,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         while (phiOUT >= Math.PI / 3) {
             phiOUT -= Math.PI / 3;
         }
-        double ua = k * Math.cos(phiOUT + Math.PI / 6);
-        double ub = k * Math.sin(phiOUT);
+        double ua = sanitizeFinite(k * Math.cos(phiOUT + Math.PI / 6), 0.0);
+        double ub = sanitizeFinite(k * Math.sin(phiOUT), 0.0);
         double x1 = 0;
         double x2 = 0;
         switch (seIN) {
@@ -956,6 +961,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             default:
                 break;
         }
+        sanitizeDutyArray(dOUT);
     }
 
     private void sectorDetection(double ur, double us, double ut, double fOUT, double phi2) {
@@ -1017,6 +1023,43 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             seOUT = 11;
         } else if ((u3 < 0) && (u2 < u3)) {
             seOUT = 12;
+        }
+    }
+
+    private double safeDutyRatio(double numerator, double denominator) {
+        return clampDutyRatio(safeDivide(numerator, denominator, DEFAULT_DUTY_RATIO));
+    }
+
+    private double clampDutyRatio(double value) {
+        if (!Double.isFinite(value)) {
+            return DEFAULT_DUTY_RATIO;
+        }
+        if (value < 0) {
+            return 0;
+        }
+        if (value > 1) {
+            return 1;
+        }
+        return value;
+    }
+
+    private double safeDivide(double numerator, double denominator, double fallback) {
+        if (!Double.isFinite(numerator) || !Double.isFinite(denominator) || Math.abs(denominator) <= NUMERIC_EPSILON) {
+            return fallback;
+        }
+        return sanitizeFinite(numerator / denominator, fallback);
+    }
+
+    private double sanitizeFinite(double value, double fallback) {
+        if (Double.isFinite(value)) {
+            return value;
+        }
+        return fallback;
+    }
+
+    private void sanitizeDutyArray(double[] values) {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = sanitizeFinite(values[i], 0.0);
         }
     }
 }

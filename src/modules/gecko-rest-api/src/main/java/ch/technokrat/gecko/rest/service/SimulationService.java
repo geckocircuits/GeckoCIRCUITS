@@ -6,9 +6,9 @@ import ch.technokrat.gecko.core.simulation.SimulationConfig;
 import ch.technokrat.gecko.core.simulation.SimulationResult;
 import ch.technokrat.gecko.rest.model.SimulationRequest;
 import ch.technokrat.gecko.rest.model.SimulationResponse;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 public class SimulationService {
 
     private static final Logger logger = LoggerFactory.getLogger(SimulationService.class);
+    static final String CANCELLED_BY_USER = "Cancelled by user";
 
     private final Map<String, SimulationResponse> simulationStore = new ConcurrentHashMap<>();
     private final Map<String, HeadlessSimulationEngine> runningEngines = new ConcurrentHashMap<>();
@@ -67,29 +68,13 @@ public class SimulationService {
             return;
         }
 
-        response.setStatus(SimulationResponse.SimulationStatus.RUNNING);
+        if (!markRunning(response)) {
+            logger.info("Skipping simulation {} because status is {}", simulationId, response.getStatus());
+            return;
+        }
 
         try {
-            // Create simulation configuration
-            SimulationConfig config = SimulationConfig.builder()
-                    .circuitFile(request.getCircuitFile())
-                    .stepWidth(request.getTimeStep())
-                    .simulationDuration(request.getSimulationTime())
-                    .solverType(SolverType.SOLVER_BE) // Default to Backward Euler
-                    .build();
-
-            // Apply parameter overrides if provided
-            if (request.getParameters() != null) {
-                for (Map.Entry<String, Double> entry : request.getParameters().entrySet()) {
-                    config = SimulationConfig.builder()
-                            .circuitFile(request.getCircuitFile())
-                            .stepWidth(request.getTimeStep())
-                            .simulationDuration(request.getSimulationTime())
-                            .solverType(SolverType.SOLVER_BE)
-                            .withParameter(entry.getKey(), entry.getValue())
-                            .build();
-                }
-            }
+            SimulationConfig config = buildSimulationConfig(request);
 
             // Create and run the simulation engine
             HeadlessSimulationEngine engine = new HeadlessSimulationEngine();
@@ -110,41 +95,23 @@ public class SimulationService {
 
             // Process results
             if (result.isSuccess()) {
-                response.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
-                response.setEndTime(Instant.now());
-
-                // Copy result data to response
-                String[] signalNames = result.getSignalNames();
-                for (int i = 0; i < signalNames.length; i++) {
-                    float[] floatData = result.getSignalData(i);
-                    if (floatData != null) {
-                        double[] doubleData = new double[floatData.length];
-                        for (int j = 0; j < floatData.length; j++) {
-                            doubleData[j] = floatData[j];
-                        }
-                        response.addResult(signalNames[i], doubleData);
-                    }
+                if (applySuccessfulResult(response, result)) {
+                    logger.info("Simulation {} completed: {} steps in {} ms",
+                            simulationId, result.getTotalTimeSteps(), result.getExecutionTimeMs());
+                } else {
+                    logger.info("Simulation {} completed after cancellation request; keeping cancelled status",
+                            simulationId);
                 }
-
-                // Add time array
-                response.addResult("time", result.getTimeArray());
-
-                logger.info("Simulation {} completed: {} steps in {} ms",
-                        simulationId, result.getTotalTimeSteps(), result.getExecutionTimeMs());
             } else {
-                response.setStatus(SimulationResponse.SimulationStatus.FAILED);
-                response.setErrorMessage(result.getErrorMessage());
-                response.setEndTime(Instant.now());
-
-                logger.error("Simulation {} failed: {}", simulationId, result.getErrorMessage());
+                if (applyFailureResult(response, result.getErrorMessage())) {
+                    logger.error("Simulation {} failed: {}", simulationId, result.getErrorMessage());
+                }
             }
 
         } catch (Exception e) {
-            response.setStatus(SimulationResponse.SimulationStatus.FAILED);
-            response.setErrorMessage("Simulation error: " + e.getMessage());
-            response.setEndTime(Instant.now());
-
-            logger.error("Simulation {} threw exception", simulationId, e);
+            if (applyFailureResult(response, "Simulation error: " + e.getMessage())) {
+                logger.error("Simulation {} threw exception", simulationId, e);
+            }
         } finally {
             runningEngines.remove(simulationId);
         }
@@ -170,7 +137,7 @@ public class SimulationService {
     }
 
     /**
-     * Cancel a running simulation.
+     * Cancel a pending or running simulation.
      *
      * @param simulationId Simulation identifier
      * @return Updated simulation response
@@ -184,19 +151,17 @@ public class SimulationService {
         }
 
         SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getStatus() == SimulationResponse.SimulationStatus.RUNNING) {
-            response.setStatus(SimulationResponse.SimulationStatus.FAILED);
-            response.setErrorMessage("Cancelled by user");
-            response.setEndTime(Instant.now());
+        if (response != null) {
+            markCancelled(response);
         }
         return response;
     }
 
     /**
-     * Get simulation progress for a running simulation.
+     * Get simulation progress.
      *
      * @param simulationId Simulation identifier
-     * @return Progress as a percentage (0-100), or -1 if not running
+     * @return Progress as a percentage (0-100), or -1 if simulation is unknown
      */
     public double getSimulationProgress(String simulationId) {
         HeadlessSimulationEngine engine = runningEngines.get(simulationId);
@@ -204,10 +169,13 @@ public class SimulationService {
             return engine.getProgress() * 100.0;
         }
         SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getStatus() == SimulationResponse.SimulationStatus.COMPLETED) {
+        if (response == null) {
+            return -1;
+        }
+        if (response.getStatus() == SimulationResponse.SimulationStatus.COMPLETED) {
             return 100.0;
         }
-        return -1;
+        return 0.0;
     }
 
     /**
@@ -219,8 +187,8 @@ public class SimulationService {
      */
     public double[] getSignalData(String simulationId, String signalName) {
         SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getResults() != null) {
-            return response.getResults().get(signalName);
+        if (response != null) {
+            return response.getResult(signalName);
         }
         return null;
     }
@@ -234,10 +202,12 @@ public class SimulationService {
     public void updateStatus(String simulationId, SimulationResponse.SimulationStatus status) {
         SimulationResponse response = simulationStore.get(simulationId);
         if (response != null) {
-            response.setStatus(status);
-            if (status == SimulationResponse.SimulationStatus.COMPLETED ||
-                    status == SimulationResponse.SimulationStatus.FAILED) {
-                response.setEndTime(Instant.now());
+            synchronized (response) {
+                response.setStatus(status);
+                if (status == SimulationResponse.SimulationStatus.COMPLETED ||
+                        status == SimulationResponse.SimulationStatus.FAILED) {
+                    response.setEndTime(Instant.now());
+                }
             }
         }
     }
@@ -291,5 +261,101 @@ public class SimulationService {
      */
     public boolean isRunning(String simulationId) {
         return runningEngines.containsKey(simulationId);
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        executorService.shutdownNow();
+    }
+
+    SimulationConfig buildSimulationConfig(SimulationRequest request) {
+        SimulationConfig.Builder builder = SimulationConfig.builder()
+                .circuitFile(request.getCircuitFile())
+                .stepWidth(request.getTimeStep())
+                .simulationDuration(request.getSimulationTime())
+                .solverType(SolverType.SOLVER_BE); // Default to Backward Euler
+
+        if (request.getParameters() != null) {
+            builder.withParameters(request.getParameters());
+        }
+
+        return builder.build();
+    }
+
+    boolean markRunning(SimulationResponse response) {
+        synchronized (response) {
+            if (response.getStatus() != SimulationResponse.SimulationStatus.PENDING) {
+                return false;
+            }
+            response.setStatus(SimulationResponse.SimulationStatus.RUNNING);
+            return true;
+        }
+    }
+
+    boolean markCancelled(SimulationResponse response) {
+        synchronized (response) {
+            if (response.getStatus() == SimulationResponse.SimulationStatus.FAILED
+                    && isBlank(response.getErrorMessage())) {
+                response.setErrorMessage(CANCELLED_BY_USER);
+                response.setEndTime(Instant.now());
+                return true;
+            }
+            if (response.getStatus() != SimulationResponse.SimulationStatus.PENDING
+                    && response.getStatus() != SimulationResponse.SimulationStatus.RUNNING) {
+                return false;
+            }
+            response.setStatus(SimulationResponse.SimulationStatus.FAILED);
+            response.setErrorMessage(CANCELLED_BY_USER);
+            response.setEndTime(Instant.now());
+            return true;
+        }
+    }
+
+    boolean applySuccessfulResult(SimulationResponse response, SimulationResult result) {
+        synchronized (response) {
+            if (isCancelled(response)) {
+                return false;
+            }
+
+            // Copy result data to response before exposing COMPLETED.
+            String[] signalNames = result.getSignalNames();
+            for (int i = 0; i < signalNames.length; i++) {
+                float[] floatData = result.getSignalData(i);
+                if (floatData == null) {
+                    continue;
+                }
+                double[] doubleData = new double[floatData.length];
+                for (int j = 0; j < floatData.length; j++) {
+                    doubleData[j] = floatData[j];
+                }
+                response.addResult(signalNames[i], doubleData);
+            }
+            response.addResult("time", result.getTimeArray());
+            response.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
+            response.setErrorMessage(null);
+            response.setEndTime(Instant.now());
+            return true;
+        }
+    }
+
+    boolean applyFailureResult(SimulationResponse response, String errorMessage) {
+        synchronized (response) {
+            if (isCancelled(response)) {
+                return false;
+            }
+            response.setStatus(SimulationResponse.SimulationStatus.FAILED);
+            response.setErrorMessage(errorMessage);
+            response.setEndTime(Instant.now());
+            return true;
+        }
+    }
+
+    private static boolean isCancelled(SimulationResponse response) {
+        return response.getStatus() == SimulationResponse.SimulationStatus.FAILED
+                && CANCELLED_BY_USER.equals(response.getErrorMessage());
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

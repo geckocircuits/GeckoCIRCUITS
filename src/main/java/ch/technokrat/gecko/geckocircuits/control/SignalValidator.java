@@ -24,10 +24,11 @@ public final class SignalValidator {
             final AbstractDataContainer data) {
         
         ValidationResult result = new ValidationResult();
+        final int knownIndices = indices.size();
         
         for (int i = 0; i < originalNames.size(); i++) {
             String expectedName = originalNames.get(i);
-            int currentIndex = indices.get(i);
+            int currentIndex = i < knownIndices ? indices.get(i) : -1;
             
             // Check if the index is valid and points to the correct signal
             if (!isValidSignalIndex(currentIndex, expectedName, data)) {

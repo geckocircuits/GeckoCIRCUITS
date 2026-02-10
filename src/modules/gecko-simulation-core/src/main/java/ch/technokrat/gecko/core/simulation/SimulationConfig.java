@@ -33,7 +33,7 @@ public final class SimulationConfig {
     private final int dataLoggingInterval;
 
     private SimulationConfig(Builder builder) {
-        this.solverSettings = builder.solverSettings;
+        this.solverSettings = builder.solverSettings.copy();
         this.circuitFilePath = builder.circuitFilePath;
         this.parameterOverrides = Collections.unmodifiableMap(new HashMap<>(builder.parameterOverrides));
         this.enableDataLogging = builder.enableDataLogging;
@@ -46,7 +46,7 @@ public final class SimulationConfig {
      * @return solver settings
      */
     public SolverSettingsCore getSolverSettings() {
-        return solverSettings;
+        return solverSettings.copy();
     }
 
     /**
@@ -115,7 +115,10 @@ public final class SimulationConfig {
          * @return this builder
          */
         public Builder solverSettings(SolverSettingsCore solverSettings) {
-            this.solverSettings = solverSettings;
+            if (solverSettings == null) {
+                throw new IllegalArgumentException("solverSettings cannot be null");
+            }
+            this.solverSettings = solverSettings.copy();
             return this;
         }
 

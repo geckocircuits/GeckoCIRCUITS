@@ -1,5 +1,7 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -314,5 +316,47 @@ public class SparseMatrixCalculatorTest {
             assertFalse("Output should be valid with very small dt",
                        Double.isNaN(calculator._outputSignal[i][0]));
         }
+    }
+
+    @Test
+    public void testCalculateSwitchingTimesZeroDenominatorsRemainFinite() throws Exception {
+        setPrivateField(calculator, "seIN", 1);
+        setPrivateField(calculator, "seOUT", 1);
+
+        invokePrivateMethod(calculator, "calculateSwitchingTimes",
+                new Class<?>[]{double.class, double.class, double.class, double.class, double.class, double.class, double.class},
+                0.0, 0.0, 0.0, 0.0, 10.0, 50.0, 0.0);
+
+        double[] dIN = (double[]) getPrivateField(calculator, "dIN");
+        double[] dOUT = (double[]) getPrivateField(calculator, "dOUT");
+
+        for (int i = 0; i < dIN.length; i++) {
+            assertFalse("dIN[" + i + "] should not be NaN", Double.isNaN(dIN[i]));
+            assertFalse("dIN[" + i + "] should not be infinite", Double.isInfinite(dIN[i]));
+        }
+        for (int i = 0; i < dOUT.length; i++) {
+            assertFalse("dOUT[" + i + "] should not be NaN", Double.isNaN(dOUT[i]));
+            assertFalse("dOUT[" + i + "] should not be infinite", Double.isInfinite(dOUT[i]));
+        }
+        assertTrue("dIN[0] should be clamped to duty range", dIN[0] >= 0.0 && dIN[0] <= 1.0);
+        assertTrue("dIN[1] should be clamped to duty range", dIN[1] >= 0.0 && dIN[1] <= 1.0);
+    }
+
+    private static void setPrivateField(Object target, String fieldName, Object value) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
+    }
+
+    private static Object getPrivateField(Object target, String fieldName) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(target);
+    }
+
+    private static Object invokePrivateMethod(Object target, String methodName, Class<?>[] parameterTypes, Object... args) throws Exception {
+        Method method = target.getClass().getDeclaredMethod(methodName, parameterTypes);
+        method.setAccessible(true);
+        return method.invoke(target, args);
     }
 }

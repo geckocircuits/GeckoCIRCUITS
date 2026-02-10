@@ -1,5 +1,7 @@
 package ch.technokrat.gecko.rest.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +19,8 @@ import java.util.Map;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * Handle validation errors from @Valid annotation.
@@ -49,12 +53,15 @@ public class GlobalExceptionHandler {
             Exception ex,
             WebRequest request) {
 
+        String path = request.getDescription(false).replace("uri=", "");
+        LOGGER.error("Unhandled exception processing request {}", path, ex);
+
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", Instant.now());
         response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.put("error", "Internal Server Error");
-        response.put("message", ex.getMessage());
-        response.put("path", request.getDescription(false).replace("uri=", ""));
+        response.put("message", "An unexpected error occurred");
+        response.put("path", path);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

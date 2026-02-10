@@ -7,6 +7,7 @@
 package ch.technokrat.gecko.core.io;
 
 import ch.technokrat.gecko.core.allg.SolverType;
+import ch.technokrat.gecko.core.circuit.netlist.LabelResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -163,6 +164,60 @@ class CircuitFileParserTest {
     }
 
     @Test
+    void parse_scripterBlockTokenWithIndentAndTab_isDiscovered() throws Exception {
+        String content = """
+            \t<scripterCode>\t
+            double x = 7.0;
+            \t<\\scripterCode>
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertTrue(model.getScripterCode().contains("double x = 7.0"));
+    }
+
+    @Test
+    void parse_dataContainerSignals_preservesEmptySlotsAndMapsNix() throws Exception {
+        String content = """
+            dataContainerSignals[] //sigA/NIX_NIX_NIX//sigB/
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertArrayEquals(new String[]{"", "", "sigA", "", "", "sigB", ""}, model.getDataContainerSignals());
+    }
+
+    @Test
+    void parse_optimizerValuesWithSlashSeparators_keepsNameValueAlignment() throws Exception {
+        String content = """
+            optimizerName[] /alpha/NIX_NIX_NIX/beta/gamma
+            optimizerValue[] /1.5/99.0/2.5/3.5
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertEquals(3, model.getOptimizerParameters().size());
+        assertEquals(1.5, model.getOptimizerParameters().get("alpha"), 1e-10);
+        assertEquals(2.5, model.getOptimizerParameters().get("beta"), 1e-10);
+        assertEquals(3.5, model.getOptimizerParameters().get("gamma"), 1e-10);
+    }
+
+    @Test
+    void parse_optimizerInvalidValueToken_doesNotShiftLaterAssignments() throws Exception {
+        String content = """
+            optimizerName[] /alpha/beta/gamma
+            optimizerValue[] 1.0 bad 3.0
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertEquals(2, model.getOptimizerParameters().size());
+        assertEquals(1.0, model.getOptimizerParameters().get("alpha"), 1e-10);
+        assertFalse(model.getOptimizerParameters().containsKey("beta"));
+        assertEquals(3.0, model.getOptimizerParameters().get("gamma"), 1e-10);
+    }
+
+    @Test
     void parse_emptyContent_returnsModelWithDefaults() throws Exception {
         String content = "";
 
@@ -295,5 +350,35 @@ class CircuitFileParserTest {
 
         assertEquals("LK", connection.getType());
         assertArrayEquals(points, connection.getPoints());
+    }
+
+    @Test
+    void labelResolver_labelListStaysInSyncAcrossMutations() {
+        LabelResolver resolver = new LabelResolver(new String[]{"A", "B"});
+
+        resolver.addLabel("C", 2);
+        resolver.removeLabel("B");
+        resolver.addLabel("A", 3);
+        resolver.removeLabelAtIndex(2);
+
+        String[] labels = resolver.getLabelList();
+        assertEquals(4, labels.length);
+        assertNull(labels[0]);
+        assertNull(labels[1]);
+        assertNull(labels[2]);
+        assertEquals("A", labels[3]);
+    }
+
+    @Test
+    void labelResolver_clearResetsLabelListAndMaps() {
+        LabelResolver resolver = new LabelResolver(new String[]{"A", "B"});
+        resolver.addLabel("C", 3);
+
+        resolver.clear();
+
+        assertEquals(0, resolver.getLabelCount());
+        assertEquals(0, resolver.getLabelList().length);
+        assertFalse(resolver.hasLabel("A"));
+        assertFalse(resolver.hasLabelAtIndex(3));
     }
 }
