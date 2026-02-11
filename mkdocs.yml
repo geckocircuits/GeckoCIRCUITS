@@ -168,6 +168,10 @@ nav:
       - MATLAB Integration: tutorials/scripting/matlab.md
       - Python Integration: tutorials/scripting/python.md
       - Java Blocks: tutorials/scripting/java-blocks.md
+    - EMI/EMC:
+      - tutorials/emi/index.md
+    - Advanced Topics:
+      - tutorials/advanced/index.md
 
   - Examples:
     - examples/index.md
@@ -200,8 +204,16 @@ nav:
       - Solar Inverter: examples/renewable/solar.md
       - Wind Converter: examples/renewable/wind.md
 
+  - Articles:
+    - articles/index.md
+
   - API Reference:
     - api/index.md
+    - Core Module:
+      - api/core/index.md
+      - Simulation Engine: api/core/simulation.md
+      - Matrix Stampers: api/core/matrix-stampers.md
+      - Control Calculators: api/core/calculators.md
     - Remote Interface: api/remote-interface.md
     - REST API: api/rest-api.md
     - GeckoSCRIPT Reference: api/geckoscript-ref.md

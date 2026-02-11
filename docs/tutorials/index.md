@@ -145,32 +145,16 @@ For batch simulations and external tool integration:
 
 ## PLECS Equivalent Mapping
 
-| PLECS Tutorial | Topic | GeckoCIRCUITS Equivalent |
-|----------------|-------|--------------------------|
-| 101 Introduction Standalone | Getting started | [101](1xx_getting_started/101_first_simulation/) First Simulation |
-| 102 Introduction Blockset | Simulink integration | [702](7xx_scripting_automation/702_matlab_integration/) MATLAB Integration |
-| 103 SMPS | Power supplies | [Flyback](../examples/basic/flyback.md), [Forward](../examples/basic/forward.md) examples |
-| 104 Thermal Buck | Thermal simulation | [501-503](5xx_thermal_simulation/) Thermal series |
-| 105 Magnetic Domain | Magnetics modeling | [901-903](9xx_magnetics_mechanical/) Magnetics series |
-| 106 Mechanical/EV | Mechanical domain | [904](9xx_magnetics_mechanical/904_mechanical_systems/) Mechanical Systems |
-| 108 Custom Components | User libraries | [107](1xx_getting_started/107_component_libraries/) Component Libraries |
-| 110 C-Script Block | Custom code | [704](7xx_scripting_automation/704_java_blocks/) Java Blocks |
-| 113 State Machine | FSM control | [106](1xx_getting_started/106_state_machines/) State Machines |
-| 114 XML-RPC/Python | Python automation | [706](7xx_scripting_automation/706_python_integration/) Python Integration |
-| 115 Analysis Tools | Bode plots, SS | [105](1xx_getting_started/105_analysis_tools/) Analysis Tools |
-| 116 MATLAB Scripting | MATLAB control | [702](7xx_scripting_automation/702_matlab_integration/) MATLAB Integration |
-
-### PSIM Equivalent Mapping
-
-| PSIM Module | Topic | GeckoCIRCUITS Equivalent |
-|-------------|-------|--------------------------|
-| Basic PSIM | Circuit simulation | [101-104](1xx_getting_started/) Getting Started |
-| Thermal Module | Loss & junction temp | [501-503](5xx_thermal_simulation/) Thermal series |
-| Motor Drive Module | PMSM, BLDC, IM | [Motor Drives](../examples/motor-drives/) examples |
-| MagCoupler Module | Magnetic co-sim | [901-903](9xx_magnetics_mechanical/) Magnetics series |
-| SmartCtrl | Control design | [204](2xx_dcdc_converters/204_analog_circuits/) Analog Circuits |
-| SimCoder | Code generation | ❌ Not available |
-| ModularDesign | Hierarchical | [107](1xx_getting_started/107_component_libraries/) Component Libraries |
+| PLECS Tutorial | GeckoCIRCUITS Equivalent |
+|----------------|-------------------------|
+| 101 Introduction | 101-102 First Simulation + Basic Circuits |
+| 103 SMPS | Flyback, Forward examples |
+| 104 Thermal | 501-503 Thermal series |
+| 105 Magnetic | 901-903 Magnetics series |
+| 110 PWM | 103 PWM Basics |
+| 112 State Machine | 106 State Machines |
+| 113 Python | 706 Python Integration |
+| 114 Analysis Tools | 105 Analysis Tools |
 
 ## Prerequisites
 
@@ -181,7 +165,6 @@ For batch simulations and external tool integration:
 ## Related Resources
 
 - [**Examples**](../examples/) - Complete application examples
-- [**Application Examples**](../application_examples/) - Industry-specific circuits
 - [**Articles**](../articles/) - Technical papers and notes
 
 ---

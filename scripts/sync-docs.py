@@ -22,6 +22,8 @@ SYNC_MAP = {
     "tutorials/4xx_dcac_inverters": "tutorials/dcac",
     "tutorials/5xx_thermal_simulation": "tutorials/thermal",
     "tutorials/7xx_scripting_automation": "tutorials/scripting",
+    "tutorials/6xx_emi_emc": "tutorials/emi",
+    "tutorials/8xx_advanced_topics": "tutorials/advanced",
     "tutorials/9xx_magnetics_mechanical": "tutorials/magnetics",
     # Examples
     "examples/basic_topologies": "examples/basic",
@@ -123,6 +125,47 @@ def sync_directory(src_dir: Path, dst_dir: Path):
 
         sync_file(src_file, dst_file)
 
+ARTICLES_DIR = RESOURCES_DIR / "articles"
+ARTICLES_SKIP = {"temp.md", "Readme.md"}
+
+
+def sync_articles():
+    """Sync individual article .md files from resources/articles/ to docs/articles/."""
+    if not ARTICLES_DIR.exists():
+        print(f"  Skipping articles (not found)")
+        return
+
+    dst_dir = DOCS_DIR / "articles"
+    dst_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"\nSyncing articles:")
+    print(f"  from: {ARTICLES_DIR.relative_to(PROJECT_ROOT)}")
+    print(f"    to: {dst_dir.relative_to(PROJECT_ROOT)}")
+
+    for src_file in sorted(ARTICLES_DIR.glob("*.md")):
+        if src_file.name in ARTICLES_SKIP:
+            continue
+        # Sanitize filename for web: lowercase, replace spaces with hyphens
+        safe_name = src_file.stem.lower().replace(" ", "-").replace("_", "-")
+        # Remove special characters but keep hyphens and alphanumerics
+        safe_name = re.sub(r'[^a-z0-9\-]', '', safe_name)
+        # Collapse multiple hyphens
+        safe_name = re.sub(r'-+', '-', safe_name).strip('-')
+        dst_file = dst_dir / (safe_name + ".md")
+        sync_file(src_file, dst_file)
+
+    # Copy article assets (images, ipes files)
+    for asset_dir in ("img", "ipes_files"):
+        src_assets = ARTICLES_DIR / asset_dir
+        if src_assets.exists():
+            dst_assets = dst_dir / asset_dir
+            if dst_assets.exists():
+                shutil.rmtree(dst_assets)
+            shutil.copytree(src_assets, dst_assets)
+            file_count = sum(1 for _ in dst_assets.iterdir())
+            print(f"  Copied {file_count} files from {asset_dir}/")
+
+
 def main():
     print("=" * 60)
     print("GeckoCIRCUITS Documentation Sync")
@@ -146,6 +189,9 @@ def main():
     examples_readme = RESOURCES_DIR / "examples" / "README.md"
     if examples_readme.exists():
         sync_file(examples_readme, DOCS_DIR / "examples" / "index.md")
+
+    # Sync articles
+    sync_articles()
 
     print("\n" + "=" * 60)
     print("Sync complete!")

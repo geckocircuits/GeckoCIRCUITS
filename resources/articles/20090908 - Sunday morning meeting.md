@@ -7,8 +7,8 @@ In the past Prof. Nishida (Chiba University) was in the situation that it was ve
 - The number of students joining his lab increased significantly
 And what kind of electrical machine and control did they use? "The students did a great job, especially on project management", Prof. Nishida told us while drinking his second cup of coffee, "and to simplify things, we employed a DC motor with a DC-DC converter. But the next step might be to employ a synchronous machine with dq-control. It will bring benefits like smaller volume but will be much more complicated."
 
-[dq_control_psms](img/20090908_fig1.png)
+[dq_control_pmsm](img/20090908_fig1.png)
 
 Now we have implemented blocks to make motor control task easy in GeckoCIRCUITS. Check out the latest example below (we set the new PMSM-example as default). Prof. Nishida employs GeckoCIRCUITS now in his projects especially because simulation is so fast and the software is very simple in usage.
  
-Simulation file [](ipes_files/dq_control_psms.ipes)
+Simulation file [](ipes_files/dq_control_pmsm.ipes)

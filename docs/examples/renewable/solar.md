@@ -394,6 +394,5 @@ Step size: ΔVref = 5V (balance speed vs. oscillation)
 
 - [Wind Converter](wind.md)
 - [PFC Converters](../power-supplies/pfc.md)
-- [Grid-Tied Inverter Design](../../tutorials/dcac/grid-tied-inverters.md)
+- [Single-Phase Inverter](../../tutorials/dcac/single-phase.md)
 - [Three-Phase Systems](../../tutorials/dcac/three-phase.md)
-- [Renewable Energy Integration](../../tutorials/renewable/index.md)

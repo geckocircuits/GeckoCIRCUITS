@@ -269,4 +269,3 @@ Primary switches can also use modulated duty cycle while fsw = fr:
 - [PFC Converters](pfc.md)
 - [EV Charger](../automotive/ev-charger.md)
 - [502 - Junction Temperature Analysis](../../tutorials/thermal/junction-temperature.md)
-- [Resonant Converter Design Guide](../../tutorials/power-supplies/resonant-design.md)

@@ -164,6 +164,24 @@ Swing dialogs use NetBeans GUI Designer `.form` files. To edit:
 - JNA 5.18.1 (native library access)
 - Log4j2 2.24.3 (logging)
 
+## Documentation Site
+
+The MkDocs documentation site is in `docs/`. Key scripts:
+
+```bash
+# Sync resources/ content (tutorials, examples, articles) into docs/
+python scripts/sync-docs.py
+
+# Generate API documentation report from Javadoc in gecko-simulation-core
+python scripts/generate-api-docs.py
+
+# Build docs site (catches broken links with --strict)
+mkdocs build --strict
+
+# Preview docs locally
+mkdocs serve
+```
+
 ## Code Quality Tools
 
 ```bash

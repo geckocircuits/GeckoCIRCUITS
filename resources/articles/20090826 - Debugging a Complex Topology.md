@@ -23,4 +23,4 @@ If you decide alternatively to omit lines and provide the connection between nod
 
 ![fig3](img/20090826_fig3.png)
 
-Simulation file [](ipes_files/YRectifier.ipes)
+Simulation file: `YRectifier.ipes` (included in GeckoCIRCUITS examples)

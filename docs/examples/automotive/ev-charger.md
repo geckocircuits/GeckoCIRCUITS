@@ -256,4 +256,4 @@ Select ceramic or film capacitor, 400V rated.
 - [Isolated DC-DC Converters](../power-supplies/llc.md)
 - [DAB Converter](../power-supplies/dab.md)
 - [502 - Junction Temperature](../../tutorials/thermal/junction-temperature.md)
-- [401 - Two-Pulse Bridge Rectifier](../../tutorials/rectifiers/basic-rectifiers.md)
+- [301 - Diode Rectifiers](../../tutorials/acdc/diode-rectifier.md)

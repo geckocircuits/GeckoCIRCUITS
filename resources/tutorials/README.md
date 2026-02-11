@@ -161,7 +161,6 @@ For batch simulations and external tool integration:
 ## Related Resources
 
 - [**Examples**](../examples/) - Complete application examples
-- [**Application Examples**](../application_examples/) - Industry-specific circuits
 - [**Articles**](../articles/) - Technical papers and notes
 
 ---

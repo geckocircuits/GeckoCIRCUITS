@@ -105,7 +105,6 @@ For contributors, documentation templates are available in [`_templates/`](_temp
 ## Related Resources
 
 - [**Tutorials**](../tutorials/) - Step-by-step learning guides
-- [**Application Examples**](../application_examples/) - Industry-specific applications
 - [**Articles**](../articles/) - Technical papers and application notes
 
 ## Status Legend

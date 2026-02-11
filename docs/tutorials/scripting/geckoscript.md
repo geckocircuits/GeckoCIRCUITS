@@ -244,7 +244,7 @@ java -jar gecko.jar --script script.js circuit.ipes
     `resources/tutorials/7xx_scripting_automation/701_gecko_script_basics/GeckoSCRIPT.pdf`
 
 !!! info "Complete API Reference"
-    For a complete API reference with all available functions, see the [GeckoSCRIPT API Reference](../../../api/geckoscript-ref.md).
+    For a complete API reference with all available functions, see the [GeckoSCRIPT API Reference](../../api/geckoscript-ref.md).
 
 ## Related Tutorials
 

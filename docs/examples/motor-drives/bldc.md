@@ -366,5 +366,3 @@ Higher power units achieve 90-95% efficiency.
 
 - [PMSM Field-Oriented Control](pmsm-foc.md)
 - [402 - Three-Phase Inverter](../../tutorials/dcac/three-phase.md)
-- [903 - Power Electronics Fundamentals](../../tutorials/fundamentals/switching.md)
-- [BLDC Sensorless Control](../../tutorials/motor-drives/sensorless-bldc.md)
