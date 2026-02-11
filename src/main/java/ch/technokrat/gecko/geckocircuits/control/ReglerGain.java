@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -25,10 +24,11 @@ import java.awt.event.ActionListener;
 
 
 public final class ReglerGain extends AbstractReglerSingleInputSingleOutput {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerGain.class, "GAIN", I18nKeys.GAIN);
 
     
-    public final UserParameter<Double> _gain = UserParameter.Builder.<Double>start("k", 1.0).
+    public transient final UserParameter<Double> _gain = UserParameter.Builder.<Double>start("k", 1.0).
             longName(I18nKeys.GAIN).
             shortName("r0").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).

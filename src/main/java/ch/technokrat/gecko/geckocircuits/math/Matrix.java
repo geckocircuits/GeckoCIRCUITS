@@ -14,13 +14,14 @@
 package ch.technokrat.gecko.geckocircuits.math;
 
 //package Jama;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-import java.text.FieldPosition;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.nio.charset.StandardCharsets;
 import java.io.StreamTokenizer;
 //import Jama.util.*;
 
@@ -66,7 +67,8 @@ double rnorm = r.normInf();
 @author The MathWorks, Inc. and the National Institute of Standards and Technology.
 @version 5 August 1998
  */
-public class Matrix implements Cloneable, java.io.Serializable {
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Matrix exposes internal array for performance in numerical computations")
+public final class Matrix implements Cloneable, java.io.Serializable {
 
     /* ------------------------
     Class variables
@@ -198,8 +200,24 @@ public class Matrix implements Cloneable, java.io.Serializable {
 
     /** Clone the Matrix object.
      */
+    @Override
     public Object clone() {
-        return this.copy();
+        try {
+            Matrix cloned = (Matrix) super.clone();
+            // Deep copy the matrix data
+            cloned.A = new double[m][n];
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    cloned.A[i][j] = A[i][j];
+                }
+            }
+            // Reset LU decomposition (not shared with clone)
+            cloned.luDecomp = null;
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            // Should never happen since we implement Cloneable
+            throw new InternalError(e);
+        }
     }
 
     /** Access the internal two-dimensional array.
@@ -735,12 +753,11 @@ public class Matrix implements Cloneable, java.io.Serializable {
             }
             return luDecomp.solve(B);
         } else {
-            assert false;
-            return null;
+            throw new IllegalArgumentException("Matrix must be square");
         }
     }
 
-    public void ResetLUDecomp() {
+    public void resetLUDecomp() {
         luDecomp = null;
     }
 
@@ -815,7 +832,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     @param d    Number of digits after the decimal.
      */
     public void print(int w, int d) {
-        print(new PrintWriter(System.out, true), w, d);
+        print(new PrintWriter(System.out, true, StandardCharsets.UTF_8), w, d);
     }
 
     /** Print the matrix to the output stream.   Line the elements up in
@@ -844,7 +861,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(NumberFormat format, int width) {
-        print(new PrintWriter(System.out, true), format, width);
+        print(new PrintWriter(System.out, true, StandardCharsets.UTF_8), format, width);
     }
 
     // DecimalFormat is a little disappointing coming from Fortran or C's printf.
@@ -924,7 +941,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
                 if (j >= n) {
                     throw new java.io.IOException("Row " + v.size() + " is too long.");
                 }
-                row[j++] = Double.valueOf(tokenizer.sval).doubleValue();
+                row[j++] = Double.parseDouble(tokenizer.sval);
             } while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
             if (j < n) {
                 throw new java.io.IOException("Row " + v.size() + " is too short.");

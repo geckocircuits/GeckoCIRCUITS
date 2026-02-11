@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalColors;
 import ch.technokrat.gecko.geckocircuits.control.DialogLabelEingeben;
 import ch.technokrat.gecko.geckocircuits.control.Point;
@@ -26,10 +26,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Connection exposes label and coordinates for circuit rendering and netlist generation")
 public class Verbindung extends AbstractCircuitSheetComponent implements ComponentTerminable, Labable {
 
     private boolean _inMoveMode = false;  // wird nur zur De-selektion mittels ESCAPE verwendet 
@@ -285,7 +286,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     // zum Speichern im ASCII-Format (anstatt als Object-Stream) -->
     public final void exportASCII(final StringBuffer ascii) {
         ascii.append("<Verbindung>");
-        DatenSpeicher.appendAsString(ascii.append("\nlabel"), _label.getLabelString());
+        ProjectData.appendAsString(ascii.append("\nlabel"), _label.getLabelString());
 
         int[] xPoints = new int[_connectorPoints.size()];
         int[] yPoints = new int[_connectorPoints.size()];
@@ -294,12 +295,12 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
             yPoints[i] = _connectorPoints.get(i).y;
         }
 
-        DatenSpeicher.appendAsString(ascii.append("\nx"), xPoints);
-        DatenSpeicher.appendAsString(ascii.append("\ny"), yPoints);
+        ProjectData.appendAsString(ascii.append("\nx"), xPoints);
+        ProjectData.appendAsString(ascii.append("\ny"), yPoints);
 
         super.exportASCII(ascii);
 
-        DatenSpeicher.appendAsString(ascii.append("\nconnectorType"), _connectorType.ordinal());
+        ProjectData.appendAsString(ascii.append("\nconnectorType"), _connectorType.ordinal());
         ascii.append(new StringBuffer("\n<\\Verbindung>\n"));
     }
 

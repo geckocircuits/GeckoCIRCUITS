@@ -13,6 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
+import ch.technokrat.gecko.geckocircuits.api.IScopeData;
 import ch.technokrat.gecko.geckocircuits.newscope.AbstractTimeSerie;
 import ch.technokrat.gecko.geckocircuits.newscope.HiLoData;
 import java.util.Observable;
@@ -20,9 +21,14 @@ import java.util.Observable;
 /**
  * A powerful data storage object, keeps data information as e.g.
  * minumum-maximum values, ...
+ *
+ * Implements {@link IScopeData} to provide a standard interface for scope
+ * data access that decouples rendering components from concrete implementations.
+ *
  * @author andy
+ * @see IScopeData
  */
-public abstract class AbstractDataContainer extends Observable{
+public abstract class AbstractDataContainer extends Observable implements IScopeData {
   /**
    * @param row the row where to search inside
    * @param columnMax maximum column value

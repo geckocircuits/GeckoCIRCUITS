@@ -23,7 +23,10 @@ import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalc
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP"},
+        justification = "Public fields for control block and calculator arrays shared during simulation; exposes maps for scope data access")
 public final class NetzlisteCONTROL {
 
     public static final DataContainerGlobal globalData = new DataContainerGlobal();
@@ -52,7 +55,7 @@ public final class NetzlisteCONTROL {
     private NetzlisteCONTROL() {
     }
 
-    public static NetzlisteCONTROL FabricContinueSimulation(NetzlisteCONTROL previousNetList) {
+    public static NetzlisteCONTROL fabricContinueSimulation(NetzlisteCONTROL previousNetList) {
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.reglerCalc = previousNetList.reglerCalc;
         returnValue._labelNodeMap.putAll(previousNetList._labelNodeMap);
@@ -67,13 +70,13 @@ public final class NetzlisteCONTROL {
         return returnValue;
     }
 
-    public static NetzlisteCONTROL FabricUpdateGui(final NetzlisteAllg nlC) {
+    public static NetzlisteCONTROL fabricUpdateGui(final NetzlisteAllg nlC) {
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.connectPotentialLabels(nlC);
         return returnValue;
     }
 
-    public static NetzlisteCONTROL FabricRunSimulation(final NetzlisteAllg nlC) {
+    public static NetzlisteCONTROL fabricRunSimulation(final NetzlisteAllg nlC) {
         SystemOutputRedirect.reset();
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.connectPotentialLabels(nlC);
@@ -89,7 +92,6 @@ public final class NetzlisteCONTROL {
         final NetzlisteCONTROL nlC = new NetzlisteCONTROL();
         nlC.connectPotentialLabels(nlA);
         nlC.optimiereAbarbeitungsListe();
-        List<RegelBlock> optimizedList = new ArrayList<RegelBlock>();
         return Arrays.asList(nlC._orderedControlBlocks);
     }
 
@@ -140,7 +142,7 @@ public final class NetzlisteCONTROL {
                     if (potLab[i3].isTerminalOnPotential(endNode)) {
                         ((ControlTerminable) endNode).setNodeNumber(i3);
                         String label = potLab[i3].getLabel();
-                        if (!label.isEmpty() && !_labelNodeMap.containsKey(label)) {
+                        if (!label.isEmpty()) {
                             CircuitSheet circuitSheet = elementsControl.get(i1).getParentCircuitSheet();
                             HashMap<String, IndexConnection> map = null;
                             if (_labelNodeMap.containsKey(circuitSheet)) {
@@ -149,7 +151,9 @@ public final class NetzlisteCONTROL {
                                 map = new HashMap<String, IndexConnection>();
                                 _labelNodeMap.put(circuitSheet, map);
                             }
-                            map.put(label, new IndexConnection(i1, i2));
+                            if (!map.containsKey(label)) {
+                                map.put(label, new IndexConnection(i1, i2));
+                            }
                         }
                     }
                 }
@@ -496,16 +500,23 @@ public final class NetzlisteCONTROL {
      * @param time
      */
     private void writeData(final double time) {
-        try {
-            float[] scopeData = globalData.getDataArray();
-            for (int i = 0; i < potIndexArray.length; i++) {
+        // Check for null before accessing (can be null during initialization)
+        if (globalData == null || _allSortedCalculatables == null || potIndexArray == null) {
+            return;
+        }
+        float[] scopeData = globalData.getDataArray();
+        if (scopeData == null) {
+            return;
+        }
+        for (int i = 0; i < potIndexArray.length; i++) {
+            if (potIndexArray[i] != null && _allSortedCalculatables[potIndexArray[i][0]] != null
+                    && _allSortedCalculatables[potIndexArray[i][0]]._inputSignal != null
+                    && _allSortedCalculatables[potIndexArray[i][0]]._inputSignal[potIndexArray[i][1]] != null) {
                 scopeData[i] = (float) _allSortedCalculatables[potIndexArray[i][0]]._inputSignal[potIndexArray[i][1]][0];
             }
-
-            globalData.insertValuesAtEnd(scopeData, time);
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
         }
+
+        globalData.insertValuesAtEnd(scopeData, time);
     }
 
     /**

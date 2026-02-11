@@ -15,7 +15,10 @@ package ch.technokrat.gecko.geckocircuits.newscope;
 
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "FFT computation class with public fields for direct data access during signal processing")
 public final class Cispr16Fft {
 
     public float[] _zvResampled;    
@@ -30,9 +33,9 @@ public final class Cispr16Fft {
     public double baseFrequency;
 
     public Cispr16Fft(final DataContainerSimple data, final boolean useBlackman) {
-        doResampling(data);        
+        doResampling(data);
         data.deleteDataReference();
-        System.gc();
+        // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
         rescaleAmplitudeToRMS(_zvResampled);        
 
         if (useBlackman) {

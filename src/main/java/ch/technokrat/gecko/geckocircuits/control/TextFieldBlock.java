@@ -17,7 +17,7 @@ import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractSpecialBlock;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSheet;
 import ch.technokrat.gecko.geckocircuits.circuit.ElementDisplayProperties;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -143,7 +143,7 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
 
     @Override
     public ElementDisplayProperties getDisplayProperties() {
-        return SchematischeEingabe2._controlDisplayMode;
+        return SchematicEditor2._controlDisplayMode;
     }
 
     @Override

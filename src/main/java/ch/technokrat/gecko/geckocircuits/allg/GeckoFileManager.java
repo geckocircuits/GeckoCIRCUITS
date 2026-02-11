@@ -106,15 +106,6 @@ public final class GeckoFileManager {
         _allAvailableFiles.add(file);
     }
 
-    //save all the files to be internal - for applet mode
-    public void exportASCIIApplet(final StringBuffer ascii) {
-        ascii.append("\nGeckoFileManager");
-        ascii.append("\n<GeckoFileManager>");        
-        for (GeckoFile file : _allAvailableFiles) {
-            file.exportASCIIApplet(ascii);
-        }
-        ascii.append("\n<\\GeckoFileManager>");
-    }
 
     //rework all relative paths (i.e. we change location of file with "save as" or save the file for the first time
     public void recomputeRelativePaths(final String absModelPath) {        

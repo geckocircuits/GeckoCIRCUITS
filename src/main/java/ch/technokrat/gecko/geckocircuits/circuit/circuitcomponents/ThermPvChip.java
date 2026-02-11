@@ -23,7 +23,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.PostCalculatable;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalFixedPositionInvisible;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalTwoPortRelativeFixedDirection;
@@ -38,11 +38,13 @@ import java.awt.Window;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // Waermequelle: Leit- und Schaltverluste von Leistungshalbleitern
 // --> Messunsg von Strom und Spannung durch LK_D oder LK_S
 // --> Ermittlung der Verluste ueber Datenblattwerte (parameter[] von LK_D und LK_S)
 // --> Realisierung mittels einer signalgesteuerten Stromquelle
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes component coupling for thermal loss calculation")
 public final class ThermPvChip extends AbstractCircuitBlockInterface implements ComponentCoupable, CurrentMeasurable,
         HiddenSubCircuitable, PostCalculatable, DirectVoltageMeasurable {
 
@@ -204,7 +206,7 @@ public final class ThermPvChip extends AbstractCircuitBlockInterface implements 
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        if (SchematischeEingabe2._thermDisplayMode.showParameter) {
+        if (SchematicEditor2._thermDisplayMode.showParameter) {
 
             final AbstractCircuitBlockInterface coupledElement =
                     (AbstractCircuitBlockInterface) getComponentCoupling()._coupledElements[0];

@@ -17,7 +17,6 @@ import java.io.*;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.filechooser.FileFilter;
 
 /**
  *
@@ -243,32 +242,18 @@ public final class DialogMakeExternal extends javax.swing.JDialog {
         } catch (IOException ex) {
             Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
-                output.close();
-            } catch (IOException ex) {
-                Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         setVisible(false);
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
     private void jButtonChooserActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonChooserActionPerformed
-
-        final FileFilter filter = new FileFilter() {
-
-            @Override
-            public boolean accept(final File file) {
-                if (file.isDirectory()) {
-                    return true;
-                }
-                return file.getName().endsWith(_geckoFile.getExtension());
-            }
-
-            @Override
-            public String getDescription() {
-                return _geckoFile.getExtension();
-            }
-        };
 
         final GeckoFileChooser saveFileChooser = GeckoFileChooser.createSimpleSaveFileChooser(_geckoFile.getExtension(), this);
                 

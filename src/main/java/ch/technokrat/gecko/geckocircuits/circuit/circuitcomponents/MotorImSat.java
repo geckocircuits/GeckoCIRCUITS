@@ -184,9 +184,6 @@ public final class MotorImSat extends AbstractMotorIMCommon {
         // Block 'irdq':
         double ird = inv_Lm * psimd - isd;
         double irq = inv_Lm * psimq - isq;
-        // Block 'psirdq' --> nicht weiter verwendet? 
-        double psird = Llr * ird + psimd;  // nicht weiter verwendet 
-        double psirq = Llr * irq + psimq;  // nicht weiter verwendet 
         // Block 'ira,irb': 
         ira = ird * Math.cos(_thetaElectric) + irq * Math.sin(_thetaElectric);
         irb = ird * Math.cos(_thetaElectric + 2 * Math.PI / 3) + irq * Math.sin(_thetaElectric + 2 * Math.PI / 3);

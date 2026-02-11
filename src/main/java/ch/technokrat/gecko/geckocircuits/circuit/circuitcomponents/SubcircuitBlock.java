@@ -25,7 +25,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.ComponentDirection;
 import ch.technokrat.gecko.geckocircuits.circuit.ElementDisplayProperties;
 import ch.technokrat.gecko.geckocircuits.circuit.Enabled;
 import ch.technokrat.gecko.geckocircuits.circuit.EnumTerminalLocation;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.SubCircuitTerminable;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalSubCircuitBlock;
@@ -58,7 +58,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     private static final int DEFAULT_BLOCK_HEIGHT = 5;
     private static final int DEFAULT_SHEET_WIDTH = 50;
     private static final int DEFAULT_SHEET_HEIGHT = 40;
-    public final SubCircuitSheet _myCircuitSheet = new SubCircuitSheet(SchematischeEingabe2.Singleton, this);
+    public final SubCircuitSheet _myCircuitSheet = new SubCircuitSheet(SchematicEditor2.Singleton, this);
     
     final UserParameter<Integer> _blockSizeX = UserParameter.Builder.
             <Integer>start("blockSizeX", DEFAULT_BLOCK_WIDTH).
@@ -235,13 +235,13 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     @Override
     public void doDoubleClickAction(final Point clickedPoint) {
         final TerminalInterface clickedTerm = clickedTerminal(clickedPoint);
-        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematischeEingabe2.Singleton._visibleCircuitSheet) {
+        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematicEditor2.Singleton._visibleCircuitSheet) {
             final DialogLabelEingeben labelDialog = new DialogLabelEingeben(clickedTerm);
             labelDialog.setVisible(true);
             return;
         }
         final CircuitSheet newComp = _myCircuitSheet;
-        SchematischeEingabe2.Singleton.setNewVisibleCircuitSheet(newComp);
+        SchematicEditor2.Singleton.setNewVisibleCircuitSheet(newComp);
     }
 
     @Override
@@ -314,7 +314,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
 
     @Override
     public ElementDisplayProperties getDisplayProperties() {
-        return SchematischeEingabe2._lkDisplayMode;
+        return SchematicEditor2._lkDisplayMode;
     }
 
     @Override

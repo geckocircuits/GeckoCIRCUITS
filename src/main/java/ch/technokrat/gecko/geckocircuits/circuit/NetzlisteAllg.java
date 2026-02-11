@@ -15,8 +15,11 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ThermAmbient;
 import ch.technokrat.gecko.geckocircuits.control.Point;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public field for singularity indices shared with matrix operations")
 public final class NetzlisteAllg {
 
     
@@ -40,8 +43,6 @@ public final class NetzlisteAllg {
      * @param connectors
      * @param components
      */
-    static int counter;
-
     private NetzlisteAllg(final Collection<Verbindung> connectors, final List<? extends AbstractBlockInterface> components) {
         this._connections.addAll(connectors);
         this._allElements = Collections.unmodifiableList(components);

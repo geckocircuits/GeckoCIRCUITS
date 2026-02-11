@@ -14,34 +14,17 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.GeckoSim;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
-import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
-import ch.technokrat.gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
-import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
-import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
-import ch.technokrat.gecko.geckocircuits.newscope.GraferV4;
-import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
-import ch.technokrat.gecko.geckocircuits.newscope.SimpleGraferPanel;
 
-import ch.technokrat.gecko.i18n.GuiFabric;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.net.URL;
-import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.io.File;
-import java.util.ArrayList;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 
+@SuppressFBWarnings(value = "DE_MIGHT_IGNORE", justification = "Icon loading is optional - dialog works without it")
 public class DialogNonLinearity extends GeckoDialog {    
     private final NonLinearDialogPanel _content;
     private static final Dimension _windowSize = new Dimension(800, 600);
@@ -51,7 +34,8 @@ public class DialogNonLinearity extends GeckoDialog {
         setContentPane(_content);
         try {
             this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif"))).getImage());
-        } catch (Exception e) {
+        } catch (Exception e) { // NOPMD
+            // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }
         
         setPreferredSize(_windowSize);                

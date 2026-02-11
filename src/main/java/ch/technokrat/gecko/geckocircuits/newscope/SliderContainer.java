@@ -262,7 +262,7 @@ final class SliderContainer{
 
     if(mouseEvent.getID() != MouseEvent.NOBUTTON && isSliderActive()){
       final Axis xAxis = _grafer.getManager().getDiagram(0)._xAxis;
-      if((mouseEvent.getModifiers() & MouseEvent.BUTTON1_MASK) == 0 || mouseEvent.isControlDown()){
+      if((mouseEvent.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) == 0 || mouseEvent.isControlDown()){
         setInDiffMode(true);
         _activeSlider = _greenSlider;
 

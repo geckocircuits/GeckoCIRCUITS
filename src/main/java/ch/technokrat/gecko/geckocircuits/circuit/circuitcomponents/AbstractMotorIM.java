@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativeFixedDirection;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 
@@ -71,10 +70,10 @@ public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
         super.setzeParameterZustandswerteAufNULL();
         _magnetizingInductance = _magnetizingInductancePar.getValue();
         psisd0 = initialStatorFluxD.getValue();
-        psisd = psisd;
+        psisd = psisd0;
         psisq0 = initialStatorFluxQ.getValue();
-        psisq = psisq0;        
-        isd0 = isa;        
+        psisq = psisq0;
+        isd0 = isa;
     }    
 
     @Override

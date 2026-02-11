@@ -13,10 +13,12 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import ch.technokrat.gecko.geckocircuits.control.ReglerSaveData;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Observable;
@@ -30,6 +32,7 @@ import javax.swing.JOptionPane;
  * This class is responsible for saving the simulation data to a data file.
  *
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Data saver stores data container reference for efficient data export")
 public final class DataSaver extends Observable implements Observer {
 
     private final AbstractDataContainer _data;
@@ -44,6 +47,8 @@ public final class DataSaver extends Observable implements Observer {
     private boolean _hasCounterValue = false;
     private static final int MAX_FILE_COUNTER = 1000;
     private final ReglerSaveData _regler;
+    private final FileNameGenerator _fileNameGenerator = new FileNameGenerator();
+    private final SignalValidator _signalValidator = new SignalValidator();
 
     public DataSaver(final AbstractDataContainer data, ReglerSaveData regler) {
         super();
@@ -87,29 +92,12 @@ public final class DataSaver extends Observable implements Observer {
         }
     }
 
+    /**
+     * Finds a free file name by delegating to FileNameGenerator.
+     * @deprecated Use _fileNameGenerator.findFreeFileName() directly
+     */
     private String findFreeFile(final String origFile) {
-        if (!new File(origFile).exists()) {
-            return origFile;
-        }
-
-        int dotIndex = origFile.lastIndexOf('.');
-        if (dotIndex < 1) {
-            dotIndex = origFile.length() - 1;
-        }
-        int underscoreIndex = origFile.lastIndexOf('_');
-
-        if (underscoreIndex < 1) {
-            underscoreIndex = dotIndex;
-        }
-
-        for (int counter = 0; counter < MAX_FILE_COUNTER; counter++) {
-            final String newFileName = origFile.substring(0, underscoreIndex) + "_" + counter + origFile.substring(dotIndex);
-            final File newFile = new File(newFileName);
-            if (!newFile.exists()) {
-                return newFileName;
-            }
-        }
-        return origFile;
+        return _fileNameGenerator.findFreeFileName(origFile);
     }
 
     private void initSettings() {
@@ -185,12 +173,16 @@ public final class DataSaver extends Observable implements Observer {
         if (_linePrinter != null) {
             try {
                 _linePrinter.closeStream();
-                _abortSignal = true;
-                Thread.sleep(SLEEP_TIMER);
+                if (_regler._saveModus == ReglerSaveData.SaveModus.DURING_SIMULATION) {
+                    _abortSignal = true;
+                    Thread.sleep(SLEEP_TIMER);
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                ex.printStackTrace();
+                Logger.getLogger(DataSaver.class.getName()).log(Level.WARNING, "Error while closing previous data stream", ex);
+            } finally {
+                _linePrinter = null;
             }
         }
 
@@ -208,6 +200,7 @@ public final class DataSaver extends Observable implements Observer {
             default:
                 assert false;
         }
+        _lastSavedDataIndex = -1;
         try {
             _linePrinter.initStream();
         } catch (IOException ex) {
@@ -260,9 +253,11 @@ public final class DataSaver extends Observable implements Observer {
         }
     }
 
+    @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+            justification = "Abstract inner class - subclasses properly handle initialization; exception is intentional for missing signals")
     abstract class AbstractLinePrinter {
 
-        final AbstractDataContainer _data;        
+        final AbstractDataContainer _data;
         final File _file;
         final int[] _selectedIndices;
         final ReglerSaveData _settings;
@@ -288,48 +283,46 @@ public final class DataSaver extends Observable implements Observer {
         abstract void printTransposedData() throws IOException;
 
         /**
-         * Sometimes, when renaming signals, the "connection" to the right index
-         * is lost. Here, we search for a signal with the right name. If it is
-         * not found, we output a warning signal and continue with the old
-         * index.
-         *
-         * @param _settings
-         * @param _data
+         * Validates and corrects signal indices using SignalValidator.
+         * If a signal name doesn't match its index, attempts to find the correct index.
+         * Throws exception if signal cannot be found.
          */
         private void compareAndCorrectSignalNamesIndices() throws SignalMissingException {
+            _settings.normalizeSelectedSignalLists();
             final List<String> originalNames = _settings.getSelectedNames();
-
-            // loop: check if wrong signals are connected
-            for (int i = 0; i < originalNames.size(); i++) {
-                final String origName = originalNames.get(i);
-
-                String dataSignalName = "";
-                int signalIndex = _settings.getSelectedSignalIndices().get(i);
-                if (signalIndex < _data.getRowLength()) {
-                    dataSignalName = _data.getSignalName(signalIndex);
-                }
-
-                if (!origName.equals(dataSignalName)) {
-                    for (int j = 0; j < _data.getRowLength(); j++) {
-                        final String realName = _data.getSignalName(j);
-                        if (realName.equals(origName)) { // if the original name is found at another position, just
-                            // repair the wroing index/connection.                                                        
-                            _settings.setSelectedSignal(j, i);
-                        }
+            final List<Integer> indices = _settings.getSelectedSignalIndices();
+            
+            SignalValidator.ValidationResult result = 
+                _signalValidator.validateSignals(originalNames, indices, _data);
+            
+            // Apply corrections
+            if (result.hasCorrections()) {
+                // Re-validate after corrections to update indices
+                for (int i = 0; i < originalNames.size(); i++) {
+                    String name = originalNames.get(i);
+                    int correctedIndex = _signalValidator.findSignalIndexByName(name, _data);
+                    if (correctedIndex >= 0) {
+                        _settings.setSelectedSignal(correctedIndex, i);
                     }
                 }
-
-                int newSignalIndex = _settings.getSelectedSignalIndices().get(i);
-
-                if (newSignalIndex >= _data.getRowLength()
-                        || !_data.getSignalName(newSignalIndex).equals(origName)) {
-                    _settings.removeSignal(i);
-                    throw new SignalMissingException("The signal \"" + origName + "\" is not available as scope input in the\n"
-                            + "simulation model. The signal \"" + origName + "\" was removed from\n"
-                            + "the selection.");
-
-                }
             }
+            
+            // Check if validation failed
+            if (!result.isValid()) {
+                // Remove invalid signals and throw exception
+                for (int i = originalNames.size() - 1; i >= 0; i--) {
+                    String name = originalNames.get(i);
+                    int index = i < indices.size() ? indices.get(i) : -1;
+                    if (index < 0 || index >= _data.getRowLength() || 
+                        !_data.getSignalName(index).equals(name)) {
+                        _settings.removeSignal(i);
+                    }
+                }
+                _settings.normalizeSelectedSignalLists();
+                throw new SignalMissingException(result.getErrorMessage());
+            }
+
+            _settings.normalizeSelectedSignalLists();
         }
     }
 
@@ -375,10 +368,10 @@ public final class DataSaver extends Observable implements Observer {
                 _bufferedWriter.write(_separator);
             }
 
-            for (int i = 0; i < maxIndex; i++) {
+            for (int i = 0; i <= maxIndex; i++) {
                 final double timeValue = _data.getTimeValue(i, 0);
                 _bufferedWriter.write(Double.toString(timeValue));
-                if (i < maxIndex - 1) {
+                if (i < maxIndex) {
                     _bufferedWriter.write(_separator);
                 }
 
@@ -393,11 +386,11 @@ public final class DataSaver extends Observable implements Observer {
                     _bufferedWriter.write(_separator);
                 }
 
-                for (int i = 0; i < maxIndex; i++) {
+                for (int i = 0; i <= maxIndex; i++) {
                     final float value = _data.getValue(column, i);
                     final String numberString = getFormatter(value).format(value);
                     _bufferedWriter.write(numberString);
-                    if (i < maxIndex - 1) {
+                    if (i < maxIndex) {
                         _bufferedWriter.write(_separator);
                     }
                 }
@@ -409,7 +402,7 @@ public final class DataSaver extends Observable implements Observer {
 
         @Override
         void initStream() throws IOException {
-            _bufferedWriter = new BufferedWriter(new FileWriter(_file));
+            _bufferedWriter = new BufferedWriter(new FileWriter(_file, StandardCharsets.UTF_8));
             if (_settings._printHeader.getValue() && !_settings._transposeData.getValue()) {
                 printHeader(_data);
             }
@@ -418,8 +411,12 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         void closeStream() throws IOException {
             if (_bufferedWriter != null) {
-                _bufferedWriter.flush();
-                _bufferedWriter.close();
+                try {
+                    _bufferedWriter.flush();
+                } finally {
+                    _bufferedWriter.close();
+                    _bufferedWriter = null;
+                }
             }
         }
 
@@ -479,7 +476,11 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         void closeStream() throws IOException {
             if (_outputStream != null) {
-                _outputStream.close();
+                try {
+                    _outputStream.close();
+                } finally {
+                    _outputStream = null;
+                }
             }
         }
 
@@ -494,19 +495,19 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         void printTransposedData() throws IOException {
             final int maxIndex = _data.getMaximumTimeIndex(0);
-            for (int i = 0; i < maxIndex; i++) {
+            for (int i = 0; i <= maxIndex; i++) {
                 _outputStream.writeDouble(_data.getTimeValue(i, 0));
             }
 
             for (int index : _selectedIndices) {
-                for (int i = 0; i < maxIndex; i++) {
+                for (int i = 0; i <= maxIndex; i++) {
                     _outputStream.writeFloat(_data.getValue(index, i));
                 }
             }
         }
     }
 
-    class SignalMissingException extends Exception {
+    static class SignalMissingException extends Exception {
 
         public SignalMissingException(String message) {
             super(message);

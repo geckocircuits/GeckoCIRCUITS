@@ -13,8 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.control.calculators.SpaceVectorCalculator;
@@ -63,7 +62,7 @@ public final class ReglerSpaceVector extends RegelBlock {
             header = new String[NO_INPUTS + 1];
         }
         header[knotenIndex + 1] = q;
-        if (header[knotenIndex + 1].equals(new String(""))) {
+        if (header[knotenIndex + 1].equals("")) {
             header[knotenIndex + 1] = "sg." + (knotenIndex + 1);
         }
     }
@@ -97,24 +96,24 @@ public final class ReglerSpaceVector extends RegelBlock {
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nscale1"), ((Float) svd.jSpinnerLength1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale2"), ((Float) svd.jSpinnerLength2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\nscale3"), ((Float) svd.jSpinnerLength3.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale1"), ((Number) svd.jSpinnerLength1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale2"), ((Number) svd.jSpinnerLength2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\nscale3"), ((Number) svd.jSpinnerLength3.getValue()).toString());
 
-        DatenSpeicher.appendAsString(ascii.append("\naverage1"), ((Float) svd.jSpinnerAverage1.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage2"), ((Float) svd.jSpinnerAverage2.getValue()).toString());
-        DatenSpeicher.appendAsString(ascii.append("\naverage3"), ((Float) svd.jSpinnerAverage3.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage1"), ((Number) svd.jSpinnerAverage1.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage2"), ((Number) svd.jSpinnerAverage2.getValue()).toString());
+        ProjectData.appendAsString(ascii.append("\naverage3"), ((Number) svd.jSpinnerAverage3.getValue()).toString());
 
     }
 
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        svd.jSpinnerLength1.setValue(new Float(tokenMap.readDataLine("scale1", 1f)));
-        svd.jSpinnerLength2.setValue(new Float(tokenMap.readDataLine("scale2", 1f)));
-        svd.jSpinnerLength3.setValue(new Float(tokenMap.readDataLine("scale3", 1f)));
-        svd.jSpinnerAverage1.setValue(new Float(tokenMap.readDataLine("average1", 1f)));
-        svd.jSpinnerAverage2.setValue(new Float(tokenMap.readDataLine("average2", 1f)));
-        svd.jSpinnerAverage3.setValue(new Float(tokenMap.readDataLine("average3", 1f)));
+        svd.jSpinnerLength1.setValue(tokenMap.readDataLine("scale1", 1f));
+        svd.jSpinnerLength2.setValue(tokenMap.readDataLine("scale2", 1f));
+        svd.jSpinnerLength3.setValue(tokenMap.readDataLine("scale3", 1f));
+        svd.jSpinnerAverage1.setValue(tokenMap.readDataLine("average1", 1f));
+        svd.jSpinnerAverage2.setValue(tokenMap.readDataLine("average2", 1f));
+        svd.jSpinnerAverage3.setValue(tokenMap.readDataLine("average3", 1f));
     }
     
 }

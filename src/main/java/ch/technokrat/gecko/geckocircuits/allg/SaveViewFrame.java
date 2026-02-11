@@ -40,10 +40,12 @@ import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.fop.svg.PDFTranscoder;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores view component reference for image export")
 public final class SaveViewFrame extends GeckoDialog {
 
-    private static final Float JPG_QUALITY = 0.8f;
+    private static final Float JPG_QUALITY = 0.8f;  // Float literal autoboxing
     private static final float GREY_RED = 0.212671f;
     private static final float GREY_GREEN = 0.715160f;
     private static final float GREY_BLUE = 0.072169f;
@@ -77,21 +79,7 @@ public final class SaveViewFrame extends GeckoDialog {
         initComponents();
         _viewPanel = saveViewPanel;
 
-        synchronized (this) {
-
-            if (lastUsedFileName.isEmpty()) {
-                lastUsedFileName = GlobalFilePathes.DATNAM;
-                final int pointIndex = lastUsedFileName.lastIndexOf('.');
-                if (pointIndex > 0) {
-                    lastUsedFileName = lastUsedFileName.substring(0, pointIndex);
-                } else {
-                    lastUsedFileName += "image";
-                }
-                lastUsedFileName += ".svg";
-            }
-        }
-
-        jTextFieldFileName.setText(lastUsedFileName);
+        jTextFieldFileName.setText(initializeLastUsedFileName());
 
 
         final ActionListener updateTypeListener = new ActionListener() {
@@ -140,6 +128,21 @@ public final class SaveViewFrame extends GeckoDialog {
                 jRadioButtonSVG.setSelected(true);
         }
     }
+
+    private static synchronized String initializeLastUsedFileName() {
+        if (lastUsedFileName.isEmpty()) {
+            lastUsedFileName = GlobalFilePathes.DATNAM;
+            final int pointIndex = lastUsedFileName.lastIndexOf('.');
+            if (pointIndex > 0) {
+                lastUsedFileName = lastUsedFileName.substring(0, pointIndex);
+            } else {
+                lastUsedFileName += "image";
+            }
+            lastUsedFileName += ".svg";
+        }
+        return lastUsedFileName;
+    }
+
     private static final String JPG_TEXT = "\n JPEG - Joint Photographic Experts Group Image:"
             + "\n\n - Rastered Image format with lossy compression"
             + "\n - Very small image size with best compression"
@@ -597,7 +600,7 @@ public final class SaveViewFrame extends GeckoDialog {
 
         @Override
         public boolean accept(final File file) {
-            // Auch Unterverzeichnisse anzeigen
+            // Also display subdirectories
             if (file.isDirectory()) {
                 return true;
             }
@@ -676,7 +679,7 @@ public final class SaveViewFrame extends GeckoDialog {
 
             // Set the transcoding hints.
             // Create the transcoder input.
-            final String svgURI = svgFile.toURL().toString();
+            final String svgURI = svgFile.toURI().toURL().toString();
             final TranscoderInput input = new TranscoderInput(svgURI);
 
             // Create the transcoder output.            
@@ -720,7 +723,7 @@ public final class SaveViewFrame extends GeckoDialog {
     }
 
     private void scaleSvgImageIfNecessary(final SVGGraphics2D svgGenerator) {
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         switch (selectedFileType) {
             case PDF:
                 break;
@@ -736,7 +739,7 @@ public final class SaveViewFrame extends GeckoDialog {
     private void createGifImage() throws FileNotFoundException, IOException {
         final int height = _viewPanel.getHeight();
         final int width = _viewPanel.getWidth();
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         final BufferedImage img = new BufferedImage((int) (scaling * width),
                 (int) (scaling * height), BufferedImage.TYPE_INT_RGB);
         final Graphics2D g2d = (Graphics2D) img.getGraphics();
@@ -774,7 +777,7 @@ public final class SaveViewFrame extends GeckoDialog {
         final int height = _viewPanel.getHeight();
         final int width = _viewPanel.getWidth();
 
-        final float scaling = (Float) jSpinnerScaling.getValue();
+        final float scaling = ((Number) jSpinnerScaling.getValue()).floatValue();
         switch (selectedFileType) {
             case PDF:
                 returnValue = new PDFTranscoder();
@@ -790,8 +793,8 @@ public final class SaveViewFrame extends GeckoDialog {
                 assert false : "no transcoder available:  " + selectedFileType;
                 return null;
         }
-        returnValue.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(scaling * width));
-        returnValue.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(scaling * height));
+        returnValue.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, scaling * width);
+        returnValue.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, scaling * height);
         return returnValue;
     }
 }

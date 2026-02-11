@@ -14,7 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.ReglerDemux;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores parent control block reference for DEMUX operation")
 public final class DEMUXCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
     private final ReglerDemux _parent;
 
@@ -26,7 +28,7 @@ public final class DEMUXCalculator extends AbstractControlCalculatable implement
     @Override
     public void berechneYOUT(final double deltaT) {
         for (int i = 0; i < _outputSignal.length; i++) {
-            _outputSignal[i][0] = _inputSignal[0][i];  // Signal-Quelle
+            _outputSignal[i][0] = _inputSignal[0][i];  // Signal-Quelle - direct reference required by architecture
         }
     }
 

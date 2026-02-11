@@ -51,7 +51,7 @@ public class ThermalTypeInfo extends AbstractTypeInfo {
     @Override
     public final AbstractBlockInterface fabric() {
         try {
-            return _typeClass.newInstance();
+            return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
             System.err.println("error: " + _typeClass);
             Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);

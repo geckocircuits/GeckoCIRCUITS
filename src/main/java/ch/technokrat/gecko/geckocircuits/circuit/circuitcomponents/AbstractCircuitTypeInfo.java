@@ -15,11 +15,12 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
-import ch.technokrat.gecko.geckocircuits.circuit.SpecialTyp;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+/**
+ * Circuit type information with GUI/I18n support.
+ * Extends AbstractTypeInfo to add internationalization for circuit-specific types.
+ */
 public abstract class AbstractCircuitTypeInfo extends AbstractTypeInfo {
 
     public AbstractCircuitTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription) {
@@ -43,13 +44,11 @@ public abstract class AbstractCircuitTypeInfo extends AbstractTypeInfo {
     @Override
     public final AbstractBlockInterface fabric() {
         try {
-            return _typeClass.newInstance();
+            return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
             System.err.println("error: " + _typeClass);
             ex.printStackTrace();
-            Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-
     }
 }

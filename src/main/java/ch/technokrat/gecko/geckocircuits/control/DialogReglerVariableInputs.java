@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 
-final class DialogReglerVariableInputs extends DialogElementCONTROL {
+final class DialogReglerVariableInputs extends DialogElementCONTROL<AbstractReglerVariableInputs> {
 
     private static final int NORTH_GRID_SIZE = 3;
     private JSpinner _spinnerInputNumber;

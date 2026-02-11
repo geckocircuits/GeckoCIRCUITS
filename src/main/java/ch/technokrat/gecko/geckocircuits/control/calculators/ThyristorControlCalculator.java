@@ -60,11 +60,12 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
 
     @Override
     public void berechneYOUT(final double deltaT) {
-        if (_synchOld <= 0 && _inputSignal[1][0] >= 0 && _synchOld != _inputSignal[1][0]) {
+        final double epsilon = 1e-10;
+        if (_synchOld <= 0 && _inputSignal[1][0] >= 0 && Math.abs(_synchOld - _inputSignal[1][0]) > epsilon) {
             _synchTime = _time;
 
 
-            if (_lastFallingZero > 0 && (_time - _lastFallingZero) != 0) {
+            if (_lastFallingZero > 0 && Math.abs(_time - _lastFallingZero) > epsilon) {
                 _synchFreq = 1.0 / (_time - _lastFallingZero);
             }
 
@@ -87,7 +88,7 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
                 onTimePoint -= THREE_HALF / _synchFreq;                
             }
 
-            if (_lastOnTimePoint[i] != onTimePoint) {
+            if (Math.abs(_lastOnTimePoint[i] - onTimePoint) > epsilon) {
                 _gateEvents.add(new GateEvent(onTimePoint, onTimePoint + _onTime, i));
             }
 

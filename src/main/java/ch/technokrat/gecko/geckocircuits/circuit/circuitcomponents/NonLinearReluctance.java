@@ -16,10 +16,8 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
-import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import static ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.LK;
 import static ch.technokrat.gecko.geckocircuits.circuit.ConnectorType.RELUCTANCE;
@@ -40,7 +38,9 @@ import java.awt.Window;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Reluctance exposes nonlinear default arrays for characteristic configuration")
 public final class NonLinearReluctance extends AbstractNonLinearCircuitComponent implements
         HiddenSubCircuitable, PostCalculatable, CurrentMeasurable, DirectVoltageMeasurable {
 

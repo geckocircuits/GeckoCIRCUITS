@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.nativec;
 
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.SystemOutputRedirect;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentState;
@@ -28,7 +28,6 @@ import ch.technokrat.gecko.geckocircuits.control.RegelBlock;
 import ch.technokrat.gecko.geckocircuits.control.SpecialNameVisible;
 import ch.technokrat.gecko.geckocircuits.control.VariableTerminalNumber;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time;
 import ch.technokrat.gecko.geckocircuits.control.javablock.ReglerJavaTriangles;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -47,26 +46,27 @@ import javax.swing.JOptionPane;
  * @author andreas
  */
 public final class ReglerNativeC extends RegelBlock implements VariableTerminalNumber {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerNativeC.class, "C DLL", I18nKeys.C_DLL);
 
-    private final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
-    private final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _inputTri = new ReglerJavaTriangles();
+    private transient final ReglerJavaTriangles _outputTri = new ReglerJavaTriangles();
     private NativeCDialog _guiWindow;
-    private NativeCBlock _nativeCBlock;
-    private NativeCLibraryFile _libFile;
+    private transient NativeCBlock _nativeCBlock;
+    private transient NativeCLibraryFile _libFile;
     private DefaultListModel _libFileList;
     private static final String PATH_SPLITTER = ";";
-    
-    
-    private final UserParameter<String> _paramSelectedLibName = UserParameter.Builder.<String>start("nativeCLibrary", "null").
+
+
+    transient final UserParameter<String> _paramSelectedLibName = UserParameter.Builder.<String>start("nativeCLibrary", "null").
             longName(I18nKeys.NATIVE_LIB).
             shortName("nativeLib").
             showInTextInfo(TextInfoType.SHOW_NEVER).
             arrayIndex(this, -1).
             build();
-    
-    private final UserParameter<String> _paramLibNames = UserParameter.Builder.<String>start("nativeCLibraries", "null").
+
+    transient final UserParameter<String> _paramLibNames = UserParameter.Builder.<String>start("nativeCLibraries", "null").
             longName(I18nKeys.NATIVE_LIBS).
             shortName("nativeLibs").
             showInTextInfo(TextInfoType.SHOW_NEVER).
@@ -329,8 +329,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {                
-        DatenSpeicher.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
-        DatenSpeicher.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
+        ProjectData.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
+        ProjectData.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
     }
 
     @Override
@@ -447,8 +447,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         
     }
     
-    public DefaultListModel convertString2List (final String list) {
-        DefaultListModel result = new DefaultListModel();
+    public DefaultListModel<String> convertString2List (final String list) {
+        DefaultListModel<String> result = new DefaultListModel<>();
         String[] elements = list.split(Pattern.quote(PATH_SPLITTER));
         for (int i=0; i<elements.length; i++) {
             result.addElement(elements[i]);
@@ -456,7 +456,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         return result;
     }
     
-    public String convertList2String (final DefaultListModel listVec) {
+    public String convertList2String (final DefaultListModel<String> listVec) {
         StringBuffer result = new StringBuffer();
         for (int i=0; i<listVec.size(); i++) {
             result.append(listVec.get(i) + PATH_SPLITTER);

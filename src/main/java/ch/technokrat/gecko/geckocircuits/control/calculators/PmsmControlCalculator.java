@@ -16,23 +16,15 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 public class PmsmControlCalculator extends AbstractControlCalculatable {
 
-    double time_last = 0;
-    double psi_sa_last = 0;
-    double psi_sb_last = 0;
+    // State variables for PI controllers and last values
     double valpha_last = 0;
     double vbeta_last = 0;
-    double phi_last = 0;
-    double phi_startup_last = 0;
     double int_n_last = 0;
     double int_iq_last = 0;
     double int_id_last = 0;
     double x_n_last = 0;
     double x_iq_last = 0;
     double x_id_last = 0;
-    double w_est_last = 0;
-    double w_est_filt_last = 0;
-    boolean startup = true;
-    double vf_offset = 0;
 
     public PmsmControlCalculator() {
         super(12, 8);
@@ -62,8 +54,7 @@ public class PmsmControlCalculator extends AbstractControlCalculatable {
 
         final double delta_t = deltaT;
 
-//*** Abort if sample time not expired
-//if (time-time_last < 0.1e-3) return yOUT;
+//*** Abort if sample time not expired (functionality not implemented)
 
         final double ialpha = ia;
         final double ibeta = 1 / Math.sqrt(3) * (2 * ib + ia);

@@ -21,13 +21,14 @@ import java.io.Serializable;
 
 // Datenbehaelter fuer eine Messkurve -->
 public class SwitchingLossCurve extends LossCurve implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final double DEFAULT_BLOCKING_VOLTAGE = 300;
 
-    final UserParameter<Double> _uBlock = UserParameter.Builder.
-            <Double>start("uBlock", DEFAULT_BLOCKING_VOLTAGE).            
+    final transient UserParameter<Double> _uBlock = UserParameter.Builder.
+            <Double>start("uBlock", DEFAULT_BLOCKING_VOLTAGE).
             longName(I18nKeys.CURVE_MEASURED_AT_VOLTAGE).
             shortName("uMeasure").
-            unit("V").            
+            unit("V").
             build();            
     
     

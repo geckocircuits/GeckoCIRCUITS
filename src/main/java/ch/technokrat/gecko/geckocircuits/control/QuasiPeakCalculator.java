@@ -14,8 +14,11 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class QuasiPeakCalculator {
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Calculation result class with public fields for direct access to computed values")
+public final class QuasiPeakCalculator {
 
     private static final double A_LOWER_LIMIT = 9000;
     private static final double B_LOWER_LIMIT = 150000;
@@ -103,7 +106,7 @@ public class QuasiPeakCalculator {
 
                 _quasiPeak *= normalizationFactor;
             }
-            System.gc();
+            // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
         } catch (Exception ex) {
             ex.printStackTrace();
         }

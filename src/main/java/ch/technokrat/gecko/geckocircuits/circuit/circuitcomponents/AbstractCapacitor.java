@@ -14,18 +14,19 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Window;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractCapacitor extends AbstractNonLinearCircuitComponent 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Capacitor exposes parameters for nonlinear characteristic configuration")
+public abstract class AbstractCapacitor extends AbstractNonLinearCircuitComponent
 implements CurrentMeasurable, DirectVoltageMeasurable {
     private static final double WIDTH = 0.9;
     private static final double HEIGHT = 0.4;

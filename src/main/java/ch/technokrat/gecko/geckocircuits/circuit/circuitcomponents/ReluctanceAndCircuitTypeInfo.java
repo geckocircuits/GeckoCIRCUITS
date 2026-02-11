@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 

@@ -14,10 +14,7 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 //import java.util.WeakHashMap;
 
 /**
@@ -35,7 +32,7 @@ public class LUDecompositionCache {
     private int _cacheHitCounter = 0;
     private int _cacheMissCounter = 0;
     private static final boolean USE_CACHE = true;
-    private static long memoryBytes = 0;
+    private long memoryBytes = 0;
 
     private static final long maxJVMMemory = Runtime.getRuntime().maxMemory();
 
@@ -96,10 +93,6 @@ public class LUDecompositionCache {
         //}
         System.out.println("cache hits: " + _cacheHitCounter + " " + _cacheMissCounter + " " + (100.0 * _cacheHitCounter / (_cacheHitCounter + _cacheMissCounter)) + "%");
         System.out.println("memory requirement in MB: " + memoryBytes / 1024 / 1024);
-        long size = 0;
-        for (Entry<Integer, AbstractCachedMatrix> entry : _cachedMatrices.entrySet()) {
-            size += entry.getValue().calculateMemoryRequirement();
-        }
     }
 
     /*
@@ -125,9 +118,8 @@ public class LUDecompositionCache {
             }
 
             AbstractCachedMatrix removed = _cachedMatrices.remove(oldestKey);
-            memoryBytes -= removed.calculateMemoryRequirement();
-
             if (removed != null) {
+                memoryBytes -= removed.calculateMemoryRequirement();
                 removed.deleteCache();
             }
 

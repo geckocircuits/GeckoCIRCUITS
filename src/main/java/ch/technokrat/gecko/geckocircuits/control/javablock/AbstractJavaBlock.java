@@ -14,19 +14,18 @@
 package ch.technokrat.gecko.geckocircuits.control.javablock;
 
 import ch.technokrat.gecko.GeckoRuntimeException;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
-import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AbstractJavaBlock {       
-    
+public abstract class AbstractJavaBlock {
+
     protected final ReglerJavaFunction _reglerJavaBlock;
     protected AbstractCompileObject _compileObject = new CompileObjectNull();
     JavaBlockSource _javaBlockSource = new JavaBlockSource.Builder().build();
@@ -49,7 +48,7 @@ public abstract class AbstractJavaBlock {
         if (!checkIfCompilationRequired()) {
             return;
         }
-        SchematischeEingabe2.zustandGeaendert = true;
+        SchematicEditor2.setZustandGeaendert(true);
         
         String className = CompileObject.findUniqueClassName();
         String sourceString = SourceFileGenerator.createSourceCode(_javaBlockSource, className, _reglerJavaBlock.YOUT.size(), _reglerJavaBlock._variableBusWidth);
@@ -61,7 +60,7 @@ public abstract class AbstractJavaBlock {
         }
 
         // repaint schematic entry - because color of JavaCode-Block could change            
-        SchematischeEingabe2.Singleton._circuitSheet.repaint();
+        SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
     private boolean checkIfCompilationRequired() {
@@ -105,12 +104,12 @@ public abstract class AbstractJavaBlock {
 
     void compileNewBlockSource(final JavaBlockSource newSourceCode) {
         _javaBlockSource = newSourceCode;
-        SchematischeEingabe2.Singleton.setDirtyFlag();
+        SchematicEditor2.Singleton.setDirtyFlag();
 
         try {
             doCompilationIfRequired();
         } catch (IOException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException during compilation: " + ex.getMessage(), ex);
         }
     }
 
@@ -163,8 +162,8 @@ public abstract class AbstractJavaBlock {
         }
         ascii.append("\n<\\extraSourceFiles>");
 
-        DatenSpeicher.appendAsString(ascii.append("\nclassName"), _compileObject.getClassName());
-        DatenSpeicher.appendAsString(ascii.append("\nCompileStatus"), _compileObject.getCompileStatus().ordinal());
+        ProjectData.appendAsString(ascii.append("\nclassName"), _compileObject.getClassName());
+        ProjectData.appendAsString(ascii.append("\nCompileStatus"), _compileObject.getCompileStatus().ordinal());
 
         try {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -172,9 +171,9 @@ public abstract class AbstractJavaBlock {
             oOutStream.writeObject(_classNameFileMap);
             oOutStream.close();
             final byte[] outBytes = baos.toByteArray();
-            DatenSpeicher.appendAsString(ascii.append("\nclassMapBytes"), outBytes);
+            ProjectData.appendAsString(ascii.append("\nclassMapBytes"), outBytes);
         } catch (IOException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException while serializing class map: " + ex.getMessage(), ex);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -196,7 +195,7 @@ public abstract class AbstractJavaBlock {
             final Map<String, CompiledClassContainer> classMap = (Map<String, CompiledClassContainer>) oInStream.readObject();
             _classNameFileMap = classMap;
         } catch (IOException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);            
+            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IOException while deserializing class map: " + ex.getMessage(), ex);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -226,18 +225,18 @@ public abstract class AbstractJavaBlock {
     private void saveSourcesForDebug(final String className, final String sourceCode) {
         FileWriter fstream = null;
         try {
-            fstream = new FileWriter("/home/andy/tmp/" + className + ".java");
+            fstream = new FileWriter("/home/andy/tmp/" + className + ".java", StandardCharsets.UTF_8);
             BufferedWriter out = new BufferedWriter(fstream);
             out.write(sourceCode);
             out.close();
             fstream.close();
         } catch (IOException ex) {
-            Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, "IOException while saving debug sources: " + ex.getMessage(), ex);
         } finally {
             try {
                 fstream.close();
             } catch (IOException ex) {
-                Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, "IOException while closing debug file: " + ex.getMessage(), ex);
             }
         }
     }

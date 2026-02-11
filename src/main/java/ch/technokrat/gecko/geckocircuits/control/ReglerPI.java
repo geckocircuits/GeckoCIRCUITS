@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -22,23 +21,27 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_TRANSIENT_FIELD_NOT_RESTORED",
+        justification = "Transient ActionListener fields are re-created after deserialization in constructor")
 public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
+    private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerPI.class, "PI", I18nKeys.PI_CONTROL);
 
-    public final UserParameter<Double> _r0 = UserParameter.Builder.<Double>start("r0", -1.0).
+    public transient final UserParameter<Double> _r0 = UserParameter.Builder.<Double>start("r0", -1.0).
             longName(I18nKeys.GAIN).
             shortName("r0").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 0).
             build();
-    public final UserParameter<Double> _a1 = UserParameter.Builder.<Double>start("a1", -1.0).
+    public transient final UserParameter<Double> _a1 = UserParameter.Builder.<Double>start("a1", -1.0).
             longName(I18nKeys.INTEGRATOR_COEFFICIENT).
             shortName("a1").
             unit("1/sec").
             arrayIndex(this, 1).
             build();
-    public final UserParameter<Double> _TimeConstant = UserParameter.Builder.<Double>start("T_Value", 1.0).
+    public transient final UserParameter<Double> _TimeConstant = UserParameter.Builder.<Double>start("T_Value", 1.0).
             longName(I18nKeys.TIME_CONSTANT).
             unit("sec").
             shortName("T").
@@ -54,7 +57,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
         _r0.addActionListener(_updateTValue);
         _r0.addActionListener(_updateR0Value);
     }
-    private final ActionListener _updateA1Value = new ActionListener() {
+    private final transient ActionListener _updateA1Value = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
             if (_calculator instanceof PICalculator) {
@@ -66,7 +69,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
 
         }
     };
-    private final ActionListener _updateR0Value = new ActionListener() {
+    private final transient ActionListener _updateR0Value = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
             if (_calculator instanceof PICalculator) {
@@ -77,7 +80,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
 
         }
     };
-    private final ActionListener _updateTValue = new ActionListener() {
+    private final transient ActionListener _updateTValue = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
 

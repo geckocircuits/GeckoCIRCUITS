@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer;
@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JPanel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Diagram component intentionally shares mutable UI components with other scope classes")
 public abstract class AbstractDiagram extends JPanel {
 
     public final DiagramSettings _diagramSettings;
@@ -126,7 +128,7 @@ public abstract class AbstractDiagram extends JPanel {
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
 
-        DatenSpeicher.appendAsString(ascii.append("\ndiagramType"), getDiagramTypeString());
+        ProjectData.appendAsString(ascii.append("\ndiagramType"), getDiagramTypeString());
         ascii.append("\n<xAxis>");
         _xAxis.exportIndividualCONTROL(ascii);
         ascii.append("\n<\\xAxis>\n");

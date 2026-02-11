@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFonts;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
@@ -26,8 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Axis stores diagram reference for coordinate transformations")
 public final class Axis {
 
     private static final int HASH_CONSTANT1 = 3;
@@ -296,11 +297,11 @@ public final class Axis {
                     scaleFactor = scaleFactor3;
                     limits = limits3;
                 } else if (scaleFactor == scaleFactor3) {
-                    scaleFactor = scaleFactor;
-                    limits = limits;
+                    scaleFactor = scaleFactor3;
+                    limits = limits3;
                 } else if (scaleFactor == scaleFactor2) {
-                    scaleFactor = scaleFactor;
-                    limits = limits;
+                    scaleFactor = scaleFactor2;
+                    limits = newLimits;
                 }
             }
             double returnValue = signalDirection * (value - limits._yLo) * scaleFactor + directionOrigin;
@@ -598,7 +599,7 @@ public final class Axis {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\naxisType"), _axisType.getCode());
+        ProjectData.appendAsString(ascii.append("\naxisType"), _axisType.getCode());
         _axisTickSettings.exportIndividualCONTROL(ascii);
         _axisGridSettings.exportIndividualCONTROL(ascii);
         _axisSettings.exportIndividualCONTROL(ascii);

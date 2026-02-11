@@ -27,12 +27,14 @@ import java.awt.Graphics2D;
 import java.awt.Window;
 import java.util.Collections;
 import java.util.List;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Magnetic coupling between coupable inductors
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes component coupling for magnetic coupling configuration")
 public final class MutualInductance extends AbstractCircuitBlockInterface implements ComponentCoupable {
     static final AbstractTypeInfo TYPE_INFO = 
             new CircuitTypeInfo(MutualInductance.class, "K", I18nKeys.MAGNETIC_COUPLING_K, I18nKeys.MAGNETIC_COUPLING_DESCRIPTION);

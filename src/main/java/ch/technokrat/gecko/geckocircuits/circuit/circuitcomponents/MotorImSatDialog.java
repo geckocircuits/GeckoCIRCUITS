@@ -14,7 +14,6 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import java.awt.Graphics2D;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;

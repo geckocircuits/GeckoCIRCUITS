@@ -14,16 +14,17 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import java.util.HashMap;
 import java.util.Map;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * this is based on the old "typ-Numbers from Uwe... with enums much cleaner!
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Enum exposes type info for component configuration")
 public enum CircuitTyp implements AbstractComponentTyp {
 
     LK_R(1, ResistorCircuit.TYPE_INFO),
@@ -85,17 +86,16 @@ public enum CircuitTyp implements AbstractComponentTyp {
     public int getTypeNumber() {
         return _intValue;
     }
-    private static Map<Integer, CircuitTyp> _backwardMap;
+    private static final Map<Integer, CircuitTyp> _backwardMap;
+
+    static {
+        _backwardMap = new HashMap<Integer, CircuitTyp>();
+        for (CircuitTyp typ : values()) {
+            _backwardMap.put(typ._intValue, typ);
+        }
+    }
 
     public static CircuitTyp getFromIntNumber(final int intNumber) {
-
-        if (_backwardMap == null) {
-            _backwardMap = new HashMap<Integer, CircuitTyp>();
-            for (CircuitTyp typ : values()) {
-                _backwardMap.put(typ._intValue, typ);
-            }
-        }
-
         if (_backwardMap.containsKey(intNumber)) {
             return _backwardMap.get(intNumber);
         }

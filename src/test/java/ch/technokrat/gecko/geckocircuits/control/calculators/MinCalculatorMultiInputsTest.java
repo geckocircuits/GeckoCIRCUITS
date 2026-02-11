@@ -17,7 +17,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
-import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**

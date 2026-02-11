@@ -23,15 +23,18 @@ import ch.technokrat.gecko.geckocircuits.circuit.TerminalTwoPortComponent;
 import ch.technokrat.gecko.geckocircuits.control.Point;
 import java.awt.Graphics2D;
 import java.awt.Window;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlockInterface implements GlobalTerminable {    
-    public static final Map<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS = 
-            new HashMap<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>>();
+public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlockInterface implements GlobalTerminable {
+    private static final Map<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS_INTERNAL =
+            new HashMap<>();
+    public static final Map<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS =
+            Collections.unmodifiableMap(ALL_GLOBALS_INTERNAL);
 
     public AbstractCircuitGlobalTerminal() {
         super();
@@ -41,11 +44,11 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
         // when loading from file. It will be replaced when the references are
         // set correctly.
         YOUT.add(new TerminalHiddenSubcircuit(this));
-        if(!ALL_GLOBALS.containsKey(getCircuitTyp())) {
-            ALL_GLOBALS.put(getCircuitTyp(), new HashSet<AbstractCircuitGlobalTerminal>());
-        } 
-        
-        ALL_GLOBALS.get(getCircuitTyp()).add(this);        
+        if(!ALL_GLOBALS_INTERNAL.containsKey(getCircuitTyp())) {
+            ALL_GLOBALS_INTERNAL.put(getCircuitTyp(), new HashSet<AbstractCircuitGlobalTerminal>());
+        }
+
+        ALL_GLOBALS_INTERNAL.get(getCircuitTyp()).add(this);        
     }
         
     
@@ -65,7 +68,7 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
     @Override
     public void deleteComponent() {
         super.deleteComponent();
-        final Set<AbstractCircuitGlobalTerminal> possibleRemoval = ALL_GLOBALS.get(getTypeEnum());
+        final Set<AbstractCircuitGlobalTerminal> possibleRemoval = ALL_GLOBALS_INTERNAL.get(getTypeEnum());
         if(possibleRemoval != null && possibleRemoval.contains(this)) {
             possibleRemoval.remove(this);
         }
@@ -93,7 +96,8 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
     
     @Override
     public Set<? extends GlobalTerminable> getAllGlobalTerminals() {
-        return ALL_GLOBALS.get(getTypeEnum());
+        final Set<AbstractCircuitGlobalTerminal> terminals = ALL_GLOBALS_INTERNAL.get(getTypeEnum());
+        return terminals == null ? Collections.emptySet() : Collections.unmodifiableSet(terminals);
     }
 
     @Override

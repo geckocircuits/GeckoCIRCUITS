@@ -28,15 +28,16 @@ import java.util.List;
 
 public final class ReglerTransferFunction extends AbstractReglerSingleInputSingleOutput
         implements Operationable {
+    private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTransferFunction.class, "TF", I18nKeys.TRANSFER_FUNKTION_H_S, I18nKeys.DEFINES_A_TRANSFER_FUNCTION);
     private double[] _zeros = new double[MAX_ARRAY_SIZE];
     private double[] _poles = new double[MAX_ARRAY_SIZE];
     private double[] _numeratorPolynom = new double[ReglerTransferFunction.MAX_ARRAY_SIZE];
     private double[] _denomPolynom = new double[ReglerTransferFunction.MAX_ARRAY_SIZE];
-    private StateSpaceCalculator _stateSpaceCalc;
+    private transient StateSpaceCalculator _stateSpaceCalc;
     public static final int MAX_ARRAY_SIZE = 20;
-    private StateVariables _savedState;
+    private transient StateVariables _savedState;
 
     public ReglerTransferFunction() {
         super();
@@ -46,19 +47,19 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
         _zeros[0] = 1;
         _poles[0] = 2;
     }
-    final UserParameter<Boolean> _inPolynomMode = UserParameter.Builder.
+    transient final UserParameter<Boolean> _inPolynomMode = UserParameter.Builder.
             <Boolean>start("polynomMode", false).
             longName(I18nKeys.IF_TRUE_THEN_POLYNOM).
             shortName("usePolynoms").
             arrayIndex(this, -1).
             build();
-    final UserParameter<Boolean> _useInitialState = UserParameter.Builder.
+    transient final UserParameter<Boolean> _useInitialState = UserParameter.Builder.
             <Boolean>start("useInitState", false).
             longName(I18nKeys.IF_TRUE_THEN_INITIAL).
             arrayIndex(this, -1).
             shortName("useInitState").
             build();
-    final UserParameter<Double> _constantFactor = UserParameter.Builder.
+    transient final UserParameter<Double> _constantFactor = UserParameter.Builder.
             <Double>start("constant", 1.0).
             longName(I18nKeys.GAIN).
             shortName("gain").

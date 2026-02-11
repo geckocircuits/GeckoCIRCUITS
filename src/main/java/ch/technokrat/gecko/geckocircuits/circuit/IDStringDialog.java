@@ -31,7 +31,7 @@ public final class IDStringDialog {
     private final AbstractBlockInterface _parent;
     private String _idString;
     private static Map<String, ArrayList<AbstractBlockInterface>> _allIDStrings = new HashMap<String, ArrayList<AbstractBlockInterface>>();
-    public static Random rand = new Random(System.currentTimeMillis());
+    public static final Random rand = new Random(System.currentTimeMillis());
     public static final int MAX_SEARCH_NUMBER = 10000;
     final List<ActionListener> actionListeners = new ArrayList<ActionListener>();
 
@@ -66,7 +66,7 @@ public final class IDStringDialog {
     public static IDStringDialog fabricVariableName(final AbstractBlockInterface parent, final String newName) {
         
         IDStringDialog returnValue = null;        
-        if (_allIDStrings.containsKey(newName) && !_allIDStrings.get(newName).equals(parent)) {
+        if (_allIDStrings.containsKey(newName) && !_allIDStrings.get(newName).contains(parent)) {
             returnValue = new IDStringDialog(parent, findUnusedName(newName));            
         } else {
             returnValue = new IDStringDialog(parent, newName);
@@ -304,7 +304,7 @@ public final class IDStringDialog {
             }
         }
 
-        CircuitSheet parent = SchematischeEingabe2.Singleton._circuitSheet.findSubCircuit(searchName);
+        CircuitSheet parent = SchematicEditor2.Singleton._circuitSheet.findSubCircuit(searchName);
         if (parent == null) {
             throw new RuntimeException("Could not find subcircuit component with name: " + searchName);
         }

@@ -14,7 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.SpaceVectorDisplay;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores display reference for space vector visualization")
 public final class SpaceVectorCalculator extends AbstractControlCalculatable {
     private final SpaceVectorDisplay _svd;
     private static final int NO_INPUTS = 9;
@@ -26,6 +28,6 @@ public final class SpaceVectorCalculator extends AbstractControlCalculatable {
     
     @Override
     public void berechneYOUT(final double deltaT) {
-        _svd.drawVector(_time, _inputSignal, deltaT);
+        _svd.drawVector(_time, _inputSignal, deltaT); // NOPMD: SpaceVectorDisplay reads-only from _inputSignal
     }
 }

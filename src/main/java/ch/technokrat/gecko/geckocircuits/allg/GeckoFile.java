@@ -15,11 +15,12 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
-import ch.technokrat.gecko.geckocircuits.circuit.IDStringDialog;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,9 +66,8 @@ public final class GeckoFile {
      */
     private final Set<Long> _usageList = new LinkedHashSet<Long>();
     private final String _extension;
-    private static final double HASH_CONST1 = 5.0;
-    private static final double HASH_CONST2 = 2032.6;
-    private static final String[] EMPTY_STRING = new String[0];
+    private static final int HASH_CONST_BOUND = 10164;
+    private static final Random RANDOM = new Random();
     private AbstractStorageStrategy _storageStrategy;
     private long _lastDiskModification = -1;
 
@@ -110,10 +110,10 @@ public final class GeckoFile {
         setStorageStrategy(StorageType.INTERNAL);
         _file = fileName;
         _separator = File.separator;
-        _absolutePath = _file.getAbsolutePath();        
+        _absolutePath = _file.getAbsolutePath();
         _relativePath = getRelativePath(_absolutePath, modelFileName);
-        _extension = _absolutePath.substring(_absolutePath.lastIndexOf('.'));        
-        _fileContents = contents;        
+        _extension = _absolutePath.substring(_absolutePath.lastIndexOf('.'));
+        _fileContents = contents != null ? contents.clone() : null;
         _hash = generateHashCode();
     }
 
@@ -159,7 +159,7 @@ public final class GeckoFile {
      * @throws FileNotFoundException
      */
     public GeckoFile(final TokenMap tokenMap, final List<AbstractCircuitSheetComponent> allComponents) throws FileNotFoundException {
-        _separator = tokenMap.readDataLine("fileSep", _separator);        
+        _separator = tokenMap.readDataLine("fileSep", File.separator);        
         _hash = tokenMap.readDataLine("hashValue", -1);
         
         
@@ -328,8 +328,7 @@ public final class GeckoFile {
         final byte[] fileContents = new byte[(int) _file.length()];
         _lastDiskModification = _file.lastModified();
 
-        try {
-            final FileInputStream inStream = new FileInputStream(_file);
+        try (FileInputStream inStream = new FileInputStream(_file)) {
             int offset = 0;
             while (offset < fileContents.length) {
                 final int numRead = inStream.read(fileContents, offset, fileContents.length - offset);
@@ -338,7 +337,6 @@ public final class GeckoFile {
                 }
                 offset += numRead;
             }
-            inStream.close();
         } catch (Exception e) {
             final String errorMessage = "GeckoFile read in file contents: cannot find file. " + e.toString();
             Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, errorMessage);
@@ -357,9 +355,9 @@ public final class GeckoFile {
         long code;
 
         code = _absolutePath.hashCode() + 2 * _relativePath.hashCode()
-                + (int) (HASH_CONST1 * Math.random() * HASH_CONST2 * Math.random());
-        
-       
+                + RANDOM.nextInt(HASH_CONST_BOUND);
+
+
         return code;
     }
 
@@ -406,12 +404,12 @@ public final class GeckoFile {
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<GeckoFile>");
         //----------------------------------------
-        DatenSpeicher.appendAsString(ascii.append("\nhashValue"), _hash);
-        DatenSpeicher.appendAsString(ascii.append("\nabsPath"), _absolutePath);
-        DatenSpeicher.appendAsString(ascii.append("\nrelPath"), _relativePath);
-        DatenSpeicher.appendAsString(ascii.append("\nfileSep"), _separator);
-        DatenSpeicher.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[_usageList.size()]));
+        ProjectData.appendAsString(ascii.append("\nhashValue"), _hash);
+        ProjectData.appendAsString(ascii.append("\nabsPath"), _absolutePath);
+        ProjectData.appendAsString(ascii.append("\nrelPath"), _relativePath);
+        ProjectData.appendAsString(ascii.append("\nfileSep"), _separator);
+        ProjectData.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
+        ProjectData.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[_usageList.size()]));
 
         ascii.append("\n<usageList>");
         for (Long userID : _usageList) {
@@ -422,7 +420,7 @@ public final class GeckoFile {
         ascii.append("\n<\\usageList>");
 
         if (_storageStrategy.getStorageType() == StorageType.INTERNAL) {
-            DatenSpeicher.appendAsString(ascii.append("\nfileContents"), _fileContents);
+            ProjectData.appendAsString(ascii.append("\nfileContents"), _fileContents);
         }
 
         ascii.append("\n<\\GeckoFile>");
@@ -433,15 +431,6 @@ public final class GeckoFile {
      *
      * @param ascii
      */
-    public void exportASCIIApplet(final StringBuffer ascii) {
-        final AbstractStorageStrategy oldIsExternalValue = _storageStrategy;
-        _storageStrategy = new InternalStrategy();
-        if (oldIsExternalValue.getStorageType() == StorageType.EXTERNAL) {
-            _fileContents = readFileIntoMemory();            
-        }        
-        exportASCII(ascii);
-        _storageStrategy = oldIsExternalValue;
-    }
 
     /**
      * get the file contents as a String
@@ -451,9 +440,9 @@ public final class GeckoFile {
     public String getContentsString() {
         String fileContents;
         if (_storageStrategy.getStorageType() == StorageType.EXTERNAL) {
-            fileContents = new String(readFileIntoMemory());
+            fileContents = new String(readFileIntoMemory(), StandardCharsets.UTF_8);
         } else {
-            fileContents = new String(_fileContents);
+            fileContents = new String(_fileContents, StandardCharsets.UTF_8);
         }
         return fileContents;
     }
@@ -502,7 +491,7 @@ public final class GeckoFile {
     }
 
     public InputStreamReader getInputStreamReader() {
-        return new InputStreamReader(getInputStream());
+        return new InputStreamReader(getInputStream(), StandardCharsets.UTF_8);
     }
 
     public BufferedReader getBufferedReader() {

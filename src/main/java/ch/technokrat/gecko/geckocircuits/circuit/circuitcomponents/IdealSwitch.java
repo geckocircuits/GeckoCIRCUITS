@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
-import static ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;

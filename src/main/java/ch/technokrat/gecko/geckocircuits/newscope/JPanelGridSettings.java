@@ -13,10 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Panel stores axis and grafer references for grid settings configuration")
 public class JPanelGridSettings extends javax.swing.JPanel {
     private Axis _axis;
     private GraferV4 _grafer;

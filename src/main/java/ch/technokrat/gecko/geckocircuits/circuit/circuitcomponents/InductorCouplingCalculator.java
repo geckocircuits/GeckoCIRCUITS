@@ -14,11 +14,9 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
-import java.util.ArrayList;
 
 public class InductorCouplingCalculator extends InductorCalculator {
 
-    private ArrayList<InductorCouplingCalculator> allInductorsTmp = new ArrayList<InductorCouplingCalculator>();
     private CoupledInductorsGroup couplingGroup; //this to make the trapezoidal solver work, perhaps ugly -> maybe need better way to do it
 
     public InductorCouplingCalculator(final AbstractInductor parent) {

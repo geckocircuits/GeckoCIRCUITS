@@ -26,10 +26,9 @@ public final class LaunchBrowser {
         final String fileUrl = url;
         try {
             if (isWindows()) {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "
-                        + fileUrl);
+                new ProcessBuilder("rundll32", "url.dll,FileProtocolHandler", fileUrl).start();
             } else {
-                Runtime.getRuntime().exec("firefox " + fileUrl);
+                new ProcessBuilder("firefox", fileUrl).start();
             }
         } catch (IOException ioe) {
             ioe.printStackTrace();

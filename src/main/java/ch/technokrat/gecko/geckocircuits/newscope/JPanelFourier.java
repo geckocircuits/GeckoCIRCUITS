@@ -22,20 +22,24 @@ import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerFourier;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public grafer for external access to plot data")
 public class JPanelFourier extends javax.swing.JPanel {
     
 
     public GraferV4 _graferNew;
     private NewScope _graferPanel;
-    private final int NUMBER_SIGNALS = 2;
+    private static final int NUMBER_SIGNALS = 2;
     private final String[] SIGNAL_NAMES = new String[]{"Re", "Im"};
     private DialogConnectSignalsGraphs _diagCON;
     private DataContainerFourier _dataContainer;
@@ -160,7 +164,7 @@ public class JPanelFourier extends javax.swing.JPanel {
         final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
         final File file = new File(fileName);
         try {
-            final FileWriter fileWriter = new FileWriter(file);
+            final FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
             final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             for (int i = 0; i < _dataContainer.getMaximumTimeIndex(0); i++) {
                 bufferedWriter.write("" + _dataContainer.getTimeValue(i, 0));

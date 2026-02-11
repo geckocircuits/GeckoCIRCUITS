@@ -14,8 +14,10 @@
 package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.swing.ImageIcon; 
-import java.net.URL; 
+import java.net.URI;
+import java.net.URL;
 
 
 /*
@@ -32,8 +34,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,10 +43,12 @@ import javax.swing.JSpinner;
  *
  * @author andy
  */
-public class SpaceVectorDisplay extends javax.swing.JFrame {
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Counter is shared across display updates for animation timing; constructor exceptions are expected on initialization failure; NetBeans GUI form generated public fields; stores control block reference for space vector display")
+public final class SpaceVectorDisplay extends javax.swing.JFrame {
     static long counter = 0;
-    final int ORIGINX = 180;
-    final int ORIGINY = 200;
+    static final int ORIGINX = 180;
+    static final int ORIGINY = 200;
     final double SQRT3 = Math.sqrt(3);
     private double _time;
     private double _old_time;
@@ -87,12 +89,12 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
         private JSpinner _average;
         private int averageSpan = 1;
         
-        private void setSpaceVector(final double r, final double s, double t) {            
-            
+        private void setSpaceVector(final double r, final double s, double t) {
+
             double re = 2 / 3.0 * (r - 0.5 * s - 0.5 * t);
             double im = -2 / 3.0 * (+0.5 * SQRT3 * s - 0.5 * SQRT3 * t);
-            
-            float average = (Float) _average.getValue();
+
+            float average = ((Number) _average.getValue()).floatValue();
             if( average > 0) {
                 averageSpan = (int) (average * 1E-6 / _timeStep);
                 if(averageSpan > HISTORY_BUFFER_SIZE) {
@@ -106,7 +108,7 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
                 spaceVectorImag = 0;
 
                 for(int i = 0; i < averageSpan; i++) {
-                    int index = ((int) (counter  + 2 * HISTORY_BUFFER_SIZE - i )) % HISTORY_BUFFER_SIZE;
+                    int index = ((int) (counter  + 2L * HISTORY_BUFFER_SIZE - i )) % HISTORY_BUFFER_SIZE;
                     spaceVectorReal += averageHistoryRe[index];
                     spaceVectorImag += averageHistoryIm[index];
                 }
@@ -122,8 +124,8 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
             old_spaceVectorRealPos = spaceVectorRealPos;
             old_spaceVectorImagPos = spaceVectorImagPos;
 
-            spaceVectorRealPos = (int) ((Float) _length.getValue() * spaceVectorReal);
-            spaceVectorImagPos = (int) ((Float) _length.getValue() * spaceVectorImag);
+            spaceVectorRealPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorReal);
+            spaceVectorImagPos = (int) (((Number) _length.getValue()).floatValue() * spaceVectorImag);
 
             if (old_spaceVectorImagPos != spaceVectorImagPos || old_spaceVectorRealPos != spaceVectorRealPos) {
                 offGraph.setColor(_paintColor);
@@ -167,7 +169,14 @@ public class SpaceVectorDisplay extends javax.swing.JFrame {
 
     /** Creates new form SpaceVectorDisplay */
     public SpaceVectorDisplay(RegelBlock regelBlock) {
-        try { this.setIconImage((new ImageIcon(new URL(GlobalFilePathes.PFAD_PICS_URL,"gecko.gif"))).getImage()); } catch (Exception ex) {}
+        try {
+            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
+            // Fix for Java 21: use URL constructor instead of URI.toURL()
+            URL gifUrl = new URL(picsUrl, "gecko.gif");
+            this.setIconImage(new ImageIcon(gifUrl).getImage());
+        } catch (Exception ex) {
+            Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.WARNING, "Failed to load icon image", ex);
+        }
         initComponents();
 
         if(regelBlock instanceof ReglerSpaceVector) {

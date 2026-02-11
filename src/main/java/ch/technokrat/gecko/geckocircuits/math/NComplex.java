@@ -104,7 +104,8 @@ public class NComplex {
 
    /** returns the absolute value of a */
    public static float abs(NComplex a) {
-        if (a.re != 0.0f || a.im != 0.0f) {
+        final float epsilon = 1e-6f;
+        if (Math.abs(a.re) > epsilon || Math.abs(a.im) > epsilon) {
             return (float)Math.sqrt(a.re*a.re + a.im*a.im);
         } else {
             return 0.0f;
@@ -115,8 +116,9 @@ public class NComplex {
    public static NComplex sqrt(NComplex a) {
       float im,re;
       float x,y,w,r;
+      final float epsilon = 1e-6f;
 
-      if ((a.re == 0.0f) && (a.im == 0.0f)) {
+      if (Math.abs(a.re) < epsilon && Math.abs(a.im) < epsilon) {
          re = 0.0f;
          im = 0.0f;
       } else {
@@ -153,24 +155,25 @@ public class NComplex {
    }
 
     public String nicePrint() {
-        if(re != 0 && im != 0) {
+        final float epsilon = 1e-6f;
+        if(Math.abs(re) > epsilon && Math.abs(im) > epsilon) {
             if(im > 0) {
-                if(im == 1) {
+                if(Math.abs(im - 1.0f) < epsilon) {
                     return tcf.formatENG(re, 3) + "+i";
-                } else 
+                } else
                 return tcf.formatENG(re, 3) + "+" + tcf.formatENG(im, 3) + "i";
             } else {
-                if(im == -1) {
+                if(Math.abs(im + 1.0f) < epsilon) {
                     return tcf.formatENG(re, 3) + "-i";
-                } else 
+                } else
                 return tcf.formatENG(re, 3) + ""  + tcf.formatENG(im, 3) + "i";
             }
         }
-        
-        if(re != 0) {
+
+        if(Math.abs(re) > epsilon) {
             return "" + tcf.formatENG(re, 3);
         } else {
-            if(Math.abs(im) == 1) {
+            if(Math.abs(Math.abs(im) - 1.0f) < epsilon) {
                 if(im > 0) return "i";
                 else return "-i";
             } else {
@@ -181,16 +184,15 @@ public class NComplex {
 
     @Override
     public int hashCode() {
-        Double real = new Double(re);
-        Double imag = new Double(im);
-        return real.hashCode() - 7 * imag.hashCode() + 3;
+        return Double.hashCode(re) - 7 * Double.hashCode(im) + 3;
     }
 
     @Override
     public boolean equals(Object o) {
         if(o instanceof NComplex) {
             NComplex compare = (NComplex) o;
-            if(compare.re == this.re && compare.im == this.im) {
+            final float epsilon = 1e-6f;
+            if(Math.abs(compare.re - this.re) < epsilon && Math.abs(compare.im - this.im) < epsilon) {
                 return true;
             } else {
                 return false;

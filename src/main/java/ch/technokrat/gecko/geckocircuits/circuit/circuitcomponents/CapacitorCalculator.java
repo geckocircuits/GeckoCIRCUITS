@@ -15,18 +15,23 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.SolverType;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Static capError flag for error coordination; public fields for simulation; stores BVector reference")
 public final class CapacitorCalculator extends CircuitComponent implements AStampable, BStampable,
-        DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
+         DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
 
     //private final LKreisC _lkCap;
-    public static boolean initCapacitor = false;
+    public static final boolean initCapacitor = false;
     private double _capacitance = 100E-6;
     private double _initialValue = 0;
     private VoltageSourceCalculator initVoltageSource;
     // ok, this is a "public" variable... bad, but useful here
     public static boolean capError = false;
     private int _z;
+    // Note: _bVector is used at line 207 in registerBVector(), IDE warning is false positive
     private BVector _bVector;
     private boolean _isNonLinear = false;
     private CapacitanceCharacteristic _NonLinearCapacitance;

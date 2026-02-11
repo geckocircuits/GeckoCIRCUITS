@@ -25,10 +25,10 @@ import javax.swing.SwingWorker;
 import ch.technokrat.gecko.i18n.bot.DLbot;
 import ch.technokrat.gecko.i18n.resources.EnglishMapper;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
-import java.util.Locale;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"},
+        justification = "Static fields are intentionally mutable - they store translation maps loaded at runtime based on user language selection; public fields for application-wide translation access; static fields hold singleton-style application state")
 public class LangInit extends javax.swing.JDialog implements PropertyChangeListener {
 
     /**
@@ -53,8 +53,8 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
     public static DoubleMap transMap_multiple;
     private static String[] arguments;
     // Applet-Wiki connection status indicator
-    private static boolean connected;
-    private static ProgressMonitor progressMonitor; // Progress Monitor GUI
+    private static volatile boolean connected;
+    private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
 

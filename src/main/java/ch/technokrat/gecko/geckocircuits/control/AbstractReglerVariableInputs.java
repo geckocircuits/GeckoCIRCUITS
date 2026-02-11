@@ -2,6 +2,7 @@ package ch.technokrat.gecko.geckocircuits.control;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,11 +34,15 @@ public abstract class AbstractReglerVariableInputs extends RegelBlock implements
     }
     
     @Override
-    public final void setInputTerminalNumber(final int number) {        
+    @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+            justification = "Null check protects against uninitialized field access from superclass constructor")
+    public final void setInputTerminalNumber(final int number) {
         super.setInputTerminalNumber(number);
-        if(_inputTerminalNumber != null) {
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
+        if (_inputTerminalNumber != null) {
             _inputTerminalNumber.setValueWithoutUndo(number);
-        }        
+        }
     }
 
     @Override

@@ -14,13 +14,14 @@
 package ch.technokrat.gecko.geckocircuits.circuit;
 
 import ch.technokrat.gecko.GeckoRuntimeException;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.control.Point;
 import ch.technokrat.gecko.geckocircuits.control.SubCircuitSheet;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 /**
@@ -29,6 +30,7 @@ import javax.swing.JOptionPane;
  * "beautiful", however DRY: don't repeat yourself!
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Terminal wrapper must share references for circuit connectivity")
 public final class TerminalToWrap {
 
     private final AbstractBlockInterface _parentComponent;
@@ -145,7 +147,7 @@ public final class TerminalToWrap {
     }
 
     public void exportAsciiIndividual(final StringBuffer ascii) {
-        DatenSpeicher.appendAsString(ascii.append("\nterminalLocation"), _terminalLocation.ordinal());
+        ProjectData.appendAsString(ascii.append("\nterminalLocation"), _terminalLocation.ordinal());
     }
 
     public void importIndividual(final TokenMap tokenMap) {

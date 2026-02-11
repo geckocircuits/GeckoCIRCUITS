@@ -14,13 +14,14 @@
 package ch.technokrat.modelviewcontrol;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Undo manager must share edit references for grouped undo operations")
 public final class GroupableUndoManager extends UndoManager{
   @Override
   public synchronized void undo() throws CannotUndoException{

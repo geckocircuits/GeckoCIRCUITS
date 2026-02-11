@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile.StorageType;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFileChooser;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
@@ -28,10 +28,13 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "SE_BAD_FIELD",
+        justification = "Dialog is not serialized in this application")
 public final class DialogVerlusteDetail extends GeckoDialog {
 
-    private final VerlustBerechnungDetailed _lossCalculation;
+    private final transient VerlustBerechnungDetailed _lossCalculation;
     private final JPanel _lowerPanel = new JPanel();
     private final JPanel _exitPanel = new JPanel();
     private final DetailedSwitchingLossesPanel _switchingLossPanel = new DetailedSwitchingLossesPanel();
@@ -104,7 +107,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);        
     }
 
-    private final ActionListener _saveChangeListener = new ActionListener() {
+    private final transient ActionListener _saveChangeListener = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent event) {
 
@@ -116,7 +119,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
             }
         }
     };
-    private final ActionListener _saveNewActionListener = new ActionListener() {
+    private final transient ActionListener _saveNewActionListener = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent actionEvent) {
             doSaveAsNew();
@@ -184,43 +187,37 @@ public final class DialogVerlusteDetail extends GeckoDialog {
 
     private String getNewFileNameDialog() {
         final StringBuffer fileName = new StringBuffer();
-        if (!Fenster.IS_APPLET) {
-            // Erstellung Array vom Datentyp Object, Hinzufügen der Optionen               
-            Object[] options = {"External File", "Model-intern File"};
+        // Erstellung Array vom Datentyp Object, Hinzufügen der Optionen
+        Object[] options = {"External File", "Model-intern File"};
 
-            int selected = JOptionPane.showOptionDialog(null,
-                    "Do you like to create a real file on your harddisk or a \n"
-                    + "file that is internal to the simulation model?",
-                    "Select file type",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null, options, options[0]);
+        int selected = JOptionPane.showOptionDialog(null,
+                "Do you like to create a real file on your harddisk or a \n"
+                + "file that is internal to the simulation model?",
+                "Select file type",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
 
-            switch (selected) {
-                case -1: // window closed by cross-escape
+        switch (selected) {
+            case -1: // window closed by cross-escape
+                return null;
+            case 0:
+                _storageType = StorageType.EXTERNAL;
+                GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".scl", "Semiconductor Loss Files (*.scl)", this, null);
+                if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
                     return null;
-                case 0:
-                    _storageType = StorageType.EXTERNAL;
-                    GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".scl", "Semiconductor Loss Files (*.scl)", this, null);
-                    if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
-                        return null;
-                    }
-                    fileName.append(fileChooser.getFileWithCheckedEnding());
-                    break;
-                case 1:
-                    _storageType = StorageType.INTERNAL;
-                    // Aufruf der statischen Methode showMessageDialog()
-                    fileName.append(JOptionPane.showInputDialog(null, "Please select a file name identifier:",
-                            "Choose file name",
-                            JOptionPane.PLAIN_MESSAGE));
-                    break;
-                default:
-                    assert false;
-            }
-
-            if (!fileName.toString().endsWith(".scl")) {
-                fileName.append(".scl");
-            }
+                }
+                fileName.append(fileChooser.getFileWithCheckedEnding());
+                break;
+            case 1:
+                _storageType = StorageType.INTERNAL;
+                // Aufruf der statischen Methode showMessageDialog()
+                fileName.append(JOptionPane.showInputDialog(null, "Please select a file name identifier:",
+                        "Choose file name",
+                        JOptionPane.PLAIN_MESSAGE));
+                break;
+            default:
+                assert false;
         }
         return fileName.toString();
     }

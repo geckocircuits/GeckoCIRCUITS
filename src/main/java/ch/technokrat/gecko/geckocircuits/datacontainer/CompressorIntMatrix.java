@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.datacontainer;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +28,9 @@ import java.util.zip.Inflater;
  *
  * @author andreas
  */
-public class CompressorIntMatrix {    
+public class CompressorIntMatrix {
+
+    private static final Random RANDOM = new Random();
 
     private List<byte[]> byteContainer = new ArrayList<byte[]>();
     private static final int BYTE_BLOCK_SIZE = 1024;
@@ -107,12 +108,9 @@ public class CompressorIntMatrix {
         final int n = 120;
         int[][] origData = new int[m][n];
 
-
-        Random random = new Random();
-
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                origData[i][j] = random.nextInt(2) + i + 7 * j - 4;
+                origData[i][j] = RANDOM.nextInt(2) + i + 7 * j - 4;
             }
         }
 

@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko;
 
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,7 +61,7 @@ public class GeckoRemote {
     private static RemoteInvocationHandler _invocationHandler;
     static boolean doProxyCheck = true;
 
-    public static class RemoteInvocationHandler implements InvocationHandler {
+    public static final class RemoteInvocationHandler implements InvocationHandler {
 
         private final Object object;
         private final Map<Method, Method> _methodMap = new HashMap<Method, Method>();
@@ -155,7 +155,6 @@ public class GeckoRemote {
     }
 
     public static void connectToGecko() {
-        Fenster.IS_APPLET = false; // this is needed - otherwise we cannot read the properties
         GeckoSim.forceLoadApplicationProperties();
         connectToGecko(GeckoRemoteRegistry.getRemoteAccessPort());
     }
@@ -274,6 +273,10 @@ public class GeckoRemote {
         //disconnects from the session on the client side only (i.e. remote side crashed)
         _wrapped = null;
         sessionID = NO_SESSION_ID;
+    }
+
+    public static void acceptExtraConnections(int numberOfExtraConnections) {
+        _proxy.acceptExtraConnections(numberOfExtraConnections);
     }
 
     private static void checkRemoteWithException() {

@@ -19,14 +19,16 @@ import ch.technokrat.gecko.geckocircuits.allg.SolverType;
 
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
-import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractResistor;
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.LK_LKOP2;
 import static ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.REL_RELUCTANCE;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.DiodeCharacteristic;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.NumberFormat;
 
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SF_SWITCH_FALLTHROUGH"},
+        justification = "Performance-critical matrix class with direct field access for simulation speed; switch fallthroughs in TH_CTH to LK_C are intentional for thermal/electric capacitor handling")
 public class LKMatrices {
 
     private static final double FAST_NULL_R = 1e-9;
@@ -211,6 +213,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
+                    /* falls through */
                 case LK_C:
                     // aW = netzliste.parameter[i1][0] / dt;  //  +C/dt
                     //aW = 2 * netzliste.parameter[i1][6] / dt;  //  +C/dt
@@ -246,6 +249,7 @@ public class LKMatrices {
                         a[x][y1] -= gain;
                         a[y][x1] -= gain;
                     }
+                    /* falls through */
                 case TH_FLOW:
                     // kein Beitrag
                     break;
@@ -260,41 +264,44 @@ public class LKMatrices {
                         a[z][y] += (-1.0);
                     }
 
-                    try {
-                        switch ((int) netzliste.parameter[i1][0]) {
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
+                    // at initialization nodePairDirectVoltageControlledSource[][] is not defined --> all according values set to zero
+                    switch ((int) netzliste.parameter[i1][0]) {
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
 
-                                if (netzliste.parameter[i1][14] == 0) {
-                                    // voltage is function of node-potentials and, therefore, calculated here in matrix A
+                            if (netzliste.parameter[i1][14] == 0) {
+                                // voltage is function of node-potentials and, therefore, calculated here in matrix A
+                                int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
+                                // Check for null before accessing (nodePairDirVoltContSrc may not be initialized)
+                                if (nodePairDVC != null && nodePairDVC[i1] != null) {
                                     double gain = netzliste.parameter[i1][11];
-                                    int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
                                     int x1 = nodePairDVC[i1][0], y1 = nodePairDVC[i1][1];
                                     a[z][x1] += (-gain);
                                     a[z][y1] += (+gain);
                                 }
+                            }
 
-                                break;
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER_NEW:
-                            case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER:
-                                double gain2 = netzliste.parameter[i1][11];
-                                a[z][z] = 1.0 / gain2;
-                                a[z][z - 1] = 1;
-                                break;
-                            case SourceType.QUELLE_DIDTCURRENTCONTROLLED_NEW:
-                            case SourceType.QUELLE_DIDTCURRENTCONTROLLED:
-                                double gain3 = netzliste.parameter[i1][11];
-                                a[z][z + 1] += gain3 / dt;
-                                break;
-                            case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
-                            case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
-                                double gain4 = netzliste.parameter[i1][11];
-                                a[z][z - 1] -= gain4;
-                                break;
-                        }
-
-                    } catch (NullPointerException npe) {
-                    }  // at initialization nodePairDirectVoltageControlledSource[][] is not defined --> all according values set to zero
+                            break;
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER_NEW:
+                        case SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER:
+                            double gain2 = netzliste.parameter[i1][11];
+                            a[z][z] = 1.0 / gain2;
+                            a[z][z - 1] = 1;
+                            break;
+                        case SourceType.QUELLE_DIDTCURRENTCONTROLLED_NEW:
+                        case SourceType.QUELLE_DIDTCURRENTCONTROLLED:
+                            double gain3 = netzliste.parameter[i1][11];
+                            a[z][z + 1] += gain3 / dt;
+                            break;
+                        case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
+                        case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
+                            double gain4 = netzliste.parameter[i1][11];
+                            a[z][z - 1] -= gain4;
+                            break;
+                        default:
+                            // No action needed for other source types
+                            break;
+                    }
                     break;
                 case LK_M:
                     // wird in LK_LKOP2 abgehandelt
@@ -441,6 +448,7 @@ public class LKMatrices {
                     // for thermal capacitance, set the parameters correctly.
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
+                    /* falls through */
                 case LK_C:
                     double fac = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
                     //bW = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
@@ -694,6 +702,7 @@ public class LKMatrices {
                     break;
                 case TH_CTH:
                     netzliste.parameter[i1][6] = netzliste.parameter[i1][0];
+                    /* falls through */
                 case LK_C:
                     double fac = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                     double nonLinearCorrectionCurrent = -fac * netzliste.parameter[i1][10];
@@ -1051,11 +1060,10 @@ public class LKMatrices {
                             break;
                         case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
-                            double gain = netzliste.parameter[i1][11];
                             int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
                             int x1 = nodePairDVC[i1][0],
                              y1 = nodePairDVC[i1][1];
-                            netzliste.eLKneu[i1]._currentInAmps = 0;//gain * (p[x1] - p[y1]);                            
+                            netzliste.eLKneu[i1]._currentInAmps = 0;//gain * (p[x1] - p[y1]);
                             //System.out.println("cur: " + (gain * (p[x1] - p[y1])) + " " + x1 + " " + y1);
                             break;
                         default:
@@ -1113,6 +1121,7 @@ public class LKMatrices {
                             }
                         }
                     }
+                    break;
                 case REL_MMF:
                 case TH_TEMP:
                 case LK_LKOP2:
@@ -1238,10 +1247,9 @@ public class LKMatrices {
         for (int i1 = 0; i1 < elementANZAHL; i1++) {
             int x = netzliste.knotenX[i1];
             int y = netzliste.knotenY[i1];
-            txt[i1] = new String(
-                    "(id) " + i1 + "\t" + netzliste.eLKneu[i1].getStringID()
+            txt[i1] = "(id) " + i1 + "\t" + netzliste.eLKneu[i1].getStringID()
                     + "\t(" + netzliste.labelListe[netzliste.knotenX[i1]] + " [" + nf.format(p[x])
-                    + "]  -  " + netzliste.labelListe[netzliste.knotenY[i1]] + " [" + nf.format(p[y]) + "]");
+                    + "]  -  " + netzliste.labelListe[netzliste.knotenY[i1]] + " [" + nf.format(p[y]) + "]";
         }
         // sortieren:
         String[] txtSub = new String[txt.length];
@@ -1484,6 +1492,9 @@ public class LKMatrices {
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
                             pALT[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]] = netzliste.parameter[i1][10];
+                            break;
+                        default:
+                            // No action needed for other source types
                             break;
                     }
                     //pALT[netzliste.knotenMAX + netzliste.spgQuelleNr[i1] + 1] = 2000;

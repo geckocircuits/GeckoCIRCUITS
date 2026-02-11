@@ -14,7 +14,6 @@
 
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.i18n.resources.I18nKeys;
 
 /**
  * Special blocks are components, that cannot be clearly identified as Control, Power-Circuits or thermal.

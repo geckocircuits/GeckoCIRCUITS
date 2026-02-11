@@ -15,6 +15,7 @@
 package ch.technokrat.gecko;
 import ch.technokrat.gecko.geckoscript.AbstractGeckoCustom;
 import ch.technokrat.gecko.geckoscript.SimulationAccess;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -121,7 +122,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
                     }
                 } else if (_mmf.isShutdownRequest()) {
                     disableAccess();
-                    System.exit(0);
+                    shutdownJvm();
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,
@@ -263,5 +264,14 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
             return argType;
         }
     }
-                
+
+    /**
+     * Shuts down the JVM when a remote shutdown request is received.
+     * This is intentional behavior for the MMF interface.
+     */
+    @SuppressFBWarnings(value = "DM_EXIT", justification = "Intentional JVM shutdown on remote shutdown request")
+    private void shutdownJvm() {
+        System.exit(0);
+    }
+
 }

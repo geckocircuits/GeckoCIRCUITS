@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-class StartFromBlocksWithoutSuccessorOrderer extends AbstractSinkControlOrderer {
+final class StartFromBlocksWithoutSuccessorOrderer extends AbstractSinkControlOrderer {
 
     public StartFromBlocksWithoutSuccessorOrderer(final Collection<ControlOrderNode> allNodesToSort) {
         super(allNodesToSort);        

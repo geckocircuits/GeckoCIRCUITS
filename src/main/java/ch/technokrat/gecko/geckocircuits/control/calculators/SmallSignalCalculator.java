@@ -15,24 +15,31 @@ package ch.technokrat.gecko.geckocircuits.control.calculators;
 
 import ch.technokrat.gecko.geckocircuits.control.IsDtChangeSensitive;
 import ch.technokrat.gecko.geckocircuits.control.SSAShape;
-import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable._time;
 import static ch.technokrat.gecko.geckocircuits.control.calculators.AbstractSignalCalculator.TWO_PI;
 import ch.technokrat.gecko.geckocircuits.newscope.Cispr16Fft;
 import ch.technokrat.gecko.geckocircuits.newscope.FFTLibrary;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
+@SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.StaticNonFinal", "PMD.PublicAttribute", "PMD.ThrowExceptionInFinally"})
+@SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "PA_PUBLIC_ARRAY_ATTRIBUTE"},
+        justification = "Writes to inherited static _time field for simulation coordination; constructor exceptions for invalid shapes; public fields for analysis data sharing")
+// Public fields and static array required by simulator API; Constructor validation required for safety
+public final class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
 
     //static boolean isSimulationDC;
     private static final int THREE = 3;
     private static final int FOUR = 4;
     private static final int NOFREQSMAX = 50;
+    private static final double NUMERIC_EPSILON = 1e-12;
 
-    public static double[][] _bode = new double[THREE][];
+    public double[][] _bode = new double[THREE][]; // Public field required by DialogSmallSignalAnalysis
 
     private final SSAShape _signalType;
     private final double _amplitude;
@@ -69,7 +76,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
         _addOutput = addOutput;
 
         _noFreqs = NOFREQSMAX;
-        calculateSimFreqs();
+        calculateSimFreqs(); // Initializes _bode field during construction
         _nMax = (int) Math.round(_bode[0][_bode[0].length - 1] / _freqStart);
 
         switch (_signalType) {
@@ -203,20 +210,14 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
     }
 
     private void printResults(float[] data, float[] smallData) {
-        PrintWriter writer = null;
-        try {
-            writer = new PrintWriter(new FileWriter("/home/andy/data.txt"));
-            if (writer != null) {
-                for (int i = 0; i < data.length; i++) {
-                    writer.print(data[i] + " " + smallData[i] + "\n");                    
-                }
-            }   if (writer != null) {
-                writer.close();
+        String tempDir = System.getProperty("java.io.tmpdir");
+        String filePath = tempDir + "/gecko_small_signal_data.txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
+            for (int i = 0; i < data.length; i++) {
+                writer.print(data[i] + " " + smallData[i] + "\n");
             }
         } catch (IOException ex) {
             Logger.getLogger(SmallSignalCalculator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            writer.close();
         }
     }
     
@@ -252,14 +253,15 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
         FFTLibrary.calculateForwardFFT (ddata);
         FFTLibrary.calculateForwardFFT (dsmallSignalData);                
 
-        for (int n = 0; n <= _nMax; n++) {
+        int maxHarmonic = getUsableHarmonicUpperBound();
+        for (int n = 0; n <= maxHarmonic; n++) {
             data_aVals[n] = 2 * ddata[2 * n] / _N;
             data_bVals[n] = 2 * ddata[2 * n + 1] / _N;
             ss_aVals[n] = 2 * dsmallSignalData[2 * n] / _N;
             ss_bVals[n] = 2 * dsmallSignalData[2 * n + 1] / _N;
         }
         
-        for (int n = 0; n <= _nMax; n++) {
+        for (int n = 0; n <= maxHarmonic; n++) {
 
             if (n == 0) {  // DC-Gleichanteil
                 magnitudeValues[n] = data_aVals[n] / 2.0f;
@@ -277,29 +279,39 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
 
         _bode[1] = new double[_bode[0].length];
         _bode[2] = new double[_bode[0].length];
+        int maxHarmonic = getUsableHarmonicUpperBound();
 
         for (int p = 0; p < _bode[0].length; p++) {
             int harmonic = (int) Math.round(_bode[0][p] / _freqStart);
+            if (harmonic < 0 || harmonic > maxHarmonic) {
+                _bode[1][p] = Double.NaN;
+                _bode[2][p] = Double.NaN;
+                continue;
+            }
 
             float magnitude = (float) Math.sqrt(ss_bVals[harmonic] * ss_bVals[harmonic] + ss_aVals[harmonic] * ss_aVals[harmonic]);
-            
-
-            _bode[1][p] = 20 * Math.log10(magnitudeValues[harmonic] / magnitude);
+            if (magnitude <= NUMERIC_EPSILON) {
+                _bode[1][p] = Double.NaN;
+            } else {
+                _bode[1][p] = 20 * Math.log10(magnitudeValues[harmonic] / magnitude);
+            }
 
             double a = data_aVals[harmonic];
             double b = data_bVals[harmonic];
             double c = ss_aVals[harmonic];
             double d = ss_bVals[harmonic];
 
-            
-            
-            double x = (a * c + b * d) / (c * c - d * d);
-            double y = (c * b - a * d) / (c * c - d * d);
-            
-            
-            //double phaseAngle = 180.0 / Math.PI * Math.abs(Math.atan2(y, x));
-            
-            double phaseAngle = 180 / Math.PI * Math.atan(y/x);                        
+            double denominator = c * c - d * d;
+            double xNumerator = a * c + b * d;
+            double yNumerator = c * b - a * d;
+            double x = xNumerator;
+            double y = yNumerator;
+            if (Math.abs(denominator) > NUMERIC_EPSILON) {
+                x = xNumerator / denominator;
+                y = yNumerator / denominator;
+            }
+
+            double phaseAngle = Math.toDegrees(Math.atan2(y, x));
             _bode[2][p] = phaseAngle;
         }
 
@@ -307,6 +319,14 @@ public class SmallSignalCalculator extends AbstractControlCalculatable implement
         
         // printResults();
 
+    }
+
+    private int getUsableHarmonicUpperBound() {
+        int fftBound = Math.max(0, (_N - 2) / 2);
+        int arrayBound = Math.min(Math.min(data_aVals.length, data_bVals.length),
+                Math.min(ss_aVals.length, ss_bVals.length)) - 1;
+        arrayBound = Math.min(arrayBound, magnitudeValues.length - 1);
+        return Math.min(Math.min(_nMax, fftBound), arrayBound);
     }
 
     private void printResults() {

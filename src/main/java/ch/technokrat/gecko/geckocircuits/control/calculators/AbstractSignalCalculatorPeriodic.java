@@ -13,6 +13,11 @@
  */
 package ch.technokrat.gecko.geckocircuits.control.calculators;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressWarnings("PMD.ThrowExceptionInFinally") // Constructor validation required for safety
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "Exception is intentional for invalid amplitude - signals must have non-negative amplitude")
 public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCalculator
         implements InitializableAtSimulationStart {
 
@@ -29,11 +34,11 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
     public AbstractSignalCalculatorPeriodic(final int noInputs, final double amplitudeAC,
             final double frequency, final double phase, final double anteilDC, final double duty) {
         super(noInputs);
-        _frequency = frequency;
-        _amplitudeAC = amplitudeAC;
         if (amplitudeAC < 0) {
             throw new IllegalArgumentException("Amplitude value of signal source has to be positive!");
         }
+        _frequency = frequency;
+        _amplitudeAC = amplitudeAC;
         _anteilDC = anteilDC;
         _dutyRatio = duty;
         _phase = phase;
@@ -53,6 +58,8 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
     protected abstract void calculateStartSignal(final double dtx,
             final double txEnd, final double phaseX);
 
+    @SuppressFBWarnings(value = "FL_FLOATS_AS_LOOP_COUNTERS",
+            justification = "Phase normalization uses double for precision; bounded loop prevents infinite iteration")
     protected final double calculatePhaseX() {
         double phaseX = _phase;
         while (phaseX > 2 * Math.PI) {

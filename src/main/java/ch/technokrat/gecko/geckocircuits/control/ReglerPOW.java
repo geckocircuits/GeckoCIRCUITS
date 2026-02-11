@@ -13,7 +13,6 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
@@ -33,9 +32,7 @@ public final class ReglerPOW extends RegelBlock {
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new AbstractControlCalculatable(1, 1) {
-
-            @Override
+        return new AbstractControlCalculatable(2, 1) {
             public void berechneYOUT(final double deltaT) {
                 _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
             }

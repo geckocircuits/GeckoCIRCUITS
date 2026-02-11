@@ -17,11 +17,13 @@ package ch.technokrat.gecko.geckoscript;
 import java.io.Writer;
 import javax.swing.JTextArea;
 import java.io.IOException;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author anstupar
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Writer stores text area reference for appending output")
 public final class JTextAreaWriter extends Writer {
 
 	private final JTextArea textArea;

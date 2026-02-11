@@ -16,7 +16,9 @@ package ch.technokrat.gecko.geckocircuits.control;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import ch.technokrat.gecko.geckocircuits.newscope.GeckoDialog;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores CISPR block reference for configuration")
 public class CisprBlockSettings extends GeckoDialog {
     private final ReglerCISPR16 _regler;
 

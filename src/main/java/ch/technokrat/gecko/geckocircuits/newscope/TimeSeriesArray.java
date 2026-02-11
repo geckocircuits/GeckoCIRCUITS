@@ -46,11 +46,13 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
         return _maximumIndex;
     }
     
-    static int counter = 0;
-    
+    // Counter used for debugging/assertion purposes only
+    @SuppressWarnings("unused")
+    private static int counter = 0;
+
     @Override
     public int findTimeIndex(final double time) {
-        counter++;
+        incrementCounter();
         //assert counter < 20000;
         final int maxIndex = _maximumIndex;
         final double maxTime = getValue(maxIndex);
@@ -85,6 +87,10 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
         }
                 
         return Math.max(returnValue, 0);
+    }
+
+    private static void incrementCounter() {
+        counter++;
     }
 
     @Override

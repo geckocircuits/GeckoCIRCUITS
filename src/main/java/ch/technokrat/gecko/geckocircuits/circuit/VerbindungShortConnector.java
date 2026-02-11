@@ -13,10 +13,13 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Short connector must share parent sheet reference for circuit hierarchy")
 public class VerbindungShortConnector extends Verbindung {
     private final CircuitSheet _parentSheet;
     

@@ -16,14 +16,13 @@ package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractTypeInfo;
-import ch.technokrat.gecko.geckocircuits.circuit.ComponentCoupable;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentDirection;
 import ch.technokrat.gecko.geckocircuits.circuit.ConnectorType;
 import ch.technokrat.gecko.geckocircuits.circuit.CurrentMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import ch.technokrat.gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import ch.technokrat.gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitSourceType;
 import ch.technokrat.gecko.geckocircuits.circuit.CircuitTypeInfo;
 import ch.technokrat.gecko.geckocircuits.circuit.TerminalRelativePosition;
@@ -37,7 +36,6 @@ import java.awt.Graphics2D;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.font.FontRenderContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +45,7 @@ import java.util.logging.Logger;
 public class IdealTransformer extends AbstractCircuitBlockInterface implements HiddenSubCircuitable, CurrentMeasurable, DirectVoltageMeasurable {
 
     private static final double HEIGHT = 0.8;
-    public static AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealTransformer.class, "Trans", I18nKeys.IDEAL_TRANSFORMER);
+    public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealTransformer.class, "Trans", I18nKeys.IDEAL_TRANSFORMER);
     final UserParameter<Double> _windingsRatio = UserParameter.Builder.
             <Double>start("windingsRatio", 5.0).
             longName(I18nKeys.RATIO_OF_WINDINGS).
@@ -272,16 +270,15 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         g2.drawLine((int) (dpix * (0 + 1)), (int) (dpix * (0 - HEIGHT) - rq), (int) (dpix * (0 + 1)), (int) (dpix * (0 - 2)));
 
         // Ansichten -->
-        FontRenderContext frc = ((Graphics2D) graphics).getFontRenderContext();
         restoreOrigTransformation(graphics);
 
-        if (SchematischeEingabe2._lkDisplayMode.showFlowSymbol) {
+        if (SchematicEditor2._lkDisplayMode.showFlowSymbol) {
             this.defineFlowSymbol(getComponentDirection(), graphics);
         }
 
-        if (SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (SchematicEditor2._lkDisplayMode.showParameter) {
             Font origFont = graphics.getFont();
-            graphics.setFont(SchematischeEingabe2.foLKSmall);
+            graphics.setFont(SchematicEditor2.foLKSmall);
             switch (getComponentDirection()) {
                 case EAST_WEST:
                     graphics.drawString("" + _windings1.getValue().floatValue(), dpix * x - graphics.getFontMetrics().stringWidth("" + _windings1.getValue().floatValue()) / 2, (int) (dpix * (y - 1.3)));
@@ -309,9 +306,9 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
     @Override
     protected void drawForeground(final Graphics2D graphics) {
         int pkd = (int) (0.4 * dpix);  // Durchmesser des Kopplungspunktes in Pixel
-        double pk1 = 1.0, pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen        
-        graphics.fillOval((int) (dpix * (+pk2) - pkd / 2), (int) (dpix * (-1.4) - pkd / 2), pkd, pkd);
-        graphics.fillOval((int) (dpix * (-pk2) - pkd / 2), (int) (dpix * (+_reversed.getValue() * 1.4) - pkd / 2), pkd, pkd);
+        double pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen
+        graphics.fillOval((int) (dpix * (+pk2) - pkd / 2.0), (int) (dpix * (-1.4) - pkd / 2.0), pkd, pkd);
+        graphics.fillOval((int) (dpix * (-pk2) - pkd / 2.0), (int) (dpix * (+_reversed.getValue() * 1.4) - pkd / 2.0), pkd, pkd);
     }
 
     @Override

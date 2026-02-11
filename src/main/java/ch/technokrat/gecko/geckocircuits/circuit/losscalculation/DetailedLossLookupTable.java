@@ -15,7 +15,7 @@ package ch.technokrat.gecko.geckocircuits.circuit.losscalculation;
 
 import java.util.List;
 
-public class DetailedLossLookupTable {
+public final class DetailedLossLookupTable {
 
     static DetailedLossLookupTable fabric(final List<? extends LossCurve> messkurvePvSWITCH, 
             final int dataIndex) {

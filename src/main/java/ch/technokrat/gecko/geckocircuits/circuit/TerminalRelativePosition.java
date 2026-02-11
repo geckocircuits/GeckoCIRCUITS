@@ -44,9 +44,8 @@ public class TerminalRelativePosition extends AbstractTerminal {
     }           
     
     public static Point getPointFromDirection(ComponentDirection direction, Point center, int posX, int posY) {
-        
-        
-        int _termDist = 5;
+
+
         int x1 = center.x, y1 = center.y;
         switch (direction) {
             case NORTH_SOUTH:

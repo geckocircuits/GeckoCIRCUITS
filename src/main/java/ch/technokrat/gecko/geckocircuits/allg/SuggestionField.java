@@ -37,31 +37,31 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
+        justification = "Field stores suggestion data list for auto-complete; JTextField is not serialized in this application")
 public final class SuggestionField extends JTextField {
 
     private static final long serialVersionUID = 1756202080423312153L;
     private final JDialog _dialog;
-    private JList _list;
+    private JList<String> _list;
     private List<String> _data = new ArrayList<String>();
     private final List<String> _suggestions = new ArrayList<String>();
-    private InterruptableMatcher _matcher;
+    private transient InterruptableMatcher _matcher;
     private Font _busy;
     private Font _regular;
     private String _lastWord = "";
     private String _lastChosenExistingVariable;
     private String _hint;
     private final List<ActionListener> _listeners = new ArrayList<ActionListener>();
-    private SuggestMatcher _suggestMatcher = new ContainsMatcher();
+    private transient SuggestMatcher _suggestMatcher = new ContainsMatcher();
     private boolean _caseSensitive = false;
     private final JScrollPane _scrollPane;
 
@@ -148,7 +148,7 @@ public final class SuggestionField extends JTextField {
         this._dialog.setUndecorated(true);
         this._dialog.setFocusableWindowState(false);
         this._dialog.setFocusable(false);
-        this._list = new JList();
+        this._list = new JList<>();
         _list.setFixedCellWidth(160);
         this._list.addMouseListener(new MouseListener() {
             private int selected;
@@ -206,7 +206,7 @@ public final class SuggestionField extends JTextField {
                         SuggestionField.this._list.ensureIndexIsVisible(SuggestionField.this._list.getSelectedIndex() - 1);
                         return;
                     }
-                    if (((e.getKeyCode() == 10 ? 1 : 0) & (SuggestionField.this._list.getSelectedIndex() != -1 ? 1 : 0) & (SuggestionField.this._suggestions.size() > 0 ? 1 : 0)) != 0) {
+                    if (e.getKeyCode() == 10 && SuggestionField.this._list.getSelectedIndex() != -1 && SuggestionField.this._suggestions.size() > 0) {
                         SuggestionField.this.setText((String) SuggestionField.this._list.getSelectedValue());
                         SuggestionField.this._lastChosenExistingVariable = SuggestionField.this._list.getSelectedValue().toString();
                         SuggestionField.this.fireActionEvent();
@@ -232,7 +232,7 @@ public final class SuggestionField extends JTextField {
         }
         Collections.sort(data);
         this._data = data;
-        this._list.setListData(data.toArray());
+        this._list.setListData(data.toArray(new String[0]));
         return true;
     }
 
@@ -340,7 +340,7 @@ public final class SuggestionField extends JTextField {
         public void run() {
             try {
                 SuggestionField.this.setFont(SuggestionField.this._busy);
-                Iterator it = SuggestionField.this._suggestions.iterator();
+                Iterator<String> it = SuggestionField.this._suggestions.iterator();
                 String word = SuggestionField.this.getText();
                 while (it.hasNext()) {
                     if (this.stop) {
@@ -359,7 +359,7 @@ public final class SuggestionField extends JTextField {
 
                 SuggestionField.this.setFont(SuggestionField.this._regular);
                 if (SuggestionField.this._suggestions.size() > 0) {
-                    SuggestionField.this._list.setListData(SuggestionField.this._suggestions.toArray());
+                    SuggestionField.this._list.setListData(SuggestionField.this._suggestions.toArray(new String[0]));
                     SuggestionField.this._list.setSelectedIndex(0);
                     SuggestionField.this._list.ensureIndexIsVisible(0);
                     SuggestionField.this._dialog.setVisible(true);

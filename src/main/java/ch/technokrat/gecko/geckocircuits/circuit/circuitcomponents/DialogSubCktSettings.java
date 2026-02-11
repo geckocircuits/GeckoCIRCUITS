@@ -19,11 +19,13 @@ import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores subcircuit block reference for settings configuration")
 public class DialogSubCktSettings extends javax.swing.JDialog {
 
     private final SubcircuitBlock _subBlock;

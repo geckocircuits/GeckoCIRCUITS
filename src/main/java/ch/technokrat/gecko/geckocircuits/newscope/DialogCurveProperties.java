@@ -18,7 +18,7 @@ package ch.technokrat.gecko.geckocircuits.newscope;
  *
  * @author andy
  */
-class DialogCurveProperties extends GeckoDialog {
+final class DialogCurveProperties extends GeckoDialog {
     private final LineSettable _lineSettable;
     private final GraferV4 _grafer;    
     private final AbstractCurve _curve;

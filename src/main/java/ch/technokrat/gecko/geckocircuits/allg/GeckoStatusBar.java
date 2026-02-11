@@ -18,6 +18,7 @@ import ch.technokrat.gecko.GeckoRemoteRegistry;
 import ch.technokrat.gecko.GeckoSim;
 import ch.technokrat.gecko.geckocircuits.circuit.SimulationsKern;
 import ch.technokrat.gecko.geckocircuits.control.NetzlisteCONTROL;
+import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerValuesSettable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.awt.*;
@@ -47,11 +48,11 @@ public class GeckoStatusBar extends JPanel {
     private static MemoryWarning _memoryWarning;
     private static boolean _showMemoryWarning = true;
     private double _runningPercentage;
-    private final Fenster _fenster;
+    private final MainWindow _fenster;
     private final GeckoProgressPanel _jPanelProgress;
     private Font font = calculateLabelFont();
 
-    GeckoStatusBar(String ti_ReadySim, final Fenster fenster) {
+    GeckoStatusBar(String ti_ReadySim, final MainWindow fenster) {
         _fenster = fenster;
         TimerTask task = new TimerTask() {
             public void run() {
@@ -70,7 +71,7 @@ public class GeckoStatusBar extends JPanel {
                                 _portLabelButton.setForeground(Color.ORANGE);
                                 _portLabelButton.setToolTipText("GeckoREMOTE " + I18nKeys.LISTENING_AT_PORT + " " + GeckoRemoteRegistry.getRemoteAccessPort());
                             } else {
-                                _portLabelButton.setText(I18nKeys.CONNECTION_TEST_FAILED.LISTENING_AT_PORT.getTranslation() + " : " + GeckoRemoteRegistry.getRemoteAccessPort());
+                                _portLabelButton.setText(I18nKeys.LISTENING_AT_PORT.getTranslation() + " : " + GeckoRemoteRegistry.getRemoteAccessPort());
                                 _portLabelButton.setForeground(Color.RED);
                             }
                         }
@@ -159,7 +160,7 @@ public class GeckoStatusBar extends JPanel {
             if (_aliasing) {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             } else {
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
             }
 
             g2d.setFont(font);
@@ -201,6 +202,11 @@ public class GeckoStatusBar extends JPanel {
     private void drawDataMem(Graphics2D g2d) {
         DataContainerValuesSettable dc = NetzlisteCONTROL.globalData;
         if (dc == null) {
+            return;
+        }
+        // globalData is always DataContainerGlobal which extends AbstractDataContainer
+        ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer adc = (ch.technokrat.gecko.geckocircuits.datacontainer.AbstractDataContainer) dc;
+        if (adc.getContainerStatus() == ContainerStatus.DELETED) {
             return;
         }
         // 20 MB for the program itself!
@@ -280,11 +286,11 @@ public class GeckoStatusBar extends JPanel {
         int tmin = (int) (tsec / 60);  // Anzahl Minuten
         tsec -= (tmin * 60);
         if (thour > 0) {
-            displayText += new String(thour + " [h]  " + tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]");
+            displayText += thour + " [h]  " + tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]";
         } else if (tmin > 0) {
-            displayText += new String(tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]");
+            displayText += tmin + " [min]  " + cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]";
         } else {
-            displayText += new String(cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]");
+            displayText += cf.formatT(tsec, TechFormat.FORMAT_AUTO) + " [s]";
         }
         this.setText(displayText);
     }

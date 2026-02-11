@@ -16,7 +16,7 @@ package ch.technokrat.gecko.geckocircuits.math;
 /**
 * The Polynomials class contains methods to handle Polynomials and Rational Functions.
 */
-public strictfp class Polynomials extends Object {
+public class Polynomials extends Object {
 
    /**
    * Given the n+1 coefficients of a polynomial of degree n in u[0..n], and the nv+1 coefficients

@@ -13,14 +13,12 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-import ch.technokrat.gecko.Documentation;
-import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GlobalFilePathes;
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
 import ch.technokrat.gecko.geckocircuits.circuit.Enabled;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import ch.technokrat.gecko.geckocircuits.datacontainer.*;
@@ -35,39 +33,40 @@ import java.util.Observable;
 import java.util.Observer;
 
 public final class ReglerSaveData extends RegelBlock implements Operationable {
+    private static final long serialVersionUID = 1L;
 
-    final UserParameter<Boolean> _printHeader = UserParameter.Builder.
-            <Boolean>start("printHeader", true).                       
+    final transient UserParameter<Boolean> _printHeader = UserParameter.Builder.
+            <Boolean>start("printHeader", true).
             longName(I18nKeys.IF_TRUE_PRINT_HEADER).
-            shortName("printHeader").            
+            shortName("printHeader").
             arrayIndex(this, -1).
             build();                               
     
-    final UserParameter<Boolean> _transposeData = UserParameter.Builder.
-            <Boolean>start("transposeData", false).                       
+    final transient UserParameter<Boolean> _transposeData = UserParameter.Builder.
+            <Boolean>start("transposeData", false).
             longName(I18nKeys.IF_TRUE_TRANSPOSE_DATA).
-            shortName("transposeData").            
+            shortName("transposeData").
             arrayIndex(this, -1).
             build();                               
     
-    final UserParameter<Integer> _skipDataPoints = UserParameter.Builder.
-            <Integer>start("skipDataPoints", 1).                       
+    final transient UserParameter<Integer> _skipDataPoints = UserParameter.Builder.
+            <Integer>start("skipDataPoints", 1).
             longName(I18nKeys.SKIP_DATA_POINTS).
-            shortName("skipDataPoints").            
+            shortName("skipDataPoints").
             arrayIndex(this, -1).
             build();             
     
-    final UserParameter<Integer> _significDigits = UserParameter.Builder.
-            <Integer>start("significantDigits", DEFAULT_DIGITS).                       
+    final transient UserParameter<Integer> _significDigits = UserParameter.Builder.
+            <Integer>start("significantDigits", DEFAULT_DIGITS).
             longName(I18nKeys.SIGNIFICANT_DIGITS).
-            shortName("significantDigits").            
+            shortName("significantDigits").
             arrayIndex(this, -1).
             build();     
     
-    final UserParameter<String> _file = UserParameter.Builder.
-            <String>start("filename", findInitialFile()).                  
+    final transient UserParameter<String> _file = UserParameter.Builder.
+            <String>start("filename", findInitialFile()).
             longName(I18nKeys.FILENAME).
-            shortName("fileName").            
+            shortName("fileName").
             arrayIndex(this, -1).
             build();             
     
@@ -75,7 +74,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     private static final int BLOCK_HEIGHT = 3;
     private static final int BLOCK_WIDTH = 6;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSaveData.class, "DataExport", I18nKeys.DATA_EXPORT_TO_FILE);
-    private DataSaver _dataSaver;
+    private transient DataSaver _dataSaver;
     private String _statusTxt = "waiting";
 
     
@@ -144,7 +143,14 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     void setSelectedSignal(int j, int i) {
-        _selectedSignalIndices.set(i, j);
+        if (i < _selectedSignalIndices.size()) {
+            _selectedSignalIndices.set(i, j);
+            return;
+        }
+        while (_selectedSignalIndices.size() < i) {
+            _selectedSignalIndices.add(-1);
+        }
+        _selectedSignalIndices.add(j);
     }
 
     void setSignalName(final int index, final String dataSignalNameNew) {
@@ -164,12 +170,22 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     void removeSignal(final int removeIndex) {
-        _selectedSignalNames.remove(removeIndex);
-        _selectedSignalIndices.remove(removeIndex);
+        if (removeIndex < _selectedSignalNames.size()) {
+            _selectedSignalNames.remove(removeIndex);
+        }
+        if (removeIndex < _selectedSignalIndices.size()) {
+            _selectedSignalIndices.remove(removeIndex);
+        }
     }
 
-    private String findInitialFile() {        
-        if (!Fenster.IS_APPLET && GlobalFilePathes.DATNAM != null) {
+    void normalizeSelectedSignalLists() {
+        while (_selectedSignalIndices.size() > _selectedSignalNames.size()) {
+            _selectedSignalIndices.remove(_selectedSignalIndices.size() - 1);
+        }
+    }
+
+    private String findInitialFile() {
+        if (GlobalFilePathes.DATNAM != null) {
             File ipesFile = new File(GlobalFilePathes.DATNAM);
             String parentDirectory = ipesFile.getParent();
             int testCounter = 1;
@@ -234,7 +250,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
             }
         }
 
-        SchematischeEingabe2.Singleton._circuitSheet.repaint();
+        SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
     @Override
@@ -244,13 +260,13 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
+        ProjectData.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
                 new String[_selectedSignalNames.size()]));
-        DatenSpeicher.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
-        DatenSpeicher.appendAsString(ascii.append("\nitemSeparator"), _itemSeparator.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nheaderSymbol"), _headerSymbol.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nsaveModus"), _saveModus.ordinal());
-        DatenSpeicher.appendAsString(ascii.append("\nfileOverwrite"), _fileOverwrite.ordinal());
+        ProjectData.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
+        ProjectData.appendAsString(ascii.append("\nitemSeparator"), _itemSeparator.ordinal());
+        ProjectData.appendAsString(ascii.append("\nheaderSymbol"), _headerSymbol.ordinal());
+        ProjectData.appendAsString(ascii.append("\nsaveModus"), _saveModus.ordinal());
+        ProjectData.appendAsString(ascii.append("\nfileOverwrite"), _fileOverwrite.ordinal());
     }
 
     @Override

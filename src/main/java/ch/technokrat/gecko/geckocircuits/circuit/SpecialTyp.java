@@ -16,8 +16,9 @@ package ch.technokrat.gecko.geckocircuits.circuit;
 import ch.technokrat.gecko.geckocircuits.allg.AbstractComponentTyp;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.control.TextFieldBlock;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Enum exposes type info for component configuration")
 public enum SpecialTyp implements AbstractComponentTyp {
     SUBCIRCUIT(27, SubcircuitBlock.tInfo),
     TEXTFIELD(70, TextFieldBlock.tInfo);   

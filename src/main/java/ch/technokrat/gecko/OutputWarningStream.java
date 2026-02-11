@@ -17,20 +17,23 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Stream stores PrintStream reference for output redirection")
 public final class OutputWarningStream extends BufferedOutputStream {
 
     private final PrintStream _ps;
     private boolean _verbosityWarnShown = false;
     private static final long DEFAULT_WARN_SIZE = 50000000;
     private static long warningBytesSize = DEFAULT_WARN_SIZE;
-    private static long byteCounter = 0;
+    private long byteCounter = 0;
     private boolean _isOriginalOutput = true;
     @SuppressWarnings("PMD")
     private StringBuffer _alternativeOutput;
     private static final int MAX_STRING_BUFFER_SIZE = 100000;
-    private static String outputDescription;
+    private String outputDescription;
     private boolean _ignoreFutureMessages = false;
     private static final int BUFFER_FRACTION = 5; // this means, after cleaning the buffer, 1/5th of the original space is left
     private static final int SEARCH_NEWLINE_CHARS = 200;
@@ -42,7 +45,7 @@ public final class OutputWarningStream extends BufferedOutputStream {
 
     @Override
     public void write(final byte[] bytes) throws IOException {
-        final String aString = new String(bytes);
+        final String aString = new String(bytes, StandardCharsets.UTF_8);
         if (_isOriginalOutput) {
             _ps.append(aString);
         } else {
@@ -55,7 +58,7 @@ public final class OutputWarningStream extends BufferedOutputStream {
 
     @Override
     public void write(final byte[] bytes, final int off, final int len) throws IOException {
-        final String aString = new String(bytes, off, len);
+        final String aString = new String(bytes, off, len, StandardCharsets.UTF_8);
         byteCounter += bytes.length;
         if (_isOriginalOutput) {
             _ps.append(aString);

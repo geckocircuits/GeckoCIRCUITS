@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.newscope;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 
 /**
@@ -196,12 +196,12 @@ public final class AxisGridSettings{
   }
 
   void exportIndividualCONTROL(final StringBuffer ascii){
-    DatenSpeicher.appendAsString(ascii.append("\nuserShowGridMaj"), _userShowGridMaj);
-    DatenSpeicher.appendAsString(ascii.append("\nuserShowGridMin"), _userShowGridMin);
-    DatenSpeicher.appendAsString(ascii.append("\nlinStilGridNormal"), _linStilGridNormal.code());
-    DatenSpeicher.appendAsString(ascii.append("\nlinStilGridMinor"), _linStilGridMinor.code());
-    DatenSpeicher.appendAsString(ascii.append("\ncolorGridNormal"), _farbeGridNormal.code());
-    DatenSpeicher.appendAsString(ascii.append("\ncolorGridMinor"), _farbeGridNormalMinor.code());
+    ProjectData.appendAsString(ascii.append("\nuserShowGridMaj"), _userShowGridMaj);
+    ProjectData.appendAsString(ascii.append("\nuserShowGridMin"), _userShowGridMin);
+    ProjectData.appendAsString(ascii.append("\nlinStilGridNormal"), _linStilGridNormal.code());
+    ProjectData.appendAsString(ascii.append("\nlinStilGridMinor"), _linStilGridMinor.code());
+    ProjectData.appendAsString(ascii.append("\ncolorGridNormal"), _farbeGridNormal.code());
+    ProjectData.appendAsString(ascii.append("\ncolorGridMinor"), _farbeGridNormalMinor.code());
   }
 
   void importASCII(final TokenMap axisMap){

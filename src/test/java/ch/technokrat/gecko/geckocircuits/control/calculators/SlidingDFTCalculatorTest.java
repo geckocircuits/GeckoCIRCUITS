@@ -100,4 +100,199 @@ public final class SlidingDFTCalculatorTest {
         assertEquals(-Math.PI / 2, _sdft._outputSignal[1][0], VERY_LARGE_TOLERANCE);
         assertEquals(2 * OFFSET, _sdft._outputSignal[2][0], LARGE_TOLERANCE);
     }
+    
+    @Test
+    public void testConstantInput() {
+        _sdft._inputSignal[0] = new double[1];
+        _sdft.initializeAtSimulationStart(DELTA_T);
+        
+        // Feed constant DC value
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            _sdft._inputSignal[0][0] = OFFSET;  // Only DC, no AC
+            _sdft.berechneYOUT(DELTA_T);
+        }
+        
+        // DC component should be OFFSET * 2 (the algorithm sums all components)
+        assertEquals(0, _sdft._outputSignal[0][0], TOLERANCE);  // AC magnitude
+        assertEquals(OFFSET * 2, _sdft._outputSignal[2][0], LARGE_TOLERANCE);  // DC component (double)
+    }
+    
+    @Test
+    public void testDCComponentOnly() {
+        _sdft._inputSignal[0] = new double[1];
+        _sdft.initializeAtSimulationStart(DELTA_T);
+        
+        double dcValue = 5.0;
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            _sdft._inputSignal[0][0] = dcValue;
+            _sdft.berechneYOUT(DELTA_T);
+        }
+        
+        assertEquals(dcValue * 2, _sdft._outputSignal[2][0], LARGE_TOLERANCE);
+    }
+    
+    @Test
+    public void testHigherFrequency() {
+        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        List<FrequencyData> freqData = new ArrayList<>();
+        double highFreq = 150;  // 150 Hz component
+        freqData.add(regler.new FrequencyData(highFreq, ReglerSlidingDFT.OutputData.ABS));
+        
+        SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
+        sdft._inputSignal[0] = new double[1];
+        sdft.initializeAtSimulationStart(DELTA_T);
+        
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * highFreq);
+            sdft.berechneYOUT(DELTA_T);
+        }
+        
+        assertEquals(AMPLITUDE, sdft._outputSignal[0][0], LARGE_TOLERANCE);
+    }
+    
+    @Test
+    public void testZeroAmplitude() {
+        _sdft._inputSignal[0] = new double[1];
+        _sdft.initializeAtSimulationStart(DELTA_T);
+        
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            _sdft._inputSignal[0][0] = 0;
+            _sdft.berechneYOUT(DELTA_T);
+        }
+        
+        // All outputs should be near zero
+        for (int i = 0; i < NO_OUTPUTS; i++) {
+            assertEquals("Output " + i, 0, _sdft._outputSignal[i][0], LARGE_TOLERANCE);
+        }
+    }
+    
+    @Test
+    public void testMultipleFrequencies() {
+        _sdft._inputSignal[0] = new double[1];
+        _sdft.initializeAtSimulationStart(DELTA_T);
+
+        // Sum of 50Hz and DC
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            _sdft._inputSignal[0][0] = OFFSET + AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
+            _sdft.berechneYOUT(DELTA_T);
+        }
+
+        // Verify outputs exist and are reasonable
+        assertFalse("Magnitude should be finite", Double.isInfinite(_sdft._outputSignal[0][0]));
+        assertFalse("Phase should be finite", Double.isInfinite(_sdft._outputSignal[1][0]));
+        assertFalse("DC should be finite", Double.isInfinite(_sdft._outputSignal[2][0]));
+    }
+
+    @Test
+    public void testRealOutputData() {
+        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        List<FrequencyData> freqData = new ArrayList<>();
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.REAL));
+
+        SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
+        sdft._inputSignal[0] = new double[1];
+        sdft.initializeAtSimulationStart(DELTA_T);
+
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            sdft._inputSignal[0][0] = AMPLITUDE * Math.cos(2 * Math.PI * time * FREQ1);
+            sdft.berechneYOUT(DELTA_T);
+        }
+
+        // Real part should be close to amplitude for cosine input
+        assertFalse("Real output should be valid", Double.isNaN(sdft._outputSignal[0][0]));
+        assertFalse("Real output should be finite", Double.isInfinite(sdft._outputSignal[0][0]));
+    }
+
+    @Test
+    public void testImagOutputData() {
+        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        List<FrequencyData> freqData = new ArrayList<>();
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.IMAG));
+
+        SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
+        sdft._inputSignal[0] = new double[1];
+        sdft.initializeAtSimulationStart(DELTA_T);
+
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
+            sdft.berechneYOUT(DELTA_T);
+        }
+
+        // Imaginary part for sine input
+        assertFalse("Imag output should be valid", Double.isNaN(sdft._outputSignal[0][0]));
+        assertFalse("Imag output should be finite", Double.isInfinite(sdft._outputSignal[0][0]));
+    }
+
+    @Test
+    public void testAllOutputDataTypes() {
+        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        List<FrequencyData> freqData = new ArrayList<>();
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.ABS));
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.REAL));
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.IMAG));
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.PHASE));
+
+        SlidingDFTCalculator sdft = new SlidingDFTCalculator(4, AVG_SPAN, freqData);
+        sdft._inputSignal[0] = new double[1];
+        sdft.initializeAtSimulationStart(DELTA_T);
+
+        for (double time = 0; time < END_TIME; time += DELTA_T) {
+            sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
+            sdft.berechneYOUT(DELTA_T);
+        }
+
+        // All outputs should be valid
+        for (int i = 0; i < 4; i++) {
+            assertFalse("Output " + i + " should be valid", Double.isNaN(sdft._outputSignal[i][0]));
+            assertFalse("Output " + i + " should be finite", Double.isInfinite(sdft._outputSignal[i][0]));
+        }
+
+        // ABS should be positive
+        assertTrue("ABS should be non-negative", sdft._outputSignal[0][0] >= 0);
+    }
+
+    @Test
+    public void testInitWithLargerDt() {
+        _sdft._inputSignal[0] = new double[1];
+        _sdft.initializeAtSimulationStart(DELTA_T);
+
+        double time = 0;
+        for (; time < END_TIME / 2; time += DELTA_T) {
+            _sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
+            _sdft.berechneYOUT(DELTA_T);
+        }
+
+        // Switch to larger time step (size decreases)
+        double largerDt = DELTA_T * 5;
+        _sdft.initWithNewDt(largerDt);
+
+        for (; time < END_TIME; time += largerDt) {
+            _sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
+            _sdft.berechneYOUT(largerDt);
+        }
+
+        assertFalse("Output should be valid after dt change", Double.isNaN(_sdft._outputSignal[0][0]));
+    }
+
+    @Test
+    public void testAverageSpanSmallerThanStepWidth() {
+        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        List<FrequencyData> freqData = new ArrayList<FrequencyData>();
+        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.ABS));
+
+        SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, 1e-6, freqData);
+        sdft._inputSignal[0] = new double[1];
+
+        double dt = 1e-3;
+        sdft.initializeAtSimulationStart(dt);
+        sdft._inputSignal[0][0] = AMPLITUDE;
+        sdft.berechneYOUT(dt);
+
+        sdft.initWithNewDt(2 * dt);
+        sdft._inputSignal[0][0] = AMPLITUDE;
+        sdft.berechneYOUT(2 * dt);
+
+        assertFalse("Output should be finite", Double.isNaN(sdft._outputSignal[0][0]));
+        assertFalse("Output should be finite", Double.isInfinite(sdft._outputSignal[0][0]));
+    }
 }

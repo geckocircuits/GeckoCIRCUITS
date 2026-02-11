@@ -13,7 +13,7 @@
  */
 package ch.technokrat.gecko.geckocircuits.control;
 
-class DialogWindowWithoutInput extends DialogElementCONTROL {
+class DialogWindowWithoutInput extends DialogElementCONTROL<RegelBlock> {
 
     public DialogWindowWithoutInput(RegelBlock aThis) {
         super(aThis);

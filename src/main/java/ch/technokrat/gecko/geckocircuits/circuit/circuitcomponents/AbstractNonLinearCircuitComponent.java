@@ -14,11 +14,11 @@
 package ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents;
 
 import ch.technokrat.gecko.geckocircuits.allg.UserParameter;
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
-import ch.technokrat.gecko.geckocircuits.allg.Fenster;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
+import ch.technokrat.gecko.geckocircuits.allg.MainWindow;
 import ch.technokrat.gecko.geckocircuits.allg.GeckoFile;
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
-import ch.technokrat.gecko.geckocircuits.circuit.SchematischeEingabe2;
+import ch.technokrat.gecko.geckocircuits.circuit.SchematicEditor2;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,11 +40,16 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-// TODO: this is a mess, please clean anybody up!
+// TODO: Future developer: This class needs refactoring when you have time and understand the full context.
 
-public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock 
-implements Operationable, Nonlinearable {       
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public fields for nonlinear characteristic data shared during simulation and file I/O")
+public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock
+implements Operationable, Nonlinearable {
+
+    private static final Random RANDOM = new Random();       
     
     public final UserParameter<Boolean> _isNonlinear = UserParameter.Builder.
             <Boolean>start("isNonlinear", false).                       
@@ -68,14 +74,14 @@ implements Operationable, Nonlinearable {
     public long nonLinearCharHashValueForInit = 0;
     public boolean initNonLinFromFile = false;
     public long nonLinearLastModified = -2;
-    public static final double[] NONLIN_CAP_X_DEFAULT = new double[]{0, 100, 300, 400};
-    public static final double[] NONLIN_CAP_Y_DEFAULT = new double[]{1e-7, 0.8e-7, 1.2e-9, 1e-9};    
-    
-    public static final double[] NONLIN_IND_X_DEFAULT = new double[]{0, 10, 15, 30};
-    public static final double[] NONLIN_IND_Y_DEFAULT = new double[]{500e-6, 500e-6, 150e-6, 100e-6};
-    
-    public static final double[] NONLIN_REL_X_DEFAULT = new double[]{0, 100, 300, 400};
-    public static final double[] NONLIN_REL_Y_DEFAULT = new double[]{2, 2, 4, 5};    
+    static final double[] NONLIN_CAP_X_DEFAULT = new double[]{0, 100, 300, 400};
+    static final double[] NONLIN_CAP_Y_DEFAULT = new double[]{1e-7, 0.8e-7, 1.2e-9, 1e-9};
+
+    static final double[] NONLIN_IND_X_DEFAULT = new double[]{0, 10, 15, 30};
+    static final double[] NONLIN_IND_Y_DEFAULT = new double[]{500e-6, 500e-6, 150e-6, 100e-6};
+
+    static final double[] NONLIN_REL_X_DEFAULT = new double[]{0, 100, 300, 400};
+    static final double[] NONLIN_REL_Y_DEFAULT = new double[]{2, 2, 4, 5};    
     
     
     
@@ -96,7 +102,7 @@ implements Operationable, Nonlinearable {
             throw new IllegalAccessException("Non-linear characteristic file must end with extension " + getNonlinearFileEnding());
         } else {            
             try {                
-                GeckoFile newFile = new GeckoFile(file, GeckoFile.StorageType.EXTERNAL, Fenster.getOpenFileName());                
+                GeckoFile newFile = new GeckoFile(file, GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());                
                 ArrayList<GeckoFile> newFileList = new ArrayList<GeckoFile>();                
                 newFileList.add(newFile);                
                 addFiles(newFileList);
@@ -116,7 +122,7 @@ implements Operationable, Nonlinearable {
         //in this case there should only be one file to remove
         if (filesToRemove.size() > 0 && nonLinearChar != null) {
             nonLinearChar.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(nonLinearChar);
+            MainWindow._fileManager.maintain(nonLinearChar);
             nonLinearChar = null;
         }
     }    
@@ -130,12 +136,12 @@ implements Operationable, Nonlinearable {
                 double[][] nonLin = readNonLinearCharacteristicFromFile(newNonLin);
                 if (nonLinearChar != null) {
                     nonLinearChar.removeUser(getUniqueObjectIdentifier());
-                    Fenster._fileManager.maintain(nonLinearChar);
+                    MainWindow._fileManager.maintain(nonLinearChar);
                 }
                 nonLinearChar = newNonLin;
                 nonlinearData = nonLin;
                 nonLinearChar.setUser(getUniqueObjectIdentifier());
-                Fenster._fileManager.addFile(nonLinearChar);
+                MainWindow._fileManager.addFile(nonLinearChar);
                 nonLinearLastModified = nonLinearChar.checkModificationTimeStamp();
             } catch (NumberFormatException e) {
                 final String errorMessage = "Non-linear characteristic file format error: \n" + e.getMessage();
@@ -183,7 +189,7 @@ implements Operationable, Nonlinearable {
             _textInfo.addErrorValue("Nonlinear file not found!");
         }
 
-        if (SchematischeEingabe2._lkDisplayMode.showParameter) {
+        if (SchematicEditor2._lkDisplayMode.showParameter) {
 
             double displayValue = 0;
             if (this instanceof AbstractCapacitor) {
@@ -224,7 +230,7 @@ implements Operationable, Nonlinearable {
                 File nonLinFile = new File(characteristicFileName);                
                 //if it doesn't exist, try first to see if it is in the same directory as the currently open model file
                 if (!nonLinFile.exists()) {
-                    final File modelFile = new File(ch.technokrat.gecko.geckocircuits.allg.Fenster.getOpenFileName());
+                    final File modelFile = new File(ch.technokrat.gecko.geckocircuits.allg.MainWindow.getOpenFileName());
                     final String currentModelDirectory = modelFile.getParent();
                     final String nonLinFileName = currentModelDirectory + System.getProperty("file.separator") + characteristicFileName;
                     nonLinFile = new File(nonLinFileName);                    
@@ -295,8 +301,8 @@ implements Operationable, Nonlinearable {
             if (tokens.countTokens() != 2) {
                 throw new NumberFormatException("Impromer data point in file: " + currentLine);
             }            
-            nonLinX[i] = (new Double(tokens.nextToken())).doubleValue();
-            nonLinY[i] = (new Double(tokens.nextToken())).doubleValue();
+            nonLinX[i] = Double.parseDouble(tokens.nextToken());
+            nonLinY[i] = Double.parseDouble(tokens.nextToken());
         }
 
         return new double[][]{nonLinX, nonLinY};
@@ -342,13 +348,13 @@ implements Operationable, Nonlinearable {
         nonlinearData = data;
         if (nonLinearChar != null) {
             nonLinearChar.removeUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.maintain(nonLinearChar);
+            MainWindow._fileManager.maintain(nonLinearChar);
         }
         try {
             File newFile = writeNonLinearCharacteristicToFile(nonlinearData, new File(newInternalFileName));
-            nonLinearChar = new GeckoFile(newFile, GeckoFile.StorageType.INTERNAL, Fenster.getOpenFileName());
+            nonLinearChar = new GeckoFile(newFile, GeckoFile.StorageType.INTERNAL, MainWindow.getOpenFileName());
             nonLinearChar.setUser(getUniqueObjectIdentifier());
-            Fenster._fileManager.addFile(nonLinearChar);
+            MainWindow._fileManager.addFile(nonLinearChar);
             nonLinearLastModified = nonLinearChar.checkModificationTimeStamp();
         } catch (Exception e) {
             final String errorMessage = "Error writing non-linear characteristic file in " + getStringID() + "\n" + e.getMessage();
@@ -390,10 +396,10 @@ implements Operationable, Nonlinearable {
     // nlX,nlY define the picewise non-linear characteristic, x is the actual value 
     public double getActualValueLINFromLinearizedCharacteristicInverse(double x) {        
         int i1 = 0;
-        boolean debug = false;
-        if( x > -23.513443326778713) {
-            debug = true;
-        }
+//        boolean debug = false;
+//        if( x > -23.513443326778713) {
+//            debug = true;
+//        }
         int pkt = nonlinearData[0].length;
         while ((i1 < pkt) && (nonlinearData[0][i1] < x)) {
             i1++;
@@ -443,12 +449,12 @@ implements Operationable, Nonlinearable {
 
     @Override
     public void exportAsciiIndividual(final StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\nnonlinX"), nonlinearData[0]);
-        DatenSpeicher.appendAsString(ascii.append("\nnonlinY"), nonlinearData[1]);
+        ProjectData.appendAsString(ascii.append("\nnonlinX"), nonlinearData[0]);
+        ProjectData.appendAsString(ascii.append("\nnonlinY"), nonlinearData[1]);
         if (nonLinearChar != null) {
-            DatenSpeicher.appendAsString(ascii.append("\nnonLinearCharHashValue"), nonLinearChar.getHashValue());
+            ProjectData.appendAsString(ascii.append("\nnonLinearCharHashValue"), nonLinearChar.getHashValue());
         } else {
-            DatenSpeicher.appendAsString(ascii.append("\nnonLinearCharHashValue"), 0);
+            ProjectData.appendAsString(ascii.append("\nnonLinearCharHashValue"), 0);
         }
     }
 
@@ -474,7 +480,7 @@ implements Operationable, Nonlinearable {
         if (_isNonlinear.getValue()) {
             if (initNonLinFromFile) {
                 try {
-                    nonLinearChar = Fenster._fileManager.getFile(nonLinearCharHashValueForInit);
+                    nonLinearChar = MainWindow._fileManager.getFile(nonLinearCharHashValueForInit);
                     updateNonLinearCharacteristic();
                 } catch (FileNotFoundException e) {
                     createNewInitialInternalFile();                    
@@ -487,8 +493,8 @@ implements Operationable, Nonlinearable {
     
     //writes a non-linear characteristic to file
     public static File writeNonLinearCharacteristicToFile(double[][] data, File nonLinFile) throws java.io.IOException {
-        
-        BufferedWriter out = new BufferedWriter(new java.io.FileWriter(nonLinFile));
+
+        BufferedWriter out = new BufferedWriter(new java.io.FileWriter(nonLinFile, StandardCharsets.UTF_8));
         for (int i = 0; i < data[0].length; i++) {
             out.write(data[0][i] + " " + data[1][i] + "\n");
         }
@@ -500,17 +506,16 @@ implements Operationable, Nonlinearable {
     
     
     /**
-     * this is for backwards-compatibility from older versions. Since the 
+     * this is for backwards-compatibility from older versions. Since the
      * file object was not yet created, we create an internal file that
      * contains the nonlinear characterisitc.
-     */    
+     */
     private void createNewInitialInternalFile() {
-        Random rand = new Random();
-        byte randByte = (byte) rand.nextInt();
+        byte randByte = (byte) RANDOM.nextInt();
         File tmpFile = new File(getStringID() + "_" + randByte + getNonlinearFileEnding());
         try {
             byte[] fileContents = writeNonLinearCharacteristicToBytes();
-            GeckoFile newFile = new GeckoFile(tmpFile, Fenster.getOpenFileName(), fileContents);
+            GeckoFile newFile = new GeckoFile(tmpFile, MainWindow.getOpenFileName(), fileContents);
             ArrayList<GeckoFile> newFiles = new ArrayList<GeckoFile>();
             newFiles.add(newFile);
             addFiles(newFiles);
@@ -522,7 +527,7 @@ implements Operationable, Nonlinearable {
     public byte[] writeNonLinearCharacteristicToBytes() {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(baos));
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(baos, StandardCharsets.UTF_8));
             for (int i = 0; i < nonlinearData[0].length; i++) {
                 out.write(nonlinearData[0][i] + " " + nonlinearData[1][i] + "\n");
             }

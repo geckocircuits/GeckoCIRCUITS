@@ -53,11 +53,11 @@ class DisplayFourierWorksheet extends JPanel {
         for (int i1 = 0; i1 < wsObj.length; i1++) {
             for (int i2 = 0; i2 < wsObj[0].length; i2++) {
                 if (i2 == 0) {
-                    wsObj[i1][i2] = new String(cf.formatT(i1 + nMin, TechFormat.FORMAT_AUTO));
+                    wsObj[i1][i2] = cf.formatT(i1 + nMin, TechFormat.FORMAT_AUTO);
                 } else if (i2 == 1) {
-                    wsObj[i1][i2] = new String(cf.formatT(cnSG[i1], TechFormat.FORMAT_AUTO));
+                    wsObj[i1][i2] = cf.formatT(cnSG[i1], TechFormat.FORMAT_AUTO);
                 } else if (i2 == 2) {
-                    wsObj[i1][i2] = new String(cf.formatT(jnSG[i1], TechFormat.FORMAT_AUTO));
+                    wsObj[i1][i2] = cf.formatT(jnSG[i1], TechFormat.FORMAT_AUTO);
                 }
             }
         }

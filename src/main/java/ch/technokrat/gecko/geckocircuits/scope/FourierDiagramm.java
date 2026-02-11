@@ -133,7 +133,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             }
             double[] empf = auto_Achsenbegrenzung_Wertempfehlung(ymin, ymax);
             this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{ymin}, new double[]{empf[1]}, new boolean[]{true});
-            this.setzeTickSpacing(new double[]{(cnSG.length / 10)}, new double[]{empf[4]});
+            this.setzeTickSpacing(new double[]{(cnSG.length / 10.0)}, new double[]{empf[4]});
             repaint();
         } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
         } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
@@ -209,7 +209,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
         }
         //
         this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{ymin}, new double[]{empf[1]}, new boolean[]{true});
-        this.setzeTickSpacing(new double[]{cnSG.length / 10}, new double[]{empf[4]});
+        this.setzeTickSpacing(new double[]{cnSG.length / 10.0}, new double[]{empf[4]});
         //-------------------------------------
     }
 
@@ -240,22 +240,17 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
 
     @Override
     public void mousePressed(final MouseEvent mouseEvent) {
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             x1Zoom = mouseEvent.getX();
             y1Zoom = mouseEvent.getY();
             imDragModus = true;
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
         }
     }
 
     @Override
     public void mouseReleased(final MouseEvent mouseEvent) {
         //-------------------
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             imDragModus = false;
             x2Zoom = mouseEvent.getX();
             y2Zoom = mouseEvent.getY();
@@ -291,7 +286,6 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             this.setzeTickSpacing(new double[]{empfX[4]}, new double[]{empfY[4]});
             repaint();
             //-------------------
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
         }
     }
 
@@ -409,14 +403,14 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
         //-------------------
         int xPix = -1, yPix = -1;
         if (xAchseTyp_ == ACHSE_LOG) {
-            xWert = achseXmin_ * Math.pow(10.0, ((xPix - xAchseX_) / sfX_));
+            xPix = xAchseX_ + (int)(sfX_ * Math.log10(xWert / achseXmin_));
         } else if (xAchseTyp_ == ACHSE_LIN) {
-            xWert = achseXmin_ + (xPix - xAchseX_) / sfX_;
+            xPix = xAchseX_ + (int)((xWert - achseXmin_) * sfX_);
         }
         if (yAchseTyp_ == ACHSE_LOG) {
-            yWert = achseYmin_ * Math.pow(10.0, ((yAchseY_ - yPix) / sfY_));
+            yPix = yAchseY_ - (int)(sfY_ * Math.log10(yWert / achseYmin_));
         } else if (yAchseTyp_ == ACHSE_LIN) {
-            yWert = achseYmin_ + (yAchseY_ - yPix) / sfY_;
+            yPix = yAchseY_ - (int)((yWert - achseYmin_) * sfY_);
         }
         return new int[]{xPix, yPix};
         //-------------------

@@ -13,20 +13,19 @@
  */
 package ch.technokrat.gecko.geckocircuits.circuit;
 
-import ch.technokrat.gecko.geckocircuits.allg.DatenSpeicher;
+import ch.technokrat.gecko.geckocircuits.allg.ProjectData;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import ch.technokrat.gecko.geckocircuits.control.Operationable;
 import ch.technokrat.gecko.geckocircuits.control.ReglerGate;
 import ch.technokrat.gecko.i18n.resources.I18nKeys;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
-import javax.swing.undo.UndoableEdit;
 import ch.technokrat.modelviewcontrol.AbstractUndoGenericModel;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "PA_PUBLIC_ARRAY_ATTRIBUTE"},
+        justification = "Component coupling must share references for circuit connectivity; array is accessed frequently")
 public final class ComponentCoupling {
 
     public final AbstractBlockInterface[] _coupledElements;
@@ -119,7 +118,7 @@ public final class ComponentCoupling {
         }
         
         final CouplingUndoableEdit edit = new CouplingUndoableEdit(_coupledElements[index], element, index, true);
-        AbstractUndoGenericModel.undoManager.addEdit(edit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(edit));
         setNewCouplingElement(index, element);
         
     }
@@ -130,7 +129,7 @@ public final class ComponentCoupling {
         }                
 
         final CouplingUndoableEdit edit = new CouplingUndoableEdit(_coupledElements[index], element, index, false);
-        AbstractUndoGenericModel.undoManager.addEdit(edit);
+        AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(edit));
         setNewCouplingElement(index, element);
     }
 
@@ -184,14 +183,14 @@ public final class ComponentCoupling {
     }
 
     public void exportASCII(StringBuffer ascii) {        
-        DatenSpeicher.appendAsString(ascii.append("\ncoupledReferenceID"), _coupledIdentifiers);
+        ProjectData.appendAsString(ascii.append("\ncoupledReferenceID"), _coupledIdentifiers);
         /**
          * careful: this is used fore restoring connections, when copy export ->
          * import is used!
          */
-        DatenSpeicher.appendAsString(ascii.append("\ncopyCoupledReferenceID"), _coupledIdentifiers);
-        DatenSpeicher.appendAsString(ascii.append("\ninternalIndex"), _internalStringIndex);
-        DatenSpeicher.appendAsString(ascii.append("\ninternalString"), _internalString);
+        ProjectData.appendAsString(ascii.append("\ncopyCoupledReferenceID"), _coupledIdentifiers);
+        ProjectData.appendAsString(ascii.append("\ninternalIndex"), _internalStringIndex);
+        ProjectData.appendAsString(ascii.append("\ninternalString"), _internalString);
     }
 
     public void refreshCoupledReferences(final List<? extends AbstractCircuitSheetComponent> allSheetElements) {
@@ -388,7 +387,7 @@ public final class ComponentCoupling {
        return returnValue;
     }
 
-    private class CouplingUndoableEdit implements UndoableEdit {
+    private class CouplingUndoableEdit implements GeckoUndoableEdit {
 
         final boolean _isSignificant;
         private final int _index;
@@ -404,7 +403,7 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public void undo() throws CannotUndoException {            
+        public void undo() throws IllegalStateException {            
             setNewCouplingElement(_index, _oldReference);
         }
 
@@ -414,7 +413,7 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public void redo() throws CannotRedoException {
+        public void redo() throws IllegalStateException {
             setNewCouplingElement(_index, _newReference);
         }
 
@@ -429,12 +428,12 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public boolean addEdit(UndoableEdit anEdit) {
+        public boolean addEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 
         @Override
-        public boolean replaceEdit(UndoableEdit anEdit) {
+        public boolean replaceEdit(GeckoUndoableEdit anEdit) {
             return false;
         }
 

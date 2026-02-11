@@ -19,20 +19,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
 import javax.swing.event.ChangeListener;
-import ch.technokrat.modelviewcontrol.IGenericMVCView;
-import ch.technokrat.modelviewcontrol.ModelMVC;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @param <M>
  * @author andy
  */
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "MVC delegate stores model reference for view-model binding")
 public class DelegateIntSpinner<M extends ModelMVC<Integer>> extends JSpinner
         implements IGenericMVCView<M>, ActionListener {
 
     private static final long serialVersionUID = 759473276284147L;
-    private ModelMVC<Integer> _model;
-    private ChangeListener _changeListener;
+    private transient ModelMVC<Integer> _model;
+    private transient ChangeListener _changeListener;
 
     /**
      *

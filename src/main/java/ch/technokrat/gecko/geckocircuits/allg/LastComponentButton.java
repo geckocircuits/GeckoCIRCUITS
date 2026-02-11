@@ -19,11 +19,13 @@ package ch.technokrat.gecko.geckocircuits.allg;
 
 import ch.technokrat.gecko.geckocircuits.circuit.AbstractBlockInterface;
 import ch.technokrat.gecko.geckocircuits.circuit.ComponentDirection;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import javax.swing.JButton;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Button intentionally shares block references for component selection UI")
 public class LastComponentButton extends JButton {
 
     private AbstractBlockInterface _showComponent;

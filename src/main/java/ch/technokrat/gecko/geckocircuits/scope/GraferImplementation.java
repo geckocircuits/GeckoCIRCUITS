@@ -29,8 +29,11 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @Deprecated
+@SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
+        justification = "Legacy graphing class with direct field access; stores worksheet data for scope visualization")
 public final class GraferImplementation extends GraferV3 implements MouseListener, MouseMotionListener {
     // Anzahl der Intervalle auf der x-Achse, in denen Hi- und Lo-Werte zwecks Datenkompression ermittelt werden
     private static final int INTERVALLE_ENTLANG_X = 2000;
@@ -46,9 +49,9 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     //---------------------------------
     private static final int TXT_DISTANCE_Y = 10;
     public static final int ANZ_DIAGRAM_MAX = 9;  // Zahl der maximal moeglichen Diagramme in einem SCOPE
-    public static int DX_IN_LINKS = 60, DX_IN_RECHTS = 70;  // links- u. rechtsseitige x-Einrueckung der Achsen in Pixel
-    public static int DY_IN_OBEN = 8, DY_IN_UNTEN = 8;  // y-Einrueckung der Achsen in Pixel von Oben bzw. Unten und y-Abstand zwischen 2 Diagrammen
-    public static int ABSTAND_BESCHRIFTUNG_XACHSE = 35;  // soviel Abstand nach ganz unten gibt es zusaetzlich, damit die x-Achsen-Labels gesetzt werden koennen
+    public static final int DX_IN_LINKS = 60, DX_IN_RECHTS = 70;  // links- u. rechtsseitige x-Einrueckung der Achsen in Pixel
+    public static final int DY_IN_OBEN = 8, DY_IN_UNTEN = 8;  // y-Einrueckung der Achsen in Pixel von Oben bzw. Unten und y-Abstand zwischen 2 Diagrammen
+    public static final int ABSTAND_BESCHRIFTUNG_XACHSE = 35;  // soviel Abstand nach ganz unten gibt es zusaetzlich, damit die x-Achsen-Labels gesetzt werden koennen
     private static final int ANZ_AUTO_TICKS = 5;
     private int x1, x2, y1, y2;  // Rechteck-Koordinaten des Zoom-Fensters
     private boolean angeklicktZoom = false;
@@ -80,22 +83,14 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     public int[] xAchsenTyp, yAchsenTyp;  // Linear oder logarithmisch?
     public int[] xAchseFarbe, yAchseFarbe;
     public int[] xAchseStil, yAchseStil;
-    // TODO: the following fields hide Grafer fields, check if it would make a 
-    // problem just to delete it from here!
-    public String[] xAchseBeschriftung, yAchseBeschriftung;
+    // Note: xAchseBeschriftung, yAchseBeschriftung, gridNormal*, linStilGridNormal*,
+    // xTickSpacing, yTickSpacing, xAnzTicksMinor, yAnzTicksMinor, xTickLaenge*, yTickLaenge*,
+    // zeigeLabels* are inherited from GraferV3
     //
-    public int[] gridNormalX_zugeordneteXAchse, gridNormalX_zugeordneteYAchse;
-    public int[] gridNormalY_zugeordneteXAchse, gridNormalY_zugeordneteYAchse;
     public int[] farbeGridNormalX, farbeGridNormalXminor, farbeGridNormalY, farbeGridNormalYminor;
-    public int[] linStilGridNormalX, linStilGridNormalXminor, linStilGridNormalY, linStilGridNormalYminor;
     public boolean[] xShowGridMaj, xShowGridMin, yShowGridMaj, yShowGridMin;
     //
     public boolean[] xTickAutoSpacing, yTickAutoSpacing;
-    public double[] xTickSpacing, yTickSpacing;
-    public int[] xAnzTicksMinor, yAnzTicksMinor;
-    public int[] xTickLaenge, xTickLaengeMinor, yTickLaenge, yTickLaengeMinor;
-    //
-    public boolean[] zeigeLabelsXmaj, zeigeLabelsXmin, zeigeLabelsYmaj, zeigeLabelsYmin;
     //
     private boolean[] zeichneDiagrammUmrandung;  // zu zeichnen, wenn der Grid wegen zu kleiner Darstellung (in Pixelpunkten) abgeschaltet ist 
     //-------------------------
@@ -176,7 +171,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     private TechFormat cf = new TechFormat();
     private NumberFormat nf = NumberFormat.getNumberInstance();
     //==========================================
-    private ArrayList txtEintraege = new ArrayList();
+    private ArrayList<String> txtEintraege = new ArrayList<>();
     private int xSchieberPix2;
     private double[] xSchieberWert2 = new double[]{-1, -1};
     private double[][] ySchieberWert2;
@@ -792,8 +787,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             grL.moveTo(xPix[0], yPix[0]);
             for (int i5 = 1; i5 < _zvCounter; i5++) {
                 if (yPix[i5] != yPix[i5 - 1]) {  // Umschaltvorgang wird in der Mitte zwischen 2 Datenpunkten realisiert --> optische Verbesserung
-                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2, yPix[i5 - 1]);
-                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2, yPix[i5]);
+                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2.0, yPix[i5 - 1]);
+                    grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2.0, yPix[i5]);
                 }
                 grL.lineTo(xPix[i5], yPix[i5]);
             }
@@ -840,7 +835,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
     private void definiereAchsenbegrenzungenImAutoZoom(DataContainer ws) {
         //--------------------------
-        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX], tickAbstandY2 = new double[ANZ_DIAGRAM_MAX];
+        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX];
         //--------------------------
         // zur Effizienz-Steigerung: pro WS-Spalte werden kleinster und groesster Wert bestimmt -->
         final double[] w1 = new double[ws.getRowLength()], w2 = new double[ws.getRowLength()];
@@ -930,7 +925,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     private void definiereAchsenbegrenzungenNumerischeSimulation(double t1, double t2) {
         //--------------------------
         final DataContainer ws = this.worksheetDaten;
-        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX], tickAbstandY2 = new double[ANZ_DIAGRAM_MAX];
+        final double[] tickAbstandY = new double[ANZ_DIAGRAM_MAX];
         //--------------------------
         // zur Effizienz-Steigerung:
         // pro WS-Spalte werden kleinster und groesster Wert bestimmt -->
@@ -1073,14 +1068,12 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         this.setzeKurveIndexWorksheetKolonnenXY(indexWsXY);
         //
         //=====================================
-        int[] crvAchsenTypLok = new int[kurvenanzahl];  // Fuer jeden Matrix-Eintrag gibt es einen eindeutigen Achsen-Typ (X oder Y oder Y2)
         int[] crvLineStyleLok = new int[kurvenanzahl];
         int[] crvLineColorLok = new int[kurvenanzahl];
         final double[] crvTransparencyLok = new double[kurvenanzahl];
         for (int i1 = 0; i1 < kurvenanzahl; i1++) {
             final int im1 = (int) (indexDerKurveInDerMatrix[i1] / 1000);
             final int im2 = (int) (indexDerKurveInDerMatrix[i1] % 1000);
-            crvAchsenTypLok[i1] = crvAchsenTyp[im1][im2];
             crvLineStyleLok[i1] = crvLineStyle[im1][im2];
             crvLineColorLok[i1] = crvLineColor[im1][im2];
             crvTransparencyLok[i1] = crvTransparency[im1][im2];
@@ -1456,10 +1449,10 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
         this.setzeAchsenBreiteHoeheX0Y0(laenge_xAchse, laenge_yAchse, posX_xAchse, posY_xAchse, posX_yAchse, posY_yAchse);
         //-------------
-        try {
+        // Check for null arrays before calling method that uses them
+        if (gridNormalX_zugeordneteXAchse != null && gridNormalX_zugeordneteYAchse != null
+                && xShowGridMaj != null && xShowGridMin != null && breitePix != null) {
             this.blendeEventuellGridLinienAus();
-        } catch (NullPointerException e) {
-            Logger.getLogger(GraferImplementation.class.getName()).log(Level.SEVERE, "Nullpointer-Exception after resizing.");
         }
     }
 
@@ -1788,7 +1781,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                         indexAngeklickterGraph = -1;
                     }
                     //-------------
-                    if ((me.getModifiers() & me.BUTTON1_MASK) != 0 && !me.isControlDown()) {
+                    if ((me.getModifiersEx() & me.BUTTON1_DOWN_MASK) != 0 && !me.isControlDown()) {
                         inDiffMode = false;
                         xSchieberPix = mx;
                     } else {
@@ -1964,7 +1957,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 xPix = (int) ((xWert - achseXminLok) * sfX_ + xAchseXLok);
             }
             if (yAchseTyp_ == ACHSE_LOG) {
-                yWert = achseYmin_ * Math.pow(10.0, ((yAchseY_ - yPix) / sfY_));
+                yPix = (int) (yAchseY_ - sfY_ * Math.log10(yWert / achseYmin_));
             } else if (yAchseTyp_ == ACHSE_LIN) {
                 yPix = (int) (yAchseY_ - (yWert - achseYmin_) * sfY_);
             }

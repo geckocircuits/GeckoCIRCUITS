@@ -23,7 +23,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores grafer reference for signal-graph connection configuration")
 public final class DialogConnectSignalsGraphs extends GeckoDialog {
 
     private final GraferV4 _grafer;
@@ -217,7 +219,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
 
                 _grafer.refreshComponentPane();
                 baueGUI();
-                jtfWEIG[jtfWEIG.length - 1].setNumberToField(110 / jtfWEIG.length);
+                jtfWEIG[jtfWEIG.length - 1].setNumberToField(110.0 / jtfWEIG.length);
                 modifiedWeightIndex = jtfWEIG.length - 1;
                 setMinimumSize(new Dimension(getWidth(), getHeight()));
                 // die x-Achse wird nur beim untesten Diagramm angezeigt --> Aktualisierung
@@ -363,7 +365,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 setSelectedDiagram(diagram);
 
                 // rechte Maus --> 'Flippen' der ZUORDNUNG ohne Dialogfenster-Eingabe
-                if (mouseEvent.getModifiers() == MouseEvent.BUTTON3_MASK || mouseEvent.isControlDown()) {
+                if (mouseEvent.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK || mouseEvent.isControlDown()) {
                     final AxisConnection jcbAchsenTyp = curve.getAxisConnection().iterateNext(diagram instanceof DiagramSignal);
                     diagram.getCurve(columnIndex - 1).setAxisConnection(jcbAchsenTyp);
                     jbM[rowIndex][columnIndex].setText(jcbAchsenTyp.toString());

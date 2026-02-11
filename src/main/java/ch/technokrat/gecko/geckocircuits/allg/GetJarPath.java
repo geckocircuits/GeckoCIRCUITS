@@ -43,14 +43,13 @@ public class GetJarPath {
     private static boolean _initialized;
     private static String _JARpath;
     private static String _JARFilePath;
-    private static Class _refToCallingPackage;
-    private static GetJarPath _gjp;
+    private static Class<?> _refToCallingPackage;
     private static final String BUILD_CLASSES_STRING = "/build/classes";
     private static final String TARGET_CLASSES_STRING = "/target/classes";
 
     private static void initializeWithOwnClassRef() {
         if (!_initialized) {
-            _gjp = new GetJarPath(GetJarPath.class);
+            new GetJarPath(GetJarPath.class);
         }
     }
 
@@ -63,12 +62,14 @@ public class GetJarPath {
      *
      * @param clazz
      */
-    public GetJarPath(final Class clazz) {
-        synchronized (this) {
-            _refToCallingPackage = clazz;
-            _initialized = true;
-            setJarPath();
-        }
+    public GetJarPath(final Class<?> clazz) {
+        initializeStatic(clazz);
+    }
+
+    private static synchronized void initializeStatic(final Class<?> clazz) {
+        _refToCallingPackage = clazz;
+        _initialized = true;
+        setJarPath();
     }
 
     /**
@@ -121,7 +122,7 @@ public class GetJarPath {
         return path;
     }
 
-    private void setJarPath() {
+    private static void setJarPath() {
         String path = getJarPathInsideJAR();
 
         // remove preceeding file:-String. Be careful, Linux and Windows require
@@ -159,7 +160,7 @@ public class GetJarPath {
 
         // finally, make a test if the directory is exisiting. If not write out an
         // error message!
-        if (!Fenster.IS_APPLET && !Fenster.IS_BRANDED) {
+        if (!MainWindow.IS_BRANDED) {
             final File testFile = new File(path);
             if (!testFile.isDirectory()) {
                 System.err.println("Error: jar-Path is not a directory!");
@@ -179,7 +180,7 @@ public class GetJarPath {
         initializeWithOwnClassRef();
 
         final File file = new File(_JARpath);
-        if (!Fenster.IS_APPLET && !Fenster.IS_BRANDED && !file.isDirectory()) {
+        if (!MainWindow.IS_BRANDED && !file.isDirectory()) {
             JOptionPane.showMessageDialog(null,
                     "Could not find path to GeckoCIRCUITS installation: \n" + file.getAbsolutePath() + "\n"
                     + "Probably non-ASCII-Characters are not resolved properly. "

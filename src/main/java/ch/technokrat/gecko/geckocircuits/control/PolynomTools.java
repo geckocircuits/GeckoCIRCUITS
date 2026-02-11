@@ -177,12 +177,17 @@ public final class PolynomTools {
         }
 
         int maxIndex = MAX_ARRAY_SIZE - 1;
-        while (polynomReal[maxIndex] < SMALL_VALUE) {
+        while (maxIndex >= 0 && polynomReal[maxIndex] < SMALL_VALUE) {
             maxIndex--;
         }
 
-        for (int i = 0; i <= maxIndex; i++) {
-            returnValue.add((double) polynomReal[i]);
+        // Handle case where factor is zero or all coefficients are negligible
+        if (maxIndex < 0) {
+            returnValue.add(0.0);
+        } else {
+            for (int i = 0; i <= maxIndex; i++) {
+                returnValue.add((double) polynomReal[i]);
+            }
         }
         return returnValue;
     }

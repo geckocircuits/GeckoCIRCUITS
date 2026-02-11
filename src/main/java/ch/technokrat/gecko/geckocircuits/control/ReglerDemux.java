@@ -25,8 +25,12 @@ import java.awt.Graphics2D;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public fields for connected Java block reference used during simulation")
 public final class ReglerDemux extends RegelBlock implements VariableTerminalNumber {
+    private static final long serialVersionUID = 1L;
 
     private static final double DA_CONST = 0.5;
     private static final double WIDTH = 0.3;
@@ -35,7 +39,7 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
     public ReglerJavaFunction _connectedJavaBlock;
     public int _connectedJavaOutputIndex;
 
-    final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
+    transient final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 3).
             longName(I18nKeys.NO_OUTPUT_TERMINALS).
             shortName("numberOutputTerminals").

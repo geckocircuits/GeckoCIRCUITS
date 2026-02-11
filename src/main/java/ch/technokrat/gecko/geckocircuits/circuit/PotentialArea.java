@@ -18,6 +18,7 @@ import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInd
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents.TerminalCircuit;
 import ch.technokrat.gecko.geckocircuits.control.Point;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;
 
 /**
@@ -25,6 +26,8 @@ import java.util.*;
  *
  * @author andreas
  */
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public fields for circuit topology information sharing between netlist components")
 public final class PotentialArea {
 
     private final Set<Point> _pointsSchematic = new LinkedHashSet<Point>();
@@ -131,7 +134,7 @@ public final class PotentialArea {
         return _potentialLabel;
     }
 
-    // is used in SchematischeEingabe2 to get all nodes of elements for showing the connections --> 
+    // is used in SchematicEditor2 to get all nodes of elements for showing the connections --> 
     public List<Point> getAllElementKnotenXY(final List<? extends AbstractBlockInterface> elements,
             final CircuitSheet circuitSheet) {
         final List<Point> returnValue = new ArrayList<Point>();
@@ -244,11 +247,11 @@ public final class PotentialArea {
             _potentialLabel = label1;
         }
 
-        if (pot1._potentialCircuitSheet == pot2._potentialCircuitSheet) {
-            _potentialCircuitSheet = pot1._potentialCircuitSheet;
-        } else {
+        if (pot1._potentialCircuitSheet != pot2._potentialCircuitSheet) {
             _potentialCircuitSheet = null;
         }
+        // Note: If sheets are equal, _potentialCircuitSheet is already set to pot1._potentialCircuitSheet
+        // since this method is called on pot1 (this == pot1)
 
         _highesPriority = LabelPriority.getHighesPriority(pot1._highesPriority, pot2._highesPriority);
 

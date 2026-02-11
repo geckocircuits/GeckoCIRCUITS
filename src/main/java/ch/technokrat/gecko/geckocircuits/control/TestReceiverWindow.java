@@ -18,7 +18,6 @@ import ch.technokrat.gecko.geckocircuits.allg.StartupWindow;
 import ch.technokrat.gecko.geckocircuits.allg.TechFormat;
 import ch.technokrat.gecko.geckocircuits.circuit.TokenMap;
 import ch.technokrat.gecko.geckocircuits.datacontainer.ContainerStatus;
-import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerFourier;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerCompressable;
 import ch.technokrat.gecko.geckocircuits.datacontainer.DataContainerSimple;
 import ch.technokrat.gecko.geckocircuits.newscope.AbstractScopeSignal;
@@ -30,8 +29,6 @@ import ch.technokrat.gecko.geckocircuits.newscope.ScopeSettings;
 import ch.technokrat.gecko.geckocircuits.newscope.TimeSeriesConstantDt;
 import ch.technokrat.gecko.geckocircuits.control.QuasiPeakCalculator;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +38,9 @@ import java.util.Set;
 import java.util.Stack;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores CISPR16 control block reference for EMI test receiver calculations")
 public final class TestReceiverWindow extends JFrame {
 
     private static final TechFormat tcf = new TechFormat();
@@ -791,7 +790,9 @@ public final class TestReceiverWindow extends JFrame {
             dcs1.setSignalName(SIGNAL_NAMES[i], i);
         }
 
-        for (float freq = 150000; freq < 1000000; freq += 50000) {
+        // Use int counter to avoid floating-point precision issues (FL_FLOATS_AS_LOOP_COUNTERS)
+        for (int freqStep = 0; freqStep < 17; freqStep++) {
+            float freq = 150000 + freqStep * 50000;
             float[] values = new float[]{getClassAValue(freq), getClassBValue(freq), Float.NaN, Float.NaN, Float.NaN, Float.NaN, Float.NaN, Float.NaN};
             dcs1.insertValuesAtEnd(values, freq);
         }
