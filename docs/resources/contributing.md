@@ -56,28 +56,34 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true \
 
 ## Code Architecture
 
-GeckoCIRCUITS uses a **multi-module Maven structure**:
+GeckoCIRCUITS is organized with a clear separation of concerns:
 
 ```
-GeckoCIRCUITS/
-├── src/main/java/ch/technokrat/gecko/
-│   ├── GeckoSim.java              # Entry point
-│   ├── geckocircuits/
-│   │   ├── circuit/               # Circuit components, MNA matrix
-│   │   ├── control/               # 64 control block calculators
-│   │   ├── math/                  # Matrix operations, FFT
-│   │   ├── newscope/              # Oscilloscope visualization
-│   │   └── datacontainer/         # Signal storage
-│   └── i18n/                      # Internationalization
-├── gecko-simulation-core/          # GUI-free simulation engine
-└── gecko-rest-api/                 # REST API server
+src/main/java/ch/technokrat/gecko/
+├── GeckoSim.java                  # Entry point and operating mode selection
+├── geckocircuits/
+│   ├── allg/                      # Global settings, file management, dialogs
+│   ├── circuit/                   # Circuit components, terminals, MNA matrix
+│   │   ├── matrix/                # MNA matrix stamping and operations
+│   │   ├── netlist/               # Netlist generation and parsing
+│   │   ├── simulation/            # Simulation engine and runners
+│   │   └── circuitcomponents/     # All component definitions
+│   ├── control/                   # 64+ control block calculators (pure computation)
+│   │   └── calculators/           # PI/PID, integrators, gain, limiters, etc.
+│   ├── math/                      # Matrix operations, FFT, LU decomposition
+│   ├── newscope/                  # Oscilloscope visualization
+│   ├── datacontainer/             # Signal storage with caching (IntegerMatrixCache, ShortMatrixCache)
+│   └── nativec/                   # Native C integration layer
+├── expressionscripting/           # GraalVM JavaScript expression evaluation
+└── i18n/                          # Internationalization (968+ translation keys)
 ```
 
-### Key Architectural Rules
+### Key Architectural Principles
 
-- **`gecko-simulation-core`** must have **zero** Swing/AWT imports. The `CorePackageValidationTest` enforces this.
-- Control calculators in `control/calculators/` are pure computation, no GUI.
-- The MNA (Modified Nodal Analysis) matrix system is in `circuit/matrix/`.
+- **Pure Computation** - Control calculators in `control/calculators/` are free from GUI dependencies (Swing/AWT).
+- **MNA Solver** - The Modified Nodal Analysis matrix system is in `circuit/matrix/` with multiple solver types (Backward Euler, Trapezoidal, Gear-Shichman).
+- **Component Registry** - `StamperRegistry` manages component-to-stamper mappings for the MNA solver.
+- **Signal Caching** - `datacontainer/` package optimizes memory usage for large signal datasets.
 
 ## Pull Request Process
 

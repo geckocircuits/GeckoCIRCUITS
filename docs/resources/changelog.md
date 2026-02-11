@@ -6,6 +6,20 @@ title: Changelog
 
 All notable changes to GeckoCIRCUITS.
 
+## v0.5.0 - "Adopt It" (2026-02)
+
+### Added
+- Developer Guide with step-by-step instructions for extending the simulator (control blocks, circuit components, MNA stampers)
+- Root CONTRIBUTING.md as entry point for new contributors
+- EV Charger application example documentation (7.4kW, PFC + isolated DC-DC)
+- LLC Resonant Converter example documentation (1kW, 400V-to-48V)
+- Grid-tied Solar Inverter example documentation (5kW, single-phase with MPPT)
+- BLDC Motor Control example documentation (500W, six-step commutation)
+
+### Changed
+- Updated contributing guide with accurate single-module architecture (removed references to planned modules)
+- Added Developer Guide to documentation site navigation
+
 ## v0.4.0 - "Test It" (2026-02)
 
 ### Added

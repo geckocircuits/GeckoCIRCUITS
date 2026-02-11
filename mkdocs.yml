@@ -213,4 +213,5 @@ nav:
     - FAQ: resources/faq.md
     - Troubleshooting: resources/troubleshooting.md
     - Contributing: resources/contributing.md
+    - Developer Guide: resources/developer-guide.md
     - Changelog: resources/changelog.md
