@@ -39,16 +39,7 @@ jobs:
           export DISPLAY=:99
           Xvfb :99 -screen 0 1024x768x24 &
           sleep 1
-          mvn test --no-transfer-progress -Dmaven.test.failure.ignore=true
-
-      - name: Check for test failures
-        run: |
-          if grep -q "Failures: [1-9]" target/surefire-reports/*.txt 2>/dev/null; then
-            echo "::error::Test failures detected"
-            grep "Failures: [1-9]" target/surefire-reports/*.txt
-            exit 1
-          fi
-          echo "All tests passed"
+          mvn test --no-transfer-progress
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
