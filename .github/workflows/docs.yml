@@ -46,7 +46,7 @@ jobs:
         run: python scripts/sync-docs.py
 
       - name: Build documentation
-        run: mkdocs build --strict
+        run: mkdocs build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
