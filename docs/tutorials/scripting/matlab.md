@@ -1,44 +1,75 @@
 ---
-title: "702 - MATLAB Integration"
+title: MATLAB and Octave Integration
+description: Remote control of GeckoCIRCUITS from MATLAB/Octave via RMI
 ---
 
 # 702 - MATLAB Integration
 
-Remote Method Invocation (RMI) interface for MATLAB/Octave.
+Control GeckoCIRCUITS remotely from MATLAB or Octave using the Remote Method Invocation (RMI) interface. This enables seamless integration of circuit simulation into MATLAB workflows, Simulink models, and automated analysis pipelines.
 
 ## Overview
 
-GeckoCIRCUITS provides MATLAB integration through:
-- **RMI Interface** - Remote procedure calls from MATLAB
-- **Simulink S-Function** - Co-simulation block
-- **Data Exchange** - Import/export simulation data
+MATLAB integration provides:
+
+- **RMI Interface** - Full remote control from MATLAB command line or scripts
+- **Parameter Control** - Set and get component parameters programmatically
+- **Simulation Execution** - Run simulations and wait for completion from MATLAB
+- **Data Extraction** - Retrieve measurements and waveforms directly into MATLAB variables
+- **Simulink Co-Simulation** - Embed GeckoCIRCUITS in Simulink models via S-Function blocks
+
+!!! warning "Prerequisites"
+    - MATLAB R2018b or later (with Java support)
+    - GeckoCIRCUITS 1.0+ (`gecko-1.0-jar-with-dependencies.jar`)
+    - Both tools must run on the same machine for RMI
 
 ## RMI Setup
 
-### Starting GeckoCIRCUITS in Remote Mode
+### Step 1: Start GeckoCIRCUITS in Remote Mode
+
+First, launch GeckoCIRCUITS with the remote flag:
 
 ```bash
-java -jar gecko.jar --remote
+java -Xmx3G -jar gecko-1.0-jar-with-dependencies.jar --remote
 ```
 
-Or from MATLAB:
+The application will start in RMI server mode, listening for MATLAB connections on the default RMI port (1099).
+
+Alternatively, start it from MATLAB:
+
 ```matlab
-system('java -jar gecko.jar --remote &');
-pause(5);  % Wait for startup
+% Start GeckoCIRCUITS in background (Windows/Linux/macOS)
+system('java -Xmx3G -jar gecko-1.0-jar-with-dependencies.jar --remote &');
+pause(5);  % Wait for startup and RMI registration
 ```
 
-### Connecting from MATLAB
+### Step 2: Connect from MATLAB
+
+Once GeckoCIRCUITS is running, add the JAR to MATLAB's classpath and connect:
 
 ```matlab
-% Add GeckoCIRCUITS to Java path
-javaaddpath('path/to/gecko.jar');
+% Add GeckoCIRCUITS JAR to Java path
+javaaddpath('path/to/gecko-1.0-jar-with-dependencies.jar');
 
-% Import remote interface
-import ch.technokrat.gecko.*;
+% Import the remote interface class
+import ch.technokrat.gecko.GeckoRemoteInterface;
 
-% Connect to running instance
+% Get singleton instance (connects to running GeckoCIRCUITS)
 gecko = GeckoRemoteInterface.getInstance();
+
+% Verify connection
+if gecko.isConnected()
+    disp('Connected to GeckoCIRCUITS');
+else
+    error('Failed to connect to GeckoCIRCUITS');
+end
 ```
+
+!!! tip "Port Configuration"
+    By default, GeckoCIRCUITS uses RMI port 1099. If this port is in use, start with:
+    ```bash
+    java -jar gecko.jar --remote --rmi-port 2099
+    ```
+    Then connect from MATLAB using the GeckoRemoteInterface constructor with the custom port.
 
 ## Basic Operations
 
@@ -217,16 +248,70 @@ end
 
 ## Best Practices
 
-1. **Always check simulation completion** before accessing results
-2. **Use appropriate time step** for accuracy vs speed
-3. **Close connection** when done:
-   ```matlab
-   gecko.disconnect();
-   ```
-4. **Batch operations** for efficiency (minimize RMI calls)
+| Practice | Why | Example |
+|----------|-----|---------|
+| Check simulation completion | Avoid reading stale results | Use `while gecko.isSimulationRunning()` |
+| Batch parameter updates | Minimize RMI overhead | Set all parameters before `startSimulation()` |
+| Use appropriate timestep | Balance accuracy vs speed | Use 1-10 ns for high-frequency switching |
+| Reuse gecko instance | Avoid reconnection delay | Create once, use throughout script |
 
-## Related Resources
+!!! warning "Error Handling"
+    Always wrap RMI calls in try-catch blocks:
+    ```matlab
+    try
+        gecko.openFile('circuit.ipes');
+        gecko.startSimulation();
+    catch ME
+        fprintf('Error: %s\n', ME.message);
+        % Handle cleanup
+    end
+    ```
 
-- [701 - GeckoSCRIPT](geckoscript.md)
-- [706 - Python Integration](python.md)
+## Example: Complete Efficiency vs Load Sweep
+
+```matlab
+% Full end-to-end example: measure efficiency across load range
+gecko = GeckoRemoteInterface.getInstance();
+gecko.openFile('buck_converter.ipes');
+
+loads = [2, 5, 10, 20, 50];  % Ohms
+efficiency = [];
+
+for R = loads
+    gecko.setParameter('R_load', R);
+    gecko.setSimulationTime(0.01);
+    gecko.setTimeStep(1e-7);
+
+    gecko.startSimulation();
+    while gecko.isSimulationRunning()
+        pause(0.05);
+    end
+
+    Pin = gecko.getMean('SCOPE', 'Pin');
+    Pout = gecko.getMean('SCOPE', 'Pout');
+    eta = Pout / Pin * 100;
+
+    efficiency = [efficiency; eta];
+    fprintf('Load: %g Ohm -> Efficiency: %.1f%%\n', R, eta);
+end
+
+% Plot results
+figure;
+plot(loads, efficiency, 'b-o', 'LineWidth', 2);
+xlabel('Load (Ohms)');
+ylabel('Efficiency (%)');
+grid on;
+title('Buck Converter: Efficiency vs Load');
+```
+
+## References
+
+- Tutorial guide: `resources/tutorials/7xx_scripting_automation/702_matlab_integration/`
+- Example circuits in `resources/examples/`
+- MATLAB documentation: [Calling Java from MATLAB](https://www.mathworks.com/help/matlab/java.html)
+
+## Related Tutorials
+
+- [701 - GeckoSCRIPT Basics](geckoscript.md)
+- [704 - Java Blocks](java-blocks.md)
 - [706 - Python Integration](python.md)

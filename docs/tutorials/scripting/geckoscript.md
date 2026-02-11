@@ -1,18 +1,33 @@
 ---
-title: "701 - GeckoSCRIPT Basics"
+title: GeckoSCRIPT Basics
+description: Built-in JavaScript scripting for automation and batch simulations
 ---
 
 # 701 - GeckoSCRIPT Basics
 
-Built-in scripting language for automation and batch simulations.
+GeckoSCRIPT is JavaScript-based scripting built directly into GeckoCIRCUITS, enabling automation without leaving the application. Powered by GraalVM Polyglot, it provides full access to the circuit simulator API from JavaScript.
 
-## Overview
+## What is GeckoSCRIPT?
 
-GeckoSCRIPT is JavaScript-based scripting built into GeckoCIRCUITS for:
-- Parameter sweeps
-- Batch simulations
-- Custom calculations
-- Data export automation
+GeckoSCRIPT is:
+
+- **Built-in JavaScript engine** - No external tools needed
+- **Direct API access** - Manipulate circuit parameters and run simulations programmatically
+- **Parameter sweeps** - Automate multi-variable design space exploration
+- **Batch automation** - Run hundreds of simulations sequentially
+- **Data export** - Generate CSV/JSON results automatically
+
+## Opening the Script Editor
+
+To access GeckoSCRIPT:
+
+1. Launch GeckoCIRCUITS with a circuit file
+2. Navigate to **Tools → GeckoSCRIPT** (or **Tools → Script Editor**)
+3. Write or paste your JavaScript code
+4. Click **Run** to execute
+
+!!! tip
+    Scripts run in the same process as GeckoCIRCUITS, with direct access to loaded circuits and simulation state. No external processes required.
 
 ## Script Structure
 
@@ -222,7 +237,17 @@ java -jar gecko.jar --script script.js circuit.ipes
 3. Generate Bode plot data with frequency sweep
 4. Create batch simulation for component comparison
 
-## Related Resources
+## Advanced Topics
+
+!!! note "Learning Resources"
+    See the comprehensive GeckoSCRIPT documentation in the tutorial file:
+    `resources/tutorials/7xx_scripting_automation/701_gecko_script_basics/GeckoSCRIPT.pdf`
+
+!!! info "Complete API Reference"
+    For a complete API reference with all available functions, see the [GeckoSCRIPT API Reference](../../../api/geckoscript-ref.md).
+
+## Related Tutorials
 
 - [702 - MATLAB Integration](matlab.md)
+- [704 - Java Blocks](java-blocks.md)
 - [706 - Python Integration](python.md)

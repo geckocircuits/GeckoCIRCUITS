@@ -19,11 +19,11 @@ GeckoCIRCUITS provides multiple interfaces for automation, integration, and prog
 
     [:octicons-arrow-right-24: Documentation](remote-interface.md)
 
--   :material-api:{ .lg .middle } **[REST API](rest-api.md)**
+-   :material-api:{ .lg .middle } **[REST API](rest-api.md)** (Planned)
 
     ---
 
-    HTTP-based API for web integration and automation
+    HTTP-based API for web integration and automation (designed, implementation pending)
 
     [:octicons-arrow-right-24: Documentation](rest-api.md)
 
@@ -39,13 +39,15 @@ GeckoCIRCUITS provides multiple interfaces for automation, integration, and prog
 
 ## Interface Comparison
 
-| Feature | Remote (RMI) | REST API | GeckoSCRIPT |
+| Feature | Remote (RMI) | REST API* | GeckoSCRIPT |
 |---------|--------------|----------|-------------|
 | Language | Java/MATLAB | Any | Built-in |
 | Real-time | Yes | No | Yes |
 | Network | Local/Remote | HTTP | Local |
 | Complexity | Medium | Low | Low |
 | Best for | MATLAB integration | Web apps | Quick automation |
+
+* REST API is currently in design phase, implementation is pending.
 
 ## Quick Start
 
@@ -74,12 +76,12 @@ gecko.runSimulation();
 vout = gecko.getMeasurement('Vout');
 ```
 
-### Python (REST API)
+### Python (REST API - Planned)
 
 ```python
 import requests
 
-# Run simulation
+# Run simulation (when REST API is implemented)
 response = requests.post('http://localhost:8080/api/simulate', json={
     'circuit': 'buck.ipes',
     'parameters': {'D': 0.5}
@@ -88,10 +90,10 @@ results = response.json()
 print(f"Vout = {results['Vout']}")
 ```
 
-### cURL (REST API)
+### cURL (REST API - Planned)
 
 ```bash
-# Get simulation status
+# Get simulation status (when REST API is implemented)
 curl http://localhost:8080/api/status
 
 # Run simulation

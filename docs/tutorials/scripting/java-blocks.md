@@ -1,86 +1,144 @@
 ---
-title: "704 - Java Blocks"
+title: Java Blocks
+description: Create custom control blocks and circuit components using Java
 ---
 
 # 704 - Java Blocks
 
-Custom component creation using Java.
+Extend GeckoCIRCUITS with custom control blocks and circuit components written in Java. Java Blocks allow implementation of complex algorithms that compile and execute at runtime within the simulator.
 
-## Overview
+## What are Java Blocks?
 
-GeckoCIRCUITS allows creating custom components using Java, enabling:
-- Complex control algorithms
-- Custom mathematical functions
-- Interface to external systems
-- Proprietary models
+Java Blocks are custom components built from Java classes that integrate directly into the GeckoCIRCUITS schematic editor:
 
-## Java Block Types
+- **Control Blocks** - Pure signal processing (PID, filters, transforms, lookup tables)
+- **Circuit Components** - Custom power elements with terminal definitions
+- **Runtime Compilation** - Compiled on load, full performance of native Java
+- **Full API Access** - Direct integration with the GeckoCIRCUITS simulation engine
+
+!!! tip "When to Use Java Blocks"
+    Java Blocks are ideal for complex algorithms that would be slow in GeckoSCRIPT, or for reusable components you want to encapsulate and distribute.
+
+## Block Types
 
 ### Control Block
 
-Custom signal processing in control domain:
-- Inputs: Control signals
-- Outputs: Control signals
-- No direct power circuit connection
+Pure signal processing - processes control-domain signals:
+
+- **Inputs** - Scalar or vector control signals
+- **Outputs** - Calculated control outputs
+- **Applications** - PID controllers, filters, signal transforms, limiters, dead-bands
+- **Performance** - Fast, no power circuit interaction
+- **Example** - Custom PI controller, dq0 transform, lookup table
 
 ### Circuit Component
 
-Custom power circuit element:
-- Electrical terminals
-- Current/voltage relationships
-- Matrix stamping for solver
+Custom power circuit element - connects to electrical network:
 
-## Creating a Control Block
+- **Terminals** - Electrical connection points to circuit
+- **Behavior** - Defined by voltage/current relationships
+- **Matrix Stamping** - Integrates into MNA matrix for solver
+- **Applications** - Custom semiconductor models, nonlinear devices
+- **Advanced** - Requires deeper API knowledge
 
-### Basic Structure
+This tutorial focuses on Control Blocks, which are more commonly used.
+
+## Creating a Custom PI Controller
+
+### Complete Example
+
+Here's a custom PI (Proportional-Integral) controller block that can be added to any schematic:
 
 ```java
 package ch.technokrat.gecko.custom;
 
 import ch.technokrat.gecko.geckocircuits.control.AbstractControlBlock;
 
-public class MyCustomBlock extends AbstractControlBlock {
+/**
+ * Custom PI Controller Block
+ * Inputs: error signal (reference - feedback)
+ * Output: control signal
+ * Parameters: Kp (proportional gain), Ki (integral gain)
+ */
+public class CustomPIController extends AbstractControlBlock {
 
-    // Parameters (user-editable)
-    private double gain = 1.0;
-    private double offset = 0.0;
+    // Tuning parameters
+    private double Kp = 1.0;      // Proportional gain
+    private double Ki = 0.1;      // Integral gain
 
     // Internal state
-    private double previousValue = 0.0;
+    private double integralState = 0.0;
+    private double saturationMin = -1.0;
+    private double saturationMax = 1.0;
 
     @Override
     public void init() {
-        // Called once at simulation start
-        previousValue = 0.0;
+        // Reset integral state at simulation start
+        integralState = 0.0;
     }
 
     @Override
     public double calculate(double[] inputs, double time) {
-        // Called every time step
-        double input = inputs[0];
-        double output = gain * input + offset;
+        double error = inputs[0];
+        double dt = getTimeStep();
 
-        // Optional: use previous value for filtering
-        output = 0.9 * previousValue + 0.1 * output;
-        previousValue = output;
+        // Proportional term
+        double proportional = Kp * error;
+
+        // Integral term (accumulate error over time)
+        integralState += Ki * error * dt;
+
+        // Anti-windup: clamp integral state
+        if (integralState > saturationMax) {
+            integralState = saturationMax;
+        } else if (integralState < saturationMin) {
+            integralState = saturationMin;
+        }
+
+        // Calculate output
+        double output = proportional + integralState;
+
+        // Output saturation
+        if (output > saturationMax) output = saturationMax;
+        if (output < saturationMin) output = saturationMin;
 
         return output;
     }
 
     @Override
     public String[] getParameterNames() {
-        return new String[]{"gain", "offset"};
+        return new String[]{"Kp", "Ki", "satMax", "satMin"};
     }
 
     @Override
     public void setParameter(String name, double value) {
         switch (name) {
-            case "gain": gain = value; break;
-            case "offset": offset = value; break;
+            case "Kp": Kp = value; break;
+            case "Ki": Ki = value; break;
+            case "satMax": saturationMax = value; break;
+            case "satMin": saturationMin = value; break;
         }
+    }
+
+    @Override
+    public String getBlockName() {
+        return "Custom PI Controller";
     }
 }
 ```
+
+### Key Concepts
+
+| Method | Purpose |
+|--------|---------|
+| `init()` | Called once at simulation start - initialize state variables |
+| `calculate()` | Called every timestep - compute output from inputs |
+| `getParameterNames()` | List editable parameters shown in GUI |
+| `setParameter()` | Update parameters from GUI or scripts |
+| `getTimeStep()` | Get current simulation timestep (use for integration) |
+
+!!! warning "Important"
+    Always reset state variables in `init()`. Use `getTimeStep()` for accurate integration. Never allocate new objects in `calculate()` - pre-allocate in constructor.
 
 ### Multiple Outputs
 
@@ -215,31 +273,60 @@ public class LookupTable extends AbstractControlBlock {
 }
 ```
 
-## Compiling and Using
+## Compiling and Installing
 
-### Compilation
+### Step 1: Compile
+
+Compile your Java block class with the GeckoCIRCUITS JAR on the classpath:
 
 ```bash
-# Compile with GeckoCIRCUITS on classpath
-javac -cp gecko.jar MyCustomBlock.java
+# Navigate to your project directory
+cd my_java_blocks/
 
-# Create JAR
-jar cf mycustom.jar MyCustomBlock.class
+# Compile (adjust path to gecko JAR as needed)
+javac -cp /path/to/gecko-1.0-jar-with-dependencies.jar CustomPIController.java
+
+# Verify compilation succeeded
+ls CustomPIController.class
 ```
 
-### Loading in GeckoCIRCUITS
+### Step 2: Package as JAR
 
-1. Place JAR in `plugins/` directory
+Create a JAR file containing your compiled classes:
+
+```bash
+# Package single class
+jar cf CustomPIController.jar CustomPIController.class
+
+# Package entire directory with multiple blocks
+jar cf myblocks.jar ch/technokrat/gecko/custom/*.class
+```
+
+### Step 3: Load into GeckoCIRCUITS
+
+**Option A: Plugin Directory (Recommended)**
+
+1. Place JAR in `<GeckoCIRCUITS_HOME>/plugins/` directory
 2. Restart GeckoCIRCUITS
-3. Block appears in control component library
-4. Drag to schematic and configure
+3. Your block appears in the control component library
+4. Drag to schematic, right-click to configure parameters
 
-### Direct Loading
+**Option B: Runtime Loading**
 
-```java
-// In GeckoSCRIPT
-loadJavaBlock("path/to/mycustom.jar", "MyCustomBlock");
+Load dynamically from a GeckoSCRIPT:
+
+```javascript
+// In GeckoSCRIPT editor
+loadJavaBlock("path/to/CustomPIController.jar", "CustomPIController");
+
+// Now you can use it programmatically
+// (block will appear in control palette)
 ```
+
+!!! tip "Example Circuits"
+    See these example circuits demonstrating Java Blocks:
+    - `demo_JAVA_Block.ipes` - Simple Java Block demo
+    - `JavaBlockPMSM.ipes` - PMSM control with Java Block PI controller
 
 ## Debugging
 
@@ -271,15 +358,104 @@ public class MyBlock extends AbstractControlBlock {
 }
 ```
 
+## Performance Optimization
+
+### Memory Allocation Pattern
+
+Pre-allocate arrays in constructor, reuse in `calculate()`:
+
+```java
+public class FastVectorBlock extends AbstractControlBlock {
+    private double[] state;    // Pre-allocated
+    private double[] tempVec;  // Working array
+
+    public FastVectorBlock() {
+        state = new double[3];
+        tempVec = new double[3];
+    }
+
+    @Override
+    public double calculate(double[] inputs, double time) {
+        // Reuse arrays - no new allocations per timestep
+        System.arraycopy(inputs, 0, tempVec, 0, 3);
+        // ... process ...
+        return result;
+    }
+}
+```
+
+### Integration Best Practices
+
+| Method | Accuracy | Stability | Use Case |
+|--------|----------|-----------|----------|
+| Forward Euler | Low | Poor | Testing |
+| Backward Euler | Low | Good | Stiff systems |
+| Trapezoidal | Medium | Good | General purpose |
+
+```java
+// Trapezoidal integration (best general purpose)
+public double calculate(double[] inputs, double time) {
+    double dt = getTimeStep();
+    double input = inputs[0];
+
+    // Trapezoidal rule
+    state += 0.5 * dt * (input + previousInput);
+    previousInput = input;
+
+    return state;
+}
+```
+
 ## Best Practices
 
-1. **Initialize all state** in `init()` method
-2. **Avoid allocations** in `calculate()` - pre-allocate arrays
-3. **Use `getTimeStep()`** for integration accuracy
-4. **Handle edge cases** (NaN, Inf, division by zero)
-5. **Document parameters** with clear names and units
+- Initialize all state in `init()` - don't assume zero state
+- Avoid object allocation in `calculate()` - pre-allocate in constructor
+- Use `getTimeStep()` for accurate integration
+- Handle edge cases (NaN, Inf, division by zero)
+- Document parameters with clear units (V, A, s, Hz, etc.)
+- Implement anti-windup in integral controllers to prevent saturation issues
+- Test with short simulations first to verify correctness
 
-## Related Resources
+## Debugging Java Blocks
 
-- [701 - GeckoSCRIPT](geckoscript.md)
-- [API Reference](../../api/index.md)
+### Print Statements
+
+```java
+@Override
+public double calculate(double[] inputs, double time) {
+    if (time > 0.001 && time < 0.00101) {
+        System.out.println("Input: " + inputs[0] + " State: " + state);
+    }
+    // ...
+}
+```
+
+### Logging
+
+```java
+import java.util.logging.*;
+
+public class MyBlock extends AbstractControlBlock {
+    private static final Logger log = Logger.getLogger(MyBlock.class.getName());
+
+    @Override
+    public double calculate(double[] inputs, double time) {
+        log.fine("Processing input: " + inputs[0]);
+        // ...
+    }
+}
+```
+
+Output appears in the GeckoCIRCUITS console/logs.
+
+## Resources
+
+- Tutorial files: `resources/tutorials/7xx_scripting_automation/704_java_blocks/`
+- Example circuits: `demo_JAVA_Block.ipes`, `JavaBlockPMSM.ipes`
+- API Javadoc: See `src/main/java/ch/technokrat/gecko/geckocircuits/control/AbstractControlBlock.java`
+
+## Related Tutorials
+
+- [701 - GeckoSCRIPT Basics](geckoscript.md)
+- [702 - MATLAB Integration](matlab.md)
+- [706 - Python Integration](python.md)

@@ -53,6 +53,12 @@ jobs:
           fi
           echo "Build and test step completed"
 
+      - name: Validate example circuits
+        continue-on-error: true
+        run: |
+          export DISPLAY=:99
+          python3 scripts/run-examples.py
+
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:

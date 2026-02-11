@@ -5,10 +5,10 @@ description: HTTP API for remote simulation control
 
 # REST API
 
-The `gecko-rest-api` module provides an HTTP/REST interface for controlling GeckoCIRCUITS programmatically.
+!!! warning "Planned Feature"
+    The REST API is designed but not yet implemented. This page documents the planned API specification and usage examples. The `gecko-rest-api` module is scheduled for future development.
 
-!!! note "Module Status"
-    The REST API is built on `gecko-simulation-core` and Spring Boot 3.2. It enables headless simulation without GUI dependencies.
+The REST API is designed as an HTTP/REST interface for controlling GeckoCIRCUITS programmatically. When complete, it will be built on `gecko-simulation-core` and Spring Boot 3.2, enabling headless simulation without GUI dependencies.
 
 ## Architecture
 
@@ -20,16 +20,9 @@ The `gecko-rest-api` module provides an HTTP/REST interface for controlling Geck
 └──────────────┘              └──────────────────┘
 ```
 
-## Starting the Server
+## Planned Endpoints
 
-```bash
-cd gecko-rest-api
-mvn spring-boot:run
-```
-
-Server starts on `http://localhost:8080`.
-
-## Endpoints
+When implemented, the REST API will support the following endpoints:
 
 ### Health Check
 
@@ -79,7 +72,9 @@ Response:
 GET /api/simulation/waveform?scope=SCOPE.1&channel=ch1
 ```
 
-## Python Client Example
+## Planned Usage Examples
+
+### Python Client Example
 
 ```python
 import requests
@@ -109,9 +104,9 @@ for D in np.linspace(0.1, 0.9, 9):
     print(f"D={D:.1f}, Vout={vout:.2f}V")
 ```
 
-## WebSocket Interface
+### WebSocket Interface
 
-For real-time data streaming:
+The planned REST API will support real-time data streaming via WebSocket:
 
 ```javascript
 const ws = new WebSocket('ws://localhost:8080/ws/simulation');
@@ -122,7 +117,7 @@ ws.onmessage = (event) => {
 };
 ```
 
-A test client is available at `resources/tutorials/7xx_scripting_automation/705_api_integration/websocket-client.html`.
+A test client is planned for `resources/tutorials/7xx_scripting_automation/705_api_integration/websocket-client.html`.
 
 ## See Also
 

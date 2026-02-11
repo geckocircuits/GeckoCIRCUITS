@@ -6,6 +6,21 @@ title: Changelog
 
 All notable changes to GeckoCIRCUITS.
 
+## v0.3.0 - "Script It" (2026-02)
+
+### Added
+- GeckoSCRIPT tutorial with script editor walkthrough, parameter sweeps, and batch automation
+- MATLAB/Octave integration tutorial covering RMI setup, parameter control, and Simulink co-simulation
+- Python integration tutorial with subprocess control, file-based modification, and optimization examples
+- Java Blocks tutorial for custom control blocks and circuit components
+- Python parameter sweep example script (`resources/tutorials/7xx_scripting_automation/706_python_integration/parameter_sweep.py`)
+- Installation verification script (`scripts/run-examples.py`)
+- Circuit validation step in CI pipeline
+
+### Changed
+- REST API documentation marked as "Planned Feature" to reflect actual implementation status
+- API index page updated to distinguish implemented vs planned interfaces
+
 ## v0.2.0 - "Understand It" (2026-02)
 
 ### Added
