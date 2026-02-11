@@ -36,6 +36,13 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
     public static final Map<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS =
             Collections.unmodifiableMap(ALL_GLOBALS_INTERNAL);
 
+    /**
+     * Clears all global terminal registrations. Used when resetting the circuit for a new file.
+     */
+    public static void clearAllGlobals() {
+        ALL_GLOBALS_INTERNAL.clear();
+    }
+
     public AbstractCircuitGlobalTerminal() {
         super();
         XIN.add(new TerminalTwoPortComponent(this, 0));     

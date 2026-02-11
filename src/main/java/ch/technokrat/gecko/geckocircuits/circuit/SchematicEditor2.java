@@ -698,17 +698,17 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         // default-Einstellungen:
         _mouseMoveMode = MouseMoveMode.NONE;
         _selectedComponents.clear();
-        AbstractCircuitGlobalTerminal.ALL_GLOBALS.clear();
-        ControlGlobalTerminal.ALL_GLOBALS.clear();
+        AbstractCircuitGlobalTerminal.clearAllGlobals();
+        ControlGlobalTerminal.clearAllGlobals();
         wirePenVisible = false;
         deleteAllComponents(_selectedComponents);
         setNewVisibleCircuitSheet(_circuitSheet);
-        ReglerFromEXTERNAL.fromExternals.clear();
-        ReglerToEXTERNAL.toExternals.clear();
+        ReglerFromEXTERNAL.clearFromExternals();
+        ReglerToEXTERNAL.clearToExternals();
 
         AbstractUndoGenericModel.undoManager.discardAllEdits();
-        CircuitSheet._findNodes.clear();
-        CircuitSheet._showNodes.clear();
+        CircuitSheet.clearFindNodes();
+        CircuitSheet.clearShowNodes();
     }
 
     public NetListLK getNetzliste(final ConnectorType connectorType) {
@@ -1096,7 +1096,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         if (checkConnectors) {
             wirePenVisible = false;
             connectorTestMode = true;
-            CircuitSheet._showNodes.clear();
+            CircuitSheet.clearShowNodes();
         } else {
             wirePenVisible = false;
             connectorTestMode = false;

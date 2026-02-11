@@ -1,0 +1,226 @@
+# MkDocs configuration for GeckoCIRCUITS documentation
+# Deploy to GitHub Pages: https://geckocircuits.github.io
+
+site_name: GeckoCIRCUITS
+site_url: https://geckocircuits.github.io
+site_description: Power Electronics Circuit Simulator - Documentation, Tutorials & Examples
+site_author: GeckoCIRCUITS Team
+repo_url: https://github.com/geckocircuits/geckocircuits
+repo_name: geckocircuits/geckocircuits
+edit_uri: edit/main/docs/
+
+# Theme configuration
+theme:
+  name: material
+  custom_dir: docs/overrides
+  language: en
+
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.tabs.link
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/lightning-bolt
+
+  favicon: assets/images/favicon.png
+
+# Plugins
+plugins:
+  - search:
+      lang: en
+  - tags
+  - minify:
+      minify_html: true
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Extra configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/geckocircuits/geckocircuits
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/company/geckocircuits
+
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+  version:
+    provider: mike
+
+extra_css:
+  - assets/css/extra.css
+
+extra_javascript:
+  - assets/js/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# Copyright
+copyright: Copyright &copy; 2024-2026 GeckoCIRCUITS Team
+
+# Navigation structure
+nav:
+  - Home: index.md
+
+  - Getting Started:
+    - getting-started/index.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - User Interface: getting-started/interface.md
+    - First Simulation: getting-started/first-simulation.md
+    - Building Circuits: getting-started/building-circuits.md
+    - PWM Basics: getting-started/pwm-basics.md
+    - Running Simulations: getting-started/running-simulations.md
+    - Analysis Tools: getting-started/analysis-tools.md
+
+  - Tutorials:
+    - tutorials/index.md
+    - DC-DC Converters:
+      - tutorials/dcdc/index.md
+      - Buck Converter: tutorials/dcdc/buck-converter.md
+      - Boost Converter: tutorials/dcdc/boost-converter.md
+      - Buck-Boost Topologies: tutorials/dcdc/buck-boost.md
+      - Flyback Converter: tutorials/dcdc/flyback.md
+      - Forward Converter: tutorials/dcdc/forward.md
+    - AC-DC Rectifiers:
+      - tutorials/acdc/index.md
+      - Diode Rectifiers: tutorials/acdc/diode-rectifier.md
+      - PFC Basics: tutorials/acdc/pfc-basics.md
+      - Vienna Rectifier: tutorials/acdc/vienna-rectifier.md
+    - DC-AC Inverters:
+      - tutorials/dcac/index.md
+      - Single-Phase Inverter: tutorials/dcac/single-phase.md
+      - Three-Phase Inverter: tutorials/dcac/three-phase.md
+      - NPC Multilevel: tutorials/dcac/npc-inverter.md
+      - MMC Converter: tutorials/dcac/mmc-converter.md
+    - Thermal Simulation:
+      - tutorials/thermal/index.md
+      - Loss Calculation: tutorials/thermal/loss-calculation.md
+      - Junction Temperature: tutorials/thermal/junction-temperature.md
+      - Heatsink Design: tutorials/thermal/heatsink-design.md
+    - Magnetics & Mechanical:
+      - tutorials/magnetics/index.md
+      - Magnetic Domain: tutorials/magnetics/magnetic-domain.md
+      - Transformer Design: tutorials/magnetics/transformer-design.md
+      - Inductor Saturation: tutorials/magnetics/inductor-saturation.md
+      - Mechanical Systems: tutorials/magnetics/mechanical-systems.md
+    - Scripting & Automation:
+      - tutorials/scripting/index.md
+      - GeckoSCRIPT: tutorials/scripting/geckoscript.md
+      - MATLAB Integration: tutorials/scripting/matlab.md
+      - Python Integration: tutorials/scripting/python.md
+      - Java Blocks: tutorials/scripting/java-blocks.md
+
+  - Examples:
+    - examples/index.md
+    - Basic Topologies:
+      - examples/basic/index.md
+      - Buck Converter: examples/basic/buck.md
+      - Boost Converter: examples/basic/boost.md
+      - Flyback: examples/basic/flyback.md
+      - Forward: examples/basic/forward.md
+    - Power Supplies:
+      - examples/power-supplies/index.md
+      - LLC Resonant: examples/power-supplies/llc.md
+      - DAB Converter: examples/power-supplies/dab.md
+      - PFC Converters: examples/power-supplies/pfc.md
+    - Motor Drives:
+      - examples/motor-drives/index.md
+      - BLDC Control: examples/motor-drives/bldc.md
+      - PMSM FOC: examples/motor-drives/pmsm-foc.md
+      - Induction Motor: examples/motor-drives/induction.md
+    - Automotive:
+      - examples/automotive/index.md
+      - EV Charger: examples/automotive/ev-charger.md
+      - Onboard Charger: examples/automotive/obc.md
+      - DC Fast Charger: examples/automotive/dcfc.md
+      - Traction Inverter: examples/automotive/traction.md
+    - Thermal:
+      - examples/thermal/index.md
+    - Renewable Energy:
+      - examples/renewable/index.md
+      - Solar Inverter: examples/renewable/solar.md
+      - Wind Converter: examples/renewable/wind.md
+
+  - API Reference:
+    - api/index.md
+    - Remote Interface: api/remote-interface.md
+    - REST API: api/rest-api.md
+    - GeckoSCRIPT Reference: api/geckoscript-ref.md
+
+  - Resources:
+    - resources/index.md
+    - Download: resources/download.md
+    - Circuit Library: resources/circuit-library.md
+    - FAQ: resources/faq.md
+    - Troubleshooting: resources/troubleshooting.md
+    - Contributing: resources/contributing.md
+    - Changelog: resources/changelog.md

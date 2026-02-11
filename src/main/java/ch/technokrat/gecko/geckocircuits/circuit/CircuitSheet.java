@@ -62,6 +62,13 @@ public class CircuitSheet extends JPanel {
      */
     public static final Set<Point> _showNodes = Collections.unmodifiableSet(_showNodesInternal);
 
+    /**
+     * Clears the find nodes set. Used when resetting the circuit.
+     */
+    public static void clearFindNodes() {
+        _findNodesInternal.clear();
+    }
+
     public CircuitSheet(final SchematicEditor2 se) {
         _se = se;
         _worksheetSize = new WorksheetSize(this);

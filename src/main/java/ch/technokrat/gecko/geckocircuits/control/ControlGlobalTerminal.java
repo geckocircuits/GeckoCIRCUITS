@@ -35,6 +35,13 @@ public final class ControlGlobalTerminal extends RegelBlock implements GlobalTer
     public static final Set<ControlGlobalTerminal> ALL_GLOBALS = Collections.unmodifiableSet(ALL_GLOBALS_INTERNAL);
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlGlobalTerminal.class,"GLOBAL_CONTROL", I18nKeys.GLOBAL_CONTROL_TERMINAL);
 
+    /**
+     * Clears all global terminal registrations. Used when resetting the circuit for a new file.
+     */
+    public static void clearAllGlobals() {
+        ALL_GLOBALS_INTERNAL.clear();
+    }
+
     public ControlGlobalTerminal() {
         super();
         XIN.add(new TerminalControlBidirectional(this, 0, 0));

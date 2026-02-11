@@ -10,7 +10,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
@@ -19,8 +19,9 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# virtual machine crash logs
 hs_err_pid*
+replay_pid*
 
 # Maven build output
 target/
@@ -28,37 +29,40 @@ target/
 # Native installer output
 release/
 
-./gecko
-
 # Claude Code workspace files
 .claude/
 
-# IDE and build artifacts
-# (legacy directories were archived to archive/legacy-dirs branch)
-
-# Eclipse IDE files
+# IDE files
 .classpath
 .project
 .settings/
+.factorypath
+*.iml
+.idea/
+.vscode/
+*.swp
+*~
+.nb-gradle/
+nbproject/private/
 
+# Python virtual environments
+.venv/
+venv/
+__pycache__/
+*.pyc
 
-/.factorypath
-/abstractgeckocustom_warnings_new.txt
-/add_suppressions.sed
-/all_warnings_current.txt
-/all_warnings_fixed.txt
-/all_warnings.txt
-/CHANGES_SUMMARY.txt
-/check_file.bat
-/check_file.sh
-/collect_warnings.bat
-/collect_warnings.sh
-/current_warnings.txt
-/filter_warnings.bat
-/filter_warnings.sh
-/fix_deprecation.sh
-/FIX_PROPOSAL_AbstractGeckoCustom.md
-/RENAME_SUMMARY.md
-/WARNINGS_GUIDE.md
-/warnings_summary.txt
-/warnings-full.txt
+# MkDocs generated site
+site/
+
+# OS files
+.DS_Store
+Thumbs.db
+.directory
+
+# Validation outputs
+validation_report.json
+resources/validation_report.json
+
+# Temporary/scratch files
+*.bak
+*.tmp
