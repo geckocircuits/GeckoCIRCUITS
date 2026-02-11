@@ -73,7 +73,7 @@ GeckoCIRCUITS is an open-source circuit simulator specialized for power electron
 
     ```bash
     # Clone and build
-    git clone https://github.com/geckocircuits/geckocircuits.git
+    git clone https://github.com/tinix84/GeckoCIRCUITS.git
     cd geckocircuits
     mvn clean package assembly:single -DskipTests
 
@@ -85,7 +85,7 @@ GeckoCIRCUITS is an open-source circuit simulator specialized for power electron
 
     ```batch
     :: Clone and build
-    git clone https://github.com/geckocircuits/geckocircuits.git
+    git clone https://github.com/tinix84/GeckoCIRCUITS.git
     cd geckocircuits
     mvn clean package assembly:single -DskipTests
 
@@ -97,7 +97,7 @@ GeckoCIRCUITS is an open-source circuit simulator specialized for power electron
 
     ```bash
     # Clone and build
-    git clone https://github.com/geckocircuits/geckocircuits.git
+    git clone https://github.com/tinix84/GeckoCIRCUITS.git
     cd geckocircuits
     mvn clean package assembly:single -DskipTests
 
@@ -161,7 +161,7 @@ graph LR
 
 | Tool | Best For | Website |
 |------|----------|---------|
-| **GeckoCIRCUITS** | Power electronics education, MATLAB integration, open-source | [GitHub](https://github.com/geckocircuits/geckocircuits) |
+| **GeckoCIRCUITS** | Power electronics education, MATLAB integration, open-source | [GitHub](https://github.com/tinix84/GeckoCIRCUITS) |
 | **PLECS** | Professional power electronics, Simulink co-sim, code generation | [plexim.com](https://www.plexim.com) |
 | **PSIM** | Motor drives, SmartCtrl design, embedded code | [altair.com/psim](https://altair.com/psim) |
 | **SIMBA** | Modern UI, Python-first workflow, cloud simulation | [simba.io](https://www.simba.io) |
@@ -170,9 +170,9 @@ graph LR
 
 ## Community
 
-- :fontawesome-brands-github: [GitHub Repository](https://github.com/geckocircuits/geckocircuits)
-- :material-bug: [Issue Tracker](https://github.com/geckocircuits/geckocircuits/issues)
-- :material-forum: [Discussions](https://github.com/geckocircuits/geckocircuits/discussions)
+- :fontawesome-brands-github: [GitHub Repository](https://github.com/tinix84/GeckoCIRCUITS)
+- :material-bug: [Issue Tracker](https://github.com/tinix84/GeckoCIRCUITS/issues)
+- :material-forum: [Discussions](https://github.com/tinix84/GeckoCIRCUITS/discussions)
 
 ## Citation
 
@@ -183,7 +183,7 @@ If you use GeckoCIRCUITS in your research, please cite:
   title = {GeckoCIRCUITS: Power Electronics Circuit Simulator},
   author = {GeckoCIRCUITS Team},
   year = {2024},
-  url = {https://github.com/geckocircuits/geckocircuits}
+  url = {https://github.com/tinix84/GeckoCIRCUITS}
 }
 ```
 

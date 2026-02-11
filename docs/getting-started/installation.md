@@ -61,7 +61,7 @@ GeckoCIRCUITS requires Java 21 or later.
 
 ### Method 1: Download Release (Recommended)
 
-1. Go to [Releases](https://github.com/geckocircuits/geckocircuits/releases)
+1. Go to [Releases](https://github.com/tinix84/GeckoCIRCUITS/releases)
 2. Download the latest `GeckoCIRCUITS-x.x-<platform>.zip`
 3. Extract to your desired location
 4. Run the launcher script
@@ -70,7 +70,7 @@ GeckoCIRCUITS requires Java 21 or later.
 
 ```bash
 # Clone repository
-git clone https://github.com/geckocircuits/geckocircuits.git
+git clone https://github.com/tinix84/GeckoCIRCUITS.git
 cd geckocircuits
 
 # Build with Maven

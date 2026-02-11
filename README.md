@@ -24,10 +24,10 @@ Originally developed at ETH Zurich's Power Electronic Systems Laboratory by Andr
 
 ### Download and Run
 
-1. Download `GeckoCIRCUITS-0.1.0.jar` from the [Releases](../../releases) page
+1. Download `gecko-1.0-jar-with-dependencies.jar` from the [Releases](https://github.com/tinix84/GeckoCIRCUITS/releases) page
 2. Run:
    ```bash
-   java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar GeckoCIRCUITS-0.1.0.jar
+   java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar gecko-1.0-jar-with-dependencies.jar
    ```
 3. Open an example circuit from `File > Open` (see [Examples](#examples) below)
 4. Click the **Simulate** button (or press F5)
@@ -91,9 +91,19 @@ GeckoCIRCUITS
 └── Integration (RMI for MATLAB, memory-mapped files, JavaScript scripting)
 ```
 
+## Documentation
+
+Full documentation is available at **[tinix84.github.io/GeckoCIRCUITS](https://tinix84.github.io/GeckoCIRCUITS/)**:
+
+- [Getting Started Guide](https://tinix84.github.io/GeckoCIRCUITS/getting-started/)
+- [Tutorials](https://tinix84.github.io/GeckoCIRCUITS/tutorials/) (DC-DC, AC-DC, DC-AC, thermal, scripting)
+- [Examples Library](https://tinix84.github.io/GeckoCIRCUITS/examples/) (125+ circuit files)
+- [API Reference](https://tinix84.github.io/GeckoCIRCUITS/api/) (GeckoSCRIPT, RMI, REST)
+- [Developer Guide](https://tinix84.github.io/GeckoCIRCUITS/resources/developer-guide/)
+
 ## Contributing
 
-Contributions are welcome. Please open an issue first to discuss what you'd like to change.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
 ```bash
 # Run tests before submitting
@@ -114,5 +124,6 @@ Copyright (c) ETH Zurich, Power Electronic Systems Laboratory. Originally develo
 
 ## Links
 
+- [Documentation](https://tinix84.github.io/GeckoCIRCUITS/)
 - [Original SourceForge project](https://sourceforge.net/projects/geckocircuits/)
 - [Technokrat contributions](https://github.com/technokrat/gecko) (HiDPI support)

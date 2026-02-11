@@ -7,7 +7,7 @@ description: Download GeckoCIRCUITS releases
 
 ## Latest Release
 
-[:material-download: Download GeckoCIRCUITS v1.0](https://github.com/geckocircuits/geckocircuits/releases/latest){ .md-button .md-button--primary }
+[:material-download: Download GeckoCIRCUITS v1.0](https://github.com/tinix84/GeckoCIRCUITS/releases/latest){ .md-button .md-button--primary }
 
 ## System Requirements
 
@@ -70,7 +70,7 @@ description: Download GeckoCIRCUITS releases
 
 ## Examples Package
 
-[:material-folder-download: Download Examples (GeckoCIRCUITS-1.0-examples.zip)](https://github.com/geckocircuits/geckocircuits/releases/latest){ .md-button }
+[:material-folder-download: Download Examples (GeckoCIRCUITS-1.0-examples.zip)](https://github.com/tinix84/GeckoCIRCUITS/releases/latest){ .md-button }
 
 Contains 100+ ready-to-run circuit files:
 
@@ -84,8 +84,8 @@ Contains 100+ ready-to-run circuit files:
 
 ```bash
 # Clone repository
-git clone https://github.com/geckocircuits/geckocircuits.git
-cd geckocircuits
+git clone https://github.com/tinix84/GeckoCIRCUITS.git
+cd GeckoCIRCUITS
 
 # Build with Maven
 mvn clean package assembly:single -DskipTests
@@ -95,22 +95,22 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true \
   -jar target/gecko-1.0-jar-with-dependencies.jar
 ```
 
-## Previous Versions
+## Version History
 
-| Version | Date | Notes |
-|---------|------|-------|
-| 1.0 | 2026-02 | Current release |
+| Version | Date | Highlights |
+|---------|------|------------|
+| 1.0 | 2026-02 | Production release with comprehensive docs, 125+ examples, developer guide |
+| 0.5.0 | 2026-02 | Developer guide, contributor onboarding |
+| 0.4.0 | 2026-02 | JaCoCo coverage enforcement, 125 new tests |
+| 0.3.0 | 2026-02 | Scripting tutorials (GeckoSCRIPT, MATLAB, Python, Java Blocks) |
+| 0.2.0 | 2026-02 | Documentation site, getting started guides, tutorials |
+| 0.1.0 | 2026-02 | Initial open-source release with CI, packaging, launcher scripts |
 
-## Checksums
-
-Verify your download:
-
-```
-SHA256 (GeckoCIRCUITS-1.0-windows.zip) = [checksum]
-SHA256 (GeckoCIRCUITS-1.0-linux.zip) = [checksum]
-SHA256 (GeckoCIRCUITS-1.0-macos.zip) = [checksum]
-```
+See [Changelog](changelog.md) for detailed release notes.
 
 ## License
 
-GeckoCIRCUITS is open source software. See [LICENSE](https://github.com/geckocircuits/geckocircuits/blob/main/LICENSE) for details.
+GeckoCIRCUITS is dual-licensed:
+
+- **Open Source**: [GNU General Public License v3.0](https://github.com/tinix84/GeckoCIRCUITS/blob/main/LICENSE) for academic, research, and open-source use
+- **Commercial**: Contact for commercial licensing terms

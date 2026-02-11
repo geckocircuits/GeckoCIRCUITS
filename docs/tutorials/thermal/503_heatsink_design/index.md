@@ -300,7 +300,7 @@ For a load step (0 to 100%):
 
 - [Loss Calculation](../501_loss_calculation/) - Determine power losses
 - [Junction Temperature](../502_junction_temperature/) - Basic thermal modeling
-- [Three-Phase VSR Thermal](https://github.com/geckocircuits/geckocircuits/blob/main/resources/../502_junction_temperature/ThreePhase-VSR_10kW_thermal.ipes) - Complete example
+- [Three-Phase VSR Thermal](https://github.com/tinix84/GeckoCIRCUITS/blob/main/resources/../502_junction_temperature/ThreePhase-VSR_10kW_thermal.ipes) - Complete example
 
 ## References
 

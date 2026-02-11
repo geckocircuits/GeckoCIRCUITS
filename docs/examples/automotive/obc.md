@@ -11,5 +11,5 @@ title: Obc
 
 ## Quick Links
 
-- [Download Circuit Files](https://github.com/geckocircuits/geckocircuits/tree/main/resources/examples/automotive)
+- [Download Circuit Files](https://github.com/tinix84/GeckoCIRCUITS/tree/main/resources/examples/automotive)
 - [Automotive Examples Index](index.md)

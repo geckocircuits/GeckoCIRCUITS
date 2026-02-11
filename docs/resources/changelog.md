@@ -6,6 +6,14 @@ title: Changelog
 
 All notable changes to GeckoCIRCUITS.
 
+## v1.0.0 - "Production" (2026-02)
+
+### Changed
+- Updated README with documentation links, proper version references, and CONTRIBUTING.md pointer
+- Fixed download page URLs to point to correct GitHub repository (tinix84/GeckoCIRCUITS)
+- Added version history table to download page
+- Production-ready documentation, examples, and developer onboarding
+
 ## v0.5.0 - "Adopt It" (2026-02)
 
 ### Added

@@ -173,7 +173,7 @@ C = \frac{\Delta I_L}{8 \times f_s \times \Delta V_{out}} = \frac{1.5}{8 \times 
 
 ## Download
 
-[:material-download: Buck Converter Circuit (buck_simple.ipes)](https://github.com/geckocircuits/geckocircuits/blob/main/resources/tutorials/2xx_dcdc_converters/201_buck_converter/buck_simple.ipes){ .md-button }
+[:material-download: Buck Converter Circuit (buck_simple.ipes)](https://github.com/tinix84/GeckoCIRCUITS/blob/main/resources/tutorials/2xx_dcdc_converters/201_buck_converter/buck_simple.ipes){ .md-button }
 
 ## Next Steps
 
