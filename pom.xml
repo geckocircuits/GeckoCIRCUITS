@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.technokrat.gecko</groupId>
+  <groupId>ch.technokrat.gecko</groupId>
   <artifactId>gecko</artifactId>
   <version>1.0</version>
 
@@ -12,11 +12,9 @@
   <description>GeckoCIRCUITS - Power Electronics Circuit Simulator</description>
   <url>https://github.com/geckocircuits</url>
 
-  <!--
-    Planned future modules:
-    - gecko-simulation-core: GUI-free simulation engine (planned)
-    - gecko-rest-api: REST API built on Spring Boot (planned)
-  -->
+  <!-- Sub-modules are built via pom-reactor.xml (aggregator):
+       mvn -f pom-reactor.xml clean test
+       See also: src/modules/gecko-simulation-core, src/modules/gecko-rest-api -->
 
   <!-- NOTE: Maven compiler may output INFO-level warnings about deprecated API usage.
        These are informational only and do not affect the build. To suppress these

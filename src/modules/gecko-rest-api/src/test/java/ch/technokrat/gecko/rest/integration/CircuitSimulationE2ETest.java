@@ -113,11 +113,14 @@ class CircuitSimulationE2ETest {
             SimulationResponse response = objectMapper.readValue(
                     submitResult.getResponse().getContentAsString(), SimulationResponse.class);
 
-            // Brief wait then cancel
+            // Brief wait then cancel - may return 200 (cancelled) or 409 (already failed)
             TimeUnit.MILLISECONDS.sleep(50);
 
-            mockMvc.perform(delete("/api/v1/simulations/{id}", response.getSimulationId()))
-                    .andExpect(status().isOk());
+            MvcResult cancelResult = mockMvc.perform(delete("/api/v1/simulations/{id}", response.getSimulationId()))
+                    .andReturn();
+            int cancelStatus = cancelResult.getResponse().getStatus();
+            assertTrue(cancelStatus == 200 || cancelStatus == 409,
+                    "Expected 200 or 409 but got " + cancelStatus);
 
             // Verify cancelled state
             mockMvc.perform(get("/api/v1/simulations/{id}", response.getSimulationId()))

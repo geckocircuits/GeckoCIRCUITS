@@ -34,12 +34,12 @@ jobs:
           chmod +x build_native_libraries.sh
           ./build_native_libraries.sh
 
-      - name: Run tests with coverage
+      - name: Run tests with coverage (all modules)
         run: |
           export DISPLAY=:99
           Xvfb :99 -screen 0 1024x768x24 &
           sleep 1
-          mvn test jacoco:report --no-transfer-progress -Dmaven.test.failure.ignore=true
+          mvn -f pom-reactor.xml test jacoco:report --no-transfer-progress -Dmaven.test.failure.ignore=true
 
       - name: Check test results
         run: |

@@ -6,6 +6,22 @@ title: Changelog
 
 All notable changes to GeckoCIRCUITS.
 
+## v1.1.0 - "Multi-Module" (2026-02)
+
+### Added
+- Multi-module Maven reactor build (`pom-reactor.xml`) aggregating main app, gecko-simulation-core, and gecko-rest-api
+- Zero-crossing detection for switch events (`ZeroCrossingDetector`, `ZeroCrossingEvent`) in simulation core
+- 49 new tests for zero-crossing detection (bisection convergence, rising/falling edges, power electronics use cases)
+
+### Changed
+- Standardized groupIds to `ch.technokrat.gecko` across all modules
+- CI workflow now builds all modules via reactor POM
+- Updated CLAUDE.md with multi-module build instructions
+
+### Fixed
+- REST API timing-sensitive E2E tests (3 tests): accept race conditions in async simulation status transitions
+- Duplicate maven-compiler-plugin warning in gecko-rest-api POM
+
 ## v1.0.0 - "Production" (2026-02)
 
 ### Changed

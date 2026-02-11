@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ch.technokrat.gecko</groupId>
+    <artifactId>gecko-reactor</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <name>GeckoCIRCUITS Reactor</name>
+    <description>Aggregator POM that builds all GeckoCIRCUITS modules together</description>
+
+    <modules>
+        <!-- Main desktop application (jar) -->
+        <module>.</module>
+        <!-- GUI-free simulation core (jar) -->
+        <module>src/modules/gecko-simulation-core</module>
+        <!-- Spring Boot REST API (jar) -->
+        <module>src/modules/gecko-rest-api</module>
+    </modules>
+</project>

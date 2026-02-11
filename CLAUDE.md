@@ -9,14 +9,21 @@ GeckoCIRCUITS is a Java 21 circuit simulator for power electronics. It supports 
 ## Build & Run Commands
 
 ```bash
-# Build with dependencies (creates target/gecko-1.0-jar-with-dependencies.jar)
+# Build main app with dependencies (creates target/gecko-1.0-jar-with-dependencies.jar)
 mvn clean package assembly:single
 
 # Build skipping tests
 mvn clean package assembly:single -DskipTests
 
-# Run tests
+# Run tests (main project only)
 mvn test
+
+# Run ALL modules (main + simulation-core + rest-api) via reactor
+mvn -f pom-reactor.xml test
+
+# Build a single sub-module
+mvn -f pom-reactor.xml test -pl src/modules/gecko-simulation-core
+mvn -f pom-reactor.xml test -pl src/modules/gecko-rest-api
 
 # Run single test class
 mvn test -Dtest=ClassName
@@ -117,10 +124,10 @@ Output packages in `target/`:
 
 **`ch.technokrat.expressionscripting/`** - GraalVM JavaScript expression evaluation
 
-### Multi-Module Structure
-- **Main project** (`/`) - Full desktop application with Swing GUI
-- **gecko-simulation-core** (planned) - GUI-free simulation engine
-- **gecko-rest-api** (planned) - Spring Boot REST API using the core module
+### Multi-Module Structure (Reactor: `pom-reactor.xml`)
+- **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI
+- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (137+ classes, 70% coverage enforced)
+- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
