@@ -6,6 +6,25 @@ title: Changelog
 
 All notable changes to GeckoCIRCUITS.
 
+## v0.4.0 - "Test It" (2026-02)
+
+### Added
+- JaCoCo coverage enforcement with 60% minimum threshold for core packages
+- Coverage summary reporting in CI pipeline (GitHub Step Summary)
+- Coverage report artifact upload in CI
+- GroupableUndoManager test suite (56 tests covering undo/redo grouping)
+- ThyristorStamper edge case tests (31 tests covering firing angle, state transitions, recovery timing)
+- MOSFETStamper edge case tests (38 tests covering body diode, gate control, switching cycles)
+
+### Changed
+- CI workflow now runs `jacoco:report` and displays per-package coverage table
+- Aligned JaCoCo plugin version to 0.8.11 across pom.xml
+- Updated CLAUDE.md with accurate module status and coverage numbers
+
+### Fixed
+- JaCoCo version mismatch between pluginManagement (0.8.13) and build (0.8.11)
+- Inaccurate references to gecko-simulation-core and gecko-rest-api modules (marked as planned)
+
 ## v0.3.0 - "Script It" (2026-02)
 
 ### Added

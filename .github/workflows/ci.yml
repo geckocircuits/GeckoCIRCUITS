@@ -34,12 +34,12 @@ jobs:
           chmod +x build_native_libraries.sh
           ./build_native_libraries.sh
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
           export DISPLAY=:99
           Xvfb :99 -screen 0 1024x768x24 &
           sleep 1
-          mvn test --no-transfer-progress -Dmaven.test.failure.ignore=true
+          mvn test jacoco:report --no-transfer-progress -Dmaven.test.failure.ignore=true
 
       - name: Check test results
         run: |
@@ -53,6 +53,43 @@ jobs:
           fi
           echo "Build and test step completed"
 
+      - name: Coverage summary
+        run: |
+          if [ -f target/site/jacoco/index.html ]; then
+            echo "## JaCoCo Coverage Report" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Package | Instruction Coverage |" >> $GITHUB_STEP_SUMMARY
+            echo "|---------|---------------------|" >> $GITHUB_STEP_SUMMARY
+            python3 -c "
+          import html.parser
+          class P(html.parser.HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.in_td=False; self.in_a=False; self.rows=[]; self.cur=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag=='td': self.in_td=True
+                  if tag=='a' and self.in_td: self.in_a=True
+              def handle_endtag(self,tag):
+                  if tag=='td': self.in_td=False
+                  if tag=='a': self.in_a=False
+                  if tag=='tr' and self.cur: self.rows.append(self.cur[:]); self.cur=[]
+              def handle_data(self,data):
+                  if self.in_td or self.in_a: self.cur.append(data.strip())
+          with open('target/site/jacoco/index.html') as f: content=f.read()
+          p=P(); p.feed(content)
+          core=['control.calculators','datacontainer','math','circuit.matrix','circuit.netlist','circuit.simulation','circuit.component','circuit.terminal','modelviewcontrol']
+          for row in p.rows:
+              if len(row)>=3:
+                  name=row[0]
+                  short=name.replace('ch.technokrat.gecko.geckocircuits.','').replace('ch.technokrat.','')
+                  if any(c in short for c in core):
+                      cov=row[2] if '%' in row[2] else row[1] if len(row)>1 and '%' in row[1] else '?'
+                      print(f'| {short} | {cov} |')
+          " >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Full report available in the coverage artifact." >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Validate example circuits
         continue-on-error: true
         run: |
@@ -64,4 +101,12 @@ jobs:
         with:
           name: GeckoCIRCUITS-jar
           path: target/gecko-1.0-jar-with-dependencies.jar
+          retention-days: 30
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: target/site/jacoco/
           retention-days: 30

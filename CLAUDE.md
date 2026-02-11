@@ -119,8 +119,8 @@ Output packages in `target/`:
 
 ### Multi-Module Structure
 - **Main project** (`/`) - Full desktop application with Swing GUI
-- **gecko-simulation-core** - GUI-free simulation engine (87 files, no Swing/AWT dependencies)
-- **gecko-rest-api** - Spring Boot 3.2.1 REST API using the core module
+- **gecko-simulation-core** (planned) - GUI-free simulation engine
+- **gecko-rest-api** (planned) - Spring Boot REST API using the core module
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
@@ -175,24 +175,27 @@ mvn pmd:check
 ### Strategic Direction (Dual-Track Approach)
 The project maintains the desktop application while adding modern web accessibility:
 - **Desktop** - Mature Swing GUI for power users, researchers, MATLAB/Simulink integration
-- **REST API** - Spring Boot server for automation, cloud deployment, CI/CD pipelines
-- **Shared Core** - `gecko-simulation-core` module used by both interfaces
+- **REST API** (planned) - Spring Boot server for automation, cloud deployment, CI/CD pipelines
+- **Shared Core** (planned) - `gecko-simulation-core` module to be extracted for both interfaces
 
 ### Active Initiatives
-1. **GUI-Free Core Extraction** - Moving simulation logic to `gecko-simulation-core` (87 files extracted, zero Swing/AWT dependencies)
-2. **Test Coverage Improvement** - Target 70%+ coverage for core packages
-3. **REST API Development** - Building on `gecko-simulation-core` for headless operation
+1. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (60%+ minimum)
+2. **GUI-Free Core Identification** - Identifying packages suitable for future `gecko-simulation-core` extraction
+3. **REST API Design** - API specification documented, implementation planned
 
 ### GUI-Free Validated Packages
 These packages are confirmed GUI-free and safe for headless/API use:
-- `circuit.matrix` (15 classes, 85% coverage) - MNA matrix stampers
-- `circuit.netlist` (4 classes, 99% coverage) - Netlist building
-- `circuit.simulation` (5 classes, 97% coverage) - Simulation engine
-- `control.calculators` (64 classes) - All control block calculators
-- `math` (7 classes, 71% coverage) - Matrix operations, LU decomposition
+- `circuit.matrix` (15 classes, 65% coverage) - MNA matrix stampers
+- `circuit.netlist` (4 classes, 89% coverage) - Netlist building
+- `circuit.simulation` (5 classes, 84% coverage) - Simulation engine
+- `circuit.component` (86% coverage) - Component definitions
+- `control.calculators` (64 classes, 81% coverage) - All control block calculators
+- `datacontainer` (71% coverage) - Signal data storage
+- `math` (7 classes, 81% coverage) - Matrix operations, LU decomposition
 
 ### Architectural Boundaries
 The `CorePackageValidationTest` enforces that core packages have no GUI imports (`java.awt`, `javax.swing`). Any violation fails the build.
+JaCoCo coverage check (`mvn verify`) enforces 60%+ instruction coverage on core packages.
 
 ## Session Journals
 
@@ -206,11 +209,10 @@ Development journals are stored in `.claude/journals/` with detailed context:
 ## Recent Git Activity
 
 Recent commits focus on:
-- Complex number and polynomial support
-- Unit tests for matrix caching (IntegerMatrixCache, ShortMatrixCache)
-- DataContainer test coverage improvements
-- SimulationRunner migration to gecko-simulation-core
-- Control calculator extraction (64 classes)
+- v0.4.0: Test coverage improvements and JaCoCo CI integration
+- v0.3.0: Scripting tutorials (GeckoSCRIPT, MATLAB, Python, Java Blocks)
+- v0.2.0: Comprehensive documentation site
+- v0.1.0: CI pipeline, launcher scripts, distribution packaging
 
 ## Key Interfaces for Headless Operation
 
