@@ -177,18 +177,11 @@ def main():
         dst_dir = DOCS_DIR / dst_rel
         sync_directory(src_dir, dst_dir)
 
-    # Copy main README files
-    print("\nSyncing main index files...")
-
-    # Tutorials main README
-    tutorials_readme = RESOURCES_DIR / "tutorials" / "README.md"
-    if tutorials_readme.exists():
-        sync_file(tutorials_readme, DOCS_DIR / "tutorials" / "index.md")
-
-    # Examples main README
-    examples_readme = RESOURCES_DIR / "examples" / "README.md"
-    if examples_readme.exists():
-        sync_file(examples_readme, DOCS_DIR / "examples" / "index.md")
+    # NOTE: tutorials/index.md and examples/index.md are hand-maintained in docs/
+    # because the resources/ READMEs use old-format paths (1xx_getting_started/,
+    # basic_topologies/) that don't match the docs site structure (dcdc/, basic/).
+    # Do NOT sync them automatically.
+    print("\nSkipping tutorials/index.md and examples/index.md (hand-maintained)")
 
     # Sync articles
     sync_articles()
