@@ -204,8 +204,8 @@ mvn pmd:check
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules) | **3,444** | Code-style only, no bugs |
-| Checkstyle | `checkstyle.xml` (150-char lines) | **4,661** | Down from 56,673 with default Sun config |
+| PMD | `pmd-ruleset.xml` (quickstart rules + allowCommentedBlocks) | **3,316** | Code-style only, no bugs |
+| Checkstyle | `checkstyle.xml` (150-char lines) | **4,618** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
 
@@ -264,6 +264,7 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `4233f74` Fix 127 PMD violations: empty blocks, empty catches, unused code, stray imports
 - `ea309a7` Update project docs after static analysis cleanup sprint
 - `9ffedb0` Fix 183 Tier 3 PMD violations: empty blocks, unused code, stray semicolons
 - `b8b8f1f` Strip trailing whitespace from 974 Java source files
