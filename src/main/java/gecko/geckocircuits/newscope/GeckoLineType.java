@@ -53,14 +53,14 @@ public enum GeckoLineType {
     
 
     public static GeckoLineType getFromCode(final int gLSCode) {
-        for (GeckoLineType val : GeckoLineType.values()) {
+        for (GeckoLineType val : values()) {
             if (val._code == gLSCode) {
                 return val;
             }
         }
         
         // default:
-        return GeckoLineType.CONNECT_NEIGHBOURS;
+        return CONNECT_NEIGHBOURS;
     }
 
     @Override

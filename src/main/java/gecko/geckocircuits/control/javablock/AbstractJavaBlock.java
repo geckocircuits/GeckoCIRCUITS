@@ -210,7 +210,7 @@ public abstract class AbstractJavaBlock {
             if (_compileObject.getCompileStatus() == CompileStatus.COMPILED_SUCCESSFULL) {
                 findAndLoadClass();
             }
-        } catch (java.lang.UnsupportedClassVersionError classVersionError) {
+        } catch (UnsupportedClassVersionError classVersionError) {
             resetCompileObject();
             System.err.println(classVersionError.getMessage());
             //classVersionError.printStackTrace();            

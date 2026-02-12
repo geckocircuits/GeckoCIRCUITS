@@ -126,12 +126,12 @@ public final class ProjectData implements Serializable {
             elementCounter++;
         }
         
-        ProjectData.appendAsString(asc.append("\noptimizerName"), optimizerParameterData.getNameOpt());
-        ProjectData.appendAsString(asc.append("\noptimizerValue"), optimizerParameterData.getValueOpt());
-        ProjectData.appendAsString(asc, "\n<scripterCode>\n" + _scripter.getScriptCode() + "\n<\\scripterCode>");
-        ProjectData.appendAsString(asc, "\n<scripterImports>\n" + _scripter.getImportCode() + "\n<\\scripterImports>");
-        ProjectData.appendAsString(asc, "\n<scripterDeclarations>\n" + _scripter.getDeclarationCode() + " " + "\n<\\scripterDeclarations>");
-        ProjectData.appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");                
+        appendAsString(asc.append("\noptimizerName"), optimizerParameterData.getNameOpt());
+        appendAsString(asc.append("\noptimizerValue"), optimizerParameterData.getValueOpt());
+        appendAsString(asc, "\n<scripterCode>\n" + _scripter.getScriptCode() + "\n<\\scripterCode>");
+        appendAsString(asc, "\n<scripterImports>\n" + _scripter.getImportCode() + "\n<\\scripterImports>");
+        appendAsString(asc, "\n<scripterDeclarations>\n" + _scripter.getDeclarationCode() + " " + "\n<\\scripterDeclarations>");
+        appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");                
         
         asc.append("\n");
         _fileManager.exportASCII(asc);
@@ -177,7 +177,7 @@ public final class ProjectData implements Serializable {
             signalNames[i] = NetzlisteCONTROL.globalData.getSignalName(i);
         }
 
-        ProjectData.appendAsString(asc.append("\ndataContainerSignals[] "), signalNames);
+        appendAsString(asc.append("\ndataContainerSignals[] "), signalNames);
 
         //
         asc.append("\n=======================\n ");

@@ -142,7 +142,7 @@ public class GeckoRemoteRegistry {
             }
             
             _remote = remoteAccess;
-            System.out.println("GeckoCIRCUITS configured for remote access at port " + GeckoRemoteRegistry.getRemoteAccessPort() + ".");
+            System.out.println("GeckoCIRCUITS configured for remote access at port " + getRemoteAccessPort() + ".");
             System.out.println("Using IP address: " + _ipAddress);
         } catch (Exception ex) {
             throw new Exception("Error in enabling new remote port!\n" + ex.getMessage(), ex);

@@ -209,7 +209,7 @@ public final class SimulationRunner {
 				try {
 					simKern.runSimulation();
 					// GUI: update menu items
-				} catch (java.lang.OutOfMemoryError err) {
+				} catch (OutOfMemoryError err) {
 					throw new OutOfMemoryError("Could not allocate enough java RAM memory for the simulation!");
 				} finally {
 					if (MainWindow._solverSettings.inPreCalculationMode) {

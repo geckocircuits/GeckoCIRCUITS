@@ -48,8 +48,8 @@ public enum GeckoColor {
         final GeckoColor returnValue = getFromOrdinal(counter);
         
         // don't select these colors, since they are nealy invisible!
-        if(returnValue == GeckoColor.WHITE || returnValue == GeckoColor.YELLOW) {
-            return GeckoColor.getNextColor();
+        if(returnValue == WHITE || returnValue == YELLOW) {
+            return getNextColor();
         }
         return returnValue;
     }
@@ -60,8 +60,8 @@ public enum GeckoColor {
         final GeckoColor returnValue = getFromOrdinal(counter);
         
         // don't select these colors, since they are nealy invisible!
-        if(returnValue == GeckoColor.WHITE || returnValue == GeckoColor.YELLOW) {
-            return GeckoColor.getNextColor(returnValue);
+        if(returnValue == WHITE || returnValue == YELLOW) {
+            return getNextColor(returnValue);
         }
         return returnValue;
     }
@@ -79,7 +79,7 @@ public enum GeckoColor {
         
     
     static GeckoColor getFromOrdinal(final int ordinal) {
-        for(GeckoColor val : GeckoColor.values()) {
+        for(GeckoColor val : values()) {
             if(val.ordinal() == ordinal) {
                 return val;
             }
@@ -95,11 +95,11 @@ public enum GeckoColor {
     public int code() { return _code; }                
     
     static GeckoColor getFromCode(final int code) {
-        for(GeckoColor val : GeckoColor.values()) {
+        for(GeckoColor val : values()) {
             if(val._code == code) {
                 return val;
             }
         }
-        return GeckoColor.BLACK;
+        return BLACK;
     }
 }

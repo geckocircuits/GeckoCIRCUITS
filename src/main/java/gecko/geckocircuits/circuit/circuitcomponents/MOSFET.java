@@ -45,21 +45,21 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
     final Diode _antiParallelDiode;
     
     UserParameter<Double> _adRon = UserParameter.Builder.
-            <Double>start("antiParallelDiodeRon", AbstractSwitch.RD_ON_DEFAULT).
+            <Double>start("antiParallelDiodeRon", RD_ON_DEFAULT).
             longName(I18nKeys.ON_RESISTANCE_ANTIPARALLEL).
             shortName("ad_rON").
             unit("Ohm").
             arrayIndex(this, -1).
             build();
     UserParameter<Double> _adRoff = UserParameter.Builder.
-            <Double>start("antiParallelDiodeRoff", AbstractSwitch.RD_OFF_DEFAULT).
+            <Double>start("antiParallelDiodeRoff", RD_OFF_DEFAULT).
             longName(I18nKeys.OFF_RESISTANCE_ANTIPARALLEL).
             shortName("ad_rOFF").
             unit("Ohm").
             arrayIndex(this, -1).
             build();
     UserParameter<Double> _adUf = UserParameter.Builder.
-            <Double>start("antiParallelDiodeUF", AbstractSwitch.UF_DEFAULT).
+            <Double>start("antiParallelDiodeUF", UF_DEFAULT).
             longName(I18nKeys.FORWARD_VOLTAGE_ANTIPARALLEL).
             shortName("ad_uF").
             unit("Ohm").
@@ -71,8 +71,8 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
     public MOSFET() {
         super();
         _antiParallelDiode = (Diode) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_D, this);
-        double[] diodeParameter = new double[]{AbstractSwitch.RD_OFF_DEFAULT, 550e-3, 3.9e-3, 
-            AbstractSwitch.RD_OFF_DEFAULT, 0, 0, 0, 0, -1, -1, 0, -1, 1};
+        double[] diodeParameter = new double[]{RD_OFF_DEFAULT, 550e-3, 3.9e-3, 
+            RD_OFF_DEFAULT, 0, 0, 0, 0, -1, -1, 0, -1, 1};
         _antiParallelDiode.setParameter(diodeParameter);
         _antiParallelDiode.setInputTerminal(0, YOUT.get(0));
         _antiParallelDiode.setOutputTerminal(0, XIN.get(0));
@@ -113,7 +113,7 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
     
 
     public void setzeParameterZustandswerteAufNULL() {
-        parameter[0] = AbstractSwitch.RD_OFF_DEFAULT;
+        parameter[0] = RD_OFF_DEFAULT;
         parameter[4] = 0;
         parameter[5] = 0;
         parameter[8] = 0;
@@ -249,6 +249,6 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
     
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);        
+        return getCalculatorsFromSubComponents(this);        
     }
 }

@@ -79,7 +79,7 @@ public class CircuitSheet extends JPanel {
     /**
      * draws the raster points visible in the background of the sheet
      */
-    public void drawCircuitSheet(java.awt.Graphics2D g2d) {
+    public void drawCircuitSheet(Graphics2D g2d) {
         final JViewport viewport = ((JViewport) this.getParent().getParent());        
         if(g2d instanceof SVGGraphics2D) {
             return; // don't paint the pixels points for exporting to images!
@@ -112,7 +112,7 @@ public class CircuitSheet extends JPanel {
     void paintConnectorTestBackground(final Graphics2D graphics) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
         graphics.setColor(GlobalColors.farbeConnectorTestModeInternal);
-        for (Point point : CircuitSheet._showNodes) {
+        for (Point point : _showNodes) {
             graphics.fillOval((int) (point.x * dpix) - RAD_CTM,
                     (int) (point.y * dpix) - RAD_CTM, 2 * RAD_CTM, 2 * RAD_CTM);
         }
@@ -121,7 +121,7 @@ public class CircuitSheet extends JPanel {
     void paintConnectorTestForeGround(final Graphics2D graphics) {
         graphics.setColor(GlobalColors.farbeConnectorTestMode);
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        for (Point point : CircuitSheet._showNodes) {
+        for (Point point : _showNodes) {
             graphics.drawOval((int) (point.x * dpix) - RAD_CTM,
                     (int) (point.y * dpix) - RAD_CTM, 2 * RAD_CTM, 2 * RAD_CTM);
         }
@@ -359,11 +359,11 @@ public class CircuitSheet extends JPanel {
         for (PotentialArea potArea : pot) {
             if (potArea.isPointOnPotential(clickPoint)) {
                 for (Point pt : potArea.getAllElementKnotenXY(elements, this)) {
-                    CircuitSheet._showNodesInternal.add(pt);
+                    _showNodesInternal.add(pt);
                 }
                 for (Verbindung verb : potArea.getAllConnections()) {
                     for (TerminalInterface term : verb.getAllTerminals()) {
-                        CircuitSheet._showNodesInternal.add(term.getPosition());
+                        _showNodesInternal.add(term.getPosition());
                     }
 
                 }                                            
@@ -376,7 +376,7 @@ public class CircuitSheet extends JPanel {
     public void maus_connectorTest(final Point clickPoint) {
         // damit man nicht (wie unten) beim 'return' vorzeitig aussteigt und eine Verbindung versehentlich
         // im Bearbeitungs-Modus laesst, die folgende kleine Schleife:        
-        CircuitSheet._showNodesInternal.clear();
+        _showNodesInternal.clear();
 
         List<AbstractBlockInterface> localElementsLK = getLocalComponents(ConnectorType.LK_AND_RELUCTANCE);
         List<AbstractBlockInterface> localElementsTHERM = getLocalComponents(ConnectorType.THERMAL);
@@ -418,7 +418,7 @@ public class CircuitSheet extends JPanel {
             return;
         }
         // no potential found on point!
-        CircuitSheet._showNodesInternal.clear();
+        _showNodesInternal.clear();
     }
 
     public Set<Verbindung> getConnection(final ConnectorType connectorType) {

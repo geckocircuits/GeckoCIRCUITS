@@ -99,7 +99,7 @@ public class BodePlot extends GeckoDialog {
 
         jPanelPlot = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jPanelPlot.setLayout(new java.awt.BorderLayout());
 

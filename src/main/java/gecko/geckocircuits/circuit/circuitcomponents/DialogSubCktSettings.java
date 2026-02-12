@@ -78,7 +78,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
         jLabelSubcircuitName = new javax.swing.JLabel();
         jTextFieldSubName = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
 
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N

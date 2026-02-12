@@ -692,7 +692,7 @@ public final class SaveViewFrame extends GeckoDialog {
             // Flush and close the stream.
             ostream.flush();
             ostream.close();
-        } catch (java.lang.OutOfMemoryError err) {
+        } catch (OutOfMemoryError err) {
             throw new GeckoRuntimeException("Java out-of-memory. Reducing the worksheet\n"
                     + "size may help to solve the problem.", err);
         } catch (Exception ex) {

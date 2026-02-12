@@ -61,7 +61,7 @@ public class DataContainerTable extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jTextFieldNumberValue = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTableData = new javax.swing.JTable();
+        jTableData = new JTable();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -177,7 +177,7 @@ public class DataContainerTable extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTableData;
+    private JTable jTableData;
     private javax.swing.JTextField jTextFieldNumberValue;
     // End of variables declaration//GEN-END:variables
 }

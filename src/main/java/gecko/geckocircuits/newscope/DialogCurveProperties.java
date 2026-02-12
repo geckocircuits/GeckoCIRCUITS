@@ -219,8 +219,8 @@ final class DialogCurveProperties extends GeckoDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelFilling;
-    private gecko.geckocircuits.newscope.JPanelLineProperties jPanelLineProperties1;
-    private gecko.geckocircuits.newscope.JPanelSymbProps jPanelSymbProps;
+    private JPanelLineProperties jPanelLineProperties1;
+    private JPanelSymbProps jPanelSymbProps;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JSpinner jSpinner1;

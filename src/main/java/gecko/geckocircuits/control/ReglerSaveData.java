@@ -96,7 +96,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
         DURING_SIMULATION;
 
         static SaveModus getFromOrdinal(final int testOrdinal) {
-            for (SaveModus modus : SaveModus.values()) {
+            for (SaveModus modus : values()) {
                 if (modus.ordinal() == testOrdinal) {
                     return modus;
                 }
@@ -112,7 +112,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
         DO_NUMBERING;
 
         private static FileOverwrite getFromOrdinal(final int testOrdinal) {
-            for (FileOverwrite modus : FileOverwrite.values()) {
+            for (FileOverwrite modus : values()) {
                 if (modus.ordinal() == testOrdinal) {
                     return modus;
                 }

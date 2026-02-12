@@ -142,7 +142,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
 
             try {
                 calculateFourier();
-            } catch (java.lang.OutOfMemoryError er) {
+            } catch (OutOfMemoryError er) {
                 throw new RuntimeException("Could not allocate enough memory for Fourier transformation!");
             }
 

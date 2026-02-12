@@ -28,12 +28,12 @@ public enum AxisConnection{
   }
 
   static AxisConnection getFromCode(final int code){
-    for(AxisConnection val : AxisConnection.values()){
+    for(AxisConnection val : values()){
       if(val.getCode() == code){
         return val;
       }
     }
-    return AxisConnection.ZUORDNUNG_NIX;
+    return ZUORDNUNG_NIX;
   }
 
   int getCode(){
@@ -50,9 +50,9 @@ public enum AxisConnection{
     if(signal){
       switch(this){
         case ZUORDNUNG_SIGNAL:
-          return AxisConnection.ZUORDNUNG_NIX;
+          return ZUORDNUNG_NIX;
         case ZUORDNUNG_NIX:
-          return AxisConnection.ZUORDNUNG_SIGNAL;
+          return ZUORDNUNG_SIGNAL;
         default:
           assert false : this;
           break;
@@ -62,11 +62,11 @@ public enum AxisConnection{
 
     switch(this){
       case ZUORDNUNG_NIX:
-        return AxisConnection.ZUORDNUNG_Y;
+        return ZUORDNUNG_Y;
       case ZUORDNUNG_Y:
-        return AxisConnection.ZUORDNUNG_Y2;
+        return ZUORDNUNG_Y2;
       case ZUORDNUNG_Y2:
-        return AxisConnection.ZUORDNUNG_NIX;
+        return ZUORDNUNG_NIX;
       default:
         assert false;
         break;

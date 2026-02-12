@@ -105,7 +105,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         initComponents();
         setTitle(InitParameters.TRANS_TOOLS);
         setLocationRelativeTo(null); // display in center screen
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jTextField5.setEditable(false); // "Items Remaining" single-line
@@ -488,7 +488,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         jScrollPane5 = new javax.swing.JScrollPane();
         jTextArea5 = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         jLabel3.setText("This toolbox lets you view/edit all translated items.");
 

@@ -39,7 +39,7 @@ public class GraferTest extends javax.swing.JFrame {
 
         newScope21 = new SimpleGraferPanel(_grafer);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -90,6 +90,6 @@ public class GraferTest extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private gecko.geckocircuits.newscope.SimpleGraferPanel newScope21;
+    private SimpleGraferPanel newScope21;
     // End of variables declaration//GEN-END:variables
 }

@@ -32,12 +32,12 @@ public enum ComponentDirection {
     }
 
     static ComponentDirection getFromCode(final int code) {
-        for (ComponentDirection val : ComponentDirection.values()) {
+        for (ComponentDirection val : values()) {
             if (val._oldOrdinal == code) {
                 return val;
             }
         }
-        return ComponentDirection.NORTH_SOUTH;
+        return NORTH_SOUTH;
     }
 
     ComponentDirection nextOrientation() {
@@ -54,7 +54,7 @@ public enum ComponentDirection {
                 assert false;
 
         }
-        return ComponentDirection.NORTH_SOUTH;
+        return NORTH_SOUTH;
     }
     
     public static ComponentDirection getDirection(final Point start, final Point end) {

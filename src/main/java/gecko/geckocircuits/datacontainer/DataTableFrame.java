@@ -40,9 +40,9 @@ public class DataTableFrame extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dataContainerTable1 = new gecko.geckocircuits.datacontainer.DataContainerTable();
+        dataContainerTable1 = new DataContainerTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(300, 300));
 
@@ -61,6 +61,6 @@ public class DataTableFrame extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private gecko.geckocircuits.datacontainer.DataContainerTable dataContainerTable1;
+    private DataContainerTable dataContainerTable1;
     // End of variables declaration//GEN-END:variables
 }

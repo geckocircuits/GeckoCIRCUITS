@@ -119,10 +119,10 @@ public final class FractionPrinter extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabelDenom;
-    private javax.swing.JLabel jLabelHs;
-    private javax.swing.JLabel jLabelLine;
-    private javax.swing.JLabel jLabelNumerator;
+    private JLabel jLabelDenom;
+    private JLabel jLabelHs;
+    private JLabel jLabelLine;
+    private JLabel jLabelNumerator;
     private javax.swing.JPanel jPanelTFPoleView;
     // End of variables declaration//GEN-END:variables
     

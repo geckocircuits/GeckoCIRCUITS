@@ -72,9 +72,9 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     
     private AbstractComponentTyp[] _typSubcircuit = new AbstractComponentTyp[]{
         SpecialTyp.SUBCIRCUIT, CircuitTyp.LK_TERMINAL, CircuitTyp.TH_TERMINAL,
-        ControlTyp.C_TERMINAL, CircuitTyp.REL_TERMINAL, CircuitTyp.LK_GLOBAL_TERMINAL,
-        CircuitTyp.TH_GLOBAL_TERMINAL, ControlTyp.C_GLOBAL_TERMINAL,
-        CircuitTyp.REL_GLOBAL_TERMINAL, ControlTyp.C_MUX, ControlTyp.C_DEMUX};
+        C_TERMINAL, CircuitTyp.REL_TERMINAL, CircuitTyp.LK_GLOBAL_TERMINAL,
+        CircuitTyp.TH_GLOBAL_TERMINAL, C_GLOBAL_TERMINAL,
+        CircuitTyp.REL_GLOBAL_TERMINAL, C_MUX, C_DEMUX};
     
     private ControlTyp[] _typCONTROL = new ControlTyp[]{
         C_GAIN, C_PT1, C_PT2, C_INT, C_PI, C_PD, C_HYS, C_LIMIT, C_ADD, C_SUB, C_MUL, C_DIV,
@@ -101,9 +101,9 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     
     
     private AbstractComponentTyp[] _typSpecial = new AbstractComponentTyp[]{
-        ControlTyp.C_JAVA_FUNCTION, ControlTyp.C_NATIVE_C_FUNCTION, ControlTyp.C_SMALL_SIG, ControlTyp.C_ABCDQ, ControlTyp.C_DQABC,
-        ControlTyp.C_TIME, ControlTyp.C_SPARSEMATRIX, ControlTyp.C_PMSM_CONTROL,
-        ControlTyp.C_PMSM_MODULATOR, ControlTyp.C_THYR_CTRL, 
+        C_JAVA_FUNCTION, C_NATIVE_C_FUNCTION, C_SMALL_SIG, C_ABCDQ, C_DQABC,
+        C_TIME, C_SPARSEMATRIX, C_PMSM_CONTROL,
+        C_PMSM_MODULATOR, C_THYR_CTRL, 
         /*ControlTyp.C_DEBUG,*/ SpecialTyp.TEXTFIELD
     };
     private AbstractComponentTyp[] _typTherm = new AbstractComponentTyp[]{
@@ -222,7 +222,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
                 setToolTipText("<html><body width='250'>" + descriptionVerbose + "</html>");
             }
 
-            setHorizontalAlignment(SwingConstants.LEADING);
+            setHorizontalAlignment(LEADING);
             setForeground(exampleBlock.getForeGroundColor());            
             setContentAreaFilled(false);
             setFocusPainted(false);

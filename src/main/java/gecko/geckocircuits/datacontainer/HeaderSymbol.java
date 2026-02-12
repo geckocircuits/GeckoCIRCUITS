@@ -26,7 +26,7 @@ public enum HeaderSymbol {
     COMMA(",");
 
     public static HeaderSymbol getFromOrdinal(final int ordinal) {
-        for (HeaderSymbol val : HeaderSymbol.values()) {
+        for (HeaderSymbol val : values()) {
             if (val.ordinal() == ordinal) {
                 return val;
             }

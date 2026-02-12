@@ -37,7 +37,7 @@ public class NativeCClassLoader extends ClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         final byte[] classBytes;
-        java.io.InputStream resourceStream = ClassLoader.getSystemResourceAsStream(
+        java.io.InputStream resourceStream = getSystemResourceAsStream(
                 name.replace(".", "/") + ".class");
 
         if (resourceStream == null) {

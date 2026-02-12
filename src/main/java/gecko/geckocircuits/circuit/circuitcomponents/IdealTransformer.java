@@ -323,6 +323,6 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
 
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);
+        return getCalculatorsFromSubComponents(this);
     }
 }

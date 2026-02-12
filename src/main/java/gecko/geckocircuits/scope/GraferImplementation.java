@@ -411,7 +411,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
         // y-Achsen --> ist bei SIGNAL anders (Grid und Labels)
         for (int i1 = 0; i1 < anzahlAchsenY; i1++) {
-            if (diagramTyp[i1] == GraferImplementation.DIAGRAM_TYP_ZV) {
+            if (diagramTyp[i1] == DIAGRAM_TYP_ZV) {
                 zeichneEinzelneKoordinatenAchse_Y(g2, i1);  // hier werden auch die Ticks fuer den Grid berechnet
             } else {
                 zeichneEinzelneSIGNALKoordinatenAchse_Y(g2, i1);
@@ -449,7 +449,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             grL.reset();
             grL.moveTo(_xAchseX[i1], _yAchseX[i1]);
             grL.lineTo(_xAchseX[i1] + breitePix[i1], _yAchseX[i1]);
-            if (linienStilAchsenX[i1] != GraferV3.INVISIBLE) {
+            if (linienStilAchsenX[i1] != INVISIBLE) {
                 g2.draw(grL);
                 g2.drawString(xAchseBeschriftung[i1], _xAchseX[i1] + breitePix[i1] / 2, _yAchseX[i1] + posXtickLabels[i1]);
             }
@@ -475,7 +475,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             grL.reset();
             grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
             grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
-            if (linienStilAchsenY[i1] != GraferV3.INVISIBLE) {
+            if (linienStilAchsenY[i1] != INVISIBLE) {
                 g2.draw(grL);
                 g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
             }
@@ -547,7 +547,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         grL.reset();
         grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
         grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
-        if (linienStilAchsenY[i1] != GraferV3.INVISIBLE) {
+        if (linienStilAchsenY[i1] != INVISIBLE) {
             g2.draw(grL);
             g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
         }
@@ -687,10 +687,10 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-------------------------------------
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             notwendigeHoehePixGRF[i1] = -1;  // default --> kein SIGNAL-Graph sondern ZV-Graph
-            if (diagramTyp[i1] == GraferImplementation.DIAGRAM_TYP_SGN) {
+            if (diagramTyp[i1] == DIAGRAM_TYP_SGN) {
                 int anzSGN = 0;  // Anzahl der SIGNAL-Verlaeufe pro SIGNAL-Graph
                 for (int i2 = 0; i2 < anzSignalePlusZeit; i2++) {
-                    if (crvAchsenTyp[i1][i2] == GraferImplementation.ZUORDNUNG_SIGNAL) {
+                    if (crvAchsenTyp[i1][i2] == ZUORDNUNG_SIGNAL) {
                         anzSGN++;
                     }
                 }
@@ -705,7 +705,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         // die Hoehe, die fuer die ZVs zur Verfuegung steht, dh. Gesamthoehe minus SIGNAL-Hoehen -->
         int height = this.getHeight() - ABSTAND_BESCHRIFTUNG_XACHSE;
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
-            if (diagramTyp[i1] == GraferImplementation.DIAGRAM_TYP_SGN) {
+            if (diagramTyp[i1] == DIAGRAM_TYP_SGN) {
                 height -= notwendigeHoehePixGRF[i1];
             }
         }
@@ -783,7 +783,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         g2.setClip(x0Kurve + 1, 0, breitePix[indexZurKurveGehoerigeYachse[i1]] - 2, 10000);
 
         grL.reset();
-        if (kurveLinienstil[i1] != GraferV3.INVISIBLE) {
+        if (kurveLinienstil[i1] != INVISIBLE) {
             grL.moveTo(xPix[0], yPix[0]);
             for (int i5 = 1; i5 < _zvCounter; i5++) {
                 if (yPix[i5] != yPix[i5 - 1]) {  // Umschaltvorgang wird in der Mitte zwischen 2 Datenpunkten realisiert --> optische Verbesserung
@@ -807,7 +807,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             final int im1 = (int) (indexDerKurveInDerMatrix[i1] / 1000);
             final int im2 = (int) (indexDerKurveInDerMatrix[i1] % 1000);
             if (crvFillDigitalCurves[im1][im2]) {
-                final Color fuellFarbe = GraferV3.selectColor(crvFillingDigitalColor[im1][im2]);
+                final Color fuellFarbe = selectColor(crvFillingDigitalColor[im1][im2]);
                 g2.setColor(fuellFarbe);
                 g2.fill(grFill.createTransformedShape(null));
             }
@@ -1011,7 +1011,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         kurvenanzahl = 0;
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             for (int i2 = 0; i2 < matrixZuordnungKurveDiagram[0].length; i2++) {
-                if ((matrixZuordnungKurveDiagram[i1][i2] == GraferImplementation.ZUORDNUNG_Y) || (matrixZuordnungKurveDiagram[i1][i2] == GraferImplementation.ZUORDNUNG_SIGNAL)) {
+                if ((matrixZuordnungKurveDiagram[i1][i2] == ZUORDNUNG_Y) || (matrixZuordnungKurveDiagram[i1][i2] == ZUORDNUNG_SIGNAL)) {
                     kurvenanzahl++;
                 }
             }
@@ -1082,7 +1082,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //
         Color[] linienFarbe = new Color[kurvenanzahl];
         for (int i1 = 0; i1 < kurvenanzahl; i1++) {
-            linienFarbe[i1] = GraferV3.selectColor(crvLineColorLok[i1]);
+            linienFarbe[i1] = selectColor(crvLineColorLok[i1]);
         }
         this.setzeKurveFarbe(linienFarbe);
         this.setzeKurveTransparenz(crvTransparencyLok);
@@ -1101,7 +1101,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
         Color[] crvSymbFarbeLok = new Color[kurvenanzahl];
         for (int i1 = 0; i1 < kurvenanzahl; i1++) {
-            crvSymbFarbeLok[i1] = GraferV3.selectColor(crvSymbColorLok[i1]);
+            crvSymbFarbeLok[i1] = selectColor(crvSymbColorLok[i1]);
         }
         this.setzeKurvePunktSymbolAnzeigen(crvSymbShowLok, crvSymbFrequLok, crvSymbShapeLok, crvSymbFarbeLok);
         //=====================================
@@ -1225,10 +1225,10 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-----------
         Color[] xAchseFarbeLok = new Color[anzGrfVisible], yAchseFarbeLok = new Color[anzGrfVisible];
         for (int i1 = 0; i1 < xAchseFarbeLok.length; i1++) {
-            xAchseFarbeLok[i1] = GraferV3.selectColor(xAchseFarbe[i1]);
+            xAchseFarbeLok[i1] = selectColor(xAchseFarbe[i1]);
         }
         for (int i1 = 0; i1 < yAchseFarbeLok.length; i1++) {
-            yAchseFarbeLok[i1] = GraferV3.selectColor(yAchseFarbe[i1]);
+            yAchseFarbeLok[i1] = selectColor(yAchseFarbe[i1]);
         }
         this.setzeAchsenFarbe(xAchseFarbeLok, yAchseFarbeLok);
         //-----------
@@ -1265,14 +1265,14 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         final Color[] farbeGridNormalXLok = new Color[anzGrfVisible];
         final Color[] farbeGridNormalXminorLok = new Color[farbeGridNormalXLok.length];
         for (int i1 = 0; i1 < farbeGridNormalXLok.length; i1++) {
-            farbeGridNormalXLok[i1] = GraferV3.selectColor(farbeGridNormalX[i1]);
-            farbeGridNormalXminorLok[i1] = GraferV3.selectColor(farbeGridNormalXminor[i1]);
+            farbeGridNormalXLok[i1] = selectColor(farbeGridNormalX[i1]);
+            farbeGridNormalXminorLok[i1] = selectColor(farbeGridNormalXminor[i1]);
         }
         final Color[] farbeGridNormalYLok = new Color[anzGrfVisible];
         final Color[] farbeGridNormalYminorLok = new Color[farbeGridNormalYLok.length];
         for (int i1 = 0; i1 < farbeGridNormalYLok.length; i1++) {
-            farbeGridNormalYLok[i1] = GraferV3.selectColor(farbeGridNormalY[i1]);
-            farbeGridNormalYminorLok[i1] = GraferV3.selectColor(farbeGridNormalYminor[i1]);
+            farbeGridNormalYLok[i1] = selectColor(farbeGridNormalY[i1]);
+            farbeGridNormalYminorLok[i1] = selectColor(farbeGridNormalYminor[i1]);
         }
         this.setzeGridFarben(farbeGridNormalXLok, farbeGridNormalYLok, farbeGridNormalXminorLok, farbeGridNormalYminorLok);
         //-----------

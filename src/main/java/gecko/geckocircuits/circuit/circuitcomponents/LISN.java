@@ -347,6 +347,6 @@ public class LISN extends AbstractCircuitBlockInterface implements HiddenSubCirc
     @Override
     @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);
+        return getCalculatorsFromSubComponents(this);
     }
 }

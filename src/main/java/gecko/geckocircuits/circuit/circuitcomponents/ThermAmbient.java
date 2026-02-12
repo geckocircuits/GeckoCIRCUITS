@@ -77,7 +77,7 @@ public final class ThermAmbient extends AbstractCircuitBlockInterface {
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        _textInfo.addParameter(tcf.formatENG(ThermAmbient.T_ZERO, 2));
+        _textInfo.addParameter(tcf.formatENG(T_ZERO, 2));
     }
 
     @Override

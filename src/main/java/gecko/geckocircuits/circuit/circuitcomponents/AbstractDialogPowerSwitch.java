@@ -52,7 +52,7 @@ public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor>
         _jRadioButtonSimpleLosses.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {                
-                _lossCalculation.setLossType(LossCalculationDetail.SIMPLE);
+                _lossCalculation.setLossType(SIMPLE);
                 switchSimpleDetailedFieldsEnable(false);
             }
         });
@@ -60,7 +60,7 @@ public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor>
         _jRadioButtonDetailedLosses.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {                                
-                _lossCalculation.setLossType(LossCalculationDetail.DETAILED);
+                _lossCalculation.setLossType(DETAILED);
                 switchSimpleDetailedFieldsEnable(true);
             }
         });

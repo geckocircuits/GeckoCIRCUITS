@@ -23,7 +23,7 @@ public enum Clipping {
     LOCAL_AUTO;    
     
     static Clipping getFromOrdinal(final int ordinal) {
-        for(Clipping val : Clipping.values()) {
+        for(Clipping val : values()) {
             if(val.ordinal() == ordinal) {
                 return val;
             }

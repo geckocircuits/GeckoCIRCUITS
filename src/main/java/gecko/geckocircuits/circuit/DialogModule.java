@@ -41,7 +41,7 @@ public class DialogModule extends GeckoDialog {
         jTextFieldFileName = new javax.swing.JTextField();
         jButtonOk = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jLabel1.setText("File name:");
 
@@ -121,7 +121,7 @@ public class DialogModule extends GeckoDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
             public void run() {
-                DialogModule dialog = new DialogModule(new javax.swing.JFrame(), true);
+                DialogModule dialog = new DialogModule(new JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 
                     @Override

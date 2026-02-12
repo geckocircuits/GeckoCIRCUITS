@@ -72,8 +72,8 @@ class ReglerLimitDialog extends AbstractDialogWithExternalOption<ReglerLimit> {
             public void paint(final Graphics graphics) {
                 RenderingHints oldRendering = ((Graphics2D) graphics).getRenderingHints();
                 
-                ((Graphics2D) graphics).setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
-                        java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+                ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 graphics.setColor(Color.white);
                 graphics.fillRect(0, 0, 100, 100);
                 graphics.setColor(Color.black);

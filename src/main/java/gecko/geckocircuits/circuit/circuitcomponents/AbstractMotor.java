@@ -255,7 +255,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     
     @Override
     final public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);        
+        return getCalculatorsFromSubComponents(this);        
     }
 
     @Override

@@ -185,7 +185,7 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     
     @Override
     public int getForeGroundColorRgb() {
-        java.awt.Color c = getForeGroundColor();
+        Color c = getForeGroundColor();
         if (c == null) {
             return 0x000000;
         }

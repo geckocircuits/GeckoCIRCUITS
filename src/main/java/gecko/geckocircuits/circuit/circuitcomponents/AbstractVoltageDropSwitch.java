@@ -20,7 +20,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes forward voltage drop parameter for configuration")
 public abstract class AbstractVoltageDropSwitch extends AbstractSwitch implements ForwardVoltageDropable {
     UserParameter<Double> _forwardVoltageDrop = UserParameter.Builder.
-            <Double>start("forwardVoltageDrop", AbstractSwitch.UF_DEFAULT).                       
+            <Double>start("forwardVoltageDrop", UF_DEFAULT).                       
             longName(I18nKeys.FORWARD_VOLTAGE_DROP).
             shortName("uF").
             addAlternativeShortName("uDS").

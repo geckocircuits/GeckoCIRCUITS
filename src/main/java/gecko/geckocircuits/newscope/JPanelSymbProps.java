@@ -100,8 +100,8 @@ public class JPanelSymbProps extends javax.swing.JPanel {
 
         jCheckBoxShow.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxShow.setText("Show Symbol");
-        jCheckBoxShow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jCheckBoxShow.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jCheckBoxShowActionPerformed(evt);
             }
         });
@@ -124,15 +124,15 @@ public class JPanelSymbProps extends javax.swing.JPanel {
         });
 
         jComboBoxShape.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jComboBoxShape.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jComboBoxShape.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jComboBoxShapeActionPerformed(evt);
             }
         });
 
         jComboBoxSymbColor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jComboBoxSymbColor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jComboBoxSymbColor.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jComboBoxSymbColorActionPerformed(evt);
             }
         });
@@ -176,7 +176,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jComboBoxShape, jComboBoxSymbColor, jSpinnerSkip});
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new Component[] {jComboBoxShape, jComboBoxSymbColor, jSpinnerSkip});
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

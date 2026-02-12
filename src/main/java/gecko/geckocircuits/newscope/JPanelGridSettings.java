@@ -91,7 +91,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
 
         jPanelMaj = new javax.swing.JPanel();
         jCheckBoxShowGridLineMaj = new javax.swing.JCheckBox();
-        jPanelLineMajGrid = new gecko.geckocircuits.newscope.JPanelLineProperties();
+        jPanelLineMajGrid = new JPanelLineProperties();
         jCheckBoxAutoSpacing = new javax.swing.JCheckBox();
         jLabelTickSpace = new javax.swing.JLabel();
         jLabelTickLengthMaj = new javax.swing.JLabel();
@@ -100,7 +100,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         formatJTextFieldTickLenghtMaj = new gecko.geckocircuits.allg.FormatJTextField();
         jPanelMin = new javax.swing.JPanel();
         jCheckBoxShowGridLineMin = new javax.swing.JCheckBox();
-        jPanelLineMinGrid = new gecko.geckocircuits.newscope.JPanelLineProperties();
+        jPanelLineMinGrid = new JPanelLineProperties();
         jLabelNumTicks = new javax.swing.JLabel();
         jLabelTickLengthMin = new javax.swing.JLabel();
         jCheckBoxShowLabelMin = new javax.swing.JCheckBox();
@@ -426,8 +426,8 @@ public class JPanelGridSettings extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelTickLengthMaj;
     private javax.swing.JLabel jLabelTickLengthMin;
     private javax.swing.JLabel jLabelTickSpace;
-    private gecko.geckocircuits.newscope.JPanelLineProperties jPanelLineMajGrid;
-    private gecko.geckocircuits.newscope.JPanelLineProperties jPanelLineMinGrid;
+    private JPanelLineProperties jPanelLineMajGrid;
+    private JPanelLineProperties jPanelLineMinGrid;
     private javax.swing.JPanel jPanelMaj;
     private javax.swing.JPanel jPanelMin;
     // End of variables declaration//GEN-END:variables

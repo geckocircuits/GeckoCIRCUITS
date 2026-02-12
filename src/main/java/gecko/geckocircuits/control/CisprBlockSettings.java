@@ -47,7 +47,7 @@ public class CisprBlockSettings extends GeckoDialog {
         jCheckBoxShowName = new javax.swing.JCheckBox();
         jTextFieldName = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOk.setText("Ok");

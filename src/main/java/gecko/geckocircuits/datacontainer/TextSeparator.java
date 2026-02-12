@@ -26,12 +26,12 @@ public enum TextSeparator {
     COMMA(',');
 
     public static TextSeparator getFromOrdinal(final int ordinal) {
-        for (TextSeparator val : TextSeparator.values()) {
+        for (TextSeparator val : values()) {
             if (val.ordinal() == ordinal) {
                 return val;
             }
         }
-        return TextSeparator.SPACE;
+        return SPACE;
     }
     private final char _symbol;
     private final String _stringValue;
@@ -46,12 +46,12 @@ public enum TextSeparator {
     }
 
     public static TextSeparator getFromCode(final int code) {
-        for (TextSeparator val : TextSeparator.values()) {
+        for (TextSeparator val : values()) {
             if (val.code() == code) {
                 return val;
             }
         }
-        return TextSeparator.SPACE;
+        return SPACE;
     }
 
     public char charValue() {

@@ -335,14 +335,14 @@ public final class NewScope extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jPanelGraphLayout = new javax.swing.GroupLayout(jPanelGraph);
+        GroupLayout jPanelGraphLayout = new GroupLayout(jPanelGraph);
         jPanelGraph.setLayout(jPanelGraphLayout);
         jPanelGraphLayout.setHorizontalGroup(
-            jPanelGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanelGraphLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 734, Short.MAX_VALUE)
         );
         jPanelGraphLayout.setVerticalGroup(
-            jPanelGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanelGraphLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 483, Short.MAX_VALUE)
         );
 
@@ -357,32 +357,32 @@ public final class NewScope extends javax.swing.JPanel {
         jTextPane.setText("The GeckoCIRCUITS Scope is a powerful tool for visualization of your simulation \nresults. The following hints may help you to use the Scope effectively.\n\n- Zooming: Select the 'Zoom' button on the left hand side panel.\n    Drag the mouse over the area where you like to zoom into.\n    Holding the Control keyboard button while zooming modifies\n    only the time-axis (x) settings.\n    Holding the Shift keyboard button while zooming modifies\n    only the value-axis (y) settings.\n    You can undo your last zoom operations via the 'Back'-button.\n- Using the Cursors for measurements: Select the 'x-y'-button\n    from the side panel. Click or drag into the graphs shows a\n    cursor, and the data values are displayed next to the graphs.\n    When you use the right mouse button, a second cursor (green) is\n    shown. The green cursor shows difference values to the previously\n    set red cursor (dt, value difference).\n- You can use labels for the input ports of the circuit schematic scope\n    Icon. The graphs within the scope are then titeled with the label names.\n- In the 'Graphs' menu, you can assign the input channels to different\n    graphs within the scope via an assignment matrix. The matrix entries\n    are toggeled via the right mouse button. Pressing the left mouse\n    button on a matrix entry allows you to change the curve properties,\n    for instance the curve color, stroke type, etc.");
         jScrollPane2.setViewportView(jTextPane);
 
-        javax.swing.GroupLayout jPanelInfoLayout = new javax.swing.GroupLayout(jPanelInfo);
+        GroupLayout jPanelInfoLayout = new GroupLayout(jPanelInfo);
         jPanelInfo.setLayout(jPanelInfoLayout);
         jPanelInfoLayout.setHorizontalGroup(
-            jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
+            jPanelInfoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 734, Short.MAX_VALUE)
         );
         jPanelInfoLayout.setVerticalGroup(
-            jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+            jPanelInfoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
         );
 
         jTabbedPane.addTab("Info", jPanelInfo);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBarLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jToolBarLeft, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBarLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBarLeft, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane)
                 .addContainerGap())

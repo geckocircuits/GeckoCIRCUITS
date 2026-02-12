@@ -316,13 +316,13 @@ public final class PolynomTools {
             }
         }
 
-        final double[] remainder = new double[PolynomTools.getMaxPolynomialDegree(tmpStorage) + 1];
+        final double[] remainder = new double[getMaxPolynomialDegree(tmpStorage) + 1];
         System.arraycopy(tmpStorage, 0, remainder, 0, remainder.length);
         return remainder;
     }
 
     public static double[] getCorrectedPolynom(final double[] denomPolynom) {
-        final int size = PolynomTools.getMaxPolynomialDegree(denomPolynom) + 1;
+        final int size = getMaxPolynomialDegree(denomPolynom) + 1;
         final double[] returnValue = new double[size];
         System.arraycopy(denomPolynom, 0, returnValue, 0, returnValue.length);
         return returnValue;

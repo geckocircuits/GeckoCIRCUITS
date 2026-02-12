@@ -511,28 +511,28 @@ private void jMenuItemContinueActionPerformed(java.awt.event.ActionEvent evt) {/
   }
 }//GEN-LAST:event_jMenuItemContinueActionPerformed
 
-    private void jMenuItemSaveDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveDataActionPerformed
+    private void jMenuItemSaveDataActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveDataActionPerformed
       JOptionPane.showMessageDialog(this, "This menu option was removed. Please use the 'Export Data To File' \ncontrol"
               + "block, which you can find in the 'Source/ Sink' control menue.", "Information",
                                     JOptionPane.INFORMATION_MESSAGE);
 
     }//GEN-LAST:event_jMenuItemSaveDataActionPerformed
 
-    private void jMenuItemAvgSgnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAvgSgnActionPerformed
+    private void jMenuItemAvgSgnActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItemAvgSgnActionPerformed
       final DialogDefineAvg dialog = new DialogDefineAvg(this, true,
                                                          (DataContainerIntegralCalculatable)_regelBlockOSZI.getZVDatenImRAM());
       dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItemAvgSgnActionPerformed
 
-    private void jMenuScopeDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuScopeDataActionPerformed
+    private void jMenuScopeDataActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuScopeDataActionPerformed
     }//GEN-LAST:event_jMenuScopeDataActionPerformed
 
-    private void jMenuItemScopeSettingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemScopeSettingsActionPerformed
+    private void jMenuItemScopeSettingsActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItemScopeSettingsActionPerformed
       DialogScopeSettings dialogSettings = new DialogScopeSettings(this, _regelBlockOSZI, true);
       dialogSettings.setVisible(true);
     }//GEN-LAST:event_jMenuItemScopeSettingsActionPerformed
   // Variables declaration - do not modify//GEN-BEGIN:variables
-  public gecko.geckocircuits.newscope.NewScope _scope;
+  public NewScope _scope;
   private javax.swing.JMenu jMenuAnalysis;
   private javax.swing.JMenuBar jMenuBar;
   private javax.swing.JMenu jMenuGraphs;

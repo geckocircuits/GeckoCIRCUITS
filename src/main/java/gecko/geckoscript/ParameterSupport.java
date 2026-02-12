@@ -106,29 +106,29 @@ public class ParameterSupport extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        _listAvailableBlocks = new javax.swing.JList();
+        _listAvailableBlocks = new JList();
         jScrollPane1 = new javax.swing.JScrollPane();
-        _listSelectBlockType = new javax.swing.JList();
+        _listSelectBlockType = new JList();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        _listAvailableParameters = new javax.swing.JList();
+        _listAvailableParameters = new JList();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("GeckoSCRIPT - Available Parameters & Outputs");
 
         jLabel1.setText("Select block type:");
 
         jLabel2.setText("Available blocks (names):");
 
-        _listAvailableBlocks.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        _listAvailableBlocks.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         _listAvailableBlocks.setFocusable(false);
         jScrollPane3.setViewportView(_listAvailableBlocks);
 
-        _listSelectBlockType.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        _listSelectBlockType.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         _listSelectBlockType.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 _listSelectBlockTypeValueChanged(evt);
@@ -138,7 +138,7 @@ public class ParameterSupport extends javax.swing.JFrame {
 
         jLabel3.setText("Accessible Parameters:");
 
-        _listAvailableParameters.setFont(new java.awt.Font("Courier New", 0, 18)); // NOI18N
+        _listAvailableParameters.setFont(new Font("Courier New", 0, 18)); // NOI18N
         jScrollPane2.setViewportView(_listAvailableParameters);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -244,9 +244,9 @@ public class ParameterSupport extends javax.swing.JFrame {
     }//GEN-LAST:event__listSelectBlockTypeValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList _listAvailableBlocks;
-    private javax.swing.JList _listAvailableParameters;
-    private javax.swing.JList _listSelectBlockType;
+    private JList _listAvailableBlocks;
+    private JList _listAvailableParameters;
+    private JList _listSelectBlockType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

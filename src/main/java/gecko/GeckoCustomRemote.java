@@ -140,7 +140,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
     @Override
     public void registerForCallback(
             final CallbackClientInterface callbackClientObject)
-            throws java.rmi.RemoteException {
+            throws RemoteException {
         clients.put(_lastSessionIDActive, callbackClientObject);
     }
 

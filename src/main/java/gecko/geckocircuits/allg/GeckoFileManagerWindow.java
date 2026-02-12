@@ -35,7 +35,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
         justification = "Dialog intentionally stores references to external GUI components for interaction; dialog is not serialized")
-public class GeckoFileManagerWindow extends javax.swing.JDialog {
+public class GeckoFileManagerWindow extends JDialog {
 
     private transient VerlustBerechnungDetailed _losses = null;
     private final String _fileExtension;
@@ -54,7 +54,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
      */
     private FormatJTextField _jlS2;
     private FormatJTextField _jlS2b;
-    private javax.swing.JButton _jbS2edit;
+    private JButton _jbS2edit;
     private final transient GeckoFileable _geckoFileable;
 
     /**
@@ -85,7 +85,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
      * @param jbS2edit
      */
     public GeckoFileManagerWindow(final VerlustBerechnungDetailed losses, final String extension, final String type,
-            final FormatJTextField jlS2, final FormatJTextField jlS2b, final javax.swing.JButton jbS2edit) {
+            final FormatJTextField jlS2, final FormatJTextField jlS2b, final JButton jbS2edit) {
 
         initComponents();
         _losses = losses;
@@ -233,35 +233,35 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroupInternalExternalExistingFiles = new javax.swing.ButtonGroup();
-        buttonGroupExternalInternalNew = new javax.swing.ButtonGroup();
-        jLabel1 = new javax.swing.JLabel();
-        jButtonOK = new javax.swing.JButton();
-        jButtonCancel = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        jButtonRemove = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jListSelectedFilesToAdd = new javax.swing.JList<>();
-        jButtonAddNewFile = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jRadioButtonIsExternalNew = new javax.swing.JRadioButton();
-        jRadioButtonIsInternalNew = new javax.swing.JRadioButton();
-        jLabelAlreadyAvailable = new javax.swing.JLabel();
-        jLabelFileType = new javax.swing.JLabel();
-        jLabelFileType2 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jButtonAddSelectedExistingFiles = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jListAvailableFiles = new javax.swing.JList<>();
-        jPanel5 = new javax.swing.JPanel();
-        jRadioButtonIsInternalExisting = new javax.swing.JRadioButton();
-        jRadioButtonIsExternalExisting = new javax.swing.JRadioButton();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        buttonGroupInternalExternalExistingFiles = new ButtonGroup();
+        buttonGroupExternalInternalNew = new ButtonGroup();
+        jLabel1 = new JLabel();
+        jButtonOK = new JButton();
+        jButtonCancel = new JButton();
+        jTabbedPane1 = new JTabbedPane();
+        jPanel1 = new JPanel();
+        jButtonRemove = new JButton();
+        jScrollPane4 = new JScrollPane();
+        jListSelectedFilesToAdd = new JList<>();
+        jButtonAddNewFile = new JButton();
+        jPanel4 = new JPanel();
+        jRadioButtonIsExternalNew = new JRadioButton();
+        jRadioButtonIsInternalNew = new JRadioButton();
+        jLabelAlreadyAvailable = new JLabel();
+        jLabelFileType = new JLabel();
+        jLabelFileType2 = new JLabel();
+        jPanel2 = new JPanel();
+        jButtonAddSelectedExistingFiles = new JButton();
+        jScrollPane2 = new JScrollPane();
+        jListAvailableFiles = new JList<>();
+        jPanel5 = new JPanel();
+        jRadioButtonIsInternalExisting = new JRadioButton();
+        jRadioButtonIsExternalExisting = new JRadioButton();
+        jPanel3 = new JPanel();
+        jScrollPane3 = new JScrollPane();
+        jTextArea1 = new JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Gecko File Manager - add external files to your model");
         setLocationByPlatform(true);
 
@@ -299,7 +299,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
             }
         });
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("File Status"));
+        jPanel4.setBorder(BorderFactory.createTitledBorder("File Status"));
 
         buttonGroupExternalInternalNew.add(jRadioButtonIsExternalNew);
         jRadioButtonIsExternalNew.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -328,68 +328,68 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jLabelFileType2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabelFileType2.setText("Java Source File");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabelAlreadyAvailable)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelFileType, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelFileType, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                     .addComponent(jRadioButtonIsExternalNew)
                                     .addComponent(jRadioButtonIsInternalNew))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())
-                    .addComponent(jLabelFileType2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jLabelFileType2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jRadioButtonIsExternalNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButtonIsInternalNew)
                 .addGap(23, 23, 23)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelAlreadyAvailable)
                     .addComponent(jLabelFileType))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelFileType2)
                 .addGap(0, 55, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonRemove, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-                    .addComponent(jButtonAddNewFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonRemove, GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
+                    .addComponent(jButtonAddNewFile, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonRemove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonAddNewFile))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -406,7 +406,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jListAvailableFiles.setModel(_existingFilesList);
         jScrollPane2.setViewportView(jListAvailableFiles);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Modify file type"));
+        jPanel5.setBorder(BorderFactory.createTitledBorder("Modify file type"));
 
         buttonGroupInternalExternalExistingFiles.add(jRadioButtonIsInternalExisting);
         jRadioButtonIsInternalExisting.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
@@ -426,49 +426,49 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jRadioButtonIsExternalExisting)
                     .addComponent(jRadioButtonIsInternalExisting))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jRadioButtonIsExternalExisting)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jRadioButtonIsInternalExisting)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonAddSelectedExistingFiles)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 484, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonAddSelectedExistingFiles)
                 .addContainerGap())
         );
@@ -477,7 +477,7 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
 
         jScrollPane3.setBorder(null);
 
-        jTextArea1.setBackground(java.awt.Color.lightGray);
+        jTextArea1.setBackground(Color.lightGray);
         jTextArea1.setColumns(20);
         jTextArea1.setEditable(false);
         jTextArea1.setRows(4);
@@ -485,54 +485,54 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         jTextArea1.setBorder(null);
         jScrollPane3.setViewportView(jTextArea1);
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+            jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab("Info", jPanel3);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 633, javax.swing.GroupLayout.PREFERRED_SIZE)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 633, GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(7, 7, 7))
             .addGroup(layout.createSequentialGroup()
                 .addGap(215, 215, 215)
-                .addComponent(jButtonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonOK, GroupLayout.PREFERRED_SIZE, 84, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonCancel, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(293, 293, 293)
                         .addComponent(jLabel1))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTabbedPane1, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonOK)
                     .addComponent(jButtonCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -697,32 +697,32 @@ public class GeckoFileManagerWindow extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jButtonOKActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroupExternalInternalNew;
-    private javax.swing.ButtonGroup buttonGroupInternalExternalExistingFiles;
-    private javax.swing.JButton jButtonAddNewFile;
-    private javax.swing.JButton jButtonAddSelectedExistingFiles;
-    private javax.swing.JButton jButtonCancel;
-    private javax.swing.JButton jButtonOK;
-    private javax.swing.JButton jButtonRemove;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabelAlreadyAvailable;
-    private javax.swing.JLabel jLabelFileType;
-    private javax.swing.JLabel jLabelFileType2;
-    private javax.swing.JList<GeckoFile> jListAvailableFiles;
-    private javax.swing.JList<GeckoFile> jListSelectedFilesToAdd;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JRadioButton jRadioButtonIsExternalExisting;
-    private javax.swing.JRadioButton jRadioButtonIsExternalNew;
-    private javax.swing.JRadioButton jRadioButtonIsInternalExisting;
-    private javax.swing.JRadioButton jRadioButtonIsInternalNew;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private ButtonGroup buttonGroupExternalInternalNew;
+    private ButtonGroup buttonGroupInternalExternalExistingFiles;
+    private JButton jButtonAddNewFile;
+    private JButton jButtonAddSelectedExistingFiles;
+    private JButton jButtonCancel;
+    private JButton jButtonOK;
+    private JButton jButtonRemove;
+    private JLabel jLabel1;
+    private JLabel jLabelAlreadyAvailable;
+    private JLabel jLabelFileType;
+    private JLabel jLabelFileType2;
+    private JList<GeckoFile> jListAvailableFiles;
+    private JList<GeckoFile> jListSelectedFilesToAdd;
+    private JPanel jPanel1;
+    private JPanel jPanel2;
+    private JPanel jPanel3;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
+    private JRadioButton jRadioButtonIsExternalExisting;
+    private JRadioButton jRadioButtonIsExternalNew;
+    private JRadioButton jRadioButtonIsInternalExisting;
+    private JRadioButton jRadioButtonIsInternalNew;
+    private JScrollPane jScrollPane2;
+    private JScrollPane jScrollPane3;
+    private JScrollPane jScrollPane4;
+    private JTabbedPane jTabbedPane1;
+    private JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }

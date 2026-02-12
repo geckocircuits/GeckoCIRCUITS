@@ -33,8 +33,8 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTransferFunction.class, "TF", I18nKeys.TRANSFER_FUNKTION_H_S, I18nKeys.DEFINES_A_TRANSFER_FUNCTION);
     private double[] _zeros = new double[MAX_ARRAY_SIZE];
     private double[] _poles = new double[MAX_ARRAY_SIZE];
-    private double[] _numeratorPolynom = new double[ReglerTransferFunction.MAX_ARRAY_SIZE];
-    private double[] _denomPolynom = new double[ReglerTransferFunction.MAX_ARRAY_SIZE];
+    private double[] _numeratorPolynom = new double[MAX_ARRAY_SIZE];
+    private double[] _denomPolynom = new double[MAX_ARRAY_SIZE];
     private transient StateSpaceCalculator _stateSpaceCalc;
     public static final int MAX_ARRAY_SIZE = 20;
     private transient StateVariables _savedState;

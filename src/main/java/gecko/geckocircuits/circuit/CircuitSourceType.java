@@ -36,18 +36,18 @@ public enum CircuitSourceType {
     }
     
     public static CircuitSourceType getFromID(final int idValue) {
-        for(CircuitSourceType tmp : CircuitSourceType.values()) {
+        for(CircuitSourceType tmp : values()) {
             if(idValue == tmp._oldGeckoID) {
                     return tmp;
             }
         }
-        for(CircuitSourceType tmp : CircuitSourceType.values()) {
+        for(CircuitSourceType tmp : values()) {
             if(idValue == tmp._newGeckoID) {
                     return tmp;
             }
         }
         assert false;
-        return CircuitSourceType.QUELLE_DC;
+        return QUELLE_DC;
     }
     
     public int getOldGeckoID() {

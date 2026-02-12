@@ -206,7 +206,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
             try {
                 _zvDatenRam = DataContainerSimple.fabricConstantDtTimeSeries(1, (int) ((SimulationsKern.getStaticTEND() - SimulationsKern.getStaticTSTART()) / deltaT)
                         + DATA_INDEX_ADD);
-            } catch (java.lang.OutOfMemoryError err) {
+            } catch (OutOfMemoryError err) {
                 _zvDatenRam = null;
                 JOptionPane.showMessageDialog(null,
                         "Could not allocate enough memory for EMI calculation block!",

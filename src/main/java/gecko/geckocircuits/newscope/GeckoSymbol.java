@@ -44,17 +44,17 @@ public enum GeckoSymbol {
     
 
     static GeckoSymbol getFromCode(final int code) {
-        for(GeckoSymbol val : GeckoSymbol.values()) {
+        for(GeckoSymbol val : values()) {
             if(val._code == code) {
                 return val;
             }
         }
         
-        return GeckoSymbol.CROSS;
+        return CROSS;
     }
     
     static GeckoSymbol getFromOrdinal(final int ordinal) {
-        for(GeckoSymbol val : GeckoSymbol.values()) {
+        for(GeckoSymbol val : values()) {
             if(val.ordinal() == ordinal) {
                 return val;
             }

@@ -88,7 +88,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
             @Override
             public void paintComponent(final java.awt.Graphics graphics) {
                 try {
-                    graphics.setColor(java.awt.Color.white);
+                    graphics.setColor(Color.white);
                     graphics.fillRect(0, 0, RECT_SIZE, RECT_SIZE);  // weisser Hintergrund
                     URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
                     // Fix for Java 21: use URL constructor instead of URI.toURL()
@@ -117,7 +117,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
             @Override
             public void paintComponent(final java.awt.Graphics graphics) {
                 try {
-                    graphics.setColor(java.awt.Color.white);
+                    graphics.setColor(Color.white);
                     graphics.fillRect(0, 0, RECT_SIZE, RECT_SIZE);  // weisser Hintergrund
                     URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
                     // Fix for Java 21: use URL constructor instead of URI.toURL()

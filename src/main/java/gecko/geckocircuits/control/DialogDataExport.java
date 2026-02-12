@@ -303,7 +303,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jButtonAbort = new javax.swing.JButton();
         jButtonFileChooser = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("Data export");
         setLocationByPlatform(true);
         setResizable(false);

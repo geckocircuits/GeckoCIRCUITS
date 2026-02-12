@@ -23,7 +23,7 @@ public enum Enabled {
     DISABLED_SHORT;
     
     public static Enabled getFromOrdinal(final int ordinal) {
-        for(Enabled val : Enabled.values()) {
+        for(Enabled val : values()) {
             if(val.ordinal() == ordinal) {
                 return val;
             }

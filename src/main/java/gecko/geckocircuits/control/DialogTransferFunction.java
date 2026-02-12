@@ -823,7 +823,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     private javax.swing.JTextField jTFInsertNumberRe;
     private gecko.geckocircuits.allg.FormatJTextField jTextFieldConst;
     private javax.swing.JTextField jTextFieldName;
-    private gecko.geckocircuits.control.FractionPrinter jTextFieldPoleZ;
-    private gecko.geckocircuits.control.FractionPrinter jTextFieldPoly;
+    private FractionPrinter jTextFieldPoleZ;
+    private FractionPrinter jTextFieldPoly;
     // End of variables declaration//GEN-END:variables
 }

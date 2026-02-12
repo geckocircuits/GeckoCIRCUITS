@@ -19,7 +19,7 @@ public enum CompileStatus {
     NOT_COMPILED, COMPILED_SUCCESSFULL, COMPILE_ERROR;
 
     public static CompileStatus getFromOrdinal(final int ordinal) {
-        for (CompileStatus val : CompileStatus.values()) {
+        for (CompileStatus val : values()) {
             if (val.ordinal() == ordinal) {
                 return val;
             }

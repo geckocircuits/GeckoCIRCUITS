@@ -498,7 +498,7 @@ public class GraferV3 extends JPanel {
             grL.reset();
             grL.moveTo(_xAchseX[i1], _yAchseX[i1]);
             grL.lineTo(_xAchseX[i1] + breitePix[i1], _yAchseX[i1]);
-            if (linienStilAchsenX[i1] != GraferV3.INVISIBLE) {
+            if (linienStilAchsenX[i1] != INVISIBLE) {
                 g2.draw(grL);
                 g2.drawString(xAchseBeschriftung[i1], _xAchseX[i1] + breitePix[i1] / 2, _yAchseX[i1] + posXtickLabels[i1]);
             }
@@ -523,7 +523,7 @@ public class GraferV3 extends JPanel {
             grL.reset();
             grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
             grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
-            if (linienStilAchsenY[i1] != GraferV3.INVISIBLE) {
+            if (linienStilAchsenY[i1] != INVISIBLE) {
                 g2.draw(grL);
                 g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
             }
@@ -602,7 +602,7 @@ public class GraferV3 extends JPanel {
         //-----------------------
         // jetzt die Linie ziehen:
         grL.reset();
-        if (kurveLinienstil[i1] != GraferV3.INVISIBLE) {            
+        if (kurveLinienstil[i1] != INVISIBLE) {            
             grL.moveTo(xPix[0], yPix[0]);
             for (int i5 = 1; i5 < anzKurvenpunkteImWorksheet; i5++) {
                 if(xPix[i5] < 2000 && yPix[i5] < 2000) { // old uwe-bug!
@@ -1085,7 +1085,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(tickXminor[indexAchseX][i2], _yAchseY[indexAchseY]);
                             grL.lineTo(tickXminor[indexAchseX][i2], _yAchseY[indexAchseY] - hoehePix[indexAchseY]);
-                            if (linStilGridNormalXminor[i1] != GraferV3.INVISIBLE) {
+                            if (linStilGridNormalXminor[i1] != INVISIBLE) {
                                 g2.draw(grL);
                             }
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
@@ -1117,7 +1117,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(tickX[indexAchseX][i2], _yAchseY[indexAchseY]);
                             grL.lineTo(tickX[indexAchseX][i2], _yAchseY[indexAchseY] - hoehePix[indexAchseY]);
-                            if (linStilGridNormalX[i1] != GraferV3.INVISIBLE) {
+                            if (linStilGridNormalX[i1] != INVISIBLE) {
                                 g2.draw(grL);
                             }
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
@@ -1166,7 +1166,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(_xAchseX[indexAchseX], tickYminor[indexAchseY][i2]);
                             grL.lineTo(_xAchseX[indexAchseX] + breitePix[indexAchseX], tickYminor[indexAchseY][i2]);
-                            if (linStilGridNormalYminor[i1] != GraferV3.INVISIBLE) {
+                            if (linStilGridNormalYminor[i1] != INVISIBLE) {
                                 g2.draw(grL);
                             }
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
@@ -1198,7 +1198,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(_xAchseX[indexAchseX], tickY[indexAchseY][i2]);
                             grL.lineTo(_xAchseX[indexAchseX] + breitePix[indexAchseX], tickY[indexAchseY][i2]);
-                            if (linStilGridNormalY[i1] != GraferV3.INVISIBLE) {
+                            if (linStilGridNormalY[i1] != INVISIBLE) {
                                 g2.draw(grL);
                             }
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
@@ -1409,31 +1409,31 @@ public class GraferV3 extends JPanel {
 
     public static Color selectColor(int selector) {
         switch (selector) {
-            case GraferV3.BLACK:
+            case BLACK:
                 return Color.black;
-            case GraferV3.RED:
+            case RED:
                 return Color.red;
-            case GraferV3.GREEN:
+            case GREEN:
                 return Color.green;
-            case GraferV3.BLUE:
+            case BLUE:
                 return Color.blue;
-            case GraferV3.DARKGRAY:
+            case DARKGRAY:
                 return Color.darkGray;
-            case GraferV3.GRAY:
+            case GRAY:
                 return Color.gray;
-            case GraferV3.LIGTHGRAY:
+            case LIGTHGRAY:
                 return Color.lightGray;
-            case GraferV3.WHITE:
+            case WHITE:
                 return Color.white;
-            case GraferV3.MAGENTA:
+            case MAGENTA:
                 return Color.magenta;
-            case GraferV3.CYAN:
+            case CYAN:
                 return Color.cyan;
-            case GraferV3.ORANGE:
+            case ORANGE:
                 return Color.orange;
-            case GraferV3.YELLOW:
+            case YELLOW:
                 return Color.yellow;
-            case GraferV3.DARKGREEN:
+            case DARKGREEN:
                 return Color.decode("0x006400");
             default:
                 System.out.println("Fehler: dtcjjztdm " + selector);
@@ -1442,8 +1442,8 @@ public class GraferV3 extends JPanel {
     }
 
     public static int getIndexForColorSelector(String fx) {
-        for (int i1 = 0; i1 < GraferV3.FARBEN.length; i1++) {
-            if (GraferV3.FARBEN[i1].equals(fx)) {
+        for (int i1 = 0; i1 < FARBEN.length; i1++) {
+            if (FARBEN[i1].equals(fx)) {
                 return i1;
             }
         }
@@ -1451,43 +1451,43 @@ public class GraferV3 extends JPanel {
     }
 
     public static Color getSelectedColor(String col) {
-        if (col.equals(GraferV3.FARBEN[ 0])) {
+        if (col.equals(FARBEN[ 0])) {
             return Color.black;
         }
-        if (col.equals(GraferV3.FARBEN[ 1])) {
+        if (col.equals(FARBEN[ 1])) {
             return Color.red;
         }
-        if (col.equals(GraferV3.FARBEN[ 2])) {
+        if (col.equals(FARBEN[ 2])) {
             return Color.green;
         }
-        if (col.equals(GraferV3.FARBEN[ 3])) {
+        if (col.equals(FARBEN[ 3])) {
             return Color.blue;
         }
-        if (col.equals(GraferV3.FARBEN[ 4])) {
+        if (col.equals(FARBEN[ 4])) {
             return Color.darkGray;
         }
-        if (col.equals(GraferV3.FARBEN[ 5])) {
+        if (col.equals(FARBEN[ 5])) {
             return Color.gray;
         }
-        if (col.equals(GraferV3.FARBEN[ 6])) {
+        if (col.equals(FARBEN[ 6])) {
             return Color.lightGray;
         }
-        if (col.equals(GraferV3.FARBEN[ 7])) {
+        if (col.equals(FARBEN[ 7])) {
             return Color.white;
         }
-        if (col.equals(GraferV3.FARBEN[ 8])) {
+        if (col.equals(FARBEN[ 8])) {
             return Color.magenta;
         }
-        if (col.equals(GraferV3.FARBEN[ 9])) {
+        if (col.equals(FARBEN[ 9])) {
             return Color.cyan;
         }
-        if (col.equals(GraferV3.FARBEN[10])) {
+        if (col.equals(FARBEN[10])) {
             return Color.orange;
         }
-        if (col.equals(GraferV3.FARBEN[11])) {
+        if (col.equals(FARBEN[11])) {
             return Color.yellow;
         }
-        if (col.equals(GraferV3.FARBEN[12])) {
+        if (col.equals(FARBEN[12])) {
             return Color.decode("0x006400");
         }
         return null;

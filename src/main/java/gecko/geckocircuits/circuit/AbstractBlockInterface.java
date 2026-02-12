@@ -51,7 +51,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     public List<UserParameter<? extends Object>> registeredParameters = new ArrayList<UserParameter<? extends Object>>();
     private ComponentDirection orientationBeforeMove = ComponentDirection.NORTH_SOUTH;
-    private gecko.geckocircuits.control.Point _sheetPosBeforeMove = new gecko.geckocircuits.control.Point(0, 0);
+    private Point _sheetPosBeforeMove = new Point(0, 0);
     /**
      * I use "lazy initialization" for the idstring, since the string is built
      * from the "type number", and the type is not available within the
@@ -612,7 +612,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             }
         }
 
-        setSheetPositionWithoutUndo(new gecko.geckocircuits.control.Point(moveToPoint.x + _sheetPosBeforeMove.x,
+        setSheetPositionWithoutUndo(new Point(moveToPoint.x + _sheetPosBeforeMove.x,
                 moveToPoint.y + _sheetPosBeforeMove.y));
     }
 
@@ -632,7 +632,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public void setPositionWithoutUndo(final int posX, final int posY) {
-        setSheetPositionWithoutUndo(new gecko.geckocircuits.control.Point(posX, posY));
+        setSheetPositionWithoutUndo(new Point(posX, posY));
         this.absetzenElement();
     }
 
@@ -844,14 +844,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     /**
      * @return the positionVorVerschieben
      */
-    public gecko.geckocircuits.control.Point getPositionVorVerschieben() {
+    public Point getPositionVorVerschieben() {
         return _sheetPosBeforeMove;
     }
 
     /**
      * @param positionVorVerschieben the positionVorVerschieben to set
      */
-    public void setPositionVorVerschieben(gecko.geckocircuits.control.Point positionVorVerschieben) {
+    public void setPositionVorVerschieben(Point positionVorVerschieben) {
         this._sheetPosBeforeMove = positionVorVerschieben;
     }
 

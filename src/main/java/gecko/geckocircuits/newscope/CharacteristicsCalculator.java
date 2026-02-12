@@ -297,7 +297,7 @@ public final class CharacteristicsCalculator {
         for (int i = 0; i < rows.length; i++) {
             rows[i] = i;
         }
-        return CharacteristicsCalculator.calculateFabric(worksheet, rows, rng1, rng2);
+        return calculateFabric(worksheet, rows, rng1, rng2);
     }
 
     @SuppressFBWarnings(value = "MS_EXPOSE_REP",

@@ -77,7 +77,7 @@ public final class GeckoFile {
         INTERNAL, EXTERNAL;
 
         private static StorageType fromOrdinal(final int ord) {
-            for (StorageType tmp : StorageType.values()) {
+            for (StorageType tmp : values()) {
                 if (tmp.ordinal() == ord) {
                     return tmp;
                 }

@@ -36,13 +36,13 @@ public enum SolverType {
     }
    
     public static SolverType getFromOldGeckoIndex(final int oldIndex) {
-        for(SolverType type : SolverType.values()) {
+        for(SolverType type : values()) {
             if(type._oldGeckoIndex == oldIndex) {
                 return type;
             }
         }
         assert false;
-        return SolverType.SOLVER_BE;
+        return SOLVER_BE;
     }
     
 }

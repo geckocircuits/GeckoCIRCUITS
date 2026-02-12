@@ -87,7 +87,7 @@ public class DialogExternal extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jButtonOk = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("External interface");
         setResizable(false);
 

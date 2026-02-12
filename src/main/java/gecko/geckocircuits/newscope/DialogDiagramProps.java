@@ -19,7 +19,7 @@ import javax.swing.JDialog;
  *
  * @author andy
  */
-class DialogDiagramProps extends javax.swing.JDialog {
+class DialogDiagramProps extends JDialog {
     private final AbstractDiagram _diagram;
     private final GraferV4 _grafer;
     
@@ -218,9 +218,9 @@ class DialogDiagramProps extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private gecko.geckocircuits.newscope.JPanelAxisSettings2 jPanelAxisSettingsX;
-    private gecko.geckocircuits.newscope.JPanelAxisSettings2 jPanelAxisSettingsY;
-    private gecko.geckocircuits.newscope.JPanelAxisSettings2 jPanelAxisSettingsY2;
+    private JPanelAxisSettings2 jPanelAxisSettingsX;
+    private JPanelAxisSettings2 jPanelAxisSettingsY;
+    private JPanelAxisSettings2 jPanelAxisSettingsY2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextFieldName;
     // End of variables declaration//GEN-END:variables

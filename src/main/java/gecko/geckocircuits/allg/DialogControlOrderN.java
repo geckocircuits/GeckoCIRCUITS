@@ -91,14 +91,14 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 
         jButton1.setText("jButton1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
 
         jScrollPane1.setViewportView(jListOptimized);
 
         jButtonOK.setText("OK");
-        jButtonOK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
             }
         });
@@ -113,8 +113,8 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         jScrollPane2.setViewportView(jListUser);
 
         jButtonReset.setText("Reset");
-        jButtonReset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonReset.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonResetActionPerformed(evt);
             }
         });
@@ -216,10 +216,10 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
     
     
     
-    private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
+    private void jButtonResetActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
     }//GEN-LAST:event_jButtonResetActionPerformed
 
-    private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
+    private void jButtonOKActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonOKActionPerformed
     }//GEN-LAST:event_jButtonOKActionPerformed
 
     /**

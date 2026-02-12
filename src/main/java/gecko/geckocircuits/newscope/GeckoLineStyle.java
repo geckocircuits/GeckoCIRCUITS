@@ -32,7 +32,7 @@ public enum GeckoLineStyle {
     SOLID_THIN(-3333336, new BasicStroke(0.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.1f));
 
     static GeckoLineStyle getFromOrdinal(final int ordinal) {
-        for (GeckoLineStyle val : GeckoLineStyle.values()) {
+        for (GeckoLineStyle val : values()) {
             if (val.ordinal() == ordinal) {
                 return val;
             }
@@ -58,7 +58,7 @@ public enum GeckoLineStyle {
     
 
     public static GeckoLineStyle setzeLinienstilSelektiert(final int ordinal) {
-        for (GeckoLineStyle val : GeckoLineStyle.values()) {
+        for (GeckoLineStyle val : values()) {
             if (val.ordinal() == ordinal) {
                 return val;
             }
@@ -76,13 +76,13 @@ public enum GeckoLineStyle {
     }
 
     public static GeckoLineStyle getFromCode(final int gLSCode) {
-        for (GeckoLineStyle val : GeckoLineStyle.values()) {
+        for (GeckoLineStyle val : values()) {
             if (val._code == gLSCode) {
                 return val;
             }
         }
         
         // default:
-        return GeckoLineStyle.SOLID_PLAIN;
+        return SOLID_PLAIN;
     }
 }

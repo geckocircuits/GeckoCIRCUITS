@@ -202,7 +202,7 @@ public class GeckoSim {
         }
 
         if (operatingmode != OperatingMode.SIMULINK && operatingmode != OperatingMode.EXTERNAL
-                && !GeckoSim._isTestingMode) {
+                && !_isTestingMode) {
             if (JavaMemoryRestart.isMemoryRestartRequired(reqMem)
                     && JavaMemoryRestart.startNewGeckoCIRCUITSJVM(reqMem, args, applicationProps.getProperty("JAVACOMMAND"))) {
                 System.exit(12);
@@ -490,8 +490,8 @@ public class GeckoSim {
                 System.err.println("Java home: " + System.getProperty("java.home"));
             }
             
-            javax.script.ScriptEngineManager manager = new javax.script.ScriptEngineManager();
-            javax.script.ScriptEngine engine = manager.getEngineByName("js");
+            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngine engine = manager.getEngineByName("js");
             if (engine == null) {
                 engine = manager.getEngineByExtension("js");
             }

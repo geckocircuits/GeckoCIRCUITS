@@ -190,7 +190,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
 
         this.addWindowListener(this);
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);  // so that the 'QuitWithoutSaving' dialog can be raised ...
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);  // so that the 'QuitWithoutSaving' dialog can be raised ...
         this.addComponentListener(this);
         //---------------------------------
 
@@ -235,7 +235,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             GlobalFilePathes.DATNAM = "Applet";
         }
 
-        if (!MainWindow.IS_BRANDED) {
+        if (!IS_BRANDED) {
             //StartupWindow.fabricUnBlocking();
         }
 
@@ -860,7 +860,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         try {
             ProjectData datLK = new ProjectData(
                     getSize(),
-                    MainWindow.optimizerParameterData,
+                    optimizerParameterData,
                     uniqueFileID, _scripter, _fileManager, _se, _solverSettings);
             //------------
             // Plain-Test variant in ASCII -->
@@ -939,7 +939,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
     public void createNewFile() {
         optimizerParameterData.clear();
-        MainWindow.aktuellerDateiName = UNTITLED;
+        aktuellerDateiName = UNTITLED;
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
         sea._typElement = null;
         _se.resetCircuitSheetsForNewFile();
@@ -1714,14 +1714,14 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             return;
         }
 
-        if (!MainWindow.IS_BRANDED) {
+        if (!IS_BRANDED) {
             GeckoSim.saveProperties();
         }
         if (_se.getZustandGeaendert()) {
             int returnOption = JOptionPane.showConfirmDialog(
                     this,
                     "The model has changed since last save to the model\nfile. Do you like to save your model "
-                    + "to the file:\n" + MainWindow.aktuellerDateiName + "\nbefore exiting GeckoCIRCUITS?",
+                    + "to the file:\n" + aktuellerDateiName + "\nbefore exiting GeckoCIRCUITS?",
                     "Warning: Exit GeckoCIRCUITS without saving!",
                     JOptionPane.YES_NO_CANCEL_OPTION);
 

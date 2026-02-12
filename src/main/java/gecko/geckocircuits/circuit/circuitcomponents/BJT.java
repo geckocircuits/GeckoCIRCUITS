@@ -273,6 +273,6 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
     
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);        
+        return getCalculatorsFromSubComponents(this);        
     }
 }

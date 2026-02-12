@@ -314,6 +314,6 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     @Override
     @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return AbstractCircuitBlockInterface.getCalculatorsFromSubComponents(this);
+        return getCalculatorsFromSubComponents(this);
     }
 }

@@ -147,7 +147,7 @@ implements Operationable, Nonlinearable {
                 final String errorMessage = "Non-linear characteristic file format error: \n" + e.getMessage();
                 final String errorTitle = getStringID() + ": ERROR - Number format exception";
                 JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
-            } catch (java.io.IOException e) {
+            } catch (IOException e) {
                 final String errorMessage = "Error reading non-linear characteristic file in " + getStringID() + "\n" + e.getMessage();
                 final String errorTitle = getStringID() + ": ERROR - I/O exception";
                 JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
@@ -230,7 +230,7 @@ implements Operationable, Nonlinearable {
                 File nonLinFile = new File(characteristicFileName);                
                 //if it doesn't exist, try first to see if it is in the same directory as the currently open model file
                 if (!nonLinFile.exists()) {
-                    final File modelFile = new File(gecko.geckocircuits.allg.MainWindow.getOpenFileName());
+                    final File modelFile = new File(MainWindow.getOpenFileName());
                     final String currentModelDirectory = modelFile.getParent();
                     final String nonLinFileName = currentModelDirectory + System.getProperty("file.separator") + characteristicFileName;
                     nonLinFile = new File(nonLinFileName);                    
@@ -270,7 +270,7 @@ implements Operationable, Nonlinearable {
             final String errorMessage = "Non-linear characteristic file format error: \n" + e.getMessage();
             final String errorTitle = getStringID() + ": ERROR - Number format exception";
             JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             final String errorMessage = "Error reading non-linear characteristic file in " + getStringID() + "\n" + e.getMessage();
             final String errorTitle = getStringID() + ": ERROR - I/O exception";
             JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
@@ -278,7 +278,7 @@ implements Operationable, Nonlinearable {
     }
 
     //reads a non linear characteristic from a file, returns an array which contains two array - non-linear x, non-linear y
-    public static double[][] readNonLinearCharacteristicFromFile(GeckoFile file) throws NumberFormatException, java.io.IOException {
+    public static double[][] readNonLinearCharacteristicFromFile(GeckoFile file) throws NumberFormatException, IOException {
         double[] nonLinX, nonLinY;
         ArrayList<String> lines = new ArrayList<String>();
         BufferedReader in = file.getBufferedReader();
@@ -336,7 +336,7 @@ implements Operationable, Nonlinearable {
                 File newData = writeNonLinearCharacteristicToFile(data, new File(fileName));
                 nonLinearChar.update(newData);
                 nonLinearLastModified = nonLinearChar.checkModificationTimeStamp();
-            } catch (java.io.IOException e) {
+            } catch (IOException e) {
                 final String errorMessage = "Error writing non-linear characteristic file in " + getStringID() + "\n" + e.getMessage();
                 final String errorTitle = getStringID() + ": ERROR - I/O exception";
                 JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
@@ -492,7 +492,7 @@ implements Operationable, Nonlinearable {
     }
     
     //writes a non-linear characteristic to file
-    public static File writeNonLinearCharacteristicToFile(double[][] data, File nonLinFile) throws java.io.IOException {
+    public static File writeNonLinearCharacteristicToFile(double[][] data, File nonLinFile) throws IOException {
 
         BufferedWriter out = new BufferedWriter(new java.io.FileWriter(nonLinFile, StandardCharsets.UTF_8));
         for (int i = 0; i < data[0].length; i++) {

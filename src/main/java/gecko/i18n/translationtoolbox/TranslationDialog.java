@@ -28,7 +28,7 @@ public class TranslationDialog extends javax.swing.JFrame {
     public TranslationDialog(String dialog) {
         initComponents();
         setLocationRelativeTo(null); // display in center screen
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         jLabel1.setText(dialog);
         
@@ -48,7 +48,7 @@ public class TranslationDialog extends javax.swing.JFrame {
     public TranslationDialog(String dialog1, String dialog2) {
         initComponents();
         setLocationRelativeTo(null); // display in center screen
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         jLabel1.setText(dialog1);
         jLabel2.setText(dialog2);
@@ -75,7 +75,7 @@ public class TranslationDialog extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

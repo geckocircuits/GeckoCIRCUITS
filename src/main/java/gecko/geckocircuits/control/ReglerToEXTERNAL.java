@@ -63,7 +63,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
     @Override
     public void deleteActionIndividual() {
         super.deleteActionIndividual();
-        ReglerToEXTERNAL.toExternalsInternal.remove(this);
+        toExternalsInternal.remove(this);
     }
 
     @Override
@@ -137,7 +137,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
                             // von 'parameter[]' kann der Vektor mit den Signal-Werte vom externen 
                             // Programm abgeholt werden
                         }
-                    } catch (java.lang.ArrayIndexOutOfBoundsException ex) {
+                    } catch (ArrayIndexOutOfBoundsException ex) {
                         dataVector = new double[XIN.size()];
                         for (int i1 = 0; i1 < XIN.size(); i1++) {
                             dataVector[i1] = _inputSignal[i1][0];

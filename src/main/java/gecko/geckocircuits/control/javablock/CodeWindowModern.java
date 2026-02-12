@@ -58,7 +58,7 @@ public class CodeWindowModern extends JFrame {
     public CodeWindowModern(ReglerJavaFunction regelBlock, StringBuffer outputStringBuffer) {
         super();
         setTitle("Java Custom Code Control Block");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(1050, 800);
         setLocationByPlatform(true);
         setMinimumSize(new Dimension(800, 600));
@@ -175,7 +175,7 @@ public class CodeWindowModern extends JFrame {
         RTextScrollPane scrollPane = new RTextScrollPane(textArea);
         scrollPane.setLineNumbersEnabled(true);
         scrollPane.setFoldIndicatorEnabled(true);
-        jPanelToInsert.add(scrollPane, java.awt.BorderLayout.CENTER);
+        jPanelToInsert.add(scrollPane, BorderLayout.CENTER);
         return textArea;
     }
 

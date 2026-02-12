@@ -119,7 +119,7 @@ public class TechFormat implements Serializable {
     // (1) Number (double) is converted to a string for GUI output
     //
     public String formatT(double x, String pattern) {
-        if (pattern.equals(TechFormat.FORMAT_AUTO)) {
+        if (pattern.equals(FORMAT_AUTO)) {
             return this.formatENG(x, anzDigits);
         } else {
             df.applyPattern(pattern);
@@ -323,7 +323,7 @@ public class TechFormat implements Serializable {
             12345.6, 123456, 1234560, 12345600, 123456000, 1234560000, 300, 7.1, 7.11, 7.12, 0.071
         };
         for (int i1 = 0; i1 < data.length; i1++) {
-            System.out.println(this.formatT(data[i1], TechFormat.FORMAT_AUTO) + "\t\t" + data[i1]);
+            System.out.println(this.formatT(data[i1], FORMAT_AUTO) + "\t\t" + data[i1]);
         }
         //----------------------------
     }
@@ -337,13 +337,13 @@ public class TechFormat implements Serializable {
             int e2 = RANDOM.nextInt((int) Math.pow(10, e1));  // integer, maximum 8 digits
             int e3 = RANDOM.nextInt(31) - 15;  // [-15 ... +15]
             double data = e2 * Math.pow(10, e3);
-            double q1 = Double.parseDouble(this.formatT(data, TechFormat.FORMAT_AUTO));
+            double q1 = Double.parseDouble(this.formatT(data, FORMAT_AUTO));
             double ratio = q1 / data;
             if (ratio > 1) {
                 ratio = data / q1;
             }
             if (ratio < 0.9999) {
-                System.out.println(data + "\t\t" + this.formatT(data, TechFormat.FORMAT_AUTO) + "\t\tratio= " + ratio);
+                System.out.println(data + "\t\t" + this.formatT(data, FORMAT_AUTO) + "\t\tratio= " + ratio);
             }
         }
     }

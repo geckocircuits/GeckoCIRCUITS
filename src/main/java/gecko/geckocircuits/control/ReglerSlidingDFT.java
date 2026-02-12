@@ -139,13 +139,13 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
         
 
         static OutputData getFromIntCode(final int code) {
-            for (OutputData compare : OutputData.values()) {
+            for (OutputData compare : values()) {
                 if (compare.getIntegerCode() == code) {
                     return compare;
                 }
             }
             assert false;
-            return OutputData.ABS;
+            return ABS;
         }
 
         private int getIntegerCode() {

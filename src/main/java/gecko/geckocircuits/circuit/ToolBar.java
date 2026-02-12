@@ -30,7 +30,7 @@ public class ToolBar extends JFrame {
 
     public ToolBar() {
         super("ToolBar");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         ImageIcon image1 = new ImageIcon("button1.gif");
         JButton button1 = new JButton(image1);
         ImageIcon image2 = new ImageIcon("button2.gif");

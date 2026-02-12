@@ -222,7 +222,7 @@ public class DialogFourier extends JDialog {
                             diagramm.setLocationRelativeTo(ich);
                             diagramm.setVisible(true);
                             //-----------------
-                        } catch (java.lang.OutOfMemoryError er) {
+                        } catch (OutOfMemoryError er) {
                             JOptionPane.showMessageDialog(null,
                                     "Could not allocate enough memory for Fourier transformation!",
                                     "Memory error!",

@@ -58,7 +58,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
             arrayIndex(this, 1).
             build();
     final UserParameter<CircuitSourceType> sourceType = UserParameter.Builder.
-            <CircuitSourceType>start("sourceType", CircuitSourceType.QUELLE_DC).
+            <CircuitSourceType>start("sourceType", QUELLE_DC).
             mapDomains(ConnectorType.LK, ConnectorType.RELUCTANCE, ConnectorType.THERMAL).
             longName(I18nKeys.TYPE_OF_SOURCE).
             shortName("type", "type", "type").
@@ -70,7 +70,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
             mapDomains(ConnectorType.LK, ConnectorType.RELUCTANCE, ConnectorType.THERMAL).
             longName(I18nKeys.FREQUENCY).
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
-            showWhenEnumValueIsSet(sourceType, CircuitSourceType.QUELLE_SIN).
+            showWhenEnumValueIsSet(sourceType, QUELLE_SIN).
             shortName("f", "f", "f").
             unit("Hz", "Hz", "Hz").
             arrayIndex(this, 2).
@@ -80,7 +80,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
             mapDomains(ConnectorType.LK, ConnectorType.RELUCTANCE, ConnectorType.THERMAL).
             longName(I18nKeys.PHASE_SHIFT_OF_WAVEFORM).
             showInTextInfo(TextInfoType.SHOW_NON_NULL).
-            showWhenEnumValueIsSet(sourceType, CircuitSourceType.QUELLE_SIN).
+            showWhenEnumValueIsSet(sourceType, QUELLE_SIN).
             shortName("phase", "phase", "phase").
             unit("degrees", "degrees", "degrees").
             arrayIndex(this, 4).
@@ -90,7 +90,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
             mapDomains(ConnectorType.LK, ConnectorType.RELUCTANCE, ConnectorType.THERMAL).
             longName(I18nKeys.GAIN_FOR_DIRECT_POTENTIAL_CONTROL).
             shortName("gain").
-            showWhenEnumValueIsSet(sourceType, CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY).
+            showWhenEnumValueIsSet(sourceType, QUELLE_VOLTAGECONTROLLED_DIRECTLY).
             unit("", "", "").
             arrayIndex(this, 11).
             build();
@@ -105,7 +105,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
             mapDomains(getDomains()).
             longName(I18nKeys.OFFSET_OF_WAVEFORM_FROM_ZERO).
             showInTextInfo(TextInfoType.SHOW_NON_NULL).
-            showWhenEnumValueIsSet(sourceType, CircuitSourceType.QUELLE_SIN).
+            showWhenEnumValueIsSet(sourceType, QUELLE_SIN).
             shortName("offset").
             unit(getSortedDomainUnits()).
             arrayIndex(this, 3).
@@ -198,7 +198,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
         parameter[7] = 0;
         parameter[8] = 0;
         parameter[9] = 0;
-        if (sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT) {
+        if (sourceType.getValue() == QUELLE_SIGNALGESTEUERT) {
             parameter[1] = 0;
         }
     }
@@ -239,14 +239,14 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
     }
 
     public void addTextInfoErrorReference() {
-        if ((sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT)
-                || (sourceType.getValue() == CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY)) {
-            if (sourceType.getValue() == CircuitSourceType.QUELLE_SIGNALGESTEUERT) {
+        if ((sourceType.getValue() == QUELLE_SIGNALGESTEUERT)
+                || (sourceType.getValue() == QUELLE_VOLTAGECONTROLLED_DIRECTLY)) {
+            if (sourceType.getValue() == QUELLE_SIGNALGESTEUERT) {
                 final String couplingLabel = getPotentialCoupling().getLabels()[0];
                 if (couplingLabel == null || couplingLabel.isEmpty()) {
                     _textInfo.addErrorValue("no control-sgn");
                 }
-            } else if (sourceType.getValue() == CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY) {
+            } else if (sourceType.getValue() == QUELLE_VOLTAGECONTROLLED_DIRECTLY) {
                 if (getComponentCoupling()._coupledElements[0] == null) {
                     _textInfo.addErrorValue("no control-sgn");
                 }

@@ -56,7 +56,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         jTextFieldIdString = new javax.swing.JTextField();
         jButtonOk = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("External interface");
         setResizable(false);
 

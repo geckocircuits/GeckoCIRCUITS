@@ -46,7 +46,7 @@ public class FourierPlotFrame extends javax.swing.JFrame {
         jToolBar1 = new javax.swing.JToolBar();
         jPanelFourier1 = new gecko.geckocircuits.newscope.JPanelFourier();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jToolBar1.setRollover(true);
 

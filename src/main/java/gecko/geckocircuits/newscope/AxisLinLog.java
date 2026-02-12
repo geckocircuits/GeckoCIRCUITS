@@ -28,7 +28,7 @@ enum AxisLinLog {
     }
 
     static AxisLinLog getFromOrdinal(final int ordinal) {
-        for (AxisLinLog val : AxisLinLog.values()) {
+        for (AxisLinLog val : values()) {
             if (val.ordinal() == ordinal) {
                 return val;
             }
@@ -38,11 +38,11 @@ enum AxisLinLog {
     }
     
     static AxisLinLog getFromCode(final int code) {
-        for (AxisLinLog val : AxisLinLog.values()) {
+        for (AxisLinLog val : values()) {
             if (val._code == code) {
                 return val;
             }
         }
-        return AxisLinLog.ACHSE_LIN;
+        return ACHSE_LIN;
     }
 };

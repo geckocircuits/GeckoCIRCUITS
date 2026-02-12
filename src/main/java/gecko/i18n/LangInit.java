@@ -244,7 +244,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Please choose a language:");
 

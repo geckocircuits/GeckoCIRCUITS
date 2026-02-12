@@ -127,14 +127,14 @@ public class DialogDefineAvg extends javax.swing.JDialog {
         jPanelBoxes = new javax.swing.JPanel();
         jButtonOk = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jPanelBoxes.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         jPanelBoxes.setLayout(new javax.swing.BoxLayout(jPanelBoxes, javax.swing.BoxLayout.LINE_AXIS));
 
         jButtonOk.setText("Ok");
-        jButtonOk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonOk.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }
         });
@@ -161,7 +161,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
+    private void jButtonOkActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
       dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

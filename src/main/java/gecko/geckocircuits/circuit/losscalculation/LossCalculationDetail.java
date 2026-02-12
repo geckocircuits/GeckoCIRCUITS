@@ -41,7 +41,7 @@ public enum LossCalculationDetail {
     }
     
     public static LossCalculationDetail getFromDeprecatedFileVersion(final int number) {
-        for(LossCalculationDetail val : LossCalculationDetail.values()) {
+        for(LossCalculationDetail val : values()) {
             if(val.getOldGeckoCIRCUITSOrdinal() == number) {
                 return val;
             }

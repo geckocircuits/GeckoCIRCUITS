@@ -32,7 +32,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
     private javax.swing.JButton jButtonExecute;
     private javax.swing.JButton jButtonExample1;
     private javax.swing.JButton jButtonExample2;
-    private javax.swing.JFrame jFrame1;
+    private JFrame jFrame1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -137,7 +137,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
     }
     
     private void initComponents() {
-        jFrame1 = new javax.swing.JFrame();
+        jFrame1 = new JFrame();
         jButtonCompile = new javax.swing.JButton();
         jButtonExecute = new javax.swing.JButton();
         jButtonCloseWindow = new javax.swing.JButton();
@@ -175,7 +175,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
             .addGap(0, 300, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle(" Optimization Code Processor");
         setLocationByPlatform(true);
 

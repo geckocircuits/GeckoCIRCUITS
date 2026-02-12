@@ -93,7 +93,7 @@ public class FormatJTextField extends JTextField {
             return 0;
         }
         if (zValue.charAt(0) == '$') {
-            return FormatJTextField.IS_VARIABLE;  // GeckoOPTIMIZER
+            return IS_VARIABLE;  // GeckoOPTIMIZER
         }
         try {
             final double xValue = _cf.parseT(zValue);

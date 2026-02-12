@@ -34,7 +34,7 @@ public enum ConnectorType {
     NONE;    
 
     public static ConnectorType fromOrdinal(final int ord) {
-        for (ConnectorType tmp : ConnectorType.values()) {
+        for (ConnectorType tmp : values()) {
             if (tmp.ordinal() == ord) {
                 return tmp;
             }

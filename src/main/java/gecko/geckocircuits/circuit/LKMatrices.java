@@ -83,7 +83,7 @@ public class LKMatrices {
         //------------------------------------
         try {
             this.setzeAnfangsbedingungen(getAnfangsbedVomDialogfenster, solverType);  // pALT und iALT werden gesetzt, zB. u(0) bei C oder i(0) bei L
-        } catch (java.lang.RuntimeException ex) {
+        } catch (RuntimeException ex) {
             // Calculate difference in days      
             ex.printStackTrace();
             throw new RuntimeException("The following error occured at the circuit initialization:\n"

@@ -107,7 +107,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         jCheckBoxIgnore = new javax.swing.JCheckBox();
         jCheckBoxExact = new javax.swing.JCheckBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel1.setText("Search for String:");
@@ -115,7 +115,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         jTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jTextField.setText("Please insert search text");
         jTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+            public void keyReleased(KeyEvent evt) {
                 jTextFieldKeyReleased(evt);
             }
         });
@@ -129,8 +129,8 @@ public final class DialogFindInModel extends javax.swing.JDialog {
 
         jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonClose.setText("Close window");
-        jButtonClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonClose.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
             }
         });
@@ -195,7 +195,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldKeyReleased
+    private void jTextFieldKeyReleased(KeyEvent evt) {//GEN-FIRST:event_jTextFieldKeyReleased
         String searchText = jTextField.getText();        
         if (!searchText.isEmpty()) {
             Set<String> found = _se._visibleCircuitSheet.findString(searchText, jCheckBoxIgnore.isSelected(), !jCheckBoxExact.isSelected());
@@ -206,7 +206,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jTextFieldKeyReleased
 
-    private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
+    private void jButtonCloseActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonCloseActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCloseActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -207,23 +207,23 @@ public final class UZiDisplay extends GeckoDialog {
             }
         }; ;
         jPanel2 = new javax.swing.JPanel();
-        jSpinnerLength1 = new javax.swing.JSpinner();
+        jSpinnerLength1 = new JSpinner();
         jLabel1 = new javax.swing.JLabel();
-        jSpinnerAverage1 = new javax.swing.JSpinner();
+        jSpinnerAverage1 = new JSpinner();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jSpinnerZ1 = new javax.swing.JSpinner();
+        jSpinnerZ1 = new JSpinner();
         jButtonClear = new javax.swing.JButton();
         jToggleButtonClose = new javax.swing.JToggleButton();
         jLabel2 = new javax.swing.JLabel();
-        jSpinnerPauseTime = new javax.swing.JSpinner();
+        jSpinnerPauseTime = new JSpinner();
         jPanel3 = new javax.swing.JPanel();
-        jSpinnerLength2 = new javax.swing.JSpinner();
+        jSpinnerLength2 = new JSpinner();
         jLabel4 = new javax.swing.JLabel();
-        jSpinnerAverage2 = new javax.swing.JSpinner();
+        jSpinnerAverage2 = new JSpinner();
         jLabel5 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jSpinnerZ2 = new javax.swing.JSpinner();
+        jSpinnerZ2 = new JSpinner();
         jRadioButtonLine = new javax.swing.JRadioButton();
         jRadioButtonPoint = new javax.swing.JRadioButton();
 
@@ -231,7 +231,7 @@ public final class UZiDisplay extends GeckoDialog {
         setLocationByPlatform(true);
         setResizable(false);
 
-        jPanelDisplay.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelDisplay.setBackground(new Color(255, 255, 255));
         jPanelDisplay.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout jPanelDisplayLayout = new javax.swing.GroupLayout(jPanelDisplay);
@@ -245,7 +245,7 @@ public final class UZiDisplay extends GeckoDialog {
             .addGap(0, 444, Short.MAX_VALUE)
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, new java.awt.Color(254, 1, 1)));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, new Color(254, 1, 1)));
 
         jSpinnerLength1.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(1.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
 
@@ -309,7 +309,7 @@ public final class UZiDisplay extends GeckoDialog {
 
         jLabel2.setText("Pause time [us]");
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, new java.awt.Color(51, 51, 255)));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, new Color(51, 51, 255)));
 
         jSpinnerLength2.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(1.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
 
@@ -487,13 +487,13 @@ public final class UZiDisplay extends GeckoDialog {
     private javax.swing.JPanel jPanelDisplay;
     private javax.swing.JRadioButton jRadioButtonLine;
     private javax.swing.JRadioButton jRadioButtonPoint;
-    public javax.swing.JSpinner jSpinnerAverage1;
-    public javax.swing.JSpinner jSpinnerAverage2;
-    public javax.swing.JSpinner jSpinnerLength1;
-    public javax.swing.JSpinner jSpinnerLength2;
-    public javax.swing.JSpinner jSpinnerPauseTime;
-    public javax.swing.JSpinner jSpinnerZ1;
-    public javax.swing.JSpinner jSpinnerZ2;
+    public JSpinner jSpinnerAverage1;
+    public JSpinner jSpinnerAverage2;
+    public JSpinner jSpinnerLength1;
+    public JSpinner jSpinnerLength2;
+    public JSpinner jSpinnerPauseTime;
+    public JSpinner jSpinnerZ1;
+    public JSpinner jSpinnerZ2;
     private javax.swing.JToggleButton jToggleButtonClose;
     // End of variables declaration//GEN-END:variables
 }

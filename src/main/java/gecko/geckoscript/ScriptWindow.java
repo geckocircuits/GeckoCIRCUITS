@@ -41,7 +41,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Script window stores simulation access reference for script execution")
-public final class ScriptWindow extends javax.swing.JFrame {
+public final class ScriptWindow extends JFrame {
     ExtraFilesWindow _extSourceWindow;
     private boolean _extWindowInit = false;
     SimulationAccess _circuit;
@@ -164,17 +164,17 @@ public final class ScriptWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButtonCloseWindow = new javax.swing.JButton();
-        jButtonCompile = new javax.swing.JButton();
-        jTabbedPane = new javax.swing.JTabbedPane();
-        jPanelCode = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel2 = new javax.swing.JPanel();
-        jPanelCodeEditor = new javax.swing.JPanel();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jListFunctions =         new javax.swing.JList<FunctionDescription>() {
+        jButtonCloseWindow = new JButton();
+        jButtonCompile = new JButton();
+        jTabbedPane = new JTabbedPane();
+        jPanelCode = new JPanel();
+        jSplitPane1 = new JSplitPane();
+        jPanel2 = new JPanel();
+        jPanelCodeEditor = new JPanel();
+        jSplitPane2 = new JSplitPane();
+        jPanel3 = new JPanel();
+        jScrollPane1 = new JScrollPane();
+        jListFunctions =         new JList<FunctionDescription>() {
 
             public String getToolTipText(MouseEvent e) {
                 int index = locationToIndex(e.getPoint());
@@ -191,131 +191,131 @@ public final class ScriptWindow extends javax.swing.JFrame {
                 return null;
             }
         };
-        jComboBoxCategory = new javax.swing.JComboBox<>();
-        jSplitPane3 = new javax.swing.JSplitPane();
-        jPanel4 = new javax.swing.JPanel();
-        jPanelImports = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanelDeclarations = new javax.swing.JPanel();
-        jPanelCompilerMessages = new javax.swing.JPanel();
-        jPanelCompMessages = new javax.swing.JPanel();
-        jPanelCompilerErrors = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanelRunOutput = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextAreaOutput = new javax.swing.JTextArea();
-        jPanelInfo = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButtonRun = new javax.swing.JButton();
-        jButtonAbort = new javax.swing.JButton();
-        jButtonFunctionDetails1 = new javax.swing.JButton();
-        jButtonAdditionalSources = new javax.swing.JButton();
+        jComboBoxCategory = new JComboBox<>();
+        jSplitPane3 = new JSplitPane();
+        jPanel4 = new JPanel();
+        jPanelImports = new JPanel();
+        jPanel5 = new JPanel();
+        jPanelDeclarations = new JPanel();
+        jPanelCompilerMessages = new JPanel();
+        jPanelCompMessages = new JPanel();
+        jPanelCompilerErrors = new JPanel();
+        jLabel1 = new JLabel();
+        jPanelRunOutput = new JPanel();
+        jScrollPane4 = new JScrollPane();
+        jTextAreaOutput = new JTextArea();
+        jPanelInfo = new JPanel();
+        jScrollPane2 = new JScrollPane();
+        jTextArea1 = new JTextArea();
+        jButtonRun = new JButton();
+        jButtonAbort = new JButton();
+        jButtonFunctionDetails1 = new JButton();
+        jButtonAdditionalSources = new JButton();
 
         setTitle("GeckoSCRIPT");
         setLocationByPlatform(true);
-        setMinimumSize(new java.awt.Dimension(500, 400));
+        setMinimumSize(new Dimension(500, 400));
 
         jButtonCloseWindow.setText("Close window");
-        jButtonCloseWindow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonCloseWindow.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonCloseWindowActionPerformed(evt);
             }
         });
 
         jButtonCompile.setText("Compile code");
-        jButtonCompile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonCompile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonCompileActionPerformed(evt);
             }
         });
 
-        jSplitPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jSplitPane1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jSplitPane1.setDividerLocation(200);
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setOrientation(JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.1);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("public void runScript() { ... }"));
+        jPanel2.setBorder(BorderFactory.createTitledBorder("public void runScript() { ... }"));
 
         jPanelCodeEditor.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelCodeEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 1072, Short.MAX_VALUE)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelCodeEditor, GroupLayout.DEFAULT_SIZE, 1072, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelCodeEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+            jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelCodeEditor, GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
 
         jSplitPane1.setBottomComponent(jPanel2);
 
-        jSplitPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jSplitPane2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jSplitPane2.setDividerLocation(450);
         jSplitPane2.setResizeWeight(0.5);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Available functions"));
+        jPanel3.setBorder(BorderFactory.createTitledBorder("Available functions"));
 
         jListFunctions.setFont(jListFunctions.getFont().deriveFont(jListFunctions.getFont().getSize()-1f));
-        jListFunctions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListFunctions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(jListFunctions);
 
         jComboBoxCategory.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-            .addComponent(jComboBoxCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+            .addComponent(jComboBoxCategory, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jComboBoxCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+            jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addComponent(jComboBoxCategory, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
         );
 
         jSplitPane2.setRightComponent(jPanel3);
 
-        jSplitPane3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jSplitPane3.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jSplitPane3.setDividerLocation(80);
-        jSplitPane3.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane3.setOrientation(JSplitPane.VERTICAL_SPLIT);
         jSplitPane3.setResizeWeight(0.5);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Imports"));
+        jPanel4.setBorder(BorderFactory.createTitledBorder("Imports"));
 
         jPanelImports.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelImports, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+            jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelImports, GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelImports, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+            jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelImports, GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
         );
 
         jSplitPane3.setTopComponent(jPanel4);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Field declarations"));
+        jPanel5.setBorder(BorderFactory.createTitledBorder("Field declarations"));
 
         jPanelDeclarations.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelDeclarations, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
+            jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelDeclarations, GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelDeclarations, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+            jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jPanelDeclarations, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
         );
 
         jSplitPane3.setRightComponent(jPanel5);
@@ -324,15 +324,15 @@ public final class ScriptWindow extends javax.swing.JFrame {
 
         jSplitPane1.setLeftComponent(jSplitPane2);
 
-        javax.swing.GroupLayout jPanelCodeLayout = new javax.swing.GroupLayout(jPanelCode);
+        GroupLayout jPanelCodeLayout = new GroupLayout(jPanelCode);
         jPanelCode.setLayout(jPanelCodeLayout);
         jPanelCodeLayout.setHorizontalGroup(
-            jPanelCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1084, Short.MAX_VALUE)
+            jPanelCodeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 1084, Short.MAX_VALUE)
         );
         jPanelCodeLayout.setVerticalGroup(
-            jPanelCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+            jPanelCodeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(jSplitPane1, GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
         );
 
         jTabbedPane.addTab("Code", jPanelCode);
@@ -343,27 +343,27 @@ public final class ScriptWindow extends javax.swing.JFrame {
 
         jLabel1.setText("Compiler messages:");
 
-        javax.swing.GroupLayout jPanelCompilerMessagesLayout = new javax.swing.GroupLayout(jPanelCompilerMessages);
+        GroupLayout jPanelCompilerMessagesLayout = new GroupLayout(jPanelCompilerMessages);
         jPanelCompilerMessages.setLayout(jPanelCompilerMessagesLayout);
         jPanelCompilerMessagesLayout.setHorizontalGroup(
-            jPanelCompilerMessagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCompilerMessagesLayout.createSequentialGroup()
+            jPanelCompilerMessagesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, jPanelCompilerMessagesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanelCompilerMessagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanelCompMessages, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelCompilerErrors, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE))
+                .addGroup(jPanelCompilerMessagesLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanelCompMessages, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
+                    .addComponent(jLabel1, GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelCompilerErrors, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 1011, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelCompilerMessagesLayout.setVerticalGroup(
-            jPanelCompilerMessagesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCompilerMessagesLayout.createSequentialGroup()
+            jPanelCompilerMessagesLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, jPanelCompilerMessagesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanelCompMessages, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanelCompilerErrors, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelCompMessages, GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelCompilerErrors, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -375,20 +375,20 @@ public final class ScriptWindow extends javax.swing.JFrame {
         jTextAreaOutput.setRows(5);
         jScrollPane4.setViewportView(jTextAreaOutput);
 
-        javax.swing.GroupLayout jPanelRunOutputLayout = new javax.swing.GroupLayout(jPanelRunOutput);
+        GroupLayout jPanelRunOutputLayout = new GroupLayout(jPanelRunOutput);
         jPanelRunOutput.setLayout(jPanelRunOutputLayout);
         jPanelRunOutputLayout.setHorizontalGroup(
-            jPanelRunOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanelRunOutputLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRunOutputLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanelRunOutputLayout.setVerticalGroup(
-            jPanelRunOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanelRunOutputLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRunOutputLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -402,92 +402,92 @@ public final class ScriptWindow extends javax.swing.JFrame {
         jTextArea1.setWrapStyleWord(true);
         jScrollPane2.setViewportView(jTextArea1);
 
-        javax.swing.GroupLayout jPanelInfoLayout = new javax.swing.GroupLayout(jPanelInfo);
+        GroupLayout jPanelInfoLayout = new GroupLayout(jPanelInfo);
         jPanelInfo.setLayout(jPanelInfoLayout);
         jPanelInfoLayout.setHorizontalGroup(
-            jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanelInfoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanelInfoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 1060, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanelInfoLayout.setVerticalGroup(
-            jPanelInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jPanelInfoLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jPanelInfoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane.addTab("Help", jPanelInfo);
 
         jButtonRun.setText("Run");
-        jButtonRun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonRun.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonRunActionPerformed(evt);
             }
         });
 
         jButtonAbort.setText("Abort script");
         jButtonAbort.setEnabled(false);
-        jButtonAbort.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAbort.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonAbortActionPerformed(evt);
             }
         });
 
         jButtonFunctionDetails1.setText("Available Blocks");
-        jButtonFunctionDetails1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonFunctionDetails1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonFunctionDetails1ActionPerformed(evt);
             }
         });
 
         jButtonAdditionalSources.setText("Additional Sources");
-        jButtonAdditionalSources.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jButtonAdditionalSources.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jButtonAdditionalSourcesActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButtonCompile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonRun, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonRun, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
-                        .addComponent(jButtonAbort, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonAbort, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCloseWindow)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonAdditionalSources)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonFunctionDetails1)))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAbort, jButtonCloseWindow, jButtonCompile, jButtonRun});
+        layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {jButtonAbort, jButtonCloseWindow, jButtonCompile, jButtonRun});
 
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jTabbedPane)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonRun)
                         .addComponent(jButtonAbort)
                         .addComponent(jButtonCloseWindow)
                         .addComponent(jButtonFunctionDetails1)
                         .addComponent(jButtonAdditionalSources))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jButtonCompile)
                         .addContainerGap())))
         );
@@ -533,7 +533,7 @@ public final class ScriptWindow extends javax.swing.JFrame {
                 try {
                     runCode();
                 } catch (Exception e) {
-                    if (Thread.currentThread().isInterrupted()) {
+                    if (currentThread().isInterrupted()) {
                         _outputStream.append("\nScript execution was aborted.\n");
                     } else {
                         Throwable toPrint = e;
@@ -571,7 +571,7 @@ public final class ScriptWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonAbortActionPerformed
 
-    private void jButtonAdditionalSourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdditionalSourcesActionPerformed
+    private void jButtonAdditionalSourcesActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonAdditionalSourcesActionPerformed
         if (!_extWindowInit) {
             _extSourceWindow.addNewFiles(_circuit._additionalSourceFiles);
             _extWindowInit = true;
@@ -580,37 +580,37 @@ public final class ScriptWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAdditionalSourcesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAbort;
-    private javax.swing.JButton jButtonAdditionalSources;
-    private javax.swing.JButton jButtonCloseWindow;
-    private javax.swing.JButton jButtonCompile;
-    private javax.swing.JButton jButtonFunctionDetails1;
-    private javax.swing.JButton jButtonRun;
-    private javax.swing.JComboBox<MethodCategory> jComboBoxCategory;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JList<FunctionDescription> jListFunctions;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanelCode;
-    private javax.swing.JPanel jPanelCodeEditor;
-    private javax.swing.JPanel jPanelCompMessages;
-    private javax.swing.JPanel jPanelCompilerErrors;
-    private javax.swing.JPanel jPanelCompilerMessages;
-    private javax.swing.JPanel jPanelDeclarations;
-    private javax.swing.JPanel jPanelImports;
-    private javax.swing.JPanel jPanelInfo;
-    private javax.swing.JPanel jPanelRunOutput;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JSplitPane jSplitPane3;
-    private javax.swing.JTabbedPane jTabbedPane;
-    private javax.swing.JTextArea jTextArea1;
-    javax.swing.JTextArea jTextAreaOutput;
+    private JButton jButtonAbort;
+    private JButton jButtonAdditionalSources;
+    private JButton jButtonCloseWindow;
+    private JButton jButtonCompile;
+    private JButton jButtonFunctionDetails1;
+    private JButton jButtonRun;
+    private JComboBox<MethodCategory> jComboBoxCategory;
+    private JLabel jLabel1;
+    private JList<FunctionDescription> jListFunctions;
+    private JPanel jPanel2;
+    private JPanel jPanel3;
+    private JPanel jPanel4;
+    private JPanel jPanel5;
+    private JPanel jPanelCode;
+    private JPanel jPanelCodeEditor;
+    private JPanel jPanelCompMessages;
+    private JPanel jPanelCompilerErrors;
+    private JPanel jPanelCompilerMessages;
+    private JPanel jPanelDeclarations;
+    private JPanel jPanelImports;
+    private JPanel jPanelInfo;
+    private JPanel jPanelRunOutput;
+    private JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane2;
+    private JScrollPane jScrollPane4;
+    private JSplitPane jSplitPane1;
+    private JSplitPane jSplitPane2;
+    private JSplitPane jSplitPane3;
+    private JTabbedPane jTabbedPane;
+    private JTextArea jTextArea1;
+    JTextArea jTextAreaOutput;
     // End of variables declaration//GEN-END:variables
 
     private void compileCode() {        

@@ -100,14 +100,14 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanelGridSettings = new gecko.geckocircuits.newscope.JPanelGridSettings();
+        jPanelGridSettings = new JPanelGridSettings();
         jPanelAxisSettings = new javax.swing.JPanel();
         jLabelScaleType = new javax.swing.JLabel();
         jComboBoxScaleType = new javax.swing.JComboBox();
         jCheckBoxAutoScale = new javax.swing.JCheckBox();
         jLabelMinVal = new javax.swing.JLabel();
         jLabelMaxVal = new javax.swing.JLabel();
-        jPanelLinePropAxis = new gecko.geckocircuits.newscope.JPanelLineProperties();
+        jPanelLinePropAxis = new JPanelLineProperties();
         jLabelAxisLabel = new javax.swing.JLabel();
         jTextFieldAxisLabel = new javax.swing.JTextField();
         formatJTextFieldMinVal = new gecko.geckocircuits.allg.FormatJTextField();
@@ -310,8 +310,8 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelMinVal;
     private javax.swing.JLabel jLabelScaleType;
     private javax.swing.JPanel jPanelAxisSettings;
-    private gecko.geckocircuits.newscope.JPanelGridSettings jPanelGridSettings;
-    private gecko.geckocircuits.newscope.JPanelLineProperties jPanelLinePropAxis;
+    private JPanelGridSettings jPanelGridSettings;
+    private JPanelLineProperties jPanelLinePropAxis;
     private javax.swing.JTextField jTextFieldAxisLabel;
     // End of variables declaration//GEN-END:variables
 }

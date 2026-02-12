@@ -93,7 +93,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
         initComponents();
         setTitle(InitParameters.TRANS_TOOL);
         setLocationRelativeTo(null); // display in center screen
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         
         this.key = key;
@@ -258,7 +258,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
         jTextArea3 = new javax.swing.JTextArea();
         jButton4 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         jLabel2.setText("This tool lets you change a flawed translation");
 

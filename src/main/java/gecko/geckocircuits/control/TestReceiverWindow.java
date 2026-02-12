@@ -144,7 +144,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonPlotOptions1 = new javax.swing.JButton();
 
         setLocationByPlatform(true);
-        setMinimumSize(new java.awt.Dimension(650, 600));
+        setMinimumSize(new Dimension(650, 600));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);

@@ -62,8 +62,8 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
             timeTextField.setNumberToField(r0Value / a1Value);
         }
 
-        KeyAdapter adapter = new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
+        KeyAdapter adapter = new KeyAdapter() {
+            public void keyReleased(KeyEvent evt) {
                 try {
                     double r0Value = r0TextField.getNumberFromField();
                     double timeValue = timeTextField.getNumberFromField();

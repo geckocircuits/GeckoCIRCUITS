@@ -62,7 +62,7 @@ public class DialogUpdateSettings extends javax.swing.JFrame {
         jRadioButtonMajor = new javax.swing.JRadioButton();
         jRadioButtonMinor = new javax.swing.JRadioButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("GeckoCIRCUITS Memory");
         setLocationByPlatform(true);
 

@@ -27,7 +27,7 @@ public class StartupWindow extends javax.swing.JDialog {
         try {
            QuasiPeakCalculator.class.getName();
         } catch (NoClassDefFoundError err) {
-            StartupWindow window = StartupWindow.fabricDisabledFeature(featureName);
+            StartupWindow window = fabricDisabledFeature(featureName);
             window.setVisible(true);
             return true;            
         }
@@ -82,7 +82,7 @@ public class StartupWindow extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabelSupport = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setResizable(false);
 
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N

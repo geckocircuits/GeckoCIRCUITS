@@ -74,7 +74,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("Text-Field Properties");
         setLocationByPlatform(true);
         setResizable(false);

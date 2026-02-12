@@ -97,7 +97,7 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
         jComboBoxConnections = new javax.swing.JComboBox();
         jButtonShowInfo = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationByPlatform(true);
         setResizable(false);
 
