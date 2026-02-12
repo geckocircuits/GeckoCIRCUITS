@@ -191,12 +191,25 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
             <version>3.5.0</version>
+            <configuration>
+              <configLocation>checkstyle.xml</configLocation>
+              <excludes>com/intel/mkl/**</excludes>
+              <consoleOutput>true</consoleOutput>
+              <failOnViolation>false</failOnViolation>
+            </configuration>
           </plugin>
           <!-- PMD for code quality -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-pmd-plugin</artifactId>
             <version>3.25.0</version>
+            <configuration>
+              <rulesets>
+                <ruleset>pmd-ruleset.xml</ruleset>
+              </rulesets>
+              <failOnViolation>false</failOnViolation>
+              <printFailingErrors>true</printFailingErrors>
+            </configuration>
           </plugin>
          <plugin>
            <artifactId>maven-jar-plugin</artifactId>

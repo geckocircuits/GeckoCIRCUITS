@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="GeckoCIRCUITS"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0
+         https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>GeckoCIRCUITS PMD rules — based on PMD quickstart with third-party exclusion</description>
+
+    <!-- Exclude third-party code -->
+    <exclude-pattern>.*/com/intel/mkl/.*</exclude-pattern>
+
+    <!-- Use the same rules as PMD quickstart (maven-pmd-plugin default) -->
+    <rule ref="rulesets/java/quickstart.xml"/>
+</ruleset>
