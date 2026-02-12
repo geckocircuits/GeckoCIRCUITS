@@ -307,6 +307,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 
         jButtonClear.setText("Clear");
         jButtonClear.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonClearActionPerformed(evt);
             }
@@ -314,6 +315,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 
         jToggleButtonClose.setText("Close");
         jToggleButtonClose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonCloseActionPerformed(evt);
             }

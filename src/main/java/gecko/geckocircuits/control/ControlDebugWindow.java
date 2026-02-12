@@ -60,6 +60,7 @@ public class ControlDebugWindow extends GeckoDialog {
 
         jButton1.setText("Block step");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
@@ -71,6 +72,7 @@ public class ControlDebugWindow extends GeckoDialog {
 
         jButtonClose.setText("Close Window");
         jButtonClose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
             }
@@ -166,6 +168,7 @@ public class ControlDebugWindow extends GeckoDialog {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new ControlDebugWindow().setVisible(true);
             }

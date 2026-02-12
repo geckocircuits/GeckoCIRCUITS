@@ -41,6 +41,7 @@ public class PreviewDialogSine extends PreviewDialog {
         }
         final int xPh = (int) (phase / 360.0 * b), xMx = xPh + b / 4;
         JComponent jcp = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.setFont(GlobalFonts.foAUSWAHL);
                 g.setColor(Color.white);

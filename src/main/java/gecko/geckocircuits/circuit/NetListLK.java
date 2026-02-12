@@ -27,7 +27,7 @@ import java.util.*;
 
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Performance-critical netlist class with direct field access for simulation speed")
-public class NetListLK {
+public final class NetListLK {
 
     public int knotenMAX, spgQuelleMAX;  // knotenMAX ... Gesamt-Knotenanzahl minus 'Ground';  spgQuelleMAX ... Summe der SpgQuellen plus LKOP2-Elemente
     public CircuitTyp[] typ;
@@ -159,7 +159,7 @@ public class NetListLK {
             this.defineNodePairDirVoltContSrc();
         }
 
-        this._postCalculatables = tmpPostCalculatables.toArray(new PostCalculatable[tmpPostCalculatables.size()]);
+        this._postCalculatables = tmpPostCalculatables.toArray(new PostCalculatable[0]);
         for (PostCalculatable calc : _postCalculatables) {
             calc.doInitialization();
         }
@@ -270,7 +270,7 @@ public class NetListLK {
         }
 
         elementANZAHLneu = eLKneuSet.size();
-        eLKneu = eLKneuSet.toArray(new AbstractCircuitBlockInterface[eLKneuSet.size()]);
+        eLKneu = eLKneuSet.toArray(new AbstractCircuitBlockInterface[0]);
     }
 
     protected void initialisiereMitSubcircuit() {

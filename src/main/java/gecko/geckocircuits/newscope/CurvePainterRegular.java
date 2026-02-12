@@ -107,7 +107,7 @@ class CurvePainterRegular extends AbstractCurvePainter{
       }
 
       AbstractCurvePixelPainter previousValue = null;
-      if(_allPainters.size() > 0){
+      if(!_allPainters.isEmpty()){
         previousValue = _allPainters.get(_allPainters.size() - 1);
       }
 

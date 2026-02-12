@@ -33,9 +33,9 @@ public class Polynomials extends Object {
       }
       for(int k = n-nv; k >= 0; k--) {
          q[k] = r[nv+k]/v[nv];
-         for(int j = nv+k-1; j >= k; j--) r[j] -= q[k]*v[j-k];
+         for(int j = nv+k-1; j >= k; j--) { r[j] -= q[k]*v[j-k]; }
       }
-      for (int j = nv; j <= n; j++) r[j] = 0.0f;
+      for (int j = nv; j <= n; j++) { r[j] = 0.0f; }
    }
 
 }

@@ -69,6 +69,7 @@ public class DialogUpdateSettings extends javax.swing.JFrame {
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }

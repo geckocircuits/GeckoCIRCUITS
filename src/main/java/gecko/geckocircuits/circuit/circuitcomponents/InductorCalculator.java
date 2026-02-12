@@ -66,6 +66,7 @@ public class InductorCalculator extends CircuitComponent implements BStampable,
 
     @Override
     public void registerBVector(BVector bvector) {
+        // no-op
     }
 
     @Override

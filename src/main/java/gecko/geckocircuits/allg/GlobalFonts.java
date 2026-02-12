@@ -19,7 +19,7 @@ import java.awt.Font;
  *
  * @author andy
  */
-public class GlobalFonts {
+public final class GlobalFonts {
     private GlobalFonts() {
         // pure static class!
     }

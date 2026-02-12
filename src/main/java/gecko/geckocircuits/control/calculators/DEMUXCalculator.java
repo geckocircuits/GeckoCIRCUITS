@@ -51,6 +51,7 @@ public final class DEMUXCalculator extends AbstractControlCalculatable implement
         }
     }
 
+    @Override
     public boolean checkInputWithoutConnectionAndFill(final int inputIndex) {
         if(_inputSignal[inputIndex] == null) {
             final int dummyLength = _outputSignal.length;

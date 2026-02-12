@@ -62,7 +62,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
      * Inner class used to execute download instructions from a separate
      * thread so that the LangInit GUI doesn't freeze up.
      */
-    private class Task extends SwingWorker<Void, Void> {
+    private final class Task extends SwingWorker<Void, Void> {
 
         @Override
         public Void doInBackground() {
@@ -76,6 +76,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
 
         @Override
         public void done() {
+            // no-op
         } // do nothing
     }
 
@@ -84,7 +85,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
      * class (DLbot) from a separate thread so that the LangInit GUI doesn't
      * freeze up.
      */
-    private class Progress extends SwingWorker<Void, Void> {
+    private final class Progress extends SwingWorker<Void, Void> {
 
         @Override
         public Void doInBackground() {
@@ -107,6 +108,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
 
         @Override
         public void done() {
+            // no-op
         } // do nothing
     }
 
@@ -128,6 +130,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
 
         // "Exit" button
         jButton1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 new InitDialog().setVisible(true); // confirm exit
             }
@@ -135,6 +138,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
 
         // "Continue" button
         jButton2.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 // Adjust fonts to correctly display special characters (eg. Japanese chars)
                 language = (SelectableLanguages) jComboBoxLanguageSelection.getSelectedItem(); // get language
@@ -178,6 +182,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
     /*
      * Method to implement PropertyChangeListener
      */
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         if ("progress".equals(e.getPropertyName())) {
             int prog = (Integer) e.getNewValue(); // get updated progress

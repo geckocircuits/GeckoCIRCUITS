@@ -139,6 +139,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
     }
 
     protected void processInputs() {
+        // no-op
     }
 
 

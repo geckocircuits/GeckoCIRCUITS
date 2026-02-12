@@ -21,7 +21,7 @@ import java.awt.Graphics;
  *
  * @author andy
  */
-public class PowerModulePainter {
+public final class PowerModulePainter {
 
     private static int[] xKB1 = new int[]{168, 141, 141, 152, 832, 831, 815}, yKB1 = new int[]{421, 439, 550, 555, 366, 249, 242};
     private static int[] xKB2 = new int[]{168, 129, 238, 164, 55, 26, 40, 664, 698, 591, 664, 774, 812}, yKB2 = new int[]{421, 366, 335, 232, 265, 218, 199, 29, 86, 117, 219, 185, 245};

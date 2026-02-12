@@ -80,6 +80,7 @@ public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLo
         return returnValue;
     }
 
+    @Override
     public final double calculateMaximumCurrentInAllCurves() {
         double returnValue = -1;
         for (LossCurve curve : _lossCurves) {

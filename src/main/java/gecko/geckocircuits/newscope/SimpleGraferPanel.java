@@ -70,6 +70,7 @@ public class SimpleGraferPanel extends javax.swing.JPanel {
 
         jPanelGraph.setOpaque(false);
         jPanelGraph.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 jPanelGraphComponentResized(evt);
             }

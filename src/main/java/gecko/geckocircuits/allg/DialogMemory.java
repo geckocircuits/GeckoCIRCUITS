@@ -87,6 +87,7 @@ public final class DialogMemory extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButton1.setText("Ok");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
@@ -141,6 +142,7 @@ public final class DialogMemory extends javax.swing.JFrame {
         jComboBoxLossy.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jComboBoxLossy.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "No loss", "Low", "Medium", "High" }));
         jComboBoxLossy.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxLossyActionPerformed(evt);
             }
@@ -190,6 +192,7 @@ public final class DialogMemory extends javax.swing.JFrame {
         jSpinnerStartup.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerStartup.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(512), Integer.valueOf(32), null, Integer.valueOf(128)));
         jSpinnerStartup.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerStartupStateChanged(evt);
             }

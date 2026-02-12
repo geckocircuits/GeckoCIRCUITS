@@ -24,12 +24,13 @@ public class InductorCouplingCalculator extends InductorCalculator {
     }
 
     public void addNewCurrent(double addCurrent) {
-        if (_solverType == SolverType.SOLVER_BE)
+        if (_solverType == SolverType.SOLVER_BE) {
             _current = _oldCurrent + addCurrent;
-        else if (_solverType == SolverType.SOLVER_TRZ)
+        } else if (_solverType == SolverType.SOLVER_TRZ) {
             _current = _oldCurrent + 0.5*addCurrent;
-        else if (_solverType == SolverType.SOLVER_GS)
+        } else if (_solverType == SolverType.SOLVER_GS) {
             _current = 2.0 / 3.0 * addCurrent + 4.0 / 3.0 * _oldCurrent - 1.0 / 3.0 * _oldOldCurrent;
+        }
     }
 
     //for making TRZ working with coupled inductors - this is ugly, should be implemented in a better way later

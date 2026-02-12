@@ -88,6 +88,7 @@ public class StartupWindow extends javax.swing.JDialog {
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }
@@ -100,6 +101,7 @@ public class StartupWindow extends javax.swing.JDialog {
         jLabelSupport.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelSupport.setText("<html><a href=\"www.gecko-simulations.com/open_source/donate.html\">www.gecko-simulations.com/open_source/support.html</a></html>");
         jLabelSupport.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabelSupportMouseClicked(evt);
             }
@@ -151,6 +153,7 @@ public class StartupWindow extends javax.swing.JDialog {
             _window = window;
         }
 
+        @Override
         public void run() {
             _window.setVisible(true);
         }

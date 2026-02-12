@@ -195,6 +195,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
     }
 
     // wird ueberschrieben, um Text dazuschreiben zu koennen -->
+    @Override
     protected void zeichne(Graphics g) {
         if ((mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) && imDragModus) {
             g.setColor(GlobalColors.farbeZoomRechteck);
@@ -224,6 +225,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         }
     }
 
+    @Override
     public void setzeAchsen() {
         //-------------------------------------
         this.setzeAchsenAnzahl(1, 1);
@@ -271,6 +273,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         //-------------------------------------
     }
 
+    @Override
     protected void setzeKurven() {
         //=========================================
         // anhand der Worksheet-Daten zu setzen -->
@@ -289,12 +292,17 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
     }
 
     //================================================
+    @Override
     public void mouseEntered(MouseEvent me) {
+        // no-op
     }
 
+    @Override
     public void mouseExited(MouseEvent me) {
+        // no-op
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
         if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             x1Zoom = me.getX();
@@ -303,6 +311,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent me) {
         //-------------------
         if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
@@ -343,12 +352,16 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
 
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
+        // no-op
     }
 
 
+    @Override
     public void mouseMoved(final MouseEvent mouseEvent) {
+        // no-op
     }
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         if (mausModus == GraferImplementation.MAUSMODUS_NIX
                 || mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {

@@ -34,9 +34,6 @@ import java.util.logging.Logger;
 @SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.NullAssignment"})
 public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
 
-    public GeckoRemoteMMFObject() {
-        //use factory method instead of constructor
-    }
 
     GeckoMemoryMappedFile _mmf = null;
     private static final int NO_SESSION_ID = -1;
@@ -68,7 +65,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             argsList.add("-mm"); //-mm is argument to enable memory-mapped access on startup
             argsList.add(file);
             argsList.add(Long.toString(size*1024*1024)); //convert MB to bytes
-            final String[] args = argsList.toArray(new String[argsList.size()]);
+            final String[] args = argsList.toArray(new String[0]);
 
             for(String arg : args) {
                 System.out.println("arg " + arg);

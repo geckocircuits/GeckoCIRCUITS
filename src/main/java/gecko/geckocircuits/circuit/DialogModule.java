@@ -49,6 +49,7 @@ public class DialogModule extends GeckoDialog {
 
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }
@@ -120,6 +121,7 @@ public class DialogModule extends GeckoDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 DialogModule dialog = new DialogModule(new JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {

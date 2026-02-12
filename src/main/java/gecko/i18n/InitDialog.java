@@ -31,6 +31,7 @@ public class InitDialog extends javax.swing.JFrame {
 
         // "Cancel" button
         jButton1.addActionListener(new ActionListener(){
+            @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
@@ -41,6 +42,7 @@ public class InitDialog extends javax.swing.JFrame {
             @SuppressWarnings("SpotBugsWarnings")
             @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DM_EXIT",
                     justification = "Intentional JVM shutdown on user exit confirmation")
+            @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }

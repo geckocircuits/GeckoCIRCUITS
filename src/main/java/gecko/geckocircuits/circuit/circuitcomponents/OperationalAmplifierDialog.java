@@ -65,6 +65,7 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
         JPanel jpDefOPV1 = new JPanel();
         jpDefOPV1.setLayout(new BorderLayout());
         final JComponent jcOPV1 = new JComponent() {
+            @Override
             public void paint(final Graphics graphics) {
                 try {
                     graphics.setColor(Color.white);

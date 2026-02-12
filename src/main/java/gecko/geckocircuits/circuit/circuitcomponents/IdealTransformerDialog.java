@@ -59,12 +59,17 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
         pIN2.add(jln);
 
         windingsRatio.addKeyListener(new KeyListener() {
+            @Override
             public void keyTyped(KeyEvent ke) {
+                // no-op
             }
 
+            @Override
             public void keyPressed(KeyEvent ke) {
+                // no-op
             }
 
+            @Override
             public void keyReleased(KeyEvent ke) {
                 windingsField1.setText(windingsRatio.getText());
                 windingsField2.setText("1");
@@ -78,12 +83,17 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
 
 
         windingsField1.addKeyListener(new KeyListener() {
+            @Override
             public void keyTyped(KeyEvent ke) {
+                // no-op
             }
 
+            @Override
             public void keyPressed(KeyEvent ke) {
+                // no-op
             }
 
+            @Override
             public void keyReleased(KeyEvent ke) {
                 try {
                     if (windingsField2.getNumberFromField() != 0) {
@@ -100,12 +110,17 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
         pIN2.add(reverse);
 
         windingsField2.addKeyListener(new KeyListener() {
+            @Override
             public void keyTyped(KeyEvent ke) {
+                // no-op
             }
 
+            @Override
             public void keyPressed(KeyEvent ke) {
+                // no-op
             }
 
+            @Override
             public void keyReleased(KeyEvent ke) {
                 try {
                     if (windingsField2.getNumberFromField() != 0) {

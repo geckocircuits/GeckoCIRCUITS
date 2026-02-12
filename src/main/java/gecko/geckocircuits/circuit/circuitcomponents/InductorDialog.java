@@ -52,6 +52,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
 
         final JCheckBox jcbNonLinL = new JCheckBox("Non-Linear Behavior");
         jcbNonLinL.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 if (jcbNonLinL.isSelected()) {
                     jbNonLinL.setEnabled(true);
@@ -82,6 +83,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
         //------------------
         final JButton jbMAG1 = new JButton("GeckoMAGNETICS");
         jcbLossL.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 if (jcbLossL.isSelected()) {
                     jbMAG1.setEnabled(true);

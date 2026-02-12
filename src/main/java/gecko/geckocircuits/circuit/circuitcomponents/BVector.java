@@ -105,8 +105,7 @@ public class BVector {
         double[] basisBCopy = new double[basisB.length];
         System.arraycopy(b, 0, bCopy, 0, b.length);
         System.arraycopy(basisB, 0, basisBCopy, 0, basisB.length);
-        BVector BCopy = new BVector(bCopy,basisBCopy,_bStampables,_isBasisStampable,_isNotBasisStampables,updateAllFlag);
-        return BCopy;
+        return new BVector(bCopy,basisBCopy,_bStampables,_isBasisStampable,_isNotBasisStampables,updateAllFlag);
     }
 
     //for registering the bstampables with the B vector which has been created as a copy

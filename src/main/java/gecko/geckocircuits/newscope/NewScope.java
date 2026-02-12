@@ -160,6 +160,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToggleButtonOff.setToolTipText("Disable cursors and zoom modus");
         jToggleButtonOff.setFocusPainted(false);
         jToggleButtonOff.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonOffActionPerformed(evt);
             }
@@ -173,6 +174,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToggleButtonZoom.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonZoom.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButtonZoom.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonZoomActionPerformed(evt);
             }
@@ -185,6 +187,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToggleButtonSlider.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonSlider.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButtonSlider.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonSliderActionPerformed(evt);
             }
@@ -200,6 +203,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonNextMax.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNextMax.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonNextMax.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNextMaxActionPerformed(evt);
             }
@@ -212,6 +216,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonNextMin.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNextMin.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonNextMin.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNextMinActionPerformed(evt);
             }
@@ -224,6 +229,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonNextZero.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNextZero.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonNextZero.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNextZeroActionPerformed(evt);
             }
@@ -236,6 +242,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonNextEqual.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonNextEqual.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonNextEqual.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonNextEqualActionPerformed(evt);
             }
@@ -248,6 +255,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonShowAll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonShowAll.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonShowAll.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonShowAllActionPerformed(evt);
             }
@@ -260,6 +268,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonZoomBack.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonZoomBack.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonZoomBack.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonZoomBackActionPerformed(evt);
             }
@@ -271,6 +280,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToggleButtonCtrl.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonCtrl.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButtonCtrl.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonCtrlActionPerformed(evt);
             }
@@ -283,6 +293,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToggleButtonZoomShift.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonZoomShift.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButtonZoomShift.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonZoomShiftActionPerformed(evt);
             }
@@ -295,6 +306,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonSaveZoom.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSaveZoom.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonSaveZoom.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveZoomActionPerformed(evt);
             }
@@ -308,6 +320,7 @@ public final class NewScope extends javax.swing.JPanel {
         jButtonLoadZoom.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonLoadZoom.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonLoadZoom.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonLoadZoomActionPerformed(evt);
             }
@@ -320,6 +333,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToggleButtonAuto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonAuto.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToggleButtonAuto.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonAutoActionPerformed(evt);
             }
@@ -330,6 +344,7 @@ public final class NewScope extends javax.swing.JPanel {
 
         jPanelGraph.setOpaque(false);
         jPanelGraph.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 jPanelGraphComponentResized(evt);
             }

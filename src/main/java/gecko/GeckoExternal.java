@@ -142,6 +142,7 @@ public class GeckoExternal {
     }
 
     public static void runGeckoSCRIPT() {
+        // no-op
     }
 
     public static void setGlobalDoubleMatrix(double[][] matrix) {

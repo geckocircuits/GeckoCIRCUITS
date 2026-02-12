@@ -33,12 +33,14 @@ public final class ReglerPOW extends RegelBlock {
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         return new AbstractControlCalculatable(2, 1) {
+            @Override
             public void berechneYOUT(final double deltaT) {
                 _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
             }
         };
     }
 
+    @Override
     protected Window openDialogWindow() {
         return new DialogSimpleInfoMessage(this, "y1 = (x1)^(x2)");
     }

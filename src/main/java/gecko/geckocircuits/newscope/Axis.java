@@ -188,7 +188,7 @@ public final class Axis {
 
     static int counter = 0;
 
-    private class AxisLog extends AbstractAxisScale {
+    private final class AxisLog extends AbstractAxisScale {
 
         private static final int DEF_MIN_TICKS = 10;
 
@@ -248,6 +248,7 @@ public final class Axis {
             return DEF_MIN_TICKS;
         }
 
+        @Override
         protected List<Tick> drawMajorTicks(final Graphics2D g2d, final Axis otherAxis) {
             List<Tick> returnValue = new ArrayList<Tick>();
             int anzTicks = (int) Math.round(Math.log10(getLimits()._yHi / getLimits()._yLo)) + MIN_LOG_TICKS;
@@ -274,7 +275,7 @@ public final class Axis {
         }
     }
 
-    private class AxisLin extends AbstractAxisScale {
+    private final class AxisLin extends AbstractAxisScale {
 
         @Override
         protected double getPixelFromValue(final double value) {
@@ -304,8 +305,7 @@ public final class Axis {
                     limits = newLimits;
                 }
             }
-            double returnValue = signalDirection * (value - limits._yLo) * scaleFactor + directionOrigin;
-            return returnValue;
+            return signalDirection * (value - limits._yLo) * scaleFactor + directionOrigin;
         }
 
         @Override
@@ -323,6 +323,7 @@ public final class Axis {
             return 2;
         }
 
+        @Override
         protected List<Tick> drawMajorTicks(final Graphics2D g2D, final Axis otherAxis) {
             final HiLoData axisMinMax = _axisMinMax.getLimits();
             int anzTicks = (int) (axisMinMax._yHi / _tickSpacing) - (int) (axisMinMax._yLo / _tickSpacing) + 2;

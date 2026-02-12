@@ -1534,12 +1534,17 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     //=================================================
     //=================================================
     //=================================================
+    @Override
     public void mouseEntered(MouseEvent me) {
+        // no-op
     }
 
+    @Override
     public void mouseExited(MouseEvent me) {
+        // no-op
     }
 
+    @Override
     public void mouseClicked(MouseEvent me) {
         if (simulationLaeuftGerade) {
             return;
@@ -1554,6 +1559,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
         if (simulationLaeuftGerade) {
             return;
@@ -1568,6 +1574,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent me) {
         if (simulationLaeuftGerade) {
             return;
@@ -1582,9 +1589,12 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
     }
 
+    @Override
     public void mouseMoved(MouseEvent me) {
+        // no-op
     }
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         if (simulationLaeuftGerade) {
             return;
@@ -1887,9 +1897,11 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     }
 
     public void mausModus_FIBONACCI_LIN(int mx, int my, int mausAktion) {
+        // no-op
     }
 
     public void mausModus_FIBONACCI_LOG(int mx, int my, int mausAktion) {
+        // no-op
     }
 
     // Wenn mit der Maus in das Pixel-Feld geklickt wird -->

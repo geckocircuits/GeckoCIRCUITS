@@ -27,6 +27,7 @@ public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSou
 
     @Override
     public final void stampMatrixA(final double[][] matrix, final double deltaT) {
+        // no-op
     }
 
     @Override
@@ -49,6 +50,7 @@ public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSou
 
     @Override
     public void registerBVector(final BVector bvector) {
+        // no-op
     }
 
     @Override
@@ -56,8 +58,9 @@ public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSou
     {
         if ((!stepped_back && (steps_reversed == 0)) || (stepped_back && (steps_reversed < steps_saved)))
         {
-            if (stepped_back)
+            if (stepped_back) {
                 historyBackward();
+            }
             prev_time = var_history[0][0];
             //System.out.println("before: _potential 1 = " + _potential1 + " _potential 2 = " + _potential2);
             _potential1 = var_history[0][1];

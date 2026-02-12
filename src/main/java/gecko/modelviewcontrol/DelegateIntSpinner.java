@@ -47,6 +47,7 @@ public class DelegateIntSpinner<M extends ModelMVC<Integer>> extends JSpinner
 
 
         _changeListener = new ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 if(_model != null) {
                     _model.setValue(getIntegerValue());

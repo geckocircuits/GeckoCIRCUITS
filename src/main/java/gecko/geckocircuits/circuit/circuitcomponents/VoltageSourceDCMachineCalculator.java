@@ -64,6 +64,7 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
         momentLast = value;
     }
 
+    @Override
     public void doPostProcess(double dt, double time) {
         // aus dem internen Subcircuit -->
         double ia = - _la.getCurrent();  // Ankerstrom

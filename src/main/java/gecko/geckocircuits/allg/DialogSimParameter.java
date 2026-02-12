@@ -255,6 +255,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
         return jpMM;
     }
 
+    @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getActionCommand().equals("Cancel")) {
             this.dispose();

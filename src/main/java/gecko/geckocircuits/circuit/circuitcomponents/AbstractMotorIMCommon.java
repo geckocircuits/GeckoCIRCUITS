@@ -69,15 +69,19 @@ public abstract class AbstractMotorIMCommon extends AbstractThreePhaseMotor {
         return 13;
     }
 
+    @Override
     int getPolePairIndex() {
         return 16;
     }
 
+    @Override
     int getStatorResistanceIndex() {
         return 17;
     }
 
+    @Override
     abstract int getInitialStatorCurrentIndexA();
+    @Override
     abstract int getInitialStatorCurrentIndexB();
 
     abstract int getInitialStatorFluxIndexD();

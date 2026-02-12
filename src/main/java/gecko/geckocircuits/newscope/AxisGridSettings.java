@@ -35,7 +35,7 @@ public final class AxisGridSettings{
   private boolean _showGridMaj, _showGridMin;
   private static final double PX1 = 230, PX2 = 100, PXR = 2.5;
 
-  private class MajorSettable implements LineSettable{
+  private final class MajorSettable implements LineSettable{
     @Override
     public void setStroke(final GeckoLineStyle stroke){
       setLinStyleMaj(stroke);
@@ -67,7 +67,7 @@ public final class AxisGridSettings{
     }
   }
 
-  private class MinorSettable implements LineSettable{
+  private final class MinorSettable implements LineSettable{
     @Override
     public void setStroke(final GeckoLineStyle stroke){
       setLinStyleMin(stroke);

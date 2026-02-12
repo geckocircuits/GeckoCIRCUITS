@@ -84,6 +84,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
     }
 
+    @Override
     public AbstractLossCalculator lossCalculatorFabric() {
         return new LossCalculatorDetailed(_parent);
     }

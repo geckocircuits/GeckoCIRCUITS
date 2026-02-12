@@ -37,6 +37,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
         super(matrix);
     }
 
+    @Override
     public void initLUDecomp() {
         double[][] tmpMatrix = _originalMatrix;
         _originalMatrix = new double[_originalMatrix.length][_originalMatrix.length];
@@ -286,6 +287,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
         _LUDecomp[j] = t;
     }
 
+    @Override
     public double[] solve(final double[] bVector) {
         for (int i = 0; i < _piv.length; i++) {
             _XCol[i + 1] = bVector[_piv[i]];
@@ -359,6 +361,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
         _upperLUIndices = upper;
     }
 
+    @Override
     public void deleteCache() {
         for (short[] toRecycle : _lowerLUIndices) {
             ShortArrayCache.recycleArray(toRecycle);

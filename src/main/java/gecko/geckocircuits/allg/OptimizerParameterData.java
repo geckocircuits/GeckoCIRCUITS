@@ -155,6 +155,7 @@ public final class OptimizerParameterData {
 
         @Override
         public void die() {
+            // no-op
         }
 
         @Override

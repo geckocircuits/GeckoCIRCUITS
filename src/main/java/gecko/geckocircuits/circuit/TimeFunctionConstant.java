@@ -35,6 +35,7 @@ public class TimeFunctionConstant extends TimeFunction {
         return _value;
     }
 
-    public void stepBack() { }
+    @Override
+    public void stepBack() { /* no-op */ }
 
 }

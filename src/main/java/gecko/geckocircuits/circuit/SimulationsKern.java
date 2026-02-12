@@ -112,6 +112,7 @@ public class SimulationsKern implements ISimulationEngine {
 
     @Override
     public void pauseSimulation() {
+        // no-op
     }
 
     @Override

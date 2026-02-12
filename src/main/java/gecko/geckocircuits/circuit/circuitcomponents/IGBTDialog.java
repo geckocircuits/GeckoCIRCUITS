@@ -32,6 +32,7 @@ public final class IGBTDialog extends AbstractDialogPowerSwitch<IGBT> {
     }
 
 
+    @Override
     public JPanel createParameterPanel() {
         JPanel returnValue = createParameterPanel(element._forwardVoltageDrop, element._onResistance,
                 element._offResistance, element.numberParalleled);

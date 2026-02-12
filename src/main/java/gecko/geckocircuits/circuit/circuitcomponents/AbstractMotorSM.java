@@ -190,6 +190,7 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
         return 17;
     }
 
+    @Override
     public final int getIndexForLoadTorque() {
         return 15;
     }
@@ -249,11 +250,13 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
         _controlledSource3.parameter[1] = ifd0;
     }
 
+    @Override
     final void updateSourceParameters() {
         super.updateSourceParameters();
         _controlledSource3.parameter[1] = ifd;
     }
 
+    @Override
     void updateHistoryVariables() {
         super.updateHistoryVariables();
         psimd0 = psimd;

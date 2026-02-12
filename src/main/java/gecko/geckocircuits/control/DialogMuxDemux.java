@@ -66,6 +66,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
 
         jSpinnerPortNumber.setModel(new javax.swing.SpinnerNumberModel(1, 1, 40, 1));
         jSpinnerPortNumber.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerPortNumberStateChanged(evt);
             }
@@ -73,16 +74,19 @@ public class DialogMuxDemux extends javax.swing.JDialog {
 
         jTextFieldIdString.setText("jTextField1");
         jTextFieldIdString.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldIdStringActionPerformed(evt);
             }
         });
         jTextFieldIdString.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jTextFieldIdStringPropertyChange(evt);
             }
         });
         jTextFieldIdString.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTextFieldIdStringKeyTyped(evt);
             }
@@ -90,6 +94,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
 
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }

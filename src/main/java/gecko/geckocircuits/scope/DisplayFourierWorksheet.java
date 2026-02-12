@@ -64,6 +64,7 @@ class DisplayFourierWorksheet extends JPanel {
         table = new JTable(wsObj, header) {
             // ueberschreiben, damit man nicht in den Daten herumeditieren kann -->
 
+            @Override
             public boolean isCellEditable(int row, int col) {
                 return false;
             }

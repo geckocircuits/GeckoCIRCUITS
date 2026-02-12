@@ -121,8 +121,7 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
     @Override
     public final HiLoData getAbsoluteMinMaxValue(final int row) {
         try {
-            HiLoData returnValue = _abMinMaxValues[row];
-            return returnValue;
+            return _abMinMaxValues[row];
         } catch (ArrayIndexOutOfBoundsException ex) {
             System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
         }

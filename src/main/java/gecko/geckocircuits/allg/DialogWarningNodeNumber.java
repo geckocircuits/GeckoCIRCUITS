@@ -92,6 +92,7 @@ public class DialogWarningNodeNumber extends JDialog implements WindowListener, 
 
 
 
+    @Override
     public void actionPerformed (ActionEvent ae) {
         if (ae.getActionCommand().equals("OK")) {
             this.dispose();
@@ -101,13 +102,20 @@ public class DialogWarningNodeNumber extends JDialog implements WindowListener, 
 
 
     //------------------------------------------------
-    public void windowDeactivated (WindowEvent we) {}
-    public void windowActivated (WindowEvent we) {}
-    public void windowDeiconified (WindowEvent we) {}
-    public void windowIconified (WindowEvent we) {}
-    public void windowClosed (WindowEvent we) {}
+    @Override
+    public void windowDeactivated (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowActivated (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowDeiconified (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowIconified (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowClosed (WindowEvent we) { /* no-op */ }
+    @Override
     public void windowClosing (WindowEvent we) { this.dispose(); }
-    public void windowOpened (WindowEvent we) {}
+    @Override
+    public void windowOpened (WindowEvent we) { /* no-op */ }
     //------------------------------------------------
 
 }

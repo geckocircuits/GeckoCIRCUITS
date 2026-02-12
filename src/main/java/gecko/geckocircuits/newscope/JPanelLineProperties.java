@@ -102,6 +102,7 @@ public class JPanelLineProperties extends javax.swing.JPanel {
 
         jComboBoxStroke.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jComboBoxStroke.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxStrokeActionPerformed(evt);
             }
@@ -109,6 +110,7 @@ public class JPanelLineProperties extends javax.swing.JPanel {
 
         jComboBoxColor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jComboBoxColor.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxColorActionPerformed(evt);
             }
@@ -117,6 +119,7 @@ public class JPanelLineProperties extends javax.swing.JPanel {
         jSpinnerTransp.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jSpinnerTransp.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(1.0f), Float.valueOf(0.0f), Float.valueOf(1.0f), Float.valueOf(0.1f)));
         jSpinnerTransp.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerTranspStateChanged(evt);
             }
@@ -127,6 +130,7 @@ public class JPanelLineProperties extends javax.swing.JPanel {
 
         jComboBoxType.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jComboBoxType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxTypeActionPerformed(evt);
             }

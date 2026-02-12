@@ -115,6 +115,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jCheckBoxShowGridLineMaj.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxShowGridLineMaj.setText("Show Grid Line");
         jCheckBoxShowGridLineMaj.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxShowGridLineMajActionPerformed(evt);
             }
@@ -123,6 +124,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jCheckBoxAutoSpacing.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxAutoSpacing.setText("Auto-Spacing");
         jCheckBoxAutoSpacing.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxAutoSpacingActionPerformed(evt);
             }
@@ -137,18 +139,21 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jCheckBoxShowLabelMaj.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxShowLabelMaj.setText("Show label at Tick");
         jCheckBoxShowLabelMaj.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxShowLabelMajActionPerformed(evt);
             }
         });
 
         formatJTextFieldTickSpace.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 formatJTextFieldTickSpaceKeyReleased(evt);
             }
         });
 
         formatJTextFieldTickLenghtMaj.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 formatJTextFieldTickLenghtMajKeyReleased(evt);
             }
@@ -204,6 +209,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jCheckBoxShowGridLineMin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxShowGridLineMin.setText("Show Grid Line");
         jCheckBoxShowGridLineMin.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxShowGridLineMinActionPerformed(evt);
             }
@@ -218,18 +224,21 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jCheckBoxShowLabelMin.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxShowLabelMin.setText("Show label at Tick");
         jCheckBoxShowLabelMin.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxShowLabelMinActionPerformed(evt);
             }
         });
 
         formatJTextFieldNumTicks.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 formatJTextFieldNumTicksKeyReleased(evt);
             }
         });
 
         formatJTextFieldTickLengthMin.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 formatJTextFieldTickLengthMinKeyReleased(evt);
             }
@@ -281,6 +290,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jCheckBoxAutoGridLine.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxAutoGridLine.setText("Auto-Grids");
         jCheckBoxAutoGridLine.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxAutoGridLineActionPerformed(evt);
             }

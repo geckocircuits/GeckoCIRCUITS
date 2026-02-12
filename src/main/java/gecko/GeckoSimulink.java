@@ -139,8 +139,7 @@ public class GeckoSimulink {
     }
 
     public int getNumInputPorts() {
-        int returnValue = ReglerFromEXTERNAL.fromExternals.size();
-        return returnValue;
+        return ReglerFromEXTERNAL.fromExternals.size();
     }
 
     static double[] tmpRemove = new double[10];

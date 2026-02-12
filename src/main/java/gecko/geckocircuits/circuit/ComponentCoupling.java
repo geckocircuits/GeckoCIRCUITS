@@ -322,7 +322,7 @@ public final class ComponentCoupling {
     }
 
     private void removeWithSingleReference(final AbstractBlockInterface partner, final int index) {
-        for(ComponentCoupling otherCoup : partner._isReferencedBy.toArray(new ComponentCoupling[partner._isReferencedBy.size()])) {
+        for(ComponentCoupling otherCoup : partner._isReferencedBy.toArray(new ComponentCoupling[0])) {
             if(otherCoup._parentElement instanceof ReglerGate
                     && _parentElement instanceof ReglerGate) {
                 otherCoup.setNewCouplingElementUndoable(index, null);
@@ -387,7 +387,7 @@ public final class ComponentCoupling {
        return returnValue;
     }
 
-    private class CouplingUndoableEdit implements GeckoUndoableEdit {
+    private final class CouplingUndoableEdit implements GeckoUndoableEdit {
 
         final boolean _isSignificant;
         private final int _index;

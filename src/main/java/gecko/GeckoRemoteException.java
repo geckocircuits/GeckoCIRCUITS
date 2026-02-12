@@ -24,6 +24,7 @@ public class GeckoRemoteException extends Exception {
      * <code>GeckoRemoteObjectException</code> without detail message.
      */
     public GeckoRemoteException() {
+        // no-op
     }
 
     /**

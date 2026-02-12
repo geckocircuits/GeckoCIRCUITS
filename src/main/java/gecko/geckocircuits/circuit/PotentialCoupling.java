@@ -121,7 +121,7 @@ public class PotentialCoupling {
         return _potentialType;
     }
 
-    private class ReferencedLabelChange implements GeckoUndoableEdit {
+    private final class ReferencedLabelChange implements GeckoUndoableEdit {
 
         final boolean _isSignificant;
         private final String _oldLabel;

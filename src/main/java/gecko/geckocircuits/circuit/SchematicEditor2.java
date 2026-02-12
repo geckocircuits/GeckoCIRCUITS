@@ -143,7 +143,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         MainWindow.seScroll.revalidate();
 
         for (AbstractCircuitSheetComponent searchTerminal
-                : _selectedComponents.toArray(new AbstractCircuitSheetComponent[_selectedComponents.size()])) {
+                : _selectedComponents.toArray(new AbstractCircuitSheetComponent[0])) {
             if (searchTerminal instanceof SubCircuitTerminable) {
                 _selectedComponents.remove(searchTerminal);
                 searchTerminal.deselectViaESCAPE();
@@ -890,6 +890,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         return normal;
     }
 
+    @Override
     public void mousePressed(final MouseEvent me) {
 
         if (me.getClickCount() < 2 && System.currentTimeMillis() - _lastMouseClickTime < 350
@@ -932,7 +933,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         // **************************
         //
         // wenn mehrere Elemente gleichzeitig markiert sind, werden alle gleichzeitig abgesetzt  -->
-        if (!wirePenVisible && _selectedComponents.size() > 0 && !isShiftClick && (me.getClickCount() <= 1)) {
+        if (!wirePenVisible && !_selectedComponents.isEmpty() && !isShiftClick && (me.getClickCount() <= 1)) {
 
             if (_mouseMoveMode == MouseMoveMode.MOVE_COMPONENTS) {
                 for (SubcircuitBlock testClickSub : _circuitSheet.getAllElements().getClassFromContainer(SubcircuitBlock.class)) {
@@ -1286,6 +1287,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         verbindungAKTUELL.setzeStartKnoten(clickPoint);
     }
 
+    @Override
     public void mouseMoved(MouseEvent me) {
         if (!simulatorAktiviert) {
             return;
@@ -1485,6 +1487,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     }
 
+    @Override
     public void mouseReleased(final MouseEvent me) {
         if (!simulatorAktiviert) {
             return;

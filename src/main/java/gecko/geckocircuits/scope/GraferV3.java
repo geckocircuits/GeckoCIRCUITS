@@ -367,13 +367,13 @@ public class GraferV3 extends JPanel {
     //-------------------------------------
 
     public void setzeAchsen() {
+        // no-op
     }
 
     protected void setzeKurven() {
+        // no-op
     }
 
-    public GraferV3() {
-    }
 
     @Override
     public void paint(Graphics g) {
@@ -412,6 +412,7 @@ public class GraferV3 extends JPanel {
 
     // zum Ueberschreiben
     protected void zeichne(Graphics g) {
+        // no-op
     }
 
     public static double lg10(double x) {

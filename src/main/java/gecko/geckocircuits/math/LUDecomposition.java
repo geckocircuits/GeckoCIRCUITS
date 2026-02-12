@@ -201,8 +201,9 @@ public class LUDecomposition implements java.io.Serializable {
 
    public boolean isNonsingular () {
       for (int j = 0; j < n; j++) {
-         if (LU[j][j] == 0)
+         if (LU[j][j] == 0) {
             return false;
+         }
       }
       return true;
    }

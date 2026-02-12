@@ -143,6 +143,7 @@ public final class TestReceiverWindow extends JFrame {
         setLocationByPlatform(true);
         setMinimumSize(new Dimension(650, 600));
         addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
             }
@@ -153,6 +154,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonCalculate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jButtonCalculate.setText("Calculate");
         jButtonCalculate.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCalculateActionPerformed(evt);
             }
@@ -162,6 +164,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonAbort.setText("Abort calculation");
         jButtonAbort.setEnabled(false);
         jButtonAbort.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAbortActionPerformed(evt);
             }
@@ -170,6 +173,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonCancel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jButtonCancel.setText("Close window");
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
             }
@@ -180,6 +184,7 @@ public final class TestReceiverWindow extends JFrame {
         jCheckBoxPeak.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxPeak.setText("Calculate Peak detection");
         jCheckBoxPeak.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxPeakActionPerformed(evt);
             }
@@ -189,6 +194,7 @@ public final class TestReceiverWindow extends JFrame {
         jCheckBoxQuasiPeak.setSelected(true);
         jCheckBoxQuasiPeak.setText("Calculate Quasi-Peak detection");
         jCheckBoxQuasiPeak.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxQuasiPeakActionPerformed(evt);
             }
@@ -197,6 +203,7 @@ public final class TestReceiverWindow extends JFrame {
         jCheckBoxAverage.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxAverage.setText("Calculate Average detection");
         jCheckBoxAverage.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxAverageActionPerformed(evt);
             }
@@ -207,6 +214,7 @@ public final class TestReceiverWindow extends JFrame {
         jRadioButtonRMS.setSelected(true);
         jRadioButtonRMS.setText("RMS display of FFT");
         jRadioButtonRMS.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonRMSActionPerformed(evt);
             }
@@ -216,6 +224,7 @@ public final class TestReceiverWindow extends JFrame {
         jRadioButtonAmpl.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jRadioButtonAmpl.setText("Amplitude display of FFT");
         jRadioButtonAmpl.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonAmplActionPerformed(evt);
             }
@@ -225,6 +234,7 @@ public final class TestReceiverWindow extends JFrame {
         jCheckBoxBlackman.setSelected(true);
         jCheckBoxBlackman.setText("use Blackman filtering (lowers noise floor)");
         jCheckBoxBlackman.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxBlackmanActionPerformed(evt);
             }
@@ -290,6 +300,7 @@ public final class TestReceiverWindow extends JFrame {
         jSpinnerMinFreq.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerMinFreq.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(9000.0d), Double.valueOf(1.0d), null, Double.valueOf(1000.0d)));
         jSpinnerMinFreq.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerMinFreqStateChanged(evt);
             }
@@ -298,6 +309,7 @@ public final class TestReceiverWindow extends JFrame {
         jSpinnerMaximum.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerMaximum.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(2000000.0d), Double.valueOf(100.0d), null, Double.valueOf(100000.0d)));
         jSpinnerMaximum.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerMaximumStateChanged(evt);
             }
@@ -307,6 +319,7 @@ public final class TestReceiverWindow extends JFrame {
         jRadioButtonInterval.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonInterval.setText("Frequency interval [Hz]:");
         jRadioButtonInterval.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonIntervalActionPerformed(evt);
             }
@@ -317,6 +330,7 @@ public final class TestReceiverWindow extends JFrame {
         jRadioButtonAuto.setSelected(true);
         jRadioButtonAuto.setText("Automatic frequency evalulation - filtering strength [0...1]:");
         jRadioButtonAuto.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonAutoActionPerformed(evt);
             }
@@ -326,6 +340,7 @@ public final class TestReceiverWindow extends JFrame {
         jSpinnerIntervalFreq.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(9000.0d), Double.valueOf(1.0d), null, Double.valueOf(1000.0d)));
         jSpinnerIntervalFreq.setEnabled(false);
         jSpinnerIntervalFreq.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerIntervalFreqStateChanged(evt);
             }
@@ -334,6 +349,7 @@ public final class TestReceiverWindow extends JFrame {
         jSpinnerThreshold.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerThreshold.setModel(new javax.swing.SpinnerNumberModel(0.5d, 0.0d, 1.0d, 0.1d));
         jSpinnerThreshold.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerThresholdStateChanged(evt);
             }
@@ -504,6 +520,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
             }
@@ -517,6 +534,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonImage.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonImage.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonImageActionPerformed(evt);
             }
@@ -529,6 +547,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonPlotOptions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonPlotOptions.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonPlotOptions.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPlotOptionsActionPerformed(evt);
             }
@@ -541,6 +560,7 @@ public final class TestReceiverWindow extends JFrame {
         jButtonPlotOptions1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonPlotOptions1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonPlotOptions1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonPlotOptions1ActionPerformed(evt);
             }
@@ -769,7 +789,7 @@ public final class TestReceiverWindow extends JFrame {
 
     void importAscii(final TokenMap tokenMap) {
         _graferNew.importIndividualCONTROL(tokenMap);
-        if(_graferNew._manager.getDiagrams().size() == 0) {
+        if(_graferNew._manager.getDiagrams().isEmpty()) {
             _graferNew.createInitialDiagramCISPR16(true, false, NUMBER_SIGNALS);
         }
         _graferPanel.importIndividualCONTROL(tokenMap);

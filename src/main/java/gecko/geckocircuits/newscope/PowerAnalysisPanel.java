@@ -233,7 +233,7 @@ public final class PowerAnalysisPanel extends JPanel {
         public void calculate(final AbstractDataContainer worksheet) {
             try {
                 final PowerCalculator ergP = PowerCalculator.calculatorFabric(worksheet, this);
-                if (this._selCurrentInd.size() != 0) {  // dh. keine Leistungsberechnung durchzufuehren weil deaktiviert
+                if (!this._selCurrentInd.isEmpty()) {  // dh. keine Leistungsberechnung durchzufuehren weil deaktiviert
 
                     for (int i = 0; i < _pqTextFields.length; i++) {
                         for (int j = 0; j < _pqTextFields[0].length; j++) {

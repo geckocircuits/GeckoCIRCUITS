@@ -59,7 +59,7 @@ public final class PotentialArea {
     }
 
     public AbstractBlockInterface[] getAllGlobalTerminals() {
-        return _globalTerminals.toArray(new AbstractBlockInterface[_globalTerminals.size()]);
+        return _globalTerminals.toArray(new AbstractBlockInterface[0]);
     }
 
     private PotentialArea() {
@@ -492,7 +492,7 @@ public final class PotentialArea {
 
     SubCircuitTerminable[] getPotentialTerminals() {
         if (_memoryOptimization == null || _memoryOptimization.length != _potentialTerminals.size()) {
-            _memoryOptimization = _potentialTerminals.toArray(new SubCircuitTerminable[_potentialTerminals.size()]);
+            _memoryOptimization = _potentialTerminals.toArray(new SubCircuitTerminable[0]);
         }
         assert validateMemoryOptimization();
         return _memoryOptimization;

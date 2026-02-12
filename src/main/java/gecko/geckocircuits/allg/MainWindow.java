@@ -196,6 +196,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         //---------------------------------
 
         keyAdapter = new KeyAdapter() {
+            @Override
             public void keyTyped(KeyEvent ke) {
                 processKeyEvents(ke);
             }
@@ -474,30 +475,35 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         JMenu menueSkalierung = GuiFabric.getJMenu(I18nKeys.SCALING);
         JMenuItem mItemSkal10 = GuiFabric.getJMenuItem(I18nKeys.POINT_10);
         mItemSkal10.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 AbstractCircuitSheetComponent.dpixValue.setValue(10);
             }
         });
         JMenuItem mItemSkal12 = GuiFabric.getJMenuItem(I18nKeys.POINT_12);
         mItemSkal12.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 AbstractCircuitSheetComponent.dpixValue.setValue(12);
             }
         });
         JMenuItem mItemSkal14 = GuiFabric.getJMenuItem(I18nKeys.POINT_14);
         mItemSkal14.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 AbstractCircuitSheetComponent.dpixValue.setValue(14);
             }
         });
         JMenuItem mItemSkal16 = GuiFabric.getJMenuItem(I18nKeys.POINT_16);
         mItemSkal16.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 AbstractCircuitSheetComponent.dpixValue.setValue(16);
             }
         });
         JMenuItem mItemSkal18 = GuiFabric.getJMenuItem(I18nKeys.POINT_18);
         mItemSkal18.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 AbstractCircuitSheetComponent.dpixValue.setValue(18);
             }
@@ -511,42 +517,49 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         JMenu menueFontSize = GuiFabric.getJMenu(I18nKeys.FONT_SIZE);
         JMenuItem mItemFS06 = GuiFabric.getJMenuItem(I18nKeys.POINT_6);
         mItemFS06.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(6, "Arial");
             }
         });
         JMenuItem mItemFS08 = GuiFabric.getJMenuItem(I18nKeys.POINT_8);
         mItemFS08.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(8, "Arial");
             }
         });
         JMenuItem mItemFS10 = GuiFabric.getJMenuItem(I18nKeys.POINT_10);
         mItemFS10.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(10, "Arial");
             }
         });
         JMenuItem mItemFS12 = GuiFabric.getJMenuItem(I18nKeys.POINT_12);
         mItemFS12.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(12, "Arial");
             }
         });
         JMenuItem mItemFS14 = GuiFabric.getJMenuItem(I18nKeys.POINT_14);
         mItemFS14.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(14, "Arial");
             }
         });
         JMenuItem mItemFS16 = GuiFabric.getJMenuItem(I18nKeys.POINT_16);
         mItemFS16.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(16, "Arial");
             }
         });
         JMenuItem mItemFS18 = GuiFabric.getJMenuItem(I18nKeys.POINT_18);
         mItemFS18.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 _se.setzeFont(18, "Arial");
             }
@@ -1091,6 +1104,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent ae) {
         if (!simulatorAktiviert) {
             return;
@@ -1655,39 +1669,59 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     //------------------------------------------------
+    @Override
     public void windowDeactivated(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowClosing(WindowEvent we) {
         this.schliesseProgramm();
     }
 
+    @Override
     public void componentResized(ComponentEvent ce) {
         this.aktualisiereDividerSplitPane(this.getWidth() - seaBREITE);
     }
 
+    @Override
     public void componentMoved(ComponentEvent ce) {
+        // no-op
     }
 
+    @Override
     public void componentShown(ComponentEvent ce) {
+        // no-op
     }
 
+    @Override
     public void componentHidden(ComponentEvent ce) {
+        // no-op
     }
     //------------------------------------------------
 
@@ -1957,6 +1991,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
     class BackupTask extends TimerTask {
 
+        @Override
         public void run() {
             if (_se.getZustandGeaendert()) {
                 rawSaveFile(new File(getAutoBackupFileName()));
@@ -1975,8 +2010,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 return dat;  // only the file name
             }            // partially the path specification is included:
             int space = txtSpace - (dat.length() + 5);
-            String erg = txt.substring(0, space) + " .. " + System.getProperty("file.separator") + " " + dat;
-            return erg;
+            return txt.substring(0, space) + " .. " + System.getProperty("file.separator") + " " + dat;
         } catch (Exception e) {
             return txt;
         }

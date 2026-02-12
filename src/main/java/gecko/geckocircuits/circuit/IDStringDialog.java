@@ -212,7 +212,7 @@ public final class IDStringDialog {
                     possibleComponents.remove(_parent);
                 }
             }
-            if (possibleComponents.size() == 0) {
+            if (possibleComponents.isEmpty()) {
                 _allIDStrings.remove(this.toString());
             }
         }

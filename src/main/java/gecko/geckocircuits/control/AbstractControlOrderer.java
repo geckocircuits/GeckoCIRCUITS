@@ -131,7 +131,7 @@ import java.util.logging.Logger;
                 throw new StackOverflowError("Cannot determine correct control execution order.");
             }
             lastSize = _nextInsertBlocks.size();
-            for (ControlOrderNode node : _nextInsertBlocks.toArray(new ControlOrderNode[_nextInsertBlocks.size()])) {
+            for (ControlOrderNode node : _nextInsertBlocks.toArray(new ControlOrderNode[0])) {
                 moveNodeToEndDirectionInList(node);
                 addNodesToNextList(node);
 

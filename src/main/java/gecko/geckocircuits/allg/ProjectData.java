@@ -526,7 +526,7 @@ public final class ProjectData implements Serializable {
 
     @SuppressWarnings("unchecked")
     public static void appendAsString(StringBuffer ascii, List<? extends Object> wert) {
-        if(wert.size() > 0 && wert.get(0) instanceof String) {
+        if(!wert.isEmpty() && wert.get(0) instanceof String) {
             appendStringArray(ascii, (List<String>)wert);
             return;
         }

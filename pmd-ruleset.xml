@@ -13,7 +13,24 @@
     <rule ref="rulesets/java/quickstart.xml">
         <!-- Allow empty catch blocks that contain a descriptive comment -->
         <exclude name="EmptyCatchBlock"/>
+
+        <!-- Legacy codebase naming — German/mixed names, _prefix convention, short math vars -->
+        <exclude name="LocalVariableNamingConventions"/>
+        <exclude name="MethodNamingConventions"/>
+        <exclude name="FormalParameterNamingConventions"/>
+
+        <!-- Style rules not suited to this math/simulation codebase -->
+        <exclude name="SingularField"/>
+        <exclude name="OneDeclarationPerLine"/>
+        <exclude name="FinalParameterInAbstractMethod"/>
+
+        <!-- Low-value rules for legacy code with established logging patterns -->
+        <exclude name="GuardLogStatement"/>
+
+        <!-- Yoda conditions — not the project's style -->
+        <exclude name="LiteralsFirstInComparisons"/>
     </rule>
+
     <rule ref="category/java/errorprone.xml/EmptyCatchBlock">
         <properties>
             <property name="allowCommentedBlocks" value="true"/>

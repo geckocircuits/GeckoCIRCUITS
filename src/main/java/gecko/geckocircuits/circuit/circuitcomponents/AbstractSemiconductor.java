@@ -77,8 +77,6 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
             unit("V").
             build();
 
-    public AbstractSemiconductor() {
-    }
 
     /**
      * this "hacks" are just for backwards-compatibility. In the old
@@ -104,9 +102,12 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
         return 3;
     }
 
+    @Override
     public void addFiles(List<GeckoFile> _newFilesToAdd) {
+        // no-op
     }
 
+    @Override
     public List<GeckoFile> getFiles() {
         if (!(getVerlustBerechnung() instanceof LossProperties)) {
             return Collections.emptyList();
@@ -117,7 +118,9 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
         return returnValue;
     }
 
+    @Override
     public void removeLocalComponentFiles(List<GeckoFile> filesToRemove) {
+        // no-op
     }
 
     @Override

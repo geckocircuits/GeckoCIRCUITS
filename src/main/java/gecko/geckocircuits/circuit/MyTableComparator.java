@@ -26,6 +26,7 @@ class MyTableComparator implements Comparator<List<Double>>, Serializable {
     private static final long serialVersionUID = 1L;
 
     public MyTableComparator() {
+        // no-op
     }
 
     @Override

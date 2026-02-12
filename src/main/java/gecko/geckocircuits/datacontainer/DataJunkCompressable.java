@@ -129,6 +129,7 @@ public final class DataJunkCompressable implements DataJunk {
         }
     }
 
+    @Override
     public float getIntegralValue(final int row, final int index) {
         try {
             return _avgData[row][index - _startIndex];

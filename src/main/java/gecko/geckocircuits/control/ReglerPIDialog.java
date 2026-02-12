@@ -63,6 +63,7 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
         }
 
         KeyAdapter adapter = new KeyAdapter() {
+            @Override
             public void keyReleased(KeyEvent evt) {
                 try {
                     double r0Value = r0TextField.getNumberFromField();

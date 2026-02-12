@@ -163,6 +163,7 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
     }
 
     public void setzeParameterZustandswerteAufNULL() {
+        // no-op
     }
 
     public List<String> getParameterStringIntern() {

@@ -157,8 +157,8 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof GridPoint)) return false;
+        if (this == obj) { return true; }
+        if (!(obj instanceof GridPoint)) { return false; }
         GridPoint other = (GridPoint) obj;
         return x == other.x && y == other.y;
     }

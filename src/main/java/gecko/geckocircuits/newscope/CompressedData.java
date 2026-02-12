@@ -129,8 +129,7 @@ public class CompressedData {
     }
 
     public int[] getEssentialData() {
-        int[] data = {_bits, _blockLength + 1, _compressedData.length};
-        return data;
+        return new int[]{_bits, _blockLength + 1, _compressedData.length};
     }
 
     public void printCompressInfo() {

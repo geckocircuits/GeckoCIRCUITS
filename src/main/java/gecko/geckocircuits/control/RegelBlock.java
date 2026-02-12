@@ -83,11 +83,11 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     @Override
     public void doOperationAfterNewConstruction() {
-        if (XIN.size() == 0 && YOUT.size() > 0) {
+        if (XIN.isEmpty() && !YOUT.isEmpty()) {
             _textInfo.initPositionRelative(-5, 0.4);
         }
 
-        if (YOUT.size() == 0 && XIN.size() > 0) {
+        if (YOUT.isEmpty() && !XIN.isEmpty()) {
             _textInfo.initPositionRelative(2, 0.4);
         }
     }
@@ -181,6 +181,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     // zum Ueberschreiben bei PI-Block und aehnlichen:
     public void initAtSimulationStart() {
+        // no-op
     }
 
 
@@ -323,8 +324,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     public int getBlockHeight() {
         int maxTerminals = Math.max(XIN.size(), YOUT.size());
-        int height = (int) (dpix * maxTerminals);
-        return height;
+        return (int) (dpix * maxTerminals);
     }
 
     public int getBlockWidth() {
@@ -343,7 +343,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     }
 
     public double getXShift() {
-        if (XIN.size() == 0 && YOUT.size() == 1) {
+        if (XIN.isEmpty() && YOUT.size() == 1) {
             return 0.5;
         } else {
             return 0;
@@ -419,19 +419,19 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     }
 
     public ControlType getType() {
-        if(XIN.size() > 0 && YOUT.size() > 0) {
+        if(!XIN.isEmpty() && !YOUT.isEmpty()) {
             return ControlType.TRANSFER;
         }
 
-        if(XIN.size() == 0 && YOUT.size() > 0) {
+        if(XIN.isEmpty() && !YOUT.isEmpty()) {
             return ControlType.SOURCE;
         }
 
-        if(XIN.size() > 0 && YOUT.size() == 0) {
+        if(!XIN.isEmpty() && YOUT.isEmpty()) {
             return ControlType.SINK;
         }
 
-        if(XIN.size() == 0 && YOUT.size() == 0) {
+        if(XIN.isEmpty() && YOUT.isEmpty()) {
             // data export has no inputs, but should be executed at the end
             return ControlType.SINK;
         }

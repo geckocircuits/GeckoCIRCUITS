@@ -72,6 +72,7 @@ public abstract class AbstractSwitchCalculator extends CircuitComponent implemen
         return _gateValue;
     }
 
+    @Override
     public boolean isBasisStampable() {
         return true;
     }

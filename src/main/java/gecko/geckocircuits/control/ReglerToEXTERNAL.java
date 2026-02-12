@@ -76,7 +76,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         return XIN;
     }
 
-    private static class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+    private static final class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -124,6 +124,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
                 @Override
                 public void berechneYOUT(double deltaT) {
 
+                    // no-op
                 }
             };
         } else {
@@ -191,6 +192,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         return "";
     }
 
+    @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\ntorder"), toExternalsInternal.indexOf(this));
     }

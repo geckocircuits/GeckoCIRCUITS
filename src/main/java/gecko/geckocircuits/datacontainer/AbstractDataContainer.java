@@ -35,42 +35,59 @@ public abstract class AbstractDataContainer extends Observable implements IScope
    * @param columnMin minimum column value
    * @return the MinMax-Data from columnOld to column
    */
+  @Override
   public abstract HiLoData getHiLoValue(final int row, final int columnMin, final int columnMax);
 
+  @Override
   public abstract float getValue(final int row, final int column);
 
+  @Override
   public abstract int getRowLength();
 
+  @Override
   public abstract double getTimeValue(final int index, final int row);
 
+  @Override
   public abstract int getMaximumTimeIndex(final int row);
 
+  @Override
   public abstract Object getDataValueInInterval(final double intervalStart, final double intervalStop, final int columnIndex);
 
+  @Override
   public abstract HiLoData getAbsoluteMinMaxValue(int row);
 
 
+  @Override
   public abstract int findTimeIndex(final double time, final int row);
 
+  @Override
   public abstract String getSignalName(final int row);
 
+  @Override
   public abstract String getXDataName();
 
+  @Override
   public abstract ContainerStatus getContainerStatus();
 
+  @Override
   public abstract void setContainerStatus(final ContainerStatus containerStatus);
 
+  @Override
   public abstract boolean isInvalidNumbers(final int row);
 
+  @Override
   public abstract AbstractTimeSerie getTimeSeries(final int row);
 
+  @Override
   public abstract float[] getDataArray();
 
+  @Override
   public String getSubcircuitSignalPath(final int row) {
       return "";
   }
 
     void setSignalPathName(int containerRowIndex, String subcircuitPath) {
+        // no-op
     }
 
 }

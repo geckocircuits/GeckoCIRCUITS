@@ -158,7 +158,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
 
     public boolean areTerminalPositionsOK() {
         System.err.println("Warning: Terminal position check disabled!");
-        if(1>0) return true;
+        if(1>0) { return true; }
         for (SubCircuitTerminable terminal1 : _myTerminals) {
             for (SubCircuitTerminable terminal2 : _myTerminals) {
                 if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
@@ -190,7 +190,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     @Override
     public void deleteActionIndividual() {
         final Collection<AbstractCircuitSheetComponent> local = _myCircuitSheet.getLocalSheetComponents();
-        final AbstractCircuitSheetComponent[] copy = local.toArray(new AbstractCircuitSheetComponent[local.size()]);
+        final AbstractCircuitSheetComponent[] copy = local.toArray(new AbstractCircuitSheetComponent[0]);
         for (AbstractCircuitSheetComponent subComp : copy) {
             subComp.deleteComponent();
         }

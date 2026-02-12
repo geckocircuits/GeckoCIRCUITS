@@ -33,6 +33,7 @@ public class ExternalSignal extends AbstractScopeSignal{
    * Empty standard constructor
    */
   public ExternalSignal(){
+      // no-op
   }
 
   /**

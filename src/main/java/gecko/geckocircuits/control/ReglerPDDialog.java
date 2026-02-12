@@ -39,6 +39,7 @@ class ReglerPDDialog extends DialogElementCONTROL<ReglerPD> {
                 hD = 45,
                 abstandPD = 15;
         JComponent compPD = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.setColor(Color.white);
                 g.fillRect(0, 0, bD, hD);

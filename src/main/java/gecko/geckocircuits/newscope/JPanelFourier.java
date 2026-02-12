@@ -114,6 +114,7 @@ public class JPanelFourier extends javax.swing.JPanel {
         jButtonSaveData.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSaveData.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonSaveData.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveDataActionPerformed(evt);
             }
@@ -125,6 +126,7 @@ public class JPanelFourier extends javax.swing.JPanel {
         jButtonSaveImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonSaveImage.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jButtonSaveImage.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveImageActionPerformed(evt);
             }

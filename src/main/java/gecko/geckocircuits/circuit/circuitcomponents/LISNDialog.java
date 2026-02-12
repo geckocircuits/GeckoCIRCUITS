@@ -41,6 +41,7 @@ class LISNDialog extends DialogElementLK {
         JPanel jpDefLISN = new JPanel();
         jpDefLISN.setLayout(new BorderLayout());
         JComponent jcLISN = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 try {
                     g.setColor(Color.white);

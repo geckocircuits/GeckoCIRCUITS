@@ -115,6 +115,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         jTextField.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jTextField.setText("Please insert search text");
         jTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(KeyEvent evt) {
                 jTextFieldKeyReleased(evt);
             }
@@ -130,6 +131,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
         jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonClose.setText("Close window");
         jButtonClose.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
             }

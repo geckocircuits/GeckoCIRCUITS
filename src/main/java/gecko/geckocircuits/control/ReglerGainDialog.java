@@ -32,6 +32,7 @@ class ReglerGainDialog extends DialogElementCONTROL<ReglerGain> {
                 hG = 32,
                 abstandG = 15;
         JComponent compImG = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.setColor(Color.white);
                 g.fillRect(0, 0, bG, hG);

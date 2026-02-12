@@ -23,6 +23,7 @@ class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
 
     FormatJTextField component = new FormatJTextField();
 
+  @Override
   public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
       int rowIndex, int vColIndex) {
       if(value != null) {
@@ -34,6 +35,7 @@ class MyTableCellEditor extends AbstractCellEditor implements TableCellEditor {
     return component;
   }
 
+  @Override
   public Object getCellEditorValue() {
       if(component.getText().isEmpty()) {
           return null;

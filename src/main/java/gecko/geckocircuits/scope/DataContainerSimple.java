@@ -51,26 +51,32 @@ public final class DataContainerSimple implements DataContainer {
         }
     }
 
+    @Override
     public int getRowLength() {
         return _data.length;
     }
 
+    @Override
     public int getColumnLength() {
         return _data[0].length;
     }
 
+    @Override
     public void setColumn(final double[] data, final int index) {
         _data[index] = data;
     }
 
+    @Override
     public double[] getColumn(final int index) {
         return _data[index];
     }
 
+    @Override
     public double getTimeIntervalResolution() {
         return _data[0][2] - _data[0][1];
     }
 
+    @Override
     public HiLoData getHiLoValue(final int row, final int columnStart, final int columnStop) {
         assert columnStart <= columnStop;
 
@@ -84,10 +90,12 @@ public final class DataContainerSimple implements DataContainer {
 
     }
 
+    @Override
     public double getEstimatedTimeValue(final int column) {
         return _data[0][column];
     }
 
+    @Override
     public int getMaximumTimeIndex() {
         return _maximumIndex;
     }

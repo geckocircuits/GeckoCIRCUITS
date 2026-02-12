@@ -21,7 +21,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LossCurvePlotPanel extends SimpleGraferPanel {
+public final class LossCurvePlotPanel extends SimpleGraferPanel {
     private int _moreDataFactor;
 
 

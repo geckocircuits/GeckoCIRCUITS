@@ -35,7 +35,7 @@ public final class NetzlisteAllg {
 
     // Ergebnis (wird zum Erstellen der Netzliste, dh. Verknuepfung der Elemente ueber die Potentiale) verwendet:
     public PotentialArea[] getPotentiale() {
-        return _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
+        return _potentialAreas.toArray(new PotentialArea[0]);
     }
     /**
      * Use the fabric methods for object creation!!!
@@ -171,7 +171,7 @@ public final class NetzlisteAllg {
 
         while (continueLoop) {
             continueLoop = false;
-            final PotentialArea[] array = _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
+            final PotentialArea[] array = _potentialAreas.toArray(new PotentialArea[0]);
             for (int i = 0; i < array.length; i++) {
                 for (int j = i + 1; j < array.length; j++) {
                     final PotentialArea pot1 = array[i];
@@ -213,8 +213,8 @@ public final class NetzlisteAllg {
         boolean continueLoop = true;
         while (continueLoop) {
             continueLoop = false;
-            final PotentialArea[] compare1Array = _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
-            final PotentialArea[] compare2Array = _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
+            final PotentialArea[] compare1Array = _potentialAreas.toArray(new PotentialArea[0]);
+            final PotentialArea[] compare2Array = _potentialAreas.toArray(new PotentialArea[0]);
 
             for (int i = 0; i < compare1Array.length; i++) {
                 for (int j = i + 1; j < compare2Array.length; j++) {
@@ -260,8 +260,8 @@ public final class NetzlisteAllg {
         boolean continueLoop = true;
         while (continueLoop) {
             continueLoop = false;
-            final PotentialArea[] compare1Array = _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
-            final PotentialArea[] compare2Array = _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
+            final PotentialArea[] compare1Array = _potentialAreas.toArray(new PotentialArea[0]);
+            final PotentialArea[] compare2Array = _potentialAreas.toArray(new PotentialArea[0]);
 
             for (int i = 0; i < compare1Array.length; i++) {
                 for (int j = i + 1; j < compare2Array.length; j++) {
@@ -285,7 +285,7 @@ public final class NetzlisteAllg {
 
     private boolean testMergeConnection() {
         boolean returnValue = false;
-        final PotentialArea[] array = _potentialAreas.toArray(new PotentialArea[_potentialAreas.size()]);
+        final PotentialArea[] array = _potentialAreas.toArray(new PotentialArea[0]);
         final Set<PotentialArea> alreadyConnected = new LinkedHashSet<PotentialArea>();
 
         for (int i = 0; i < array.length; i++) {

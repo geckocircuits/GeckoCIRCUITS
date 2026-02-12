@@ -317,6 +317,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jComboBoxFilter.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxFilter.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jComboBoxFilterPropertyChange(evt);
             }
@@ -341,6 +342,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jButtonTable.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonTable.setText("Show data table");
         jButtonTable.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTableActionPerformed(evt);
             }
@@ -397,6 +399,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadButtOverwrite.setSelected(true);
         jRadButtOverwrite.setText("Overwrite existing data");
         jRadButtOverwrite.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadButtOverwriteActionPerformed(evt);
             }
@@ -406,6 +409,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadButtDoNumber.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadButtDoNumber.setText("Automatic numbering of file names");
         jRadButtDoNumber.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadButtDoNumberActionPerformed(evt);
             }
@@ -416,6 +420,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadButtManSave.setSelected(true);
         jRadButtManSave.setText("Save manually");
         jRadButtManSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadButtManSaveActionPerformed(evt);
             }
@@ -425,6 +430,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadButtEndSave.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadButtEndSave.setText("Save automatically at simulation end");
         jRadButtEndSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadButtEndSaveActionPerformed(evt);
             }
@@ -434,6 +440,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadButtContinSav.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadButtContinSav.setText("Save continuously during simulation");
         jRadButtContinSav.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadButtContinSavActionPerformed(evt);
             }
@@ -442,6 +449,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jSpinnerSkip.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerSkip.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
         jSpinnerSkip.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerSkipStateChanged(evt);
             }
@@ -453,6 +461,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jCheckBoxTranspose.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jCheckBoxTranspose.setText("Transpose data table (rows first)");
         jCheckBoxTranspose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxTransposeActionPerformed(evt);
             }
@@ -506,6 +515,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
         jComboSeparator.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jComboSeparator.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboSeparatorActionPerformed(evt);
             }
@@ -515,6 +525,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jCheckPrintHdr.setSelected(true);
         jCheckPrintHdr.setText("Print header line including signal names");
         jCheckPrintHdr.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckPrintHdrActionPerformed(evt);
             }
@@ -525,6 +536,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
         jComboHeaderSym.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jComboHeaderSym.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboHeaderSymActionPerformed(evt);
             }
@@ -536,6 +548,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jSpinnerDigits.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerDigits.setModel(new javax.swing.SpinnerNumberModel(4, 1, 6, 1));
         jSpinnerDigits.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerDigitsStateChanged(evt);
             }
@@ -545,6 +558,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadioBinary.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioBinary.setText("Binary format");
         jRadioBinary.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioBinaryActionPerformed(evt);
             }
@@ -555,6 +569,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jRadioText.setSelected(true);
         jRadioText.setText("Text format");
         jRadioText.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioTextActionPerformed(evt);
             }
@@ -646,6 +661,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonClose.setText("Close");
         jButtonClose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseActionPerformed(evt);
             }
@@ -654,6 +670,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jButtonDoSave.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonDoSave.setText("Save data to file");
         jButtonDoSave.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveData(evt);
             }
@@ -662,6 +679,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jTxtFildFileName.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jTxtFildFileName.setText("/home/andreas/testFile.txt");
         jTxtFildFileName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTxtFildFileNameKeyReleased(evt);
             }
@@ -675,12 +693,14 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jButtonAbort.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonAbort.setText("Abort Save");
         jButtonAbort.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAbortActionPerformed(evt);
             }
         });
 
         jButtonFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonFileChooserActionPerformed(evt);
             }

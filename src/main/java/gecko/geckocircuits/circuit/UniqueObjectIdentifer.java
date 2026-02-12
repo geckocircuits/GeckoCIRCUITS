@@ -21,9 +21,6 @@ public class UniqueObjectIdentifer {
     private static Random generator = new Random();
     private long identifier = 0;
 
-    public UniqueObjectIdentifer() {
-
-    }
 
     public long getIdentifier() {
         //assert identifier != 0;

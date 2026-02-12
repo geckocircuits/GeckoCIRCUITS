@@ -44,6 +44,7 @@ public class CheckBoxList extends JList<String>
     }
 
     // ListSelectionListener implementation
+    @Override
     public void valueChanged (ListSelectionEvent lse) {
         System.out.println (lse);
         if (! lse.getValueIsAdjusting()) {
@@ -71,10 +72,11 @@ public class CheckBoxList extends JList<String>
             while (it.hasNext()) {
                 Integer nextInt = (Integer) it.next();
                 int index = nextInt;
-                if (selectionCache.contains (nextInt))
+                if (selectionCache.contains (nextInt)) {
                     getSelectionModel().removeSelectionInterval (index, index);
-                else
+                } else {
                     getSelectionModel().addSelectionInterval (index, index);
+                }
             }
 
             // save selections for next time
@@ -103,8 +105,9 @@ public class CheckBoxList extends JList<String>
             "Don", "Kimi", "Kelly", "Keagan"
         };
         Iterator<String> it = Arrays.asList(listItems).iterator();
-        while (it.hasNext())
+        while (it.hasNext()) {
             defModel.addElement (it.next());
+        }
         // show list
         JScrollPane scroller =
             new JScrollPane (list,
@@ -129,6 +132,7 @@ public class CheckBoxList extends JList<String>
             add (defaultComp, BorderLayout.CENTER);
         }
 
+        @Override
         public Component getListCellRendererComponent(JList<?> list,
                                                       Object  value,
                                                       int index,

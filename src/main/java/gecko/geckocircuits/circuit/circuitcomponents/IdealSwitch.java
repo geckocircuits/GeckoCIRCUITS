@@ -52,6 +52,7 @@ public final class IdealSwitch extends AbstractSwitch {
     }
 
 
+    @Override
     public void setzeParameterZustandswerteAufNULL() {
         parameter[0] = parameter[2];
         parameter[3] = 0;

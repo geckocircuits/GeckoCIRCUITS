@@ -33,8 +33,6 @@ public class LastComponentButton extends JButton {
     private AbstractComponentTyp _typ;
     private ComponentDirection _componentDirection = ComponentDirection.NORTH_SOUTH;
 
-    public LastComponentButton() {
-    }
 
     public void setSelectedShowComponent(final AbstractBlockInterface showComponent, final AbstractComponentTyp typ) {
         _showComponent = showComponent;

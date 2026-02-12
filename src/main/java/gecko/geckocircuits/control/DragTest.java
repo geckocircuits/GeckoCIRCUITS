@@ -46,6 +46,7 @@ public class DragTest extends JFrame implements DragSourceListener,
     super("Drag Test");
     setSize(200, 150);
     addWindowListener(new WindowAdapter() {
+      @Override
       public void windowClosing(WindowEvent we) {
         System.exit(0);
       }
@@ -60,24 +61,29 @@ public class DragTest extends JFrame implements DragSourceListener,
     setVisible(true);
   }
 
+  @Override
   public void dragGestureRecognized(DragGestureEvent dge) {
     System.out.println("Drag Gesture Recognized!");
     transferable = new StringSelection(jl.getSelectedValue().toString());
     ds.startDrag(dge, DragSource.DefaultCopyDrop, transferable, this);
   }
 
+  @Override
   public void dragEnter(DragSourceDragEvent dsde) {
     System.out.println("Drag Enter");
   }
 
+  @Override
   public void dragExit(DragSourceEvent dse) {
     System.out.println("Drag Exit");
   }
 
+  @Override
   public void dragOver(DragSourceDragEvent dsde) {
     System.out.println("Drag Over");
   }
 
+  @Override
   public void dragDropEnd(DragSourceDropEvent dsde) {
     System.out.print("Drag Drop End: ");
     if (dsde.getDropSuccess()) {
@@ -87,6 +93,7 @@ public class DragTest extends JFrame implements DragSourceListener,
     }
   }
 
+  @Override
   public void dropActionChanged(DragSourceDragEvent dsde) {
     System.out.println("Drop Action Changed");
   }

@@ -126,7 +126,7 @@ public class GeckoFileManagerWindow extends JDialog {
 
         List<GeckoFile> existingFiles = MainWindow._fileManager.getFilesByExtension(extension);
 
-        if (alreadyUsedFiles.size() > 0) {
+        if (!alreadyUsedFiles.isEmpty()) {
             existingFiles.removeAll(alreadyUsedFiles);
         }
 
@@ -267,6 +267,7 @@ public class GeckoFileManagerWindow extends JDialog {
 
         jButtonOK.setText("OK");
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
             }
@@ -274,6 +275,7 @@ public class GeckoFileManagerWindow extends JDialog {
 
         jButtonCancel.setText("Cancel");
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
             }
@@ -282,6 +284,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jButtonRemove.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonRemove.setText("Remove Selection");
         jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRemoveActionPerformed(evt);
             }
@@ -294,6 +297,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jButtonAddNewFile.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonAddNewFile.setText("Add New File");
         jButtonAddNewFile.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddNewFileActionPerformed(evt);
             }
@@ -305,6 +309,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jRadioButtonIsExternalNew.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonIsExternalNew.setText("External");
         jRadioButtonIsExternalNew.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonIsExternalNewActionPerformed(evt);
             }
@@ -314,6 +319,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jRadioButtonIsInternalNew.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonIsInternalNew.setText("Internal");
         jRadioButtonIsInternalNew.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonIsInternalNewActionPerformed(evt);
             }
@@ -398,6 +404,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jButtonAddSelectedExistingFiles.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonAddSelectedExistingFiles.setText("Add Selected File(s) to local block");
         jButtonAddSelectedExistingFiles.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddSelectedExistingFilesActionPerformed(evt);
             }
@@ -412,6 +419,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jRadioButtonIsInternalExisting.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonIsInternalExisting.setText("Internal");
         jRadioButtonIsInternalExisting.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonIsInternalExistingActionPerformed(evt);
             }
@@ -421,6 +429,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jRadioButtonIsExternalExisting.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jRadioButtonIsExternalExisting.setText("External");
         jRadioButtonIsExternalExisting.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButtonIsExternalExistingActionPerformed(evt);
             }

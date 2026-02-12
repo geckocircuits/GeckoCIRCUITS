@@ -134,6 +134,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
 
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }

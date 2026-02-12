@@ -211,18 +211,22 @@ public class DataTablePanelParameters extends JPanel {
             _numberColumns = numberColumns;
         }
 
+        @Override
         public int getColumnCount() {
             return _numberColumns;
         }
 
+        @Override
         public int getRowCount() {
             return variableNumbers.size() + 1;
         }
 
+        @Override
         public String getColumnName(int col) {
             return _columnTitles[col];
         }
 
+        @Override
         public Object getValueAt(int row, int col) {
             if (row >= variableNumbers.size()) {
                 return null;
@@ -253,6 +257,7 @@ public class DataTablePanelParameters extends JPanel {
          * then the last column would contain text ("true"/"false"),
          * rather than a check box.
          */
+        @Override
         public Class<?> getColumnClass(final int column) {
             if (column == 0) {
                 return String.class;
@@ -261,10 +266,12 @@ public class DataTablePanelParameters extends JPanel {
             }
         }
 
+        @Override
         public boolean isCellEditable(int row, int col) {
             return true;
         }
 
+        @Override
         public void setValueAt(Object value, int row, int col) {
 
             boolean isNullValue = false;

@@ -44,6 +44,7 @@ public abstract class AbstractSwitch extends AbstractSemiconductor implements Cu
         }
     }
 
+    @Override
     public final LossProperties getVerlustBerechnung() {
         return verluste;
     }

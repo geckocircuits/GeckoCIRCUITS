@@ -329,7 +329,7 @@ public class TerminalRegistry<T> {
      */
     public int indexOf(T terminal) {
         int idx = inputTerminals.indexOf(terminal);
-        if (idx >= 0) return idx;
+        if (idx >= 0) { return idx; }
         return outputTerminals.indexOf(terminal);
     }
 
@@ -514,10 +514,10 @@ public class TerminalRegistry<T> {
         }
         int count = 0;
         for (T terminal : inputTerminals) {
-            if (adapter.isConnected(terminal)) count++;
+            if (adapter.isConnected(terminal)) { count++; }
         }
         for (T terminal : outputTerminals) {
-            if (adapter.isConnected(terminal)) count++;
+            if (adapter.isConnected(terminal)) { count++; }
         }
         return count;
     }

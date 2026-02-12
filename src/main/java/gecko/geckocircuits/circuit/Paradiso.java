@@ -41,9 +41,6 @@ public class Paradiso {
     private static int msglvl;
 
 
-    public Paradiso() {
-
-    }
 
 
 

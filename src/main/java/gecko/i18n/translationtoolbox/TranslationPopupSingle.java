@@ -47,7 +47,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
      * Inner class used to execute upload instructions from a separate
      * thread to avoid freezing up.
      */
-    private class Task extends SwingWorker<Void, Void> {
+    private final class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
             // upload the suggestion
@@ -56,14 +56,14 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
         }
 
         @Override
-        public void done() {} // do nothing
+        public void done() { /* no-op */ } // do nothing
     }
 
     /*
      * Inner class used to acquire progress information from the upload bot
      * class (UPbot) from a separate thread to avoid freezing up.
      */
-    private class Progress extends SwingWorker<Void, Void> {
+    private final class Progress extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
             setProgress(0);
@@ -84,7 +84,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
         }
 
         @Override
-        public void done() {} // do nothing
+        public void done() { /* no-op */ } // do nothing
     }
 
     /**
@@ -108,6 +108,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
 
         // "Cancel" button
         jButton1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 dispose(); // dispose of pop-up
             }
@@ -115,6 +116,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
 
         // "Done" button
         jButton2.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (confirmed) {
                     // initialize progressMonitor
@@ -139,6 +141,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
 
         // "Confirm" button
         jButton3.addActionListener(new ActionListener()  {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 newTranslation = jTextField3.getText(); // get suggestion
                 if (newTranslation.isEmpty()) {
@@ -152,6 +155,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
 
         // "Open Translation Toolbox" button
         jButton4.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (confirmed) {
                     buttonName = InitParameters.OTT_BUTTON;
@@ -180,6 +184,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
     /*
      * Method to implement PropertyChangeListener
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
             int prog = (Integer) evt.getNewValue(); // get updated progress

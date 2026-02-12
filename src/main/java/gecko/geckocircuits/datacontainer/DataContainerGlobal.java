@@ -184,6 +184,7 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
     return _data.hashCode();
   }
 
+    @Override
     public float[] getDataArray() {
         return _data.getDataArray();
     }

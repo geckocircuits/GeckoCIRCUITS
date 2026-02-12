@@ -423,7 +423,7 @@ public final class SaveViewFrame extends GeckoDialog {
         }
 
         final javax.swing.filechooser.FileFilter fileFilter =
-                new ImageFileFilter(allEndings.toArray(new String[allEndings.size()]));
+                new ImageFileFilter(allEndings.toArray(new String[0]));
         chooser.setFileFilter(fileFilter);
         final int result = chooser.showSaveDialog(_viewPanel);
         if (result == JFileChooser.CANCEL_OPTION) {

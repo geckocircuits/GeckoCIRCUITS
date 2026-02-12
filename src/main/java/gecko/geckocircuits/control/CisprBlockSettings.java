@@ -52,6 +52,7 @@ public class CisprBlockSettings extends GeckoDialog {
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }
@@ -60,6 +61,7 @@ public class CisprBlockSettings extends GeckoDialog {
         jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonCancel.setText("Cancel");
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCancelActionPerformed(evt);
             }

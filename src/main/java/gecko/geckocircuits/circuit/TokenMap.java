@@ -141,7 +141,8 @@ public final class TokenMap {
                             readLineNumber = j;
                         }
                     }
-                } else try {
+                } else {
+                    try {
                     if (lineToken.charAt(0) == '<' && lineToken.length() > 1 && lineToken.charAt(1) != '\\') {
                         final String endToken = "<\\" + lineToken.substring(1, lineToken.length());
                         int j = readLineNumber;
@@ -161,9 +162,10 @@ public final class TokenMap {
                             _duplicateMap.put(lineToken, list);
                         }
                     }
-                } catch (Exception ex) {
-                    System.err.println("line token: " + lineToken);
-                    ex.printStackTrace();
+                    } catch (Exception ex) {
+                        System.err.println("line token: " + lineToken);
+                        ex.printStackTrace();
+                    }
                 }
                 //System.out.println(lineToken);
                 readTokenLine(lineToken, readLineNumber, _map);

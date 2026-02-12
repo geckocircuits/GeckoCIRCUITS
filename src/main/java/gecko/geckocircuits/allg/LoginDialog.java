@@ -70,6 +70,7 @@ public class LoginDialog extends JDialog {
 
         btnLogin.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 LoginDialog.this.dispose();
             }
@@ -77,6 +78,7 @@ public class LoginDialog extends JDialog {
         btnCancel = new JButton("Cancel");
         btnCancel.addActionListener(new ActionListener() {
 
+            @Override
             public void actionPerformed(ActionEvent e) {
                 _canceled = true;
                 dispose();

@@ -163,7 +163,7 @@ public class ParameterRegistry<P> {
      * @return the parameter, or null if not found
      */
     public P findByShortName(String name) {
-        if (name == null) return null;
+        if (name == null) { return null; }
         return byShortName.get(name.toLowerCase());
     }
 
@@ -174,7 +174,7 @@ public class ParameterRegistry<P> {
      * @return the parameter, or null if not found
      */
     public P findByAlternativeName(String name) {
-        if (name == null) return null;
+        if (name == null) { return null; }
         return byAlternativeName.get(name.toLowerCase());
     }
 

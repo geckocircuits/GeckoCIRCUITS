@@ -34,6 +34,7 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
     }
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidArrayLoops"})
+    @Override
     void calculateYOUT(final double time, final double deltaT, final double[][] inputSignals,
             final double[][] outputSignals) throws Exception {
         if (_compiledInstance == null) {

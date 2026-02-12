@@ -76,6 +76,7 @@ public class GeckoDialog extends JDialog {
         final KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
         final Action actionListener = new AbstractAction() {
 
+            @Override
             public void actionPerformed(final ActionEvent actionEvent) {
                 setVisible(false);
             }

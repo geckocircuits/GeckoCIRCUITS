@@ -19,8 +19,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 class MyTableCellRenderer extends DefaultTableCellRenderer {
     private final TechFormat tf = new TechFormat();
     public MyTableCellRenderer() {
+        // no-op
     }
 
+    @Override
     public void setValue(Object value) {
         if(value == null) {
             setText("");

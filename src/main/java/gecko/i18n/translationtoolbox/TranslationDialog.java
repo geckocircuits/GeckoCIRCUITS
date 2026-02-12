@@ -34,6 +34,7 @@ public class TranslationDialog extends javax.swing.JFrame {
 
         // "OK" button
         jButton1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }
@@ -55,6 +56,7 @@ public class TranslationDialog extends javax.swing.JFrame {
 
         // "OK" button
         jButton1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
             }

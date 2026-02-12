@@ -192,7 +192,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
 
 
         SmallSignalCalculator ssc = element._lastCalculator;
-        if(ssc == null) return;
+        if(ssc == null) { return; }
         double[] ssv = ssc._smallSignalValues;
         double[] measuredValues = ssc._measuredValues;
         double dt = ssc._calculationDeltaT;

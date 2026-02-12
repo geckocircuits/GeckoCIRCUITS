@@ -68,6 +68,7 @@ public abstract class AbstractControlCalculatable {
      * Intended to be overwritten by subclasses to free resources if necessary.
      */
     public void tearDownOnPause() {
+        // no-op
     }
 
     protected double[][] createOutputSignal(final int noOutputs) {

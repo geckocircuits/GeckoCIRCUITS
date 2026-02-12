@@ -207,7 +207,7 @@ public final class ConnectionPath {
      * @return corner count
      */
     public int getCornerCount() {
-        if (points.size() < 3) return 0;
+        if (points.size() < 3) { return 0; }
 
         int corners = 0;
         for (int i = 1; i < points.size() - 1; i++) {
@@ -232,7 +232,7 @@ public final class ConnectionPath {
      * @return true if path is valid
      */
     public boolean isValid() {
-        if (points.size() < 2) return false;
+        if (points.size() < 2) { return false; }
 
         for (int i = 0; i < points.size() - 1; i++) {
             PathPoint p1 = points.get(i);
@@ -326,8 +326,8 @@ public final class ConnectionPath {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof ConnectionPath)) return false;
+        if (this == obj) { return true; }
+        if (!(obj instanceof ConnectionPath)) { return false; }
         ConnectionPath other = (ConnectionPath) obj;
         return connectorType == other.connectorType && points.equals(other.points);
     }
@@ -342,7 +342,7 @@ public final class ConnectionPath {
         StringBuilder sb = new StringBuilder();
         sb.append("ConnectionPath[").append(connectorType).append("]: ");
         for (int i = 0; i < points.size(); i++) {
-            if (i > 0) sb.append(" -> ");
+            if (i > 0) { sb.append(" -> "); }
             sb.append(points.get(i));
         }
         return sb.toString();
@@ -362,8 +362,8 @@ public final class ConnectionPath {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof PathPoint)) return false;
+            if (this == obj) { return true; }
+            if (!(obj instanceof PathPoint)) { return false; }
             PathPoint other = (PathPoint) obj;
             return x == other.x && y == other.y;
         }

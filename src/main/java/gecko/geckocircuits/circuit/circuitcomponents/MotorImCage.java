@@ -35,6 +35,7 @@ public final class MotorImCage extends AbstractMotorIM {
     // interne Variablen:
     private double imd0 = 0, imq0 = 0;
 
+    @Override
     public int getIndexForLoadTorque() {
         return 15;
     }
@@ -140,6 +141,7 @@ public final class MotorImCage extends AbstractMotorIM {
         graphics.drawOval((int) (-dpix * RADIUS_MOTOR_SYMBOL) + drMpix, (int) (-dpix * RADIUS_MOTOR_SYMBOL) + drMpix, (int) (dpix * 2 * RADIUS_MOTOR_SYMBOL) - 2 * drMpix, (int) (dpix * 2 * RADIUS_MOTOR_SYMBOL) - 2 * drMpix);
     }
 
+    @Override
     protected Window openDialogWindow() {
         return new MotorImCageDialog(this);
     }

@@ -137,8 +137,7 @@ public final class CapacitanceCharacteristic {
         {
             double y1 = y_val_C.get(i - 1);
             double y2 = y_val_C.get(i);
-            double y = y1 + (y2 - y1) / (x2 - x1) * (V - x1);
-            return y;
+            return y1 + (y2 - y1) / (x2 - x1) * (V - x1);
         }
 
     }

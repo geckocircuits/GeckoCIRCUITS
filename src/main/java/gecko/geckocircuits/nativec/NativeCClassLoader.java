@@ -24,9 +24,6 @@ import java.io.IOException;
  */
 public class NativeCClassLoader extends ClassLoader {
 
-    public NativeCClassLoader() {
-
-    }
 
 
     @Override

@@ -84,6 +84,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }
@@ -104,6 +105,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
         jSpinnerSheetX.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerSheetX.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(40), Integer.valueOf(20), null, Integer.valueOf(5)));
         jSpinnerSheetX.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerSheetXStateChanged(evt);
             }
@@ -112,6 +114,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
         jSpinnerSheetY.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerSheetY.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(30), Integer.valueOf(20), null, Integer.valueOf(5)));
         jSpinnerSheetY.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerSheetYStateChanged(evt);
             }
@@ -120,6 +123,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
         jSpinnerBlockX.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerBlockX.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
         jSpinnerBlockX.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerBlockXStateChanged(evt);
             }
@@ -128,6 +132,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
         jSpinnerBlockY.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerBlockY.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(10), Integer.valueOf(1), null, Integer.valueOf(1)));
         jSpinnerBlockY.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerBlockYStateChanged(evt);
             }

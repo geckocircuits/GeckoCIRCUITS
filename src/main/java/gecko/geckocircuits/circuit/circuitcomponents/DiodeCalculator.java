@@ -112,6 +112,7 @@ public final class DiodeCalculator extends CircuitComponent<Diode> implements AS
 
     }
 
+    @Override
     public boolean isBasisStampable() {
         return true;
     }

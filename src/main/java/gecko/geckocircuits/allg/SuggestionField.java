@@ -115,15 +115,18 @@ public final class SuggestionField extends JTextField {
                 SuggestionField.this._dialog.dispose();
             }
 
+            @Override
             public void windowClosed(final WindowEvent event) {
                 SuggestionField.this._dialog.dispose();
             }
 
+            @Override
             public void windowActivated(final WindowEvent event) {
                 // nothing todo
             }
         });
         addFocusListener(new FocusListener() {
+            @Override
             public void focusLost(FocusEvent e) {
                 SuggestionField.this._dialog.setVisible(false);
 
@@ -136,6 +139,7 @@ public final class SuggestionField extends JTextField {
                 }
             }
 
+            @Override
             public void focusGained(FocusEvent e) {
                 if (SuggestionField.this.getText().equals(SuggestionField.this._hint)) {
                     SuggestionField.this.setText("");
@@ -153,9 +157,12 @@ public final class SuggestionField extends JTextField {
         this._list.addMouseListener(new MouseListener() {
             private int selected;
 
+            @Override
             public void mousePressed(MouseEvent e) {
+                // no-op
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
                 if (this.selected == SuggestionField.this._list.getSelectedIndex()) {
                     SuggestionField.this.setText((String) SuggestionField.this._list.getSelectedValue());
@@ -166,12 +173,17 @@ public final class SuggestionField extends JTextField {
                 this.selected = SuggestionField.this._list.getSelectedIndex();
             }
 
+            @Override
             public void mouseExited(MouseEvent e) {
+                // no-op
             }
 
+            @Override
             public void mouseEntered(MouseEvent e) {
+                // no-op
             }
 
+            @Override
             public void mouseClicked(MouseEvent e) {
                 fireActionEvent();
             }
@@ -181,13 +193,17 @@ public final class SuggestionField extends JTextField {
         this._dialog.add(_scrollPane);
         this._dialog.pack();
         addKeyListener(new KeyListener() {
+            @Override
             public void keyTyped(KeyEvent e) {
+                // no-op
             }
 
+            @Override
             public void keyPressed(KeyEvent e) {
                 SuggestionField.this.relocate();
             }
 
+            @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == 27) {
                     SuggestionField.this._dialog.setVisible(false);
@@ -206,7 +222,7 @@ public final class SuggestionField extends JTextField {
                         SuggestionField.this._list.ensureIndexIsVisible(SuggestionField.this._list.getSelectedIndex() - 1);
                         return;
                     }
-                    if (e.getKeyCode() == 10 && SuggestionField.this._list.getSelectedIndex() != -1 && SuggestionField.this._suggestions.size() > 0) {
+                    if (e.getKeyCode() == 10 && SuggestionField.this._list.getSelectedIndex() != -1 && !SuggestionField.this._suggestions.isEmpty()) {
                         SuggestionField.this.setText((String) SuggestionField.this._list.getSelectedValue());
                         SuggestionField.this._lastChosenExistingVariable = SuggestionField.this._list.getSelectedValue().toString();
                         SuggestionField.this.fireActionEvent();
@@ -330,13 +346,12 @@ public final class SuggestionField extends JTextField {
         this._caseSensitive = caseSensitive;
     }
 
-    private class InterruptableMatcher extends Thread {
+    private final class InterruptableMatcher extends Thread {
 
         private volatile boolean stop;
 
-        private InterruptableMatcher() {
-        }
 
+        @Override
         public void run() {
             try {
                 SuggestionField.this.setFont(SuggestionField.this._busy);

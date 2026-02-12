@@ -188,6 +188,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     }
 
     // Initialisiereung nach INIT&START -->
+    @Override
     public void setzeParameterZustandswerteAufNULL() {
         this.initPar();
         _outputCapacitor.parameter[1] = 0;

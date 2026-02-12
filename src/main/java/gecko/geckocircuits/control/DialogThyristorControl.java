@@ -66,6 +66,7 @@ public class DialogThyristorControl extends javax.swing.JFrame {
 
         jSpinnerInitFreq.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(50.0d), Double.valueOf(0.0d), null, Double.valueOf(1.0d)));
         jSpinnerInitFreq.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerInitFreqStateChanged(evt);
             }
@@ -77,6 +78,7 @@ public class DialogThyristorControl extends javax.swing.JFrame {
 
         jSpinnerGateOn.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0040d), null, null, Double.valueOf(1.0d)));
         jSpinnerGateOn.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerGateOnStateChanged(evt);
             }
@@ -88,6 +90,7 @@ public class DialogThyristorControl extends javax.swing.JFrame {
 
         jSpinnerPhaseShift.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0d), null, null, Double.valueOf(1.0d)));
         jSpinnerPhaseShift.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerPhaseShiftStateChanged(evt);
             }
@@ -170,6 +173,7 @@ public class DialogThyristorControl extends javax.swing.JFrame {
 
         jButtonOK.setText("OK");
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
             }

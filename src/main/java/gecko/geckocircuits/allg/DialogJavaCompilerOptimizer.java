@@ -125,6 +125,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
     }
 
     private void doRun () {
+        // no-op
     }
 
 
@@ -181,6 +182,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
 
         jButtonCompile.setText("Compile Code");
         jButtonCompile.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCompileActionPerformed(evt);
             }
@@ -188,6 +190,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
 
         jButtonExecute.setText("Run Optimization");
         jButtonExecute.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonExecuteActionPerformed(evt);
             }
@@ -195,6 +198,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
 
         jButtonCloseWindow.setText("Close Window");
         jButtonCloseWindow.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCloseWindowActionPerformed(evt);
             }
@@ -238,6 +242,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
 
         jButtonExample2.setText("Example 2");
         jButtonExample2.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonExample2ActionPerformed(evt);
             }
@@ -245,6 +250,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
 
         jButtonExample1.setText("Example 1");
         jButtonExample1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonExample1ActionPerformed(evt);
             }

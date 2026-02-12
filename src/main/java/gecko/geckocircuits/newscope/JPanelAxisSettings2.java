@@ -121,6 +121,7 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
 
         jComboBoxScaleType.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jComboBoxScaleType.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxScaleTypeActionPerformed(evt);
             }
@@ -129,6 +130,7 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
         jCheckBoxAutoScale.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxAutoScale.setText("Auto-Scaling");
         jCheckBoxAutoScale.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxAutoScaleActionPerformed(evt);
             }
@@ -146,18 +148,21 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
         jTextFieldAxisLabel.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jTextFieldAxisLabel.setEnabled(false);
         jTextFieldAxisLabel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jTextFieldAxisLabelPropertyChange(evt);
             }
         });
 
         formatJTextFieldMinVal.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formatJTextFieldMinValFocusLost(evt);
             }
         });
 
         formatJTextFieldMaxVal.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formatJTextFieldMaxValFocusLost(evt);
             }
@@ -166,6 +171,7 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
         jCheckBoxSymmetricZero.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxSymmetricZero.setText("Symmetric zero");
         jCheckBoxSymmetricZero.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBoxSymmetricZeroActionPerformed(evt);
             }

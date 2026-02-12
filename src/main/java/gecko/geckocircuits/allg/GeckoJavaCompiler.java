@@ -69,8 +69,6 @@ public class GeckoJavaCompiler {
     //-------------------------------------------------------------------
     private MainWindow gecko;
 
-    public GeckoJavaCompiler() {
-    }
 
     public void setGecko(MainWindow gecko) {
         this.gecko = gecko;
@@ -245,14 +243,18 @@ public class GeckoJavaCompiler {
 
                 @Override
                 public void write(byte[] b) {
+                    // no-op
                 }
 
+                @Override
                 public void write(byte[] b, int off, int len) {
                     compilerMessage += new String(b, StandardCharsets.UTF_8).substring(off, len);
 
                 }
 
+                @Override
                 public void write(int b) {
+                    // no-op
                 }
             };
             PrintWriter compilerWriter = new PrintWriter(outStream, true, StandardCharsets.UTF_8);

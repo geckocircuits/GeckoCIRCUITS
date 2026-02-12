@@ -191,6 +191,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
 
     }
 
+    @Override
     public void setZValue(int z) {
         assert z > 0;
         System.out.println("setting z Value: + " + z);
@@ -232,6 +233,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
         }
     }
 
+    @Override
     public int getZValue() {
         return _z;
     }

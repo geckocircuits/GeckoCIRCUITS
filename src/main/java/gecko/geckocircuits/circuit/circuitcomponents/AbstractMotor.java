@@ -155,6 +155,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
 
     @Override
     public void doInitialization() {
+        // no-op
     }
 
     @Override

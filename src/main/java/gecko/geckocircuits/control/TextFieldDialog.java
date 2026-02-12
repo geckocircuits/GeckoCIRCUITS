@@ -86,6 +86,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
 
         jTextFieldTitle.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jTextFieldTitle.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextFieldTitleKeyReleased(evt);
             }
@@ -94,6 +95,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jButtonTextColor.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonTextColor.setText("Color");
         jButtonTextColor.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTextColorActionPerformed(evt);
             }
@@ -135,6 +137,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jSpinnerBreite.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerBreite.setModel(new javax.swing.SpinnerNumberModel(5, 3, 200, 1));
         jSpinnerBreite.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerBreiteStateChanged(evt);
             }
@@ -143,6 +146,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jSpinnerHoehe.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jSpinnerHoehe.setModel(new javax.swing.SpinnerNumberModel(2, 0, 200, 1));
         jSpinnerHoehe.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerHoeheStateChanged(evt);
             }
@@ -151,6 +155,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jButtonBackColor.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonBackColor.setText("Background Color");
         jButtonBackColor.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBackColorActionPerformed(evt);
             }
@@ -193,6 +198,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jTextAreaContents.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jTextAreaContents.setRows(5);
         jTextAreaContents.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextAreaContentsKeyReleased(evt);
             }
@@ -202,6 +208,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jButtonOk.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOk.setText("Ok");
         jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOkActionPerformed(evt);
             }

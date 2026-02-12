@@ -32,9 +32,11 @@ public class IdealSwitchCalculator extends AbstractSwitchCalculator implements H
 
     @Override
     public final void stampVectorB(double[] b, double t, double dt) {
+        // no-op
     }
 
 
+    @Override
     public boolean isBasisStampable() {
         return true;
     }

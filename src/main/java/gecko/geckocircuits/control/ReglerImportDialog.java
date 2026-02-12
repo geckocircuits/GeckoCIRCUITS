@@ -64,6 +64,7 @@ class ReglerImportDialog extends DialogElementCONTROL<ReglerSignalSource>{
          */
         JButton jbImport = GuiFabric.getJButton(I18nKeys.IMPORT_DATA);
         jbImport.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
 
                 GeckoFileManagerWindow fileManager = new GeckoFileManagerWindow(element, ".dat", "Data file, space-separated", true);

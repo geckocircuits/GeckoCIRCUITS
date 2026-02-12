@@ -130,6 +130,7 @@ public class ParameterSupport extends javax.swing.JFrame {
 
         _listSelectBlockType.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         _listSelectBlockType.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            @Override
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 _listSelectBlockTypeValueChanged(evt);
             }

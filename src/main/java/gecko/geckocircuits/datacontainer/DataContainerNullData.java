@@ -29,6 +29,7 @@ public final class DataContainerNullData extends AbstractDataContainer implement
   private DefinedMeanSignals _definedMeanSignals;
 
   public DataContainerNullData(){
+      // no-op
   }
 
   public DataContainerNullData(final List<AbstractScopeSignal> signalNames){
@@ -149,6 +150,7 @@ public final class DataContainerNullData extends AbstractDataContainer implement
 
   @Override
   public void defineAvgCalculation(final List<ScopeSignalMean> meansSignals){
+      // no-op
   }
 
   public void setDefinedMeanSignals(final DefinedMeanSignals definedMeanSignals){

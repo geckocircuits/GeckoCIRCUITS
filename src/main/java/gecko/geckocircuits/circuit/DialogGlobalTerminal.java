@@ -104,6 +104,7 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
         jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonOK.setText("Ok");
         jButtonOK.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
             }
@@ -114,11 +115,13 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
 
         jTextFieldName.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jTextFieldName.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextFieldNameFocusLost(evt);
             }
         });
         jTextFieldName.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 jTextFieldNameKeyTyped(evt);
             }
@@ -129,6 +132,7 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
 
         jComboBoxAllNames.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jComboBoxAllNames.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxAllNamesActionPerformed(evt);
             }
@@ -142,6 +146,7 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
         jButtonShowInfo.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jButtonShowInfo.setText("Show info");
         jButtonShowInfo.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonShowInfoActionPerformed(evt);
             }

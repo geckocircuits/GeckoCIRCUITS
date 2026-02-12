@@ -104,9 +104,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public void doReferenceRemoveAction(final ComponentCoupling removed) {
+        // no-op
     }
 
     public void doReferenceAddAction(final ComponentCoupling added) {
+        // no-op
     }
 
     public final void setAccessibleParameter(final String paramname, final double paramValue) throws IllegalAccessException {
@@ -168,7 +170,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         for (UserParameter par : getRegisteredParameters()) {
             returnList.add(par.getLongName());
         }
-        return returnList.toArray(new String[returnList.size()]);
+        return returnList.toArray(new String[0]);
     }
 
     public final String[] getAccessibleParamterDescription() {
@@ -176,7 +178,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         for (UserParameter par : getRegisteredParameters()) {
             returnList.add(par.getShortName());
         }
-        return returnList.toArray(new String[returnList.size()]);
+        return returnList.toArray(new String[0]);
     }
 
     public final String[] getUnits() {
@@ -184,7 +186,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         for (UserParameter par : getRegisteredParameters()) {
             returnList.add(par.getUnit());
         }
-        return returnList.toArray(new String[returnList.size()]);
+        return returnList.toArray(new String[0]);
     }
 
     public Color getForeGroundColor() {
@@ -365,6 +367,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
      *
      */
     protected void importIndividual(final TokenMap tokenMap) {
+        // no-op
     }
 
     public final String getStringID() {
@@ -372,6 +375,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     protected void addTextInfoParameters() {
+        // no-op
     }
 
     @Override
@@ -902,6 +906,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     protected void exportAsciiIndividual(final StringBuffer ascii) {
+        // no-op
     }
 
     protected abstract void paintIndividualComponent(final Graphics2D graphics);
@@ -912,6 +917,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
      * @param originalBlock
      */
     public void copyAdditionalParameters(final AbstractBlockInterface originalBlock) {
+        // no-op
     }
 
     @Override
@@ -1001,6 +1007,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public void setToolbarPaintProperties() {
+        // no-op
     }
 
     public final I18nKeys getTypeDescriptionVerbose() {
@@ -1020,6 +1027,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public void doOperationAfterNewConstruction() {
+        // no-op
     }
 
     private final class MoveComponentUndoEdit implements UndoableEdit {

@@ -59,6 +59,7 @@ class ReglerIntegratorDialog extends DialogElementCONTROL<ReglerIntegrator> {
                 abstandi = 15;
 
         final JComponent compIm2 = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.setColor(Color.white);
                 g.fillRect(0, 0, bi, hi);

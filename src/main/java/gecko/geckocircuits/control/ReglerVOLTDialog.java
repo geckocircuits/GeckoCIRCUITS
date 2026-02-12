@@ -101,6 +101,7 @@ class ReglerVOLTDialog extends DialogElementCONTROL<AbstractPotentialMeasurement
         if (testCombo instanceof JComboBox) {
             componentCombo = (JComboBox) ((JPanel) compMeasurement.getComponent(0)).getComponent(0);
             dpvm.jComboBoxLabel1.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent ae) {
                     if (dpvm.jComboBoxLabel1.getSelectedItem() != null) {
                         componentCombo.setSelectedIndex(-1);
@@ -110,6 +111,7 @@ class ReglerVOLTDialog extends DialogElementCONTROL<AbstractPotentialMeasurement
 
 
             componentCombo.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent ae) {
                     if (componentCombo.getSelectedItem() != null) {
                         dpvm.jComboBoxLabel1.setSelectedIndex(-1);
@@ -123,6 +125,7 @@ class ReglerVOLTDialog extends DialogElementCONTROL<AbstractPotentialMeasurement
 
         dpvm.jComboBoxLabel2.setForeground(potentialColor);
         dpvm.jComboBoxLabel2.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 String[] parStr = element.getParameterString();
                 if (dpvm.jComboBoxLabel2.getSelectedItem() != null) {

@@ -82,12 +82,17 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
         final FormatJTextField initCurrentField = getRegisteredTextField(element._initCurrent);
 
         windingsField.addKeyListener(new KeyListener() {
+            @Override
             public void keyTyped(final KeyEvent event) {
+                // no-op
             }
 
+            @Override
             public void keyPressed(final KeyEvent event) {
+                // no-op
             }
 
+            @Override
             public void keyReleased(final KeyEvent event) {
                 ampTurnsField.setNumberToField(windingsField.getNumberFromField() * ampTurnsField.getNumberFromField());
             }
@@ -129,10 +134,12 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
         ampTurnsField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(final KeyEvent event) {
+                // no-op
             }
 
             @Override
             public void keyPressed(final KeyEvent event) {
+                // no-op
             }
 
             @Override

@@ -30,6 +30,7 @@ public class TerminalTwoPortRelativeFixedDirection extends AbstractTerminal {
 
     }
 
+    @Override
     public Point getPosition() {
         return TerminalTwoPortComponent.getPointFromDirection(_fixedDirection, _parentElement.getSheetPosition(), _termDist);
     }

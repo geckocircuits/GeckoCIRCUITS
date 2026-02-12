@@ -83,6 +83,7 @@ public abstract class AbstractPotentialMeasurement extends RegelBlock implements
         return new ReglerVOLTDialog(this);
     }
 
+    @Override
     public final void checkComponentCompatibility(Object testObject, List<AbstractBlockInterface> insertList) {
         if(testObject instanceof DirectVoltageMeasurable) {
             DirectVoltageMeasurable voltMeas = (DirectVoltageMeasurable) testObject;

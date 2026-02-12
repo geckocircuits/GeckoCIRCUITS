@@ -29,8 +29,8 @@ public class DiodeSegment {
     }
 
     int testIfInInterval(double time, double testVoltage, double stoerGroesse, double acceptanceThreshold) {
-        if(testVoltage < _startVoltage * stoerGroesse + acceptanceThreshold) return -1;
-        if(testVoltage > _endVoltage * stoerGroesse  - acceptanceThreshold) return 1;
+        if(testVoltage < _startVoltage * stoerGroesse + acceptanceThreshold) { return -1; }
+        if(testVoltage > _endVoltage * stoerGroesse  - acceptanceThreshold) { return 1; }
         return 0;
     }
 

@@ -298,8 +298,6 @@ public class GeckoSim {
         return brandURL != null;
     }
 
-    public GeckoSim() {
-    }
 
     private void initialisiere() {
         //new LangInit(args);

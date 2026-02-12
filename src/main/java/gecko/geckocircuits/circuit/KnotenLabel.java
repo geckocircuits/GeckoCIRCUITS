@@ -42,7 +42,7 @@ public class KnotenLabel implements Serializable {
 
 
 
-    public KnotenLabel () {}
+    public KnotenLabel () { /* no-op */ }
 
     public KnotenLabel (String[] ascii) {
         this.importASCII(ascii);
@@ -50,12 +50,12 @@ public class KnotenLabel implements Serializable {
 
 
     public boolean istAngeklickt (int xPix, int yPix) {
-        if ((x1click<xPix)&&(xPix<x2click)&&(y1click<yPix)&&(yPix<y2click)) return true; else return false;
+        if ((x1click<xPix)&&(xPix<x2click)&&(y1click<yPix)&&(yPix<y2click)) { return true; } else { return false; }
     }
 
 
     public void zeichne (Graphics g, Color f1, int dpix) {
-        if (!visible) return;
+        if (!visible) { return; }
         //-----
         //g.setFont(font);
         g.setColor(f1);
@@ -96,6 +96,7 @@ public class KnotenLabel implements Serializable {
 
     public void importASCII (final String[] ascii) {
 
+        // no-op
     }
 
 

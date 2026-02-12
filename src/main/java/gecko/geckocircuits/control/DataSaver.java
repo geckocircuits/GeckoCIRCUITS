@@ -115,7 +115,7 @@ public final class DataSaver extends Observable implements Observer {
         }
     }
 
-    private class SaveRunnable implements Runnable {
+    private final class SaveRunnable implements Runnable {
 
         @Override
         public void run() {

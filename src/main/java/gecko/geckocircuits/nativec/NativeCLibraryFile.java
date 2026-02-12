@@ -28,6 +28,7 @@ public final class NativeCLibraryFile {
     private File _libFile;
 
     public NativeCLibraryFile () {
+        // no-op
     }
 
     public NativeCLibraryFile (final String fileName) throws FileNotFoundException {

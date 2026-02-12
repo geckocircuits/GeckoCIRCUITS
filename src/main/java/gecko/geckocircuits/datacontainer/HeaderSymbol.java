@@ -51,6 +51,7 @@ public enum HeaderSymbol {
         return TextSeparator.SPACE;
     }
 
+    @Override
     public String toString() {
         return _stringValue;
     }

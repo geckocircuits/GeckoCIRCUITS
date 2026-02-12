@@ -37,9 +37,6 @@ final class CurveSettings {
     int _crvSymbFrequ = 1; // number for skipping the symbol shape drawing
     GeckoLineType _lineType = GeckoLineType.CONNECT_NEIGHBOURS;
 
-    CurveSettings() {
-        // nothing to do!
-    }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\ncurveColor"), _curveColor.code());

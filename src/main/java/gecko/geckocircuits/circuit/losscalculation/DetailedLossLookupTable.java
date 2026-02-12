@@ -157,8 +157,7 @@ public final class DetailedLossLookupTable {
         double wheigt1 = (xRight - searchXValue) / (xRight - xLeft);
 
         assert wheigt1 + wheigt2 < 1.01 && wheigt1 + wheigt2 > 0.99;
-        double returnValue = en1 * wheigt1 + en2 * wheigt2;
-        return returnValue;
+        return en1 * wheigt1 + en2 * wheigt2;
     }
 
 }

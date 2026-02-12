@@ -96,6 +96,7 @@ public class PreviewDialogRectangular extends PreviewDialog {
         //------------------
         final int xPh0 = (int) (phase / 360.0 * b), xMx = xPh0 + b / 4, xPh = (int) (0.75 * b);
         JComponent jcp = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.setFont(GlobalFonts.foAUSWAHL);
                 g.setColor(Color.white);

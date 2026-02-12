@@ -136,6 +136,7 @@ abstract class AbstractThreePhaseMotor extends AbstractMotor {
     abstract int getInitialStatorCurrentIndexA();
     abstract int getInitialStatorCurrentIndexB();
 
+    @Override
     void updateHistoryVariables() {
         super.updateHistoryVariables();
         isd0 = isd;

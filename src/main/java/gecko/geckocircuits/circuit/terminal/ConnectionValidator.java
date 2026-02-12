@@ -217,7 +217,7 @@ public final class ConnectionValidator {
             // Parallel segments - check for overlap
             if (aHorizontal) {
                 // Both horizontal
-                if (a1.y != b1.y) return false;  // Different rows
+                if (a1.y != b1.y) { return false; }  // Different rows
                 int aMin = Math.min(a1.x, a2.x);
                 int aMax = Math.max(a1.x, a2.x);
                 int bMin = Math.min(b1.x, b2.x);
@@ -225,7 +225,7 @@ public final class ConnectionValidator {
                 return aMin <= bMax && bMin <= aMax;
             } else {
                 // Both vertical
-                if (a1.x != b1.x) return false;  // Different columns
+                if (a1.x != b1.x) { return false; }  // Different columns
                 int aMin = Math.min(a1.y, a2.y);
                 int aMax = Math.max(a1.y, a2.y);
                 int bMin = Math.min(b1.y, b2.y);

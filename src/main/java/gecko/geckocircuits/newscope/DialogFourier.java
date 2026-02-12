@@ -167,7 +167,9 @@ public class DialogFourier extends JDialog {
                 jcbZV[i1 - 1].setSelected(true);  // default-init
             }
             jcbZV[i1 - 1].addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent ae) {
+                    // no-op
                 }
             });
             pSEL.add(jcbZV[i1 - 1], gbc);
@@ -185,6 +187,7 @@ public class DialogFourier extends JDialog {
         JPanel pOK = new JPanel();
         jbCALC = GuiFabric.getJButton(I18nKeys.CALCULATE);
         jbCALC.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 f1 = 1.0 / (_jPanelRange.getStopTimeValue() - _jPanelRange.getStartTimeValue());
                 ftff1.setText(cf.formatT(f1, TechFormat.FORMAT_AUTO));
@@ -201,6 +204,7 @@ public class DialogFourier extends JDialog {
                 Thread rechner = new Thread() {
                     private double[][][] erg;
 
+                    @Override
                     public void run() {
                         jbCALC.setEnabled(false);  // damit man nicht mehrere Berechnungen durch versehentliches Druecken startet
                         try {
@@ -241,6 +245,7 @@ public class DialogFourier extends JDialog {
         });
         JButton jbCancel = GuiFabric.getJButton(I18nKeys.CANCEL);
         jbCancel.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 dispose();
             }

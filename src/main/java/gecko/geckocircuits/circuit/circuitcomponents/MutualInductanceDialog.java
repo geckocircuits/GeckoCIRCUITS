@@ -88,6 +88,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
             combo.setSelectedIndex(indexCombo);
             combo.addActionListener(new ActionListener() {
 
+                @Override
                 public void actionPerformed(ActionEvent ae) {
                     for (AbstractBlockInterface search : alleElementLK) {
                         if (search.getStringID().equals(combo.getSelectedItem().toString())) {
@@ -111,6 +112,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
             combo2.setSelectedIndex(indexCombo);
             combo2.setForeground(GlobalColors.farbeFertigElementLK);
             combo2.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent ae) {
 
                     for (AbstractBlockInterface search : alleElementLK) {
@@ -154,6 +156,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
     protected JComponent schreibeFormeln_M() {
         final int bG = 230, hG = 180, x1 = 10, y1 = 30, y2 = y1 + 30, y3 = y2 + 30, y4 = y3 + 35, y5 = y4 + 30;
         JComponent comp = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.setColor(Color.white);
                 g.fillRect(0, 0, 999, 999);

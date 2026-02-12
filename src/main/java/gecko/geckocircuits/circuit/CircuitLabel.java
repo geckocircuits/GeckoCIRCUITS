@@ -79,7 +79,7 @@ public class CircuitLabel {
     /**
      * GUI-free implementation of label rename edit.
      */
-    private class RenameLabelUndoableEdit implements GeckoUndoableEdit {
+    private final class RenameLabelUndoableEdit implements GeckoUndoableEdit {
         final boolean _isSignificant;
         private final String _oldLabel;
         private final String _newLabel;

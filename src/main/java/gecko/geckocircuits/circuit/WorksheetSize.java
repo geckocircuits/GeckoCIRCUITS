@@ -98,8 +98,8 @@ public final class WorksheetSize {
                 if (_parent instanceof SubCircuitSheet) {
                     SubCircuitSheet subSheet = (SubCircuitSheet) _parent;
                     final Collection<SubCircuitTerminable> allSheetTerminals = subSheet._subBlock._myTerminals;
-                    if(allSheetTerminals != null)
-                    for (SubCircuitTerminable term : allSheetTerminals) {
+                    if(allSheetTerminals != null) {
+                        for (SubCircuitTerminable term : allSheetTerminals) {
                         if (term.getTerminalLocation() == EnumTerminalLocation.RIGHT) {
                             setCheckedTerminalSheetPosition(term, sizeX - 1, term.getSheetPosition().y, allSheetTerminals);
                         }
@@ -116,6 +116,7 @@ public final class WorksheetSize {
                             setCheckedTerminalSheetPosition(term, term.getSheetPosition().x, sizeY - 1, allSheetTerminals);
                         }
 
+                        }
                     }
                 }
 

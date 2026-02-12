@@ -409,7 +409,7 @@ public final class GeckoFile {
         ProjectData.appendAsString(ascii.append("\nrelPath"), _relativePath);
         ProjectData.appendAsString(ascii.append("\nfileSep"), _separator);
         ProjectData.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        ProjectData.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[_usageList.size()]));
+        ProjectData.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
 
         ascii.append("\n<usageList>");
         for (Long userID : _usageList) {
@@ -595,7 +595,7 @@ public final class GeckoFile {
         abstract byte[] getContentsByteCopy();
     }
 
-    private class InternalStrategy extends AbstractStorageStrategy {
+    private final class InternalStrategy extends AbstractStorageStrategy {
 
         @Override
         StorageType getStorageType() {
@@ -635,7 +635,7 @@ public final class GeckoFile {
         }
     }
 
-    private class ExternalStrategy extends AbstractStorageStrategy {
+    private final class ExternalStrategy extends AbstractStorageStrategy {
 
         @Override
         StorageType getStorageType() {

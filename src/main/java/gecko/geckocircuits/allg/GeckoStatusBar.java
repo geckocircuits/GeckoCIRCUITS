@@ -55,6 +55,7 @@ public class GeckoStatusBar extends JPanel {
     GeckoStatusBar(String ti_ReadySim, final MainWindow fenster) {
         _fenster = fenster;
         TimerTask task = new TimerTask() {
+            @Override
             public void run() {
                 try {
                     _portLabelButton.setVisible(GeckoRemoteRegistry.isRemoteEnabled());

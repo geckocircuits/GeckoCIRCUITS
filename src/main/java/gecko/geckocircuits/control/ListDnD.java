@@ -29,8 +29,9 @@ public class ListDnD {
 
     private JScrollPane getListComponent(String s) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        for(int j = 0; j < 5; j++)
+        for(int j = 0; j < 5; j++) {
             model.addElement(s + " " + (j+1));
+        }
         JList<String> list = new JList<>(model);
         list.setName(s);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);

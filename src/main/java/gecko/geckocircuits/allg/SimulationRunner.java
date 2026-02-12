@@ -184,7 +184,7 @@ public final class SimulationRunner {
 		this.initSim(0, 0); // dt and tEND should be set appropriately
 	}
 
-	private class RunThreadRun implements Runnable {
+	private final class RunThreadRun implements Runnable {
 
 		long q1;
 		long q2;
@@ -194,6 +194,7 @@ public final class SimulationRunner {
 			_runWithoutThread = true;
 		}
 
+		@Override
 		public void run() {
 			try {
 				for (AbstractBlockInterface block : _se.getElementCONTROL()) {

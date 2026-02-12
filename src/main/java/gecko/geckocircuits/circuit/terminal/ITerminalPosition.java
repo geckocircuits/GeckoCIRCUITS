@@ -162,8 +162,8 @@ public interface ITerminalPosition {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof ITerminalPosition)) return false;
+            if (this == obj) { return true; }
+            if (!(obj instanceof ITerminalPosition)) { return false; }
             ITerminalPosition other = (ITerminalPosition) obj;
             return x == other.getX() && y == other.getY() &&
                    connectorType == other.getConnectorType();

@@ -35,6 +35,7 @@ public class ReglerControlDebug extends RegelBlock {
             @Override
             public void berechneYOUT(double deltaT) {
 
+                // no-op
             }
         };
     }

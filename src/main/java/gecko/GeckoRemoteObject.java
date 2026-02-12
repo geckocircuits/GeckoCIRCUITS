@@ -47,9 +47,6 @@ import java.util.logging.Logger;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer reference for RMI invocation")
 public class GeckoRemoteObject {
 
-    public GeckoRemoteObject() {
-        //use factory method instead of constructor
-    }
 
     private int portNumber;
     GeckoRemoteInterface _wrapped = null;
@@ -106,7 +103,7 @@ public class GeckoRemoteObject {
             }
             argsList.add("-p");
             argsList.add(Integer.toString(port));
-            final String[] args = argsList.toArray(new String[argsList.size()]);
+            final String[] args = argsList.toArray(new String[0]);
 
             for(String arg : args) {
                 System.out.println("arg " + arg);

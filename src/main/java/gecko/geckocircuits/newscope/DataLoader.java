@@ -116,7 +116,6 @@ public final class DataLoader{
     final int originDataIndex = timeSerie.findTimeIndex(axisOriginValue);
     final int indexToLoad = Math.max(0, originDataIndex - 1);
     final double loadXValue = timeSerie.getValue(indexToLoad);
-    int returnValue = (int) xAxis.getPixelFromValue(loadXValue);
-    return returnValue;
+    return (int) xAxis.getPixelFromValue(loadXValue);
   }
 }

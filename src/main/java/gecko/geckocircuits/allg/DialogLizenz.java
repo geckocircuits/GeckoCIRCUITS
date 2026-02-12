@@ -90,6 +90,7 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
 
 
 
+    @Override
     public void actionPerformed (ActionEvent ae) {
         // 'OK'-Knopf gedrueckt --> Dialog kann verlassen werden
         this.dispose();
@@ -98,13 +99,20 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
 
 
     //------------------------------------------------
+    @Override
     public void windowDeactivated (WindowEvent we) { this.requestFocus(); }
-    public void windowActivated (WindowEvent we) {}
-    public void windowDeiconified (WindowEvent we) {}
-    public void windowIconified (WindowEvent we) {}
-    public void windowClosed (WindowEvent we) {}
-    public void windowClosing (WindowEvent we) {}
-    public void windowOpened (WindowEvent we) {}
+    @Override
+    public void windowActivated (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowDeiconified (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowIconified (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowClosed (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowClosing (WindowEvent we) { /* no-op */ }
+    @Override
+    public void windowOpened (WindowEvent we) { /* no-op */ }
     //------------------------------------------------
 
 }

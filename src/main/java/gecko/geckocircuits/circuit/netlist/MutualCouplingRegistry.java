@@ -95,8 +95,8 @@ public class MutualCouplingRegistry {
          * @return partner index, or -1 if not part of this coupling
          */
         public int getPartner(int inductorIndex) {
-            if (inductor1Index == inductorIndex) return inductor2Index;
-            if (inductor2Index == inductorIndex) return inductor1Index;
+            if (inductor1Index == inductorIndex) { return inductor2Index; }
+            if (inductor2Index == inductorIndex) { return inductor1Index; }
             return -1;
         }
 
@@ -108,8 +108,8 @@ public class MutualCouplingRegistry {
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (!(obj instanceof Coupling)) return false;
+            if (this == obj) { return true; }
+            if (!(obj instanceof Coupling)) { return false; }
             Coupling other = (Coupling) obj;
             // Couplings are equal if they connect same inductors (order doesn't matter)
             return (inductor1Index == other.inductor1Index && inductor2Index == other.inductor2Index) ||

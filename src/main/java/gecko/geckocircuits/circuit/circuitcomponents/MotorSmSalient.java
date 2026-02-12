@@ -92,10 +92,12 @@ public final class MotorSmSalient extends AbstractMotorSM {
 
     static int counter = 0;
 
+    @Override
     int getDamperLeakageInductanceDIndex() {
         return DAMPER_LEAKAGE_IND_D_INDEX;
     }
 
+    @Override
     int getDamperLeakageInductanceQIndex() {
         return DAMPER_LEAKAGE_IND_Q_INDEX;
     }

@@ -285,7 +285,7 @@ public final class GraferV4 extends JPanel {
 
     }
 
-    private class UpdateRunnable implements Runnable {
+    private final class UpdateRunnable implements Runnable {
 
         /**
          * Please note: I want to enshure, that the update of the curves is done

@@ -23,6 +23,7 @@ class MotorDCDialog extends AbstractMotorDialog<MotorDC> {
         super(parent);
     }
 
+    @Override
     List<UserParameter<Double>> getDialogSortedParameters() {
         return Arrays.asList(element._machineConstantParam, element._frictionParameter, element._inertiaParameter,
                 element._polePairsParameter,

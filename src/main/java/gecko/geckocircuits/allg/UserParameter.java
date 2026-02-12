@@ -617,7 +617,7 @@ public final class UserParameter<T> {
         }
     }
 
-    public static class Builder<T> {
+    public static final class Builder<T> {
 
         private int _index = -1;
         private String _identifier;

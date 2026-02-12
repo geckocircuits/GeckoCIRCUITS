@@ -116,11 +116,15 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
         }
     }
 
+    @Override
     public abstract ConnectorType getSimulationDomain();
 
+    @Override
     public abstract AbstractBlockInterface fabric();
 
+    @Override
     public abstract String getExportImportCharacters();
+    @Override
     public abstract String getSaveIdentifier();
 
     /**

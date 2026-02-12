@@ -148,7 +148,7 @@ public final class HiLoData {
     }
 
     public static HiLoData getMergedFromList(final List<HiLoData> list) {
-        assert list.size() > 0;
+        assert !list.isEmpty();
         float minValue = Float.NaN;
         float maxValue = Float.NaN;
 

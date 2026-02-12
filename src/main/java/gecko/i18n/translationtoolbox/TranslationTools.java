@@ -56,7 +56,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
      * Inner class used to execute upload instructions from a separate
      * thread to avoid freezing up.
      */
-    private class Task extends SwingWorker<Void, Void> {
+    private final class Task extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
             if (confirmedSingle) {
@@ -71,14 +71,14 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         }
 
         @Override
-        public void done() {} // do nothing
+        public void done() { /* no-op */ } // do nothing
     }
 
     /*
      * Inner class used to acquire progress information from the upload bot
      * class (UPbot) from a separate thread to avoid freezing up.
      */
-    private class Progress extends SwingWorker<Void, Void> {
+    private final class Progress extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
             setProgress(0);
@@ -97,7 +97,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         }
 
         @Override
-        public void done() {} // do nothing
+        public void done() { /* no-op */ } // do nothing
     }
 
     /**
@@ -163,6 +163,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Done" button ActionListener
         jButton1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (changed) {
                     // make the change in the GUIs
@@ -196,6 +197,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Confirm" button in Single-Line
         jButton5.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 newTranslationSingle = jTextField8.getText(); // get new suggestion
 
@@ -211,6 +213,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Confirm" button in Multiple-Line
         jButton8.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 newTranslationMultiple = jTextArea3.getText(); // get new suggestion
 
@@ -226,6 +229,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Next Item" button in Single-Line
         jButton6.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (counterSingle > 1) {
                     if (confirmedSingle) {
@@ -263,6 +267,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Next Item" button in Multiple-Line
         jButton9.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (counterMultiple > 1) {
                     if (confirmedMultiple) {
@@ -300,6 +305,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Previous Item" button in Single-Line
         jButton7.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (counterSingle < maxCounterSingle) {
                     if (confirmedSingle) {
@@ -337,6 +343,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
 
         // "Previous Item" button in Multiple-Line
         jButton10.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 if (counterMultiple < maxCounterMultiple) {
                     if (confirmedMultiple) {
@@ -377,6 +384,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
     /*
      * Method to implement PropertyChangeListener
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("progress".equals(evt.getPropertyName())) {
             int prog = (Integer) evt.getNewValue(); // get updated progress

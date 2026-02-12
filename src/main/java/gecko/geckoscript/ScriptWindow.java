@@ -100,6 +100,7 @@ public final class ScriptWindow extends JFrame {
 
         jListFunctions.addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getClickCount() == 2) {
                     int index = jListFunctions.locationToIndex(evt.getPoint());
@@ -138,6 +139,7 @@ public final class ScriptWindow extends JFrame {
         //event with the propety called "value".
         optPane.addPropertyChangeListener(new PropertyChangeListener() {
 
+            @Override
             public void propertyChange(PropertyChangeEvent e) {
                 if (e.getPropertyName().equals("value")) {
                     optionPaneDialog.dispose();
@@ -176,6 +178,7 @@ public final class ScriptWindow extends JFrame {
         jScrollPane1 = new JScrollPane();
         jListFunctions =         new JList<FunctionDescription>() {
 
+            @Override
             public String getToolTipText(MouseEvent e) {
                 int index = locationToIndex(e.getPoint());
                 if (-1 < index) {
@@ -218,6 +221,7 @@ public final class ScriptWindow extends JFrame {
 
         jButtonCloseWindow.setText("Close window");
         jButtonCloseWindow.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonCloseWindowActionPerformed(evt);
             }
@@ -225,6 +229,7 @@ public final class ScriptWindow extends JFrame {
 
         jButtonCompile.setText("Compile code");
         jButtonCompile.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonCompileActionPerformed(evt);
             }
@@ -423,6 +428,7 @@ public final class ScriptWindow extends JFrame {
 
         jButtonRun.setText("Run");
         jButtonRun.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonRunActionPerformed(evt);
             }
@@ -431,6 +437,7 @@ public final class ScriptWindow extends JFrame {
         jButtonAbort.setText("Abort script");
         jButtonAbort.setEnabled(false);
         jButtonAbort.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonAbortActionPerformed(evt);
             }
@@ -438,6 +445,7 @@ public final class ScriptWindow extends JFrame {
 
         jButtonFunctionDetails1.setText("Available Blocks");
         jButtonFunctionDetails1.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonFunctionDetails1ActionPerformed(evt);
             }
@@ -445,6 +453,7 @@ public final class ScriptWindow extends JFrame {
 
         jButtonAdditionalSources.setText("Additional Sources");
         jButtonAdditionalSources.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonAdditionalSourcesActionPerformed(evt);
             }
@@ -556,6 +565,7 @@ public final class ScriptWindow extends JFrame {
 
     public void runNewComputationThread() {
 
+        // no-op
     }
 
 

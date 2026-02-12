@@ -112,6 +112,7 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
 
 
 
+    @Override
     public void setzeParameterZustandswerteAufNULL() {
         parameter[0] = RD_OFF_DEFAULT;
         parameter[4] = 0;

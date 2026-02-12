@@ -34,10 +34,12 @@ public class HiLoData {
     }
 
     void insertCompare(HiLoData data) {
-        if(data.yLo < 1E30f)
+        if(data.yLo < 1E30f) {
             yLo = Math.min(yLo, data.yLo);
-        if(data.yHi > -1E30)
+        }
+        if(data.yHi > -1E30) {
             yHi = Math.max(yHi, data.yHi);
+        }
 
     }
 

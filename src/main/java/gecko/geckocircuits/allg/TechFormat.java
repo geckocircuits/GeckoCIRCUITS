@@ -141,8 +141,7 @@ public class TechFormat implements Serializable {
         try {
             //-----------------------
             // (1) Does the input string represent a correctly entered 'double' number? -->
-            double x = Double.parseDouble(s);
-            return x;
+            return Double.parseDouble(s);
         } catch (Exception e1) {
             //-----------------------
             // (2) Does the input string contain invalid input characters? -->
@@ -200,8 +199,7 @@ public class TechFormat implements Serializable {
                             break;
                         }
                     }
-                    double x = (z1 + 0.1 * z2) * this.exp10(hoch[i1]);
-                    return x;
+                    return (z1 + 0.1 * z2) * this.exp10(hoch[i1]);
                 }
             }
             //-----------------------

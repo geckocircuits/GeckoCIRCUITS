@@ -101,6 +101,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
         jCheckBoxShow.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jCheckBoxShow.setText("Show Symbol");
         jCheckBoxShow.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jCheckBoxShowActionPerformed(evt);
             }
@@ -118,6 +119,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
         jSpinnerSkip.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jSpinnerSkip.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
         jSpinnerSkip.addChangeListener(new javax.swing.event.ChangeListener() {
+            @Override
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSpinnerSkipStateChanged(evt);
             }
@@ -125,6 +127,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
 
         jComboBoxShape.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jComboBoxShape.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jComboBoxShapeActionPerformed(evt);
             }
@@ -132,6 +135,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
 
         jComboBoxSymbColor.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jComboBoxSymbColor.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jComboBoxSymbColorActionPerformed(evt);
             }

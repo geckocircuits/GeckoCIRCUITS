@@ -120,7 +120,7 @@ implements Operationable, Nonlinearable {
     @Deprecated // this is really ugly! Use an interface instead for external files!
     public void removeLocalComponentFiles(final List<GeckoFile> filesToRemove) {
         //in this case there should only be one file to remove
-        if (filesToRemove.size() > 0 && nonLinearChar != null) {
+        if (!filesToRemove.isEmpty() && nonLinearChar != null) {
             nonLinearChar.removeUser(getUniqueObjectIdentifier());
             MainWindow._fileManager.maintain(nonLinearChar);
             nonLinearChar = null;
@@ -129,7 +129,7 @@ implements Operationable, Nonlinearable {
 
     @Override
     public void addFiles(final List<GeckoFile> newFiles) {
-        if (newFiles.size() > 0) {
+        if (!newFiles.isEmpty()) {
             //should be only one file, therefore get first one on list
             GeckoFile newNonLin = newFiles.get(0);
             try {

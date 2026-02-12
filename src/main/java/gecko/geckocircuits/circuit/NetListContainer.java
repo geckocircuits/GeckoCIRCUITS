@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.control.NetzlisteCONTROL;
 
-public class NetListContainer {
+public final class NetListContainer {
 
     public final NetzlisteCONTROL _nlControl;
     public final NetListLK _nlLK;

@@ -56,6 +56,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         JButton jbOK = GuiFabric.getJButton(I18nKeys.OK);
         jbOK.setActionCommand("OK");
         jbOK.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 schliesseFenster();
             }
@@ -90,6 +91,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         }
         final Image imgM = imgMx;
         JComponent jc1 = new JComponent() {
+            @Override
             public void paint(Graphics g) {
                 g.drawImage(imgM, 0, 0, this);
             }
@@ -100,27 +102,39 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
     }
 
     //------------------------------------------------
+    @Override
     public void windowDeactivated(WindowEvent we) {
         //this.requestFocus();
     }
 
+    @Override
     public void windowActivated(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowDeiconified(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowIconified(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowClosed(WindowEvent we) {
+        // no-op
     }
 
+    @Override
     public void windowClosing(WindowEvent we) {
         this.schliesseFenster();
     }
 
+    @Override
     public void windowOpened(WindowEvent we) {
+        // no-op
     }
     //------------------------------------------------
 
@@ -129,6 +143,8 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         this.dispose();
     }
 
+    @Override
     public void actionPerformed(ActionEvent ae) {
+        // no-op
     }
 }

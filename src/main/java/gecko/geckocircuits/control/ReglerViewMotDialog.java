@@ -48,7 +48,7 @@ class ReglerViewMotDialog extends DialogElementCONTROL<ReglerVIEWMOT> {
         }
 
         //
-        if (labelListeElementLK2.size() > 0) {
+        if (!labelListeElementLK2.isEmpty()) {
             final JComboBox<String> combo = new JComboBox<>();
             for (String label : labelListeElementLK2) {
                 combo.addItem(label);

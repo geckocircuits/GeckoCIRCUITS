@@ -144,6 +144,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
     }
 
     // wird ueberschrieben, um Text dazuschreiben zu koennen -->
+    @Override
     protected void zeichne(Graphics g) {
         if ((mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) && imDragModus) {
             g.setColor(GlobalColors.farbeZoomRechteck);
@@ -231,10 +232,12 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
 
     @Override
     public void mouseEntered(final MouseEvent mouseEvent) {
+        // no-op
     }
 
     @Override
     public void mouseExited(final MouseEvent mouseEvent) {
+        // no-op
     }
 
     @Override
@@ -290,10 +293,12 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
 
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
+        // no-op
     }
 
     @Override
     public void mouseMoved(final MouseEvent mouseEvent) {
+        // no-op
     }
 
     @Override

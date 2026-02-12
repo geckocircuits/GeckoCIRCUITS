@@ -285,7 +285,7 @@ public class StateTransitionValidator {
      * Context information for state transition validation.
      * Contains all electrical conditions needed to determine valid transitions.
      */
-    public static class TransitionContext {
+    public static final class TransitionContext {
         private final double gateSignal;
         private final double voltage;
         private final double current;

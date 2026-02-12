@@ -114,10 +114,12 @@ final class ZoomWindow {
 
         @Override
         public void mouseExited(final MouseEvent mouseEvent) {
+            // no-op
         }
 
         @Override
         public void mouseClicked(final MouseEvent mouseEvent) {
+            // no-op
         }
 
         @Override

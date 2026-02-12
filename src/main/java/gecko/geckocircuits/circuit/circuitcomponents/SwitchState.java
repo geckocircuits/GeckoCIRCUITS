@@ -47,6 +47,7 @@ public class SwitchState {
         return _time;
     }
 
+    @Override
     public String toString() {
         return getElementName() + ": " + _state;
     }

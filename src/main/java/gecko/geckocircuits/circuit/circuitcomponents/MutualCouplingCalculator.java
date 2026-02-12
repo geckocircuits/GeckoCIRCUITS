@@ -33,6 +33,7 @@ public class MutualCouplingCalculator {
     }
 
     public MutualCouplingCalculator() {
+        // no-op
     }
 
     public InductorCouplingCalculator getL1() {

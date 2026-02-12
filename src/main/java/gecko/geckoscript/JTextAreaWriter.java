@@ -33,10 +33,10 @@ public final class JTextAreaWriter extends Writer {
 	}
 
     @Override
-    public void flush(){ }
+    public void flush(){ /* no-op */ }
 
     @Override
-    public void close(){ }
+    public void close(){ /* no-op */ }
 
 	@Override
 	public void write(char[] cbuf, int off, int len) throws IOException {

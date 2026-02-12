@@ -54,6 +54,7 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
     }
 
 
+    @Override
     String getXMLTag() {
         return "SchaltverlusteMesskurve";
     }

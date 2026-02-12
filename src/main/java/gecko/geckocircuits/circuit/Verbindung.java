@@ -54,6 +54,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         }
     }
 
+    @Override
     public final ConnectorType getSimulationDomain() {
         return _connectorType;
     }
@@ -126,6 +127,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         _isInitialized = true;
     }
 
+    @Override
     public final void moveComponent(final Point moveToPoint) {
         for (int i1 = 0; i1 < _connectorPoints.size(); i1++) {
             final Point movedPoint = new Point(_pointsBeforeMove.get(i1).x + moveToPoint.x, _pointsBeforeMove.get(i1).y + moveToPoint.y);
@@ -283,6 +285,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     }
 
     // zum Speichern im ASCII-Format (anstatt als Object-Stream) -->
+    @Override
     public final void exportASCII(final StringBuffer ascii) {
         ascii.append("<Verbindung>");
         ProjectData.appendAsString(ascii.append("\nlabel"), _label.getLabelString());
@@ -431,7 +434,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         return _trimmedCoords;
     }
 
-    private class MoveVerbindungUndoAction implements UndoableEdit {
+    private final class MoveVerbindungUndoAction implements UndoableEdit {
         private final List<Point> _newPositions = new ArrayList<Point>();
         private final List<Point> _oldPositions = new ArrayList<Point>();
 

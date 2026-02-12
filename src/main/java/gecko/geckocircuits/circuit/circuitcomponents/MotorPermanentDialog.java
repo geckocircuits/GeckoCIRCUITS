@@ -23,6 +23,7 @@ class MotorPermanentDialog extends AbstractMotorDialog<MotorPermanent> {
         super(parent);
     }
 
+    @Override
     List<UserParameter<Double>> getDialogSortedParameters() {
         return Arrays.asList(element._frictionParameter, element._inertiaParameter,
                 element._polePairsParameter,

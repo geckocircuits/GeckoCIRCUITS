@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-public class GeckoRemoteRegistry {
+public final class GeckoRemoteRegistry {
 
     private static final String INTERFACE_NAME = "GeckoRemoteInterface";
     private static Registry _rmiRegistry = null;

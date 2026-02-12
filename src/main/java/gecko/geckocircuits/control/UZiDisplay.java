@@ -294,6 +294,7 @@ public final class UZiDisplay extends GeckoDialog {
 
         jButtonClear.setText("Clear");
         jButtonClear.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonClearActionPerformed(evt);
             }
@@ -301,6 +302,7 @@ public final class UZiDisplay extends GeckoDialog {
 
         jToggleButtonClose.setText("Close");
         jToggleButtonClose.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButtonCloseActionPerformed(evt);
             }

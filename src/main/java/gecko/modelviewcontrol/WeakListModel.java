@@ -140,7 +140,7 @@ public final class WeakListModel implements ListModel, Serializable{
 
   public EventListener[] getListeners(final Class listenerType){
     final Set<ListDataListener> set = _listenerList.keySet();
-    return set.toArray(new EventListener[set.size()]);
+    return set.toArray(new EventListener[0]);
   }
 
   protected void fireContentsChanged(final Object source, final int index0, final int index1){

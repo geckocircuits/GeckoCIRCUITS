@@ -53,6 +53,7 @@ public final class MemoryWarning extends javax.swing.JDialog {
 
         jButtonContinue.setText("Try to continue");
         jButtonContinue.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonContinueActionPerformed(evt);
             }
@@ -60,6 +61,7 @@ public final class MemoryWarning extends javax.swing.JDialog {
 
         jButtonAbort.setText("Abort simulation");
         jButtonAbort.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAbortActionPerformed(evt);
             }

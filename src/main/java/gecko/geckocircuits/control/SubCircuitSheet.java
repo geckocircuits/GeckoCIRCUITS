@@ -137,6 +137,7 @@ public class SubCircuitSheet extends CircuitSheet {
         g2d.drawRect(0, 0, dpix * _worksheetSize.getSizeX(), dpix * _worksheetSize.getSizeY());
     }
 
+    @Override
     public void doSetVisibleAction() {
         super.doSetVisibleAction();
         _nameLabel = new JLabel();

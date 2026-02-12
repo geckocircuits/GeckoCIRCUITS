@@ -37,7 +37,7 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
 
     public void initInductanceMatrix(final List<InductorCouplingCalculator> allInductors, final List<MutualCouplingCalculator> couplings, int N) {
         inductanceMatrix = null;
-        if (allInductors.size() == 0) {
+        if (allInductors.isEmpty()) {
             return;
         }
 
@@ -121,12 +121,14 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
 
     }
 
+     @Override
      public void calculateCurrent(double[] p, double dt, double t) {
 
         SolverType solver = getSolverType();
 
-        if (pOld == null)
+        if (pOld == null) {
             pOld = new double[p.length]; //ugly, should be removed later!
+        }
 
         int n = inductanceMatrix.length;
         double[] AP2 = new double[n];
@@ -162,8 +164,9 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
             ind.addNewCurrent(dt * outValue);
         }
 
-        if (solver == SolverType.SOLVER_TRZ)
+        if (solver == SolverType.SOLVER_TRZ) {
              pOld = p; //we need the old potential for the trapezoidal solver - yes, this is UGLY and should be replaced with a better implementation
+        }
 
 
     }

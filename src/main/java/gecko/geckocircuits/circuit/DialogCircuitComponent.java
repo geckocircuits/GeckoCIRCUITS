@@ -119,7 +119,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
 
         if (!(element instanceof SubCircuitTerminable)) {
             jPanelName.add(checkBoxCompEnabled);
-            if (element.XIN.size() > 0 && element.YOUT.size() > 0) {
+            if (!element.XIN.isEmpty() && !element.YOUT.isEmpty()) {
                 jPanelName.add(checkBoxCompShorted);
             }
         }
@@ -173,6 +173,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
 
 
     public void processInputIndividual() {
+        // no-op
     }
 
     @Override
@@ -246,22 +247,27 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
 
     @Override
     public void windowDeactivated(final WindowEvent windowEvent) {
+        // no-op
     }
 
     @Override
     public void windowActivated(final WindowEvent windowEvent) {
+        // no-op
     }
 
     @Override
     public void windowDeiconified(WindowEvent we) {
+        // no-op
     }
 
     @Override
     public void windowIconified(WindowEvent we) {
+        // no-op
     }
 
     @Override
     public void windowClosed(WindowEvent we) {
+        // no-op
     }
 
     @Override
@@ -271,6 +277,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
 
     @Override
     public void windowOpened(WindowEvent we) {
+        // no-op
     }
 
     public static FormatJTextField fabricFormatTextField(final UserParameter parameter) {

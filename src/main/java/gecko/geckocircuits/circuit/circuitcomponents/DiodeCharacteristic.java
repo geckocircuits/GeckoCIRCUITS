@@ -50,14 +50,14 @@ public class DiodeCharacteristic {
             }
         }
 
-        _diodeSegments = diodeSegments.toArray(new DiodeSegment[diodeSegments.size()]);
+        _diodeSegments = diodeSegments.toArray(new DiodeSegment[0]);
         activeSegment = _diodeSegments[0];
         activeIndex = 0;
     }
 
     public boolean testIfWrongSegment(double time, double voltage, double stoergroesse, double acceptanceThreshold) {
         int result = activeSegment.testIfInInterval(time, voltage, stoergroesse, acceptanceThreshold);
-        if(result == 0) return false;
+        if(result == 0) { return false; }
         activeIndex += result;
         activeSegment = _diodeSegments[activeIndex];
 

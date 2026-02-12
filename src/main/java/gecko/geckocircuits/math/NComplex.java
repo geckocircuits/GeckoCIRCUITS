@@ -48,6 +48,7 @@ public class NComplex {
    }
 
    /** return a string representation of the complex number */
+   @Override
    public String toString()  { return re + " + " + im + "i"; }
 
    /** returns a new complex number with value a + b */
@@ -160,13 +161,15 @@ public class NComplex {
             if(im > 0) {
                 if(Math.abs(im - 1.0f) < epsilon) {
                     return tcf.formatENG(re, 3) + "+i";
-                } else
-                return tcf.formatENG(re, 3) + "+" + tcf.formatENG(im, 3) + "i";
+                } else {
+                    return tcf.formatENG(re, 3) + "+" + tcf.formatENG(im, 3) + "i";
+                }
             } else {
                 if(Math.abs(im + 1.0f) < epsilon) {
                     return tcf.formatENG(re, 3) + "-i";
-                } else
-                return tcf.formatENG(re, 3) + ""  + tcf.formatENG(im, 3) + "i";
+                } else {
+                    return tcf.formatENG(re, 3) + ""  + tcf.formatENG(im, 3) + "i";
+                }
             }
         }
 
@@ -174,8 +177,7 @@ public class NComplex {
             return "" + tcf.formatENG(re, 3);
         } else {
             if(Math.abs(Math.abs(im) - 1.0f) < epsilon) {
-                if(im > 0) return "i";
-                else return "-i";
+                if(im > 0) { return "i"; } else { return "-i"; }
             } else {
                 return tcf.formatENG(im, 3) + "i";
             }

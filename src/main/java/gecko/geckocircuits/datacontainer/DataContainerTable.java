@@ -70,6 +70,7 @@ public class DataContainerTable extends javax.swing.JPanel {
         jButtonStart.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jButtonStart.setText("Start");
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStartActionPerformed(evt);
             }
@@ -78,6 +79,7 @@ public class DataContainerTable extends javax.swing.JPanel {
         jButtonEnd.setFont(new java.awt.Font("Dialog", 0, 10)); // NOI18N
         jButtonEnd.setText("End");
         jButtonEnd.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEndActionPerformed(evt);
             }
@@ -90,6 +92,7 @@ public class DataContainerTable extends javax.swing.JPanel {
         jTextFieldNumberValue.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
         jTextFieldNumberValue.setText("0.0");
         jTextFieldNumberValue.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNumberValueActionPerformed(evt);
             }

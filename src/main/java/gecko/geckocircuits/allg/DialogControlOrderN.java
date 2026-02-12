@@ -98,6 +98,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 
         jButtonOK.setText("OK");
         jButtonOK.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonOKActionPerformed(evt);
             }
@@ -114,6 +115,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 
         jButtonReset.setText("Reset");
         jButtonReset.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jButtonResetActionPerformed(evt);
             }

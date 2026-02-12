@@ -79,6 +79,7 @@ class ReglerSignalSourceDialog extends AbstractDialogWithExternalOption<ReglerSi
             jCheckBoxShowDetails.setSelected(true);
         }
         jCheckBoxShowDetails.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 if (jCheckBoxShowDetails.isSelected()) {
                     displayDetails = true;
@@ -119,7 +120,7 @@ class ReglerSignalSourceDialog extends AbstractDialogWithExternalOption<ReglerSi
 
     @Override
     JComponent[] getComponentsDisabledExternal() {
-        return tf.toArray(new JComponent[tf.size()]);
+        return tf.toArray(new JComponent[0]);
     }
 
 }

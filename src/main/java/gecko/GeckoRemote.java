@@ -44,11 +44,6 @@ import java.util.Map;
 public class GeckoRemote {
     private static String _pathToJava = "";
 
-    public GeckoRemote() {
-        // pure static function, but:
-        // some people like to have a quick and dirty access to this
-        // functions. Therefore, I keep this empty constructor.
-    }
 
     private static int portNumber;
     static GeckoRemoteInterface _wrapped = null;
@@ -117,7 +112,7 @@ public class GeckoRemote {
             }
             argsList.add("-p");
             argsList.add(Integer.toString(port));
-            GeckoSim.main(argsList.toArray(new String[argsList.size()]));
+            GeckoSim.main(argsList.toArray(new String[0]));
             //while(GeckoSim.remoteLoading);
             if (GeckoSim.remoteLoaded) {
                 connectToGecko(port);

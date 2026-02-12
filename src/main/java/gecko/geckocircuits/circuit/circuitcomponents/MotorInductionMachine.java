@@ -73,6 +73,7 @@ public final class MotorInductionMachine extends AbstractMotorIM {
         _resistor.setOutputTerminal(0, YOUT.get(1));
     }
 
+    @Override
     public int getIndexForLoadTorque() {
         return 15;
     }

@@ -20,7 +20,7 @@
 package gecko.i18n;
 
 
-public class InitParameters {
+public final class InitParameters {
 
     private InitParameters(){} // prevents instantiation
 

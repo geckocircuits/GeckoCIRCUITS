@@ -340,8 +340,8 @@ public class LabelResolver {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof LabelResolver)) return false;
+        if (this == obj) { return true; }
+        if (!(obj instanceof LabelResolver)) { return false; }
         LabelResolver other = (LabelResolver) obj;
         return labelToIndex.equals(other.labelToIndex);
     }
