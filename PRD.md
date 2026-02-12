@@ -112,7 +112,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
   - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
 - Fixed 183 Tier 3 PMD violations: EmptyCatchBlock (20), EmptyControlStatement (44), UnnecessarySemicolon (34), UnnecessaryReturn (33), UnusedLocalVariable (28), UnusedPrivateMethod (13), UnusedPrivateField (11)
 - Stripped trailing whitespace from 974 Java source files (13,359 lines)
-- SpotBugs: 0 bugs (maintained), PMD: 823 violations (down from 3,316), Checkstyle: 4,618 (unchanged)
+- SpotBugs: 0 bugs (maintained), PMD: 823 violations (down from 3,443), Checkstyle: 4,632
 
 ### Previous Sprint (2026-02-12): LossCalculation GUI Decoupling
 - Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
@@ -162,7 +162,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - `mkdocs build --strict`: Zero broken links in documentation
 - SpotBugs: 0 bugs enforced (204 inline `@SuppressFBWarnings` annotations)
 - PMD: Custom ruleset (`pmd-ruleset.xml`), 823 remaining violations (code-style, not bugs)
-- Checkstyle: Project-tuned config (`checkstyle.xml`), 4,618 remaining violations
+- Checkstyle: Project-tuned config (`checkstyle.xml`), 4,632 remaining violations
 
 ### Success Metrics
 
@@ -175,7 +175,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | Broken links | 0 | 0 |
 | SpotBugs bugs | 0 | 0 |
 | PMD violations | 823 | <500 |
-| Checkstyle violations | 4,618 | <2,000 |
+| Checkstyle violations | 4,632 | <2,000 |
 | REST API endpoints | 0 | 10+ |
 
 ## 8. Content Inventory
