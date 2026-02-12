@@ -135,8 +135,6 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{ymin}, new double[]{empf[1]}, new boolean[]{true});
             this.setzeTickSpacing(new double[]{(cnSG.length / 10.0)}, new double[]{empf[4]});
             repaint();
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
-            // intentionally empty
         } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
             //------------------------------------
             xSchieberAktiv = true;
@@ -300,10 +298,11 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
 
     @Override
     public void mouseDragged(final MouseEvent mouseEvent) {
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-            // intentionally empty
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_NIX
+                || mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+            return;
+        }
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             if (!imDragModus) {
                 return;
             }

@@ -286,8 +286,7 @@ public class ScopeSettings implements Serializable {
                 for (int jj = 1; jj < noInputSignals + 1; jj++) {
                     AxisConnection axisConnection = AxisConnection.getFromCode(matrixZuordnungKurveDiagram[i][jj]);
                     diag.getCurve(jj - 1).setAxisConnection(axisConnection);
-                    if (axisConnection == AxisConnection.ZUORDNUNG_SIGNAL) {
-                    }
+                    // ZUORDNUNG_SIGNAL axis connection requires no additional setup
                 }
 
 

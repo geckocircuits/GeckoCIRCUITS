@@ -198,11 +198,6 @@ public final class CharacteristicsCalculator {
         final double rng2 = bounderies[1];
 
 
-        for(int i = 0; i < rows.length; i++) {
-            if(rows[i] != i) {
-            }
-        }
-
         final int dataRowLength = rows.length;
 
         final double totalT = rng2 - rng1;

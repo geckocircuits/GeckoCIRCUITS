@@ -186,8 +186,6 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
             this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{empf[0]}, new double[]{empf[1]}, new boolean[]{true});
             this.setzeTickSpacing(new double[]{(0.2 / f1)}, new double[]{empf[4]});
             repaint();
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
-            // intentionally empty
         } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
             //------------------------------------
             xSchieberAktiv = true;
@@ -298,19 +296,11 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
     }
 
     public void mousePressed(MouseEvent me) {
-        //double[] xy= getValueFromPixel(me.getX(),me.getY());
-        //System.out.println("xPix= "+me.getX()+"\tyPix= "+me.getY()+"\t\tx= "+xy[0]+"\ty= "+xy[1]);
-        //-------------------
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             x1Zoom = me.getX();
             y1Zoom = me.getY();
             imDragModus = true;
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
-            // intentionally empty
         }
-        //-------------------
     }
 
     public void mouseReleased(MouseEvent me) {
@@ -360,10 +350,11 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
     }
 
     public void mouseDragged(MouseEvent me) {
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
-            // intentionally empty
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mausModus == GraferImplementation.MAUSMODUS_NIX
+                || mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+            return;
+        }
+        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             if (!imDragModus) {
                 return;
             }

@@ -88,7 +88,7 @@ public class PreviewDialogRectangular extends PreviewDialog {
                     triX[i1] = triX[i1 - 1];
                 }
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: array boundary at first iteration
             }  // damit es senkrechte Linien gibt
             tx += dt;
             i1++;

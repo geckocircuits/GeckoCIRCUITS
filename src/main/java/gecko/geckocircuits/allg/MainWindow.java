@@ -178,14 +178,14 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            // intentionally empty
+            // ignored: fall back to default look and feel
         }
         try {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
-            // intentionally empty
+            // ignored: icon loading is optional
         }
 
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
@@ -234,11 +234,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             }
         } else {
             GlobalFilePathes.DATNAM = "Applet";
-        }
-
-        if (!IS_BRANDED) {
-            // intentionally empty
-            //StartupWindow.fabricUnBlocking();
         }
 
         DialogUpdate.checkForUpdateInterval();
@@ -790,7 +785,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
     }
 
-    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DB_DUPLICATE_BRANCHES",
+    @SuppressFBWarnings(value = "DB_DUPLICATE_BRANCHES",
             justification = "Both RECENT_CIRCUITS_4 match and new name require same shift operation")
     private void aktualisierePropertiesRECENT(String datnam) {
         if (datnam.equals(GlobalFilePathes.RECENT_CIRCUITS_1) || datnam.isEmpty()) {
@@ -1459,12 +1454,13 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 drp.setVisible(true);
             } else if (befehl.equals(
                     "3Dtherm")) {
+                System.out.println("Nicht implementiert");
             } else if (befehl.equals(
                     "geckoScript")) {
-                        // intentionally empty
                 _scripter.makeVisible();
             } else if (befehl.equals(
                     "magnet")) {
+                System.out.println("Nicht implementiert");
             } else if (befehl.equals(
                     "3Delmag")) {
                 System.out.println("Nicht implementiert");

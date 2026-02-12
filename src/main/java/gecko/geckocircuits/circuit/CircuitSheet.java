@@ -183,8 +183,7 @@ public class CircuitSheet extends JPanel {
                 }
 
             } catch (ConcurrentModificationException ex) {
-                // this happens sometimes, when the painting thread tries to paint and a new component is inserted
-                // at the same time. Just ignore the exception, since a repaint will be done anyway, soon.
+                // ignored: concurrent paint during component insertion, repaint will follow
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

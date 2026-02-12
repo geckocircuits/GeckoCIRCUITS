@@ -305,9 +305,6 @@ public final class NetzlisteCONTROL {
                         }
                     }
                 }
-            } else {
-                // intentionally empty
-                //System.out.println("mux without input:  " + muxEntry.getValue().getStringID());
             }
         }
     }

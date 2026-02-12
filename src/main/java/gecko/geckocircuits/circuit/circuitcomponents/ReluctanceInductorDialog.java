@@ -142,7 +142,7 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
                         initCurrentField.setNumberToField(ampTurnsField.getNumberFromField() / windingsField.getNumberFromField());
                     }
                 } catch (Exception ex) {
-                    // not output here. During typing, there may be unreadable numbers, e.g. "1e-" for 1e-10"
+                    // ignored: use default value during typing of incomplete numbers
                 }
             }
         });

@@ -480,11 +480,12 @@ public class GraferV3 extends JPanel {
         // der Grid berechnet werden muss
         //
         for (int i1 = 0; i1 < anzahlAchsenX; i1++) {
+            if (linienStilAchsenX[i1] == INVISIBLE) {
+                continue;
+            }
             g2.setColor(farbeAchsenX[i1]);
             if (linienStilAchsenX[i1] == SOLID_PLAIN) {
                 g2.setStroke(str_SOLID_PLAIN);
-            } else if (linienStilAchsenX[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-                // intentionally empty
             } else if (linienStilAchsenX[i1] == SOLID_FAT_1) {
                 g2.setStroke(str_SOLID_FAT_1);
             } else if (linienStilAchsenX[i1] == SOLID_FAT_2) {
@@ -499,18 +500,17 @@ public class GraferV3 extends JPanel {
             grL.reset();
             grL.moveTo(_xAchseX[i1], _yAchseX[i1]);
             grL.lineTo(_xAchseX[i1] + breitePix[i1], _yAchseX[i1]);
-            if (linienStilAchsenX[i1] != INVISIBLE) {
-                g2.draw(grL);
-                g2.drawString(xAchseBeschriftung[i1], _xAchseX[i1] + breitePix[i1] / 2, _yAchseX[i1] + posXtickLabels[i1]);
-            }
+            g2.draw(grL);
+            g2.drawString(xAchseBeschriftung[i1], _xAchseX[i1] + breitePix[i1] / 2, _yAchseX[i1] + posXtickLabels[i1]);
             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
         }
         for (int i1 = 0; i1 < anzahlAchsenY; i1++) {
+            if (linienStilAchsenY[i1] == INVISIBLE) {
+                continue;
+            }
             g2.setColor(farbeAchsenY[i1]);
             if (linienStilAchsenY[i1] == SOLID_PLAIN) {
                 g2.setStroke(str_SOLID_PLAIN);
-            } else if (linienStilAchsenY[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-                // intentionally empty
             } else if (linienStilAchsenY[i1] == SOLID_FAT_1) {
                 g2.setStroke(str_SOLID_FAT_1);
             } else if (linienStilAchsenY[i1] == SOLID_FAT_2) {
@@ -525,10 +525,8 @@ public class GraferV3 extends JPanel {
             grL.reset();
             grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
             grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
-            if (linienStilAchsenY[i1] != INVISIBLE) {
-                g2.draw(grL);
-                g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
-            }
+            g2.draw(grL);
+            g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
         }
         //==================================
@@ -588,8 +586,6 @@ public class GraferV3 extends JPanel {
         //
         if (kurveLinienstil[i1] == SOLID_PLAIN) {
             g2.setStroke(str_SOLID_PLAIN);
-        } else if (kurveLinienstil[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-            // intentionally empty
         } else if (kurveLinienstil[i1] == SOLID_FAT_1) {
             g2.setStroke(str_SOLID_FAT_1);
         } else if (kurveLinienstil[i1] == SOLID_FAT_2) {
@@ -598,7 +594,7 @@ public class GraferV3 extends JPanel {
             g2.setStroke(str_DOTTED_PLAIN);
         } else if (kurveLinienstil[i1] == DOTTED_FAT) {
             g2.setStroke(str_DOTTED_FAT);
-        } else {
+        } else if (kurveLinienstil[i1] != INVISIBLE) {
             System.out.println("Fehler: rhjw5z65");
         }
 
@@ -1068,11 +1064,12 @@ public class GraferV3 extends JPanel {
                 for (int i3 = 0; i3 < showGridNormalXminor.length; i3++) {
                     if ((showGridNormalXminor[i3][0] == indexAchseX) && (showGridNormalXminor[i3][1] == indexAchseY) && (tickXminor[indexAchseX] != null)) {
                         for (int i2 = 0; i2 < tickXminor[indexAchseX].length; i2++) {
+                            if (linStilGridNormalXminor[i1] == INVISIBLE) {
+                                continue;
+                            }
                             g.setColor(farbeGridNormalXminor[i1]);
                             if (linStilGridNormalXminor[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
-                            } else if (linStilGridNormalXminor[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-                                // intentionally empty
                             } else if (linStilGridNormalXminor[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalXminor[i1] == SOLID_FAT_2) {
@@ -1089,9 +1086,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(tickXminor[indexAchseX][i2], _yAchseY[indexAchseY]);
                             grL.lineTo(tickXminor[indexAchseX][i2], _yAchseY[indexAchseY] - hoehePix[indexAchseY]);
-                            if (linStilGridNormalXminor[i1] != INVISIBLE) {
-                                g2.draw(grL);
-                            }
+                            g2.draw(grL);
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
                             //-----------------------
                         }
@@ -1101,11 +1096,12 @@ public class GraferV3 extends JPanel {
                 for (int i3 = 0; i3 < showGridNormalXmajor.length; i3++) {
                     if ((showGridNormalXmajor[i3][0] == indexAchseX) && (showGridNormalXmajor[i3][1] == indexAchseY) && (tickX[indexAchseX] != null)) {
                         for (int i2 = 0; i2 < tickX[indexAchseX].length; i2++) {
+                            if (linStilGridNormalX[i1] == INVISIBLE) {
+                                continue;
+                            }
                             g.setColor(farbeGridNormalX[i1]);
                             if (linStilGridNormalX[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
-                            } else if (linStilGridNormalX[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-                                // intentionally empty
                             } else if (linStilGridNormalX[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalX[i1] == SOLID_FAT_2) {
@@ -1122,9 +1118,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(tickX[indexAchseX][i2], _yAchseY[indexAchseY]);
                             grL.lineTo(tickX[indexAchseX][i2], _yAchseY[indexAchseY] - hoehePix[indexAchseY]);
-                            if (linStilGridNormalX[i1] != INVISIBLE) {
-                                g2.draw(grL);
-                            }
+                            g2.draw(grL);
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
                             //-----------------------
                         }
@@ -1151,11 +1145,12 @@ public class GraferV3 extends JPanel {
                 for (int i3 = 0; i3 < showGridNormalYminor.length; i3++) {
                     if ((showGridNormalYminor[i3][0] == indexAchseX) && (showGridNormalYminor[i3][1] == indexAchseY) && (tickYminor[indexAchseY] != null)) {
                         for (int i2 = 0; i2 < tickYminor[indexAchseY].length; i2++) {
+                            if (linStilGridNormalYminor[i1] == INVISIBLE) {
+                                continue;
+                            }
                             g.setColor(farbeGridNormalYminor[i1]);
                             if (linStilGridNormalYminor[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
-                            } else if (linStilGridNormalYminor[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-                                // intentionally empty
                             } else if (linStilGridNormalYminor[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalYminor[i1] == SOLID_FAT_2) {
@@ -1172,9 +1167,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(_xAchseX[indexAchseX], tickYminor[indexAchseY][i2]);
                             grL.lineTo(_xAchseX[indexAchseX] + breitePix[indexAchseX], tickYminor[indexAchseY][i2]);
-                            if (linStilGridNormalYminor[i1] != INVISIBLE) {
-                                g2.draw(grL);
-                            }
+                            g2.draw(grL);
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
                             //-----------------------
                         }
@@ -1184,11 +1177,12 @@ public class GraferV3 extends JPanel {
                 for (int i3 = 0; i3 < showGridNormalYmajor.length; i3++) {
                     if ((showGridNormalYmajor[i3][0] == indexAchseX) && (showGridNormalYmajor[i3][1] == indexAchseY) && (tickY[indexAchseY] != null)) {
                         for (int i2 = 0; i2 < tickY[indexAchseY].length; i2++) {
+                            if (linStilGridNormalY[i1] == INVISIBLE) {
+                                continue;
+                            }
                             g.setColor(farbeGridNormalY[i1]);
                             if (linStilGridNormalY[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
-                            } else if (linStilGridNormalY[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
-                                // intentionally empty
                             } else if (linStilGridNormalY[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalY[i1] == SOLID_FAT_2) {
@@ -1205,9 +1199,7 @@ public class GraferV3 extends JPanel {
                             grL.reset();
                             grL.moveTo(_xAchseX[indexAchseX], tickY[indexAchseY][i2]);
                             grL.lineTo(_xAchseX[indexAchseX] + breitePix[indexAchseX], tickY[indexAchseY][i2]);
-                            if (linStilGridNormalY[i1] != INVISIBLE) {
-                                g2.draw(grL);
-                            }
+                            g2.draw(grL);
                             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
                             //-----------------------
                         }

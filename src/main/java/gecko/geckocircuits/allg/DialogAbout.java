@@ -72,7 +72,7 @@ public class DialogAbout extends JDialog {
             URL url2 = new URL(GlobalFilePathes.PFAD_PICS_URL, "GeckoSimulationsLogo_50.png");
             geckoBild = new ImageIcon(url2).getImage();
         } catch (MalformedURLException | RuntimeException e) {
-            // intentionally empty
+            // ignored: icon loading is optional
         }
 
 
@@ -82,7 +82,7 @@ public class DialogAbout extends JDialog {
             dFormat = new SimpleDateFormat("MMM yyyy", Locale.US);
             releaseDate = dFormat.format(rDate);
         } catch (ParseException pe) {
-            // intentionally empty
+            // ignored: use default release date
         }
 
         this.setTitle(" About");

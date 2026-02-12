@@ -86,7 +86,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: interruption acceptable
             }
             // keep updating progress until task is finished
             while (!task.isDone()) {

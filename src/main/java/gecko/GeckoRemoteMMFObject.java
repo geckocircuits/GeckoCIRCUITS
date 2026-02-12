@@ -278,10 +278,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("simulateStep",new Object[0]);
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method simulateStep!");
                 }
 
@@ -297,10 +296,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("simulateSteps",new Object[]{steps});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method simulateSteps!");
                 }
 
@@ -602,10 +600,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setGlobalParameterValue",new Object[]{parameterName,value});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setGlobalParameterValue!");
                 }
 
@@ -644,10 +641,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setParameter",new Object[]{elementName,parameterName,value});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setParameter!");
                 }
 
@@ -663,10 +659,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setParameters",new Object[]{elementName,parameterNames,values});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setParameters!");
                 }
 
@@ -748,10 +743,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("runSimulation",new Object[0]);
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method runSimulation!");
                 }
 
@@ -767,10 +761,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("initSimulation",new Object[0]);
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method initSimulation!");
                 }
 
@@ -786,10 +779,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("initSimulation",new Object[]{deltaT,endTime});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method initSimulation!");
                 }
 
@@ -805,10 +797,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("continueSimulation",new Object[0]);
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method continueSimulation!");
                 }
 
@@ -824,10 +815,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("simulateTime",new Object[]{time});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method simulateTime!");
                 }
 
@@ -865,10 +855,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("endSimulation",new Object[0]);
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method endSimulation!");
                 }
 
@@ -884,10 +873,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("saveFileAs",new Object[]{fileName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method saveFileAs!");
                 }
 
@@ -903,10 +891,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("openFile",new Object[]{fileName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method openFile!");
                 }
 
@@ -1136,10 +1123,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setPosition",new Object[]{elementName,xCoord,yCoord});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setPosition!");
                 }
 
@@ -1178,10 +1164,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("deleteComponent",new Object[]{elementName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method deleteComponent!");
                 }
 
@@ -1197,10 +1182,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("deleteAllComponents",new Object[]{subcircuitName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method deleteAllComponents!");
                 }
 
@@ -1216,10 +1200,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("createComponent",new Object[]{elementType,elementName,xCoord,yCoord});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method createComponent!");
                 }
 
@@ -1235,10 +1218,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setOutputNodeName",new Object[]{elementName,nodeIndex,nodeName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setOutputNodeName!");
                 }
 
@@ -1254,10 +1236,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setInputNodeName",new Object[]{elementName,nodeIndex,nodeName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setInputNodeName!");
                 }
 
@@ -1368,10 +1349,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setComponentName",new Object[]{oldName,newName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setComponentName!");
                 }
 
@@ -1388,10 +1368,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("rotate",new Object[]{elementName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method rotate!");
                 }
 
@@ -1407,10 +1386,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setOrientation",new Object[]{elementName,direction});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setOrientation!");
                 }
 
@@ -1426,10 +1404,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("importFromFile",new Object[]{fileName,subCircuitName});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method importFromFile!");
                 }
 
@@ -1489,10 +1466,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setGlobalFloatMatrix",new Object[]{matrix});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method seGlobalFloatMatrix!");
                 }
 
@@ -1508,10 +1484,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("setGlobalDoubleMatrix",new Object[]{matrix});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method setGlobalDoubleMatrix!");
                 }
 
@@ -1749,10 +1724,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (checkRemote()) {
                 final GeckoRemotePipeObject method = new GeckoRemotePipeObject("initSteadyStateDetection",new Object[]{stateVariables,frequency,deltaT,simulationTime});
                 final GeckoRemotePipeObject returnValue = _mmf.callMethod(sessionID, method);
-                if (returnValue.isVoidReturn()) {
-                } else if (returnValue.isErrorMessage()) {
+                if (returnValue.isErrorMessage()) {
                     throw new RuntimeException(returnValue.getErrorMessage());
-                } else {
+                } else if (!returnValue.isVoidReturn()) {
                     throw new RuntimeException("Invalid return value in method initSteadyStateDetection!");
                 }
 

@@ -97,7 +97,7 @@ public class GeckoDialog extends JDialog {
             URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
             this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
         } catch (java.net.URISyntaxException | java.net.MalformedURLException e) {
-            // Exception intentionally ignored: Icon loading is optional - dialog works without it
+            // ignored: icon loading is optional
         }
     }
 

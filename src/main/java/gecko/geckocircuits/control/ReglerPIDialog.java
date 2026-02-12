@@ -73,7 +73,7 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
                         a1TextField.setNumberToField(newA1Value);
                     }
                 } catch (Throwable ex) {
-                    // really, here, I don't want any output messages!
+                    // ignored: use default value during typing of incomplete numbers
                 }
             }
         };
@@ -90,7 +90,7 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
                         timeTextField.setNumberToField(r0TextField.getNumberFromField() / a1Value);
                     }
                 } catch (Throwable ex) {
-                    // really, here, I don't want any output messages!
+                    // ignored: use default value during typing of incomplete numbers
                 }
             }
         });

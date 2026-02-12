@@ -255,7 +255,7 @@ public class GeckoStatusBar extends JPanel {
             g2d.setColor(Color.lightGray);
             g2d.drawRect(0, 0, barPixelLength, getHeight() - 1);
         } catch (ConcurrentModificationException ex) {
-            // don't know why this happens :-(
+            // ignored: best-effort UI update during concurrent paint
         }
     }
 

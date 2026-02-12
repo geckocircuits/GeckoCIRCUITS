@@ -85,7 +85,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
                         final double newValue = textField.getNumberFromField();
                         _definedMeanSignals.findMeanSignal(origSignal).setAverageTime(newValue);
                     } catch (NumberFormatException ex) {
-                        // nothing to do here.
+                        // ignored: use default value
                     }
                 }
             });

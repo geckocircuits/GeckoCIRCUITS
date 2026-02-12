@@ -265,13 +265,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         } else {
             // Daten kommen von der laufenden ZV-Simulation / hier werden SCOPEs initialisiert, bevor Simulationsdaten da sind -->
             // (1) // minX[],maxX[],minY[],maxY[],minY2[],maxY2[] werden willkuerlich initial gesetzt:
-            for (int i1 = 0; i1 < minX.length; i1++) {
-                // intentionally empty
-                // XXX minX[i1] = SimulationsKern.t1SCOPE;
-                // XXX maxX[i1] = SimulationsKern.t2SCOPE;
-                // XXX minY[i1] = -10;
-                // XXX maxY[i1] = +10;
-            }
+            // Previously set minX/maxX/minY/maxY from SimulationsKern values (now removed)
+            // Values are initialized elsewhere before use
             // (2) crvClipValXmin[][],crvClipValXmax[][],crvClipValYmin[][],crvClipValYmax[][] werden berechnet
             this.initClipping();
             // (3) Auto-Ticks // benoetigen minX[],maxX[],minY[],maxY[],... zur Berechnung
@@ -316,7 +311,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 try {
                     zeichneEinzelneSIGNALKurve(g2, i1);
                 } catch (Exception e) {
-                    // intentionally empty
+                    // ignored: best-effort curve rendering
                 }  // SIGNAL --> siehe Implementierung gleich unten
             } else {
                 int anzKurvenpunkteImWorksheet = worksheetDaten.getColumnLength();
@@ -326,7 +321,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 try {
                     zeichneEinzelneKurve(g2, i1, anzKurvenpunkteImWorksheet);
                 } catch (Exception e) {
-                    // intentionally empty
+                    // ignored: best-effort curve rendering
                 }  // ZV --> ist Standard in 'GraferV3'
                 //----------
                 if ((i1 > 0) && (_yAchseY[indexZurKurveGehoerigeYachse[i1]] != _yAchseY[indexZurKurveGehoerigeYachse[i1 - 1]])) {
@@ -433,12 +428,13 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         final GeneralPath grL = new GeneralPath();
         //
         for (int i1 = 0; i1 < anzahlAchsenX; i1++) {
+            if (linienStilAchsenX[i1] == INVISIBLE) {
+                continue;
+            }
             g2.setColor(farbeAchsenX[i1]);
             // TODO: replace with switch statement
             if (linienStilAchsenX[i1] == SOLID_PLAIN) {
-                // intentionally empty
                 g2.setStroke(str_SOLID_PLAIN);
-            } else if (linienStilAchsenX[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
             } else if (linienStilAchsenX[i1] == SOLID_FAT_1) {
                 g2.setStroke(str_SOLID_FAT_1);
             } else if (linienStilAchsenX[i1] == SOLID_FAT_2) {
@@ -453,19 +449,18 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             grL.reset();
             grL.moveTo(_xAchseX[i1], _yAchseX[i1]);
             grL.lineTo(_xAchseX[i1] + breitePix[i1], _yAchseX[i1]);
-            if (linienStilAchsenX[i1] != INVISIBLE) {
-                g2.draw(grL);
-                g2.drawString(xAchseBeschriftung[i1], _xAchseX[i1] + breitePix[i1] / 2, _yAchseX[i1] + posXtickLabels[i1]);
-            }
+            g2.draw(grL);
+            g2.drawString(xAchseBeschriftung[i1], _xAchseX[i1] + breitePix[i1] / 2, _yAchseX[i1] + posXtickLabels[i1]);
             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
         }
         for (int i1 = 0; i1 < anzahlAchsenY; i1++) {
+            if (linienStilAchsenY[i1] == INVISIBLE) {
+                continue;
+            }
             g2.setColor(farbeAchsenY[i1]);
             // TODO: replace with switch statement
             if (linienStilAchsenY[i1] == SOLID_PLAIN) {
-                // intentionally empty
                 g2.setStroke(str_SOLID_PLAIN);
-            } else if (linienStilAchsenY[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
             } else if (linienStilAchsenY[i1] == SOLID_FAT_1) {
                 g2.setStroke(str_SOLID_FAT_1);
             } else if (linienStilAchsenY[i1] == SOLID_FAT_2) {
@@ -480,10 +475,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             grL.reset();
             grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
             grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
-            if (linienStilAchsenY[i1] != INVISIBLE) {
-                g2.draw(grL);
-                g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
-            }
+            g2.draw(grL);
+            g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
             g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
         }
         //==================================
@@ -530,13 +523,14 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         if (i1 % 2 != 0) {
             return;  // nur linke y-Achse wird gezeichnet!
         }        //
+        if (linienStilAchsenY[i1] == INVISIBLE) {
+            return;
+        }
         g2.setColor(farbeAchsenY[i1]);
 
         // TODO: replace with switch expression!
         if (linienStilAchsenY[i1] == SOLID_PLAIN) {
-            // intentionally empty
             g2.setStroke(str_SOLID_PLAIN);
-        } else if (linienStilAchsenY[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
         } else if (linienStilAchsenY[i1] == SOLID_FAT_1) {
             g2.setStroke(str_SOLID_FAT_1);
         } else if (linienStilAchsenY[i1] == SOLID_FAT_2) {
@@ -553,10 +547,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         grL.reset();
         grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
         grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
-        if (linienStilAchsenY[i1] != INVISIBLE) {
-            g2.draw(grL);
-            g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
-        }
+        g2.draw(grL);
+        g2.drawString(yAchseBeschriftung[i1], _xAchseY[i1] - posYtickLabels[i1], _yAchseY[i1] - hoehePix[i1] / 2);
         g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
         //==================================
     }
@@ -758,9 +750,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
         // TODO: replace with switch statement
         if (kurveLinienstil[i1] == SOLID_PLAIN) {
-            // intentionally empty
             g2.setStroke(str_SOLID_PLAIN);
-        } else if (kurveLinienstil[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
         } else if (kurveLinienstil[i1] == SOLID_FAT_1) {
             g2.setStroke(str_SOLID_FAT_1);
         } else if (kurveLinienstil[i1] == SOLID_FAT_2) {
@@ -769,7 +759,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             g2.setStroke(str_DOTTED_PLAIN);
         } else if (kurveLinienstil[i1] == DOTTED_FAT) {
             g2.setStroke(str_DOTTED_FAT);
-        } else {
+        } else if (kurveLinienstil[i1] != INVISIBLE) {
             assert false;
         }
         //-----------------------
@@ -1601,9 +1591,11 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
 
 
+        if (mausModus == MAUSMODUS_NIX || mausModus == MAUSMODUS_ZOOM_AUTOFIT) {
+            return;
+        }
         int mx = me.getX(), my = me.getY();
-        if (mausModus == MAUSMODUS_NIX); else if (mausModus == MAUSMODUS_ZOOM_AUTOFIT); else if (mausModus == MAUSMODUS_ZOOM_FENSTER) {
-            // intentionally empty
+        if (mausModus == MAUSMODUS_ZOOM_FENSTER) {
             mausModus_ZOOM_FENSTER(mx, my, MOUSE_DRAGGED, me.isControlDown(), me.isShiftDown());
         } else if (mausModus == MAUSMODUS_ZEICHNE_LINIE) {
             mausModus_ZEICHNE_LINIE(mx, my, MOUSE_DRAGGED);
@@ -1821,7 +1813,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             try {
                 xSchieberWert[0] = getValueFromPixel(xSchieberPix, 0)[0];
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: best-effort slider value conversion
             }  // x-Wert der Schieber-Position
             int index = findSliderTimeIndex(xSchieberWert[0]);
             if (index >= 0) {
@@ -1843,7 +1835,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             try {
                 xSchieberWert2[0] = getValueFromPixel(xSchieberPix2, 0)[0];
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: best-effort slider value conversion
             }  // x-Wert der Schieber-Position
             int index = findSliderTimeIndex(xSchieberWert2[0]);
             if (index >= 0) {

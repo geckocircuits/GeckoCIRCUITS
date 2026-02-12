@@ -203,9 +203,6 @@ implements Operationable, Nonlinearable {
             String uTxt = getFixedIDString() + "=" + (_isNonlinear.getValue() ? "nonlin" : tcf.formatENG(displayValue, 3));
             if (getNonlinearReplacedParameter() != null && getNonlinearReplacedParameter().getNameOpt().isEmpty()) {
                 _textInfo.addParameter(uTxt);
-            } else {
-                // intentionally empty
-
             }
         }
     }

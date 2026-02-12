@@ -296,7 +296,7 @@ public final class GeckoMemoryMappedFile {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
-                //do nothing
+                // ignored: interruption acceptable
             }
             while (true) {
                 status = _mmb.getLong(STATUS_ID_POS);
@@ -325,7 +325,7 @@ public final class GeckoMemoryMappedFile {
                 try {
                     Thread.sleep(5);
                 } catch (InterruptedException ex) {
-                    //do nothing
+                    // ignored: interruption acceptable
                 }
             }
         } else {

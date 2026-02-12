@@ -94,7 +94,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: interruption acceptable
             }
 
             // keep updating progress until task is finished

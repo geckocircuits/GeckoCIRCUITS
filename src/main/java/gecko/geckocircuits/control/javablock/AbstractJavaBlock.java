@@ -19,7 +19,6 @@ import gecko.geckocircuits.allg.GeckoFile;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

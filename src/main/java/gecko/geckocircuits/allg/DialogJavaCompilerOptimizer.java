@@ -116,7 +116,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception ex) {
-            // Icon loading is optional - dialog works without it
+            // ignored: icon loading is optional
         }
         this.initComponents();
         //-------

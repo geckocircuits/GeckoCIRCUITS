@@ -17,13 +17,7 @@ import gecko.geckocircuits.control.IsDtChangeSensitive;
 import gecko.geckocircuits.control.SSAShape;
 import static gecko.geckocircuits.control.calculators.AbstractSignalCalculator.TWO_PI;
 import gecko.geckocircuits.newscope.FFTLibrary;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.StaticNonFinal", "PMD.PublicAttribute", "PMD.ThrowExceptionInFinally"})
 @SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "PA_PUBLIC_ARRAY_ATTRIBUTE"},

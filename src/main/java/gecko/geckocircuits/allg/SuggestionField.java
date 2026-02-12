@@ -285,7 +285,7 @@ public final class SuggestionField extends JTextField {
             tmpLocation.y += - listHeight;
             this._dialog.setLocation(tmpLocation);
         } catch (IllegalComponentStateException exc) {
-            // exc.printStackTrace();
+            // ignored: component not yet displayable
         }
     }
 

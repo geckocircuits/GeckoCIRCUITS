@@ -133,7 +133,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
-                //nothing to do here
+                // ignored: interruption acceptable
             }
         }
     }

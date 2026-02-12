@@ -22,7 +22,6 @@ import gecko.geckocircuits.datacontainer.DataContainerSimple;
 import gecko.geckocircuits.newscope.AbstractScopeSignal;
 import gecko.geckocircuits.newscope.DialogConnectSignalsGraphs;
 import gecko.geckocircuits.newscope.GraferV4;
-import gecko.geckocircuits.newscope.MemoryContainer;
 import gecko.geckocircuits.newscope.NewScope;
 import gecko.geckocircuits.newscope.ScopeSettings;
 import gecko.geckocircuits.newscope.TimeSeriesConstantDt;

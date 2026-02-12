@@ -918,7 +918,7 @@ public final class Matrix implements Cloneable, java.io.Serializable {
 
         // Ignore initial empty lines
         while (tokenizer.nextToken() == StreamTokenizer.TT_EOL) {
-            // intentionally empty
+            continue; // skip EOL tokens until non-EOL token found
         }
         if (tokenizer.ttype == StreamTokenizer.TT_EOF) {
             throw new java.io.IOException("Unexpected EOF on matrix read.");

@@ -811,7 +811,7 @@ public class SimulationsKern implements ISimulationEngine {
         try {
             Thread.sleep(sleep);
         } catch (InterruptedException e) {
-            // Intentionally ignored: sleep interruption is not critical here
+            // ignored: interruption acceptable
         }  // damit es nicht zu einer 'RacingCondition' mit einer eventuell noch laufenden Aktualisierung aus takteAuffrischungScope() kommt
         //---------------------------
         for (int i1 = 0; i1 < c.length; i1++) {

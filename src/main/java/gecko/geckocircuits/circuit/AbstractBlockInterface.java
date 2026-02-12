@@ -601,10 +601,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     @Override
     public void moveComponent(final Point moveToPoint) {
-        if (this instanceof ThermAmbient) {
-            // intentionally empty
-            // nix machen!
-        } else {
+        if (!(this instanceof ThermAmbient)) {
             for (AbstractTerminal term : XIN) {
                 term.getLabelObject().setLabelPriority(LabelPriority.LOW);
             }

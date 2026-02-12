@@ -72,7 +72,7 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: interruption acceptable
             }
 
             // keep updating progress until task is finished

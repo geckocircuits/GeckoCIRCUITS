@@ -29,8 +29,6 @@ public class LUDecompositionCache {
     private static final int MAX_CACHE_SIZE = 1000;
     private static int varMaxCacheSize = MAX_CACHE_SIZE;
     private final Map<Integer, AbstractCachedMatrix> _cachedMatrices = new HashMap<Integer, AbstractCachedMatrix>();
-    private int _cacheHitCounter = 0;
-    private int _cacheMissCounter = 0;
     private static final boolean USE_CACHE = true;
     private long memoryBytes = 0;
 
@@ -48,7 +46,6 @@ public class LUDecompositionCache {
         final AbstractCachedMatrix newMatrix = new CachedMatrix(matrix);
         final AbstractCachedMatrix fromCache = _cachedMatrices.get(newMatrix.hashCode());
         if (fromCache == null) {
-            _cacheMissCounter++;
             newMatrix.setAccess(time);
             testForCacheShrink(time);
             newMatrix.initLUDecomp();
@@ -73,7 +70,6 @@ public class LUDecompositionCache {
             }
 
             fromCache.setAccess(time);
-            _cacheHitCounter++;
             //System.out.println("matrix size : " + matrix.length);
 //             if(_cacheHitCounter%1000 == 0) {
 //                 printDebugMessages(time);

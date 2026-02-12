@@ -45,7 +45,7 @@ public class DialogWarningNodeNumber extends JDialog implements WindowListener, 
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception e) {
-            // Icon loading is optional - dialog works without it
+            // ignored: icon loading is optional
         }
         this.addWindowListener(this);
         this.setTitle(" Warning: Node Number");

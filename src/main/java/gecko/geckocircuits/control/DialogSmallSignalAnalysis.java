@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.GeckoExternal;
 import gecko.GeckoSim;
 import gecko.geckocircuits.allg.FormatJTextField;
 import gecko.geckocircuits.allg.UserParameter;
@@ -43,7 +42,6 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     private JComboBox<SSAShape> _jComboSignal;
     private GraferV4 _grafer;
     private SimpleGraferPanel newScope1;
-    private double oldTend;
     private BodePlot2 _bodePlot;
 
     /**

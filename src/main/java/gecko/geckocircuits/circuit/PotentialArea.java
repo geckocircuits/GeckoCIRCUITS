@@ -468,20 +468,6 @@ public final class PotentialArea {
                 }
                 compare = nodes._element;
             }
-
-        } else {
-            // intentionally empty
-//            for (ElementNodes nodes : _elementNodeTerminals) {
-//                boolean allTerminalCircuits = true;
-//                if( ! (nodes._element instanceof TerminalCircuit)) {
-//                    allTerminalCircuits = false;
-//                    break;
-//                }
-//                if(allTerminalCircuits) {
-//                    System.out.println("removing empty potential! " + ((TerminalCircuit) nodes._element).getStringID() + " " + ((TerminalCircuit) nodes._element).getParentSheetIdentifier());
-//                    return true;
-//                }
-//            }
         }
 
         return _elementNodeTerminals.isEmpty();

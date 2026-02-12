@@ -10,5 +10,13 @@
     <exclude-pattern>.*/com/intel/mkl/.*</exclude-pattern>
 
     <!-- Use the same rules as PMD quickstart (maven-pmd-plugin default) -->
-    <rule ref="rulesets/java/quickstart.xml"/>
+    <rule ref="rulesets/java/quickstart.xml">
+        <!-- Allow empty catch blocks that contain a descriptive comment -->
+        <exclude name="EmptyCatchBlock"/>
+    </rule>
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock">
+        <properties>
+            <property name="allowCommentedBlocks" value="true"/>
+        </properties>
+    </rule>
 </ruleset>

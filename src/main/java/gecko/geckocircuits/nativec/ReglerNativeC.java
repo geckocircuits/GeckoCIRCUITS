@@ -253,16 +253,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
         final Color origColor = graphics.getColor();
         graphics.setColor(getBackgroundColor());  // default
-        if (getModus() == ComponentState.FINISHED) {
-            // intentionally empty
-//            if (_javaBlock.getCompileStatus() == CompileStatus.NOT_COMPILED) {
-//                graphics.setColor(Color.WHITE);
-//            } else if (_javaBlock.getCompileStatus() == CompileStatus.COMPILED_SUCCESSFULL) {
-//                graphics.setColor(GlobalColors.farbeElementCONTROLHintergrund);
-//            } else if (_javaBlock.getCompileStatus() == CompileStatus.COMPILE_ERROR) {
-//                graphics.setColor(Color.orange);
-//            }
-        } else {
+        if (getModus() != ComponentState.FINISHED) {
             graphics.setColor(Color.white);
         }
 
@@ -427,13 +418,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 //                }
                 //_guiWindow.setVisible(true);
                 //_guiWindow.loadSourcesText();
-            } else {
-                if (_guiWindow.isVisible()) {
-                    _guiWindow.toFront();
-                } else {
-                    // intentionally empty
-                    //_guiWindow.loadSourcesText();
-                }
+            } else if (_guiWindow.isVisible()) {
+                _guiWindow.toFront();
             }
             return (Window) _guiWindow;
     }

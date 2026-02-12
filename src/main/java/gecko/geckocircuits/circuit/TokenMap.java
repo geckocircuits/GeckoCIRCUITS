@@ -126,7 +126,7 @@ public final class TokenMap {
                             for (; j < ascii.length && (ascii[j].isEmpty()
                                     || ascii[j].charAt(0) != '<'
                                     || !ascii[j].startsWith(endToken)); j++) {
-                                        // intentionally empty
+                                continue; // scan forward to find end token
                             }
 
                             final BlockInfo blockInfo = new BlockInfo(readLineNumber, j, this);
@@ -148,7 +148,7 @@ public final class TokenMap {
                         for (; j < ascii.length
                                 && (ascii[j].isEmpty() || ascii[j].charAt(0) != '<'
                                 || !ascii[j].startsWith(endToken)); j++) {
-                                    // intentionally empty
+                            continue; // scan forward to find end token
                         }
 
                         final BlockInfo tmpBlockInfo = new BlockInfo(readLineNumber, j, this, false);
@@ -192,9 +192,7 @@ public final class TokenMap {
     }
 
     public void makeBlockTokenMap(final String[] ascii) {
-        for (int i = 0; i < ascii.length; i++) {
-            // intentionally empty
-        }
+        // No-op: block token map construction not needed for this implementation
     }
 
     public TokenMap getSpecialBlockTokenMap(final String identifier) {
@@ -205,9 +203,6 @@ public final class TokenMap {
             }
             BlockInfo block = blockInfoList.pollFirst();
             return block._tokenMap;
-        } else {
-            // intentionally empty
-            // nothing todo - no element found!
         }
         return null;
     }
@@ -248,13 +243,6 @@ public final class TokenMap {
             }
             BlockInfo block = blockInfoList.pollFirst();
             return block._tokenMap;
-        } else {
-            // intentionally empty
-//            System.out.println("not found: " + identifier);
-//            System.out.println("available:");
-//            for(String key : _duplicateMap.keySet()) {
-//                System.out.println("key: " + key);
-//            }
         }
         return null;
     }

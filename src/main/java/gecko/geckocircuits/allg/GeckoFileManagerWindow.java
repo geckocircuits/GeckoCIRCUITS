@@ -261,7 +261,7 @@ public class GeckoFileManagerWindow extends JDialog {
         jScrollPane3 = new JScrollPane();
         jTextArea1 = new JTextArea();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setTitle("Gecko File Manager - add external files to your model");
         setLocationByPlatform(true);
 

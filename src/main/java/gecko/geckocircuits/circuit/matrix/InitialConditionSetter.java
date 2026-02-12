@@ -52,16 +52,13 @@ public class InitialConditionSetter {
     /** Initial time value for initialization simulation */
     private static final double INIT_TIME = -1e-9;
 
-    /** Solver type being used */
-    private final SolverType solverType;
-
     /**
      * Creates a new InitialConditionSetter.
      *
      * @param solverType the solver type to use
      */
     public InitialConditionSetter(SolverType solverType) {
-        this.solverType = solverType;
+        // solverType parameter retained for API compatibility
     }
 
     /**

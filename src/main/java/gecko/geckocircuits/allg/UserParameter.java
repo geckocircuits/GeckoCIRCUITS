@@ -332,9 +332,6 @@ public final class UserParameter<T> {
             }
 
             assert false;
-        } else {
-            // intentionally empty
-            //System.err.println("Value not found: " + _identifier);
         }
 
     }

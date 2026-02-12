@@ -72,7 +72,7 @@ public class TranslationPopupSingle extends javax.swing.JFrame implements Proper
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
-                // intentionally empty
+                // ignored: interruption acceptable
             }
 
             // keep updating progress until task is finished

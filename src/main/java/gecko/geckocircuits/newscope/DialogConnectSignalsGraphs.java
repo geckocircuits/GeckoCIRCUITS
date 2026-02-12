@@ -325,11 +325,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
                 final AbstractDiagram diagram = _manager.getDiagram(rowIndex);
-                if (diagram instanceof DiagramSignal) {
-                    //final Dialog dialog = new DialogDigitalGraphProperties(_grafer, rowIndex);
-                    //dialog.setVisible(true);
-                } else {
-                    // intentionally empty
+                if (!(diagram instanceof DiagramSignal)) {
                     final Dialog dialog = new DialogDiagramProps(DialogConnectSignalsGraphs.this, true, diagram, _grafer);
                     dialog.setVisible(true);
                     baueGUI();

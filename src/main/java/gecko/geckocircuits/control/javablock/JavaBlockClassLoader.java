@@ -19,8 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -66,7 +64,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
 
                 return Class.forName(name, true, createUrlClassLoader(url));
             } catch (MalformedURLException | ClassNotFoundException ex) {
-                // intentionally empty
+                // ignored: class not found via URL class loader, return null
             }
             return null;
             // return super.findClass(name);

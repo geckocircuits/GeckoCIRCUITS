@@ -347,14 +347,8 @@ public final class ProjectData implements Serializable {
 
 
 
-        if (!isBackupRead && tokenMap.containsToken("dataContainerSignals[]")) {
-            String[] sigNames = new String[0];
-            sigNames = tokenMap.readDataLine("dataContainerSignals[]", sigNames);
-            for (int row = 0; row < sigNames.length; row++) {
-                // intentionally empty
-                // TODO ??? NetzlisteCONTROL.globalData.setSignalName(row, sigNames[row]);
-            }
-        }
+        // TODO: dataContainerSignals[] token is read but signal names are not applied.
+        // Previously: NetzlisteCONTROL.globalData.setSignalName(row, sigNames[row]);
 
         if (_dt_pre <= 0) {
             _dt_pre = _dt;
@@ -678,7 +672,7 @@ public final class ProjectData implements Serializable {
                 return neuerPfadDETAIL;
             }
         } catch (Exception e) {
-            // intentionally empty
+            // ignored: best-effort path resolution
         }
         return GlobalFilePathes.DATNAM_NOT_DEFINED;
     }
