@@ -14,7 +14,7 @@ All notable changes to GeckoCIRCUITS.
 - 49 new tests for zero-crossing detection (bisection convergence, rising/falling edges, power electronics use cases)
 
 ### Changed
-- Standardized groupIds to `ch.technokrat.gecko` across all modules
+- Standardized groupIds to `gecko` across all modules
 - CI workflow now builds all modules via reactor POM
 - Updated CLAUDE.md with multi-module build instructions
 

@@ -4,7 +4,7 @@ title: Control Calculators API
 
 # Control Calculators API
 
-Package: `ch.technokrat.gecko.core.control.calculators`
+Package: `gecko.core.control.calculators`
 
 72 calculator classes implementing the computation logic for GeckoCIRCUITS control blocks. These are GUI-free and suitable for headless simulation.
 

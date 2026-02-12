@@ -39,7 +39,7 @@ GeckoCIRCUITS/
 ├── src/modules/
 │   ├── gecko-simulation-core/       # GUI-free simulation engine
 │   │   ├── pom.xml
-│   │   └── src/main/java/ch/technokrat/gecko/core/
+│   │   └── src/main/java/gecko/core/
 │   │       ├── circuit/             # Component cores, matrix, netlist, simulation
 │   │       ├── control/calculators/ # 64 calculator classes (PI, PID, gain, etc.)
 │   │       ├── math/               # Matrix operations, LU decomposition
@@ -52,7 +52,7 @@ GeckoCIRCUITS/
 ### 2.2 Main Application (854 files)
 
 ```
-src/main/java/ch/technokrat/gecko/
+src/main/java/gecko/
 ├── GeckoSim.java                    # Entry point, mode selection
 ├── geckocircuits/
 │   ├── allg/                        # Global settings, file management, dialogs

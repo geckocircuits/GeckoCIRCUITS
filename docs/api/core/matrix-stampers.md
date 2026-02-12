@@ -4,7 +4,7 @@ title: Matrix Stampers API
 
 # Matrix Stampers API
 
-Package: `ch.technokrat.gecko.core.circuit.matrix`
+Package: `gecko.core.circuit.matrix`
 
 MNA (Modified Nodal Analysis) matrix stamping strategies for circuit simulation. Each component type has a stamper that knows how to contribute to the system matrices.
 

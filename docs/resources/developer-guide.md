@@ -19,7 +19,7 @@ GeckoCIRCUITS is a Java 21 power electronics circuit simulator built on Modified
 
 ```
 GeckoCIRCUITS
-├── Entry Point: GeckoSim (ch.technokrat.gecko.GeckoSim)
+├── Entry Point: GeckoSim (gecko.GeckoSim)
 │   └── Operating Modes: STANDALONE (GUI), REMOTE (RMI), MMF, SIMULINK
 │
 ├── Circuit Simulation Engine
@@ -107,7 +107,7 @@ Let's add a saturation limiter block (useful for control feedback).
 
 ```java
 // File: control/calculators/SaturationCalculator.java
-package ch.technokrat.gecko.geckocircuits.control.calculators;
+package gecko.geckocircuits.control.calculators;
 
 /**
  * Saturation limiter: output = clamp(input, min, max)
@@ -324,7 +324,7 @@ Let's implement a temperature-dependent resistor: `R(T) = R0 * (1 + α * ΔT)`
 
 ```java
 // File: circuit/matrix/TemperatureResistorStamper.java
-package ch.technokrat.gecko.geckocircuits.circuit.matrix;
+package gecko.geckocircuits.circuit.matrix;
 
 public class TemperatureResistorStamper implements IMatrixStamper {
 

@@ -50,9 +50,9 @@ This tutorial focuses on Control Blocks, which are more commonly used.
 Here's a custom PI (Proportional-Integral) controller block that can be added to any schematic:
 
 ```java
-package ch.technokrat.gecko.custom;
+package gecko.custom;
 
-import ch.technokrat.gecko.geckocircuits.control.AbstractControlBlock;
+import gecko.geckocircuits.control.AbstractControlBlock;
 
 /**
  * Custom PI Controller Block
@@ -299,7 +299,7 @@ Create a JAR file containing your compiled classes:
 jar cf CustomPIController.jar CustomPIController.class
 
 # Package entire directory with multiple blocks
-jar cf myblocks.jar ch/technokrat/gecko/custom/*.class
+jar cf myblocks.jar gecko/custom/*.class
 ```
 
 ### Step 3: Load into GeckoCIRCUITS
@@ -452,7 +452,7 @@ Output appears in the GeckoCIRCUITS console/logs.
 
 - Tutorial files: `resources/tutorials/7xx_scripting_automation/704_java_blocks/`
 - Example circuits: `demo_JAVA_Block.ipes`, `JavaBlockPMSM.ipes`
-- API Javadoc: See `src/main/java/ch/technokrat/gecko/geckocircuits/control/AbstractControlBlock.java`
+- API Javadoc: See `src/main/java/gecko/geckocircuits/control/AbstractControlBlock.java`
 
 ## Related Tutorials
 

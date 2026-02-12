@@ -16,20 +16,20 @@ NC='\033[0m' # No Color
 
 # Backend packages (pure logic, no GUI)
 BACKEND_PACKAGES=(
-    "ch.technokrat.gecko.geckocircuits.circuit.matrix"
-    "ch.technokrat.gecko.geckocircuits.control.calculators"
-    "ch.technokrat.gecko.geckocircuits.math"
-    "ch.technokrat.gecko.geckocircuits.datacontainer"
-    "ch.technokrat.gecko.geckocircuits.circuit.losscalculation"
-    "ch.technokrat.gecko.geckocircuits.api"
+    "gecko.geckocircuits.circuit.matrix"
+    "gecko.geckocircuits.control.calculators"
+    "gecko.geckocircuits.math"
+    "gecko.geckocircuits.datacontainer"
+    "gecko.geckocircuits.circuit.losscalculation"
+    "gecko.geckocircuits.api"
 )
 
 # Mixed packages with significant backend logic
 MIXED_PACKAGES=(
-    "ch.technokrat.gecko.geckocircuits.newscope"
-    "ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents"
-    "ch.technokrat.gecko.geckocircuits.circuit"
-    "ch.technokrat.gecko.geckocircuits.control"
+    "gecko.geckocircuits.newscope"
+    "gecko.geckocircuits.circuit.circuitcomponents"
+    "gecko.geckocircuits.circuit"
+    "gecko.geckocircuits.control"
 )
 
 echo -e "${BLUE}============================================${NC}"
