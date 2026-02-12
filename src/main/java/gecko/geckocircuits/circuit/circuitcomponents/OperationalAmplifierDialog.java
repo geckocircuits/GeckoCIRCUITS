@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -44,13 +44,13 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
     protected JTabbedPane createGUI_OPV1() {
         JPanel mainParameter = createParameterPanel(element.gainValue, element.inputResistance, element.outputResistance, element.frequencyDependency);
         mainParameter.setBorder(new TitledBorder("Main Parameters"));
-        
+
         JPanel voltDivPanel = createParameterPanel(element.voltageDividerRa, element.voltageDividerRb);
         voltDivPanel.setBorder(new TitledBorder("Voltage Divider"));
-        
+
         JPanel limitPanel = createParameterPanel(element.voltageLimitationMax, element.voltageLimitationMin);
         limitPanel.setBorder(new TitledBorder("Voltage-Limitation"));
-                
+
         JPanel jpOx = new JPanel();
         //jpOx.setLayout(new BorderLayout());
         jpOx.add(mainParameter, BorderLayout.WEST);
@@ -90,5 +90,5 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
         tabberOPV1.addTab("Parameter", jpOz);
         tabberOPV1.addTab("Model", jpDefOPV1);
         return tabberOPV1;
-    }            
+    }
 }

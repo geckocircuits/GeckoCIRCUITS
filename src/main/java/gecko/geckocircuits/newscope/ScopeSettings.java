@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -100,7 +100,7 @@ public class ScopeSettings implements Serializable {
             }
         }
 
-        signalNamen.clear();        
+        signalNamen.clear();
 
 
         crvSymbShape = new int[ANZ_DIAGRAM_MAX][50];
@@ -190,15 +190,15 @@ public class ScopeSettings implements Serializable {
             }
         }
 
-    }        
-    
-    
-    public void loadSettings(GraferV4 impl) {        
+    }
+
+
+    public void loadSettings(GraferV4 impl) {
         if (_isFormatBefore160) {
             final DiagramCurveSignalManager manager = impl.getManager();
             manager.updateCurveNumber(noInputSignals);
             final int noDiagrams = manager.getNumberDiagrams();
-            
+
             if (noDiagrams != anzDiagram) {
                 while (impl.getManager().getDiagrams().size() < anzDiagram) {
                     impl.getManager().addDiagram(new DiagramCurve(impl));
@@ -323,14 +323,14 @@ public class ScopeSettings implements Serializable {
         ascii.append("\n<\\scopeSettings>");
     }
 
-    public boolean importASCII(final TokenMap tokenMap) {        
+    public boolean importASCII(final TokenMap tokenMap) {
         if (tokenMap.containsToken("xAchseStil[]")) {
             _isFormatBefore160 = true;
         } else {
             _isFormatBefore160 = false;
             return true;
         }
-        
+
         if (tokenMap.containsToken("noInputSignals")) {
             noInputSignals = tokenMap.readDataLine("noInputSignals", noInputSignals);
         }
@@ -436,7 +436,7 @@ public class ScopeSettings implements Serializable {
 
         signalNamen = tokenMap.readDataLineStringArray("signalNamen[]");
 
-        noInputSignals = signalNamen.size() - 1;   // -1: compatibility to old save format!                                                     
+        noInputSignals = signalNamen.size() - 1;   // -1: compatibility to old save format!
         matrixZuordnungKurveDiagram = tokenMap.readDataLine("matrixZuordnungKurveDiagram[][]", matrixZuordnungKurveDiagram);
 
 
@@ -462,7 +462,7 @@ public class ScopeSettings implements Serializable {
         }
 
 
-        // Achtung: in alten Versionen sind diese beiden Parameter nicht gesetzt, daher hier default-Initialisierung: 
+        // Achtung: in alten Versionen sind diese beiden Parameter nicht gesetzt, daher hier default-Initialisierung:
         if (crvTransparency == null) {
             crvTransparency = new double[crvLineColor.length][crvLineColor[0].length];
             for (int i = 0; i < crvTransparency.length; i++) {
@@ -483,6 +483,6 @@ public class ScopeSettings implements Serializable {
             }
         }
         return true;
-    }        
-    
+    }
+
 }

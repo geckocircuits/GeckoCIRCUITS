@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,19 +30,19 @@ import java.util.List;
         justification = "Immutable value object with intentionally public final fields for performance")
 public final class HiLoData {
 
-    private static final float LARGE_VALUE = 1E30f;    
+    private static final float LARGE_VALUE = 1E30f;
 
-    
+
     // this is a final class with only final members
     // CHECKSTYLE:OFF
-    public final float _yLo; 
+    public final float _yLo;
     public final float _yHi;
     // CHECKSTYLE:ON
-    
+
     private static final HiLoData ZERO_DATA = new HiLoData(0, 0);
     private static final HiLoData ZERO_ONE_DATA = new HiLoData(0, 1);
     private static final HiLoData ONE_DATA = new HiLoData(1, 1);
-    
+
     /**
      * very often, HiLo-Data is filled with integer objects {0, 1} {0,0}, ...
      * Therefore, just return a static object.
@@ -58,31 +58,31 @@ public final class HiLoData {
                 return ZERO_ONE_DATA;
             }
          }
-        
+
         if(lowValue == 1 && highValue == 1) {
-            return ONE_DATA;            
-         }                            
-        
+            return ONE_DATA;
+         }
+
         return new HiLoData(lowValue, highValue);
     }
-    
-    
+
+
     private HiLoData(final float minValue, final float maxValue) {
-        //assert minValue <= maxValue : minValue + " not <! " + maxValue;        
+        //assert minValue <= maxValue : minValue + " not <! " + maxValue;
         _yLo = minValue;
-        _yHi = maxValue;                
+        _yHi = maxValue;
     }
-        
+
 
     public boolean compare(final HiLoData toCompare) {
         return toCompare._yLo == _yLo && toCompare._yHi == _yHi;
     }
-    
+
     /**
-     * 
+     *
      * @param data if null, a new HiLo-Object is created
      * @param value value that extends the current data interval
-     * @return 
+     * @return
      */
     public static HiLoData mergeFromValue(final HiLoData data, final float value) {
         HiLoData returnValue = data;
@@ -90,7 +90,7 @@ public final class HiLoData {
             returnValue = hiLoDataFabric(value, value);
             return returnValue;
         }
-        
+
         if (value < returnValue._yLo) {
             return hiLoDataFabric(value, data._yHi);
         }
@@ -98,7 +98,7 @@ public final class HiLoData {
         if (value > returnValue._yHi) {
             return hiLoDataFabric(data._yLo, value);
         }
-        
+
         return returnValue;
     }
 
@@ -111,74 +111,74 @@ public final class HiLoData {
             assert hilo1 != null;
             return hilo1;
         }
-        
+
         float low1 = hilo1._yLo;
         float low2 = hilo2._yLo;
-        
+
         float high1 = hilo1._yHi;
         float high2 = hilo2._yHi;
-        
+
         float returnLow = Float.NaN;
         float returnHigh = Float.NaN;
-        
+
         if(low1 == low1 && low2 == low2) {
             returnLow = Math.min(low1, low2);
         } else {
             if(low1 == low1) {
                 returnLow = low1;
             }
-            
+
             if(low2 == low2) {
                 returnLow = low2;
             }
         }
-        
+
         if(high1 == high1 && high2 == high2) {
-            returnHigh = Math.max(high1, high2);                      
+            returnHigh = Math.max(high1, high2);
         } else {
             if(high1 == high1) {
                 returnHigh = high1;
             }
             if(high2 == high2) {
-                returnHigh = high2;                         
+                returnHigh = high2;
             }
         }
-                                
+
         return hiLoDataFabric(returnLow, returnHigh);
-    }        
+    }
 
     public static HiLoData getMergedFromList(final List<HiLoData> list) {
         assert list.size() > 0;
         float minValue = Float.NaN;
         float maxValue = Float.NaN;
 
-        
+
         for (HiLoData hilo : list) {
             assert hilo != null : "Null HiLoData in list, list size: " + list.size();
-            
+
             float compareMax = hilo._yHi;
             float compareMin = hilo._yLo;
-            
-            if(compareMax == compareMax) {                
+
+            if(compareMax == compareMax) {
                 if(maxValue == maxValue) {
                     maxValue= Math.max(compareMax, maxValue);
                 } else {
                     maxValue = compareMax;
                 }
-                
+
             }
-            
+
             if(compareMin == compareMin) {
                 if(minValue == minValue) {
                     minValue= Math.min(compareMin, minValue);
                 } else {
                     minValue = compareMin;
-                }                
-            }                                                
+                }
+            }
         }
-        return hiLoDataFabric(minValue, maxValue);                
-    }        
-    
+        return hiLoDataFabric(minValue, maxValue);
+    }
+
     private static float correctWithNotANumber(float value1, float value2) {
         if(value1 != value1 && value2 != value2) {
             return Float.NaN;
@@ -203,7 +203,7 @@ public final class HiLoData {
     public boolean isValidNumber() {
         return _yHi == _yHi && _yLo == _yLo && !Double.isInfinite(_yHi) && !Double.isInfinite(_yLo);
     }
-    
+
 
     @Override
     public int hashCode() {
@@ -235,6 +235,6 @@ public final class HiLoData {
         return _yLo <= isInRange && isInRange <= _yHi;
     }
 
-    
-    
+
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,10 +17,10 @@ import gecko.geckocircuits.allg.GlobalColors;
 
 /**
  * Enumeration of connector types with associated display properties.
- * 
+ *
  * This class is GUI-free: it returns color values as RGB integers rather than
  * java.awt.Color objects. Convert to Color in GUI code if needed.
- * 
+ *
  * @author andreas
  * @since Sprint 15 - GUI-free refactoring
  */
@@ -31,7 +31,7 @@ public enum ConnectorType {
     RELUCTANCE,
     LK_AND_RELUCTANCE,
     THERMAL,
-    NONE;    
+    NONE;
 
     public static ConnectorType fromOrdinal(final int ord) {
         for (ConnectorType tmp : values()) {
@@ -55,7 +55,7 @@ public enum ConnectorType {
                 return SchematicEditor2._controlDisplayMode;
             default:
                 return SchematicEditor2._lkDisplayMode;
-        }        
+        }
     }
 
     /**
@@ -70,7 +70,7 @@ public enum ConnectorType {
             case LK_AND_RELUCTANCE:
                 return colorToRgb(GlobalColors.farbeElementLKHintergrund);
             case RELUCTANCE:
-                return colorToRgb(GlobalColors.farbeElementRELBACKGROUND);            
+                return colorToRgb(GlobalColors.farbeElementRELBACKGROUND);
             case CONTROL:
                 return colorToRgb(GlobalColors.farbeElementCONTROLHintergrund);
             case NONE:
@@ -78,7 +78,7 @@ public enum ConnectorType {
                 return 0xD3D3D3; // Color.lightGray as RGB
         }
     }
-    
+
     /**
      * @deprecated Use getBackgroundColorRgb() for GUI-free code.
      * For GUI layer only - returns AWT Color.
@@ -105,10 +105,10 @@ public enum ConnectorType {
                 return colorToRgb(GlobalColors.farbeFertigElementCONTROL);
             case NONE:
             default:
-                return 0x808080; // Color.GRAY as RGB           
+                return 0x808080; // Color.GRAY as RGB
         }
     }
-    
+
     /**
      * @deprecated Use getForeGroundColorRgb() for GUI-free code.
      * For GUI layer only - returns AWT Color.
@@ -117,7 +117,7 @@ public enum ConnectorType {
     java.awt.Color getForeGroundColor() {
         return new java.awt.Color(getForeGroundColorRgb());
     }
-    
+
     /**
      * Convert java.awt.Color to RGB integer.
      * Only used during transition; remove this method once GlobalColors is refactored.

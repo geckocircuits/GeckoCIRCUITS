@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -80,7 +80,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
 
         LeitverlusteMesskurve initCurve115 = new LeitverlusteMesskurve(115);  // Tj=115°C
         _messkurvePvCOND.add(initCurve115);
-        initCurve115.setCurveData(new double[][]{{0, 0.8, 2.1}, {0, 0.6, 8}});        
+        initCurve115.setCurveData(new double[][]{{0, 0.8, 2.1}, {0, 0.6, 8}});
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
     }
 
@@ -90,7 +90,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
 
     public List<LeitverlusteMesskurve> getCopyOfLeitverlusteMesskurvenArray() {
         List<LeitverlusteMesskurve> returnValue = new ArrayList<LeitverlusteMesskurve>();
-        // herausgegeben wird ein Kopie, damit man mit 'Cancel' im uebergeordneten Fenster die Aenderungen nicht zwingend uebernehmen muss -->        
+        // herausgegeben wird ein Kopie, damit man mit 'Cancel' im uebergeordneten Fenster die Aenderungen nicht zwingend uebernehmen muss -->
         for (LeitverlusteMesskurve toCopy : _messkurvePvCOND) {
             LeitverlusteMesskurve theCopy = new LeitverlusteMesskurve(toCopy.tj.getValue());
             double[][] dataCopy = new double[toCopy.getCurveData().length][toCopy.getCurveData()[0].length];
@@ -138,17 +138,17 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             _messkurvePvCOND.add(toCopy.copy());
         }
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
-                        
+
     }
 
     public void importASCII(TokenMap tokenMap) {
         if (tokenMap.containsToken("lossFileHashValue")) {
             lossFileHashValue = tokenMap.readDataLine("lossFileHashValue", lossFileHashValue);
-        }                
-        
+        }
+
         datnamGemesseneVerluste = tokenMap.readDataLine("datnamGemesseneVerluste", datnamGemesseneVerluste);
 
-        
+
         try {
             // Relative Pfadangaben pruefen und gegebenfalls aktualisieren:
             if (!datnamGemesseneVerluste.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
@@ -180,7 +180,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         lossFile = null;
     }
 
-    public boolean leseDetailVerlusteVonDatei(final GeckoFile newLossFile) {        
+    public boolean leseDetailVerlusteVonDatei(final GeckoFile newLossFile) {
         //------------------
         // Datei einlesen -->
         List<String> datVec = new ArrayList<String>();
@@ -223,16 +223,16 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         for (int i1 = 0; i1 < datVec.size(); i1++) {
             ascii[i1] = (String) datVec.get(i1);
         }
-                
+
         final TokenMap tokenMap = new TokenMap(ascii);
         //------------------
 
         _messkurvePvCOND.clear();
-        //------------------        
-        boolean needClearSwitchCurves = true;        
-        
+        //------------------
+        boolean needClearSwitchCurves = true;
+
         for (TokenMap lossBlock = tokenMap.getBlockTokenMap("<SchaltverlusteMesskurve>"); lossBlock != null;
-                lossBlock = tokenMap.getBlockTokenMap("<SchaltverlusteMesskurve>")) {            
+                lossBlock = tokenMap.getBlockTokenMap("<SchaltverlusteMesskurve>")) {
             SwitchingLossCurve newCurve = new SwitchingLossCurve(-1, -1);
             if(needClearSwitchCurves) {
                 _messkurvePvSWITCH.clear();
@@ -244,14 +244,14 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
 
         _onLossesLookupTable = DetailedLossLookupTable.fabric(_messkurvePvSWITCH, 1);
         _offLossesLookupTable = DetailedLossLookupTable.fabric(_messkurvePvSWITCH, 2);
-        
+
         for (TokenMap lossBlock = tokenMap.getBlockTokenMap("<LeitverlusteMesskurve>"); lossBlock != null;
                 lossBlock = tokenMap.getBlockTokenMap("<LeitverlusteMesskurve>")) {
             LeitverlusteMesskurve newCurve = new LeitverlusteMesskurve(-1);
             _messkurvePvCOND.add(newCurve);
-            newCurve.importASCII(lossBlock);  // Initialisierung der entsprechenden gemessenen Kurve            
+            newCurve.importASCII(lossBlock);  // Initialisierung der entsprechenden gemessenen Kurve
         }
-        
+
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
 
         datnamGemesseneVerluste = newLossFile.getCurrentAbsolutePath();
@@ -268,13 +268,13 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
     }
 
     public void initLossFile() {
-        if (lossFileHashValue != 0) {            
-            try {                
+        if (lossFileHashValue != 0) {
+            try {
                 GeckoFile detailedLossFile = _fileAccessor.getFile(lossFileHashValue);
                 leseDetailVerlusteVonDatei(detailedLossFile);
             } catch (FileNotFoundException e) {
                 //this means this is probably an old .ipes file without a valid hash key for the GeckoFile (i.e. saved in an older version)
-                //here try to recover from the old file name                
+                //here try to recover from the old file name
                 readLossesFromFileAndSetDetailedLossType(datnamGemesseneVerluste);
             }
         }
@@ -309,7 +309,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
 
     public boolean schreibeDetailVerlusteAufDatei(final String fkaku, final List<SwitchingLossCurve> messkurvePvSWITCH,
             final List<LeitverlusteMesskurve> messkurvePvCOND, final GeckoFile.StorageType storageType) {
-        //added boolean flag "external" - true if losses always looked up from external file, 
+        //added boolean flag "external" - true if losses always looked up from external file,
         // false if loss file is to be saved with .ipes file
 
         StringBuffer ascii = new StringBuffer();
@@ -324,12 +324,12 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             curve.exportASCII(ascii);
         }
         GeckoFile newLossFile = null;
-        
+
         //
         try {
             // jetzt wird 'ascii' in eine Datei geschrieben -->
             //
-            // Plain-Test Variante in ASCII --> 
+            // Plain-Test Variante in ASCII -->
             /// BufferedWriter out= new BufferedWriter(new FileWriter(fkaku));
             //--------
             File lossesFile;
@@ -439,23 +439,23 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
                 _temperature = DEFAULT_REFERENCE_VOLTAGE;
             } else {
                 _temperature = temperature;
-            }            
+            }
             super.calcLosses(current, temperature, deltaT);
         }
 
         @Override
-        double calcConductionLoss() {          
-            return _conductionTable.getInterpolatedXValue(_temperature, _current) * _current;                        
+        double calcConductionLoss() {
+            return _conductionTable.getInterpolatedXValue(_temperature, _current) * _current;
         }
 
         @Override
         double calcTurnOnSwitchingLoss() {
-            return _onLossesLookupTable.getInterpolatedYValue(_temperature, _current) / _deltaT;                        
+            return _onLossesLookupTable.getInterpolatedYValue(_temperature, _current) / _deltaT;
         }
 
         @Override
         double calcTurnOffSwitchingLoss() {
-            return _offLossesLookupTable.getInterpolatedYValue(_temperature, _oldCurrent) / _deltaT;                                    
+            return _offLossesLookupTable.getInterpolatedYValue(_temperature, _oldCurrent) / _deltaT;
         }
 
         @Override

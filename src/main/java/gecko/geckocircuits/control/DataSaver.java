@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -60,12 +60,12 @@ public final class DataSaver extends Observable implements Observer {
         final Thread runThread = new Thread(_saveRunnable);
         runThread.start();
     }
-    
+
     public void doManualSaveBlocking() {
         if(_data.getContainerStatus() == ContainerStatus.RUNNING) {
             throw new RuntimeException("Error: blocking save can only be initiated when simulation has stopped.");
         }
-        
+
         if(_regler._saveModus != ReglerSaveData.SaveModus.MANUAL) {
             throw new RuntimeException("Error: Data export block must be set to \"Save manually.\"");
         }
@@ -290,10 +290,10 @@ public final class DataSaver extends Observable implements Observer {
             _settings.normalizeSelectedSignalLists();
             final List<String> originalNames = _settings.getSelectedNames();
             final List<Integer> indices = _settings.getSelectedSignalIndices();
-            
-            SignalValidator.ValidationResult result = 
+
+            SignalValidator.ValidationResult result =
                 _signalValidator.validateSignals(originalNames, indices, _data);
-            
+
             // Apply corrections
             if (result.hasCorrections()) {
                 // Re-validate after corrections to update indices
@@ -305,14 +305,14 @@ public final class DataSaver extends Observable implements Observer {
                     }
                 }
             }
-            
+
             // Check if validation failed
             if (!result.isValid()) {
                 // Remove invalid signals and throw exception
                 for (int i = originalNames.size() - 1; i >= 0; i--) {
                     String name = originalNames.get(i);
                     int index = i < indices.size() ? indices.get(i) : -1;
-                    if (index < 0 || index >= _data.getRowLength() || 
+                    if (index < 0 || index >= _data.getRowLength() ||
                         !_data.getSignalName(index).equals(name)) {
                         _settings.removeSignal(i);
                     }

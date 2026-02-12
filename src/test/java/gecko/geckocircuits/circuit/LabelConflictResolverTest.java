@@ -43,7 +43,7 @@ public class LabelConflictResolverTest {
     public void testHasLabelConflict_NoConflict() {
         List<String> existing = Arrays.asList("a", "b", "c");
         List<String> copied = Arrays.asList("d", "e", "f");
-        
+
         assertFalse("Should not detect conflict", resolver.hasLabelConflict(existing, copied));
     }
 
@@ -51,7 +51,7 @@ public class LabelConflictResolverTest {
     public void testHasLabelConflict_WithConflict() {
         List<String> existing = Arrays.asList("a", "b", "c");
         List<String> copied = Arrays.asList("b", "d");
-        
+
         assertTrue("Should detect conflict on 'b'", resolver.hasLabelConflict(existing, copied));
     }
 
@@ -59,7 +59,7 @@ public class LabelConflictResolverTest {
     public void testHasLabelConflict_EmptyExisting() {
         List<String> existing = Collections.emptyList();
         List<String> copied = Arrays.asList("a", "b");
-        
+
         assertFalse("Empty existing should have no conflicts", resolver.hasLabelConflict(existing, copied));
     }
 
@@ -67,21 +67,21 @@ public class LabelConflictResolverTest {
     public void testHasLabelConflict_EmptyCopied() {
         List<String> existing = Arrays.asList("a", "b");
         List<String> copied = Collections.emptyList();
-        
+
         assertFalse("Empty copied should have no conflicts", resolver.hasLabelConflict(existing, copied));
     }
 
     @Test
     public void testHasLabelConflict_NullExisting() {
         List<String> copied = Arrays.asList("a", "b");
-        
+
         assertFalse("Null existing should have no conflicts", resolver.hasLabelConflict(null, copied));
     }
 
     @Test
     public void testHasLabelConflict_NullCopied() {
         List<String> existing = Arrays.asList("a", "b");
-        
+
         assertFalse("Null copied should have no conflicts", resolver.hasLabelConflict(existing, null));
     }
 
@@ -89,7 +89,7 @@ public class LabelConflictResolverTest {
     public void testHasLabelConflict_IgnoresEmptyLabels() {
         List<String> existing = Arrays.asList("a", "", "b");
         List<String> copied = Arrays.asList("", "c");
-        
+
         assertFalse("Empty labels should not cause conflicts", resolver.hasLabelConflict(existing, copied));
     }
 
@@ -97,7 +97,7 @@ public class LabelConflictResolverTest {
     public void testHasLabelConflict_AllSame() {
         List<String> existing = Arrays.asList("a", "b");
         List<String> copied = Arrays.asList("a", "b");
-        
+
         assertTrue("Identical lists should conflict", resolver.hasLabelConflict(existing, copied));
     }
 
@@ -107,7 +107,7 @@ public class LabelConflictResolverTest {
     public void testFindNonConflictingSuffixIndex_NoConflicts() {
         List<String> copied = Arrays.asList("a", "b");
         List<String> existing = Arrays.asList("c", "d");
-        
+
         assertEquals("Should return 0 when no conflicts", 0, resolver.findNonConflictingSuffixIndex(copied, existing));
     }
 
@@ -115,7 +115,7 @@ public class LabelConflictResolverTest {
     public void testFindNonConflictingSuffixIndex_ConflictAtZero() {
         List<String> copied = Arrays.asList("a", "b");
         List<String> existing = Arrays.asList("a.0", "c");
-        
+
         assertEquals("Should return 1 when .0 conflicts", 1, resolver.findNonConflictingSuffixIndex(copied, existing));
     }
 
@@ -123,7 +123,7 @@ public class LabelConflictResolverTest {
     public void testFindNonConflictingSuffixIndex_MultipleConflicts() {
         List<String> copied = Arrays.asList("x");
         List<String> existing = Arrays.asList("x.0", "x.1", "x.2");
-        
+
         assertEquals("Should return 3 to skip all conflicts", 3, resolver.findNonConflictingSuffixIndex(copied, existing));
     }
 
@@ -131,21 +131,21 @@ public class LabelConflictResolverTest {
     public void testFindNonConflictingSuffixIndex_EmptyCopied() {
         List<String> copied = Collections.emptyList();
         List<String> existing = Arrays.asList("a", "b");
-        
+
         assertEquals("Empty copied should return 0", 0, resolver.findNonConflictingSuffixIndex(copied, existing));
     }
 
     @Test
     public void testFindNonConflictingSuffixIndex_NullCopied() {
         List<String> existing = Arrays.asList("a", "b");
-        
+
         assertEquals("Null copied should return 0", 0, resolver.findNonConflictingSuffixIndex(null, existing));
     }
 
     @Test
     public void testFindNonConflictingSuffixIndex_NullExisting() {
         List<String> copied = Arrays.asList("a", "b");
-        
+
         assertEquals("Null existing should return 0", 0, resolver.findNonConflictingSuffixIndex(copied, null));
     }
 
@@ -153,7 +153,7 @@ public class LabelConflictResolverTest {
     public void testFindNonConflictingSuffixIndex_SkipsEmptyLabels() {
         List<String> copied = Arrays.asList("", "a");
         List<String> existing = Arrays.asList("a.0");
-        
+
         assertEquals("Should consider only non-empty labels", 1, resolver.findNonConflictingSuffixIndex(copied, existing));
     }
 
@@ -187,7 +187,7 @@ public class LabelConflictResolverTest {
     public void testRemoveDuplicates_NoDuplicates() {
         List<String> labels = new ArrayList<>(Arrays.asList("a", "b", "c"));
         resolver.removeDuplicates(labels);
-        
+
         assertEquals(3, labels.size());
         assertEquals(Arrays.asList("a", "b", "c"), labels);
     }
@@ -196,7 +196,7 @@ public class LabelConflictResolverTest {
     public void testRemoveDuplicates_WithDuplicates() {
         List<String> labels = new ArrayList<>(Arrays.asList("a", "b", "a", "c", "b"));
         resolver.removeDuplicates(labels);
-        
+
         assertEquals(3, labels.size());
         assertEquals(Arrays.asList("a", "b", "c"), labels);
     }
@@ -205,7 +205,7 @@ public class LabelConflictResolverTest {
     public void testRemoveDuplicates_AllSame() {
         List<String> labels = new ArrayList<>(Arrays.asList("x", "x", "x"));
         resolver.removeDuplicates(labels);
-        
+
         assertEquals(1, labels.size());
         assertEquals("x", labels.get(0));
     }
@@ -214,7 +214,7 @@ public class LabelConflictResolverTest {
     public void testRemoveDuplicates_EmptyList() {
         List<String> labels = new ArrayList<>();
         resolver.removeDuplicates(labels);
-        
+
         assertTrue("Empty list should stay empty", labels.isEmpty());
     }
 
@@ -227,7 +227,7 @@ public class LabelConflictResolverTest {
     public void testRemoveDuplicates_SingleElement() {
         List<String> labels = new ArrayList<>(Arrays.asList("single"));
         resolver.removeDuplicates(labels);
-        
+
         assertEquals(1, labels.size());
     }
 
@@ -237,9 +237,9 @@ public class LabelConflictResolverTest {
     public void testGetConflictingLabels_MultipleConflicts() {
         List<String> existing = Arrays.asList("a", "b", "c", "d");
         List<String> copied = Arrays.asList("b", "c", "e");
-        
+
         List<String> conflicts = resolver.getConflictingLabels(existing, copied);
-        
+
         assertEquals(2, conflicts.size());
         assertTrue(conflicts.contains("b"));
         assertTrue(conflicts.contains("c"));
@@ -249,9 +249,9 @@ public class LabelConflictResolverTest {
     public void testGetConflictingLabels_NoConflicts() {
         List<String> existing = Arrays.asList("a", "b");
         List<String> copied = Arrays.asList("c", "d");
-        
+
         List<String> conflicts = resolver.getConflictingLabels(existing, copied);
-        
+
         assertTrue("Should be empty when no conflicts", conflicts.isEmpty());
     }
 
@@ -259,7 +259,7 @@ public class LabelConflictResolverTest {
     public void testGetConflictingLabels_NullInput() {
         List<String> conflicts1 = resolver.getConflictingLabels(null, Arrays.asList("a"));
         List<String> conflicts2 = resolver.getConflictingLabels(Arrays.asList("a"), null);
-        
+
         assertTrue(conflicts1.isEmpty());
         assertTrue(conflicts2.isEmpty());
     }
@@ -331,7 +331,7 @@ public class LabelConflictResolverTest {
     public void testHasOrphanedCouplingReference_NoOrphans() {
         String[] couplingLabels = {"a", "b"};
         Set<String> remaining = new HashSet<>(Arrays.asList("a", "b", "c"));
-        
+
         assertFalse(resolver.hasOrphanedCouplingReference(couplingLabels, remaining));
     }
 
@@ -339,7 +339,7 @@ public class LabelConflictResolverTest {
     public void testHasOrphanedCouplingReference_WithOrphans() {
         String[] couplingLabels = {"a", "b"};
         Set<String> remaining = new HashSet<>(Arrays.asList("a", "c"));
-        
+
         assertTrue("'b' is orphaned", resolver.hasOrphanedCouplingReference(couplingLabels, remaining));
     }
 
@@ -347,7 +347,7 @@ public class LabelConflictResolverTest {
     public void testHasOrphanedCouplingReference_EmptyCouplingLabels() {
         String[] couplingLabels = {};
         Set<String> remaining = new HashSet<>(Arrays.asList("a", "b"));
-        
+
         assertFalse(resolver.hasOrphanedCouplingReference(couplingLabels, remaining));
     }
 
@@ -361,7 +361,7 @@ public class LabelConflictResolverTest {
     public void testHasOrphanedCouplingReference_IgnoresEmptyLabels() {
         String[] couplingLabels = {"", "a", ""};
         Set<String> remaining = new HashSet<>(Arrays.asList("a"));
-        
+
         assertFalse("Empty labels should be ignored", resolver.hasOrphanedCouplingReference(couplingLabels, remaining));
     }
 
@@ -372,14 +372,14 @@ public class LabelConflictResolverTest {
         // Simulating a typical copy operation where labels need renaming
         List<String> existingLabels = Arrays.asList("node1", "node2", "gnd");
         List<String> copiedLabels = new ArrayList<>(Arrays.asList("node1", "node2", "out"));
-        
+
         // Check conflict
         assertTrue(resolver.hasLabelConflict(existingLabels, copiedLabels));
-        
+
         // Find non-conflicting suffix
         int suffix = resolver.findNonConflictingSuffixIndex(copiedLabels, existingLabels);
         assertEquals(0, suffix); // .0 doesn't conflict
-        
+
         // Rename
         List<String> renamed = new ArrayList<>();
         for (String label : copiedLabels) {
@@ -387,9 +387,9 @@ public class LabelConflictResolverTest {
                 renamed.add(resolver.renameWithSuffix(label, suffix));
             }
         }
-        
+
         assertEquals(Arrays.asList("node1.0", "node2.0", "out.0"), renamed);
-        
+
         // Verify no more conflicts
         assertFalse(resolver.hasLabelConflict(existingLabels, renamed));
     }
@@ -399,10 +399,10 @@ public class LabelConflictResolverTest {
         // Scenario: user has already copied once, now copying again
         List<String> existingLabels = Arrays.asList("node1", "node1.0", "node1.1");
         List<String> copiedLabels = Arrays.asList("node1");
-        
+
         int suffix = resolver.findNonConflictingSuffixIndex(copiedLabels, existingLabels);
         assertEquals("Should find .2 as first available", 2, suffix);
-        
+
         String renamed = resolver.renameWithSuffix("node1", suffix);
         assertEquals("node1.2", renamed);
     }

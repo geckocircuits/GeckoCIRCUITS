@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,7 +25,7 @@ import org.junit.Assert;
 
 
 /**
- * Comment: The Native C Test Libraries were compiled on a Windows x86_64 machine 
+ * Comment: The Native C Test Libraries were compiled on a Windows x86_64 machine
  *          with GCC. To use them, you need to run the JUnit test under Windows 64bit.
  *          Otherwise, please recompile them and if necessary edit the fileName.
  * @author DIEHL Controls Ricardo Richter
@@ -36,12 +36,12 @@ public class NativeCTest {
     private NativeCBlock _nativeCBlock;
     private NativeCLibraryFile _libFile;
     String _libFilePath, _libName;
-    
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
+
     /**
-     * 
+     *
      * @param fileName  Name of Native Library
      * @return the absolute Path to the Native Library in the test directory
      */
@@ -66,7 +66,7 @@ public class NativeCTest {
                 + fileName;
         return absPath;
     }
-    
+
     @Before
     public void setUp() {
         try {
@@ -94,14 +94,14 @@ public class NativeCTest {
             _libFile = null;
         }
     }
-    
+
     @Test
     public void testNativeCLibraryFile_NotFound() throws FileNotFoundException {
         thrown.expect(FileNotFoundException.class);
         thrown.expectMessage("Could not find Library File");
         NativeCLibraryFile testLibFile = new NativeCLibraryFile( "..\\.dll");
     }
-    
+
     @Test
     public void testNativeCLibraryFile_Found() {
         org.junit.Assume.assumeTrue("Native library not available for this platform", _libFile != null);
@@ -115,7 +115,7 @@ public class NativeCTest {
             Assert.fail("Test File was not found!");
         }
     }
-    
+
     @Test
     public void testLoadAndExecuteNativeLibrary() {
         org.junit.Assume.assumeTrue("Native library not available for this platform", _libFile != null);

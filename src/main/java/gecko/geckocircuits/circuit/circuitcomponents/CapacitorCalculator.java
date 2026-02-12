@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -58,7 +58,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
         //double aW = _lkCap.getParameter()[6] / dt;  //  +C/dt
 
         if (initCapacitor && _initialValue != 0) {
-            initVoltageSource = new VoltageSourceCalculator(-_initialValue, matrixIndices[0], 
+            initVoltageSource = new VoltageSourceCalculator(-_initialValue, matrixIndices[0],
                     matrixIndices[1], _z, _componentNumber, _parent);
             initVoltageSource.stampMatrixA(matrix, dt);
         } else {
@@ -85,13 +85,13 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
         //double bW = (_lkCap.getParameter()[6] / dt) * (pALT[matrixIndices[0]] - pALT[matrixIndices[1]])
         //        + fac * _lkCap.getParameter()[10];
 
-        // above is the nonlinear implementation        
+        // above is the nonlinear implementation
         if (initCapacitor && _initialValue != 0) {
             initVoltageSource.stampVectorB(b, t, dt);
         } else {
             double bW = 0;
             if (_isNonLinear) {
-                //bW = (_capacitance / dt) * (_potential1 - _potential2) + _newOldCapRatio*_oldCurrent; 
+                //bW = (_capacitance / dt) * (_potential1 - _potential2) + _newOldCapRatio*_oldCurrent;
                 if (_solverType == SolverType.SOLVER_BE) {
                     bW = _capacitance / dt * (_potential1 - _potential2) + _newOldCapRatio * _oldCurrent;
                 } else if (_solverType == SolverType.SOLVER_TRZ) {
@@ -100,7 +100,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
                     bW = _capacitance / dt * (2 * (_potential1 - _potential2) - 0.5 * (_potential1 - _potential2)) + _newOldCapRatio * _oldCurrent;
                 }
             } else {
-                //bW = (_capacitance /*_lkCap.getParameter()[0]*/ / dt) * (_potential1 - _potential2); 
+                //bW = (_capacitance /*_lkCap.getParameter()[0]*/ / dt) * (_potential1 - _potential2);
                 if (_solverType == SolverType.SOLVER_BE) {
                     bW = _capacitance / dt * (_potential1 - _potential2);
                 } else if (_solverType == SolverType.SOLVER_TRZ) {

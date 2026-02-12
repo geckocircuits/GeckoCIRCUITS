@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -67,7 +67,7 @@ public abstract class AbstractDiagram extends JPanel {
         diagramTypeString = diagramMap.readDataLine("diagramType", diagramTypeString);
 
         AbstractDiagram returnValue;
-        returnValue = new DiagramCurve(grafer); // default-diagram                               
+        returnValue = new DiagramCurve(grafer); // default-diagram
 
         final TokenMap diagramSettingsMap = diagramMap.getBlockTokenMap("<diagramSettings>");
         if (diagramSettingsMap != null) {
@@ -106,7 +106,7 @@ public abstract class AbstractDiagram extends JPanel {
     }
 
     AbstractDiagram(final GraferV4 grafer, final DiagramSettings diagramSettings) {
-        super();        
+        super();
         this.setBorder(null);
         _diagramSettings = diagramSettings;
         _yAxis1._axisMinMax.setNiceScale(true);
@@ -115,10 +115,10 @@ public abstract class AbstractDiagram extends JPanel {
 
         _labelPanel.setOpaque(false);
         addMouseListeners();
-        
+
         addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized(final ComponentEvent evt) {                
+            public void componentResized(final ComponentEvent evt) {
                 loadDataFromContainer(_grafer.getDataContainer());
             }
         });
@@ -150,15 +150,15 @@ public abstract class AbstractDiagram extends JPanel {
             ascii.append("\n<\\CurveDiagram>\n");
         }
 
-    }            
+    }
 
     public void setAllCurvesWithBars(final int[] indices) {
         for(int index : indices) {
-            AbstractCurve curve = _curves.get(index);            
+            AbstractCurve curve = _curves.get(index);
             curve._curveSettings._lineType = GeckoLineType.BAR;
         }
     }
-    
+
 
     private class LabelPanel extends JPanel {
 
@@ -189,7 +189,7 @@ public abstract class AbstractDiagram extends JPanel {
         }
 
         @Override
-        protected void paintComponent(final Graphics graphics) {            
+        protected void paintComponent(final Graphics graphics) {
             final Graphics2D g2d = (Graphics2D) graphics;
             super.paintComponent(graphics);
 
@@ -198,13 +198,13 @@ public abstract class AbstractDiagram extends JPanel {
                     curve.getCurveLabel().drawLabel(g2d);
                 }
             }
-            
+
             graphics.setFont(GlobalFonts.foGRAFER);
             graphics.setColor(_xAxis._axisSettings.getColor().getJavaColor());
             if(_grafer._manager.getDiagrams().get(_grafer._manager.getDiagrams().size()-1) == AbstractDiagram.this) {
                 graphics.drawString(_grafer.xAxisLabel, 0, this.getHeight() - graphics.getFontMetrics().getHeight()/2+1);
             }
-            
+
         }
     };
 
@@ -252,7 +252,7 @@ public abstract class AbstractDiagram extends JPanel {
             _yAxis2.drawAxis(g2d, this instanceof DiagramSignal, _xAxis);
         }
 
-        g2d.setStroke(GeckoLineStyle.SOLID_PLAIN.stroke());  // wieder auf 'default' setzen                                    
+        g2d.setStroke(GeckoLineStyle.SOLID_PLAIN.stroke());  // wieder auf 'default' setzen
     }
 
     public boolean checkForY2Axis() {
@@ -302,12 +302,12 @@ public abstract class AbstractDiagram extends JPanel {
         return _curves.get(index);
     }
 
-    public void setCurves(final List<AbstractCurve> newCurves) {        
-        _curves = newCurves;                
+    public void setCurves(final List<AbstractCurve> newCurves) {
+        _curves = newCurves;
     }
 
-    public void setAxisPositions(final boolean anyY2Axis) {                
-        if (getWidth() == 0) {            
+    public void setAxisPositions(final boolean anyY2Axis) {
+        if (getWidth() == 0) {
             return;
         }
 
@@ -322,7 +322,7 @@ public abstract class AbstractDiagram extends JPanel {
         } else {
             _dxInRight = DX_IN_RIGHT_DEF;
         }
-        
+
         _xAxis.setAxisLengthPixel(getWidth() - (DX_IN_LINKS + _dxInRight));
 
         _xAxis._axisOriginPixel.x = DX_IN_LINKS;
@@ -354,7 +354,7 @@ public abstract class AbstractDiagram extends JPanel {
 
     private HiLoData calculateAutoScaleYMinMax(final AxisConnection axisConnection,
             final AbstractDataContainer worksheetDaten) {
-        
+
         if (worksheetDaten == null) {
             return HiLoData.hiLoDataFabric(-1, 1);
         }
@@ -363,8 +363,8 @@ public abstract class AbstractDiagram extends JPanel {
             final int index = _curves.indexOf(curve);
             if (curve.getAxisConnection() == axisConnection) {
                 final HiLoData addValue = worksheetDaten.getAbsoluteMinMaxValue(index);
-                assert addValue != null : index;                
-                minMaxValue = HiLoData.merge(addValue, minMaxValue);                
+                assert addValue != null : index;
+                minMaxValue = HiLoData.merge(addValue, minMaxValue);
             }
         }
         return minMaxValue;
@@ -374,16 +374,16 @@ public abstract class AbstractDiagram extends JPanel {
         final HiLoData minMaxValue1 = calculateAutoScaleYMinMax(AxisConnection.ZUORDNUNG_Y, worksheetDaten);
         final HiLoData minMaxValue2 = calculateAutoScaleYMinMax(AxisConnection.ZUORDNUNG_Y2, worksheetDaten);
 
-        if (minMaxValue1 != null) {            
+        if (minMaxValue1 != null) {
             _yAxis1._axisMinMax.setGlobalAutoScaleValues(minMaxValue1);
         }
 
         if (minMaxValue2 != null) {
-            _yAxis2._axisMinMax.setGlobalAutoScaleValues(minMaxValue2);                        
+            _yAxis2._axisMinMax.setGlobalAutoScaleValues(minMaxValue2);
         }
 
     }
-       
+
 
     public void loadDataFromContainer(final AbstractDataContainer container) {
         boolean forceLoad;
@@ -394,13 +394,13 @@ public abstract class AbstractDiagram extends JPanel {
         if (container.getMaximumTimeIndex(0) > 0) {
             calculateAutoScaleYBothYAxis(container);
         }
-        
+
         for (int i = 0; i < this._curves.size(); i++) {
             AbstractCurve curve = this._curves.get(i);
             if (curve.getAxisConnection() != AxisConnection.ZUORDNUNG_NIX) {
                 forceLoad = (this._grafer._manager.getAllScopeSignals().get(curve.getValueDataIndex()) instanceof ExternalSignal);
-                try {                    
-                    curve._curvePainter.loadRequiredData(container, forceLoad);                    
+                try {
+                    curve._curvePainter.loadRequiredData(container, forceLoad);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -409,7 +409,7 @@ public abstract class AbstractDiagram extends JPanel {
     }
 
     @Override
-    protected void paintComponent(final Graphics graphics) {        
+    protected void paintComponent(final Graphics graphics) {
         super.paintComponent(graphics);
         final Graphics2D g2d = (Graphics2D) graphics;
         drawBorder(g2d);
@@ -429,7 +429,7 @@ public abstract class AbstractDiagram extends JPanel {
 
     }
 
-    private void drawCurves(final Graphics2D g2d, final SliderContainer slider) {        
+    private void drawCurves(final Graphics2D g2d, final SliderContainer slider) {
         int labelIndex = 0;
         for (AbstractCurve curve : _curves) {
             if (curve.getAxisConnection() == AxisConnection.ZUORDNUNG_NIX) {

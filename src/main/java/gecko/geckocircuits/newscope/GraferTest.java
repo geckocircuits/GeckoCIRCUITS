@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,15 +17,15 @@ package gecko.geckocircuits.newscope;
 import java.awt.Dimension;
 
 public class GraferTest extends javax.swing.JFrame {
-    private final GraferV4 _grafer;    
+    private final GraferV4 _grafer;
 
-    public GraferTest() {        
-        ScopeSettings settings = new ScopeSettings();        
+    public GraferTest() {
+        ScopeSettings settings = new ScopeSettings();
         _grafer = new GraferV4(settings);
-        _grafer.setPreferredSize(new Dimension(600, 400));                
-        _grafer.setSize(new Dimension(600, 400));                
-        _grafer.createInitialAndSingleDiagram(false, false, 1);                                
-        initComponents();        
+        _grafer.setPreferredSize(new Dimension(600, 400));
+        _grafer.setSize(new Dimension(600, 400));
+        _grafer.createInitialAndSingleDiagram(false, false, 1);
+        initComponents();
     }
 
     /**
@@ -62,7 +62,7 @@ public class GraferTest extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

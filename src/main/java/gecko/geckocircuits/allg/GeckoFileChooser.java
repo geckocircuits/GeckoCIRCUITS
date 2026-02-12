@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,8 +19,8 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 public final class GeckoFileChooser {
-    
-    
+
+
     private final JFileChooser _fileChooser;
     private static File _lastUsedDirectory = null;
     private final String _fileEnding;
@@ -30,7 +30,7 @@ public final class GeckoFileChooser {
     private GeckoFileChooser(final String ending, final File currentDirectory,
             final String fileDescription) {
         _fileChooser = new JFileChooser(currentDirectory);
-        
+
         if (ending != null) {
             assert ending.startsWith(".");
 
@@ -52,7 +52,7 @@ public final class GeckoFileChooser {
                     return fileDescription;
                 }
             };
-            _fileChooser.setAcceptAllFileFilterUsed(false);            
+            _fileChooser.setAcceptAllFileFilterUsed(false);
             _fileChooser.addChoosableFileFilter(filter);
 
         }
@@ -75,26 +75,26 @@ public final class GeckoFileChooser {
         if(_fileEnding == null) {
             return _fileChooser.getSelectedFile();
         }
-        
+
         String fileName = _fileChooser.getSelectedFile().getAbsolutePath();
         if (!fileName.endsWith(_fileEnding)) {
             fileName += _fileEnding;
         }
         return new File(fileName);
     }
-    
+
     public static GeckoFileChooser createOpenFileChooser(final String ending,
             final String fileDescription, final Component windowParent, final File currentDirectory) {
-        final File checkedCurrentDirectory = calculateCheckedCurrentDirectory(currentDirectory);                
+        final File checkedCurrentDirectory = calculateCheckedCurrentDirectory(currentDirectory);
         final GeckoFileChooser returnValue = new GeckoFileChooser(ending, checkedCurrentDirectory, fileDescription);
         final int result = returnValue._fileChooser.showOpenDialog(windowParent);
-        returnValue.processResult(result);        
+        returnValue.processResult(result);
         return returnValue;
     }
-    
+
     public static GeckoFileChooser createSimpleOpenFileChooser(final String ending,
             final Component windowParent) {
-        return createOpenFileChooser(ending, ending, windowParent, null);        
+        return createOpenFileChooser(ending, ending, windowParent, null);
     }
 
     public static GeckoFileChooser createSimpleSaveFileChooser(final String ending, final Component windowParent) {
@@ -102,18 +102,18 @@ public final class GeckoFileChooser {
     }
 
     public static GeckoFileChooser createSaveFileChooser(final String ending,
-            final String fileDescription, final Component windowParent, final File currentDirectory) {        
+            final String fileDescription, final Component windowParent, final File currentDirectory) {
 
-        File checkedCurrentDirectory = calculateCheckedCurrentDirectory(currentDirectory);        
+        File checkedCurrentDirectory = calculateCheckedCurrentDirectory(currentDirectory);
         final GeckoFileChooser returnValue = new GeckoFileChooser(ending, checkedCurrentDirectory, fileDescription);
         final int result = returnValue._fileChooser.showSaveDialog(windowParent);
-        returnValue.processResult(result);        
+        returnValue.processResult(result);
         return returnValue;
     }
-    
+
     public static File calculateCheckedCurrentDirectory(final File currentDirectory) {
         File checkedCurrentDirectory = currentDirectory;
-        
+
         if (currentDirectory == null || !currentDirectory.exists()) {
             if (_lastUsedDirectory != null && _lastUsedDirectory.exists()) {
                 checkedCurrentDirectory = _lastUsedDirectory;
@@ -137,5 +137,5 @@ public final class GeckoFileChooser {
                 }
         }
     }
-    
+
 }

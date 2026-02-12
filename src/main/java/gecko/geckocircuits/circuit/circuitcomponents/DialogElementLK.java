@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,24 +34,24 @@ import javax.swing.JLabel;
  */
 public abstract class DialogElementLK<T extends AbstractCircuitBlockInterface> extends DialogCircuitComponent<T> {
 
-    private GridBagConstraints gbc = new GridBagConstraints();                
+    private GridBagConstraints gbc = new GridBagConstraints();
 
     DialogElementLK(final T elementLK) {
-        super(GeckoSim._win, true, elementLK);                        
-        getContentPane().setLayout(new BorderLayout());        
-    }            
+        super(GeckoSim._win, true, elementLK);
+        getContentPane().setLayout(new BorderLayout());
+    }
 
     abstract void baueGUIIndividual();
 
     @Override
-    public void baueGUI() {        
+    public void baueGUI() {
         con = this.getContentPane();
-        con.setLayout(new BorderLayout());        
-        gbc.fill = GridBagConstraints.BOTH;                        
-        con.add(jPanelName, BorderLayout.NORTH);                         
+        con.setLayout(new BorderLayout());
+        gbc.fill = GridBagConstraints.BOTH;
+        con.add(jPanelName, BorderLayout.NORTH);
         baueGUIIndividual();
-        con.add(jPanelButtonOkCancel, BorderLayout.SOUTH);        
-    }   
+        con.add(jPanelButtonOkCancel, BorderLayout.SOUTH);
+    }
 
     static Component createControlLabelCombo(final AbstractCircuitBlockInterface elementLK) {
         Component returnValue = null;
@@ -84,5 +84,5 @@ public abstract class DialogElementLK<T extends AbstractCircuitBlockInterface> e
             returnValue = labelMissing;
         }
         return returnValue;
-    }                
+    }
 }

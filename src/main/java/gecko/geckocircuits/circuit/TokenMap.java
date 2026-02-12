@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -45,7 +45,7 @@ public final class TokenMap {
             _specialTokens.put("sp", new SpecialPair("<ElementSPECIAL>", "<\\ElementSPECIAL>"));
             _specialTokens.put("eTH", new SpecialPair("<ElementTHERM>", "<\\ElementTHERM>"));
             _specialTokens.put("c", new SpecialPair("<ElementCONTROL>", "<\\ElementCONTROL>"));
-            _specialTokens.put("GeckoFileManager", new SpecialPair("<GeckoFileManager>", "<\\GeckoFileManager>"));            
+            _specialTokens.put("GeckoFileManager", new SpecialPair("<GeckoFileManager>", "<\\GeckoFileManager>"));
         }
         makeTokenMap(ascii, makeSpecialPairs);
     }
@@ -94,7 +94,7 @@ public final class TokenMap {
         while (readLineNumber < ascii.length) {
             final String line = ascii[readLineNumber];
             //System.out.println(readLineNumber + " " + line);
-            
+
             int spaceIndex = line.indexOf(' ');
             if (spaceIndex < 1) {
                 spaceIndex = line.length();
@@ -108,7 +108,7 @@ public final class TokenMap {
                     continue;
                 }
 
-                
+
                 final String lineToken = line.substring(0, spaceIndex);;
                 //System.out.println("line: " + line);
                 if (makeSpecialPairs) {
@@ -119,7 +119,7 @@ public final class TokenMap {
 //                        System.err.println("reading: " + ascii[readLineNumber + 0]);
 //                        System.err.println("reading: xxx " + ascii[readLineNumber + 1]);
 //                        System.err.println("reading: " + ascii[readLineNumber + 2]);
-                        
+
                         if (ascii[readLineNumber + 1].equals(pair._startToken)) {
                             final String endToken = pair._stopToken;
                             int j = readLineNumber;
@@ -139,7 +139,7 @@ public final class TokenMap {
 
                             readLineNumber = j;
                         }
-                    } 
+                    }
                 } else try {
                     if (lineToken.charAt(0) == '<' && lineToken.length() > 1 && lineToken.charAt(1) != '\\') {
                         final String endToken = "<\\" + lineToken.substring(1, lineToken.length());
@@ -176,13 +176,13 @@ public final class TokenMap {
         if (!map.containsKey(lineToken)) {
             map.put(lineToken, lineNumber);
         }
-        
+
         // This is for repairing a severe file format bug in old versions of GeckoCIRCUITS. Could maybe
         // removed in the future (current date: Octorber 2012)
         if(lineToken.equalsIgnoreCase("orientierung")) {
             map.put(lineToken, lineNumber);
         }
-        
+
     }
 
     public TokenMap getBlockMap() {
@@ -194,7 +194,7 @@ public final class TokenMap {
         }
     }
 
-    public TokenMap getSpecialBlockTokenMap(final String identifier) {        
+    public TokenMap getSpecialBlockTokenMap(final String identifier) {
         if (_specialMap.containsKey(identifier)) {
             Deque<BlockInfo> blockInfoList = _specialMap.get(identifier);
             if (blockInfoList.isEmpty()) {
@@ -266,7 +266,7 @@ public final class TokenMap {
                 shiftedStartIndex++;
             }
 
-            _startIndex = shiftedStartIndex + 1; // remove the first <token>     
+            _startIndex = shiftedStartIndex + 1; // remove the first <token>
             _stopIndex = stopIndex;
             String[] subBlock = new String[_stopIndex - _startIndex];
             for (int i = _startIndex, j = 0; i < stopIndex; i++, j++) {
@@ -281,7 +281,7 @@ public final class TokenMap {
                 shiftedStartIndex++;
             }
 
-            _startIndex = shiftedStartIndex + 1; // remove the first <token>     
+            _startIndex = shiftedStartIndex + 1; // remove the first <token>
             _stopIndex = stopIndex;
             final String[] subBlock = new String[_stopIndex - _startIndex];
             for (int i = _startIndex, j = 0; i < stopIndex; i++, j++) {
@@ -309,7 +309,7 @@ public final class TokenMap {
             final Integer lineNumber = _map.get(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
-            stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen            
+            stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
             String wert = stk.nextToken();
             if (wert.equals(ProjectData.NIX)) {
                 return "";
@@ -348,7 +348,7 @@ public final class TokenMap {
             return targetObject;
         }
     }
-    
+
     public HiLoData readDataLine(final String identifier, final HiLoData targetObject) {
         try {
             final Integer lineNumber = _map.get(identifier);
@@ -384,19 +384,19 @@ public final class TokenMap {
             return targetObject;
         }
     }
-    
+
     public List<String> readDataLineStringArray(final String identifier) {
         try {
             final Integer lineNumber = _map.get(identifier);
-            final String ascii = asciiLines[lineNumber];            
+            final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, ProjectData.SEPARATOR_ASCII_STRINGARRAY);
             stk.nextToken();  // erster Wert wird uebersprungen
-            final int numberTokens = stk.countTokens();            
+            final int numberTokens = stk.countTokens();
             List<String> wert = new ArrayList<String>();
             for (int i1 = 0; i1 < numberTokens; i1++) {
                 String token = stk.nextToken();
                 if (token.equals(ProjectData.NIX)) {
-                    wert.add("");                    
+                    wert.add("");
                 } else {
                     wert.add(token);
                 }
@@ -406,8 +406,8 @@ public final class TokenMap {
             logErrorString(identifier, ex);
             return Collections.EMPTY_LIST;
         }
-    }                
-    
+    }
+
 
     public boolean[][] readDataLine(final String identifier, final boolean[][] targetObject) {
         try {
@@ -548,7 +548,7 @@ public final class TokenMap {
         }
 
     }
-    
+
     public List<Double> readDataLineDoubleArray(final String identifier) {
         try {
             final Integer lineNumber = _map.get(identifier);
@@ -571,7 +571,7 @@ public final class TokenMap {
             return Collections.EMPTY_LIST;
         }
     }
-    
+
 
     public int[] readDataLine(final String identifier, final int[] targetObject) {
         try {
@@ -617,8 +617,8 @@ public final class TokenMap {
         }
     }
 
-    
-    
+
+
     public byte[] readDataLine(final String identifier, final byte[] targetObject) {
         try {
             final Integer lineNumber = _map.get(identifier);

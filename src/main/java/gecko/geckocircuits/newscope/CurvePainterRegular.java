@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -44,7 +44,7 @@ class CurvePainterRegular extends AbstractCurvePainter{
     final AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency);
     g2d.setComposite(alphaComposite);
     g2d.setColor(_curve._curveSettings._curveColor.getJavaColor());
-    //_curvePoints.drawPath(g2d, _startIndex);        
+    //_curvePoints.drawPath(g2d, _startIndex);
 
     final Stroke oldStroke = g2d.getStroke();
     g2d.setStroke(_curve._curveSettings._curveLineStyle.stroke());
@@ -69,29 +69,29 @@ class CurvePainterRegular extends AbstractCurvePainter{
    * get all data from the dataContainer (expensive operation!);
    */
   @Override
-  public void reLoadData(final int minimumPixel, final int maximumPixel){      
+  public void reLoadData(final int minimumPixel, final int maximumPixel){
     synchronized(this){ // do this synchronized, otherwise we will get concurrent modificationss of _allPainters.
       _allPainters.clear();
-      _allPoints.clear();        
-      loadDataRange(minimumPixel, maximumPixel);        
+      _allPoints.clear();
+      loadDataRange(minimumPixel, maximumPixel);
     }
   }
 
   @Override
-  public void loadDataRange(final int startPixel, final int stopPixel){                        
-      
+  public void loadDataRange(final int startPixel, final int stopPixel){
+
     final int pixelInterval = stopPixel - startPixel;
     if(pixelInterval > MAX_PIXEL_DRAW || pixelInterval < 0){
       return;
-    }      
-            
+    }
+
     for(int xPixel = startPixel; xPixel <= stopPixel; xPixel++){
         if(xPixel > MAX_PIXEL_DRAW) {
             return;
-        }        
-      final double x1Value = _xAxis.getValueFromPixel(xPixel - 1);        
-      final double x2Value = _xAxis.getValueFromPixel(xPixel); 
-              
+        }
+      final double x1Value = _xAxis.getValueFromPixel(xPixel - 1);
+      final double x2Value = _xAxis.getValueFromPixel(xPixel);
+
       if(x1Value == 0 && x2Value == 0){
         continue;
       }
@@ -99,13 +99,13 @@ class CurvePainterRegular extends AbstractCurvePainter{
       if(_ramData == null) {
         return;
       }
-                  
-      final Object value = _ramData.getDataValueInInterval(x1Value, x2Value, _curve.getValueDataIndex());            
-      
+
+      final Object value = _ramData.getDataValueInInterval(x1Value, x2Value, _curve.getValueDataIndex());
+
       if(value == null){
         continue;
       }
-      
+
       AbstractCurvePixelPainter previousValue = null;
       if(_allPainters.size() > 0){
         previousValue = _allPainters.get(_allPainters.size() - 1);
@@ -122,15 +122,15 @@ class CurvePainterRegular extends AbstractCurvePainter{
           default:
               assert false;
       }
-      
-                                                                                                       
+
+
 
       addValueToAllPoints(value, xPixel);
       synchronized(this){
         _allPainters.add(pixelPainter);
-      }      
+      }
     }
-      
+
   }
 
   @Override

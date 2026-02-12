@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,14 +20,14 @@ import gecko.geckocircuits.newscope.NewScope;
  *
  * @author andy
  */
-public class FourierPlotFrame extends javax.swing.JFrame {    
+public class FourierPlotFrame extends javax.swing.JFrame {
 
     public FourierPlotFrame(final NewScope newScope, final double baseFrequency, final double[][][] erg) {
-        initComponents();        
+        initComponents();
         jPanelFourier1.insertData(baseFrequency, erg);
         newScope.additionalPanel(jPanelFourier1._graferNew);
     }
-    
+
 
     /**
      * This method is called from within the constructor to initialize the form.

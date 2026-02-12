@@ -333,7 +333,7 @@ public class IGBTStamperTest {
     public void testCreateDefaultParameters_GateOn() {
         double[] params = IGBTStamper.createDefaultParameters(1.0);
 
-        assertEquals("rCurrent should be rOn when gate=1", 
+        assertEquals("rCurrent should be rOn when gate=1",
                      IGBTStamper.DEFAULT_R_ON, params[IGBTStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("uForward", IGBTStamper.DEFAULT_U_FORWARD, params[IGBTStamper.PARAM_U_FORWARD], TOLERANCE);
         assertEquals("gate", 1.0, params[IGBTStamper.PARAM_GATE], TOLERANCE);
@@ -343,7 +343,7 @@ public class IGBTStamperTest {
     public void testCreateDefaultParameters_GateOff() {
         double[] params = IGBTStamper.createDefaultParameters(0.0);
 
-        assertEquals("rCurrent should be rOff when gate=0", 
+        assertEquals("rCurrent should be rOff when gate=0",
                      IGBTStamper.DEFAULT_R_OFF, params[IGBTStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("gate", 0.0, params[IGBTStamper.PARAM_GATE], TOLERANCE);
     }

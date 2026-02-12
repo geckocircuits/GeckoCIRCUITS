@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -12,14 +12,14 @@
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
 /*
- * Class used to initialize English key-value pairs.  
+ * Class used to initialize English key-value pairs.
  * -No connection to the Wiki Database is needed.
  */
 package gecko.i18n.resources;
 
 import gecko.i18n.DoubleMap;
 
-public class EnglishMapper { 
+public class EnglishMapper {
 
     /**
      * Creates a new map with all single-line English key-value pairs and
@@ -33,7 +33,7 @@ public class EnglishMapper {
         for(I18nKeys value : I18nKeys.values()) {
             dm.insertPair(value, value._englishTranslation);
         }
-        
+
 //        // initialize single-line pairs
 //        dm.putPair("File", "File");
 //        dm.putPair("New", "New");
@@ -361,7 +361,7 @@ public class EnglishMapper {
     public static DoubleMap initEnglishMap_multiple() {
         DoubleMap dm = new DoubleMap();
 
-        // initialize multiple-line pairs        
+        // initialize multiple-line pairs
 //        dm.putPair("DialogRemotePort.jTextAreaRemoteInfo.text", "Here you can allow the control of a \nGeckoCIRCUITS simulation by another\napplication (e.g. MATLAB) via a network \nport. For details see the GeckoSCRIPT\ntutorial. Currently only connections from\nthe local machine are allowed; network\naccess will be implemented in a future\nversion.");
 //        dm.putPair("GeckoFileManagerWindow.jTextArea1.text", "\nFiles specified as \"internal\" are read in by Gecko fully the first time they are added\nto a block and then saved into the Gecko model file (*.ipes). \n\"External\" files are accessed every time a block needs them, and must be distributed \nalong with the model file in order for the simulation to work properly with them.\nYou can use the buttons on the right-hand side to change an existing file's status.");
 //        dm.putPair("CautionOverwriteAutoBackupFile", "Caution: you try to overwrite your auto-backup file. \nYou should rename your filename to prevent data-loss!\n Do you want to continue anyway?");

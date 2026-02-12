@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,10 +20,10 @@ public abstract class AbstractReglerSingleInputSingleOutput extends RegelBlock {
     public AbstractReglerSingleInputSingleOutput() {
         super(1,1);
     }
-    
+
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{getTypeDescription()};
     }
-    
+
 }

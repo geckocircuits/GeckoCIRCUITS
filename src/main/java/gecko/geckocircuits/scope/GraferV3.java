@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -542,7 +542,7 @@ public class GraferV3 extends JPanel {
             }
             AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparenz);
             g2.setComposite(ac);
-        } else {            
+        } else {
             AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1);
             g2.setComposite(ac);
         }
@@ -598,22 +598,22 @@ public class GraferV3 extends JPanel {
         } else {
             System.out.println("Fehler: rhjw5z65");
         }
-        
+
         //-----------------------
         // jetzt die Linie ziehen:
         grL.reset();
-        if (kurveLinienstil[i1] != INVISIBLE) {            
+        if (kurveLinienstil[i1] != INVISIBLE) {
             grL.moveTo(xPix[0], yPix[0]);
             for (int i5 = 1; i5 < anzKurvenpunkteImWorksheet; i5++) {
                 if(xPix[i5] < 2000 && yPix[i5] < 2000) { // old uwe-bug!
-                    grL.lineTo(xPix[i5], yPix[i5]);  
+                    grL.lineTo(xPix[i5], yPix[i5]);
                 }
             }
 
             g2.draw(grL);
         }
-        
-        
+
+
         g2.setStroke(str_SOLID_PLAIN);  // wieder auf 'default' setzen
         //
         //-----------------------
@@ -867,18 +867,18 @@ public class GraferV3 extends JPanel {
             double[] wertTickY_temp = new double[anzTicks];
             int[] tickY_temp = new int[anzTicks];
             int j = 0;
-            
+
             for (int i2 = 0; i2 < anzTicks; i2++) {
                 double wert = yTickSpacing[i1] * (int) (achseYmin[i1] / yTickSpacing[i1]) + i2 * yTickSpacing[i1];
-                int tick = this.berechne_y_PixLinear(wert, i1);                
+                int tick = this.berechne_y_PixLinear(wert, i1);
                 if ((achseYmin[i1] <= wert) && (wert <= achseYmax[i1])) {
-                    wertTickY_temp[j] = wert;                    
+                    wertTickY_temp[j] = wert;
                     tickY_temp[j] = tick;
                     j++;
                 }
             }
-            anzTicks = j;  // Korrektur der Tick-Anzahl -->            
-            wertTickY[i1] = new double[anzTicks];            
+            anzTicks = j;  // Korrektur der Tick-Anzahl -->
+            wertTickY[i1] = new double[anzTicks];
             System.arraycopy(wertTickY_temp, 0, wertTickY[i1], 0, anzTicks);
             tickY[i1] = new int[anzTicks];
             System.arraycopy(tickY_temp, 0, tickY[i1], 0, anzTicks);

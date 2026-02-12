@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -219,7 +219,7 @@ public class CisprDataExport extends GeckoDialog {
 
     private void doSave(final boolean useDBMu) {
             int dataIndex = -1;
-            if (jRadioButtonMax.isSelected()) {                
+            if (jRadioButtonMax.isSelected()) {
                 dataIndex = TestReceiverWindow.INDEX_MAX_EST;
             } else if (jRadioButtonPeak.isSelected()) {
                 dataIndex = TestReceiverWindow.INDEX_PEAK;
@@ -233,8 +233,8 @@ public class CisprDataExport extends GeckoDialog {
                 dataIndex = TestReceiverWindow.INDEX_FOURIER;
             }
             saveData(dataIndex, _dataContainer, new File(jTextFieldFile.getText()), useDBMu);
-    }        
-    
+    }
+
 
     public static void saveData(final int dataIndex, final AbstractDataContainer dataContainer, final File file,
             final boolean useDBMu) {
@@ -251,8 +251,8 @@ public class CisprDataExport extends GeckoDialog {
                 }
             }
             bufferedWriter.close();
-        } catch (Throwable ex) {            
-            
+        } catch (Throwable ex) {
+
             JOptionPane.showMessageDialog(null,
                     ex.getMessage() + "\n" + ex.toString(), "Error while saving file",
                     JOptionPane.ERROR_MESSAGE);

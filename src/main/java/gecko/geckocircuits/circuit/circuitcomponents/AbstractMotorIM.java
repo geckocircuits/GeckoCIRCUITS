@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,7 +17,7 @@ import gecko.geckocircuits.allg.UserParameter;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 
-public abstract class AbstractMotorIM extends AbstractMotorIMCommon {    
+public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
     double _magnetizingInductance;
     public final UserParameter<Double> _magnetizingInductancePar = UserParameter.Builder.
             <Double>start("magnetizingInductance", 0.05).
@@ -25,21 +25,21 @@ public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
             shortName("Lm").
             unit("H").
             arrayIndex(this, 21).
-            build();        
+            build();
 
     double isd0, isq0 = 0, ird0 = 0, irq0 = 0;
-    double isd, isq = 0, ird = 0, irq = 0;                       
-    
+    double isd, isq = 0, ird = 0, irq = 0;
+
     @Override
     final int getInitialRotationSpeedIndex() {
         return 24;
     }
-    
+
     @Override
     int getInitialRotorPositionIndex() {
         return 25;
     }
-        
+
     @Override
     int getInitialStatorCurrentIndexA() {
         return 22;
@@ -49,12 +49,12 @@ public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
     int getInitialStatorCurrentIndexB() {
         return 23;
     }
-    
+
     @Override
     int getInitialStatorFluxIndexD() {
         return 26;
     }
-    
+
     @Override
     int getInitialStatorFluxIndexQ() {
         return 27;
@@ -63,7 +63,7 @@ public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
     @Override
     final double calculateElectricTorque() {
         return 1.5 * _magnetizingInductance * (isq * ird - isd * irq);
-    }            
+    }
 
     @Override
     public void setzeParameterZustandswerteAufNULL() {
@@ -74,13 +74,13 @@ public abstract class AbstractMotorIM extends AbstractMotorIMCommon {
         psisq0 = initialStatorFluxQ.getValue();
         psisq = psisq0;
         isd0 = isa;
-    }    
+    }
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
         super.drawConnectorLines(graphics);
     }
-    
-    
-    
+
+
+
 }

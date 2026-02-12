@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,11 +31,11 @@ public final class ShortMatrixCache {
     public static void clearCache() {
         shortMatrixCache.clear();
     }
-    
+
     private ShortMatrixCache() {
         // pure utility class!
     }
-    
+
     public static short[][] getCachedMatrix(final int mDim, final int nDim) {
         final IntegerMatrixCache.DimensionKey searchKey = new IntegerMatrixCache.DimensionKey(mDim, nDim);
         final short[][] isPresent = shortMatrixCache.remove(searchKey);
@@ -53,5 +53,5 @@ public final class ShortMatrixCache {
             n = toRecycle[0].length;
         }
         shortMatrixCache.put(new IntegerMatrixCache.DimensionKey(m, n), toRecycle);
-    }                
+    }
 }

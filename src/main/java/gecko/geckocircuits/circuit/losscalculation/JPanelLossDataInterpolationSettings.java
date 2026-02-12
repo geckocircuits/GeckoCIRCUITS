@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,7 +34,7 @@ class JPanelLossDataInterpolationSettings extends JPanel {
     private final FormatJTextField _jtfTemperature = new FormatJTextField(100);
     private final JPanel _jpTt = new JPanel();
     private final FormatJTextField _jtfVoltage = new FormatJTextField(300);
-    private final transient ActionListener _createCurveListener = new ActionListener() { 
+    private final transient ActionListener _createCurveListener = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent actionEvent) {
             try {
@@ -42,7 +42,7 @@ class JPanelLossDataInterpolationSettings extends JPanel {
                 final double uMeas = _jtfVoltage.getNumberFromField();
                 _parentDialog.createTestCurve(temperature, uMeas);
             } catch (Exception exc) {
-                System.out.println(exc.getMessage());                
+                System.out.println(exc.getMessage());
             }
         }
     };

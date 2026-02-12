@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -40,7 +40,7 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
     @SuppressFBWarnings(value = "MS_MUTABLE_COLLECTION_PKGPROTECT",
             justification = "_exportImportEnumMap is intentionally public for component type registration across packages")
     public static final Map<String, AbstractComponentTyp> _exportImportEnumMap = new HashMap<String, AbstractComponentTyp>();
-    
+
     static Set<Class<? extends AbstractBlockInterface>> _uniqueClassSet = new HashSet<Class<? extends AbstractBlockInterface>>();
     static Set<String> _uniqueTestSet = new HashSet<String>() {
         @Override
@@ -50,7 +50,7 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
         }
     };
     static Set<AbstractComponentTyp> _allRegisteredComponentEnums = new HashSet<AbstractComponentTyp>();
-    static Set<AbstractTypeInfo> _allRegisteredTypeInfos = new HashSet<AbstractTypeInfo>();            
+    static Set<AbstractTypeInfo> _allRegisteredTypeInfos = new HashSet<AbstractTypeInfo>();
 
     static AbstractTypeInfo getTypeFromEnum(final AbstractComponentTyp _typElement) {
         return _enumTypeMap.get(_typElement);
@@ -63,16 +63,16 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
             throw new RuntimeException("Error: a component with type \"" + elementType + "\" does not exist!");
         }
     }
-    
+
     public final I18nKeys _typeDescription;
-    public final I18nKeys _typeDescriptionVerbose;    
+    public final I18nKeys _typeDescriptionVerbose;
 
     public AbstractTypeInfo(final Class<? extends AbstractBlockInterface> typeClass, final String idString, final I18nKeys typeDescription, final I18nKeys typeDescriptionVerbose) {
         super(typeClass, idString);
         _typeDescription = typeDescription;
         _typeDescriptionVerbose = typeDescriptionVerbose;
         _classTypeMap.put(_typeClass, this);
-        _stringTypeMap.put(idString, this);                
+        _stringTypeMap.put(idString, this);
         _allRegisteredTypeInfos.add(this);
         doConsistencyCheck();
     }
@@ -80,32 +80,32 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
     public AbstractTypeInfo(final Class<? extends AbstractBlockInterface> typeClass, final String idString, final I18nKeys typeDescription) {
         this(typeClass, idString, typeDescription, typeDescription);
     }
-    
-    public void doConsistencyCheck() {                        
-        assert !_fixedIDString.isEmpty();                
+
+    public void doConsistencyCheck() {
+        assert !_fixedIDString.isEmpty();
         assert !_uniqueTestSet.contains(_fixedIDString) : "Error: ID string is used twice! " + _fixedIDString;
-        _uniqueTestSet.add(_fixedIDString);        
+        _uniqueTestSet.add(_fixedIDString);
         assert !_uniqueClassSet.contains(_typeClass) : "Error: the class is already registered!";
         _uniqueClassSet.add(_typeClass);
     }
-    
+
     public static AbstractTypeInfo getTypeInfoFromClass(Class<? extends AbstractBlockInterface> aClass) {
         return _classTypeMap.get(aClass);
     }
-    
+
     public static AbstractComponentTyp getTypeEnumFromClass(Class<? extends AbstractBlockInterface> aClass) {
         return _classEnumMap.get(aClass);
     }
-    
+
     public void addParentEnum(final AbstractComponentTyp parentType) {
-        assert !_allRegisteredComponentEnums.contains(parentType);                
+        assert !_allRegisteredComponentEnums.contains(parentType);
         _allRegisteredComponentEnums.add(parentType);
         _parentType = parentType;
         _classEnumMap.put(_typeClass, parentType);
         _enumTypeMap.put(parentType, this);
         if(!_exportImportEnumMap.containsKey(this.getExportImportCharacters())) {
-            _exportImportEnumMap.put(this.getExportImportCharacters(), parentType);        
-        }         
+            _exportImportEnumMap.put(this.getExportImportCharacters(), parentType);
+        }
     }
 
     public static AbstractTypeInfo getTypeFromString(final String elementType) {
@@ -115,33 +115,33 @@ public abstract class AbstractTypeInfo extends TypeInfoCore {
             throw new IllegalArgumentException("String type " + elementType + " could not be found!");
         }
     }
-    
+
     public abstract ConnectorType getSimulationDomain();
-    
+
     public abstract AbstractBlockInterface fabric();
-    
+
     public abstract String getExportImportCharacters();
     public abstract String getSaveIdentifier();
-    
+
     /**
      * Factory method to create components from file with deserialization
      */
-    public static final AbstractBlockInterface fabricFromFile(final AbstractComponentTyp typ, TokenMap tokenMap) {        
+    public static final AbstractBlockInterface fabricFromFile(final AbstractComponentTyp typ, TokenMap tokenMap) {
         final AbstractBlockInterface returnValue = typ.getTypeInfo().fabric();
-        returnValue.importASCII(tokenMap);        
+        returnValue.importASCII(tokenMap);
         return returnValue;
     }
-    
+
     /**
      * Factory method to create new component instance and initialize
      */
-    public static final AbstractBlockInterface fabricNew(final AbstractTypeInfo typ) {        
+    public static final AbstractBlockInterface fabricNew(final AbstractTypeInfo typ) {
         final AbstractBlockInterface returnValue = typ.fabric();
         returnValue.setParentCircuitSheet(SchematicEditor2.Singleton._visibleCircuitSheet);
         returnValue.doOperationAfterNewConstruction();
         return returnValue;
     }
-    
+
     /**
      * Factory method for hidden sub-components
      */

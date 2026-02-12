@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,13 +22,13 @@
 //import javax.script.ScriptException;
 //
 //class VariableExpression extends AbstractExpression {
-//    
+//
 //    private CompiledScript _script;
 //    private final Compilable _compileable;
 //    final String _evaluationString;
 //    private boolean _thisExpressionHasNoVariableReferences = true;
 //    public static final Map<String, Double> variablesMappedToNumbers = new LinkedHashMap<String, Double>();
-//    
+//
 //    private static final Pattern FIND_DOLLAR_REGEXP = Pattern.compile(
 //            "\\$     # word boundary\n"
 //            + "[A-Za-z]# 1 ASCII letter\n"
@@ -42,7 +42,7 @@
 //
 //    VariableExpression(final Object nameable, final String expression) {
 //        super(nameable, expression);
-//        
+//
 //        _compileable = (Compilable) JavaScriptTest.engine;
 //
 //        final String withString = " with(Math)  { " + expression + " }";
@@ -67,13 +67,13 @@
 //            Double returnValue = (Double) doubleValue;
 //            variablesMappedToNumbers.put(_nameable.toString(), returnValue);
 //            return returnValue;
-//        } catch (final ScriptException ex) {                              
+//        } catch (final ScriptException ex) {
 //            throw new ScriptException("Error in evaluation of expression: " + VariableExpression.this + "\n" + ex.getMessage());
-//        }        
-//    }        
+//        }
+//    }
 //
 //    public boolean hasNoVariable() {
 //        return _thisExpressionHasNoVariableReferences;
-//    } 
-//        
+//    }
+//
 //}

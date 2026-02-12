@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -65,7 +65,7 @@ public final class CompileObject extends AbstractCompileObject {
         _classFileName = _className + ".java";
         _workingDirectory = findWorkingDirectory();
 
-        _sourceString = sourceString;                                
+        _sourceString = sourceString;
         _compilerOptions = setCompilerOptions();
 
         try {
@@ -83,7 +83,7 @@ public final class CompileObject extends AbstractCompileObject {
                     if (fileName.startsWith(_className)) {
                         _classMap.put(fileName, new CompiledClassContainer(entry.getValue().getByteArray(),
                                 _sourceString));
-                    }  
+                    }
                     else {
                         for (GeckoFile externalSource : additionalSourceFiles) {
                             if (externalSource.getName().equals(fileName + ".java")) {
@@ -118,7 +118,7 @@ public final class CompileObject extends AbstractCompileObject {
     public static JavaFileObject generateJavaSourceCode(final String sourceText, final String className) {
         return new SimpleJavaFileObjectImpl(RamJavaFileObject.toURI(className), JavaFileObject.Kind.SOURCE, sourceText);
     }
-    
+
 
     @Override
     public String getCompilerMessage() {
@@ -162,7 +162,7 @@ public final class CompileObject extends AbstractCompileObject {
             Logger.getLogger(CompileObject.class.getName()).log(Level.INFO, "Java Compiler found: " + compiler.getClass().getName());
         } else {
             Logger.getLogger(CompileObject.class.getName()).log(Level.SEVERE, "Java Compiler not found via ToolProvider, trying fallback...");
-            
+
             // this fixes the java 1.7 compilation problem
             try {
                 try {
@@ -193,7 +193,7 @@ public final class CompileObject extends AbstractCompileObject {
 
     private List<String> setCompilerOptions() {
         final List<String> options = new ArrayList<String>();
-     
+
         options.add("-classpath");
 
         String javaSeparator = ":";
@@ -225,7 +225,7 @@ public final class CompileObject extends AbstractCompileObject {
         //add classpath to running program to be able to access all gecko classes from the newly created class
         //System.out.println("classpath string: " + classPathString);
         options.addAll(Arrays.asList("-classpath", classPathString.toString()));
-        
+
         return Collections.unmodifiableList(options);
     }
 

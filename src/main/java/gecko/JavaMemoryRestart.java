@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -180,7 +180,7 @@ final class JavaMemoryRestart {
         commands.add(javaCommand);
         commands.add("-Xmx" + memorySize + "m");
 	// GraalVM need this flag to be in compatibilty mode with Nashorn. Syntaxpane used Nashorn
-	commands.add("-Dpolyglot.js.nashorn-compat=true"); 
+	commands.add("-Dpolyglot.js.nashorn-compat=true");
         commands.add("-jar");
         commands.add(pathToJarFile);
         commands.addAll(Arrays.asList(args));

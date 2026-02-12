@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,13 +24,13 @@ public abstract class AbstractTimeSerie {
     public abstract double getValue(final int index);
     public abstract void setValue(final int index, final double value);
     /**
-     * 
+     *
      * @return bigest index, for which data is already written into container
      */
     public abstract int getMaximumIndex();
-    
+
     /**
-     * 
+     *
      * @param time value to search the index for
      * @param maxIndex maximum index for which the worksheet data is valid
      * @return worksheet index of the given time value
@@ -38,9 +38,9 @@ public abstract class AbstractTimeSerie {
     public abstract int findTimeIndex(final double time);
 
     /**
-     * 
+     *
      * @return the difference between the last two inserted time values.
      */
     public abstract double getLastTimeInterval();
-    
+
 }

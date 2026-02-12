@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,7 +23,7 @@ import java.util.*;
 public final class GeckoFileManager {
 
     public final Set<GeckoFile> _allAvailableFiles = new LinkedHashSet<GeckoFile>();
-    
+
     //create an empty GeckoFileManager
     public GeckoFileManager() {
         // nothing todo for this constructor
@@ -39,13 +39,13 @@ public final class GeckoFileManager {
     }
 
     //get a file based on hash value
-    public GeckoFile getFile(final long hash) throws FileNotFoundException {                        
-        for (GeckoFile tmpFile : _allAvailableFiles) {            
+    public GeckoFile getFile(final long hash) throws FileNotFoundException {
+        for (GeckoFile tmpFile : _allAvailableFiles) {
             if (tmpFile.getHashValue() == hash) {
                 return tmpFile;
             }
         }
-                
+
         throw new FileNotFoundException("Desired file not found!");
     }
 
@@ -75,11 +75,11 @@ public final class GeckoFileManager {
         try {
             final GeckoFile file = getFile(fileHash);
             //otherwise it is already removed
-            if (file != null && file.noOfUsers() == 0) {                
-                _allAvailableFiles.remove(getFile(fileHash));                
+            if (file != null && file.noOfUsers() == 0) {
+                _allAvailableFiles.remove(getFile(fileHash));
             }
         } catch (Exception ex) {
-            System.err.println("GeckoFile not found: " + ex.getMessage());            
+            System.err.println("GeckoFile not found: " + ex.getMessage());
         }
     }
 
@@ -94,7 +94,7 @@ public final class GeckoFileManager {
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\nGeckoFileManager");
         ascii.append("\n<GeckoFileManager>");
-        
+
         for (GeckoFile file : _allAvailableFiles) {
             file.exportASCII(ascii);
         }
@@ -108,7 +108,7 @@ public final class GeckoFileManager {
 
 
     //rework all relative paths (i.e. we change location of file with "save as" or save the file for the first time
-    public void recomputeRelativePaths(final String absModelPath) {        
+    public void recomputeRelativePaths(final String absModelPath) {
         for (GeckoFile file : _allAvailableFiles) {
             file.recomputeRelativePath(absModelPath);
         }

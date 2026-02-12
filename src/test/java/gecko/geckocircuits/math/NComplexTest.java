@@ -344,7 +344,7 @@ public class NComplexTest {
         NComplex a = new NComplex(2.0f, 3.0f);
         NComplex sqrtA = NComplex.sqrt(a);
         NComplex squared = NComplex.mul(sqrtA, sqrtA);
-        
+
         // squared should equal a (within tolerance)
         assertEquals(a.getRe(), squared.getRe(), 0.01f);
         assertEquals(a.getIm(), squared.getIm(), 0.01f);

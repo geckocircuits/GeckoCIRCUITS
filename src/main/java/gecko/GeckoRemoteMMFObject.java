@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,28 +23,28 @@ import java.util.logging.Logger;
 
 /**
  * This class is a wrapper for use in from external programs, e.g. MATLAB or
- * other Java programs. The communication is done via a memory-mapped file (MMF). 
+ * other Java programs. The communication is done via a memory-mapped file (MMF).
  * This is the alternative, non-network counterpart to GeckoRemoteObject.
  *
- * It is implemented as a child class of GeckoRemoteObject to make inserting the alternative 
+ * It is implemented as a child class of GeckoRemoteObject to make inserting the alternative
  * interface into e.g. GeckoMAGNETICS easier. Ideally both should implement a common interface.
- * 
+ *
  * @author andrija s.
  */
 @SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.NullAssignment"})
 public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
 
-    public GeckoRemoteMMFObject() {        
+    public GeckoRemoteMMFObject() {
         //use factory method instead of constructor
     }
-    
+
     GeckoMemoryMappedFile _mmf = null;
     private static final int NO_SESSION_ID = -1;
     private long sessionID = NO_SESSION_ID;
     private static final String ERROR_STRING = "Error with calling remote method. See nested exception for details:\n";
     private static String _pathToJava = "";
-    
-    
+
+
 
     /**
      * Start GeckoCIRCUITS, set it up to use a given memory-mapped file.
@@ -69,7 +69,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             argsList.add(file);
             argsList.add(Long.toString(size*1024*1024)); //convert MB to bytes
             final String[] args = argsList.toArray(new String[argsList.size()]);
-            
+
             for(String arg : args) {
                 System.out.println("arg " + arg);
             }
@@ -79,7 +79,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             } catch (InterruptedException ex) {
                 Logger.getLogger(GeckoRemoteMMFObject.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (GeckoSim.mmfLoaded) {                
+            if (GeckoSim.mmfLoaded) {
                 return connectToExistingInstance(file);
             }
         } else {
@@ -91,7 +91,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
         return null;
     }
 
-    
+
     /**
      * Start GeckoCIRCUITS, set it up to use a given memory-mapped file, initialized to the default size.
      * The memory-mapped file should NOT exist in order to start a fresh new instance of GeckoCIRCUITS!
@@ -104,7 +104,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
     public static GeckoRemoteMMFObject startNewRemoteInstance(final String file) {
         return startNewRemoteInstance(file,GeckoMemoryMappedFile._defaultBufferSize);
     }
-    
+
    /**
     * Connect to a running GeckoCIRCUITS instance via a memory-mapped file.
     * For success,
@@ -130,14 +130,14 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
         return returnValue;
     }
 
-   
+
     /**
      * Connect to GeckoCIRCUITS via a memory-mapped file.
      * @param file the file which to connect through
      */
     private void connectToExistingInstance(final GeckoMemoryMappedFile file) {
         //try {
-            if (file.isFree()) { 
+            if (file.isFree()) {
                 //try {
                     final long newSessionID = file.connect(10000); //wait for 10 s
                     if (newSessionID > 0) {
@@ -155,7 +155,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                     } else { // -2
                         throw new RuntimeException("Connection attempt to GeckoCIRCUITS via " + file.getFileName()
                                 + " has timed out. Please check whether this file really belongs to a running GeckoCIRCUITS instance.");
-                    }                   
+                    }
                 //} catch (Exception e) {
                     //throw new RuntimeException("Error connecting to existing GeckoCIRCUITS instance at file " + file.getFileName(), e);
                 //}
@@ -177,7 +177,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
         //}
 
     }
-    
+
     /**
      * Set the path of the java executable to use (needed when starting GeckoCIRCUITS from a Netbeans platform application)
      * @param pathToJavaExe the path to the java executable
@@ -187,10 +187,10 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             _pathToJava = pathToJavaExe;
         } else {
             throw new RuntimeException("Error: Path to Java executable: " + pathToJavaExe + " does not exist!");
-        }        
+        }
     }
-    
-        
+
+
     @Override
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
     public void disconnectFromGecko() {
@@ -211,7 +211,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                     + "\nTo force a (potentially one-sided) disconnect, please call forceDisconnectFromGecko().\n"+e.getMessage(), e);
         }
     }
-    
+
     @Override
     public void forceDisconnectFromGecko() {
         //disconnects from the session on the client side only (i.e. remote side crashed)
@@ -236,15 +236,15 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
         }
     }
 
-    
+
     /**
      * NOTE: Ideally, we would for all the remaining methods, like to get the method name by reflection.
      * This is ugly however in terms of compilation, see: http://stackoverflow.com/questions/442747/getting-the-name-of-the-current-executing-method
      * Therefore, in each method, we construct the GeckoRemotePipeObject manually.
      * Annoying, but gives the best performance.
      */
-    
-    
+
+
     /**
      * exit the JVM.
      */
@@ -285,7 +285,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method simulateStep!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -305,7 +305,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method simulateSteps!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -325,7 +325,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getAccessibleParameters!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -347,7 +347,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getControlElements!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -355,7 +355,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public String[] getCircuitElements() {
         try {
@@ -369,7 +369,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getCircuitElements!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -391,7 +391,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getThermalElements!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -399,7 +399,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public String[] getSpecialElements() {
         try {
@@ -413,7 +413,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSpecialElements!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -435,7 +435,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getIGBTs!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -443,7 +443,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public String[] getDiodes() {
         try {
@@ -457,7 +457,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getDiodes!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -479,7 +479,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getThyristors!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -501,7 +501,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getIdealSwitches!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -523,7 +523,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getResistors!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -545,7 +545,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getInductors!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -567,7 +567,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getCapacitors!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -589,7 +589,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method doOperation!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -611,7 +611,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setGlobalParameterValue!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -631,7 +631,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getGlobalParameterValue!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -639,7 +639,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
 
     @Override
     public void setParameter(final String elementName, final String parameterName, final double value) {
@@ -654,7 +654,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setParameter!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -674,7 +674,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setParameters!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -694,7 +694,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getParameter!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -716,7 +716,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getOutput!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -738,7 +738,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getOutput!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -760,13 +760,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method runSimulation!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void initSimulation() {
         try {
@@ -780,7 +780,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method initSimulation!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -800,7 +800,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method initSimulation!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -820,7 +820,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method continueSimulation!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -840,7 +840,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method simulateTime!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -860,7 +860,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSimulationTime!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -882,13 +882,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method endSimulation!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void saveFileAs(final String fileName) {
         try {
@@ -902,7 +902,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method saveFileAs!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -922,7 +922,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method openFile!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -944,7 +944,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method get_dt!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -968,7 +968,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method get_dt_pre!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -992,7 +992,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method get_Tend!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -1016,13 +1016,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method set_dt!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     @SuppressWarnings("PMD")
     //CHECKSTYLE:OFF
@@ -1038,7 +1038,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method set_Tend!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1047,7 +1047,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
 
     @Override
     @SuppressWarnings("PMD")
-    //CHECKSTYLE:OFF    
+    //CHECKSTYLE:OFF
     public double get_Tend_pre() {
          try {
             if (checkRemote()) {
@@ -1060,7 +1060,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method get_Tend_pre!");
                 }
-                        
+
             } else {
                 return 0;
             }
@@ -1084,7 +1084,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method set_dt_pre!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1106,7 +1106,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method set_Tend_pre!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1127,7 +1127,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getFourier!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1142,7 +1142,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
         return getFourier(scopeName, 0, startTime, endTime, harmonics);
     }
 
-    
+
     @Override
     public void setPosition(final String elementName, final int xCoord, final int yCoord) {
         try {
@@ -1156,13 +1156,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setPosition!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public int[] getPosition(final String elementName) {
         try {
@@ -1176,7 +1176,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setPosition!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1184,7 +1184,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
         return new int[] {};
     }
 
-    
+
 
     @Override
     public void deleteComponent(final String elementName) {
@@ -1199,13 +1199,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method deleteComponent!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void deleteAllComponents(final String subcircuitName) {
         try {
@@ -1219,7 +1219,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method deleteAllComponents!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1239,7 +1239,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method createComponent!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1259,7 +1259,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setOutputNodeName!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1279,13 +1279,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setInputNodeName!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public String getOutputNodeName(final String elementName, final int nodeIndex) {
         try {
@@ -1299,7 +1299,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setOutputNodeName!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1320,7 +1320,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getInputNodeName!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1341,7 +1341,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getTimeArray!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1363,7 +1363,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalData!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1394,7 +1394,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setComponentName!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1415,7 +1415,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method rotate!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1435,7 +1435,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setOrientation!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1455,7 +1455,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method importFromFile!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1475,7 +1475,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getGlobalFloatMatrix!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1497,15 +1497,15 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getGlobalDoubleMatrix!");
                 }
-                        
+
             } else {
                 return null;
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
-    }    
-    
+    }
+
     @Override
     public void setGlobalFloatMatrix(final float[][] matrix) {
         try {
@@ -1519,13 +1519,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method seGlobalFloatMatrix!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void setGlobalDoubleMatrix(final double[][] matrix) {
         try {
@@ -1539,7 +1539,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method setGlobalDoubleMatrix!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1559,7 +1559,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalAvg!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1581,7 +1581,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalRMS!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1603,7 +1603,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalTHD!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1625,7 +1625,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalMin!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1647,7 +1647,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalMax!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1669,7 +1669,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalRipple!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1691,7 +1691,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalKlirr!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1713,7 +1713,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalShape!");
                 }
-                        
+
             } else {
                 return Double.NaN;
             }
@@ -1736,7 +1736,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalFourier!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1758,7 +1758,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method floatFFT!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1766,7 +1766,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public void initSteadyStateDetection(String[] stateVariables, double frequency, double deltaT,
             double simulationTime) {
@@ -1781,14 +1781,14 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method initSteadyStateDetection!");
                 }
-                        
+
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
-        
+
+
     @Override
     public double[] simulateToSteadyState(final boolean supressMessages) {
         try {
@@ -1802,7 +1802,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method simulateToSteadyState!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1810,7 +1810,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     @Override
     public double[] simulateToSteadyState(final boolean supressMessages, final double targetCorrelation, final double targetMeanPctDiff) {
         try {
@@ -1824,7 +1824,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 } else {
                     throw new RuntimeException("Invalid return value in method getSignalData!");
                 }
-                        
+
             } else {
                 return null;
             }
@@ -1832,13 +1832,13 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
         }
     }
-    
+
     //unsupported methods from supertype
-    
+
     @Override
-    public void allowAdditionalClients(final int additionalClients) { 
+    public void allowAdditionalClients(final int additionalClients) {
         throw new UnsupportedOperationException("Not supported yet in GeckoRemoteMMFObject. For multiplce clients, use GeckoRemoteObject.");
     }
-    
-    
+
+
 }

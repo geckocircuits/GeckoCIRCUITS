@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -40,7 +40,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores data array reference for SSA plot display")
 public final class DialogSSAPlot extends GeckoDialog {
-    
+
     private double[][] _data;
     //private String _extension = ".txt";
     private String _type = "text file";
@@ -48,7 +48,7 @@ public final class DialogSSAPlot extends GeckoDialog {
     private final JPanel lowerPanel = new JPanel();
     private DataTablePanel table;
     private final SimpleGraferPanel newScope1;
-    
+
     public DialogSSAPlot(final double[][] data){
         super(GeckoSim._win, true);
         _data = data;
@@ -66,15 +66,15 @@ public final class DialogSSAPlot extends GeckoDialog {
         Dimension windowSize = new Dimension(800, 600);
         setPreferredSize(windowSize);
         setSize(windowSize);
-        
+
         _grafer = new GraferV4(settings);
         _grafer.createInitialAndSingleDiagram(true, true, 1);
-        
+
         newScope1 = new SimpleGraferPanel(_grafer);
-        
+
         //_extension = ...;
         _type = "SSA Bode Plot";
-        
+
         //this.initMagnitude();
         Container con = this.getContentPane();
         con.setLayout(new BorderLayout());
@@ -85,9 +85,9 @@ public final class DialogSSAPlot extends GeckoDialog {
         this.pack();
         updatePlot();
     }
-    
+
     /*
-    private void initMagnitude(){       
+    private void initMagnitude(){
         data = _parent.getMagnitude();
     }
     */
@@ -95,16 +95,16 @@ public final class DialogSSAPlot extends GeckoDialog {
         table = new DataTablePanel(new String[]{"omega [rad/s]","|G| [dB]"});
         table.setPreferredSize(new Dimension(150,100));
         table.setValues(_data);
-        
+
         table.addTableModelListener(new TableModelListener(){
             @Override
             public void tableChanged(TableModelEvent e){
                 _data = table.getCheckedData();
                 updatePlot();
             }
-            
-        });  
-        
+
+        });
+
         JPanel jpCONDdataGes = new JPanel();
         jpCONDdataGes.setLayout(new BorderLayout());
         jpCONDdataGes.add(table, BorderLayout.CENTER);
@@ -118,7 +118,7 @@ public final class DialogSSAPlot extends GeckoDialog {
         //========================
         return jpCOND;
     }
-    
+
     private void updatePlot() {
         DataContainerSimple dcs1 = DataContainerSimple.fabricArrayTimeSeries(1, _data[0].length);
         dcs1.setSignalName("TF of ...", 0);
@@ -130,5 +130,5 @@ public final class DialogSSAPlot extends GeckoDialog {
         dcs1.setContainerStatus(ContainerStatus.PAUSED);
         _grafer.setDataContainer(dcs1);
     }
-    
+
 }

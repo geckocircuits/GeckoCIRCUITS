@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,7 +47,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
     private DataSaver _dataSaver;
     public final ReglerSaveData _reglerDataSave;
     private boolean _inFillLists;
-    
+
     public DialogDataExport(final java.awt.Frame parent, final boolean modal, final ReglerSaveData dataSavable,
             final List<AbstractDataContainer> selectContainers, final DataSaver _parentDataSaver) {
         super(parent, modal);
@@ -89,7 +89,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void fillLists() {
         _inFillLists = true;
-        try { // somewhere, I have a race condition when a signal is deleted... 
+        try { // somewhere, I have a race condition when a signal is deleted...
             Thread.sleep(100);
         } catch (InterruptedException ex) {
             Logger.getLogger(DialogDataExport.class.getName()).log(Level.SEVERE, null, ex);
@@ -98,7 +98,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         if (container == null) {
             return;
         }
-        
+
         final List<String> selectedStrings = _reglerDataSave.getSelectedNames();
         final int rowLength = container.getRowLength();
         ((DefaultListModel<DataIndexItem>) jListAvailable.getModel()).clear();
@@ -118,8 +118,8 @@ public final class DialogDataExport extends javax.swing.JDialog {
                 ((DefaultListModel<DataIndexItem>) jListSelected.getModel()).addElement(listItem);
             }
 
-        }        
-                
+        }
+
         _inFillLists = false;
     }
 
@@ -733,7 +733,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSaveData(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonSaveData
-        
+
         _dataSaver = new DataSaver(_containers.get(0), _reglerDataSave);
 
         _dataSaver.addObserver(new Observer() {
@@ -834,7 +834,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jCheckBoxTransposeActionPerformed
 
     private void jButtonFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFileChooserActionPerformed
-                        
+
         GeckoFileChooser fileChooser = GeckoFileChooser.createSimpleSaveFileChooser(null, this);
         if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
             return;

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,23 +13,23 @@
  */
 package gecko.geckocircuits.circuit;
 
-public enum ControlSourceType {            
+public enum ControlSourceType {
     QUELLE_SIN(402, 0, "SINE"),
-    QUELLE_DREIECK(403, 1, "TRIANGLE"),    
+    QUELLE_DREIECK(403, 1, "TRIANGLE"),
     QUELLE_RECHTECK(404, 2, "RECTANGLE"),
     QUELLE_RANDOM(405, 3, "RANDOM"),
     QUELLE_IMPORT(406,4, "IMPORT");
-    
+
     private final String _outputString;
     private final int _oldGeckoID;
     private final int _newGeckoID;
-    
+
     ControlSourceType(final int oldGeckoID, final int newGeckoID, final String outputString) {
         _oldGeckoID = oldGeckoID;
         _newGeckoID = newGeckoID;
         _outputString = outputString;
     }
-    
+
     public static ControlSourceType getFromID(final int idValue) {
         for(ControlSourceType tmp : values()) {
             if(idValue == tmp._oldGeckoID) {
@@ -44,11 +44,11 @@ public enum ControlSourceType {
         assert false;
         return QUELLE_RECHTECK;
     }
-    
+
     public int getOldGeckoID() {
         return _oldGeckoID;
-    }       
-    
+    }
+
     @Override
     public String toString() {
         return _outputString;

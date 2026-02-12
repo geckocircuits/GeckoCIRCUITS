@@ -230,7 +230,7 @@ public class TechFormatTest {
         double original = 12345.678;
         String formatted = techFormat.formatENG(original, 6);
         double parsed = techFormat.parseT(formatted);
-        
+
         assertEquals(original, parsed, original * PERCENT_DELTA);
     }
 
@@ -239,7 +239,7 @@ public class TechFormatTest {
         double original = 1.5e-9;
         String formatted = techFormat.formatENG(original, 6);
         double parsed = techFormat.parseT(formatted);
-        
+
         assertEquals(original, parsed, Math.abs(original * PERCENT_DELTA));
     }
 
@@ -248,7 +248,7 @@ public class TechFormatTest {
         double original = 2.5e9;
         String formatted = techFormat.formatENG(original, 6);
         double parsed = techFormat.parseT(formatted);
-        
+
         assertEquals(original, parsed, original * PERCENT_DELTA);
     }
 

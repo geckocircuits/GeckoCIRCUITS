@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -294,10 +294,10 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             throw new GeckoRuntimeException("could not read data file in SIGNAL source block!");
         }
         try {
-            
+
             final BufferedReader bufRead = _externalDataFile.getBufferedReader();//new BufferedReader(new FileReader(datnamXY));
-            final List<String> datVec = new ArrayList<String>();            
-            
+            final List<String> datVec = new ArrayList<String>();
+
             for (String line = bufRead.readLine(); line != null; line = bufRead.readLine()) {
                 datVec.add(line);
             }
@@ -307,10 +307,10 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
 
             final StringTokenizer stk = new StringTokenizer(datVec.get(0), " ");
             final double tStart = Double.parseDouble(stk.nextToken());  // time t==0
-            
-            for (int i1 = 0; i1 < _xy[0].length; i1++) {                
-                final String lineSTring = datVec.get(i1);                
-                final StringTokenizer tokenizer = new StringTokenizer(lineSTring, " ");                
+
+            for (int i1 = 0; i1 < _xy[0].length; i1++) {
+                final String lineSTring = datVec.get(i1);
+                final StringTokenizer tokenizer = new StringTokenizer(lineSTring, " ");
                 _xy[0][i1] = Double.parseDouble(tokenizer.nextToken()) - tStart;  // time (verschoben, sodass Zeit bei 0 beginnt)
                 _xy[1][i1] = Double.parseDouble(tokenizer.nextToken());      // value
             }
@@ -365,7 +365,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
             _externalDataFileHashValue = tokenMap.readDataLine("externalDataFileHashValue", _externalDataFileHashValue);
         }
 
-        if (!tokenMap.containsToken("version170")) { // repair from version 1.62 to later version: phase 
+        if (!tokenMap.containsToken("version170")) { // repair from version 1.62 to later version: phase
             // was changed from radians to degrees!
             _phase.setValueWithoutUndo(Math.toDegrees(_phase.getValue()));
         }
@@ -376,12 +376,12 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         if (!_datnamXY.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
             //first check if this is a file loaded from previous versions
             try {
-                _externalDataFile = MainWindow._fileManager.getFile(_externalDataFileHashValue);                                                
+                _externalDataFile = MainWindow._fileManager.getFile(_externalDataFileHashValue);
             } catch (FileNotFoundException e) {
                 final String errorMessage = "External data file missing in signal source "
                         + getStringID() + ":\n" + e.getMessage();
                 final String errorTitle = getStringID() + ": ERROR - File not found!";
-                JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);                
+                JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -191,11 +191,11 @@ public class PotentialCoupling {
             return "Label reference from \"" + _newLabel + "\" to \"" + _oldLabel + "\"";
         }
     }
-    
-    
+
+
     class SetOperation extends Operationable.OperationInterface {
         final int _index;
-        SetOperation(final int index) {            
+        SetOperation(final int index) {
             super((index == 0) ? "setCouplingLabel" : "setSecondCouplingLabel", I18nKeys.SET_COUPLING_LABEL);
             _index = index;
         }
@@ -204,28 +204,28 @@ public class PotentialCoupling {
                 if (!(parameterValue instanceof String)) {
                     throw new IllegalArgumentException("Parameter type must be a String!");
                 }
-                                                                                                    
+
                 setNewCouplingLabel(_index, (String) parameterValue);
                 if(_parent instanceof AbstractPotentialMeasurement) {
                     ((AbstractPotentialMeasurement) _parent).getComponentCoupling().setNewCouplingElement(0, null);
                 }
-                return null;                                                                                
+                return null;
             }
-        
-    }    
+
+    }
 
     public List<Operationable.OperationInterface> getOperationInterfaces() {
         List<Operationable.OperationInterface> returnValue = new ArrayList<Operationable.OperationInterface>();
-        
+
         Operationable.OperationInterface op0 = new SetOperation(0);
         returnValue.add(op0);
-        
+
         if(_stringIDIndices.length == 2) {
             Operationable.OperationInterface op1 = new SetOperation(1);
             returnValue.add(op1);
         }
-        
+
        return returnValue;
     }
-    
+
 }

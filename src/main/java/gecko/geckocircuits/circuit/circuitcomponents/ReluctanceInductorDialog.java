@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -53,7 +53,7 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
         }
 
         final FormatJTextField ampTurnsField = new FormatJTextField();
-        
+
         reverseInput.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -77,10 +77,10 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
         });
 
         pIN2.add(jln);
-        
+
         final FormatJTextField windingsField  = getRegisteredTextField(element._windings);
         final FormatJTextField initCurrentField = getRegisteredTextField(element._initCurrent);
-        
+
         windingsField.addKeyListener(new KeyListener() {
             public void keyTyped(final KeyEvent event) {
             }
@@ -96,8 +96,8 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
 
         final JLabel m_n = labelFabric("Initial current =  ");
         pIN2.add(m_n);
-        
-        
+
+
         initCurrentField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(final KeyEvent event) {
@@ -119,7 +119,7 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
             }
         });
         pIN2.add(initCurrentField);
-        
+
         JLabel jLabAmpTurns = labelFabric("Initial AmpTurns =");
         pIN2.add(jLabAmpTurns);
         pIN2.add(ampTurnsField);
@@ -149,5 +149,5 @@ class ReluctanceInductorDialog extends DialogElementLK<ReluctanceInductor> {
 
         con.add(pIN2, BorderLayout.CENTER);
 
-    }        
+    }
 }

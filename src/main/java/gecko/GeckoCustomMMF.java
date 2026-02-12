@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,21 +27,21 @@ import javax.swing.JOptionPane;
  * @author andrija s.
  */
 public class GeckoCustomMMF extends AbstractGeckoCustom {
-    
+
     private GeckoMemoryMappedFile _mmf = null;
     private boolean _accessEnabled = false;
     private long _connectionID = -1;
-    
-    
+
+
     public GeckoCustomMMF(final SimulationAccess access) {
         super(access,null);
     }
-    
+
     @Override
     public void runScript() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
     /**
      * Enable remote access of GeckoCIRCUITS via a memory-mapped file.
      * The file will be reinitialized to a blank disconnected state. Be careful therefore not to pass here files with potentially active connections!
@@ -56,7 +56,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         _accessEnabled = true;
         startMonitoring();
     }
-    
+
     /**
      * Enable remote access of GeckoCIRCUITS via a memory-mapped file.
      * The file will be reinitialized to a blank disconnected state. Be careful therefore not to pass here files with potentially active connections!
@@ -72,7 +72,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         _accessEnabled = true;
         startMonitoring();
     }
-    
+
     /**
      * Disable access to GeckoCIRCUITS via the MMF. The active MMF is deleted!
      */
@@ -83,22 +83,22 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         _mmf.deleteFile();
         _mmf = null;
     }
-    
+
     /**
      * Creates a new thread to monitor the MMF for incoming method calls.
      */
     private void startMonitoring() {
         Thread monitoringThread = new Thread(new Runnable() {
-           
+
             @Override
             public void run() {
                 monitorMMF();
             }
-            
+
         });
         monitoringThread.start();
     }
-    
+
     private void monitorMMF() {
         GeckoRemotePipeObject methodCall;
         while (_accessEnabled) {
@@ -137,7 +137,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
             }
         }
     }
-    
+
     /**
      * Returns the status of the connection.
      * @return a string description for display
@@ -157,9 +157,9 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
             } else {
                 return "Status: (dis)connecting in progress...";
             }
-        }                
+        }
     }
-    
+
     /**
      * Check whether remote access is enabled.
      * @return true if it is
@@ -167,7 +167,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
     public boolean isEnabled() {
         return _accessEnabled;
     }
-    
+
     /**
      * Calls a method indicated by the client via the memory-mapped file and sends the response.
      * @param methodObject
@@ -181,7 +181,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
             final Object[] arguments = methodObject.getMethodArguments();
             final Class[] argumentTypes = new Class[arguments.length];
             for (int i = 0; i < arguments.length; i++) {
-                argumentTypes[i] = checkForPrimitiveType(arguments[i].getClass()); 
+                argumentTypes[i] = checkForPrimitiveType(arguments[i].getClass());
             }
             //special case
             if ("doOperation".equals(name)) {
@@ -197,22 +197,22 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         } catch (Exception ex) {
             //send back error message
             response = new GeckoRemotePipeObject(methodObject.getMethodName(),ex.getMessage());
-        }        
+        }
         _mmf.respondToMethodCall(_connectionID, response);
     }
-    
+
     /**
      * Check if there is a connection.
-     * 
+     *
      * @return true if there is a connection or connection attempt in progress
      */
     public boolean isConnected() {
         if (_mmf == null) {
-          return false;  
-        } 
+          return false;
+        }
         return !_mmf.isFree();
     }
-    
+
     /**
      * Get the name of the file for remote access.
      * @return the name of the file for access. If access is not enabled, an empty string is returned.
@@ -223,10 +223,10 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         }
         return _mmf.getFileName();
     }
-    
+
     /**
      * Get the memory-mapped file size.
-     * 
+     *
      * @return the size of the memory-mapped buffer, in bytes
      */
     public long getFileSize() {
@@ -235,7 +235,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         }
         return _mmf.getBufferSize();
     }
-    
+
     /**
      * For transmission, all method arguments are converted to Objects, which means doubles become Doubles, etc.
      * However all the methods take primitive types, therefore we must convert back.

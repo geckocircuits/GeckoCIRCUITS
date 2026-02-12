@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -77,7 +77,7 @@ public final class ReglerSpaceVector extends RegelBlock {
         yKlickMin = (int) (dpix * (y - WIDTH));
         yKlickMax = (int) (dpix * (y - WIDTH + NO_INPUTS));
         Color origColor = graphics.getColor();
-        graphics.setColor(getBackgroundColor());  // default        
+        graphics.setColor(getBackgroundColor());  // default
 
         graphics.fillRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - WIDTH + 1)), (int) (dpix * 2 * DA_VALUE), (int) (dpix * NO_INPUTS));
         graphics.setColor(origColor);
@@ -115,5 +115,5 @@ public final class ReglerSpaceVector extends RegelBlock {
         svd.jSpinnerAverage2.setValue(tokenMap.readDataLine("average2", 1f));
         svd.jSpinnerAverage3.setValue(tokenMap.readDataLine("average3", 1f));
     }
-    
+
 }

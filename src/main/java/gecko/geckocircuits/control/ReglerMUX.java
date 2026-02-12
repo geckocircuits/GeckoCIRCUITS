@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -41,8 +41,8 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
             shortName("numberInputTerminals").
             arrayIndex(this, -1).
             build();
-    
-    
+
+
     public ReglerMUX() {
         super(3, 0);
         YOUT.add(new TerminalControlOutput(this, 2, -1));
@@ -64,7 +64,7 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.VECTOR_SIGNAL};
     }
-    
+
 
     @Override
     @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
@@ -91,7 +91,7 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     @Override
     public void setOutputTerminalNumber(final int number) {
         // here, we don't have output terminals
-    }    
+    }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -130,7 +130,7 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
     @Override
     protected String getCenteredDrawString() {
         return "";
-    }        
+    }
 
     @Override
     protected Window openDialogWindow() {

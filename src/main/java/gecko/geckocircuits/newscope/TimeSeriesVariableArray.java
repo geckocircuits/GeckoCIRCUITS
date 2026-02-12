@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -89,35 +89,35 @@ public final class TimeSeriesVariableArray extends AbstractTimeSerie{
   }
 
 //    public static void main(final String args[]) {
-//     
+//
 //        TimeSeriesVariableArray ts = new TimeSeriesVariableArray();
 //        final int arraySize = 4000000;
 //        final Random rnd = new Random();
 //        System.out.println("Test started...");
-//        
+//
 //        System.out.print("Setting values...");
 //        ts.setValue(0, 0.0);
 //        for (int i = 1; i < arraySize; i++) {
 //            ts.setValue(i, ts.getValue(i-1) + i/3);
 //        }
 //        System.out.println(" done");
-//        
+//
 ////        int getIndex = rnd.nextInt(arraySize);
 ////        System.out.print("Trying to get value at index: " + getIndex);
 ////        System.out.println(", got: " + ts.getValue(getIndex));
-//        
+//
 //        double time = ts.getValue(ts.getMaximumIndex())*rnd.nextDouble();
 //        System.out.println("Trying to find index of " + time);
 //        long startTime = System.currentTimeMillis();
 //        int indexFound = ts.findTimeIndex(time, ts.getMaximumIndex());
 //        long endTime = System.currentTimeMillis();
-//        
+//
 //        System.out.println(" -> found index: " + indexFound +
 //                " in " + (endTime-startTime) + " milliseconds.");
 //        System.out.println("Previous value: " + ts.getValue(indexFound - 1));
 //        System.out.println("VALUE FOUND:    " + ts.getValue(indexFound));
 //        System.out.println("Next value:     " + ts.getValue(indexFound + 1));
-//        
+//
 //    }
   @Override
   public double getLastTimeInterval(){

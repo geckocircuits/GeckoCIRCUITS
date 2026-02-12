@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,22 +25,22 @@ public final class DiagramCurve extends AbstractDiagram {
     static final String DIAGRAM_TYPE_STRING = "DiagramCurve";
 
     public DiagramCurve(final GraferV4 grafer) {
-        super(grafer, new DiagramSettings());        
+        super(grafer, new DiagramSettings());
     }
 
     public DiagramCurve(final AbstractDiagram oldDiagram) {
-        super(oldDiagram._grafer, new DiagramSettings());        
+        super(oldDiagram._grafer, new DiagramSettings());
     }
-    
+
     @Override
-    List<AbstractCurve> getCurvesCopy(final List<AbstractCurve> oldCurves) {        
+    List<AbstractCurve> getCurvesCopy(final List<AbstractCurve> oldCurves) {
         final List<AbstractCurve> newCurves = new ArrayList<AbstractCurve>();
         for (AbstractCurve curve : oldCurves) {
             newCurves.add(new CurveRegular(curve, this));
         }
         return Collections.unmodifiableList(newCurves);
     }
-    
+
     @Override
     AbstractCurve curveFabric() {
         return new CurveRegular(this);
@@ -53,10 +53,10 @@ public final class DiagramCurve extends AbstractDiagram {
 
     @Override
     String getDiagramTypeString() {
-        return DIAGRAM_TYPE_STRING;                
+        return DIAGRAM_TYPE_STRING;
     }
 
-    
-    
-    
+
+
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -61,16 +61,16 @@ public class NativeCDialog extends GeckoDialog {
     private final JList<String> jListLibFiles;
     private final JButton jButtonOpenFile = GuiFabric.getJButton(I18nKeys.ADD_NEW);
     private final JButton jButtonRemoveSelection = GuiFabric.getJButton(I18nKeys.REMOVE_SELECTION);
-    
+
     private final JPanel jPanelButtonOk;
     private final JPanel jPanelOpenFile;
-    
+
     private JFileChooser jFileChooser;
     protected final NativeCDialog _thisObj;
     private final ReglerNativeC _regNCObj;
-    
+
     private final NativeCLibraryFile _selectedLibFile;
-    
+
 
 
     /**
@@ -115,7 +115,7 @@ public class NativeCDialog extends GeckoDialog {
                 }
             }
         } );
-        
+
         jButtonRemoveSelection.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
@@ -126,7 +126,7 @@ public class NativeCDialog extends GeckoDialog {
                 _fileList.remove(index);
             }
         } );
-        
+
         jButtonOK.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
@@ -219,9 +219,9 @@ public class NativeCDialog extends GeckoDialog {
         }
         this.pack();
     }
-    
+
     private void initFileChooser () {
-        FileFilter filterLibrary = new FileNameExtensionFilter("Shared Library (*.dll, *.so, *.jnilib)", 
+        FileFilter filterLibrary = new FileNameExtensionFilter("Shared Library (*.dll, *.so, *.jnilib)",
                 "dll", "so", "jnilib"); // Windows: *.dll, Linux: *.so, Mac OS: *.jnilib
         jFileChooser = new JFileChooser();
         jFileChooser.setAcceptAllFileFilterUsed(false);
@@ -233,7 +233,7 @@ public class NativeCDialog extends GeckoDialog {
             jFileChooser.setCurrentDirectory(new File(GlobalFilePathes.DATNAM));
         }
     }
-    
+
     private boolean isFileNameAlreadyInList (final String name) {
         if (name == null) {
             return true;

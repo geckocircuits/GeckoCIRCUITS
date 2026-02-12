@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -87,13 +87,13 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         YOUT.add(new TerminalRelativePosition(this, 1, 2));
         YOUT.add(new TerminalRelativePosition(this, 1, -2));
         _windings1.addActionListener(ratioListener);
-        _windings2.addActionListener(ratioListener);        
+        _windings2.addActionListener(ratioListener);
 
         this.setzeSubcircuit();
     }
     private ActionListener ratioListener = new ActionListener() {
         @Override
-        public void actionPerformed(ActionEvent e) {                        
+        public void actionPerformed(ActionEvent e) {
             _windingsRatio.setValueWithoutUndo(_windings1.getValue() / _windings2.getValue());
         }
     };
@@ -110,7 +110,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         secondaryVoltageSource._upperLimit.setValueWithoutUndo(Double.MAX_VALUE);
     }
 
-    // Initialisiereung nach INIT&START --> 
+    // Initialisiereung nach INIT&START -->
     @Override
     public void setzeParameterZustandswerteAufNULL() {
         this.initPar();
@@ -247,7 +247,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         int x = getSheetPosition().x;
         int y = getSheetPosition().y;
         //-----------------
-        // Klickbereich:        
+        // Klickbereich:
         double rq = Math.round(dpix * 2 * HEIGHT / 7.0);
 
         g2.setStroke(new BasicStroke((float) 2.0));

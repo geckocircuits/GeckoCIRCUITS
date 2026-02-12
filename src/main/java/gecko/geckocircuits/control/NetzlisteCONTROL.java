@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -330,7 +330,7 @@ public final class NetzlisteCONTROL {
 ////            initDone = true;
 ////                try {
 ////                    bufReader = new BufferedReader(new FileReader(compareFile));
-////                    
+////
 ////                } catch (IOException ex) {
 ////                    Logger.getLogger(NetzlisteCONTROL.class.getName()).log(Level.SEVERE, null, ex);
 ////                }
@@ -351,12 +351,12 @@ public final class NetzlisteCONTROL {
 //                    System.out.print(calc._outputSignal[i][0] + " ");
 //                }
 //                System.out.println("");
-//            }                        
+//            }
 //            System.exit(3);
 //        }
         for (int i = 0; i < _sortedControlBlocksNew.length; i++) {
             _sortedControlBlocksNew[i].berechneYOUT(deltaT);
-        }        
+        }
 
 //        for(AbstractControlCalculatable calc : _sortedControlBlocksNew) {
 //            for(int i =0 ;i < calc._outputSignal.length; i++) {
@@ -367,9 +367,9 @@ public final class NetzlisteCONTROL {
 //                            if(_sortedReglerWONonCalculatables[k]._calculator == calc) {
 //                                System.out.println("calculator " +  _sortedReglerWONonCalculatables[k].getStringID() + " " + i + " " + j);
 //                            }
-//                        }                        
+//                        }
 //                    }
-//                    
+//
 //                }
 //            }
 //        }
@@ -378,22 +378,22 @@ public final class NetzlisteCONTROL {
 
     static int counter = 0;
 
-    // Wird erst in 'SimulationsKern' aufgerufen, und zwar dort, wo die Simulation wirklich gestartet wird 
-    // ... damit wird vermieden, dass beim Aufbau der Regelung im SchematicEntry jedesmal, wenn ein Element oder ein Parameter 
-    // geaendert wird, und die NetzlisteCONTROL neu gebaut wird, auch die (bei grossen Regelstrukturen) sehr zeitintensive 
-    // Berechnung der Bauelement-Optimierung durchgefuehrt wird und das SchematicEntry entsprechend traege auf den User reagiert 
-    // 
+    // Wird erst in 'SimulationsKern' aufgerufen, und zwar dort, wo die Simulation wirklich gestartet wird
+    // ... damit wird vermieden, dass beim Aufbau der Regelung im SchematicEntry jedesmal, wenn ein Element oder ein Parameter
+    // geaendert wird, und die NetzlisteCONTROL neu gebaut wird, auch die (bei grossen Regelstrukturen) sehr zeitintensive
+    // Berechnung der Bauelement-Optimierung durchgefuehrt wird und das SchematicEntry entsprechend traege auf den User reagiert
+    //
     public void optimiereAbarbeitungsListe() {
         //BlockOrderOptimizerNew blockOrderOtimizerNew = new BlockOrderOptimizerNew(elementsControl);
         //_orderedControlBlocks = blockOrderOtimizerNew.getOptimierteAbarbeitungsListe().toArray(new RegelBlock[0]);
 
         BlockOrderOptimizer3 blockOrderOtimizer3 = new BlockOrderOptimizer3(elementsControl);
         _orderedControlBlocks = blockOrderOtimizer3.getOptimierteAbarbeitungsListe().toArray(new RegelBlock[0]);
-                
-        
+
+
 //        for(int i = 0; i < _orderedControlBlocks.length; i++) {
 //            System.out.println("rb " + i + " " + _orderedControlBlocks[i]);
-//        }        
+//        }
     }
 
     public void createControlCalculators() {

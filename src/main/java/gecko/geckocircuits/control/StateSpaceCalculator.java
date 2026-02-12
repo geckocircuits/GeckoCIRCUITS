@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -49,7 +49,7 @@ public final class StateSpaceCalculator {
     private Matrix _rhsVec;
     private StateVariables _stateVariables;
     private final double _deltaT;
-    
+
     static class StateVariables {
 
         /**
@@ -88,7 +88,7 @@ public final class StateSpaceCalculator {
                 _result.set(i, 0, resultVector[i]);
             }
         }
-                
+
 
         private void saveHistory(final double newXIn) {
             _xOLDOLD = _xOLD;
@@ -155,7 +155,7 @@ public final class StateSpaceCalculator {
             _stateVariables = stateVariables;
         }
     }
-    
+
     void initializeWithNewDt(final double deltaT) {
          calculateMatrixA(deltaT);
 
@@ -205,13 +205,13 @@ public final class StateSpaceCalculator {
 
         outputSignal[0][0] = 0;
 
-        if (_AMatrix != null) {  
+        if (_AMatrix != null) {
             _rhsVec = _AMatrix.times(_stateVariables._result);
             for (int i = 0; i < _denominDegree; i++) {
                 _rhsVec.set(i, 0, _rhsVec.get(i, 0) + _stateVariables._result.get(i, 0));
             }
 
-            _rhsVec.set(0, 0, _rhsVec.get(0, 0) + deltaT * xIN[0][0]);            
+            _rhsVec.set(0, 0, _rhsVec.get(0, 0) + deltaT * xIN[0][0]);
             _stateVariables._result = _AMatrix2.solve(_rhsVec);
         }
         double resultValue = 0;

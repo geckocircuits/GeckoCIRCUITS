@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Connection exposes label and coordinates for circuit rendering and netlist generation")
 public class Verbindung extends AbstractCircuitSheetComponent implements ComponentTerminable, Labable {
 
-    private boolean _inMoveMode = false;  // wird nur zur De-selektion mittels ESCAPE verwendet 
+    private boolean _inMoveMode = false;  // wird nur zur De-selektion mittels ESCAPE verwendet
     private final List<Point> _connectorPoints = new ArrayList<Point>();
     private boolean _movementWestEast;  // Bewegungsrichtung mit der Maus beim Ziehen der Verbindung
     private CircuitLabel _label = new CircuitLabel();
@@ -42,7 +42,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
             new TerminalVerbindung(this, _connectorPoints, TerminalVerbindung.Location.START);
     private final TerminalVerbindung _endTerminal =
             new TerminalVerbindung(this, _connectorPoints, TerminalVerbindung.Location.END);
-    private boolean _isInitialized;    
+    private boolean _isInitialized;
     public List<Point> _subPaths = new ArrayList<Point>();
     private List<Point> _trimmedCoords = new ArrayList<Point>();
 
@@ -51,7 +51,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         _connectorType = connectorType;
         if(! (this instanceof VerbindungShortConnector)) {
             setParentCircuitSheet(parentSheet);
-        }                
+        }
     }
 
     public final ConnectorType getSimulationDomain() {
@@ -84,7 +84,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         return Collections.unmodifiableList(_connectorPoints);
     }
 
-    public final void setLabel(final String label) {        
+    public final void setLabel(final String label) {
         _label.setLabel(label);
     }
 
@@ -93,17 +93,17 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     }
 
     public final void setzeStartKnoten(final Point clickPoint) {
-        _inMoveMode = true;        
+        _inMoveMode = true;
         _connectorPoints.clear();
         _connectorPoints.add(clickPoint);
     }
 
     public final void setzeEndKnoten(final int pointX, final int pointY) {
-        _inMoveMode = false;        
+        _inMoveMode = false;
         final Point endPoint = new Point(pointX, pointY);
         _connectorPoints.set(_connectorPoints.size() - 1, endPoint);
         this.absetzenElement();
-        trimCoordinates();        
+        trimCoordinates();
     }
 
     @Override
@@ -115,13 +115,13 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     }
 
     @Override
-    public final void absetzenElement() {          
+    public final void absetzenElement() {
         if(_isInitialized) {
-            MoveVerbindungUndoAction undoAction = new MoveVerbindungUndoAction(_pointsBeforeMove, _connectorPoints);            
+            MoveVerbindungUndoAction undoAction = new MoveVerbindungUndoAction(_pointsBeforeMove, _connectorPoints);
             AbstractUndoGenericModel.undoManager.addEdit(undoAction);
         }
         _pointsBeforeMove.clear();
-        _pointsBeforeMove.addAll(_connectorPoints);        
+        _pointsBeforeMove.addAll(_connectorPoints);
         setModus(ComponentState.FINISHED);
         _isInitialized = true;
     }
@@ -228,7 +228,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     }
 
     @Override
-    public final void paintGeckoComponent(final Graphics2D graphics) {        
+    public final void paintGeckoComponent(final Graphics2D graphics) {
         Color fFertig = GlobalColors.farbeFertigVerbindungLK;
         switch (_connectorType) {
             case RELUCTANCE:
@@ -332,7 +332,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     public final LabelPriority getLabelPriority() {
         return _label.getLabelPriority();
     }
-    
+
     public void changeConnectorType(ConnectorType newType) {
         _connectorType = newType;
     }
@@ -360,7 +360,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
             case LK:
                 return "verbindungLK ";
             case THERMAL:
-                return "verbindungTHERM ";                        
+                return "verbindungTHERM ";
             default:
                 assert false;
                 return null;
@@ -378,7 +378,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     }
 
     @Override
-    public int[] getAussenabmessungenRechteckEckpunkte() {        
+    public int[] getAussenabmessungenRechteckEckpunkte() {
         int[] returnValue = new int[4];
         returnValue[0] = dpix * Math.min(_startTerminal.getPosition().x, _endTerminal.getPosition().x);
         returnValue[1] = dpix * Math.min(_startTerminal.getPosition().y, _endTerminal.getPosition().y);
@@ -400,7 +400,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     public void initAnimationParts() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
-    
+
     public void trimCoordinates() {
         if (_connectorPoints.size() > 1) {
             _trimmedCoords.add(new Point(_connectorPoints.get(0).x, _connectorPoints.get(0).y));
@@ -422,8 +422,8 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
             }
 
             _trimmedCoords.add(new Point(_connectorPoints.get(_connectorPoints.size() - 1).x, _connectorPoints.get(_connectorPoints.size() - 1).y));
-            
-           
+
+
         }
     }
 
@@ -434,7 +434,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     private class MoveVerbindungUndoAction implements UndoableEdit {
         private final List<Point> _newPositions = new ArrayList<Point>();
         private final List<Point> _oldPositions = new ArrayList<Point>();
-        
+
         private MoveVerbindungUndoAction(final List<Point> oldPositions, final List<Point> newPositions) {
             _newPositions.addAll(newPositions);
             _oldPositions.addAll(oldPositions);
@@ -501,5 +501,5 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
             return "Move connection";
         }
     }
-    
+
 }

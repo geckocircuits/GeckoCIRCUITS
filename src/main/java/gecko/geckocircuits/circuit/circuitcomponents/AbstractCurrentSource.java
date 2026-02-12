@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,7 +37,7 @@ public abstract class AbstractCurrentSource extends AbstractCircuitSource {
                 (int) (dpix * -I_ARROW_LENGTH * WIDTH + 1),
                 (int) (dpix * 2 * ARROW_LINE_WIDTH * WIDTH), (int) (dpix * I_ARROW_LENGTH * WIDTH));
     }
-    
+
 
     @Override
     final String getUnitForDomain(final ConnectorType connectorType) {
@@ -83,11 +83,11 @@ public abstract class AbstractCurrentSource extends AbstractCircuitSource {
                 return "iMAX";
         }
     }
-    
+
     @Override
     @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new CurrentSourceCalculator(this));
     }
-    
+
 }

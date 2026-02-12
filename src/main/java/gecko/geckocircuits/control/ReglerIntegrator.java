@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,7 +30,7 @@ public final class ReglerIntegrator extends RegelBlock {
     private static final int MIN_INDEX = 2;
     private static final int MAX_INDEX = 3;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerIntegrator.class, "INT", I18nKeys.INTEGRATOR);
-    
+
     public final transient UserParameter<Double> _a1Val = UserParameter.Builder.<Double>start("a1", 1.0).
             longName(I18nKeys.INTEGRATOR_COEFFICIENT).
             shortName("a1").
@@ -57,7 +57,7 @@ public final class ReglerIntegrator extends RegelBlock {
             build();
 
     public ReglerIntegrator() {
-        super(2, 1);        
+        super(2, 1);
 
         final ActionListener minMaxAction = new ActionListener() {
 
@@ -69,15 +69,15 @@ public final class ReglerIntegrator extends RegelBlock {
                     final double max = _maxLimit.getValue();
                     if(min < max) {
                         intCalc.setMinMax(min, max);
-                    }                    
+                    }
                     return;
                 }
                 assert _calculator == null : "Calculator not known!";
             }
         };
-        
+
         _maxLimit.addActionListener(minMaxAction);
-        _minLimit.addActionListener(minMaxAction);        
+        _minLimit.addActionListener(minMaxAction);
 
         _a1Val.addActionListener(new ActionListener() {
 
@@ -94,7 +94,7 @@ public final class ReglerIntegrator extends RegelBlock {
 
         // we don't add an actionlistener the y0 value, since the initial value is fixed after simulation start!
 
-    }            
+    }
 
     @Override
     public String[] getOutputNames() {
@@ -105,15 +105,15 @@ public final class ReglerIntegrator extends RegelBlock {
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.INTEGRAL_OUTPUT_LIMITED};
     }
-    
+
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         return new IntegratorCalculation(_a1Val.getValue(), _y0Val.getValue(), _minLimit.getValue(), _maxLimit.getValue());
-    }   
+    }
 
     @Override
     protected Window openDialogWindow() {
         return new ReglerIntegratorDialog(this);
-    }    
+    }
 }

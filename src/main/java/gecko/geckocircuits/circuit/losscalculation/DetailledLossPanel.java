@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -99,13 +99,13 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
     }
 
     final void baueGUI() {
-        
+
         _jPanelCurvesSelection = new JPanel();
         _jPanelCurvesSelection.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edit Curves", TitledBorder.LEFT, TitledBorder.TOP));
         _jPanelCurvesSelection.setLayout(new BorderLayout());
-        
+
 //jpSWed.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.LEFT, TitledBorder.TOP, TxtI.ti_Font_border));
-        _leftPanelTempAndBlocking.setLayout(new GridLayout(getTableCaptions().length+1, 1));        
+        _leftPanelTempAndBlocking.setLayout(new GridLayout(getTableCaptions().length+1, 1));
 
         final JButton jbAdd = GuiFabric.getJButton(I18nKeys.ADD_NEW);
         jbAdd.addActionListener(new ActionListener() {
@@ -133,7 +133,7 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
         _leftPanelTempAndBlocking.add(jbDel);
         _jPanelCurvesSelection.add(_leftPanelTempAndBlocking, BorderLayout.SOUTH);
 
-        // die Messkurven-Liste wird in einer eigenen Methode erzeugt, weil sie aktualisiert werden kann -->        
+        // die Messkurven-Liste wird in einer eigenen Methode erzeugt, weil sie aktualisiert werden kann -->
         _temperatureButtons = createRadioButtonsPanel();
         _jPanelCurvesSelection.add(_temperatureButtons, BorderLayout.NORTH);
 
@@ -155,8 +155,8 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
         if(!_lossCurves.isEmpty()) {
             _selectedCurve = _lossCurves.get(0);
             loadSelectedCurveIntoTable();
-        }        
-        
+        }
+
 
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.LEFT, TitledBorder.TOP));
         setLayout(new BorderLayout());
@@ -195,7 +195,7 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
         returnValue.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(final TableModelEvent tableModelEvent) {
-                if (_listenerActive) {                    
+                if (_listenerActive) {
                     _selectedCurve.setCurveData(_table.getCheckedData());
                     updateGuiAndGrafer();
                 }
@@ -208,13 +208,13 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
     public abstract double calculateMaximumCurrentInAllCurves();
 
     /**
-     * 
+     *
      * @param temperature the temperature where the testcurve should be generated
-     * @param appliedVoltage still ugly: for conduction losses, the applied voltage 
+     * @param appliedVoltage still ugly: for conduction losses, the applied voltage
      * does not have any effect
      */
     final void createTestCurve(final double temperature, final double appliedVoltage) {
-        _testCurve = calculateNewTestCurve(temperature, appliedVoltage);        
+        _testCurve = calculateNewTestCurve(temperature, appliedVoltage);
         updateGuiAndGrafer();
     }
 

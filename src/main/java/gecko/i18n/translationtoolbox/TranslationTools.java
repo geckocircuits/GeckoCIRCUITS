@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
         justification = "Static progressMonitor is a shared UI component for progress tracking")
 public class TranslationTools extends javax.swing.JFrame implements PropertyChangeListener {
-    
+
     private boolean confirmedSingle = false;
     private boolean confirmedMultiple = false;
     private boolean changed = false;
@@ -51,7 +51,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
     private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
-    
+
     /*
      * Inner class used to execute upload instructions from a separate
      * thread to avoid freezing up.
@@ -66,16 +66,16 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
             if (confirmedMultiple) {
                 // upload multiple-line suggestion
                 UPbot.addTranslationSuggestion_multiple(keysMultiple.get(counterMultiple), newTranslationMultiple, commentMultiple);
-            }            
+            }
             return null;
         }
-        
+
         @Override
         public void done() {} // do nothing
     }
-        
+
     /*
-     * Inner class used to acquire progress information from the upload bot 
+     * Inner class used to acquire progress information from the upload bot
      * class (UPbot) from a separate thread to avoid freezing up.
      */
     private class Progress extends SwingWorker<Void, Void> {
@@ -88,16 +88,16 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
             } catch (Exception e) {}
             // keep updating progress until task is finished
             while (!task.isDone()) {
-                setProgress(UPbot.getProgress()); // update progress                
+                setProgress(UPbot.getProgress()); // update progress
             }
             setProgress(100); // indicate task completion
             return null;
         }
-        
+
         @Override
         public void done() {} // do nothing
     }
-    
+
     /**
      * Creates new form TranslationTools
      */
@@ -114,74 +114,74 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         jTextField9.setEditable(false); // "Items Remaining" multiple-line
         jTextArea4.setEditable(false); // "Current Translation" multiple-line
         jTextArea5.setEditable(false); // "Original English" multiple-line
-        
+
         maxCounterSingle = LangInit.transMap_single.getSize();
         maxCounterMultiple = LangInit.transMap_multiple.getSize();
         // initialize counters
         counterSingle = maxCounterSingle;
         counterMultiple = maxCounterMultiple;
-        
+
         // "Items Remaining" text field in single-line
         jTextField5.setText(counterSingle.toString());
-        
+
         // "Items Remaining" text field in multiple-line
         jTextField9.setText(counterMultiple.toString());
-        
+
         keysSingle = new HashMap<Integer, I18nKeys>(); // create the keysSingle HashMap
-        
+
         int i = counterSingle;
-        
+
         // initialize single-line keys HashMap
         for (I18nKeys key : LangInit.englishMap_single.getKeySet()) {
             keysSingle.put(i, key);
             i = i - 1;
         }
-        
+
         // "Original English" text field in single-line
         jTextField6.setText(LangInit.englishMap_single.getValue(keysSingle.get(counterSingle)));
-        
+
         // "Current Translation" text field in single-line
         jTextField7.setText(LangInit.transMap_single.getValue(keysSingle.get(counterSingle)));
-        
+
         keysMultiple = new HashMap<Integer,I18nKeys>(); // create the keysMultiple HashMap
-        
+
         i = counterMultiple;
-        
+
         // initialize multiple-line keys HashMap
         for (I18nKeys key : LangInit.englishMap_multiple.getKeySet()) {
             keysMultiple.put(i, key);
             i = i - 1;
         }
-        
+
         // "Original English" text area in multiple-line
         jTextArea5.setText(LangInit.englishMap_multiple.getValue(keysMultiple.get(counterMultiple)));
-        
+
         // "Current Translation" text area in multiple-line
         jTextArea4.setText(LangInit.transMap_multiple.getValue(keysMultiple.get(counterMultiple)));
-        
+
         // "Done" button ActionListener
         jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (changed) {
                     // make the change in the GUIs
                     // LangInit.app.setText();
-                    
+
                     if (confirmedSingle || confirmedMultiple) {
                         buttonName = InitParameters.DONE_BUTTON;
-                        
+
                         // initialize progressMonitor
                         progressMonitor = new ProgressMonitor(TranslationTools.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                         progressMonitor.setProgress(0); // initialize progress
-                    
+
                         // Create new threads
                         task = new Task();
                         progress = new Progress();
-                        progress.addPropertyChangeListener(TranslationTools.this);                    
-                    
+                        progress.addPropertyChangeListener(TranslationTools.this);
+
                         // Run threads
                         task.execute();
                         progress.execute();
-                        
+
                         disableButtons();
                     } else {
                         dispose();
@@ -191,12 +191,12 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                 }
             }
         });
-        
+
         // "Confirm" button in Single-Line
         jButton5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 newTranslationSingle = jTextField8.getText(); // get new suggestion
-                                    
+
                 if (newTranslationSingle.isEmpty()) {
                     new TranslationDialog(InitParameters.EMPTY_CONFIRM_MESSAGE).setVisible(true);
                 } else {
@@ -204,14 +204,14 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                     confirmedSingle = true; // confirm the suggestion
                     changed = true; // indicates that a change has been made
                 }
-            } 
+            }
         });
-        
+
         // "Confirm" button in Multiple-Line
         jButton8.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 newTranslationMultiple = jTextArea3.getText(); // get new suggestion
-                
+
                 if (newTranslationMultiple.isEmpty()) {
                     new TranslationDialog(InitParameters.EMPTY_CONFIRM_MESSAGE).setVisible(true);
                 } else {
@@ -221,29 +221,29 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                 }
             }
         });
-        
+
         // "Next Item" button in Single-Line
         jButton6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (counterSingle > 1) {
                     if (confirmedSingle) {
                         // save the suggestion on the Wiki
-                        
+
                         // initialize progressMonitor
                         progressMonitor = new ProgressMonitor(TranslationTools.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                         progressMonitor.setProgress(0); // initialize progress
-                    
+
                         // Create new threads
                         task = new Task();
                         progress = new Progress();
-                        progress.addPropertyChangeListener(TranslationTools.this);                    
-                    
+                        progress.addPropertyChangeListener(TranslationTools.this);
+
                         // Run threads
                         task.execute();
                         progress.execute();
-                        
+
                         disableButtons();
-                        
+
                         jTextField8.setText("");
                         jTextArea1.setText("");
                         confirmedSingle = false;
@@ -255,32 +255,32 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                     jTextField6.setText(LangInit.englishMap_single.getValue(keysSingle.get(counterSingle)));
                     // "Current Translation" text field in single-line
                     jTextField7.setText(LangInit.transMap_single.getValue(keysSingle.get(counterSingle)));
-                }                
+                }
             }
         });
-        
+
         // "Next Item" button in Multiple-Line
         jButton9.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (counterMultiple > 1) {
                     if (confirmedMultiple) {
                         // save suggestion on the Wiki
-                        
+
                         // initialize progressMonitor
                         progressMonitor = new ProgressMonitor(TranslationTools.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                         progressMonitor.setProgress(0); // initialize progress
-                    
+
                         // Create new threads
                         task = new Task();
                         progress = new Progress();
-                        progress.addPropertyChangeListener(TranslationTools.this);                    
-                    
+                        progress.addPropertyChangeListener(TranslationTools.this);
+
                         // Run threads
                         task.execute();
                         progress.execute();
-                        
+
                         disableButtons();
-                        
+
                         jTextArea2.setText("");
                         jTextArea3.setText("");
                         confirmedMultiple = false;
@@ -295,29 +295,29 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                 }
             }
         });
-        
+
         // "Previous Item" button in Single-Line
         jButton7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (counterSingle < maxCounterSingle) {
                     if (confirmedSingle) {
                         // save the suggestion on the Wiki
-                        
+
                         // initialize progressMonitor
                         progressMonitor = new ProgressMonitor(TranslationTools.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                         progressMonitor.setProgress(0); // initialize progress
-                    
+
                         // Create new threads
                         task = new Task();
                         progress = new Progress();
-                        progress.addPropertyChangeListener(TranslationTools.this);                    
-                    
+                        progress.addPropertyChangeListener(TranslationTools.this);
+
                         // Run threads
                         task.execute();
                         progress.execute();
-                        
+
                         disableButtons();
-                        
+
                         jTextField8.setText("");
                         jTextArea1.setText("");
                         confirmedSingle = false;
@@ -329,32 +329,32 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                     jTextField6.setText(LangInit.englishMap_single.getValue(keysSingle.get(counterSingle)));
                     // "Current Translation" text field
                     jTextField7.setText(LangInit.transMap_single.getValue(keysSingle.get(counterSingle)));
-                }               
+                }
             }
         });
-      
+
         // "Previous Item" button in Multiple-Line
         jButton10.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (counterMultiple < maxCounterMultiple) {
                     if (confirmedMultiple) {
                         // save the suggestion on the Wiki
-                        
+
                         // initialize progressMonitor
                         progressMonitor = new ProgressMonitor(TranslationTools.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                         progressMonitor.setProgress(0); // initialize progress
-                    
+
                         // Create new threads
                         task = new Task();
                         progress = new Progress();
-                        progress.addPropertyChangeListener(TranslationTools.this);                    
-                    
+                        progress.addPropertyChangeListener(TranslationTools.this);
+
                         // Run threads
                         task.execute();
                         progress.execute();
-                        
+
                         disableButtons();
-                        
+
                         jTextArea2.setText("");
                         jTextArea3.setText("");
                         confirmedMultiple = false;
@@ -366,12 +366,12 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
                     jTextArea5.setText(LangInit.englishMap_multiple.getValue(keysMultiple.get(counterMultiple)));
                     // "Current Translation" text area in multiple-line
                     jTextArea4.setText(LangInit.transMap_multiple.getValue(keysMultiple.get(counterMultiple)));
-                }         
+                }
             }
         });
-      
+
     }
-    
+
     /*
      * Method to implement PropertyChangeListener
      */
@@ -381,16 +381,16 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
             progressMonitor.setProgress(prog); // update progress
             String info = "Completed " + prog + "%"; // information for the user
             progressMonitor.setNote(info); // update the message
-                                    
+
             // check if canceled
             if (progressMonitor.isCanceled()) {
                 // cancel threads
                 progress.cancel(true);
                 task.cancel(true);
-                
+
                 enableButtons();
             }
-                                    
+
             // check if threads completed
             if (progress.isDone()) {
                 UPbot.resetProgress();
@@ -404,12 +404,12 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
             }
         }
     }
-    
+
     /*
      * Method to enable buttons
      */
     private void enableButtons() {
-        jButton1.setEnabled(true); // "Done" button  
+        jButton1.setEnabled(true); // "Done" button
         jButton6.setEnabled(true); // "Next Item" button single-line
         jButton7.setEnabled(true); // "Previous Item" button single-line
         jButton5.setEnabled(true); // "Confirm" button single-line
@@ -417,12 +417,12 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         jButton9.setEnabled(true); // "Next Item" button multiple-line
         jButton10.setEnabled(true); // "Previous Item" button multiple-line
     }
-    
+
     /*
      * Method to disable buttons
      */
     private void disableButtons() {
-        jButton1.setEnabled(false); // "Done" button  
+        jButton1.setEnabled(false); // "Done" button
         jButton6.setEnabled(false); // "Next Item" button single-line
         jButton7.setEnabled(false); // "Previous Item" button single-line
         jButton5.setEnabled(false); // "Confirm" button single-line
@@ -430,7 +430,7 @@ public class TranslationTools extends javax.swing.JFrame implements PropertyChan
         jButton9.setEnabled(false); // "Next Item" button multiple-line
         jButton10.setEnabled(false); // "Previous Item" button multiple-line
     }
-              
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

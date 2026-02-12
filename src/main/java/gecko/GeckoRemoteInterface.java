@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,7 +27,7 @@ public interface GeckoRemoteInterface extends Remote {
 
     //these are functions for remote access session set up
     boolean isFree() throws RemoteException;
-    
+
     /**
      * Get the session ID for the current GeckoCIRCUITS remote control connection.
      * @return the last active session ID (since there may be multiple clients)
@@ -38,17 +38,17 @@ public interface GeckoRemoteInterface extends Remote {
     long getSessionID() throws RemoteException;
 
     boolean checkSessionID(long sessionID) throws RemoteException;
-    
+
     long connect() throws RemoteException;
 
     void disconnect(long sessionID) throws RemoteException;
 
     void acceptExtraConnections(int numberOfExtraConnections) throws RemoteException;
-    
+
     boolean acceptsExtraConnections() throws RemoteException;
-    
+
     void registerLastClientToCallMethod(long sessionID) throws RemoteException;
-    
+
     @Category(MethodCategory.COMPONENT_CREATION_LISTING)
     @Documentation(I18nKeys.GET_CONTROL_ELEMS_DOC)
     @Declaration("String[] getControlElements()")
@@ -63,7 +63,7 @@ public interface GeckoRemoteInterface extends Remote {
     @Documentation(I18nKeys.GET_THERM_ELEMS_DOC)
     @Declaration("String[] getThermalElements()")
     String[] getThermalElements() throws RemoteException;
-    
+
     @Category(MethodCategory.COMPONENT_CREATION_LISTING)
     @Documentation(I18nKeys.GET_SPEC_ELEMS_DOC)
     @Declaration("String[] getSpecialElements()")
@@ -79,18 +79,18 @@ public interface GeckoRemoteInterface extends Remote {
     @Declaration("String[] getDiodes()")
     String[] getDiodes() throws RemoteException;
 
-    
+
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.SET_WORKSHEET_SIZE)
-    @Declaration("void setWorksheetSize(int sizeX, int sizeY)")            
+    @Declaration("void setWorksheetSize(int sizeX, int sizeY)")
     void setWorksheetSize(int sizeX, int sizeY) throws RemoteException;
-    
+
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.GET_WORKSHEET_SIZE)
-    @Declaration("int[] getWorksheetSize()")            
+    @Declaration("int[] getWorksheetSize()")
     int[] getWorksheetSize() throws RemoteException;
-    
-    
+
+
     @Category(MethodCategory.COMPONENT_CREATION_LISTING)
     @Documentation(I18nKeys.GET_THYRISTORS_DOC)
     @Declaration("String[] getThyristors()")
@@ -115,7 +115,7 @@ public interface GeckoRemoteInterface extends Remote {
     @Documentation(I18nKeys.GET_CAPACITORS_DOC)
     @Declaration("String[] getCapacitors()")
     String[] getCapacitors() throws RemoteException;
-    
+
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.DO_OPERATION_DOC)
     @Declaration("Object doOperation(String elemName, String opName, Object paramValue)")
@@ -225,11 +225,11 @@ public interface GeckoRemoteInterface extends Remote {
     @Documentation(I18nKeys.GET_SIM_TIME_DOC)
     @Declaration("double getSimulationTime()")
     double getSimulationTime() throws RemoteException;
-    
+
     @Category(MethodCategory.SIMULATION_START)
     @Documentation(I18nKeys.SET_THE_TOTAL_SIMULATION_TIME_TO_THE_GIVEN_VALUE_TEND)
     @Declaration("void set_Tend(double value)")
-    void set_Tend(double value) throws RemoteException;            
+    void set_Tend(double value) throws RemoteException;
 
     @Category(MethodCategory.LOAD_SAVE_MODEL)
     @Documentation(I18nKeys.SAVE_FILE_AS_DOCUMENTATION)
@@ -245,12 +245,12 @@ public interface GeckoRemoteInterface extends Remote {
     @Documentation(I18nKeys.IMPORT_FROM_FILE_DOC)
     @Declaration("void importFromFile(String fileName, String insertSubCircuitName)")
     void importFromFile(String fileName, String importIntoSubcircuit) throws RemoteException, FileNotFoundException;
-    
+
     @Category(MethodCategory.LOAD_SAVE_MODEL)
     @Documentation(I18nKeys.SHUTDOWN_DOC)
     @Declaration("void shutdown()")
     void shutdown() throws RemoteException;
-    
+
     @Category(MethodCategory.SIGNAL_PROCESSING)
     @Documentation(I18nKeys.GET_FOURIER_1_DOC)
     @Declaration("double[][] getFourier(String scope, int port, double tStart, double tStop, int harm)")
@@ -302,13 +302,13 @@ public interface GeckoRemoteInterface extends Remote {
     double getSignalRipple(String signalName, double startTime, double endTime) throws RemoteException;
 
     @Category(MethodCategory.SIGNAL_PROCESSING)
-    double[][] getSignalFourier(String signalName, double startTime, double endTime, int harmonics) throws RemoteException;        
+    double[][] getSignalFourier(String signalName, double startTime, double endTime, int harmonics) throws RemoteException;
 
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.SET_POSITION_DOC)
     @Declaration("void setPosition(String elementName, int xPosition, int yPosition)")
     void setPosition(String elementName, int xPosition, int yPosition) throws RemoteException;
-    
+
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.GET_POSITION_DOC)
     @Declaration("int[] getPosition(String elementName)")
@@ -323,18 +323,18 @@ public interface GeckoRemoteInterface extends Remote {
     @Documentation(I18nKeys.DELETE_ALL_COMPONENTS_DOC)
     @Declaration("void deleteAllComponents(String subcircuitName)")
     void deleteAllComponents(String subcircuitName) throws RemoteException;
-    
-    
+
+
     @Category(MethodCategory.COMPONENT_CREATION_LISTING)
     @Documentation(I18nKeys.CREATE_COMPONENT_DOC)
     @Declaration("void createComponent(String compType, String newElemName, int sheetPosX, sheetPosY)")
     void createComponent(String elementType, String elementName, int xPosition, int yPosition) throws RemoteException;
-    
+
     @Category(MethodCategory.COMPONENT_CREATION_LISTING)
     @Documentation(I18nKeys.CREATE_CONNECTOR_DOC)
     @Declaration("createConnector(String elementName, int xStart, int yStart, int xEnd, int yEnd, boolean startHorizontal)")
     void createConnector(String elementName, int xStart, int yStart, int xEnd, int yEnd, boolean startHorizontal) throws RemoteException;
-        
+
 
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.SET_OUTPUT_NODE_NAME_DOC)
@@ -346,7 +346,7 @@ public interface GeckoRemoteInterface extends Remote {
     @Declaration("void setInputNodeName(String elementName, int nodeIndex, String nodeName)")
     void setInputNodeName(String elementName, int nodeIndex, String nodeName) throws RemoteException;
 
-    
+
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.GET_OUTPUT_NODE_NAME_DOC)
     @Declaration("String getOutputNodeName(String elementName, int nodeIndex)")
@@ -356,8 +356,8 @@ public interface GeckoRemoteInterface extends Remote {
     @Documentation(I18nKeys.GET_INPUT_NODE_NAME_DOC)
     @Declaration("String getInputNodeName(String elementName, int nodeIndex)")
     String getInputNodeName(String elementName, int nodeIndex) throws RemoteException;
-    
-    
+
+
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.ROTATE_DOC)
     @Declaration("void rotate(String elementName)")
@@ -366,7 +366,7 @@ public interface GeckoRemoteInterface extends Remote {
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.SET_ORIENTATION_DOC)
     @Declaration("void setOrientation(String elementName, String direction)")
-    void setOrientation(String elementName, String direction) throws RemoteException;    
+    void setOrientation(String elementName, String direction) throws RemoteException;
 
     @Category(MethodCategory.SIGNAL_PROCESSING)
     @Documentation(I18nKeys.GET_SIGNAL_DATA_DOCUMENTATION)
@@ -381,7 +381,7 @@ public interface GeckoRemoteInterface extends Remote {
     @Category(MethodCategory.COMPONENT_PROPERTIES)
     @Documentation(I18nKeys.SET_COMPONENT_NAME_DOCUMENTATION)
     @Declaration("void setComponentName(String oldName, String newName) throws Exception")
-    void setComponentName(String oldName, String newName) throws Exception;    
+    void setComponentName(String oldName, String newName) throws Exception;
 
     @Category(MethodCategory.SIGNAL_PROCESSING)
     @Documentation(I18nKeys.STORED_MATRIX_DOC)
@@ -428,20 +428,20 @@ public interface GeckoRemoteInterface extends Remote {
     @Declaration("void initSteadyStateDetection(String[] stateVariables, double frequency, double dt, double simulationTime)")
     void initSteadyStateDetection(String[] stateVariables, double frequency, double deltaT,
             double simulationTime) throws RemoteException;
-    
+
     @Category(MethodCategory.SIMULATION_START)
     @Documentation(I18nKeys.SIMULATE_TO_STEADY_STATE_DEFAULT)
     @Declaration("double[] simulateToSteadyState(boolean supressMessages)")
     double[] simulateToSteadyState(final boolean supressMessages) throws RemoteException;
-    
+
     @Category(MethodCategory.SIMULATION_START)
     @Documentation(I18nKeys.SIMULATE_TO_STEADY_STATE)
     @Declaration("double[] simulateToSteadyState(boolean supressMessages, double targetCorrelation, double targetMeanPctDiff)")
     double[] simulateToSteadyState(final boolean supressMessages, final double targetCorrelation, final double targetMeanPctDiff) throws RemoteException;
-    
+
     ////////// here, we place the deprecated methods. Don't document them, they are deprecated!
     // in case you declare a new deprecated interface method, please REMOVE its documentation!
-    
+
     //@Documentation(I18nKeys.SET_LOSS_FILE_DOC)
     //@Declaration("void setLossFile(String elementName, String lossFileName) throws FileNotFoundException")
     @Deprecated
@@ -451,8 +451,8 @@ public interface GeckoRemoteInterface extends Remote {
     //@Declaration("void setNonLinear(String elementName, String characteristicFileName) throws FileNotFoundException")
     @Deprecated
     void setNonLinear(String elementName, String characteristicFileName) throws RemoteException, FileNotFoundException;
-    
-    
+
+
     //@Category(MethodCategory.SIMULATION_START)
     //@Documentation(I18nKeys.INIT_STEADY_STATE_DETECTION)
     //@Declaration("void initSteadyStateDetection(String[] stateVariables, double[] frequencies, double dt, double simulationTime)")
@@ -465,8 +465,8 @@ public interface GeckoRemoteInterface extends Remote {
     //@Declaration("double[] simulateUntilSteadyState(boolean supressMessages)")
     @Deprecated
     double[] simulateUntilSteadyState(boolean supressMessages) throws RemoteException;
-    
-    
+
+
     @Deprecated
     void create(String elementType, String elementName, int xPosition, int yPosition) throws RemoteException;
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,10 +24,10 @@ public class OrCalculatorTwoInputsTest extends AbstractTransitiveTwoInputs {
     }
 
     @Override
-    @Test        
+    @Test
     public void testInputTrueTrue() {
         double val = getValue(1,1);
-        assertWithTol(1, val);        
+        assertWithTol(1, val);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class OrCalculatorTwoInputsTest extends AbstractTransitiveTwoInputs {
     }
 
     @Override
-    @Test        
+    @Test
     public void testInputFalseFalse() {
         double val = getValue(0,0);
-        assertWithTol(0, val);        
-    }    
+        assertWithTol(0, val);
+    }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,33 +28,33 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerTERMINAL.class, "CONTROL_TERMINAL", I18nKeys.CONTROL_TERMINAL);
     private transient final TerminalToWrap _wrapped = new TerminalToWrap(this);
-    
+
     public ReglerTERMINAL() {
         super();
-        XIN.add(new TerminalControlBidirectional(this, 0, 0));             
-        // this is only a dummy terminal, so that we get the correct label name 
+        XIN.add(new TerminalControlBidirectional(this, 0, 0));
+        // this is only a dummy terminal, so that we get the correct label name
         // when loading from file. It will be replaced when the references are
         // set correctly.
         YOUT.add(new TerminalHiddenSubcircuit(this));
     }
-    
+
 
     @Override
     public void absetzenElement() {
         super.absetzenElement();
         _wrapped.absetzenElement();
     }
-    
+
     @Override
     public void copyAdditionalParameters(final AbstractBlockInterface originalBlock) {
         super.copyAdditionalParameters(originalBlock);
-        _wrapped.copyAdditionalParameters(((ReglerTERMINAL) originalBlock)._wrapped);        
+        _wrapped.copyAdditionalParameters(((ReglerTERMINAL) originalBlock)._wrapped);
     }
-        
-        
+
+
     @Override
-    public int istAngeklickt(final int mouseX, final int mouseY) {        
-        if ((getSheetPosition().x*dpix - dpix/2 <= mouseX) && mouseX <= (getSheetPosition().x*dpix + dpix/2) 
+    public int istAngeklickt(final int mouseX, final int mouseY) {
+        if ((getSheetPosition().x*dpix - dpix/2 <= mouseX) && mouseX <= (getSheetPosition().x*dpix + dpix/2)
                 && (getSheetPosition().y*dpix - dpix/2 <= mouseY) && (mouseY <= getSheetPosition().y*dpix + dpix/2 )) {
             return 1;
         } else {
@@ -74,20 +74,20 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
         // the label dialog should never apear!
         return null;
     }
-    
+
     @Override
-    public void moveComponent(final Point moveToPoint) {                
-        _wrapped.moveComponent(moveToPoint);        
-    }        
-    
+    public void moveComponent(final Point moveToPoint) {
+        _wrapped.moveComponent(moveToPoint);
+    }
+
     @Override
     public void drawBlockRectangle(final Graphics2D graphics) {
         // don't draw a block rectangle for this component!
         xKlickMin = getSheetPosition().x * dpix - dpix / 2;
         xKlickMax = getSheetPosition().x * dpix + dpix / 2;
         yKlickMin = getSheetPosition().y * dpix - dpix / 2;
-        yKlickMax = getSheetPosition().y * dpix + dpix / 2; 
-    }            
+        yKlickMax = getSheetPosition().y * dpix + dpix / 2;
+    }
 
     @Override
     protected void paintIndividualComponent(final Graphics2D graphics) {
@@ -97,17 +97,17 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
         graphics.setColor(GlobalColors.farbeElementCONTROLHintergrund);
         _wrapped.drawBackground(graphics);
         graphics.setColor(origColor);
-        _wrapped.drawForeground(graphics);   
+        _wrapped.drawForeground(graphics);
         graphics.setTransform(origTranform);
         drawBlockRectangle(graphics);
-    }            
+    }
 
     @Override
     protected String getCenteredDrawString() {
         // don't draw a string here!
         return "";
-    }        
-                
+    }
+
 
     @Override
     public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {
@@ -115,28 +115,28 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
         _wrapped.createBlockTerminal();
 
     }
-    
+
     @Override
     public void findAndSetReferenceToParentSheet(final List<SubcircuitBlock> allSubs, final String rootSubName) {
         super.findAndSetReferenceToParentSheet(allSubs, rootSubName);
-        _wrapped.createBlockTerminal();        
+        _wrapped.createBlockTerminal();
     }
-    
+
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        _wrapped.importIndividual(tokenMap);            
+        _wrapped.importIndividual(tokenMap);
     }
-    
+
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         super.exportAsciiIndividual(ascii);
-        _wrapped.exportAsciiIndividual(ascii);        
-    }                
+        _wrapped.exportAsciiIndividual(ascii);
+    }
 
     @Override
-    public void deleteActionIndividual() {        
+    public void deleteActionIndividual() {
         super.deleteActionIndividual();
-        _wrapped.deleteActionIndividual();        
+        _wrapped.deleteActionIndividual();
     }
 
     @Override
@@ -147,31 +147,31 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[0];
-    }    
+    }
     class ReglerTerminalCalculator extends AbstractControlCalculatable {
 
         public ReglerTerminalCalculator() {
             super(1, 1);
         }
 
-        
+
         @Override
         public void berechneYOUT(double deltaT) {
             _outputSignal[0][0] = 3.14;
         }
-        
+
     }
-    
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         return new ReglerTerminalCalculator();
-    }    
+    }
 
     @Override
     protected Window openDialogWindow() {
         return new ReglerTerminalDialog(this);
-    }                
-    
+    }
+
     @Override
     public TerminalSubCircuitBlock getBlockTerminal() {
         return _wrapped.getBlockTerminal();
@@ -181,7 +181,7 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     public EnumTerminalLocation getTerminalLocation() {
         return _wrapped.getTerminalLocation();
     }
-    
+
     @Override
     public int getForeGroundColorRgb() {
         Color c = getForeGroundColor();

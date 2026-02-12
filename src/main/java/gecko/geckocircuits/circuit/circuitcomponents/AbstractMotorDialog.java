@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,23 +34,23 @@ abstract class AbstractMotorDialog<T extends AbstractMotor> extends DialogElemen
     public AbstractMotorDialog(final T elementLK) {
         super(elementLK);
     }
-    
+
 
     @Override
-    public void processInputIndividual() {                
-        
+    public void processInputIndividual() {
+
         List<UserParameter<Double>> orderedUserParameters = getDialogSortedParameters();
-        
-        for (UserParameter<Double> param : orderedUserParameters) {  
+
+        for (UserParameter<Double> param : orderedUserParameters) {
             final FormatJTextField textField = tf.get(orderedUserParameters.indexOf(param));
             double number = textField.getNumberFromField();  // cM
             if (number == FormatJTextField.IS_VARIABLE) {
-                param.setNameOpt(textField.getText());                
+                param.setNameOpt(textField.getText());
             } else {
                 param.setNameOpt("");
                 param.setUserValue(number);
             }
-        }        
+        }
     }
 
     @Override
@@ -80,10 +80,10 @@ abstract class AbstractMotorDialog<T extends AbstractMotor> extends DialogElemen
 
     abstract JPanel buildPanelInitParameter();
     abstract List<UserParameter<Double>> getInitPanelParameters();
-    
+
     void createOrderedComponents() {
         List<UserParameter<Double>> orderedUserPars = getDialogSortedParameters();
-        
+
         variableNames = new JLabel[orderedUserPars.size()];
         explanationStrings = new JLabel[orderedUserPars.size()];
 
@@ -94,7 +94,7 @@ abstract class AbstractMotorDialog<T extends AbstractMotor> extends DialogElemen
             }
             variableNames[i] = labelFabric(orderedUserPars.get(i).getShortName()
                     + " [" + unitString + "] ");
-            explanationStrings[i] = labelFabric(trenner + orderedUserPars.get(i).getLongName());            
+            explanationStrings[i] = labelFabric(trenner + orderedUserPars.get(i).getLongName());
             tf.add(fabricFormatTextField(orderedUserPars.get(i)));
         }
     }
@@ -123,7 +123,7 @@ abstract class AbstractMotorDialog<T extends AbstractMotor> extends DialogElemen
         jPanelMOTOR.setLayout(new GridBagLayout());
         return jPanelMOTOR;
     }
-    
+
     abstract List<UserParameter<Double>> getDialogSortedParameters();
 
     JPanel buildPanelParameters(int startIndex, int endIndex, int[] separatorIndices, boolean addTorqueCombo) {
@@ -150,7 +150,7 @@ abstract class AbstractMotorDialog<T extends AbstractMotor> extends DialogElemen
         }
         if(addTorqueCombo) {
             addTorqueCombo(gbc.gridy + 1, jpParMOTOR, gbc);
-        }        
+        }
         return jpParMOTOR;
     }
 }

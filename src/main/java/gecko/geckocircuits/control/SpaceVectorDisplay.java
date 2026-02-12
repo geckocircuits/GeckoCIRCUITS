@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,7 +15,7 @@ package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import javax.swing.ImageIcon; 
+import javax.swing.ImageIcon;
 import java.net.URL;
 
 
@@ -52,8 +52,8 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
     private double _time;
     private double _old_time;
     private double _timeStep;
-    
-    
+
+
     private BufferedImage doubleBufferImage;
     private final GraphicsConfiguration gfxConf = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
     Graphics2D offGraph;
@@ -61,7 +61,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
     SpaceVector sv2;
     SpaceVector sv3;
     private ReglerSpaceVector reglerSpaceVector;
-   
+
 
     private class SpaceVector {
 
@@ -87,7 +87,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         private JSpinner _length;
         private JSpinner _average;
         private int averageSpan = 1;
-        
+
         private void setSpaceVector(final double r, final double s, double t) {
 
             double re = 2 / 3.0 * (r - 0.5 * s - 0.5 * t);
@@ -102,7 +102,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 
                 averageHistoryRe[(int) counter % HISTORY_BUFFER_SIZE] = (float) re;
                 averageHistoryIm[(int) counter % HISTORY_BUFFER_SIZE] = (float) im;
-                
+
                 spaceVectorReal = 0;
                 spaceVectorImag = 0;
 
@@ -114,12 +114,12 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 
                 spaceVectorReal /= averageSpan;
                 spaceVectorImag /= averageSpan;
-                
+
             } else {
                 spaceVectorImag = im;
-                spaceVectorReal = re;            
+                spaceVectorReal = re;
             }
-            
+
             old_spaceVectorRealPos = spaceVectorRealPos;
             old_spaceVectorImagPos = spaceVectorImagPos;
 
@@ -136,14 +136,14 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
                     offGraph.drawRect(spaceVectorRealPos, spaceVectorImagPos, 1, 1);
                 }
             }
-            
+
             jPanelDisplay.repaint();
         }
 
         public void paintArrow(Graphics2D g2d) {
             double angle = Math.atan2(spaceVectorImag, spaceVectorReal);
             g2d.setColor(_arrowColor);
-            
+
             g2d.translate(ORIGINX, ORIGINY);
             Polygon arrowHead = new Polygon(new int[]{
                     spaceVectorRealPos,
@@ -156,7 +156,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
                 }, 3);
 
         g2d.drawLine(0, 0, spaceVectorRealPos, spaceVectorImagPos);
-        
+
         g2d.fillPolygon(arrowHead);
         g2d.setColor(Color.black);
         g2d.drawPolygon(arrowHead);
@@ -188,7 +188,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         AlphaComposite ac =
         AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.1f);
         offGraph.setComposite(ac);
-        
+
         offGraph.translate(ORIGINX, ORIGINY);
 
         clearDisplay();
@@ -196,13 +196,13 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         sv2 = new SpaceVector(Color.blue, Color.blue, jSpinnerLength2, jSpinnerAverage2);
         sv3 = new SpaceVector(Color.green, Color.green, jSpinnerLength3, jSpinnerAverage3);
         jRadioButtonLine.setSelected(true);
-        
-    }        
-    
+
+    }
+
 
     private void clearDisplay() {
 
-        Color oldColor = offGraph.getColor();        
+        Color oldColor = offGraph.getColor();
         for(int i = 0; i < 50; i++) {
             offGraph.setColor(Color.white);
             offGraph.fillRect(-ORIGINX, -ORIGINY, 500, 500);
@@ -488,7 +488,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 //        System.exit(-1);
 //    }
 
-    private void SpaceVectorPaint(Graphics g) {        
+    private void SpaceVectorPaint(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -504,12 +504,12 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         // re axis
         g2d.drawLine(ORIGINX, ORIGINY, 340, ORIGINY);
         g2d.drawPolygon(new int[]{340, 340, 345}, new int[]{ORIGINY-5, ORIGINY+5, ORIGINY}, 3);
-        
+
         // im axis
         g2d.drawLine(ORIGINX, ORIGINY, ORIGINX, 30);
         g2d.drawPolygon(new int[]{ORIGINX-5, ORIGINX+5, ORIGINX}, new int[]{30, 30, 25}, 3);
-        
-        
+
+
         g2d.setFont(new Font(Font.SERIF, 2, 10));
         g2d.drawString("Re", 2 * ORIGINX-20, ORIGINY+20);
         g2d.drawString("Im", ORIGINX+10, 40);
@@ -525,7 +525,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         _old_time = _time;
         _time = time;
         _timeStep = dt;
-        
+
         int pauseValue = (Integer) jSpinnerPauseTime.getValue();
         if (pauseValue >= 1) {
             try {

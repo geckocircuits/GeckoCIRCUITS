@@ -59,7 +59,7 @@ public class SignalDataContainerRegularTest {
         String originalName = signalContainer.getSignalName();
         String newName = "OverriddenName";
         signalContainer.setSignalName(newName);
-        
+
         assertNotEquals(originalName, signalContainer.getSignalName());
         assertEquals(newName, signalContainer.getSignalName());
     }
@@ -91,7 +91,7 @@ public class SignalDataContainerRegularTest {
         for (int i = 0; i < testValues.length; i++) {
             dataContainer.setValue(testValues[i], 1, i);
         }
-        
+
         for (int i = 0; i < testValues.length; i++) {
             assertEquals(testValues[i], dataContainer.getValue(1, i), EPSILON);
         }
@@ -216,7 +216,7 @@ public class SignalDataContainerRegularTest {
     public void testModifyUnderlying() {
         // Change value in underlying container
         dataContainer.setValue(99.99f, 1, 5);
-        
+
         // Should be visible through signal container's parent
         assertEquals(99.99f, signalContainer.getDataContainer().getValue(1, 5), EPSILON);
     }
@@ -337,10 +337,10 @@ public class SignalDataContainerRegularTest {
     public void testToStringMultiple() {
         SignalDataContainerRegular signal1 = new SignalDataContainerRegular(dataContainer, 1);
         SignalDataContainerRegular signal2 = new SignalDataContainerRegular(dataContainer, 2);
-        
+
         String str1 = signal1.toString();
         String str2 = signal2.toString();
-        
+
         assertNotNull(str1);
         assertNotNull(str2);
         assertNotEquals(str1, str2);
@@ -352,10 +352,10 @@ public class SignalDataContainerRegularTest {
     public void testSignalContainerWithTimeSeriesData() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(5, 100);
         SignalDataContainerRegular signal = new SignalDataContainerRegular(tsContainer, 1);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f};
         tsContainer.insertValuesAtEnd(values, 0.0);
-        
+
         assertEquals(signal.getDataContainer().getValue(1, 0), 2.0f, EPSILON);
     }
 
@@ -363,13 +363,13 @@ public class SignalDataContainerRegularTest {
     public void testSignalContainerTimeSeries() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricArrayTimeSeries(3, 100);
         SignalDataContainerRegular signal = new SignalDataContainerRegular(tsContainer, 1);
-        
+
         float[] values1 = {10.0f, 20.0f, 30.0f};
         float[] values2 = {40.0f, 50.0f, 60.0f};
-        
+
         tsContainer.insertValuesAtEnd(values1, 0.0);
         tsContainer.insertValuesAtEnd(values2, 0.001);
-        
+
         assertEquals(20.0f, signal.getDataContainer().getValue(1, 0), EPSILON);
         assertEquals(50.0f, signal.getDataContainer().getValue(1, 1), EPSILON);
     }
@@ -379,11 +379,11 @@ public class SignalDataContainerRegularTest {
     @Test
     public void testSignalNamePersistenceWithData() {
         signalContainer.setSignalName("TemperatureSensor");
-        
+
         // Add data
         dataContainer.setValue(25.5f, 1, 0);
         dataContainer.setValue(26.0f, 1, 1);
-        
+
         // Signal name should still be there
         assertEquals("TemperatureSensor", signalContainer.getSignalName());
     }
@@ -393,11 +393,11 @@ public class SignalDataContainerRegularTest {
         SignalDataContainerRegular sig1 = new SignalDataContainerRegular(dataContainer, 1);
         SignalDataContainerRegular sig2 = new SignalDataContainerRegular(dataContainer, 2);
         SignalDataContainerRegular sig3 = new SignalDataContainerRegular(dataContainer, 3);
-        
+
         sig1.setSignalName("Phase_A");
         sig2.setSignalName("Phase_B");
         sig3.setSignalName("Phase_C");
-        
+
         assertEquals("Phase_A", sig1.getSignalName());
         assertEquals("Phase_B", sig2.getSignalName());
         assertEquals("Phase_C", sig3.getSignalName());
@@ -410,7 +410,7 @@ public class SignalDataContainerRegularTest {
         for (int i = 0; i < 10; i++) {
             dataContainer.setValue(i * 1.5f, 1, i);
         }
-        
+
         HiLoData hiLo = dataContainer.getHiLoValue(1, 0, 10);
         assertNotNull(hiLo);
         assertTrue(hiLo._yLo <= hiLo._yHi);
@@ -421,7 +421,7 @@ public class SignalDataContainerRegularTest {
         for (int i = 0; i < 50; i++) {
             dataContainer.setValue((float) Math.sin(i * 0.1) * 100, 1, i);
         }
-        
+
         HiLoData absMinMax = dataContainer.getAbsoluteMinMaxValue(1);
         assertNotNull(absMinMax);
         assertTrue(absMinMax._yLo <= absMinMax._yHi);
@@ -430,13 +430,13 @@ public class SignalDataContainerRegularTest {
     @Test
     public void testMultipleDataContainers() {
         DataContainerSimple container2 = new DataContainerSimple(5, 100);
-        
+
         SignalDataContainerRegular sig1 = new SignalDataContainerRegular(dataContainer, 1);
         SignalDataContainerRegular sig2 = new SignalDataContainerRegular(container2, 2);
-        
+
         dataContainer.setValue(100.0f, 1, 0);
         container2.setValue(200.0f, 2, 0);
-        
+
         assertEquals(100.0f, sig1.getDataContainer().getValue(1, 0), EPSILON);
         assertEquals(200.0f, sig2.getDataContainer().getValue(2, 0), EPSILON);
     }
@@ -463,7 +463,7 @@ public class SignalDataContainerRegularTest {
     public void testGetHiLoValueZeroRange() {
         dataContainer.setValue(42.0f, 1, 0);
         HiLoData hiLo = dataContainer.getHiLoValue(1, 0, 1);
-        
+
         assertNotNull(hiLo);
         assertEquals(42.0f, hiLo._yLo, EPSILON);
         assertEquals(42.0f, hiLo._yHi, EPSILON);
@@ -473,7 +473,7 @@ public class SignalDataContainerRegularTest {
     public void testVeryLargeDataValues() {
         float largeValue = 1e10f;
         dataContainer.setValue(largeValue, 1, 0);
-        
+
         assertEquals(largeValue, dataContainer.getValue(1, 0), largeValue * EPSILON);
     }
 
@@ -481,7 +481,7 @@ public class SignalDataContainerRegularTest {
     public void testVerySmallDataValues() {
         float smallValue = 1e-10f;
         dataContainer.setValue(smallValue, 1, 0);
-        
+
         assertEquals(smallValue, dataContainer.getValue(1, 0), smallValue * 1e-3f);
     }
 
@@ -493,33 +493,33 @@ public class SignalDataContainerRegularTest {
         SignalDataContainerRegular voltageSignal = new SignalDataContainerRegular(dataContainer, 1);
         SignalDataContainerRegular currentSignal = new SignalDataContainerRegular(dataContainer, 2);
         SignalDataContainerRegular powerSignal = new SignalDataContainerRegular(dataContainer, 3);
-        
+
         // Set meaningful names
         voltageSignal.setSignalName("Voltage (V)");
         currentSignal.setSignalName("Current (A)");
         powerSignal.setSignalName("Power (W)");
-        
+
         // Fill with realistic data
         float[] voltages = {10, 20, 30, 40, 50};
         float[] currents = {1, 2, 3, 4, 5};
         float[] powers = {10, 40, 90, 160, 250};
-        
+
         for (int i = 0; i < voltages.length; i++) {
             dataContainer.setValue(voltages[i], 1, i);
             dataContainer.setValue(currents[i], 2, i);
             dataContainer.setValue(powers[i], 3, i);
         }
-        
+
         // Verify names
         assertEquals("Voltage (V)", voltageSignal.getSignalName());
         assertEquals("Current (A)", currentSignal.getSignalName());
         assertEquals("Power (W)", powerSignal.getSignalName());
-        
+
         // Verify data access
         assertEquals(30.0f, voltageSignal.getDataContainer().getValue(1, 2), EPSILON);
         assertEquals(3.0f, currentSignal.getDataContainer().getValue(2, 2), EPSILON);
         assertEquals(90.0f, powerSignal.getDataContainer().getValue(3, 2), EPSILON);
-        
+
         // Verify min/max
         HiLoData voltageBounds = dataContainer.getHiLoValue(1, 0, 5);
         assertEquals(10.0f, voltageBounds._yLo, EPSILON);
@@ -538,13 +538,13 @@ public class SignalDataContainerRegularTest {
     public void testSignalContainerDataIndependence() {
         SignalDataContainerRegular sig1 = new SignalDataContainerRegular(dataContainer, 1);
         SignalDataContainerRegular sig2 = new SignalDataContainerRegular(dataContainer, 2);
-        
+
         float value1 = 111.111f;
         float value2 = 222.222f;
-        
+
         dataContainer.setValue(value1, 1, 0);
         dataContainer.setValue(value2, 2, 0);
-        
+
         // Verify each signal accesses correct row
         assertEquals(value1, sig1.getDataContainer().getValue(1, 0), EPSILON);
         assertEquals(value2, sig2.getDataContainer().getValue(2, 0), EPSILON);

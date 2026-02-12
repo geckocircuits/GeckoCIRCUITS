@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -125,7 +125,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
 
   public ScopeFrame(final GraferV4 grafer){
     this._grafer = grafer;
-    
+
     // add CTRL+arrow keys to the actionmap to move around selected external signals
     JComponent components = (JComponent)this.getContentPane();
     ActionMap actionMap = components.getActionMap();
@@ -212,7 +212,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
     _powerAnalysisSettings.importIndividualControl(settingsMap);
     _scope.importIndividualCONTROL(settingsMap);
   }
-  
+
   public void setReferenzAufRegelBlock(final RegelBlock regelBlockOSZI){
     _regelBlockOSZI = (ReglerOSZI)regelBlockOSZI;
   }
@@ -244,7 +244,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
       jMenuScopeData.setEnabled(false);
       jMenuGraphs.setEnabled(false);
       jMenuAnalysis.setEnabled(false);
-      // Worksheet-Daten waehrend der Simulation nicht zugaenglich:            
+      // Worksheet-Daten waehrend der Simulation nicht zugaenglich:
     }else{
       jMenuItemInitAndStart.setEnabled(true);
       jMenuItemParameter.setEnabled(true);

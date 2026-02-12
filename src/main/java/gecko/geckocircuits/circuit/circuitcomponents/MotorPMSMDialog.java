@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,20 +19,20 @@ import java.util.List;
 import javax.swing.JPanel;
 
 class MotorPMSMDialog extends AbstractMotorDialog<MotorPMSM> {
-    
+
     public MotorPMSMDialog(final MotorPMSM parent) {
         super(parent);
     }
-    
+
 
     @Override
     JPanel buildPanelParameters() {
-        return super.buildPanelParameters(0, 7, new int[]{4,8}, true);        
+        return super.buildPanelParameters(0, 7, new int[]{4,8}, true);
     }
 
     @Override
     JPanel buildPanelInitParameter() {
-        return super.buildPanelParameters(7, 11, new int[]{2}, false);        
+        return super.buildPanelParameters(7, 11, new int[]{2}, false);
     }
 
     @Override
@@ -47,10 +47,10 @@ class MotorPMSMDialog extends AbstractMotorDialog<MotorPMSM> {
     List<UserParameter<Double>> getInitPanelParameters() {
         return Arrays.asList(element.initialStatorCurrentA, element.initialStatorCurrentB, element._initialRotationalSpeed,
                 element._initialRotorPosition);
-    
+
     }
-        
-    
-    
-    
+
+
+
+
 }

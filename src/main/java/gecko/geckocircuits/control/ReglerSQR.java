@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,21 +24,21 @@ public final class ReglerSQR extends AbstractReglerSingleInputSingleOutput {
     @Override
     public String[] getOutputNames() {
          return new String[]{"square"};
-    }           
-    
+    }
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new SquareCalculator();        
-    }    
+        return new SquareCalculator();
+    }
 
     @Override
     protected Window openDialogWindow() {
         return new DialogSimpleInfoMessage(this, "y1 = (x1)^2");
     }
 
-    
+
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.SQUARE_OF_INPUT_DESCRIPTION};
-    }    
+    }
 }

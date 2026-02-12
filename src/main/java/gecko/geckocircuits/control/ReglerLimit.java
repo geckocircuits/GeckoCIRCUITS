@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,16 +34,16 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerminalStateable {
     private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerLimit.class, "LIMIT", I18nKeys.LIMITER);
-    
+
     private static final double Y_STRING_DRAW_OFFSET = 2.2;
     private static final int X_DRAW_OFFSET = 3;
     private static final int Y_DRAW_OFFSET = 3;
-    private static final int IN_TERMS_WITH_EXT = 3;    
+    private static final int IN_TERMS_WITH_EXT = 3;
     private static final int X_EXTERNAL_TERMINAL = -1;
     private static final String MAX = "max";
     private static final String MIN = "min";
-    
-    
+
+
     final transient UserParameter<Double> _minLimit = UserParameter.
             Builder.<Double>start("minLimit", -1.0).
             longName(I18nKeys.LOWER_LIMIT).
@@ -58,7 +58,7 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
             showInTextInfo(TextInfoType.SHOW_WHEN_NON_EXTERNAL).
             arrayIndex(this, 1).
             build();
-    
+
     final transient UserParameter<Boolean> _isExternalSet = UserParameter.Builder.
             <Boolean>start("useExternal", false).
             longName(I18nKeys.IF_TRUE_EXTERNAL_TERMINALS).
@@ -67,14 +67,14 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
             build();
 
     private transient final Stack<TerminalControlInput> _stashedTerminals = new Stack<TerminalControlInput>();
-    
+
     public ReglerLimit() {
         super(1, 1);
-        
+
         final ActionListener minMaxAction = new ActionListener() {
 
             @Override
-            public void actionPerformed(final ActionEvent event) {                
+            public void actionPerformed(final ActionEvent event) {
                 if (_calculator instanceof LimitCalculatorInternal) {
                     final double min = _minLimit.getValue();
                     final double max = _maxLimit.getValue();
@@ -85,13 +85,13 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
                 assert _calculator == null || _calculator instanceof LimitCalculatorExternal: "Calculator not known!";
             }
         };
-        
+
         _minLimit.addActionListener(minMaxAction);
         _maxLimit.addActionListener(minMaxAction);
 
-        setExpandedParameterListener(_isExternalSet);        
+        setExpandedParameterListener(_isExternalSet);
     }
-            
+
 
     @Override
     public int getBlockHeight() {
@@ -106,7 +106,7 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.OUTPUT_LIMITED_BY_SPECIFIED_BOUNDS};
-    }    
+    }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -138,23 +138,23 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
     @Override
     protected String getCenteredDrawString() {
         return "LIM";
-    }    
-                
-    
+    }
+
+
     @Override
     protected Window openDialogWindow() {
-        return new ReglerLimitDialog(this);        
-    }    
+        return new ReglerLimitDialog(this);
+    }
 
     @Override
     public void setFolded() {
         while (XIN.size() > 1) {
-            _stashedTerminals.push((TerminalControlInput) XIN.pop());   
+            _stashedTerminals.push((TerminalControlInput) XIN.pop());
         }
         assert XIN.size() == 1;
     }
 
-    
+
     @Override
     public void setExpanded() {
         for(int i = 0, popSize = _stashedTerminals.size(); i < popSize; i++) {
@@ -163,17 +163,17 @@ public final class ReglerLimit extends RegelBlock implements ControlInputTwoTerm
         while (XIN.size() < IN_TERMS_WITH_EXT) {
             XIN.add(new TerminalControlInput(this, X_EXTERNAL_TERMINAL, -XIN.size() - 1));
         }
-    }        
+    }
 
     @Override
     public boolean isExternalSet() {
         return _isExternalSet.getValue();
     }
-    
-    
+
+
     @Override
     public void setExternalUsed(final boolean value) {
         _isExternalSet.setUserValue(value);
     }
-            
+
 }

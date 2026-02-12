@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,11 +24,11 @@ public final class ReglerLN extends AbstractReglerSingleInputSingleOutput {
     @Override
     public String[] getOutputNames() {
         return new String[]{"ln"};
-    }    
+    }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new LnCalculator();        
+        return new LnCalculator();
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -45,9 +45,9 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
 
     public AbstractCircuitGlobalTerminal() {
         super();
-        XIN.add(new TerminalTwoPortComponent(this, 0));     
-        
-        // this is only a dummy terminal, so that we get the correct label name 
+        XIN.add(new TerminalTwoPortComponent(this, 0));
+
+        // this is only a dummy terminal, so that we get the correct label name
         // when loading from file. It will be replaced when the references are
         // set correctly.
         YOUT.add(new TerminalHiddenSubcircuit(this));
@@ -55,10 +55,10 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
             ALL_GLOBALS_INTERNAL.put(getCircuitTyp(), new HashSet<AbstractCircuitGlobalTerminal>());
         }
 
-        ALL_GLOBALS_INTERNAL.get(getCircuitTyp()).add(this);        
+        ALL_GLOBALS_INTERNAL.get(getCircuitTyp()).add(this);
     }
-        
-    
+
+
     /**
      * return null if no terminal was clicked!
      *
@@ -85,22 +85,22 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
     public void doDoubleClickAction(final Point clickedPoint) {
         final DialogGlobalTerminal dialog = new DialogGlobalTerminal(GeckoSim._win, this);
         dialog.setVisible(true);
-    }        
-    
+    }
+
     @Override
     protected void drawForeground(final Graphics2D graphics) {
         final int diameter = dpix / 2;
-        graphics.fillOval(-diameter / 2 - 1, -diameter / 2 - 1, diameter + 1, diameter + 1);        
+        graphics.fillOval(-diameter / 2 - 1, -diameter / 2 - 1, diameter + 1, diameter + 1);
     }
 
     @Override
     protected void drawBackground(final Graphics2D graphics) {
         final int diameter = dpix;
-        graphics.fillRect(-diameter / 2-1, -diameter / 2-1, diameter+1, diameter+1);        
-    }    
-    
-    
-    
+        graphics.fillRect(-diameter / 2-1, -diameter / 2-1, diameter+1, diameter+1);
+    }
+
+
+
     @Override
     public Set<? extends GlobalTerminable> getAllGlobalTerminals() {
         final Set<AbstractCircuitGlobalTerminal> terminals = ALL_GLOBALS_INTERNAL.get(getTypeEnum());
@@ -112,16 +112,16 @@ public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlock
         // nothing todo, the dialog is opened in "doDoubleClickAction"
         assert false;
         return null;
-    }                
+    }
 
     @Override
-    void drawConnectorLines(final Graphics2D graphics) {        
+    void drawConnectorLines(final Graphics2D graphics) {
         // this component does not have connector lines!
     }
-    
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

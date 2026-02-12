@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,8 +21,8 @@ import gecko.geckoscript.SimulationAccess;
  * @author andy
  */
 public final class ExternalGeckoCustom extends AbstractGeckoCustom {
- 
-    
+
+
     public ExternalGeckoCustom(final SimulationAccess access) {
         super(access, null);
     }
@@ -30,7 +30,7 @@ public final class ExternalGeckoCustom extends AbstractGeckoCustom {
     @Override
     public void runScript() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }            
-      
-    
+    }
+
+
 }

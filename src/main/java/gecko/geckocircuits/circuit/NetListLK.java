@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -124,7 +124,7 @@ public class NetListLK {
      * @param e
      * @return
      */
-    public static NetListLK fabricIncludingSubcircuits(final Set<Verbindung> v, List<? extends AbstractBlockInterface> e) {                        
+    public static NetListLK fabricIncludingSubcircuits(final Set<Verbindung> v, List<? extends AbstractBlockInterface> e) {
         NetzlisteAllg nl = NetzlisteAllg.fabricNetzlistDisabledParentSubsRemoved(v, e);
         nl.deSingularizeIsolatedPotentials();
         return new NetListLK(nl, true);
@@ -136,7 +136,7 @@ public class NetListLK {
 
     private NetListLK(NetzlisteAllg nlLK, boolean includeSubCircuits) {
         _singularityEntries = nlLK._singularityIndices;
-                
+
         this.v = nlLK._connections.toArray(new Verbindung[0]);
         this.verbindungANZAHL = v.length;
         this.potLab = nlLK.getPotentiale();
@@ -150,27 +150,27 @@ public class NetListLK {
             if (this.elements[i] instanceof PostCalculatable) {
                 tmpPostCalculatables.add((PostCalculatable) this.elements[i]);
             }
-        }        
-                
+        }
+
         this.elementANZAHL = this.elements.length;
         this.elementANZAHLneu = this.elementANZAHL;  // wird weiter unten im Fall eventueller Subcircuits korregiert
         if (includeSubCircuits) {
             this.initialisiereMitSubcircuit();
             this.defineNodePairDirVoltContSrc();
         }
-        
+
         this._postCalculatables = tmpPostCalculatables.toArray(new PostCalculatable[tmpPostCalculatables.size()]);
         for (PostCalculatable calc : _postCalculatables) {
             calc.doInitialization();
         }
-        
+
         labelListe = new String[potLab.length];
         for (int i1 = 0; i1 < potLab.length; i1++) {
             String label = potLab[i1].getLabel();
             labelListe[i1] = label;
-        } 
-        
-        
+        }
+
+
 
     }
 
@@ -185,7 +185,7 @@ public class NetListLK {
         this.knotenX = knotenX;
         this.knotenY = knotenY;
         this.parameter = parameter;
-        
+
         this.spgQuelleNr = spgQuelleNr;
         this.elementANZAHL = typ.length;
         this.elementANZAHLneu = this.elementANZAHL;
@@ -243,7 +243,7 @@ public class NetListLK {
     // (dh. nicht als Netzliste um Rechenaufwand zu reduzieren)
     public void berechneSubCircuitAlsDifferentialgleichung(double dt, double t) {
         this.t = t;
-        for (PostCalculatable calc : _postCalculatables) {                        
+        for (PostCalculatable calc : _postCalculatables) {
             calc.doCalculation(dt, t);
         }
     }
@@ -288,10 +288,10 @@ public class NetListLK {
         }
         NetzlisteAllg netList = NetzlisteAllg.fabricNetzlistComplete(connections, eLKneuList);
         netList.deSingularizeIsolatedPotentials();
-        _singularityEntries = netList._singularityIndices;                
-        
+        _singularityEntries = netList._singularityIndices;
+
         this.potLab = netList.getPotentiale();
-        
+
         //***********************************************************
         // LK-Knotenliste -->
         typ = new CircuitTyp[elementANZAHLneu];
@@ -311,7 +311,7 @@ public class NetListLK {
             spgQuelleNr[i1] = circuitTyp == CircuitTyp.REL_MMF || circuitTyp == CircuitTyp.LK_U
                     || circuitTyp == CircuitTyp.LK_LKOP2 || circuitTyp == CircuitTyp.TH_TEMP ? (spgQuelleZaehler++) : -1;
             //------------------
-            // Anfangsknoten:            
+            // Anfangsknoten:
             List<AbstractTerminal> startTerminals = elem.XIN;
             int[] nrAnfangsKn = new int[startTerminals.size()];  // dieses Array muss mit Knotennummern gefuellt werden
             for (int i2 = 0; i2 < startTerminals.size(); i2++) {
@@ -334,19 +334,19 @@ public class NetListLK {
             }
 
             // Zuweisung der KnotenNummern fuer LK-Netzliste (es gibt bei den LK-Elementen nur je einen Anfangs- u. End-Knoten):
-            
+
             try {
                 knotenX[i1] = nrAnfangsKn[0];
                 knotenY[i1] = nrEndKn[0];
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }                
-        
+        }
+
 //        System.out.println("yyyyyyyyyyyyyyyyyyyyyyy repair!!!");
 //        int[] saveKnotenX = new int[]{5, 2, 3, 4, 0, 5, 1};
 //        int[] saveKnotenY = new int[]{6, 3, 2, 6, 1, 4, 0};
-//        
+//
 //        knotenX = saveKnotenX;
 //        knotenY = saveKnotenY;
         //------------------
@@ -382,7 +382,7 @@ public class NetListLK {
             }
         }
         spgQuelleZaehler++;
-                
+
         //--------------
         for (int i1 = 0; i1 < nl.typ.length; i1++) {
             switch (nl.typ[i1]) {
@@ -446,7 +446,7 @@ public class NetListLK {
         //--------------
         NetListLK nl_C_ersetzt = new NetListLK(i_typ, i_knotenX, i_knotenY, i_parameter, i_spgQuelleNr);
         nl_C_ersetzt._singularityEntries = nl._singularityEntries;
-        
+
         nl_C_ersetzt.elements = nl.elements;
         nl_C_ersetzt.eLKneu = nl.eLKneu;
         nl_C_ersetzt.nodePairDirVoltContSrc = nl.nodePairDirVoltContSrc;
@@ -465,7 +465,7 @@ public class NetListLK {
         for (AbstractCircuitBlockInterface search : elements) {
             if (search instanceof MutualInductance) {
                 double[] parM = search.getParameter();
-                
+
                 for (int i2 = 0; i2 < this.getElementANZAHL(); i2++) {
                     if (((ComponentCoupable) search).getComponentCoupling()._coupledElements[0].equals(elements[i2])) {
                         parM[5] = i2;

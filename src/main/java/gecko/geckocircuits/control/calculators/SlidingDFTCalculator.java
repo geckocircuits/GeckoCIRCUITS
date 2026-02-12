@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,7 +19,7 @@ import gecko.geckocircuits.control.ReglerSlidingDFT.FrequencyData;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SlidingDFTCalculator extends AbstractControlCalculatable 
+public final class SlidingDFTCalculator extends AbstractControlCalculatable
     implements InitializableAtSimulationStart, IsDtChangeSensitive {
 
     private int[] _frequencyIndicesMap;
@@ -56,7 +56,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
         }
         for (int i = 0; i < _frequencyIndicesMap.length; i++) {
             final int index = _frequencyIndicesSet[_frequencyIndicesMap[i]];
-            
+
             switch (_data.get(i)._outputData) {
                 case ABS:
                     _outputSignal[i][0] = 2 * Math.sqrt(_freqsReal[index] * _freqsReal[index]
@@ -77,12 +77,12 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
             }
         }
     }
-    
+
     private void doSlidingFourierStep() {
-        final double deltaReal = _newestDataReal - _oldestDataReal;        
+        final double deltaReal = _newestDataReal - _oldestDataReal;
         for (int i : _frequencyIndicesSet) {
             final int index = i * _idx % _size;
-            final double argument = -Math.PI *2* index / ((double) _size);            
+            final double argument = -Math.PI *2* index / ((double) _size);
             _freqsReal[i] += deltaReal * Math.cos(argument);
             _freqsImag[i] += deltaReal * Math.sin(argument);
         }
@@ -91,7 +91,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
         _size = Math.max(1, (int) Math.round(_averageSpanSecs / deltaT));
-        _timeData = new double[_size];        
+        _timeData = new double[_size];
         _freqsReal = new double[_size + 1];
         _freqsImag = new double[_size + 1];
         calculateFrequencyIndices();

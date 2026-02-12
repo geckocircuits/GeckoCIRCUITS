@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -35,7 +35,7 @@ import gecko.i18n.resources.I18nKeys;
 // Leistungskreis Idealer Schalter (hoch- oder niederohmiger Widerstand, daher bidirektional)
 // BJT is NOT an AbstractSwitch, since it does not connect to a "control gate"!
 public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCircuitable {
-    
+
     private static final double DEF_FORWARD_BETA = 100;
     private static final double DEF_BACKWARD_BETA = 60;
     private static final double DEF_BASE_RES = 0.1;
@@ -43,111 +43,111 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
     private static final double DEF_COL_RES = 0.01;
     private static final double DEF_uF = 0.6;
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(BJT.class, "BJT", I18nKeys.BIPOLAR_TRANSISTOR);
-    
-    
+
+
     final UserParameter<Double> _forwardBeta = UserParameter.Builder.
-            <Double>start("forwardBeta", DEF_FORWARD_BETA).                       
+            <Double>start("forwardBeta", DEF_FORWARD_BETA).
             longName(I18nKeys.FORWARD_AMP_FACTOR).
-            shortName("beta1").            
+            shortName("beta1").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 0).
-            build();                                    
-    
+            build();
+
     final UserParameter<Double> _backwardBeta = UserParameter.Builder.
-            <Double>start("backwardBeta", DEF_BACKWARD_BETA).                       
+            <Double>start("backwardBeta", DEF_BACKWARD_BETA).
             longName(I18nKeys.BACKWARD_AMP_FACTOR).
-            shortName("beta2").            
+            shortName("beta2").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 1).
-            build();                                    
-    
+            build();
+
     final UserParameter<Double> _baseResistance = UserParameter.Builder.
-            <Double>start("baseResistance", DEF_BASE_RES).                       
+            <Double>start("baseResistance", DEF_BASE_RES).
             longName(I18nKeys.INTERNAL_BASE_RES).
             shortName("rB").
-            unit("ohm").            
+            unit("ohm").
             arrayIndex(this, 2).
-            build();                                    
+            build();
 
     final UserParameter<Double> _emitterResistance = UserParameter.Builder.
-            <Double>start("emitterResistance", DEF_EM_RES).                       
+            <Double>start("emitterResistance", DEF_EM_RES).
             longName(I18nKeys.INTERNAL_EM_RES).
             shortName("rE").
-            unit("ohm").            
+            unit("ohm").
             arrayIndex(this, -1).
-            build();                                    
-    
+            build();
+
     final UserParameter<Double> _collectorResistance = UserParameter.Builder.
-            <Double>start("collectorResistance", DEF_COL_RES).                       
+            <Double>start("collectorResistance", DEF_COL_RES).
             longName(I18nKeys.INTERNAL_COL_RES).
             shortName("rC").
-            unit("ohm").            
+            unit("ohm").
             arrayIndex(this, -1).
-            build();                                    
-    
-    
+            build();
+
+
     final UserParameter<Double> _forwardVoltage = UserParameter.Builder.
-            <Double>start("forwardVoltage", DEF_uF).                       
+            <Double>start("forwardVoltage", DEF_uF).
             longName(I18nKeys.SEMICONDUCTOR_FORWARD_VOLTAGE).
             shortName("uF").
-            unit("V").            
+            unit("V").
             arrayIndex(this, 5).
-            build();                                    
-    
+            build();
+
     final UserParameter<Boolean> _isNpn = UserParameter.Builder.
-            <Boolean>start("isNpn", true).                       
+            <Boolean>start("isNpn", true).
             longName(I18nKeys.IF_TRUE_THEN_NPN).
-            shortName("NPN").            
+            shortName("NPN").
             arrayIndex(this, 6).
-            build();                               
-    
-    private final TerminalRelativePosition _baseTerminal;    
+            build();
+
+    private final TerminalRelativePosition _baseTerminal;
     private final AbstractTerminal _emitterTerminal;
     private final AbstractTerminal _collectorTerminal;
     private final AbstractTerminal _midTerminal = new TerminalHiddenSubcircuit(this);
-        
-    
+
+
     private final Diode _diode1;
     private final Diode _diode2;
     private final AbstractCurrentSource controlledSource1;
     private final AbstractCurrentSource controlledSource2;
     private final AbstractResistor _resistor1;
-    
+
 
     public BJT() {
-        super();        
+        super();
         _collectorTerminal = XIN.get(0);
-        _baseTerminal = new TerminalRelativePosition(this, -2, 0);        
+        _baseTerminal = new TerminalRelativePosition(this, -2, 0);
         _emitterTerminal = YOUT.get(0);
         XIN.add(_baseTerminal);
         //YOUT.add(_baseMidTerminal);
 
         _diode1 = (Diode) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_D, this);
-        _diode1.getIDStringDialog().setRandomStringID();        
+        _diode1.getIDStringDialog().setRandomStringID();
         _diode1.setOutputTerminal(0, _collectorTerminal);
         _diode1.setInputTerminal(0, _midTerminal);
 
         _diode2 = (Diode) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_D, this);
-        _diode2.getIDStringDialog().setRandomStringID();        
+        _diode2.getIDStringDialog().setRandomStringID();
         _diode2.setOutputTerminal(0, _emitterTerminal);
         _diode2.setInputTerminal(0, _midTerminal);
 
 
-        controlledSource1 = (AbstractCurrentSource) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_I, this);        
+        controlledSource1 = (AbstractCurrentSource) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_I, this);
         controlledSource1.setOutputTerminal(0, _midTerminal);
         controlledSource1.setInputTerminal(0, _collectorTerminal);
         controlledSource1.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY);
-        controlledSource1.directPotentialGain.setValueWithoutUndo(DEF_FORWARD_BETA / DEF_BASE_RES);        
+        controlledSource1.directPotentialGain.setValueWithoutUndo(DEF_FORWARD_BETA / DEF_BASE_RES);
 
 
-        controlledSource2 = (AbstractCurrentSource) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_I, this);        
+        controlledSource2 = (AbstractCurrentSource) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_I, this);
         controlledSource2.setOutputTerminal(0, _midTerminal);
         controlledSource2.setInputTerminal(0, _emitterTerminal);
         controlledSource2.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY);
         controlledSource2.directPotentialGain.setValueWithoutUndo(DEF_BACKWARD_BETA / DEF_BASE_RES);
-        
 
-        _resistor1 = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);        
+
+        _resistor1 = (AbstractResistor) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_R, this);
         _resistor1._resistance.setValueWithoutUndo(DEF_BASE_RES);
         _resistor1.setOutputTerminal(0, _midTerminal);
         _resistor1.setInputTerminal(0, _baseTerminal);
@@ -164,15 +164,15 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
 
         // output collector diode
         _diode2.setOutputTerminal(0, _emitterTerminal);
-        _diode2.setInputTerminal(0, _midTerminal);       
-        
+        _diode2.setInputTerminal(0, _midTerminal);
+
         // emitter clamping current source
         controlledSource1.setOutputTerminal(0, _midTerminal);
         controlledSource1.setInputTerminal(0, _collectorTerminal);
 
         // collector clamping current source
         controlledSource2.setOutputTerminal(0, _midTerminal);
-        controlledSource2.setInputTerminal(0, _emitterTerminal);               
+        controlledSource2.setInputTerminal(0, _emitterTerminal);
 
         // base resistance
         _resistor1.setOutputTerminal(0, _midTerminal);
@@ -180,7 +180,7 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         //_baseMidTerminal.getLabelObject().setLabel("base mid");
         //_midTerminal.getLabelObject().setLabel("Mid mid");
     }
-    
+
     private void setPNPTerminals() {
         // output emitter diode
         _diode1.setOutputTerminal(0, _midTerminal);
@@ -197,14 +197,14 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         // collector clamping current source
         controlledSource2.setOutputTerminal(0, _emitterTerminal);
         controlledSource2.setInputTerminal(0, _midTerminal);
-        
+
         // base resistance
         _resistor1.setOutputTerminal(0, _baseTerminal);
-        _resistor1.setInputTerminal(0, _midTerminal);        
-        
+        _resistor1.setInputTerminal(0, _midTerminal);
+
     }
-    
-    
+
+
     @Override
     public Collection<AbstractBlockInterface> getHiddenSubCircuitElements() {
 
@@ -219,7 +219,7 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
 
         _diode2._forwardVoltageDrop.setValueWithoutUndo(_forwardVoltage.getValue());
         _diode2._onResistance.setValueWithoutUndo(_emitterResistance.getValue());
-        
+
 
         if (_isNpn.getValue()) {
             setNPNTerminals();
@@ -229,8 +229,8 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         return Arrays.asList( new AbstractBlockInterface[]{_diode1, _diode2, controlledSource1, _resistor1});
     }
 
-    
-    
+
+
 
 
     @Override
@@ -248,7 +248,7 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         Stroke oldStroke = graphics.getStroke();
         graphics.setStroke(new BasicStroke((float) 3.0));
         graphics.drawLine(-(int) (dpix * 0.8), (int) (dpix * 0.8), -(int) (dpix * 0.8), (int) (-dpix * 0.8));
-        graphics.setStroke(oldStroke);        
+        graphics.setStroke(oldStroke);
     }
 
     @Override
@@ -259,8 +259,8 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
         graphics.drawLine(-(int) (dpix * 0.8), (int) (-dpix * 0.3), 0, -dpix );
         graphics.drawLine(-2 * dpix, 0, -(int) (dpix * 0.8), 0);
     }
-    
-    
+
+
     @Override
     public boolean includeParentInSimulation() {
         return false;
@@ -269,10 +269,10 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
     @Override
     protected Window openDialogWindow() {
         return new BJTDialog(this);
-    }    
-    
+    }
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return getCalculatorsFromSubComponents(this);        
+        return getCalculatorsFromSubComponents(this);
     }
 }

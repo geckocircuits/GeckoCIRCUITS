@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,7 +17,7 @@ import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.i18n.resources.I18nKeys;
 
 class HeatFlowCurrentSource  extends AbstractCurrentSource {
-    static final AbstractTypeInfo TYPE_INFO = 
-            new ThermalTypeInfo(HeatFlowCurrentSource.class, "HEAT-SOURCE", I18nKeys.HEAT_SOURCE_W);    
-    
+    static final AbstractTypeInfo TYPE_INFO =
+            new ThermalTypeInfo(HeatFlowCurrentSource.class, "HEAT-SOURCE", I18nKeys.HEAT_SOURCE_W);
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,19 +31,19 @@ public final class IGBTDialog extends AbstractDialogPowerSwitch<IGBT> {
         super(elementLK);
     }
 
-    
+
     public JPanel createParameterPanel() {
         JPanel returnValue = createParameterPanel(element._forwardVoltageDrop, element._onResistance,
-                element._offResistance, element.numberParalleled);        
-        
+                element._offResistance, element.numberParalleled);
+
         _tfSaturationCurrent = new FormatJTextField();
-        
+
         double initISat = ((IGBT) element)._saturationCurrent.getValue();
         if (initISat <= 0) {
             initISat = 10;
         }
         _tfSaturationCurrent.setNumberToField(initISat);
-        
+
         jCheckBoxSatCurrent = new JCheckBox("iSAT [A] =");
         jCheckBoxSatCurrent.setSelected(element._isSatCurEnabled.getValue());
         _tfSaturationCurrent.setEnabled(jCheckBoxSatCurrent.isSelected());
@@ -59,14 +59,14 @@ public final class IGBTDialog extends AbstractDialogPowerSwitch<IGBT> {
         grid.setRows(grid.getRows()+2);
         grid.setColumns(2);
         returnValue.add(new JLabel(""));
-        returnValue.add(jCheckBoxSatCurrent);        
+        returnValue.add(jCheckBoxSatCurrent);
         returnValue.add(_tfSaturationCurrent);
         return returnValue;
     }
 
     @Override
     public void processInputIndividual() {
-        setValueFromTextField(element._saturationCurrent, _tfSaturationCurrent);        
-        element._isSatCurEnabled.setUserValue(jCheckBoxSatCurrent.isSelected());        
-    }    
+        setValueFromTextField(element._saturationCurrent, _tfSaturationCurrent);
+        element._isSatCurEnabled.setUserValue(jCheckBoxSatCurrent.isSelected());
+    }
 }

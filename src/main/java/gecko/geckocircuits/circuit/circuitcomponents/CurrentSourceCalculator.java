@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,8 +30,8 @@ public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSou
     }
 
     @Override
-    public final void stampVectorB(final double[] bVector, double time, double deltaT) {        
-        _current = _function.calculate(time, deltaT);                
+    public final void stampVectorB(final double[] bVector, double time, double deltaT) {
+        _current = _function.calculate(time, deltaT);
         bVector[matrixIndices[0]] -= _current;
         bVector[matrixIndices[1]] += _current;
 
@@ -81,11 +81,11 @@ public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSou
             steps_reversed++;
         }
     }
-    
+
     @Override
     public final void updateHistory(final double[] potentials) {
         _potential1 = potentials[matrixIndices[0]];
-        _potential2 = potentials[matrixIndices[1]];        
+        _potential2 = potentials[matrixIndices[1]];
     }
 
 }

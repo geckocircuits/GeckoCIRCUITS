@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,10 +15,10 @@ package gecko.geckocircuits.circuit;
 
 /**
  * GUI-free abstract class for edits that should not appear in the undo menu.
- * 
+ *
  * Implements GeckoUndoableEdit to work in headless environments,
  * while maintaining backward compatibility with Swing via adaptation.
- * 
+ *
  * @author GeckoCIRCUITS Team
  * @since Sprint 15 - GUI-free refactoring
  */
@@ -28,7 +28,7 @@ public abstract class InvisibleEdit implements GeckoUndoableEdit {
     public final boolean canUndo() {
         return true;
     }
-    
+
 
     @Override
     public final boolean canRedo() {
@@ -69,5 +69,5 @@ public abstract class InvisibleEdit implements GeckoUndoableEdit {
     public final String getRedoPresentationName() {
         return "invisible edit!";
     }
-    
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,8 +36,8 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
     private final TimeFunctionConstant _timeFunction;
     private double _Ne;
 
-    public VoltageSourceDCMachineCalculator(TimeFunctionConstant timeFunction, InductorCouplingCalculator le, 
-            InductorCouplingCalculator la, final AbstractVoltageSource parent) {        
+    public VoltageSourceDCMachineCalculator(TimeFunctionConstant timeFunction, InductorCouplingCalculator le,
+            InductorCouplingCalculator la, final AbstractVoltageSource parent) {
         super(timeFunction, parent);
         _timeFunction = timeFunction;
         _la = la;

@@ -11,10 +11,10 @@ import static org.junit.Assert.*;
  * This calculator implements control logic for direct AC-AC conversion without DC link.
  */
 public class SparseMatrixCalculatorTest {
-    
+
     private SparseMatrixCalculator calculator;
     private static final double TOLERANCE = 1e-6;
-    
+
     @Before
     public void setUp() {
         calculator = new SparseMatrixCalculator();
@@ -26,26 +26,26 @@ public class SparseMatrixCalculatorTest {
             calculator._outputSignal[i] = new double[]{0};
         }
     }
-    
+
     @Test
     public void testConstructor() {
         // SMC control has 8 inputs and 9 outputs
         assertEquals("Should have 8 inputs", 8, calculator._inputSignal.length);
         assertEquals("Should have 9 outputs", 9, calculator._outputSignal.length);
     }
-    
+
     @Test
     public void testZeroInputs() {
         // Zero input should produce valid outputs (may not be exactly zero due to initialization)
         calculator.berechneYOUT(0.001);
-        
+
         // All outputs should be initialized and valid
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertNotNull("Output " + i + " should be initialized", calculator._outputSignal[i][0]);
             assertFalse("Output " + i + " should be valid", Double.isNaN(calculator._outputSignal[i][0]));
         }
     }
-    
+
     @Test
     public void testMultipleTimeSteps() {
         // Test stability across multiple calculation steps
@@ -53,19 +53,19 @@ public class SparseMatrixCalculatorTest {
             // Set varying inputs
             calculator._inputSignal[0][0] = Math.sin(0.1 * step);
             calculator._inputSignal[1][0] = Math.cos(0.1 * step);
-            
+
             calculator.berechneYOUT(0.001);
-            
+
             // Verify all outputs remain valid
             for (int i = 0; i < calculator._outputSignal.length; i++) {
-                assertFalse("Output " + i + " at step " + step + " should be valid", 
+                assertFalse("Output " + i + " at step " + step + " should be valid",
                            Double.isNaN(calculator._outputSignal[i][0]));
-                assertFalse("Output " + i + " at step " + step + " should not be infinite", 
+                assertFalse("Output " + i + " at step " + step + " should not be infinite",
                            Double.isInfinite(calculator._outputSignal[i][0]));
             }
         }
     }
-    
+
     @Test
     public void testInputVoltageConversion() {
         // Test conversion of 3-phase input to 3-phase output
@@ -78,9 +78,9 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[5][0] = -3.0;  // Output Vc ref
         calculator._inputSignal[6][0] = 0.0;   // Frequency
         calculator._inputSignal[7][0] = 0.0;   // Phase
-        
+
         calculator.berechneYOUT(0.001);
-        
+
         // 9 outputs: typically 6 switch commands + 3 voltage outputs or similar
         for (int i = 0; i < 6; i++) {
             // Switch commands should be 0 or 1 (or values indicating on/off)
@@ -89,14 +89,14 @@ public class SparseMatrixCalculatorTest {
                       out >= -10 && out <= 10);
         }
     }
-    
+
     @Test
     public void testFrequencyVariation() {
         // Test across different switching frequencies (if parameter exists)
         for (double freq = 0.0; freq <= 1.0; freq += 0.2) {
             calculator._inputSignal[6][0] = freq;  // Frequency parameter
             calculator.berechneYOUT(0.001);
-            
+
             // Outputs should remain stable despite frequency changes
             for (int i = 0; i < calculator._outputSignal.length; i++) {
                 assertFalse("Output should be valid at freq " + freq,
@@ -104,31 +104,31 @@ public class SparseMatrixCalculatorTest {
             }
         }
     }
-    
+
     @Test
     public void testNegativeInputVoltages() {
         // Test with all negative input voltages
         calculator._inputSignal[0][0] = -5.0;
         calculator._inputSignal[1][0] = -3.0;
         calculator._inputSignal[2][0] = -2.0;
-        
+
         calculator.berechneYOUT(0.001);
-        
+
         // Should handle negative inputs gracefully
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid", Double.isNaN(calculator._outputSignal[i][0]));
         }
     }
-    
+
     @Test
     public void testHighMagnitudeInputs() {
         // Test stability with high magnitude inputs
         calculator._inputSignal[0][0] = 1000.0;
         calculator._inputSignal[1][0] = 1000.0;
         calculator._inputSignal[2][0] = 1000.0;
-        
+
         calculator.berechneYOUT(0.001);
-        
+
         // Should remain stable
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid with high inputs",
@@ -137,31 +137,31 @@ public class SparseMatrixCalculatorTest {
                        Double.isInfinite(calculator._outputSignal[i][0]));
         }
     }
-    
+
     @Test
     public void testSmallTimeStep() {
         // Test with very small time step
         calculator._inputSignal[0][0] = 1.0;
         calculator.berechneYOUT(1e-8);
-        
+
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid with small dt",
                        Double.isNaN(calculator._outputSignal[i][0]));
         }
     }
-    
+
     @Test
     public void testLargeTimeStep() {
         // Test with larger time step
         calculator._inputSignal[0][0] = 1.0;
         calculator.berechneYOUT(0.01);
-        
+
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid with large dt",
                        Double.isNaN(calculator._outputSignal[i][0]));
         }
     }
-    
+
     @Test
     public void testOutputIndependence() {
         // Test that outputs remain consistent across repeated calculations

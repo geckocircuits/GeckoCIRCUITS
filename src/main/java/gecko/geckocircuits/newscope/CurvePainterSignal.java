@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -44,7 +44,7 @@ final class CurvePainterSignal extends AbstractCurvePainter{
   }
 
   @Override
-  public void loadDataRange(final int startPixel, final int stopPixel){      
+  public void loadDataRange(final int startPixel, final int stopPixel){
     for(int i = startPixel; i < stopPixel; i++){
       final Object value = _ramData.getDataValueInInterval(_xAxis.getValueFromPixel(i),
                                                            _xAxis.getValueFromPixel(i + 1), _curve.getValueDataIndex());

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -40,7 +40,7 @@ class ReglerIntegratorDialog extends DialogElementCONTROL<ReglerIntegrator> {
         JPanel pINT = createParameterPanel(element._a1Val, element._y0Val, element._minLimit, element._maxLimit);
         jpM.add(pINT, BorderLayout.CENTER);
         //
-        // Erklaerender Text: 
+        // Erklaerender Text:
         JLabel txtINT1 = new JLabel("z == 1    >>   Reset");
         txtINT1.setFont(GlobalFonts.LAB_FONT_DIALOG_1);
         txtINT1.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
@@ -50,14 +50,14 @@ class ReglerIntegratorDialog extends DialogElementCONTROL<ReglerIntegrator> {
         pImTxt.add(txtINT1, BorderLayout.CENTER);
         pImTxt.add(new JLabel(" "), BorderLayout.SOUTH);  // Vertikal-Abstand a
         //
-        jpM.add(pImTxt, BorderLayout.SOUTH);        
+        jpM.add(pImTxt, BorderLayout.SOUTH);
     }
 
     private JComponent getImageComponent() {
         final int bi = 90,
                 hi = 45,
                 abstandi = 15;
-        
+
         final JComponent compIm2 = new JComponent() {
             public void paint(Graphics g) {
                 g.setColor(Color.white);

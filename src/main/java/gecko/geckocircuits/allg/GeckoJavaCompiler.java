@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -176,7 +176,7 @@ public class GeckoJavaCompiler {
             while ((strLine = reader.readLine()) != null) {
                 appendSourcLine("\t\t" + strLine);
             }
-            //appendSourcLine("private static double[] yOUT = new double[" + "tnY" + "];"); 
+            //appendSourcLine("private static double[] yOUT = new double[" + "tnY" + "];");
             appendSourcLine("static {");
             reader = new BufferedReader(new StringReader(_javaStaticCode));
             while ((strLine = reader.readLine()) != null) {
@@ -249,7 +249,7 @@ public class GeckoJavaCompiler {
 
                 public void write(byte[] b, int off, int len) {
                     compilerMessage += new String(b, StandardCharsets.UTF_8).substring(off, len);
-                    
+
                 }
 
                 public void write(int b) {
@@ -257,7 +257,7 @@ public class GeckoJavaCompiler {
             };
             PrintWriter compilerWriter = new PrintWriter(outStream, true, StandardCharsets.UTF_8);
 
-            // Compile --> 
+            // Compile -->
 
 
             _workingDirectory = new File(GlobalFilePathes.PFAD_JAR_HOME).getParent();
@@ -296,7 +296,7 @@ public class GeckoJavaCompiler {
                 ClassLoader cl = createDynamicClassLoader(output);
 
                 Class<?> c = Class.forName(_className, false, cl);
-                Class<?> clazz = c;// Class.forName(_className, true, urlCl);                
+                Class<?> clazz = c;// Class.forName(_className, true, urlCl);
 
                 Class<?>[] partypes = new Class<?>[0];
                 try {
@@ -349,7 +349,7 @@ public class GeckoJavaCompiler {
 
     //==============================================================
     class RAMJavaFileObject extends SimpleJavaFileObject {
-        // 
+        //
 
         RAMJavaFileObject(String name, Kind kind) {
             super(toURI(name), kind);
@@ -416,7 +416,7 @@ public class GeckoJavaCompiler {
             System.out.println("Error in GeckoJavaCompiler.test(): " + e);
         }
         System.out.println("_compilerMessage= \n" + compilerMessage + "\n\n===========\n");
-        //System.out.println("_sourceString= \n"+_sourceString+"\n\n===========\n"); 
+        //System.out.println("_sourceString= \n"+_sourceString+"\n\n===========\n");
         boolean calcOK = this.startCalculation();
         System.out.println("Fertig. calcOK=" + calcOK);
     }

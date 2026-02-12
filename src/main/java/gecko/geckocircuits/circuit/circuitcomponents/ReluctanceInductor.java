@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.List;
 
 public final class ReluctanceInductor extends AbstractCircuitBlockInterface
-        implements HiddenSubCircuitable, CurrentMeasurable, 
+        implements HiddenSubCircuitable, CurrentMeasurable,
         DirectVoltageMeasurable {
 
     static final AbstractTypeInfo TYPE_INFO =
@@ -88,7 +88,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
             build();
     private final AbstractBlockInterface[] _qLK = new AbstractCircuitBlockInterface[2];
     ;
-    
+
     private final AbstractVoltageSource _primarySource =
             (AbstractVoltageSource) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_U, this);
     public final AbstractVoltageSource _secondarySource =
@@ -103,8 +103,8 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
         YOUT.add(new TerminalRelativePositionReluctance(this, 1, X_TERM_DISTANCE));
         YOUT.add(new TerminalRelativePositionReluctance(this, 1, -X_TERM_DISTANCE));
 
-        
-        
+
+
         _qLK[0] = _primarySource;
         _qLK[1] = _secondarySource;
         _primarySource.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_DIDTCURRENTCONTROLLED);
@@ -117,11 +117,11 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
         _outputReversed.addActionListener(_reversedListener);
 
         setSourcePotentialGains();
-        
+
         _windings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent event) {
-                setSourcePotentialGains();                
+                setSourcePotentialGains();
             }
         });
 
@@ -130,9 +130,9 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
             public void actionPerformed(final ActionEvent event) {
                 _primarySource._didtInitialCurrent.setValueWithoutUndo(_initCurrent.getValue());
             }
-        });        
-        
-        
+        });
+
+
     }
     private final ActionListener _reversedListener = new ActionListener() {
         @Override
@@ -140,7 +140,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
             defineTerminals();
         }
     };
-    
+
     private void setSourcePotentialGains() {
         _primarySource.directPotentialGain.setUserValue(-_windings.getValue());
         _secondarySource.directPotentialGain.setValueWithoutUndo(-_windings.getValue());
@@ -162,7 +162,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
 
     private void setSubComponentsName() {
         _primarySource.getIDStringDialog().setNameUnChecked(getStringID());
-        _secondarySource.getIDStringDialog().setNameUnChecked(getStringID());        
+        _secondarySource.getIDStringDialog().setNameUnChecked(getStringID());
     }
 
     @Override
@@ -195,7 +195,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
     }
 
     @Override
-    public Collection<AbstractBlockInterface> getHiddenSubCircuitElements() {                
+    public Collection<AbstractBlockInterface> getHiddenSubCircuitElements() {
         return Arrays.asList(_qLK);
     }
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -57,10 +57,10 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         super(1, 0);
         try {
             _testReceiverCISPR16 = new TestReceiverWindow(this);
-        } catch(Throwable ex) {            
+        } catch(Throwable ex) {
             ex.printStackTrace();
         }
-        
+
     }
 
     @Override
@@ -70,8 +70,8 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
 
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        _testReceiverCISPR16.importAscii(tokenMap);        
-    }            
+        _testReceiverCISPR16.importAscii(tokenMap);
+    }
 
     @Override
     public String[] getOutputNames() {
@@ -87,7 +87,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
     public List<OperationInterface> getOperationEnumInterfaces() {
         final List<OperationInterface> returnValue = new ArrayList<OperationInterface>();
         returnValue.add(new OperationInterface("startCalculation", I18nKeys.START_CALCULATION_DOC) {
-            @Override                        
+            @Override
             public Object doOperation(final Object parameterValue) {
                 _testReceiverCISPR16.startCalculation(false);
                 return null;
@@ -95,47 +95,47 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         });
 
         returnValue.add(new OperationInterface("saveFourierData", I18nKeys.SAVE_DATA_DOC) {
-            @Override            
-            public Object doOperation(final Object parameterValue) {                
+            @Override
+            public Object doOperation(final Object parameterValue) {
                 _testReceiverCISPR16.saveFourierDataToFile(new File((String) parameterValue));
                 return null;
             }
         });
-        
+
         returnValue.add(new OperationInterface("savePeakData", I18nKeys.SAVE_DATA_DOC) {
-            @Override            
-            public Object doOperation(final Object parameterValue) {                
+            @Override
+            public Object doOperation(final Object parameterValue) {
                 _testReceiverCISPR16.savePeakDataToFile(new File((String) parameterValue));
                 return null;
             }
         });
-        
+
         returnValue.add(new OperationInterface("saveQuasiPeakData", I18nKeys.SAVE_DATA_DOC) {
-            @Override            
-            public Object doOperation(final Object parameterValue) {                
+            @Override
+            public Object doOperation(final Object parameterValue) {
                 _testReceiverCISPR16.saveQuasiPeakDataToFile(new File((String) parameterValue));
                 return null;
             }
         });
-        
+
         returnValue.add(new OperationInterface("saveAveragePeakData", I18nKeys.SAVE_DATA_DOC) {
-            @Override            
-            public Object doOperation(final Object parameterValue) {                
+            @Override
+            public Object doOperation(final Object parameterValue) {
                 _testReceiverCISPR16.saveAverageDataToFile(new File((String) parameterValue));
                 return null;
             }
         });
 
         returnValue.add(new OperationInterface("abortCalculation", I18nKeys.ABORT_SIMULATION) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 _testReceiverCISPR16.abortCalculation();
                 return null;
             }
         });
-        
+
         returnValue.add(new OperationInterface("calculateQpAtFrequency", I18nKeys.GET_QUASI_PEAK_AT_FREQ) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 if (!(parameterValue instanceof Number)) {
                     throw new IllegalArgumentException("parameter type must be numeric!");
@@ -145,7 +145,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
             }
         });
         returnValue.add(new OperationInterface("calculatePeakAtFrequency", I18nKeys.GET_PEAK_AT_FREQ) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 if (!(parameterValue instanceof Number)) {
                     throw new IllegalArgumentException("parameter type must be numeric!");
@@ -157,7 +157,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         });
 
         returnValue.add(new OperationInterface("calculateAvgAtFrequency", I18nKeys.GET_AVG_AT_FREQ) {
-            @Override                     
+            @Override
             public Object doOperation(final Object parameterValue) {
                 if (!(parameterValue instanceof Number)) {
                     throw new IllegalArgumentException("parameter type must be numeric!");
@@ -166,11 +166,11 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
                 checkForValidTestReceiver();
                 return _testReceiverNew.calculateAvgAtFrequency(((Number) parameterValue).doubleValue());
             }
-        });        
-                
+        });
+
         return Collections.unmodifiableList(returnValue);
     }
-         
+
 
     private void checkForValidTestReceiver() {
         if (_testReceiverNew == null) {
@@ -188,13 +188,13 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
             super(1, 0);
         }
 
-        
+
         private float[] dataValue = new float[1];
-        
+
         @Override
         public void berechneYOUT(final double deltaT) {
             // be careful, this is complicated by intention! If we would just insert
-            // the  inputSignal[0], it would be overwritten in the next simulation step.            
+            // the  inputSignal[0], it would be overwritten in the next simulation step.
             dataValue[0] = (float) _inputSignal[0][0];
             _zvDatenRam.setContainerStatus(ContainerStatus.RUNNING);
             _zvDatenRam.insertValuesAtEnd(dataValue, _time);
@@ -259,7 +259,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
         int a1 = DI_OFFSET + 4, a2 = DI_OFFSET + 2;
         graphics.drawLine((int) (dpix * (xPos - WIDTH) + a2), (int) (dpix * (yPos + WIDTH) - a1), (int) (dpix * (xPos + DA_OFFSET) - a2), (int) (dpix * (yPos + WIDTH) - a1));  // waagrechte Achse
         graphics.drawLine((int) (dpix * (xPos - WIDTH) + a1), (int) (dpix * (yPos - DA_OFFSET) + a2), (int) (dpix * (xPos - WIDTH) + a1), (int) (dpix * (yPos + WIDTH) - a2));  // senkrechte Achse
-        // Stuetzpunkte der Class A/B-Kurven: 
+        // Stuetzpunkte der Class A/B-Kurven:
         final int dx = (int) (dpix * (WIDTH + DA_OFFSET) - a1 - a2), dy = dx;
         final int xk1 = (int) (dpix * (xPos - WIDTH) + a1 + 2);
         final int xk2 = (int) (dpix * (xPos - WIDTH) + a1 + 2 + dx / 3.0);

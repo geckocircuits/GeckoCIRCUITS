@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -57,9 +57,9 @@ public final class DialogLabelEingeben extends JDialog {
             _connector = ((TerminalVerbindung) terminal).getParentConnection();
         } else {
             _connector = null;
-        }        
-        
-        _originalLabel = _label.getLabelString();               
+        }
+
+        _originalLabel = _label.getLabelString();
         setTitle(" Label");
         baueGUI();
 
@@ -84,10 +84,10 @@ public final class DialogLabelEingeben extends JDialog {
         final JPanel panelX = new JPanel();
         panelX.add(knOK);
         panelX.add(knX);
-        
+
         _textField.setText(_originalLabel);
         _textField.setColumns(COLS);
-        _textField.selectAll();        
+        _textField.selectAll();
 
         final JPanel jpN = new JPanel();
         jpN.setLayout(new GridLayout(2, 1));
@@ -123,7 +123,7 @@ public final class DialogLabelEingeben extends JDialog {
                 }
 
                 // 'OK'-Knopf oder 'Return'-Taste gedrueckt --> entsprechender Label des Elements wird aktualisiert
-                _label.setLabelFromUserDialog(_textField.getText());                
+                _label.setLabelFromUserDialog(_textField.getText());
                 _clickedTerminal.getCircuitSheet().updateRenamedLabel(_originalLabel, _textField.getText(), _conType);
                 SchematicEditor2.Singleton.registerChangeWithNetlistUpdate();
                 dispose();
@@ -144,7 +144,7 @@ public final class DialogLabelEingeben extends JDialog {
 
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                // The action to be executed when Escape is pressed  
+                // The action to be executed when Escape is pressed
                 DialogLabelEingeben.this.dispose();
             }
         }, stroke, JComponent.WHEN_IN_FOCUSED_WINDOW);

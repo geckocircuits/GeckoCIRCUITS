@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "FFT computation class with public fields for direct data access during signal processing")
 public final class Cispr16Fft {
 
-    public float[] _zvResampled;    
+    public float[] _zvResampled;
     public float[] _magnitudes;
     public int _maximumNN;
     public int _resampledN = 0;
@@ -36,14 +36,14 @@ public final class Cispr16Fft {
         doResampling(data);
         data.deleteDataReference();
         // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
-        rescaleAmplitudeToRMS(_zvResampled);        
+        rescaleAmplitudeToRMS(_zvResampled);
 
         if (useBlackman) {
             blackmanFiltering(_zvResampled);
         }
 
         realft(_zvResampled, 1);
-        normalizeFFTArray(_zvResampled);                        
+        normalizeFFTArray(_zvResampled);
 
         double maxValue = -1e30;
         for (int i = 0; i < _zvResampled.length/ 2 - 1; i++) {
@@ -52,7 +52,7 @@ public final class Cispr16Fft {
                 maxValue = abs;
             }
         }
-        
+
         _magnitudes = new float[_zvResampled.length/2];
         for(int i = 0; i < _zvResampled.length/2; i++) {
             _magnitudes[i] = getMagnitude(i);
@@ -99,40 +99,40 @@ public final class Cispr16Fft {
     private static void blackmanFiltering(final float[] data) {
         assert data.length % 2 == 0 : "Error: data array must be even length!";
         final int NNN = data.length -1;
-        
+
         final double const1 = 2 * Math.PI / NNN;
-        
+
         // the blackman curve is symmetric... speed it up by calculation only half the values.
-        for (int ii = 0; ii < NNN / 2+1; ii++) {            
+        for (int ii = 0; ii < NNN / 2+1; ii++) {
             double factor = calculateBlackmanFactor(const1, ii);
             data[ii] *= factor;
-            data[NNN - ii] *= factor;            
+            data[NNN - ii] *= factor;
         }
     }
-    
+
     static double calculateBlackmanFactor(final double constValue, final int index) {
         final double cosX = Math.cos(index * constValue);
-        
+
         // the cos calculation is quite expensive. We need cos (2* x) here, which can be
         // calculated via the cosine addition theorem!
-        final double cos2X = 2 * cosX * cosX -1;            
+        final double cos2X = 2 * cosX * cosX -1;
         return BLACKMAN_NORM * (BLACKMAN_A0 - BLACKMAN_A1 * cosX + BLACKMAN_A2 * cos2X);
     }
-        
+
 
     public static void inverseBlackman(final float[] data) {
         assert data.length % 2 == 0 : "Error: data array must be even length!";
-        final int NNN = data.length -1;        
-        final double const1 = 2 * Math.PI / NNN;        
-        
+        final int NNN = data.length -1;
+        final double const1 = 2 * Math.PI / NNN;
+
         // the blackman curve is symmetric... speed it up by calculation only half the values.
         for (int ii = 0; ii < NNN/2+1; ii++) {
             final double factor = 1.0 / calculateBlackmanFactor(const1, ii);
             data[ii] *= factor;
             data[NNN - ii] *= factor;
         }
-    }    
-    
+    }
+
     /**
      *
      * @param data input-output array of length N + 1 (!)
@@ -259,12 +259,12 @@ public final class Cispr16Fft {
             mmax = istep;
         }
     }
-    
+
     private static void normalizeFFTArray(float[] data) {
         final int dataSize = data.length;
         final float normalizeFactor = (float) (2.0 / dataSize);
         for(int i = 0; i < dataSize; i++) {
-            data[i] *= normalizeFactor; 
+            data[i] *= normalizeFactor;
         }
     }
 
@@ -276,7 +276,7 @@ public final class Cispr16Fft {
     }
 
     static long magnitudeCounter = 0;
-    private float getMagnitude(final int frequencyIndex) {        
+    private float getMagnitude(final int frequencyIndex) {
         final double imag = _zvResampled[2 * frequencyIndex + 1];
         final double real = _zvResampled[2 * frequencyIndex];
         return (float) Math.sqrt(real * real + imag * imag);

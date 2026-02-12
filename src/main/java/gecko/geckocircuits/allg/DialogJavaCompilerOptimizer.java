@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores Java compiler reference for optimization code")
 public class DialogJavaCompilerOptimizer extends JFrame {
-    
+
     private GeckoJavaCompiler geckoJavaCompiler;
     private javax.swing.JButton jButtonCloseWindow;
     private javax.swing.JButton jButtonCompile;
@@ -58,21 +58,21 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         +"\nSet the parameter values in the GeckoCIRCUITS model: \n\n"
         +"public void setOptimizerParameterData (String[] optName, double[] optValue);\n"
         +"\nControl the Simulation with the following methods:\n\n"
-        +"public void setSimParameter (double dt, double tDURATION, double tPAUSE);\n" 
-        +"public void startCalculation ();\n" 
-        +"public void stopCalculation ();\n" 
-        +"public void continueCalculation ();\n" 
-        +"public boolean isSimulationRunning ();\n" 
+        +"public void setSimParameter (double dt, double tDURATION, double tPAUSE);\n"
+        +"public void startCalculation ();\n"
+        +"public void stopCalculation ();\n"
+        +"public void continueCalculation ();\n"
+        +"public boolean isSimulationRunning ();\n"
         +"\nGet the simulation results for postprocessing:\n"
         +"(RAM-data might be reduced ,e.g. just every 2nd simulation point recorded,\n"
         +"hard disk data is complete but will slow down the simulation)\n\n"
-        +"public double[][] getZV (String stringID_scope);\n" 
-        +"public boolean activateWriteToFile (String stringID_scope);\n" 
-        +"public boolean saveZVData (String stringID_scope, String fileName);\n" 
-        +"public boolean deactivateWriteToFile (String stringID_scope);\n" 
-        +""; 
+        +"public double[][] getZV (String stringID_scope);\n"
+        +"public boolean activateWriteToFile (String stringID_scope);\n"
+        +"public boolean saveZVData (String stringID_scope, String fileName);\n"
+        +"public boolean deactivateWriteToFile (String stringID_scope);\n"
+        +"";
     private String example1= ""
-        +"// Define parameter names in the GeckoCIRCUITS model by using the '$'-character in the input dialog, " 
+        +"// Define parameter names in the GeckoCIRCUITS model by using the '$'-character in the input dialog, "
         + "\n// e.g. set resistor value to '$b' instead of '1000' in the dialog window of the resistor. "+"\n"
         +"String[] nameOpt= new String[]{\"$a\",\"$b\",\"$c\",\"$d\",\"$fre\"}; \n"
         +"double[] valueOpt= new double[]{1,1000,3,4, 1600};  \n"
@@ -81,7 +81,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         +"\n// With these settings the simulation will run with dt=1us, and will make a stop at 4ms: \n"
         +"GECKO.setSimParameter(1e-6,10e-3,4e-3);  \n"
         +"GECKO.startCalculation(); \n"
-        +"\n// We have to stop the simulation at t=4ms to set new parameter values before proceeding. " 
+        +"\n// We have to stop the simulation at t=4ms to set new parameter values before proceeding. "
         +"\n// This is done with the following code: \n"
         +"while (GECKO.isSimulationRunning()) { try { Thread.sleep(500); } catch (InterruptedException ie) {} } \n"
         +"\n// New values can be set. $b is from now on 350 instead of 1000.\n"
@@ -89,27 +89,27 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         +"valueOpt[1]= 350;  \n"
         +"valueOpt[4]= 350;  \n"
         +"\n// Now we can proceed with the simulation:\n"
-        +"GECKO.continueCalculation(); \n" 
-        +""; 
+        +"GECKO.continueCalculation(); \n"
+        +"";
     //--------------
     /*
     --------------
-    public void opt_setOptimizerParameterData (String[] optName, double[] optValue) { win.setOptimizerParameterData(optName,optValue); } 
+    public void opt_setOptimizerParameterData (String[] optName, double[] optValue) { win.setOptimizerParameterData(optName,optValue); }
     public boolean opt_isSimulationRunning () { return win.isSimulationRunning(); }
-    public double[][] opt_getZV (String stringID_scope) { return win.getZV(stringID_scope); } 
+    public double[][] opt_getZV (String stringID_scope) { return win.getZV(stringID_scope); }
     public boolean opt_activateWriteToFile (String stringID_scope) { return win.activateWriteToFile(stringID_scope); }
     public boolean opt_saveZVData (String stringID_scope, String fileName) { return win.saveZVData(stringID_scope,fileName); }
     public boolean opt_deactivateWriteToFile (String stringID_scope) { return win.deactivateWriteToFile(stringID_scope); }
     public void opt_startCalculation () { win.startCalculation(); }
     public void opt_stopCalculation () { win.stopCalculation(); }
-    public void opt_continueCalculation () { win.continueCalculation(); } 
-    public void opt_setSimParameter (double dt, double tDURATION, double tPAUSE) { win.setSimParameter(dt,tDURATION,tPAUSE); } 
+    public void opt_continueCalculation () { win.continueCalculation(); }
+    public void opt_setSimParameter (double dt, double tDURATION, double tPAUSE) { win.setSimParameter(dt,tDURATION,tPAUSE); }
     --------------
     */
 
-    
-    
-    
+
+
+
     public DialogJavaCompilerOptimizer (GeckoJavaCompiler geckoJavaCompiler) {
         try {
             @SuppressWarnings("deprecation")
@@ -118,16 +118,16 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         } catch (Exception ex) {
             // Icon loading is optional - dialog works without it
         }
-        this.initComponents();        
+        this.initComponents();
         //-------
-        this.geckoJavaCompiler= geckoJavaCompiler; 
-        this.setCodeText(); 
+        this.geckoJavaCompiler= geckoJavaCompiler;
+        this.setCodeText();
     }
 
     private void doRun () {
     }
 
-    
+
     public void setCodeText () {
         jTextAreaCode.setText(geckoJavaCompiler.getSourceCode());
         jTextAreaCompilerMessage.setText(geckoJavaCompiler.getCompilerMessage());
@@ -135,7 +135,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
         jTextAreaStaticInit.setText(geckoJavaCompiler.getStaticInitCode());
         jTextAreaVariables.setText(geckoJavaCompiler.getStaticVariables());
     }
-    
+
     private void initComponents() {
         jFrame1 = new JFrame();
         jButtonCompile = new javax.swing.JButton();
@@ -385,7 +385,7 @@ public class DialogJavaCompilerOptimizer extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void jButtonCloseWindowActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonCloseWindowActionPerformed
-    
+
     if(! (geckoJavaCompiler.getCompileStatus() == GeckoJavaCompiler.COMPILESTATUS.COMPILED_SUCCESSFULL)) {
         loadCode();
     }
@@ -401,7 +401,7 @@ private void jButtonCompileActionPerformed(java.awt.event.ActionEvent evt) {//NO
 
     private void jButtonExecuteActionPerformed (java.awt.event.ActionEvent evt) {
         try {
-            geckoJavaCompiler.startCalculation(); 
+            geckoJavaCompiler.startCalculation();
         } catch (Exception e) {
             jTabbedPane.setSelectedIndex(1);
         }
@@ -420,7 +420,7 @@ private void jButtonExample2ActionPerformed(java.awt.event.ActionEvent evt) {//N
              "\nimport javax.swing.JLabel;" +
              "\nimport static java.lang.System.out;" +
              "\nimport static java.lang.Math.*;");
-    jTextAreaStaticInit.setText("helloWindow = new HelloWorld();" + 
+    jTextAreaStaticInit.setText("helloWindow = new HelloWorld();" +
                 "\nhelloWindow.setVisible(true);");
     jTextAreaVariables.setText(
             "private static final JLabel label = new JLabel(\"Show Simulation Time\");" +
@@ -430,18 +430,18 @@ private void jButtonExample2ActionPerformed(java.awt.event.ActionEvent evt) {//N
             "\n\tgetContentPane().add(label);" +
             "\n\tpack();" +
             "\n\tsetLocationRelativeTo(null);" +
-            "\n}}" + 
+            "\n}}" +
             "\nprivate static HelloWorld helloWindow;");
- 
+
 }//GEN-LAST:event_jButtonExample2ActionPerformed
 
 private void jButtonExample1ActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonExample1ActionPerformed
-    jTextAreaCode.setText(example1); 
+    jTextAreaCode.setText(example1);
     jTextAreaImports.setText("import gecko.geckocircuits.allg.MainWindow;\n");
     jTextAreaStaticInit.setText("");
-    jTextAreaVariables.setText("");     
+    jTextAreaVariables.setText("");
 }//GEN-LAST:event_jButtonExample1ActionPerformed
-    
+
 
 
 private void loadCode () {
@@ -456,9 +456,9 @@ private void loadCode () {
             Logger.getLogger(DialogJavaCompilerOptimizer.class.getName()).log(Level.SEVERE, null, ex);
         }
 }
-    
-    
 
-    
-    
+
+
+
+
 }

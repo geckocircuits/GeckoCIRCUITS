@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,7 +28,7 @@ public final class NiceScale {
     private static final double FIVE = 5;
     private static final double TEN = 10;
     private static final double ZERO_OFFSET = 1e-5;
-    
+
 
     public NiceScale(final HiLoData minMaxData, boolean isXAxis) {
         double SMALL_INCREASE = 1.001;
@@ -85,8 +85,8 @@ public final class NiceScale {
 
         calculate();
     }
-    
-    
+
+
     /**
      * Instantiates a new instance of the NiceScale class.
      *
@@ -106,11 +106,11 @@ public final class NiceScale {
         this._niceMin =
                 Math.floor(_minPoint / _tickSpacing) * _tickSpacing;
         this._niceMax =
-                Math.ceil(_maxPoint / _tickSpacing) * _tickSpacing;        
+                Math.ceil(_maxPoint / _tickSpacing) * _tickSpacing;
         assert _niceMin == _niceMin : _tickSpacing + " " + _niceMin + " " + _maxPoint + " " + _minPoint + " range " + _range + " "
                 + (_maxPoint - _minPoint) + " " + _maxPoint + " " + _minPoint;
-        assert _niceMax == _niceMax;        
-                
+        assert _niceMax == _niceMax;
+
     }
 
     /**
@@ -171,6 +171,6 @@ public final class NiceScale {
     }
 
     public HiLoData getNiceLimits() {
-        return HiLoData.hiLoDataFabric((float) _niceMin, (float) _niceMax);        
+        return HiLoData.hiLoDataFabric((float) _niceMin, (float) _niceMax);
     }
 }

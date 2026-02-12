@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,9 +37,9 @@ final class ControlOrderNode {
     private boolean _loopCrack;
 
     public ControlOrderNode(final RegelBlock elementControl) {
-        _elementControl = elementControl;        
+        _elementControl = elementControl;
     }
-    
+
     public void calculateNeighbours(final Collection<ControlOrderNode> allBlocks) {
         if (_elementControl.getType() != ControlType.SOURCE) {
             calculateDirectInputs(allBlocks);
@@ -47,7 +47,7 @@ final class ControlOrderNode {
 
         if (_elementControl.getType() != ControlType.SINK) {
             calculateDirectOutputs(allBlocks);
-        }       
+        }
     }
 
     public ControlType getControlType() {
@@ -57,7 +57,7 @@ final class ControlOrderNode {
     public RegelBlock getElementControl() {
         return _elementControl;
     }
-    
+
 
     private void calculateDirectInputs(final Collection<ControlOrderNode> allBlocks) {
         assert _directInputs.isEmpty() : "do this calculation only once at the beginning!";
@@ -99,7 +99,7 @@ final class ControlOrderNode {
             for (AbstractTerminal term : element2.getElementControl().XIN) {
                 final int nodeIndex = ((ControlTerminable) term).getNodeNumber();
                 for (int i4 = 0; i4 < nodeIndexOut.size(); i4++) {
-                    if (nodeIndex == nodeIndexOut.get(i4)) {                        
+                    if (nodeIndex == nodeIndexOut.get(i4)) {
                         _directOutputs.add(element2);
                     }
                 }
@@ -109,17 +109,17 @@ final class ControlOrderNode {
     }
 
     public boolean isDirectInputOfElement(final ControlOrderNode node) {
-        return node._directInputs.contains(this);        
+        return node._directInputs.contains(this);
     }
 
     public boolean isDirectOutputOfElement(final ControlOrderNode node) {
-        return node._directOutputs.contains(this);        
+        return node._directOutputs.contains(this);
     }
 
     Set<ControlOrderNode> getAllDirectOutputs() {
         return Collections.unmodifiableSet(_directOutputs);
     }
-    
+
     /**
      * direct inputs are direct predecessor blocks of the control block node
      *
@@ -132,13 +132,13 @@ final class ControlOrderNode {
     void setInitialPriority(final int initialPriority) {
         _priority = initialPriority;
     }
-    
+
     void testSetMaximumPriority(final int newMaxPriority) {
-        _priority = Math.max(_priority, newMaxPriority);        
+        _priority = Math.max(_priority, newMaxPriority);
     }
-    
-    void testSetMinimumPriority(final int newMinPriority) {        
-        _priority = Math.min(_priority, newMinPriority);        
+
+    void testSetMinimumPriority(final int newMinPriority) {
+        _priority = Math.min(_priority, newMinPriority);
     }
 
     int getPriority() {
@@ -148,9 +148,9 @@ final class ControlOrderNode {
     void setLoopCrackTrue() {
         _loopCrack = true;
     }
-    
+
     boolean getLoopCrack() {
         return _loopCrack;
     }
-    
+
 }

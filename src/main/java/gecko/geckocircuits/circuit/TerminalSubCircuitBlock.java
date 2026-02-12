@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,7 +43,7 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
     public TerminalSubCircuitBlock(final SubcircuitBlock relatedComponent, SubCircuitTerminable lkTerminal) {
         super(relatedComponent);
         _subcircuitBlock = relatedComponent;
-        _lkTerminal = lkTerminal;        
+        _lkTerminal = lkTerminal;
     }
 
     @Override
@@ -62,7 +62,7 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
     @Override
     public void paintComponent(final Graphics graphics) {
         Color oldColor = graphics.getColor();
-        graphics.setColor(_lkTerminal.getForeGroundColor());        
+        graphics.setColor(_lkTerminal.getForeGroundColor());
         super.paintComponent(graphics);
         graphics.setColor(oldColor);
     }
@@ -83,13 +83,13 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
     }
 
     @Override
-    public AbstractTerminal createCopy(final AbstractBlockInterface relatedComponent) {        
-        final SubCircuitTerminable terminable = (SubCircuitTerminable) relatedComponent;             
-        assert terminable.getParentCircuitSheet() instanceof SubCircuitSheet;                
+    public AbstractTerminal createCopy(final AbstractBlockInterface relatedComponent) {
+        final SubCircuitTerminable terminable = (SubCircuitTerminable) relatedComponent;
+        assert terminable.getParentCircuitSheet() instanceof SubCircuitSheet;
         final SubCircuitSheet subSheet = (SubCircuitSheet) terminable.getParentCircuitSheet();
-        final SubcircuitBlock subBlock = subSheet._subBlock;        
+        final SubcircuitBlock subBlock = subSheet._subBlock;
         final TerminalSubCircuitBlock returnValue = new TerminalSubCircuitBlock(subBlock, terminable);
-        
+
         returnValue.getLabelObject().setLabel(_label.getLabelString());
         returnValue.relativeX = relativeX;
         returnValue.relativeY = relativeY;
@@ -102,12 +102,12 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
     }
 
     @Override
-    public void paintLabelString(final Graphics2D graphics) {        
+    public void paintLabelString(final Graphics2D graphics) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        Color oldColor = graphics.getColor(); 
-        
-        graphics.setColor(_lkTerminal.getForeGroundColor());        
-        
+        Color oldColor = graphics.getColor();
+
+        graphics.setColor(_lkTerminal.getForeGroundColor());
+
         if (!_label.getLabelString().isEmpty()) {
             graphics.drawString(_label.getLabelString(), (int) (dpix * getPosition().x) + DX_IN, (int) (dpix * getPosition().y) + DY_TEXT);
         }
@@ -158,12 +158,12 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
     public int getNodeNumber() {
         return _nodeNumber;
     }
-    
+
     @Override
     public void setNodeNumber(final int newValue) {
         _nodeNumber = newValue;
     }
-    
+
     @Override
     public void clearNodeNumber() {
         _nodeNumber = -1;

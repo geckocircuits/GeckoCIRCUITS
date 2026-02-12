@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,7 +20,7 @@ public class ThyristorCalculator extends AbstractSwitchCalculator implements Cur
     private double _tReverse;
     private double _lastSwitchEvent;
     private static final double REVERSE_FACTOR = 3.0;
-    
+
     public ThyristorCalculator(final Thyristor parent) {
         super(parent);
     }
@@ -48,11 +48,11 @@ public class ThyristorCalculator extends AbstractSwitchCalculator implements Cur
         _current = (_voltage - _uForward) / _rDt;
 
         if (isTurnOffNeeded()) {
-            toTurnOff(time);        
+            toTurnOff(time);
         }
         if(isTurnOnNeeded()) {
-            doTurnOn();        
-        }        
+            doTurnOn();
+        }
     }
 
     /**
@@ -71,7 +71,7 @@ public class ThyristorCalculator extends AbstractSwitchCalculator implements Cur
     }
 
     private void doTurnOn() {
-        
+
             // gate==1  und  (uD > uf) und Thyristor "OFF"
             _rDt = _rON;
             if (_bVector != null) {
@@ -79,10 +79,10 @@ public class ThyristorCalculator extends AbstractSwitchCalculator implements Cur
             }
             DiodeCalculator.diodeSwitchError = true;
             _rDt = Math.max(_rDt, NEARLY_ZERO_R);
-            switchAction = true;        
+            switchAction = true;
     }
 
-    private void toTurnOff(final double time) {        
+    private void toTurnOff(final double time) {
             if (time - _lastSwitchEvent > REVERSE_FACTOR * _tReverse) {
                 _lastSwitchEvent = time;
             }
@@ -96,7 +96,7 @@ public class ThyristorCalculator extends AbstractSwitchCalculator implements Cur
                 _rDt = Math.max(_rDt, NEARLY_ZERO_R);
                 switchAction = true;
 
-            }       
+            }
     }
 
     private boolean isTurnOffNeeded() {

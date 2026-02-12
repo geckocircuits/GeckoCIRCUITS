@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -58,7 +58,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
                 int stringIndex = foundString.indexOf(':');
                 foundString = foundString.substring(stringIndex+2);
                 foundString = foundString.substring(0, foundString.indexOf(" "));
-                jTextField.setText(foundString);                    
+                jTextField.setText(foundString);
                 _se._visibleCircuitSheet.findString(foundString, jCheckBoxIgnore.isSelected(), !jCheckBoxExact.isSelected());
                 } catch (Exception ex) {
                     System.err.println("could not find component!");
@@ -196,7 +196,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldKeyReleased(KeyEvent evt) {//GEN-FIRST:event_jTextFieldKeyReleased
-        String searchText = jTextField.getText();        
+        String searchText = jTextField.getText();
         if (!searchText.isEmpty()) {
             Set<String> found = _se._visibleCircuitSheet.findString(searchText, jCheckBoxIgnore.isSelected(), !jCheckBoxExact.isSelected());
             ((DefaultListModel<String>)jList1.getModel()).clear();

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,23 +21,23 @@ import gecko.geckocircuits.allg.SolverType;
  * Handles capacitance value and initial voltage state.
  */
 public abstract class AbstractCapacitorCore extends CircuitComponentCore {
-    
+
     protected double _capacitance = 100e-9;  // Default 100 nF
     protected double _initialValue = 0.0;     // Initial voltage/temperature
     protected double _linearizedCapacitance;
-    
+
     protected AbstractCapacitorCore(SolverType solverType) {
         super(solverType);
         _linearizedCapacitance = _capacitance;
     }
-    
+
     /**
      * Get capacitance value in Farads
      */
     public double getCapacitance() {
         return _capacitance;
     }
-    
+
     /**
      * Set capacitance value
      */
@@ -49,28 +49,28 @@ public abstract class AbstractCapacitorCore extends CircuitComponentCore {
         }
         this._linearizedCapacitance = this._capacitance;
     }
-    
+
     /**
      * Get initial voltage value in Volts
      */
     public double getInitialValue() {
         return _initialValue;
     }
-    
+
     /**
      * Set initial voltage condition
      */
     public void setInitialValue(double initialValue) {
         this._initialValue = initialValue;
     }
-    
+
     /**
      * Get linearized capacitance (for nonlinear capacitors)
      */
     public double getLinearizedCapacitance() {
         return _linearizedCapacitance;
     }
-    
+
     /**
      * Set linearized capacitance
      */

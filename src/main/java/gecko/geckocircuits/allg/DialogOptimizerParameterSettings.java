@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -46,12 +46,12 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
                 + "\n\nIf parameter names in the simulation model are not defined in the input list, an error is given. In this case "
                 + "the simulation cannot be performed. "
                 + "\n";
-        
+
     private final OptimizerParameterData _optData;
     private Map<String, Integer> _numberOfUsedParamemters = new HashMap<String, Integer>();
     private JTabbedPane tabber;
     private JTextArea jtaHLP;
-    
+
     private DataTablePanelParameters _dataTable;
 
     public DialogOptimizerParameterSettings(OptimizerParameterData optData, List<AbstractBlockInterface> e) {
@@ -63,13 +63,13 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
                 if(!nameOpt.isEmpty()) {
                     int oldNumber = 0;
                     if(_numberOfUsedParamemters.containsKey(nameOpt)) {
-                        oldNumber = _numberOfUsedParamemters.remove(nameOpt);                        
-                    }                    
+                        oldNumber = _numberOfUsedParamemters.remove(nameOpt);
+                    }
                     _numberOfUsedParamemters.put(nameOpt, oldNumber + 1);
                 }
             }
         }
-        
+
         this.init();
         this.setMinimumSize(new Dimension(300, 200));
         this.setVisible(true);
@@ -89,7 +89,7 @@ public class DialogOptimizerParameterSettings extends GeckoDialog {
 
     private JPanel baueGUIInput() {
 
-        _dataTable = new DataTablePanelParameters(new String[]{I18nKeys.NAME.getTranslation(), 
+        _dataTable = new DataTablePanelParameters(new String[]{I18nKeys.NAME.getTranslation(),
             I18nKeys.VALUE.getTranslation(), I18nKeys.USAGES.getTranslation()}, _numberOfUsedParamemters);
 
         List<String> nOpt = _optData.getNameOpt();

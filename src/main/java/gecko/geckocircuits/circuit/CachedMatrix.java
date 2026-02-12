@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -75,7 +75,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
     public void doLUDecomposition(final double[][] aMatrix) {
 
 //        boolean isSymmetric = true;
-//        boolean isStructureSymmetric = true;        
+//        boolean isStructureSymmetric = true;
         // Use a "left-looking", dot-product, Crout/Doolittle algorithm.
         assert aMatrix.length == aMatrix[0].length;
 
@@ -184,12 +184,12 @@ public final class CachedMatrix extends AbstractCachedMatrix {
 
         // Outer loop.
         for (int j = 0; j < _nn; j++) {
-            // Make a copy of the j-th column to localize references.            
+            // Make a copy of the j-th column to localize references.
             for (int i = 0; i < _nn; i++) {
                 LUcolj[i] = _LUDecomp[i][j];
             }
 
-            // Apply previous transformations.            
+            // Apply previous transformations.
             for (int i = 0; i < _nn; i++) {
                 double[] LUrowi = _LUDecomp[i];
                 // Most of the time is spent in the following dot product.
@@ -253,7 +253,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
 
         ShortMatrixCache.recycleMatrix(rowEntryIndices);
 
-        //System.out.println("conuter:  " + counter + " " + counter2);        
+        //System.out.println("conuter:  " + counter + " " + counter2);
     }
 
     private void setLUMatrixValue(int i, int j, double value) {
@@ -305,7 +305,7 @@ public final class CachedMatrix extends AbstractCachedMatrix {
                 final int index = _upperLUIndices[k][i];
                 _XCol[index + 1] -= _XCol[k + 1] * _LUDecomp[index][k];
             }
-        }       
+        }
 
         return _XCol;
     }

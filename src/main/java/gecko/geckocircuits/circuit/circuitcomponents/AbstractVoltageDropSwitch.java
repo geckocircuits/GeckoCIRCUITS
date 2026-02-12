@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,19 +20,19 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes forward voltage drop parameter for configuration")
 public abstract class AbstractVoltageDropSwitch extends AbstractSwitch implements ForwardVoltageDropable {
     UserParameter<Double> _forwardVoltageDrop = UserParameter.Builder.
-            <Double>start("forwardVoltageDrop", UF_DEFAULT).                       
+            <Double>start("forwardVoltageDrop", UF_DEFAULT).
             longName(I18nKeys.FORWARD_VOLTAGE_DROP).
             shortName("uF").
             addAlternativeShortName("uDS").
-            unit("V").            
+            unit("V").
             arrayIndex(this, 1).
-            build();     
-    
+            build();
+
 
     @Override
     public UserParameter<Double> getForwardVoltageDropParameter() {
         return _forwardVoltageDrop;
     }
-    
-    
+
+
 }

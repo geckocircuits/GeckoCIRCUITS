@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,9 +18,9 @@ import gecko.geckocircuits.control.calculators.DivCalculator;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
-public final class ReglerDivision extends RegelBlock {    
+public final class ReglerDivision extends RegelBlock {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerDivision.class, "DIV", I18nKeys.DIVISION);
-    
+
     public ReglerDivision() {
         super(2, 1);
     }
@@ -37,13 +37,13 @@ public final class ReglerDivision extends RegelBlock {
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new DivCalculator();        
-    }            
+        return new DivCalculator();
+    }
 
     @Override
     protected Window openDialogWindow() {
         return new DialogSimpleInfoMessage(this, "<html>Division y = x1 / x2. Warning: a division by <br>"
                 + "zero may result in a \"nan\" or \"inf\" output.</html>");
-    }    
+    }
 
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,7 +17,7 @@ import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 
 /**
- * be careful here: This class is used in the JUnit tests of GeckoRemote... 
+ * be careful here: This class is used in the JUnit tests of GeckoRemote...
  * Always throw an unsupported-operation exception of all methods. Netbeans
  * will auto-generate this for you.
  * @author andy
@@ -29,17 +29,17 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public boolean isFree() throws RemoteException {
         return true;
     }
-    
+
     @Override
     public boolean acceptsExtraConnections() throws RemoteException {
         return true;
     }
-    
+
     @Override
     public void acceptExtraConnections(int numberOfExtraConnections) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void registerLastClientToCallMethod(long sessionID) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -54,7 +54,7 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public boolean checkSessionID(long sessionID) throws RemoteException {
         return true;
     }
-    
+
     @Override
     public long connect() throws RemoteException {
         return SESSION_ID;
@@ -84,7 +84,7 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public String[] getThermalElements() throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public String[] getSpecialElements() throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -399,7 +399,7 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public double[] simulateUntilSteadyState(boolean supressMessages) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void initSteadyStateDetection(String[] stateVariables, double frequency, double dt, double simulationTime) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -414,8 +414,8 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public void deleteAllComponents(String subcircuitName) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-        
-    
+
+
     @Override
     public double[] simulateToSteadyState(boolean supressMessages, double targetCorrelation, double targetMeanPctDiff) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -435,7 +435,7 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public void setPosition(String elementName, int xPosition, int yPosition) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public int[] getPosition(String elementName) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -460,7 +460,7 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public String getInputNodeName(String elementName, int nodeIndex) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public String getOutputNodeName(String elementName, int nodeIndex) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -555,7 +555,7 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public void createComponent(String elementType, String elementName, int xPosition, int yPosition) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void createConnector(String elementName, int xStart, int yStart, int xEnd, int yEnd, boolean startHorizontal) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -569,8 +569,8 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     @Override
     public int[] getWorksheetSize() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }   
-    
+    }
+
 
     @Override
     public String[] getAccessibleParameters(String componentName) throws RemoteException {
@@ -581,5 +581,5 @@ public class GeckoRemoteTestingDummy implements GeckoRemoteInterface {
     public float[] floatFFT(float[] timeValues) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

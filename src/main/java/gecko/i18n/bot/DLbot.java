@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,7 +30,7 @@ public class DLbot {
 
     private static volatile boolean connected = false; // Applet-Wiki connection status indicator
     private static volatile int progress = 0; // download progress (percent)
-   
+
     /*
      * Creates a new bot with DLbot credentials, logs in and returns it.
      * -Throws an exception if communication with the wiki failed.
@@ -48,11 +48,11 @@ public class DLbot {
             progress = Math.min(progress + 3, 99); // update progress
             b.login(InitParameters.DLbot_LOGIN, InitParameters.DLbot_PWORD);
             progress = Math.min(progress + 22, 99); // update progress
-            return b;        
+            return b;
     }
-    
+
     /**
-     * Downloads all current single-line translations for the chosen language 
+     * Downloads all current single-line translations for the chosen language
      * (other than English) off of the Wiki database
      * @return DoubleMap containing all single-line translations for the language
      */
@@ -73,7 +73,7 @@ public class DLbot {
             return null;
         }
     }
-    
+
     /**
      * Downloads all current multiple-line translations for the chosen language
      * off of the Wiki database
@@ -84,13 +84,13 @@ public class DLbot {
             MediaWikiBot b = initBot();
             DoubleMap dm = new DoubleMap();
             SimpleArticle sa;
-            
+
             // Get all multiple-line translations
             for (I18nKeys key : LangInit.englishMap_multiple.getKeySet()) {
                 sa = b.readData("Translations:" + InitParameters.MULTIPLE_PAGE + "/" + key + "/" + InitParameters.getCurrentLanguageCode());
                 progress = Math.min(progress + 5, 99); // update progress
                 String value = sa.getText();
-                dm.insertPair(key, value);               
+                dm.insertPair(key, value);
             }
             connected = true;
             return dm;
@@ -100,7 +100,7 @@ public class DLbot {
             return null;
         }
     }
-    
+
      /**
      * Method to get connection status
      * - To be called after connection attempts
@@ -109,7 +109,7 @@ public class DLbot {
     public static boolean getConnectionStatus() {
         return connected;
     }
-    
+
     /**
      * Method to get download progress
      * - To be called while downloading from a separate thread
@@ -118,7 +118,7 @@ public class DLbot {
     public static int getProgress() {
         return progress;
     }
-    
+
     /**
      * Method to reinitialize progress
      * - To be called after completing download instructions
@@ -126,9 +126,9 @@ public class DLbot {
     public static void resetProgress() {
         progress = 0;
     }
-    
+
     /*
-     * This method parses wikiCode to key-value pairs which get stored in a 
+     * This method parses wikiCode to key-value pairs which get stored in a
      * DoubleMap and returned.
      * -Updates progress
      */
@@ -139,11 +139,11 @@ public class DLbot {
         progress = Math.min(progress + 2, 99); // update progress
         // iterate through all lines
         for (int i=0; i<lines.length; i=i+2) {
-            I18nKeys key = I18nKeys.fabricFromKeyString(lines[i].substring(0, lines[i].length()-2));            
+            I18nKeys key = I18nKeys.fabricFromKeyString(lines[i].substring(0, lines[i].length()-2));
             String value = lines[i+1];
-            dm.insertPair(key, value);            
+            dm.insertPair(key, value);
             progress = Math.min(progress + 1, 99); // keep increasing progress to 99%
-        }       
+        }
         return dm;
     }
 }

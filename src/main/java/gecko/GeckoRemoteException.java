@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,9 +36,9 @@ public class GeckoRemoteException extends Exception {
     public GeckoRemoteException(String msg) {
         super(msg);
     }
-    
+
     /**
-     * Create a new GeckoRemoteException which contains a reference to the exception (e.g. IOException, or other) which cause the 
+     * Create a new GeckoRemoteException which contains a reference to the exception (e.g. IOException, or other) which cause the
      * GeckoRemote exception.
      * @param message the message of the GeckoRemoteException
      * @param preecedingException the exception which caused a GeckoRemoteException to be thrown

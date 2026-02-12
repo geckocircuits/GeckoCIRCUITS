@@ -397,7 +397,7 @@ public class ThyristorStamperTest {
     public void testCreateDefaultParameters_GateOn() {
         double[] params = ThyristorStamper.createDefaultParameters(1.0);
 
-        assertEquals("rCurrent should be rOn when gate=1", 
+        assertEquals("rCurrent should be rOn when gate=1",
                      ThyristorStamper.DEFAULT_R_ON, params[ThyristorStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("uForward", ThyristorStamper.DEFAULT_U_FORWARD, params[ThyristorStamper.PARAM_U_FORWARD], TOLERANCE);
         assertEquals("gate", 1.0, params[ThyristorStamper.PARAM_GATE], TOLERANCE);
@@ -407,7 +407,7 @@ public class ThyristorStamperTest {
     public void testCreateDefaultParameters_GateOff() {
         double[] params = ThyristorStamper.createDefaultParameters(0.0);
 
-        assertEquals("rCurrent should be rOff when gate=0", 
+        assertEquals("rCurrent should be rOff when gate=0",
                      ThyristorStamper.DEFAULT_R_OFF, params[ThyristorStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("gate", 0.0, params[ThyristorStamper.PARAM_GATE], TOLERANCE);
     }
@@ -481,7 +481,7 @@ public class ThyristorStamperTest {
     public void testThyristorStateCycle() {
         // Test complete ON/OFF cycle with latching behavior
         double recoveryTime = stamper.getRecoveryTime(); // 10e-6
-        
+
         stamper.setState(false);
         stamper.setLastSwitchOffTime(Double.NEGATIVE_INFINITY);
         assertFalse("initially OFF", stamper.isOn());
@@ -500,7 +500,7 @@ public class ThyristorStamperTest {
         // Then 0.003 - 0.003 = 0 < recoveryTime, so doesn't turn off yet
         stamper.updateStateWithGate(0.0, 1.0, 0.0, 0.003);
         assertTrue("stays ON (recovery delay starting)", stamper.isOn());
-        
+
         // Second call at current zero, after recovery time
         // Now 0.003 + 15e-6 - 0.003 = 15e-6 >= 10e-6, so turns off
         double turnOffTime = 0.003 + 15e-6;

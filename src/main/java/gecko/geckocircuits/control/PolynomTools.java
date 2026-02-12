@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -35,12 +35,12 @@ public final class PolynomTools {
     public static final TechFormat TECH_FORMATTER = new TechFormat();
 
     private PolynomTools() {
-        // private static - make this a utility-class  
+        // private static - make this a utility-class
     }
 
     ;
-    
-    
+
+
     public static String getPolynomString(double[] polynom) {
         List<Double> tmpList = new ArrayList<Double>();
         for (double value : polynom) {
@@ -48,13 +48,13 @@ public final class PolynomTools {
         }
         return getPolynomString(tmpList);
     }
-    
+
     public static void main(String[] args) {
         List<Double> testPoly = Arrays.asList(-2.0, -2.0);
         System.out.println(getPolynomString(testPoly));
     }
-    
-    
+
+
     /*
      * return a html-String for the given polynom. Format: 1 + s - 2s^2 -> [1, 1, -2]
      *
@@ -68,16 +68,16 @@ public final class PolynomTools {
             final Double value = polynom.get(power);
             final String niceFormValue = TECH_FORMATTER.formatENG(value, 3);
             // if nearly-zero power is detected, do not print anything
-            if (Math.abs(polynom.get(power)) < SMALL_VALUE) {                
+            if (Math.abs(polynom.get(power)) < SMALL_VALUE) {
                 continue;
             }
 
-            if (firstFlag) {                
+            if (firstFlag) {
                 if(value == -1) {
                     returnValue.append("-");
                 } else if(value != 1){
                     returnValue.append(niceFormValue);
-                }           
+                }
                 if(power == 0 && Math.abs(value) == 1) {
                     returnValue.append('1');
                 }
@@ -109,7 +109,7 @@ public final class PolynomTools {
             if (Math.abs(Math.abs(value) - 1) > SMALL_VALUE) {
                 returnValue.append(niceFormValue);
             } else { // if 1 or -1, just print the sign:
-                if (value < 0) { // the positive sign was handled before!                   
+                if (value < 0) { // the positive sign was handled before!
                     returnValue.append('-');
                 }
             }
@@ -283,7 +283,7 @@ public final class PolynomTools {
 //        double [] den = new double[]{ 1, 2, 1};
 //        double[] lead = new double[0];
 //        double[] remainder = polynomialDivision(num, den, lead);
-//        
+//
 //        System.out.println(PolynomTools.getPolynomString(remainder));
 //    }
     /**

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,11 +34,11 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
      * yes, -1 and not +1! with this setting, the output gets +1 when the input is -1, and vice versa.
      */
     private static final double DEF_HYS_THRES = -1;
-    
+
     private static final int X_EXTERNAL = -1;
     private static final int Y_EXTERNAL = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerHysteresis.class, "HYS", I18nKeys.HYSTERESIS);
-    
+
     public final transient UserParameter<Double> _hysteresisThreshold = UserParameter.Builder.<Double>start("h", DEF_HYS_THRES).
             longName(I18nKeys.HYSTERESIS_THRESHOLD).
             shortName("h").
@@ -50,14 +50,14 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
             shortName("external").
             arrayIndex(this, 1).
             build();
-    
+
     private transient TerminalControlInput _stashedTerminal;
-    
+
     public ReglerHysteresis() {
         super(1, 1);
-        
+
         setExpandedParameterListener(_useExternal);
-                
+
         _hysteresisThreshold.addActionListener(new ActionListener() {
 
             @Override
@@ -107,12 +107,12 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
 
         }
     }
-    
+
 
     @Override
     public int getBlockHeight() {
         return dpix;
-    }        
+    }
 
 
     @Override
@@ -122,8 +122,8 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
 
     @Override
     public void setFolded() {
-        if(XIN.size() == 2) {            
-            _stashedTerminal = (TerminalControlInput) XIN.pop();            
+        if(XIN.size() == 2) {
+            _stashedTerminal = (TerminalControlInput) XIN.pop();
         }
         if(XIN.size() == 1) {
             return;
@@ -133,26 +133,26 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
 
     @Override
     public void setExpanded() {
-        
-        if(XIN.size() == 2) {            
+
+        if(XIN.size() == 2) {
             return;
         }
-        
+
         if(_stashedTerminal != null) {
             XIN.push(_stashedTerminal);
         } else {
             XIN.add(new TerminalControlInput(this, X_EXTERNAL, Y_EXTERNAL));
-        }                                                            
+        }
     }
 
     @Override
     public boolean isExternalSet() {
         return _useExternal.getValue();
     }
-    
+
     @Override
     public void setExternalUsed(final boolean value) {
         _useExternal.setUserValue(value);
     }
-    
+
 }

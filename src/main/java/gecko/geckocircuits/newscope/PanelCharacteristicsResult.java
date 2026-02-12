@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,8 +31,8 @@ import javax.swing.border.TitledBorder;
  * @author andy
  */
 public final class PanelCharacteristicsResult extends JPanel {
-    private final JPanel _pERGx = new JPanel();        
-    
+    private final JPanel _pERGx = new JPanel();
+
     private final FormatJTextField[] _ftfAVG;  // Textfelder fuer AVG-Werte
     private final FormatJTextField[] _ftfRMS;  // Textfelder fuer RMS-Werte
     private final FormatJTextField[] _ftfMIN, _ftfMAX;  // Textfelder fuer minimale und maximale Werte
@@ -40,54 +40,54 @@ public final class PanelCharacteristicsResult extends JPanel {
     private final FormatJTextField[] _ftfCREST;
     private final FormatJTextField[] _ftfSHAPE;
     private final FormatJTextField[] _ftfTHD;
-    private final FormatJTextField[] _ftfRIPPLE;  
-    private final FormatJTextField[] _peakToPeak;  
-    
+    private final FormatJTextField[] _ftfRIPPLE;
+    private final FormatJTextField[] _peakToPeak;
+
     private final JPanel _pClcq;
     private final JPanel _pClc;
     private static final int NO_VIEW_COLS = 8;
     private static final int FONT_SIZE = 11;
-    
+
     public void setAvgText(final String text, final int index) {
         _ftfAVG[index].setText(text);
     }
-    
+
     public void setRmsText(final String text, final int index) {
         _ftfRMS[index].setText(text);
     }
-    
+
     public void setMinText(final String text, final int index) {
         _ftfMIN[index].setText(text);
     }
-    
+
     public void setMaxText(final String text, final int index) {
         _ftfMAX[index].setText(text);
     }
-    
+
     public void setCRestText(final String text, final int index) {
         _ftfCREST[index].setText(text);
     }
-    
+
     public void setShapeText(final String text, final int index) {
         _ftfSHAPE[index].setText(text);
     }
-    
+
     public void setThdText(final String text, final int index) {
         _ftfTHD[index].setText(text);
     }
-    
+
     public void setPeakPeakText(final String text, final int index) {
         _peakToPeak[index].setText(text);
     }
-    
+
     public void setRippleText(final String text, final int index) {
         _ftfRIPPLE[index].setText(text);
     }
-    
+
     public PanelCharacteristicsResult(final AbstractDataContainer dataContainer) {
         super();
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), 
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Characteristics", TitledBorder.LEFT, TitledBorder.TOP));
         _pClcq = new JPanel();
         _pClcq.setLayout(new GridLayout(dataContainer.getRowLength()+1, 1));
@@ -105,9 +105,9 @@ public final class PanelCharacteristicsResult extends JPanel {
 
         _pClc = new JPanel();
         _pClc.setLayout(new GridLayout(dataContainer.getRowLength()+1, NO_VIEW_COLS));
-        
+
         setCharTitleLabels();
-        
+
         final int columnLength = dataContainer.getRowLength();
         final List<FormatJTextField[]> allFormatTxtFlds = new ArrayList<FormatJTextField[]>();
 
@@ -165,6 +165,6 @@ public final class PanelCharacteristicsResult extends JPanel {
             tmp.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
             _pClc.add(tmp);
         }
-        
+
     }
 }

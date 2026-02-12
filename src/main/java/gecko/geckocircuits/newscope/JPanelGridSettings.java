@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,52 +28,52 @@ public class JPanelGridSettings extends javax.swing.JPanel {
     /** This constructor is only meant for the netbeans gui builder! */
     public JPanelGridSettings() {
         super();
-        initComponents();      
+        initComponents();
         _axis = null;
         _grafer = null;
         _initDone = false;
     }
-    
+
     public void init(final Axis axis, final GraferV4 grafer) {
         _axis = axis;
-        
+
         final AxisTickSettings tickSettings = _axis._axisTickSettings;
         final AxisGridSettings gridSettings = _axis._axisGridSettings;
-        
+
         jCheckBoxAutoSpacing.setSelected(true);
         jCheckBoxAutoSpacingActionPerformed(null);
         jCheckBoxAutoGridLine.setSelected(gridSettings.isAutoGrids());
         jCheckBoxShowGridLineMaj.setEnabled(!gridSettings.isAutoGrids());
         jCheckBoxShowGridLineMin.setEnabled(!gridSettings.isAutoGrids());
-        
+
         updateTextFields();
-        
+
         jCheckBoxShowLabelMaj.setSelected(tickSettings.isShowLabelsMaj());
         jCheckBoxShowLabelMin.setSelected(tickSettings.isShowLabelsMin());
         jCheckBoxShowGridLineMaj.setSelected(gridSettings.isUserShowGridMaj());
         jCheckBoxShowGridLineMin.setSelected(gridSettings.isUserShowGridMin());
-        
+
         jPanelLineMajGrid.init(gridSettings.getSettableMaj(), grafer);
         jPanelLineMinGrid.init(gridSettings.getSettableMin(), grafer);
-        
+
         // transparency cannot be changed
         jPanelLineMajGrid.jLabel3.setVisible(false);
         jPanelLineMajGrid.jSpinnerTransp.setVisible(false);
         jPanelLineMinGrid.jLabel3.setVisible(false);
         jPanelLineMinGrid.jSpinnerTransp.setVisible(false);
-        
+
         _grafer = grafer;
         _initDone = true;
     }
-    
+
     public void updateTextFields() {
         formatJTextFieldTickSpace.setNumberToField(_axis._tickSpacing);
         formatJTextFieldNumTicks.setNumberToField(_axis._axisTickSettings.getAnzTicksMinor());
-        
+
         formatJTextFieldTickLenghtMaj.setNumberToField(_axis._axisTickSettings.getTickLengthMaj());
         formatJTextFieldTickLengthMin.setNumberToField(_axis._axisTickSettings.getTickLengthMin());
     }
-    
+
     private void repaintComponent() {
         if (_grafer != null) {
             _grafer.repaint();

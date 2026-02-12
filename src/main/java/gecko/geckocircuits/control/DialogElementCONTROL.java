@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,36 +25,36 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
-public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogCircuitComponent<T> {    
-    JPanel jpM = new JPanel();                    
+public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogCircuitComponent<T> {
+    JPanel jpM = new JPanel();
 
     public DialogElementCONTROL(final T element) {
-        super(GeckoSim._win, true, element);                
-        
-    }    
-    
+        super(GeckoSim._win, true, element);
+
+    }
+
 
     @Override
     public void baueGUI() {
-        this.setLocationRelativeTo(GeckoSim._win);                
+        this.setLocationRelativeTo(GeckoSim._win);
         con = this.getContentPane();
-        con.setLayout(new BorderLayout());                                        
+        con.setLayout(new BorderLayout());
         try {
         con.add(jPanelName, BorderLayout.NORTH);
         } catch (Exception ex) {
             // sometimes, I git an XException here... don't know the reason.
             ex.printStackTrace();
-        }  
+        }
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Parameter", TitledBorder.LEFT, TitledBorder.TOP));
-        
+
         baueGuiIndividual();
         con.add(jpM, BorderLayout.CENTER);
         con.add(jPanelButtonOkCancel, BorderLayout.SOUTH);
     }
 
-    
+
     public static JPanel createComponentCouplingPanel(final AbstractBlockInterface couplingElement) {
         if (!(couplingElement instanceof ComponentCoupable)) {
             return null;
@@ -99,7 +99,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
             psw1.add(combo);
         }
         jpM.add(psw1);
-                      
+
         return jpM;
     }
 
@@ -136,10 +136,10 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
         processInputs();
         processRegisteredParameters();
         schliesseFenster();
-    }        
+    }
 
     protected void processInputs() {
     }
 
-        
+
 }

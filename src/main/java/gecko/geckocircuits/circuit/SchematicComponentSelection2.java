@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -68,13 +68,13 @@ public class SchematicComponentSelection2 extends JTabbedPane {
         CircuitTyp.LK_MOTOR_IMC, CircuitTyp.LK_MOTOR_IMA, CircuitTyp.LK_MOTOR_IMSAT, /*
          * Typ.LK_MOTOR_IMB,
          */ CircuitTyp.LK_LISN,};
-    
+
     private AbstractComponentTyp[] _typSubcircuit = new AbstractComponentTyp[]{
         SpecialTyp.SUBCIRCUIT, CircuitTyp.LK_TERMINAL, CircuitTyp.TH_TERMINAL,
         C_TERMINAL, CircuitTyp.REL_TERMINAL, CircuitTyp.LK_GLOBAL_TERMINAL,
         CircuitTyp.TH_GLOBAL_TERMINAL, C_GLOBAL_TERMINAL,
         CircuitTyp.REL_GLOBAL_TERMINAL, C_MUX, C_DEMUX};
-    
+
     private ControlTyp[] _typCONTROL = new ControlTyp[]{
         C_GAIN, C_PT1, C_PT2, C_INT, C_PI, C_PD, C_HYS, C_LIMIT, C_ADD, C_SUB, C_MUL, C_DIV,
         C_MIN, C_MAX, C_SIGN, C_TF
@@ -84,7 +84,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
         C_TEMP, C_FLOW, C_VIEWMOT, C_CISPR16, C_SPACE_VECTOR,
         C_U_ZI//, C_SMALL_SIG
     };
-    
+
     private ControlTyp[] _typDigital = new ControlTyp[]{
         C_NOT, C_AND, C_OR, C_XOR,
         C_DELAY, C_SAMPLEHOLD, C_COUNTER,
@@ -97,12 +97,12 @@ public class SchematicComponentSelection2 extends JTabbedPane {
         C_SIGNALSOURCE, C_CONST, C_SWITCH,
         C_TO_EXTERNAL, C_FROM_EXTERNAL, C_DATA_EXPORT, C_SOURCE_IMPORT_DATA, C_SOURCE_RANDOM
     };
-    
-    
+
+
     private AbstractComponentTyp[] _typSpecial = new AbstractComponentTyp[]{
         C_JAVA_FUNCTION, C_NATIVE_C_FUNCTION, C_SMALL_SIG, C_ABCDQ, C_DQABC,
         C_TIME, C_SPARSEMATRIX, C_PMSM_CONTROL,
-        C_PMSM_MODULATOR, C_THYR_CTRL, 
+        C_PMSM_MODULATOR, C_THYR_CTRL,
         /*ControlTyp.C_DEBUG,*/ SpecialTyp.TEXTFIELD
     };
     private AbstractComponentTyp[] _typTherm = new AbstractComponentTyp[]{
@@ -122,7 +122,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     public SchematicComponentSelection2() {
 
         List<AbstractBlockInterface> showAllBlocks = new ArrayList<AbstractBlockInterface>();
-        
+
         for (AbstractComponentTyp typ : AbstractTypeInfo._allRegisteredComponentEnums) {
             AbstractBlockInterface newComponent = typ.getTypeInfo().fabric();
             if (newComponent != null) {
@@ -176,7 +176,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
         searchTestField.addSelectionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (AbstractBlockInterface block : _showBlocks) {                    
+                for (AbstractBlockInterface block : _showBlocks) {
                     if (block.getTypeDescription().getTranslation().equals(searchTestField.getText())) {
                         _lastComponentButton.setSelectedShowComponent(block, _showBlocksType.get(_showBlocks.indexOf(block)));
                     }
@@ -193,7 +193,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
             public void actionPerformed(final ActionEvent event) {
                 if (_lastComponentButton.getSelectedBlock() != null) {
                     se.deselect();
-                    _typElement = _lastComponentButton.getTyp();                    
+                    _typElement = _lastComponentButton.getTyp();
                 }
 
             }
@@ -209,7 +209,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
         private final AbstractComponentTyp _typ;
 
         public ComponentSelectionButton(final AbstractComponentTyp typ, final AbstractBlockInterface exampleBlock) {
-            super(LangInit.getTranslatedString(exampleBlock.getTypeDescription()));                        
+            super(LangInit.getTranslatedString(exampleBlock.getTypeDescription()));
             addMouseListener(new PopupListener(exampleBlock.getTypeDescription()));
             _typ = typ;
             final String description = getText();
@@ -222,7 +222,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
             }
 
             setHorizontalAlignment(LEADING);
-            setForeground(exampleBlock.getForeGroundColor());            
+            setForeground(exampleBlock.getForeGroundColor());
             setContentAreaFilled(false);
             setFocusPainted(false);
 
@@ -241,10 +241,10 @@ public class SchematicComponentSelection2 extends JTabbedPane {
 
                 @Override
                 public void mouseReleased(final MouseEvent event) {
-                    if(_mouseInComponent) {                        
+                    if(_mouseInComponent) {
                         se.deselect();
-                        _typElement = _typ;                        
-                        _lastComponentButton.setSelectedShowComponent(_map.get(_typ), _typ);                    
+                        _typElement = _typ;
+                        _lastComponentButton.setSelectedShowComponent(_map.get(_typ), _typ);
                     }
                 }
 
@@ -283,7 +283,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
 
         @Override
         public void mouseDragged(final MouseEvent event) {
-            _lastDraggedMillis = System.currentTimeMillis();            
+            _lastDraggedMillis = System.currentTimeMillis();
         }
 
         @Override

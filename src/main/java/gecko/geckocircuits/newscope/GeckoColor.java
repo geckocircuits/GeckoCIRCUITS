@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@ import java.awt.Color;
  */
 public enum GeckoColor {
 
-    
+
     /**
      * WARNING: Don't change the order of the enumeration constants, ordinal() is used!
      */
@@ -39,45 +39,45 @@ public enum GeckoColor {
     YELLOW (-3444451, Color.YELLOW),
     DARKGREEN (-3444452, Color.decode("0x006400"));
 
-    
+
     private static int counter = 0;
-    
+
     static GeckoColor getNextColor() {
         counter++;
         counter = counter % values().length;
         final GeckoColor returnValue = getFromOrdinal(counter);
-        
+
         // don't select these colors, since they are nealy invisible!
         if(returnValue == WHITE || returnValue == YELLOW) {
             return getNextColor();
         }
         return returnValue;
     }
-    
+
     static GeckoColor getNextColor(GeckoColor previous) {
         counter = previous.ordinal()+1;
         counter = counter % values().length;
         final GeckoColor returnValue = getFromOrdinal(counter);
-        
+
         // don't select these colors, since they are nealy invisible!
         if(returnValue == WHITE || returnValue == YELLOW) {
             return getNextColor(returnValue);
         }
         return returnValue;
     }
-    
+
 
     private final int _code;
     private final Color _color;
-    
+
     GeckoColor(final int code, final Color color) {
         _code = code;
         _color = color;
     }
-    
-    
-        
-    
+
+
+
+
     static GeckoColor getFromOrdinal(final int ordinal) {
         for(GeckoColor val : values()) {
             if(val.ordinal() == ordinal) {
@@ -87,13 +87,13 @@ public enum GeckoColor {
         assert false;
         return null;
     }
-            
+
     public Color getJavaColor() {
         return _color;
     }
-    
-    public int code() { return _code; }                
-    
+
+    public int code() { return _code; }
+
     static GeckoColor getFromCode(final int code) {
         for(GeckoColor val : values()) {
             if(val._code == code) {

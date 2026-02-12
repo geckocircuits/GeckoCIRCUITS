@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -53,7 +53,7 @@ public final class UZiDisplay extends GeckoDialog {
     Graphics2D offGraph;
     DrawVector sv1;
     DrawVector sv2;
-    
+
 
     private class DrawVector {
 
@@ -158,9 +158,9 @@ public final class UZiDisplay extends GeckoDialog {
      */
     public UZiDisplay(final ReglerU_ZI regelBlock) {
         super(GeckoSim._win, false);
-                
+
         initComponents();
-        
+
 
         doubleBufferImage = gfxConf.createCompatibleImage(getWidth(), getHeight());
         offGraph = doubleBufferImage.createGraphics();

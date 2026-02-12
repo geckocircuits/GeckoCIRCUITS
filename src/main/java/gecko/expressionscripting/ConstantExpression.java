@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,17 +18,17 @@
 //
 //class ConstantExpression extends AbstractExpression {
 //
-//    private final Double _constantReturnValue;    
-//    
-//    ConstantExpression(final Object nameable, final VariableExpression possibleReturnValue) 
+//    private final Double _constantReturnValue;
+//
+//    ConstantExpression(final Object nameable, final VariableExpression possibleReturnValue)
 //            throws ScriptException {
 //        super(nameable, possibleReturnValue._scriptingCodeGivenFromUser);
-//        _constantReturnValue = possibleReturnValue.evaluate();                
+//        _constantReturnValue = possibleReturnValue.evaluate();
 //    }
 //
 //    @Override
 //    Double evaluate() throws ScriptException {
 //        return _constantReturnValue;
 //    }
-//    
+//
 //}

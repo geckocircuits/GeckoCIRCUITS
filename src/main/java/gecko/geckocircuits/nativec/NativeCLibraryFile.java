@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,22 +26,22 @@ public final class NativeCLibraryFile {
     private long _timeStamp;
     private String _libPathName;
     private File _libFile;
-    
+
     public NativeCLibraryFile () {
     }
-    
+
     public NativeCLibraryFile (final String fileName) throws FileNotFoundException {
         setFile(fileName);
     }
-    
+
     public NativeCLibraryFile (final File file) throws FileNotFoundException {
         setFile(file);
     }
-    
+
     public String getFileName () {
         return _libPathName;
     }
-    
+
     public void setFile (final File file) throws FileNotFoundException {
         if (file != null) {
             if (!file.exists()) {
@@ -53,7 +53,7 @@ public final class NativeCLibraryFile {
             }
         }
     }
-    
+
     public void setFile (final String fileName) throws FileNotFoundException {
         _libFile = new File(fileName);
         if (!_libFile.exists()) {
@@ -63,17 +63,17 @@ public final class NativeCLibraryFile {
             _timeStamp = _libFile.lastModified();
         }
     }
-    
+
     public void setFile () {
         _libFile = null;
         _libPathName = null;
         _timeStamp = 0;
     }
-    
+
     public File getFile() {
         return _libFile;
     }
-    
+
     public File savegetFile () throws FileNotFoundException {
         if (_libFile == null || _libPathName == null) {
             throw new FileNotFoundException("No Library File was selected!");
@@ -81,7 +81,7 @@ public final class NativeCLibraryFile {
             return _libFile;
         }
     }
-    
+
     public String savegetFileName () throws FileNotFoundException {
         if (_libFile == null || _libPathName == null) {
             throw new FileNotFoundException("No Library File was selected!");
@@ -89,16 +89,16 @@ public final class NativeCLibraryFile {
             return _libPathName;
         }
     }
-    
+
     /**
-     * The TimeStamp can be used in future as an easy implementation for 
+     * The TimeStamp can be used in future as an easy implementation for
      * revision control.
-     * @return 
+     * @return
      */
     public long getTimeStamp () {
         return _timeStamp;
     }
-    
+
     public boolean updateTimeStamp () throws FileNotFoundException {
         long newTimeStamp;
         if (_libFile == null) {

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,27 +24,27 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
 
     // CHECKSTYLE:OFF
     DataContainerCompressable _dataCont;
-    
-        
-    private final TimeSeriesConstantDt _timeSeries;    
+
+
+    private final TimeSeriesConstantDt _timeSeries;
     private final double _baseFrequency;
 
     public DataContainerFourier(final int rows, final int maximumColumns, final double baseFrequency) {
-        _timeSeries = new TimeSeriesConstantDt();         
-        _dataCont = new DataContainerCompressable(2, _timeSeries, new String[]{"Re", "Im"}, "f");                                
+        _timeSeries = new TimeSeriesConstantDt();
+        _dataCont = new DataContainerCompressable(2, _timeSeries, new String[]{"Re", "Im"}, "f");
         _baseFrequency = baseFrequency;
     }
-    
+
     public void insertValues(final float[] magnitude, final float[] phase) {
         for(int i = 0; i < magnitude.length; i++) {
             float[] array = _dataCont.getDataArray();
             array[0] = magnitude[i];
-            array[1] = phase[i];            
+            array[1] = phase[i];
             _dataCont.insertValuesAtEnd(array, _baseFrequency * i);
-        }        
-        
+        }
+
     }
-            
+
 
     @Override
     public final float getValue(final int row, final int column) {
@@ -52,7 +52,7 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
     }
 
     public final void setValue(final float value, final int row, final int column) {
-        throw new UnsupportedOperationException("this operation is not supported in the data container.");        
+        throw new UnsupportedOperationException("this operation is not supported in the data container.");
     }
 
     @Override
@@ -62,7 +62,7 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
 
     @Override
     public final HiLoData getHiLoValue(final int row, final int columnStart, final int columnStop) {
-        return _dataCont.getHiLoValue(row, columnStop, columnStop);        
+        return _dataCont.getHiLoValue(row, columnStop, columnStop);
     }
 
     @Override
@@ -71,24 +71,24 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
     }
 
     @Override
-    public final int getMaximumTimeIndex(final int row) {        
-        return _timeSeries.getMaximumIndex();                
+    public final int getMaximumTimeIndex(final int row) {
+        return _timeSeries.getMaximumIndex();
     }
 
     @SuppressWarnings("PMD")
     @Override
-    public void insertValuesAtEnd(final float[] values, final double timeValue) {        
-        throw new UnsupportedOperationException("this operation is not supported in the data container.");        
-    }    
+    public void insertValuesAtEnd(final float[] values, final double timeValue) {
+        throw new UnsupportedOperationException("this operation is not supported in the data container.");
+    }
 
     @Override
     public final HiLoData getAbsoluteMinMaxValue(final int row) {
-        return _dataCont.getAbsoluteMinMaxValue(row);        
-    }    
+        return _dataCont.getAbsoluteMinMaxValue(row);
+    }
 
     @Override
     public final int findTimeIndex(final double time, final int row) {
-        return _dataCont.findTimeIndex(time, row);        
+        return _dataCont.findTimeIndex(time, row);
     }
 
     @Override
@@ -105,13 +105,13 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
     public Object getDataValueInInterval(double intervalStart, double intervalStop, int columnIndex) {
         return _dataCont.getDataValueInInterval(intervalStart, intervalStop, columnIndex);
     }
-    
-    
+
+
     @Override
     public String getSignalName(final int row) {
-        return _dataCont.getSignalName(row);        
+        return _dataCont.getSignalName(row);
     }
-    
+
 
     @Override
     public String getXDataName() {
@@ -136,7 +136,7 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
     @Override
     public AbstractTimeSerie getTimeSeries(final int row) {
         return _timeSeries;
-    }    
+    }
 
     @Override
     public float[] getDataArray() {

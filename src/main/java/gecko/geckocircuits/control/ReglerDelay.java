@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,7 +26,7 @@ public final class ReglerDelay extends AbstractReglerSingleInputSingleOutput {
     private static final long serialVersionUID = 1L;
     private static final double DEFAULT_DELAY = 10e-6;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerDelay.class, "DELAY", I18nKeys.DELAY);
-    
+
     public final transient UserParameter<Double> _tDelay = UserParameter.Builder.<Double>start("tDelay", DEFAULT_DELAY).
             longName(I18nKeys.DELAY_INPUT).
             unit("sec").
@@ -34,8 +34,8 @@ public final class ReglerDelay extends AbstractReglerSingleInputSingleOutput {
             addAlternativeShortName("T_delay").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 0).
-            build();                
-        
+            build();
+
 
     public ReglerDelay() {
         super();
@@ -55,7 +55,7 @@ public final class ReglerDelay extends AbstractReglerSingleInputSingleOutput {
     @Override
     public String[] getOutputNames() {
         return new String[]{"delayed"};
-    }        
+    }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -66,17 +66,17 @@ public final class ReglerDelay extends AbstractReglerSingleInputSingleOutput {
     @Override
     protected String getCenteredDrawString() {
         return "DEL";
-    }            
+    }
 
     @Override
     protected Window openDialogWindow() {
-        return new ReglerDelayDialog(this);        
+        return new ReglerDelayDialog(this);
     }
-                
-    
+
+
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.OUTPUT_DELEAYED_BY_TIME};
     }
-    
+
 }

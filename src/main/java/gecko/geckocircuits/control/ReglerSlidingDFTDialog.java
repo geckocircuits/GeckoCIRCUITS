@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -51,7 +51,7 @@ final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT
         jPanelFreqs = new JPanel();
         jPanelFreqs.setBorder(new TitledBorder("Fourier Transform Frequencies"));
         _originalData = regler.getFrequencyData();
-        this.setTitle(LangInit.getTranslatedString(regler.getTypeDescription()));        
+        this.setTitle(LangInit.getTranslatedString(regler.getTypeDescription()));
         _grid = new GridLayout(_originalData.size(), 2);
         for (ReglerSlidingDFT.FrequencyData data : _originalData) {
             addFreqData(data);
@@ -85,7 +85,7 @@ final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT
                 addComboBox(ReglerSlidingDFT.OutputData.ABS);
                 jPanelFreqs.revalidate();
                 ReglerSlidingDFTDialog.this.pack();
-                setResizable(false);                                
+                setResizable(false);
             }
         });
         buttonAddRemovePanel.add(_jButtonAddFreq);
@@ -95,15 +95,15 @@ final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT
             public void actionPerformed(final ActionEvent event) {
                 if (_frequencySelectionList.size() == 1) {
                     return;
-                }                                
+                }
 
                 jPanelFreqs.remove(_frequencySelectionList.pop());
-                
+
                 FormatJTextField toRemoveTextField = _freqFields.pop();
                 unregisterTextField(toRemoveTextField);
-                
+
                 jPanelFreqs.remove(toRemoveTextField);
-                jPanelFreqs.remove(_labels.pop());                
+                jPanelFreqs.remove(_labels.pop());
 
                 _grid.setRows(_freqFields.size());
                 _grid.setColumns(5);
@@ -111,7 +111,7 @@ final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT
                 setResizable(true);
                 jPanelFreqs.revalidate();
                 ReglerSlidingDFTDialog.this.pack();
-                setResizable(false);                
+                setResizable(false);
             }
         });
         buttonAddRemovePanel.add(_jButtonRemoveFreq);
@@ -126,7 +126,7 @@ final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT
         _labels.add(labPar1);
         labPar1.setFont(GlobalFonts.LAB_FONT_DIALOG_1);
         labPar1.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
-        jPanelFreqs.add(labPar1);        
+        jPanelFreqs.add(labPar1);
         FormatJTextField textField = getRegisteredTextField(data._frequency);
         _freqFields.add(textField);
         jPanelFreqs.add(textField);
@@ -178,21 +178,21 @@ final class ReglerSlidingDFTDialog extends DialogElementCONTROL<ReglerSlidingDFT
     public void processInputIndividual() {
         super.processInputIndividual(); //To change body of generated methods, choose Tools | Templates.
         element.setOutputTerminalNumber(_freqFields.size());
-                
+
         for(JComboBox combo : _frequencySelectionList) {
-            int index = _frequencySelectionList.indexOf(combo);            
+            int index = _frequencySelectionList.indexOf(combo);
             _originalData.get(index)._outputData = (OutputData) combo.getSelectedItem();
         }
         int makeSmaller = 0;
         if(_originalData.size() > _freqFields.size()) {
             makeSmaller = _originalData.size() - _freqFields.size();
         }
-        
+
         for(int i = 0; i < makeSmaller; i++) {
             element.removeLastFrequencyData();
-        }                        
+        }
     }
-    
-    
+
+
 
 }

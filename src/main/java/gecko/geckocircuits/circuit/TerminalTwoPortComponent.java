@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,14 +19,14 @@ import java.awt.Graphics;
 public final class TerminalTwoPortComponent extends AbstractTerminal {
 
     private final int _termDist;
-    
+
     /**
      * a two-Terminal component should only show 1 flow symbol.
      */
-    boolean _isFlowSymbolTerminal = false;    
-    
-    
-    
+    boolean _isFlowSymbolTerminal = false;
+
+
+
     public TerminalTwoPortComponent(AbstractBlockInterface relatedComponent, int termDist) {
         super(relatedComponent);
         _termDist = termDist;
@@ -66,7 +66,7 @@ public final class TerminalTwoPortComponent extends AbstractTerminal {
         returnValue._isFlowSymbolTerminal = _isFlowSymbolTerminal;
         return returnValue;
     }
-    
+
 
     @Override
     public void paintComponent(Graphics graphics) {
@@ -77,8 +77,8 @@ public final class TerminalTwoPortComponent extends AbstractTerminal {
 
 
         super.paintComponent(graphics);
-    }        
-    
+    }
+
     public void setIsFlowSymbolTerminal(final boolean value) {
         _isFlowSymbolTerminal = value;
     }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,29 +28,29 @@ public final class IdealSwitch extends AbstractSwitch {
     private static final double WIDTH = 1.6;
     private static final double HEIGHT = 0.8;
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealSwitch.class, "S", I18nKeys.IDAL_SWITCH);
-        
+
     /**
      * this "hacks" are just for backwards-compatibility. In the old GeckoCIRCUITS
-     * versions, the ideal switch has an on resistance parameter index of 1, in 
+     * versions, the ideal switch has an on resistance parameter index of 1, in
      * all other switches it is 2. The same "shift" applies for off-resistance.
-     * @return 
-     */    
+     * @return
+     */
     @Override
     int getOnResistanceIndex() {
         return 1;
     }
-    
+
     /**
      * this "hacks" are just for backwards-compatibility. In the old GeckoCIRCUITS
-     * versions, the ideal switch has an on resistance parameter index of 1, in 
+     * versions, the ideal switch has an on resistance parameter index of 1, in
      * all other switches it is 2. The same "shift" applies for off-resistance.
-     * @return 
+     * @return
      */
     @Override
     int getOffResistanceIndex() {
         return 2;
     }
-    
+
 
     public void setzeParameterZustandswerteAufNULL() {
         parameter[0] = parameter[2];
@@ -65,25 +65,25 @@ public final class IdealSwitch extends AbstractSwitch {
         graphics.drawLine(0, 2 * dpix, 0, (int) (dpix * WIDTH / 2));
         graphics.fillPolygon(
                 new int[]{0, (int) (dpix * ddx), (int) (dpix * (HEIGHT + ddx)), (int) (dpix * HEIGHT)},
-                new int[]{(int) (-dpix * WIDTH / 2), (int) (-dpix * (WIDTH / 2 + ddy)), 
+                new int[]{(int) (-dpix * WIDTH / 2), (int) (-dpix * (WIDTH / 2 + ddy)),
                     (int) (dpix * (WIDTH / 2 - ddy)), (int) (dpix * WIDTH / 2)}, 4);
     }
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
-        graphics.drawLine(0, dpix * 2, 0, dpix);        
-        graphics.drawLine(0, -dpix * 2, 0, -dpix);        
+        graphics.drawLine(0, dpix * 2, 0, dpix);
+        graphics.drawLine(0, -dpix * 2, 0, -dpix);
     }
 
-    
-    
+
+
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        verluste.addTextInfoValue(_textInfo);                
-        addGateTextInfo();        
-    }    
-    
+        verluste.addTextInfoValue(_textInfo);
+        addGateTextInfo();
+    }
+
     @Override
     protected Window openDialogWindow() {
         return new IdealSwitchDialog(this);
@@ -93,6 +93,6 @@ public final class IdealSwitch extends AbstractSwitch {
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new IdealSwitchCalculator(this));
     }
-    
-    
+
+
 }

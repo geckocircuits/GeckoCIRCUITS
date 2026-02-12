@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -57,7 +57,7 @@ public final class CharacteristicsCalculator {
             if(worksheet.getMaximumTimeIndex(0) != _maxTimeIndex) {
                 return false;
             }
-            
+
             return true;
         }
     }
@@ -122,7 +122,7 @@ public final class CharacteristicsCalculator {
     public double getMinValue(final int index) {
         return _min[index];
     }
-    
+
     public double getPeakToPeakValue(final int index) {
         return _peakPeak[index];
     }
@@ -198,13 +198,13 @@ public final class CharacteristicsCalculator {
         final double rng2 = bounderies[1];
 
         boolean isContinusRowsCalculation = true;
-        
+
         for(int i = 0; i < rows.length; i++) {
             if(rows[i] != i) {
                 isContinusRowsCalculation = false;
             }
         }
-        
+
         final int dataRowLength = rows.length;
 
         final double totalT = rng2 - rng1;
@@ -219,9 +219,9 @@ public final class CharacteristicsCalculator {
             final double omegaT = 2 * Math.PI / totalT * tAktuell;
             final double sinOmegaT = Math.sin(omegaT);
             final double cosOmegaT = Math.cos(omegaT);
-                       
+
             for (int i2 = 0; i2 < dataRowLength; i2++) {
-                final double wert = worksheet.getValue(rows[i2], i1);                
+                final double wert = worksheet.getValue(rows[i2], i1);
                 _avg[i2] += (wert * deltaT);
                 _rms2[i2] += (wert * wert * deltaT);
                 _min[i2] = Math.min(_min[i2], wert);
@@ -230,8 +230,8 @@ public final class CharacteristicsCalculator {
                 _gsA1[i2] += wert * cosOmegaT * deltaT;
                 _gsB1[i2] += wert * sinOmegaT * deltaT;
             }
-        }        
-        
+        }
+
         //-------------------
         // Auswertung:
         for (int i2 = 0; i2 < dataRowLength; i2++) {

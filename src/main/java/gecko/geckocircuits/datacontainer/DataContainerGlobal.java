@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,7 +31,7 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
   private int _lastDataIndex = -1;
 
   public DataContainerGlobal(){
-    super();      
+    super();
     final DataContainerNullData data = new DataContainerNullData();
     _data = data;
     _settable = data;
@@ -39,9 +39,9 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
   }
 
   public void init(final int rows, final String[] signalNames, final String xDataName){
-    
+
       final DataContainerCompressable data = new DataContainerCompressable(rows, new TimeSeriesConstantDt(),
-                                                                         signalNames, xDataName);      
+                                                                         signalNames, xDataName);
     _settable = data;
     _data = data;
     _data.addObserver(this);
@@ -115,7 +115,7 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
   }
 
   @Override
-  public String getSignalName(final int row){      
+  public String getSignalName(final int row){
     return _data.getSignalName(row);
   }
 
@@ -191,10 +191,10 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
     @Override
     void setSignalPathName(int containerRowIndex, String subcircuitPath) {
         _data.setSignalPathName(containerRowIndex, subcircuitPath);
-    }          
-    
+    }
+
     @Override
-    public String getSubcircuitSignalPath(final int row) {      
+    public String getSubcircuitSignalPath(final int row) {
       return _data.getSubcircuitSignalPath(row);
   };
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,12 +19,12 @@ import gecko.i18n.resources.I18nKeys;
 
 
 
-public final class ReglerVOLT extends AbstractPotentialMeasurement  {        
+public final class ReglerVOLT extends AbstractPotentialMeasurement  {
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerVOLT.class, "VOLT", I18nKeys.VOLTAGE_MEASUREMENT_V);
-    
+
     public ReglerVOLT() {
-        super(ConnectorType.LK);        
+        super(ConnectorType.LK);
     }
 
     @Override
@@ -35,8 +35,8 @@ public final class ReglerVOLT extends AbstractPotentialMeasurement  {
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.MEASURED_VOLTAGE_V};
-    }                            
-    
+    }
+
 
     @Override
     public I18nKeys getCouplingTitle() {

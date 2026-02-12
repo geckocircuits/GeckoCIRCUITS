@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,11 +17,11 @@ import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.control.calculators.SinCalculator;
 import gecko.i18n.resources.I18nKeys;
 
-public final  class ReglerSIN extends AbstractTrigonometricFunction {        
+public final  class ReglerSIN extends AbstractTrigonometricFunction {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSIN.class, "SIN", I18nKeys.SIN);
-    
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new SinCalculator();        
-    }                        
+        return new SinCalculator();
+    }
 }

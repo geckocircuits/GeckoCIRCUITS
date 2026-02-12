@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class Paradiso {
 
-    
+
     private final static int nrhs = 1;
     private final static int idum = 0;              /* Integer dummy. */
     /* Pardiso control parameters. */
@@ -42,16 +42,16 @@ public class Paradiso {
 
 
     public Paradiso() {
-        
+
     }
-    
-   
-    
+
+
+
     public static void factorize(double[] values, int[] ai, int[] aj, int n, int mtype, Paradiso paradiso) {
         /* Auxiliary variables. */
 
         double[] ddum = new double[2];        /* Double dummy */
-        
+
 
         /* -------------------------------------------------------------------- */
         /* .. Setup Pardiso control parameters. */
@@ -61,7 +61,7 @@ public class Paradiso {
         }
         paradiso.iparm[0] = 1; /* No solver default */
         paradiso.iparm[1] = 2; /* Fill-in reordering from METIS */
-                        
+
         paradiso.iparm[2] = 4; /* Numbers of processors, value of OMP_NUM_THREADS */
         paradiso.iparm[3] = 0; /* 0No iterative-direct algorithm */
         paradiso.iparm[4] = 0; /* No user fill-in reducing permutation */
@@ -83,7 +83,7 @@ public class Paradiso {
         paradiso.iparm[28] = 1;
         maxfct = 1;         /* Maximum number of numerical factorizations.  */
         mnum = 1;         /* Which factorization to use. */
-        
+
         msglvl = 0;         /* Print statistical information  */
         int error = 0;         /* Initialize error flag */
 
@@ -94,15 +94,15 @@ public class Paradiso {
         for (int i = 0; i < 64; i++) {
             paradiso.pt[i] = 0;
         }
-        
-        
+
+
         /* -------------------------------------------------------------------- */
         /* ..  Reordering and Symbolic Factorization.  This step also allocates */
         /*     all memory that is necessary for the factorization.              */
         /* -------------------------------------------------------------------- */
-        int phase = 11;        
-        
-        //long facstart = System.currentTimeMillis();        
+        int phase = 11;
+
+        //long facstart = System.currentTimeMillis();
         LAPACK.PARDISO(paradiso.pt, maxfct, mnum, mtype, phase,
                 n, values, ai, aj, idum, nrhs,
                 paradiso.iparm, msglvl, ddum, ddum, error);
@@ -130,8 +130,8 @@ public class Paradiso {
         //System.out.println("factorization time: " + (facstop - facstart)/1000.0);
         //System.exit(45);
     }
-    
-    
+
+
     public static double[] solve(double[] values, int[] ai, int[] aj, double[] rhs, int n, int mtype, int nRHS, Paradiso paradiso) {
         /* RHS and solution vectors. */
         double[] x = null;
@@ -140,15 +140,15 @@ public class Paradiso {
         } else {
             x = new double[n * nRHS];
         }
-        
+
 
         /* /\* -------------------------------------------------------------------- *\/     */
         /* /\* ..  Back substitution and iterative refinement.                      *\/ */
         /* -------------------------------------------------------------------- */
         int phase = 33;
         int error = 0;
-        
-        
+
+
         LAPACK.PARDISO(paradiso.pt, maxfct, mnum, mtype, phase,
                 n, values, ai, aj, idum, nRHS,
                 paradiso.iparm, msglvl, rhs, x, error);
@@ -157,14 +157,14 @@ public class Paradiso {
         if (error != 0) {
             Logger.getLogger(Paradiso.class.getName()).log(Level.SEVERE, "\nERROR during solution: " + error);
         }
-                
+
         /* -------------------------------------------------------------------- */
         /* ..  Termination and release of memory.                               */
         /* -------------------------------------------------------------------- */
         //phase = -1;                 /* Release internal memory. */
-        /* Release internal memory. */ 
-        //int dummy = LAPACK.PARDISO(pt, maxfct, mnum, mtype, phase, n, ddum, ai, aj, idum, nrhs, iparm, msglvl, ddum, ddum, error);       
+        /* Release internal memory. */
+        //int dummy = LAPACK.PARDISO(pt, maxfct, mnum, mtype, phase, n, ddum, ai, aj, idum, nrhs, iparm, msglvl, ddum, ddum, error);
         return x;
     }
-    
+
 }

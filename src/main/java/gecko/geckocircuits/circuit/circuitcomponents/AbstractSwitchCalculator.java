@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,10 +20,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Static flags for switch coordination; public fields for simulation; stores BVector reference")
 public abstract class AbstractSwitchCalculator extends CircuitComponent implements AStampable, BStampable {
 
-    
+
     protected static final double NEARLY_ZERO_R = 1e-9;
     private static final double DEFAULT_TEMP = 25;
-    
+
     protected double _rON = DEFAULT_R_ON;
     protected double _rOFF = DEFAULT_R_OFF;
     // variable resistance
@@ -49,10 +49,10 @@ public abstract class AbstractSwitchCalculator extends CircuitComponent implemen
      * all other switches use this piece of code.
      */
     public void setGateSignal(final boolean value) {
-        
+
         _gateValue = value;
         switchAction = true;
-        
+
         if (_gateValue) {
             _rDt = _rON;
         } else {
@@ -63,9 +63,9 @@ public abstract class AbstractSwitchCalculator extends CircuitComponent implemen
         if(_bVector != null) {
             _bVector.setUpdateAllFlag();
         }
-        
+
         //System.out.println("Gate signal set to " + _gateValue);
-        
+
     }
 
     public final boolean isGateSignalOn() {
@@ -92,24 +92,24 @@ public abstract class AbstractSwitchCalculator extends CircuitComponent implemen
     public final void setUForward(final double value) {
         _uForward = value;
     }
-    
-    
+
+
     public SwitchState getState(double time) {
-        
+
         SwitchState state;
         SwitchState.State componentState;
-        
+
         if (_rDt > _rON) {
             componentState = SwitchState.State.OFF;
         }
         else {
             componentState = SwitchState.State.ON;
         }
-        
+
         state = new SwitchState(_parent,componentState,time);
-        
+
         return state;
-        
+
     }
 
 }

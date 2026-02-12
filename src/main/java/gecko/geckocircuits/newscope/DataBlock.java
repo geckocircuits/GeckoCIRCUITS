@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -38,7 +38,7 @@ public class DataBlock {
 
     public final double getBlockValue(final int index) {
         final int blockIndex = index - _startIndex;
-        
+
         assert 0 <= blockIndex && blockIndex < _size;
         return _startValue + blockIndex * _dt;
     }
@@ -65,7 +65,7 @@ public class DataBlock {
         return _size == 1 || (_startValue + _size * (1 - TOLERANCE) * _dt <= value
                 && value <= _startValue + _size * (1 + TOLERANCE) * _dt);
     }
-    
+
     public final int findTimeIndex(final double time) {
         final int blockIndex = (int) ((time - _startValue)/_dt);
         return _startIndex + blockIndex;
@@ -166,11 +166,11 @@ public class DataBlock {
             return result;
         }
     }
-    
+
     public final IndexLimit getIndexLimit() {
         return new IndexLimit(_startIndex, _startIndex + _size - 1);
     }
-    
+
     public final double getStartValue() {
         return _startValue;
     }

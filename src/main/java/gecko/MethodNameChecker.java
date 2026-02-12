@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,7 +37,7 @@ final class MethodNameChecker {
         } catch (AssertionError err) { // we go here, when the JVM-flag "-ea" is set!
             for (Method toTest : checkMethods.getMethods()) {
                 try {
-                    assert containsMethodSignature.getMethod(toTest.getName(), toTest.getParameterTypes()) != null;                    
+                    assert containsMethodSignature.getMethod(toTest.getName(), toTest.getParameterTypes()) != null;
                 } catch (Throwable ex) {
                     assert false : "Method in geckoRemoteInterface not found: " + toTest;
                 }

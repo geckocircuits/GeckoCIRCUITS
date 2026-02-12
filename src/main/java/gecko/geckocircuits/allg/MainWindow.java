@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -604,7 +604,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         mItemSetPar = GuiFabric.getJMenuItem(I18nKeys.SET_PARAMETERS);
         mItemSetPar.setActionCommand("setParameters");
         mItemSetPar.addActionListener(this);
-        // 
+        //
         mItemSetOrder = GuiFabric.getJMenuItem(I18nKeys.SET_ORDER_OF_CONTROL);
         mItemSetOrder.setActionCommand("setOrder");
         mItemSetOrder.addActionListener(this);
@@ -869,7 +869,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             // DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
             GZIPOutputStream out1 = new GZIPOutputStream(new FileOutputStream(file));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1, java.nio.charset.StandardCharsets.UTF_8));
-            //            
+            //
             out.write(datLK.exportASCII());
             out.flush();
             out.close();
@@ -882,7 +882,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             checkWrittenFileSize(file);
         }
     }
-    
+
 
 
     public void saveFile() {
@@ -1009,7 +1009,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         AbstractCircuitSheetComponent.dpixValue.setValueWithoutUndo(daten.dpix);
         daten.updateSolverSettings(_solverSettings);
 
-        
+
 
         int fensterWidth = daten._fensterWidth, fensterHeight = daten._fensterHeight;
         if ((fensterWidth != -1) && (fensterHeight != -1)) {
@@ -1036,8 +1036,8 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         _se.resetCircuitSheetsForNewFile();
         GlobalFilePathes.DATNAM = dateiName;
         _se.resetCircuitSheetsForNewFile();
-        ProjectData daten = loadProjectDataFromFile(dateiName, false, optimizerParameterData);        
-        daten.updateSolverSettings(_solverSettings);        
+        ProjectData daten = loadProjectDataFromFile(dateiName, false, optimizerParameterData);
+        daten.updateSolverSettings(_solverSettings);
         _se.ladeGespeicherteNetzlisteVonProjectData(daten, null);
 
         AbstractCircuitSheetComponent.dpixValue.setValue(daten.dpix);
@@ -1076,7 +1076,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         this.aktualisierePropertiesRECENT(aktuellerDateiName);
         uniqueFileID = daten._uniqueFileId;
 
-        // don't do this for two reasons: first - how it is implemented now with 
+        // don't do this for two reasons: first - how it is implemented now with
         // static ReglerFromExternal and ReglerToExtral ArrayLists, the simulink
         // interfaces are loaded twice!
         // second: the window which asks for the autobackup halts the whole simulink system!
@@ -1327,19 +1327,19 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 GeckoFileChooser fileChooser = GeckoFileChooser.createOpenFileChooser(".ipes", "Circuit Simulation Files (*.ipes)", this, currentDirectory);
                 if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
                     return;
-                }                
-                    final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();                    
+                }
+                    final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
                     try {
                         if(new File(fileName).exists()) {
                             String[] fileLines = getLinesArrayFromIpesFile(fileName);
-                            _se.readSelectedElementsFromASCIIString(fileLines);                    
+                            _se.readSelectedElementsFromASCIIString(fileLines);
                         } else {
                             throw new FileNotFoundException("File not found " + fileName);
-                        }                        
+                        }
                     } catch(Throwable error) {
                         JOptionPane.showMessageDialog(MainWindow.this,
                             "Error during file import : " + fileName + "\n" + error.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }                                        
+                    }
             } else if (befehl.equals("Export")) {
                 _se.export_allesImBearbeitungsModus();
                 //========================================================================
@@ -1934,9 +1934,9 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             throw new FileNotFoundException("File: " + GlobalFilePathes.DATNAM + " not found!");
         }
 
-        ProjectData daten = null;        
-        String[] lines = getLinesArrayFromIpesFile(dateiName);        
-        daten = new ProjectData(lines, isAutoBackupFile, optimizer);        
+        ProjectData daten = null;
+        String[] lines = getLinesArrayFromIpesFile(dateiName);
+        daten = new ProjectData(lines, isAutoBackupFile, optimizer);
         return daten;
 
     }
@@ -1982,7 +1982,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             return txt;
         }
     }
-    
+
     private static String[] getLinesArrayFromIpesFile(String dateiName) {
         String[] lines = null;
         //----------
@@ -2005,7 +2005,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             for (int i1 = 0; i1 < datVec.size(); i1++) {
                 lines[i1] = datVec.elementAt(i1);
             }
-            
+
 
         } catch (Exception e) {
             System.out.println("openFile() - GZIP >> " + e);
@@ -2024,7 +2024,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 for (int i1 = 0; i1 < datVec.size(); i1++) {
                     lines[i1] = datVec.elementAt(i1);
                     //System.out.println("zeile[i1]= "+zeile[i1]);
-                }                
+                }
             } catch (Exception eGZIP) {
                 System.out.println("openFile() - A >> " + eGZIP);
                 eGZIP.printStackTrace();
@@ -2032,5 +2032,5 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
         return lines;
     }
-    
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,26 +30,26 @@ public abstract class AbstractCapacitor extends AbstractNonLinearCircuitComponen
 implements CurrentMeasurable, DirectVoltageMeasurable {
     private static final double WIDTH = 0.9;
     private static final double HEIGHT = 0.4;
-    
+
     final UserParameter<Double> _capacitance = UserParameter.Builder.
-            <Double>start("capacitance", 100e-9).           
-            mapDomains(ConnectorType.LK, ConnectorType.THERMAL).            
+            <Double>start("capacitance", 100e-9).
+            mapDomains(ConnectorType.LK, ConnectorType.THERMAL).
             longName(I18nKeys.CAPACITOR_C_F, I18nKeys.CAPACITOR_CTH_JK).
             shortName("C", "Cth").
             unit("F", "J/K").
             showInTextInfo(TextInfoType.SHOW_NEVER). // nonlinearity: custom display!
             arrayIndex(this, 0).
-            build();                                    
-    
+            build();
+
     UserParameter<Double> _initialValue = UserParameter.Builder.
-            <Double>start("initVoltage", 0.0).           
-            mapDomains(ConnectorType.LK, ConnectorType.THERMAL).            
+            <Double>start("initVoltage", 0.0).
+            mapDomains(ConnectorType.LK, ConnectorType.THERMAL).
             longName(I18nKeys.INITIAL_VOLTAGE, I18nKeys.INITIAL_TEMPERATURE).
             shortName("uC(0)", "Temp(0)").
             unit("V", "K").
-            showInTextInfo(TextInfoType.SHOW_NON_NULL).            
+            showInTextInfo(TextInfoType.SHOW_NON_NULL).
             arrayIndex(this, 1).
-            build();                                            
+            build();
 
     @Override
     public void setzeParameterZustandswerteAufNULL() {
@@ -66,7 +66,7 @@ implements CurrentMeasurable, DirectVoltageMeasurable {
 
     public boolean updateNonlinearCapacitances() {
         // parameter[6] : original starting capacitance
-        // parameter[7] : actual value of nonlinear capacitance        
+        // parameter[7] : actual value of nonlinear capacitance
         boolean returnValue = false;
         if (_isNonlinearForCalculationUsage) {
             parameter[7] = getActualValueLOGFromLinearizedCharacteristic(Math.abs(parameter[3]));
@@ -90,7 +90,7 @@ implements CurrentMeasurable, DirectVoltageMeasurable {
         g2d.setColor(Color.white);
         g2d.fillRect((int) (-dpix * WIDTH), (int) (-dpix * hoi), (int) (dpix * 2 * WIDTH), (int) (dpix * (2 * hoi - 0.05)));
     }
-        
+
     @Override
     public final String getNonlinearFileEnding() {
         return ".nlc";
@@ -130,9 +130,9 @@ implements CurrentMeasurable, DirectVoltageMeasurable {
     public String getNonlinearNameShort() {
         return "C(u(";
     }
-    
-    
-    
+
+
+
     @Override
     public final double[][] getInitalNonlinValues() {
         double[][] returnValue = new double[2][NONLIN_IND_X_DEFAULT.length];
@@ -146,12 +146,12 @@ implements CurrentMeasurable, DirectVoltageMeasurable {
     @Override
     public final UserParameter<Double> getNonlinearReplacedParameter() {
         return _capacitance;
-    }                
-    
+    }
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new CapacitorCalculator(this));
     }
-    
-    
+
+
 }

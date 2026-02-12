@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -116,15 +116,15 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
             }
             xNeu[i] = (float) worksheet.getTimeValue(j, 0);
             yRef[i] = (float) worksheet.getValue(dataIndex-1, j);
-        }        
-        
+        }
+
         for(i = 0; i < an.length; i++) {
             yNeu[2* i] = (float) an[i];
             yNeu[2*i+1] = (float) bn[i];
         }
-        
+
         Cispr16Fft.realft(yNeu, -1);
-        
+
         //=======================================
         DataContainer daten = new DataContainerSimple(3, xNeu.length);
 
@@ -138,7 +138,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         //-----------------------
         this.setzeAchsen();
         this.setzeKurven();
-        
+
     }
 
     // Neuskalierung des Diagramms, wenn die Fenster-Abmessungen geaendert werden -->
@@ -353,7 +353,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
     @Override
     public void mouseClicked(final MouseEvent mouseEvent) {
     }
-    
+
 
     public void mouseMoved(final MouseEvent mouseEvent) {
     }
@@ -376,7 +376,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
             if (xSchieberPix > X0xi + bi) {
                 xSchieberPix = X0xi + bi;
             }
-            xSchieberWert[0] = getValueFromPixel(xSchieberPix, 0)[0]; 
+            xSchieberWert[0] = getValueFromPixel(xSchieberPix, 0)[0];
             // x-Wert der Schieber-Position
             for (int i1 = 1; i1 < xNeu.length; i1++) {
                 if ((xNeu[i1 - 1] <= xSchieberWert[0]) && (xSchieberWert[0] <= xNeu[i1])) {

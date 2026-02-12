@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -61,14 +61,14 @@ public class SimulationsKern implements ISimulationEngine {
     private int[] interessanteKnotenTHERM;   // zum Aufnehmen der ZV-Temperatur-Kurven zwischen THERM-Knoten mittels TEMP
     private int[] zeigerAufControlElement;  // Interaktion LK - CONTROL
     private int[] zeigerAufControlElementTHERM;  // Interaktion THERM - CONTROL
-    private int[][] zeiger_VIEWMOT_MaschineLK;  // zur Messung von Maschinen-internen Parametern 
+    private int[][] zeiger_VIEWMOT_MaschineLK;  // zur Messung von Maschinen-internen Parametern
     private int jjZeiger;
     private int mult = 20, add = 50;  // Erweiterung der Felder in den Interaktions-Methoden, um Spezialfaelle abzudecken
     //
     private int[][] zuordnung_SchalterLK_SWITCH;  // Welcher Schalter wird durch welchen SWITCH angesteuert?
     private int[][] zuordnung_QuelleLK_signalCONTROL;  // Welcher CONTROL-Knoten steuert welche signalgesteuerte LK-Quelle?
     private int[][] zuordnung_QuelleTHERM_signalCONTROL;  // Welcher CONTROL-Knoten steuert welche signalgesteuerte THERM-Quelle?
-    private int[][] zuordnung_MaschineLK_LoadParameterInCONTROL;  // Welcher CONTROL-Knoten definiert welche mechanischen Signale (zB. externes Moment) des Motors? 
+    private int[][] zuordnung_MaschineLK_LoadParameterInCONTROL;  // Welcher CONTROL-Knoten definiert welche mechanischen Signale (zB. externes Moment) des Motors?
     //
     private RegelBlock[] c;
     private double[][] controlParameters;
@@ -163,7 +163,7 @@ public class SimulationsKern implements ISimulationEngine {
             }
 
             lkmLK.schreibeMatrix_B(dt, t, false);
-            lkmLK.p = _lkCachedMatrix.solve(lkmLK.bVector);            
+            lkmLK.p = _lkCachedMatrix.solve(lkmLK.bVector);
             doDiodeErrorsRecalculations();
             nl.berechneSubCircuitAlsDifferentialgleichung(dt, t);  // interne Berechungen in SubCircuits diverser LK-Elemente
             lkmLK.aktualisiereKnotenpotentiale(dt, t);     // pALT=p;
@@ -172,7 +172,7 @@ public class SimulationsKern implements ISimulationEngine {
 
         if (simuliereThermKreis) {
             lkmTHERM.schreibeMatrix_B(dt, t, false);
-            // Loesen der Matrizen-Gleichungen (Leistungskreis):                                    
+            // Loesen der Matrizen-Gleichungen (Leistungskreis):
 
             lkmTHERM.p = _thCachedMatrix.solve(lkmTHERM.bVector);
             lkmTHERM.berechneBauteilStroeme(-1, dt, t, false, 0);  // stoergroesse '-1' nur fuer die Dioden relevant, hier sind Werte egal
@@ -183,7 +183,7 @@ public class SimulationsKern implements ISimulationEngine {
 
         //===================================
         // Regler:
-        //===================================        
+        //===================================
         if (simuliereRegelkreis) {
             controlNL.berechneZeitschritt(dt, t);
         }
@@ -229,22 +229,22 @@ public class SimulationsKern implements ISimulationEngine {
             double[] par = e.parameter;
             double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
 
-            if (blockOutput != null) {  // weil beim ersten Zeitschritt yout noch nicht definiert wurde                                
-                par[1] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal                                                        
+            if (blockOutput != null) {  // weil beim ersten Zeitschritt yout noch nicht definiert wurde
+                par[1] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal
             }
         }
     }
 
     private void setThermalControlledSourcesFromControlValues() {
-        // Ansteuerung der signalgesteuerten THERM-Quellen mittels Signal vom Regelkreis:        
+        // Ansteuerung der signalgesteuerten THERM-Quellen mittels Signal vom Regelkreis:
         for (int i1 = 0; i1 < zuordnung_QuelleTHERM_signalCONTROL.length; i1++) {
             int reglerIndex = zuordnung_QuelleTHERM_signalCONTROL[i1][1];
             int outputIndex = zuordnung_QuelleTHERM_signalCONTROL[i1][2];
             AbstractCircuitBlockInterface e = thermNL.elements[zuordnung_QuelleTHERM_signalCONTROL[i1][0]];
-            double[] par = e.parameter;            
+            double[] par = e.parameter;
             double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
-            if (blockOutput != null) {  // weil beim ersten Zeitschritt yout noch nicht definiert wurde                                
-                par[1] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal                    
+            if (blockOutput != null) {  // weil beim ersten Zeitschritt yout noch nicht definiert wurde
+                par[1] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal
             }
         }
     }
@@ -278,14 +278,14 @@ public class SimulationsKern implements ISimulationEngine {
 
         setControlledSourcesFromControlValue();
         //------------------
-        // Ansteuerung der externen Maschinienwerte (zB. Last-Drehmoment) mittels Signal vom Regelkreis:            
+        // Ansteuerung der externen Maschinienwerte (zB. Last-Drehmoment) mittels Signal vom Regelkreis:
         for (int i1 = 0; i1 < zuordnung_MaschineLK_LoadParameterInCONTROL.length; i1++) {
             AbstractCircuitBlockInterface e = nl.elements[zuordnung_MaschineLK_LoadParameterInCONTROL[i1][0]];
             int reglerIndex = zuordnung_MaschineLK_LoadParameterInCONTROL[i1][1];
             int outputIndex = zuordnung_MaschineLK_LoadParameterInCONTROL[i1][2];
             double[] par = e.parameter;
             double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
-            par[((AbstractMotor) e).getIndexForLoadTorque()] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal                                
+            par[((AbstractMotor) e).getIndexForLoadTorque()] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal
         }
         //-------------------------------------------------------------------
         // Potentialdifferenzen im LK-Kreis an Regelkreiselement VOLT uebergeben:
@@ -472,7 +472,7 @@ public class SimulationsKern implements ISimulationEngine {
         this.t = tAktuell;
         // Update static fields for backward compatibility
         updateStaticTimes(tSTART, tEND);
-        //            
+        //
         this.controlNL = nlContainer._nlControl;
         controlNL.doMemorInits(dt);
         if (recalculateMatrixFromDifferentDt) {
@@ -506,7 +506,7 @@ public class SimulationsKern implements ISimulationEngine {
         zuordnung_QuelleLK_signalCONTROL = definiereInteraktion_SignalgesteuerteQuelle_Regler(nl);  // welches allg. CONTROL-Signal steuert welche LK_QUELLE (LK_U, LK_I) an?
         zuordnung_QuelleTHERM_signalCONTROL = definiereInteraktion_SignalgesteuerteQuelle_Regler(thermNL);  // welches allg. CONTROL-Signal steuert welche THERM_QUELLE (LK_TEMP, LK_FLOW) an?
 
-        zuordnung_MaschineLK_LoadParameterInCONTROL = definiereInteraktion_MaschineLK_LoadParameterInCONTROL();  // Welcher CONTROL-Knoten definiert welche mechanischen Signale (zB. externes Moment) des Motors?            
+        zuordnung_MaschineLK_LoadParameterInCONTROL = definiereInteraktion_MaschineLK_LoadParameterInCONTROL();  // Welcher CONTROL-Knoten definiert welche mechanischen Signale (zB. externes Moment) des Motors?
         definiereInteraktion_TEMP_FLOW_THERM();  // wie messe ich thermischen Fluss und Temperatur-Differenzen im THERM mit CONTROL-FLOW bzw. CONTROL-TEMP?
         setControlledSourcesFromControlValue();
         setThermalControlledSourcesFromControlValues();
@@ -669,13 +669,13 @@ public class SimulationsKern implements ISimulationEngine {
                 if (selectedMotor != null) {
                     iA = c[i1].getParameterString()[0];         // zB. "M-DC.4.omega"
                     iA1 = c[i1].getParameterString()[1];  // --> "M-DC.4"
-                    iA2 = c[i1].getParameterString()[2];  // --> "omega"                
+                    iA2 = c[i1].getParameterString()[2];  // --> "omega"
                     for (int i2 = 0; i2 < nl.elements.length; i2++) {
                         AbstractCircuitBlockInterface el = nl.elements[i2];
                         if (selectedMotor.equals(el)) {
                             List<String> parameterStringIntern = el.getParameterStringIntern();
                             for (int i3 = 0; i3 < parameterStringIntern.size(); i3++) {
-                                if (iA2.equals(parameterStringIntern.get(i3))) {  // --> internen Motor-Parameter gefunden                                                                 
+                                if (iA2.equals(parameterStringIntern.get(i3))) {  // --> internen Motor-Parameter gefunden
                                     zeiger_VIEWMOT_MaschineLK_temp[jjZeiger] = new int[]{i1, i2, i3};
                                     jjZeiger++;
                                 }
@@ -781,7 +781,7 @@ public class SimulationsKern implements ISimulationEngine {
                     boolean returnOK = false;
 
                     for (AbstractCircuitBlockInterface elem : thermNL.eLKneu) {
-                        if (elem != null) {                            
+                        if (elem != null) {
                             if (directComponent.equalsPossibleSubComponent(elem)) {
                                 returnOK = true;
                                 iKn[jj] = thermNL.knotenX[counter];

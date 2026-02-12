@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,14 +27,14 @@ public final class ReglerGain extends AbstractReglerSingleInputSingleOutput {
     private static final long serialVersionUID = 1L;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerGain.class, "GAIN", I18nKeys.GAIN);
 
-    
+
     public transient final UserParameter<Double> _gain = UserParameter.Builder.<Double>start("k", 1.0).
             longName(I18nKeys.GAIN).
             shortName("r0").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 0).
-            build();                
-    
+            build();
+
     public ReglerGain() {
         super();
         _gain.addActionListener(new ActionListener() {
@@ -59,21 +59,21 @@ public final class ReglerGain extends AbstractReglerSingleInputSingleOutput {
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.OUTPUT_MULTIPLIED_BY_SPECIFIED_GAIN};
-    }            
-    
+    }
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new GainCalculator(_gain.getValue());        
-    }    
+        return new GainCalculator(_gain.getValue());
+    }
 
     @Override
     protected String getCenteredDrawString() {
         return "P";
-    }                        
+    }
 
     @Override
     protected Window openDialogWindow() {
-        return new ReglerGainDialog(this);        
+        return new ReglerGainDialog(this);
     }
-    
+
 }

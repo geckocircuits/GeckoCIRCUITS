@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -96,7 +96,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
             return false;
         }
     }
-    
+
     @Override
     //here we generate a session ID and return it to the sender
     public long connect() {
@@ -110,21 +110,21 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
 
     @Override
     public void disconnect(final long remoteSessionID) {
-        
+
         if (clients != null && !clients.isEmpty() && clients.containsKey(remoteSessionID)) {
             try {
                 final CallbackClientInterface disconnectingClient = clients.get(remoteSessionID);
                 if(disconnectingClient != null) {
-                    disconnectingClient.printSystemMessage("GeckoREMOTE session closed.");                
-                }                
+                    disconnectingClient.printSystemMessage("GeckoREMOTE session closed.");
+                }
             } catch (RemoteException ex) {
                 Logger.getLogger(GeckoCustomRemote.class.getName()).log(Level.SEVERE, null, ex);
             }
             clients.remove(remoteSessionID);
-            _free = (clients.isEmpty() || (_acceptsExtraConnections && clients.size() < (_numberOfExtraConnectionsAccepted+1))); 
+            _free = (clients.isEmpty() || (_acceptsExtraConnections && clients.size() < (_numberOfExtraConnectionsAccepted+1)));
         }
     }
-    
+
     /**
      * Used when unbinding the registry.
      */
@@ -136,7 +136,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
             }
         }
     }
-    
+
     @Override
     public void registerForCallback(
             final CallbackClientInterface callbackClientObject)
@@ -144,26 +144,26 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
         clients.put(_lastSessionIDActive, callbackClientObject);
     }
 
-    
+
     @Override
     public void acceptExtraConnections(int numberOfExtraConnections) {
         _acceptsExtraConnections = (numberOfExtraConnections > 0);
         _numberOfExtraConnectionsAccepted = numberOfExtraConnections;
         _free = (clients.isEmpty() || (_acceptsExtraConnections && clients.size() < (_numberOfExtraConnectionsAccepted+1)));
     }
-    
+
     @Override
     public boolean acceptsExtraConnections() {
         return _acceptsExtraConnections;
     }
-    
+
     @Override
     public void registerLastClientToCallMethod(long sessionID) {
         if (clients.containsKey(sessionID)) {
             _lastSessionIDActive = sessionID;
-        }            
+        }
     }
-    
+
     public static String pingRemoteClient() {
         if(clients == null || clients.isEmpty()) {
             return null;
@@ -189,7 +189,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
                 return null;
             }
         }
-        
+
         return pongs;
     }
 

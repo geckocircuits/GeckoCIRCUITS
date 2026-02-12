@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,7 +31,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
 public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor> extends DialogElementLK<T> {
-    
+
     private final JPanelHalbleiterDetailButtons _panelHalbleiterDetail;
     private JPanel _jPanelSimpleLosses;
     private final LossProperties _lossCalculation;
@@ -40,77 +40,77 @@ public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor>
     private final JPanel _characteristicsPanel = new JPanel();
     private JTabbedPane _tabber;
     private final JPanel _lossPanel = new JPanel();
-    
+
     public AbstractDialogPowerSwitch(final T elementLK) {
-        super(elementLK);        
+        super(elementLK);
         _lossCalculation = (LossProperties) element.getVerlustBerechnung();
         ButtonGroup bgD = new ButtonGroup();
         bgD.add(_jRadioButtonSimpleLosses);
         bgD.add(_jRadioButtonDetailedLosses);
-        
+
         _jRadioButtonSimpleLosses.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent actionEvent) {                
+            public void actionPerformed(final ActionEvent actionEvent) {
                 _lossCalculation.setLossType(SIMPLE);
                 switchSimpleDetailedFieldsEnable(false);
             }
         });
-        
+
         _jRadioButtonDetailedLosses.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent actionEvent) {                                
+            public void actionPerformed(final ActionEvent actionEvent) {
                 _lossCalculation.setLossType(DETAILED);
                 switchSimpleDetailedFieldsEnable(true);
             }
         });
-        
+
         final LossProperties lossProps = (LossProperties) element.getVerlustBerechnung();
         final VerlustBerechnungDetailed detailed = lossProps.getDetailedLosses();
         _panelHalbleiterDetail = new JPanelHalbleiterDetailButtons(detailed);
     }
-    
+
     public abstract JPanel createParameterPanel();
-    
+
     @Override
     protected final void baueGUIIndividual() {
-        _tabber = new JTabbedPane();        
-        
-        populateCharacteristicsPanel();        
-        populateLossesPanel();        
+        _tabber = new JTabbedPane();
+
+        populateCharacteristicsPanel();
+        populateLossesPanel();
         _tabber.addTab(I18nKeys.CHARACTERISTIC.getTranslation(), _characteristicsPanel);
         _tabber.addTab("Losses", _lossPanel);
         con.add(_tabber, BorderLayout.CENTER);
-    }    
-    
+    }
+
     private void populateCharacteristicsPanel() {
-        _characteristicsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), 
+        _characteristicsPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 I18nKeys.CIRCUIT_MODEL.getTranslation(), TitledBorder.LEFT, TitledBorder.TOP));
         _characteristicsPanel.setLayout(new BorderLayout());
-        
-        JPanel pS1 = createParameterPanel();        
+
+        JPanel pS1 = createParameterPanel();
         _characteristicsPanel.add(pS1, BorderLayout.NORTH);
     }
 
 
-    private void populateLossesPanel() {    
+    private void populateLossesPanel() {
         _lossPanel.setLayout(new BorderLayout());
         _lossPanel.add(createSimpleOuterPanel(), BorderLayout.NORTH);
         _lossPanel.add(createOuterDetailedLossPanel(), BorderLayout.SOUTH);
-                
-        setRadioButtonsInitialStates();        
-    }    
 
-    
+        setRadioButtonsInitialStates();
+    }
+
+
     /**
      * when changing between simple losses and detailled losses, the corresponding panel
      * is enabled, and the other one disabled.
-     * @param enabled 
+     * @param enabled
      */
     private void switchSimpleDetailedFieldsEnable(final boolean enabled) {
         if (_panelHalbleiterDetail != null) {
             _panelHalbleiterDetail.setEnabled(enabled);
         }
-        for (Component comp : _jPanelSimpleLosses.getComponents()) {            
+        for (Component comp : _jPanelSimpleLosses.getComponents()) {
             comp.setEnabled(!enabled);
         }
     }
@@ -146,8 +146,8 @@ public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor>
     }
 
     private JPanel createOuterDetailedLossPanel() {
-        JPanel detailedOuterPanel = new JPanel();        
-        
+        JPanel detailedOuterPanel = new JPanel();
+
         detailedOuterPanel.setLayout(new BorderLayout());
         detailedOuterPanel.add(_jRadioButtonDetailedLosses, BorderLayout.BEFORE_FIRST_LINE);
         JPanel jpDx2x = new JPanel();
@@ -158,5 +158,5 @@ public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor>
         detailedOuterPanel.add(_panelHalbleiterDetail, BorderLayout.CENTER);
         return detailedOuterPanel;
     }
-        
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,19 +15,19 @@ package gecko;
 
 /**
  * This an interface for using RMI to control GeckoCIRCUITS from e.g. MATLAB, or
- * remotely from another machine. Warning: the methods of this interface MUST have 
+ * remotely from another machine. Warning: the methods of this interface MUST have
  * identical method names as GeckoRemoteInterface class. I am checking this within
  * a static final Object via assertions. But: this interface does not declare any exception.
- * 
+ *
  * @author  andy.
  *
  */
 public interface GeckoRemoteIntWithoutExc {
-    
-    MethodNameChecker CHECKER = 
+
+    MethodNameChecker CHECKER =
             MethodNameChecker.checkFabric(GeckoRemoteIntWithoutExc.class, GeckoRemoteInterface.class);
-    
-    
+
+
     void runSimulation();
 
     String[] getControlElements();
@@ -35,7 +35,7 @@ public interface GeckoRemoteIntWithoutExc {
     String[] getCircuitElements();
 
     String[] getThermalElements();
-    
+
     String[] getSpecialElements();
 
     String[] getIGBTs();
@@ -53,9 +53,9 @@ public interface GeckoRemoteIntWithoutExc {
     String[] getCapacitors();
 
     Object doOperation(String elementName, String operationName, Object parameterValue);
-    
-    void setParameter(String elementName, String parameterName, double value);    
-    
+
+    void setParameter(String elementName, String parameterName, double value);
+
     void setParameters(String elementName, String[] parameterNames, double[] values);
 
     double getParameter(String elementName, String parameterName);
@@ -69,7 +69,7 @@ public interface GeckoRemoteIntWithoutExc {
     void initSimulation(final double deltaT, final double endTime) ;
 
     void continueSimulation() ;
-    
+
     void simulateTime(double time) ;
 
     void endSimulation() ;
@@ -79,18 +79,18 @@ public interface GeckoRemoteIntWithoutExc {
     void openFile(String fileName);
 
     void importFromFile(String fileName, String importIntoSubcircuit);
-    
+
     double get_dt() ;
     double get_Tend() ;
 
     double get_dt_pre() ;
     double get_Tend_pre() ;
-    
+
     void set_dt(double value) ;
     void set_dt_pre(double value) ;
     void set_Tend(double value) ;
     void set_Tend_pre(double value) ;
-    
+
     @Deprecated
     double[] getSignalCharacteristics(String scopeName, int scopePort, double startTime, double endTime) ;
 
@@ -167,22 +167,22 @@ public interface GeckoRemoteIntWithoutExc {
 
     double[][] getSignalFourier(String signalName, double startTime, double endTime, int harmonics) ;
 
-    
+
     void setWorksheetSize(int sizeX, int sizeY);
-    int[] getWorksheetSize();    
-    
-    
-    void initSteadyStateDetection(final String[] stateVariables, final double frequency, final double deltaT, 
+    int[] getWorksheetSize();
+
+
+    void initSteadyStateDetection(final String[] stateVariables, final double frequency, final double deltaT,
             final double simulationTime) ;
-    
+
     @Deprecated
-    void initSteadyStateDetection(final String[] stateVariables, final double[] frequencies, final double deltaT, 
+    void initSteadyStateDetection(final String[] stateVariables, final double[] frequencies, final double deltaT,
             final double simulationTime) ;
 
     double[] simulateToSteadyState(boolean supressMessages) ;
-    
+
     double[] simulateToSteadyState(boolean supressMessages, double targetCorrelation, double targetMeanPctDiff) ;
-    
+
     @Deprecated
     double[] simulateUntilSteadyState(boolean supressMessages) ;
 
@@ -197,18 +197,18 @@ public interface GeckoRemoteIntWithoutExc {
 
     @Deprecated
     void delete(String elementName) ;
-    void deleteComponent(String elementName) ;    
+    void deleteComponent(String elementName) ;
     void deleteAllComponents(String subcircuitName) ;
-    
+
     void createConnector(String elementName, int xStart, int yStart, int xEnd, int yEnd, boolean startHorizontal);
-    
+
     void createComponent(String elementType, String elementName, int xPosition, int yPosition) ;
     @Deprecated
     void create(String elementType, String elementName, int xPosition, int yPosition) ;
 
     void setOutputNodeName(String elementName, int nodeIndex, String nodeName) ;
     void setInputNodeName(String elementName, int nodeIndex, String nodeName) ;
-    
+
     String getOutputNodeName(String elementName, int nodeIndex) ;
     String getInputNodeName(String elementName, int nodeIndex) ;
 
@@ -230,13 +230,13 @@ public interface GeckoRemoteIntWithoutExc {
      double[][] getGlobalDoubleMatrix() ;
      void setGlobalFloatMatrix(final float[][] matrix) ;
      void setGlobalDoubleMatrix(final double[][] matrix) ;
-    float[] floatFFT(final float[] timeValues) ;    
+    float[] floatFFT(final float[] timeValues) ;
     @Deprecated
-    float[] realFFT(final float[] timeValues) ;    
+    float[] realFFT(final float[] timeValues) ;
     @Deprecated
     String[] getParametersNames(String componentName) ;
     String[] getAccessibleParameters(String componentName) ;
-    
+
     void setGlobalParameterValue(String parameterName, double value) ;
     double getGlobalParameterValue(String parameterName) ;
 

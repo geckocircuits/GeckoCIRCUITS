@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,7 +19,7 @@ import org.junit.Test;
 
 public final class SignalCalculatorTriangleTest {
     private static final int NO_INPUTS = 1;
-    
+
     /**
      * WARNING: giving a negative amplitude makes probems in this test.
      * Then, the output signal is just zero? but in the simulation model,
@@ -37,32 +37,32 @@ public final class SignalCalculatorTriangleTest {
     private static final double EXPECTED_MIN = 1;
     private static final double EXPECTED_MAX = 5;
     private static final double EXPECTED_END_VAL = 4.664;
-    
+
     @Before
     public void setUp() {
         _signalCalc = new SignalCalculatorTriangle(NO_INPUTS, AMPL, FREQUENCY, PHASE, DC_OFFSET, DUTY);
         _signalCalc.initializeAtSimulationStart(DELTA_T);
     }
-    
+
     @Test(expected=IllegalArgumentException.class)
     public void negativeAmpltudeError() {
         _signalCalc = new SignalCalculatorTriangle(NO_INPUTS, -AMPL, FREQUENCY, PHASE, DC_OFFSET, DUTY);
     }
-    
+
     @Test
-    public void testBerechneYOUT() {           
+    public void testBerechneYOUT() {
         double maxValue = -Double.MAX_VALUE;
         double minValue = Double.MAX_VALUE;
-                                
+
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             AbstractSignalCalculator.setTime(time);
             _signalCalc.berechneYOUT(DELTA_T);
             final double result = _signalCalc._outputSignal[0][0];
             maxValue = Math.max(result, maxValue);
-            minValue = Math.min(result, minValue);            
+            minValue = Math.min(result, minValue);
         }
         assertEquals(EXPECTED_END_VAL, _signalCalc._outputSignal[0][0], TOLERANCE);
         assertEquals(EXPECTED_MIN, minValue, TOLERANCE);
-        assertEquals(EXPECTED_MAX, maxValue, TOLERANCE);        
-    }    
+        assertEquals(EXPECTED_MAX, maxValue, TOLERANCE);
+    }
 }

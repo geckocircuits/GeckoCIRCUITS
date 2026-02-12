@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -139,7 +139,7 @@ public final class TimeSeriesVariableBlock extends AbstractTimeSerie {
 //        System.out.println("Found index: " + foundA + ", with value: " + tsa.getValue(foundA));
 //        System.out.println("TIMESERIESVARIABLEBLOCK:");
 //        System.out.println("Found index: " + foundB + ", with value: " + tsb.getValue(foundB));
-        
+
 //        for (int i=0; i<10000; i++) {
 //            time = scale * tsa.getValue(tsa.getMaximumIndex()) * rnd.nextDouble();
 //            foundA = tsa.findTimeIndex(time, tsa.getMaximumIndex());
@@ -149,15 +149,15 @@ public final class TimeSeriesVariableBlock extends AbstractTimeSerie {
 //                        ", with time: " + time);
 //            }
 //        }
-        
+
 //        System.out.println("----------------------------------------------------------------------");
 //        System.out.println("Testing the speed...");
 //        reps = 10000;
 //        System.out.println("Trying to find indices for " + reps + " different time values: ");
-//        
+//
 //        System.out.println("TIMESERIESVARIABLEARRAY:");
 //        time = scale * tsa.getValue(tsa.getMaximumIndex()) * rnd.nextDouble();
-//        
+//
 //        long startTime = System.currentTimeMillis();
 //        for (int i = 0; i < reps; i++) {
 //            tsa.findTimeIndex(time, tsa.getMaximumIndex());
@@ -166,7 +166,7 @@ public final class TimeSeriesVariableBlock extends AbstractTimeSerie {
 //        long endTime = System.currentTimeMillis();
 //
 //        System.out.println("Indices found in: " + (endTime - startTime) + " milliseconds");
-        
+
 //        System.out.println("TIMESERIESVARIABLEBLOCK:");
 //        time = scale * tsb.getValue(tsb.getMaximumIndex()) * rnd.nextDouble();
 //

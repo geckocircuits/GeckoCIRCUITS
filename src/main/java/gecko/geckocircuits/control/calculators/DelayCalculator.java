@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,14 +22,14 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
     private double[] _youtVerzoegert = null;
     private int _zeigerYOUT = -1;
     private boolean _speicherLeer;
-    
+
     /*
      * the delay time value can only be changed at simulation start or at stop->continue.
      * This is the reason for this helper "init" variable!
      */
     private double _initDelayTime;
     private double _delayTime;
-    
+
     public DelayCalculator(final double delayTime) {
         super();
         setDelayTime(delayTime);
@@ -83,7 +83,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
             _outputSignal[0][0] = _youtVerzoegert[_zeigerYOUT];
             _youtVerzoegert[_zeigerYOUT] = _inputSignal[0][0];  // laufendes Nachfuellen des Speichers
             _zeigerYOUT++;
-            _zeigerYOUT %= _youtVerzoegert.length; // Zeiger laeuft 'im Kreis', damit wird verhindert, dass die 
+            _zeigerYOUT %= _youtVerzoegert.length; // Zeiger laeuft 'im Kreis', damit wird verhindert, dass die
             // Daten im Speicher bei jedem Zeitschritt geshiftet werden muessen
         }
     }

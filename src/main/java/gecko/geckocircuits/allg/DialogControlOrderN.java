@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -52,18 +52,18 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
      * Creates new form DialogControlOrderN
      */
     public DialogControlOrderN(final java.awt.Frame parent, final boolean modal, final List<RegelBlock> optimizedList) {
-        
+
         super(parent, modal);
-        
+
         setTitle("Control Order");
         initComponents();
         initButtonEvents();
         initLists(optimizedList);
-        
+
         _dragSource = new DragSource();
         _dragSource.createDefaultDragGestureRecognizer(jListUser, DnDConstants.ACTION_MOVE, this);
         _dropTarget = new DropTarget(jListUser, this);
-        
+
         setVisible(true);
     }
 
@@ -167,7 +167,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 
     private void initButtonEvents(){
         getRootPane().setDefaultButton(jButtonOK);
-        
+
         jButtonOK.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(final ActionEvent event){
@@ -202,7 +202,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
             }
         });
     }
-    
+
     private void initLists(final List<RegelBlock> optimizedList){
         final DefaultListModel<RegelBlock> optModel = new DefaultListModel<>();
         final DefaultListModel<RegelBlock> userModel = new DefaultListModel<>();
@@ -213,9 +213,9 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         jListOptimized.setModel(optModel);
         jListUser.setModel(userModel);
     }
-    
-    
-    
+
+
+
     private void jButtonResetActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
     }//GEN-LAST:event_jButtonResetActionPerformed
 
@@ -229,7 +229,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 //        /* Set the Nimbus look and feel */
 //        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
 //        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
 //         */
 //        try {
 //            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -281,7 +281,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
     Object _draggedObject;
     int _sourceIndex = -1;
     DropTarget _dropTarget;
-    
+
     //DragNDrop Listeners:
     //DragGesture
     @Override
@@ -296,7 +296,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         final ControlOrderTransferable trans = new ControlOrderTransferable(_draggedObject);
         _dragSource.startDrag(dge, null, trans, this);
     }
-    
+
     //DragSource
     @Override
     public void dragEnter(final DragSourceDragEvent dsde) {
@@ -324,7 +324,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         _draggedObject = null;
         _sourceIndex = -1;
     }
-    
+
     //DropTarget
     @Override
     public final void dragEnter(final DropTargetDragEvent dtde) {
@@ -372,11 +372,11 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         }
         jListUser.setModel(model);
         dtde.dropComplete(true);
-        
+
     }
-    
-    class ControlOrderTransferable implements Transferable { 
-        Object _object; 
+
+    class ControlOrderTransferable implements Transferable {
+        Object _object;
         public ControlOrderTransferable (final Object obj) {
             _object = obj;
         }
@@ -396,9 +396,9 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         @Override
         public DataFlavor[] getTransferDataFlavors () {
             return new DataFlavor[0];
-        } 
+        }
     }
-    
-    
+
+
 }
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -41,9 +41,9 @@ public abstract class AbstractResistor extends AbstractTwoPortLKreisBlock
             shortName("R", "Rel", "Rth").
             unit("ohm", "Amp-Turns/Weber", "K/W").
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
-            arrayIndex(this, 0).            
+            arrayIndex(this, 0).
             build();
-    
+
 
     @Override
     public final void setzeParameterZustandswerteAufNULL() {
@@ -76,7 +76,7 @@ public abstract class AbstractResistor extends AbstractTwoPortLKreisBlock
             }
         };
     }
-    
+
     @Override
     public final List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new ResistorCalculator(this));

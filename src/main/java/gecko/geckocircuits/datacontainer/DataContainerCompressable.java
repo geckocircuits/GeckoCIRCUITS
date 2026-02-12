@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -176,7 +176,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
                 timeInterval = timeValue - _timeSerie.getValue(maxIndex);
             }
 
-            //  for(int row = 0; row < values.length; row++) {        
+            //  for(int row = 0; row < values.length; row++) {
             for (int row : _avgIndicesArray) {
                 _integralValues[row] += values[row] * timeInterval;
                 _data.get(column / JUNK_SIZE).setIntegralValue(_integralValues[row], row, column);
@@ -246,7 +246,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
             }
         }
 
-        if (startIndex == stopIndex) { // in this case, there was no data point in the given interval.   
+        if (startIndex == stopIndex) { // in this case, there was no data point in the given interval.
             return null;
         }
         if (startIndex + 1 == stopIndex) { // we have exactly one datapoint in the interval.
@@ -374,7 +374,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     ;
 
     @Override
-    void setSignalPathName(int row, String subcircuitPath) {        
+    void setSignalPathName(int row, String subcircuitPath) {
         _signalPathNames[row] = subcircuitPath;
     }
 

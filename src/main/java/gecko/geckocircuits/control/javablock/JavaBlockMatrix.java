@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,7 +32,7 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
         returnValue._additionalSourceFiles.addAll(this._additionalSourceFiles);
         return returnValue;
     }
-    
+
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidArrayLoops"})
     void calculateYOUT(final double time, final double deltaT, final double[][] inputSignals,
             final double[][] outputSignals) throws Exception {
@@ -43,7 +43,7 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
         _compiledInstance.calculateYOUT(inputSignals, time, deltaT);
         checkOutputsForNANorINFValues(outputSignals);
     }
-    
+
     public double[][] getOutputVectorFromBlock() {
         if (_compiledInstance == null) {
             throw new IllegalStateException("Java block compilation failed - cannot get output. Check error logs for details.");

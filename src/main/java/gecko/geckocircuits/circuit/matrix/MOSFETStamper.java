@@ -26,7 +26,7 @@ package gecko.geckocircuits.circuit.matrix;
  * - No forward voltage drop (pure resistor model)
  * - Inherent body diode can conduct in reverse when OFF (if modeled)
  *
- * This stamper is essentially the same as IdealSwitchStamper since the 
+ * This stamper is essentially the same as IdealSwitchStamper since the
  * GeckoCIRCUITS LKMatrices code treats LK_S and LK_MOSFET identically.
  *
  * A matrix stamps (same pattern as resistor, but with state-dependent R):

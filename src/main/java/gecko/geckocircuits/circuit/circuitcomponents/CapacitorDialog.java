@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,7 +32,7 @@ class CapacitorDialog extends DialogElementLK<AbstractCapacitor> {
     @Override
     protected void baueGUIIndividual() {
         final JPanel pIN = createParameterPanel(element._capacitance, element._initialValue);
-        
+
         final JButton jbNonLinC = GuiFabric.getJButton(I18nKeys.DEFINE_CHARACTERISTIC);
         jbNonLinC.addActionListener(new ActionListener() {
             @Override
@@ -41,9 +41,9 @@ class CapacitorDialog extends DialogElementLK<AbstractCapacitor> {
                dialog.setVisible(true);
             }
         });
-        
+
         final FormatJTextField capacitanceField = tf.get(0);
-        
+
         final JCheckBox jcbNonLinC = new JCheckBox("Non-Linear Behavior");
         jcbNonLinC.addActionListener(new ActionListener() {
             @Override
@@ -66,7 +66,7 @@ class CapacitorDialog extends DialogElementLK<AbstractCapacitor> {
             jbNonLinC.setEnabled(false);
             capacitanceField.setEnabled(true);
         }
-        
+
         final JPanel pNonLinC = new JPanel();
         pNonLinC.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Non-Linear", TitledBorder.LEFT, TitledBorder.TOP));
         pNonLinC.setLayout(new BorderLayout());
@@ -78,7 +78,7 @@ class CapacitorDialog extends DialogElementLK<AbstractCapacitor> {
         final JPanel pINyC = new JPanel();
         pINyC.setLayout(new BorderLayout());
         pINyC.add(pIN, BorderLayout.NORTH);
-        pINyC.add(pNonLinC, BorderLayout.CENTER);        
+        pINyC.add(pNonLinC, BorderLayout.CENTER);
         con.add(pINyC, BorderLayout.CENTER);
-    }                        
+    }
 }

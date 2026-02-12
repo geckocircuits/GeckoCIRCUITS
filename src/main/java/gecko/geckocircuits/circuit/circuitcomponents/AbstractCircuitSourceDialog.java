@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,43 +37,43 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
     private static final int DC_SOURCE_TAB_INDEX = 1;
     private static final int SIGNAL_CTRL_TAB_INDEX = 2;
     private static final int DIRECT_VOLTAGE_TAB_INDEX = 3;
-    
+
     private static final int DIALOG_SIZE_X = 100;
     private static final int DIALOG_SIZE_Y = 110;
-    
-    private final JTabbedPane _tabberU = new JTabbedPane();    
-    
+
+    private final JTabbedPane _tabberU = new JTabbedPane();
+
     private FormatJTextField _dcValueField;
     private FormatJTextField _amplitudeField;
     private FormatJTextField _frequencyField;
     private FormatJTextField _offsetField;
     private FormatJTextField _phaseField;
     private FormatJTextField _gainField;
-    
+
     public AbstractCircuitSourceDialog(final AbstractCircuitSource parent) {
         super(parent);
     }
 
     @Override
     void baueGUIIndividual() {
-        
-        String labelText1 = "";        
-        
+
+        String labelText1 = "";
+
         if(element instanceof AbstractVoltageSource) {
             _dcValueField = getRegisteredTextField( ((AbstractVoltageSource) element)._dcValue);
-            _amplitudeField = getRegisteredTextField( ((AbstractVoltageSource) element)._amplitude);            
-            _offsetField = getRegisteredTextField(((AbstractVoltageSource) element)._offset);                        
-            labelText1 = ((AbstractVoltageSource) element)._amplitude.getShortName();            
+            _amplitudeField = getRegisteredTextField( ((AbstractVoltageSource) element)._amplitude);
+            _offsetField = getRegisteredTextField(((AbstractVoltageSource) element)._offset);
+            labelText1 = ((AbstractVoltageSource) element)._amplitude.getShortName();
         } else if(element instanceof AbstractCurrentSource) {
             _dcValueField = getRegisteredTextField(((AbstractCurrentSource) element)._dcValue);
-            _amplitudeField = getRegisteredTextField( ((AbstractCurrentSource) element)._amplitude);            
-            _offsetField = getRegisteredTextField(((AbstractCurrentSource) element)._offset);                        
+            _amplitudeField = getRegisteredTextField( ((AbstractCurrentSource) element)._amplitude);
+            _offsetField = getRegisteredTextField(((AbstractCurrentSource) element)._offset);
             labelText1 = ((AbstractCurrentSource) element)._amplitude.getShortName();
         }
-        
-        _frequencyField = getRegisteredTextField(element.frequency);                
-        _phaseField = getRegisteredTextField(element.phase);                
-                
+
+        _frequencyField = getRegisteredTextField(element.frequency);
+        _phaseField = getRegisteredTextField(element.phase);
+
         JPanel puAC2 = new JPanel();
         puAC2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "AC Sinusoidal", TitledBorder.LEFT, TitledBorder.TOP));
         puAC2.setLayout(new GridLayout(5, 2));
@@ -131,7 +131,7 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         //
         //------------
         JPanel puSGNdir = new JPanel();
-        puSGNdir.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), 
+        puSGNdir.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Direct Voltage Control", TitledBorder.LEFT, TitledBorder.TOP));
         puSGNdir.setLayout(new BorderLayout());
         JPanel jpM = null;
@@ -153,7 +153,7 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         //-------
         JLabel jl30x = labelFabric("Gain = ");
         _gainField = getRegisteredTextField(element.directPotentialGain);
-        
+
         JPanel puSdirX = new JPanel();
         puSdirX.setLayout(new BorderLayout());
         puSdirX.add(puSGNdir, BorderLayout.NORTH);
@@ -167,14 +167,14 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         puSdir.add(new JScrollPane(jtx5), BorderLayout.CENTER);
         //
         _tabberU.addTab("Dir.Volt.", puSdir);
-        
-        
-        
+
+
+
         JPanel jpMM = new JPanel();
         jpMM.setLayout(new BorderLayout());
         jpMM.add(_tabberU, BorderLayout.CENTER);
-        
-        switch (element.sourceType.getValue()) {            
+
+        switch (element.sourceType.getValue()) {
             case QUELLE_SIN:
                 _tabberU.setSelectedIndex(SIN_TAB_INDEX);
                 break;
@@ -192,15 +192,15 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         }
         con.add(jpMM, BorderLayout.CENTER);
     }
-    
+
     @Override
-    public void processInputIndividual() {                                        
+    public void processInputIndividual() {
         switch (_tabberU.getSelectedIndex()) {
             case SIN_TAB_INDEX:
-                element.sourceType.setUserValue(CircuitSourceType.QUELLE_SIN);                
+                element.sourceType.setUserValue(CircuitSourceType.QUELLE_SIN);
                 break;
             case DC_SOURCE_TAB_INDEX:
-                element.sourceType.setUserValue(CircuitSourceType.QUELLE_DC);                                
+                element.sourceType.setUserValue(CircuitSourceType.QUELLE_DC);
                 break;
             case SIGNAL_CTRL_TAB_INDEX:
                 element.sourceType.setUserValue(CircuitSourceType.QUELLE_SIGNALGESTEUERT);

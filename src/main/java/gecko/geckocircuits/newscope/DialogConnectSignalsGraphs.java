@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -44,7 +44,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
     private JPanel jpMatrix;
     private GridBagConstraints _gbc;
     private JLabelRot[] jlSGN;
-    private static final int HUNDRED = 100;    
+    private static final int HUNDRED = 100;
     private static final int SIGN_NAME_SPACING = 10;
     private static final int ROT_ANGLE = -90;
     private static final int SIGN_NAME_LENTH = 90;
@@ -66,7 +66,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
         //--------------------
         this.baueGUI();
         this.pack();
-        this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));        
+        this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
@@ -356,7 +356,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
         _gbc.gridy = rowIndex + 1;
         jpMatrix.add(jbM[rowIndex][columnIndex], _gbc);  // MATRIX: x/y/y2/sg - Knoepfe als zentrales Element
         jbM[rowIndex][columnIndex].setLineSettable(curve);
-        jbM[rowIndex][columnIndex].addMouseListener(new MouseAdapter() {  // x-Achse (Zeit) nicht anklick- und veraenderbar 
+        jbM[rowIndex][columnIndex].addMouseListener(new MouseAdapter() {  // x-Achse (Zeit) nicht anklick- und veraenderbar
             @Override
             public void mousePressed(final MouseEvent mouseEvent) {
                 final List<AbstractDiagram> diagrams = _manager.getDiagrams();

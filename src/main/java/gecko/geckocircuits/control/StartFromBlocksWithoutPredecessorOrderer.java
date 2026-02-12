@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,15 +20,15 @@ import java.util.Set;
 final class StartFromBlocksWithoutPredecessorOrderer extends AbstractSourceControlOrderer {
 
     public StartFromBlocksWithoutPredecessorOrderer(final Collection<ControlOrderNode> allNodesToSort) {
-        super(allNodesToSort);        
+        super(allNodesToSort);
         assert _sourceList.isEmpty() : "these components should already be filtered/removed!";
-        assert _sinkList.isEmpty()  : "these components should already be filtered/removed!";                                
-    }    
-    
+        assert _sinkList.isEmpty()  : "these components should already be filtered/removed!";
+    }
+
     @Override
     Set<ControlOrderNode> getStartSet() {
         return findBlocksWithoutPredecessors();
-    }            
+    }
 
     private Set<ControlOrderNode> findBlocksWithoutPredecessors() {
         final Set<ControlOrderNode> returnValue = new LinkedHashSet<ControlOrderNode>();
@@ -39,11 +39,11 @@ final class StartFromBlocksWithoutPredecessorOrderer extends AbstractSourceContr
         }
         return returnValue;
     }
-    
+
     @Override
     String getRemainingWarningString() {
         return "The following control blocks don't have any"
                 + " path to any control block: ";
     }
-    
+
 }

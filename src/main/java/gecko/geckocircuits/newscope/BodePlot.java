@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,43 +43,43 @@ public class BodePlot extends GeckoDialog {
         _graferPanel = new NewScope(_graferNew);
         _dataContainer = null;
     }
-        
-    
+
+
     public void insertData(double[][]erg) {
         _graferNew = new GraferV4(new ScopeSettings());
-        _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");        
+        _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");
         _graferNew.setSimulationTimeBoundaries(erg[0][0], erg[0][erg[0].length-1]);
         _graferPanel = new NewScope(_graferNew);
         jPanelPlot.add(_graferPanel);
         _graferNew.createInitialAndSingleDiagram(true, true, 2);
         _graferNew._manager.getDiagram(0)._diagramSettings.setNameDiagram("Magnitude");
-        AbstractDiagram diag = new DiagramCurve(_graferNew);                
+        AbstractDiagram diag = new DiagramCurve(_graferNew);
         diag._diagramSettings.setNameDiagram("Phase");
         diag._xAxis.setAxisType(AxisLinLog.ACHSE_LOG);
-        
+
         _graferNew.getManager().addDiagram(diag);
         _graferNew._manager.getDiagram(0).getCurve(1).setAxisConnection(AxisConnection.ZUORDNUNG_NIX);
         diag.getCurve(1).setAxisConnection(AxisConnection.ZUORDNUNG_Y);
-        
+
         //_graferNew._manager.getDiagrams().get(0).setAllCurvesWithBars(new int[]{0});
-        
+
         _dataContainer = DataContainerSimple.fabricArrayTimeSeries(2, erg[0].length);
         addSignalNames();
-        
-        
-        for (int i = 0; i < erg[0].length; i++) {            
+
+
+        for (int i = 0; i < erg[0].length; i++) {
             float[] data = new float[]{(float) erg[1][i], (float) erg[2][i]};
-            _dataContainer.insertValuesAtEnd(data, erg[0][i]);            
-        }                
+            _dataContainer.insertValuesAtEnd(data, erg[0][i]);
+        }
         for(int i = 0; i < SIGNAL_NAMES.length; i++) {
             _dataContainer.setSignalName(SIGNAL_NAMES[i], i);
         }
-        
+
         _dataContainer.setContainerStatus(ContainerStatus.PAUSED);
         _graferPanel.setDataContainer(_dataContainer);
         //new DialogConnectSignalsGraphs(_graferNew).setVisible(true);
     }
-    
+
     private void addSignalNames() {
         final Stack<AbstractScopeSignal> inputSignals = new Stack<AbstractScopeSignal>();
         for (int i = 0; i < NUMBER_SIGNALS; i++) {
@@ -117,7 +117,7 @@ public class BodePlot extends GeckoDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanelPlot;
     // End of variables declaration//GEN-END:variables

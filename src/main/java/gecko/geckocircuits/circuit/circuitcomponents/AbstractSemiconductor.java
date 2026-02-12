@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -77,7 +77,7 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
             unit("V").
             build();
 
-    public AbstractSemiconductor() {                               
+    public AbstractSemiconductor() {
     }
 
     /**
@@ -141,9 +141,9 @@ public abstract class AbstractSemiconductor extends AbstractTwoPortLKreisBlock i
 
                 if (lossFile.exists() && !lossFile.isDirectory()) {
                     final String foundLossFileName = lossFile.getAbsolutePath();
-                    if (foundLossFileName.endsWith(".scl")) {                                                
-                        ((LossProperties) getVerlustBerechnung()).getDetailedLosses().readLossesFromFileAndSetDetailedLossType(foundLossFileName);                        
-                    } else {                        
+                    if (foundLossFileName.endsWith(".scl")) {
+                        ((LossProperties) getVerlustBerechnung()).getDetailedLosses().readLossesFromFileAndSetDetailedLossType(foundLossFileName);
+                    } else {
                         throw new RuntimeException("Invalid loss file " + foundLossFileName);
                     }
                 } else {

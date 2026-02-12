@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -33,11 +33,11 @@ public final class Thyristor extends AbstractVoltageDropSwitch {
     private static final int POLYGON_POINTS = 3;
     private static final double GATE_SYMBOL_LENGTH = 1.3;
     private static final int GATE_SYMB_THICKNESS = 3;
-    
-    private static final int DYNAMIC_RESISTANCE_INDEX = 0; 
+
+    private static final int DYNAMIC_RESISTANCE_INDEX = 0;
     private static final int GATE_SIGNAL_INDEX = 8;
     private static final int LAST_SWITCH_TIME_INDEX = 11;
-    
+
     final UserParameter<Double> _reverseRecoveryDelay = UserParameter.Builder.
 	<Double>start("reverserecoverydelay", 0.0).
 	longName(I18nKeys.REVERSE_RECOVERY_DELAY).
@@ -46,12 +46,12 @@ public final class Thyristor extends AbstractVoltageDropSwitch {
 	arrayIndex(this,REVERSE_RECOV_INDEX).
 	build();
 
-    
+
     public Thyristor() {
-        super();       
-        uK.setCorrectedIndex(CORRECTED_UK_INDEX);                 
+        super();
+        uK.setCorrectedIndex(CORRECTED_UK_INDEX);
     }
-   
+
 
     @Override
     public void setzeParameterZustandswerteAufNULL() {
@@ -65,45 +65,45 @@ public final class Thyristor extends AbstractVoltageDropSwitch {
     @Override
     protected void drawBackground(final Graphics2D graphics) {
         Color oldColor = graphics.getColor();
-        graphics.setColor(getForeGroundColor());        
-        
+        graphics.setColor(getForeGroundColor());
+
         drawGateSymbol(graphics);
-        
+
         graphics.setColor(oldColor);
-        graphics.fillPolygon(new int[]{0, (int) (-dpix * WIDTH), (int) (dpix * WIDTH)}, 
+        graphics.fillPolygon(new int[]{0, (int) (-dpix * WIDTH), (int) (dpix * WIDTH)},
                 new int[]{(int) (dpix * HEIGHT), (int) (-dpix * HEIGHT), (int) (-dpix * HEIGHT)}, POLYGON_POINTS);
-    }    
-    
+    }
+
     private void drawGateSymbol(final Graphics2D graphics) {
         final double gateLength = GATE_SYMBOL_LENGTH * WIDTH;  // Gate-Symbol des THYR --> Laenge
         final int gtd = GATE_SYMB_THICKNESS;  // Gate-Symbol des THYR --> Breite in Pix
-        graphics.fillRect((int) (-dpix * gateLength), (int) (-gtd / 2), (int) (dpix * gateLength), gtd);  
+        graphics.fillRect((int) (-dpix * gateLength), (int) (-gtd / 2), (int) (dpix * gateLength), gtd);
     }
-    
-    
+
+
     @Override
-    protected void drawForeground(final Graphics2D graphics) {                                                
-        graphics.drawPolygon(new int[]{0, (int) (-dpix * WIDTH), (int) (dpix * WIDTH)}, 
+    protected void drawForeground(final Graphics2D graphics) {
+        graphics.drawPolygon(new int[]{0, (int) (-dpix * WIDTH), (int) (dpix * WIDTH)},
                 new int[]{(int) (dpix * HEIGHT), (int) (-dpix * HEIGHT), (int) (-dpix * HEIGHT)}, POLYGON_POINTS);
-        graphics.fillRect((int) (-dpix * WIDTH), (int) (dpix * HEIGHT - 2), (int) (dpix * 2 * WIDTH), 2);        
+        graphics.fillRect((int) (-dpix * WIDTH), (int) (dpix * HEIGHT - 2), (int) (dpix * 2 * WIDTH), 2);
     }
-    
-   
+
+
     @Override
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
-        addGateTextInfo();        
-        verluste.addTextInfoValue(_textInfo);        
-    }    
+        addGateTextInfo();
+        verluste.addTextInfoValue(_textInfo);
+    }
 
     @Override
     public Window openDialogWindow() {
-        return new ThyristorDialog(this); 
-    }    
-    
+        return new ThyristorDialog(this);
+    }
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new ThyristorCalculator(this));
     }
-    
+
 }

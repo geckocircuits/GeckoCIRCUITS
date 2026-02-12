@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -70,7 +70,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     public static Font circuitFont = new Font("Arial", Font.PLAIN, 12);
     static int DY_ZEILENABSTAND_TXT = circuitFont.getSize() + 3;  // MS_PKGPROTECT: only used within package - Parameter, Namen und andere Beschriftungen --> vertikaler Zeilenabstand
     // die eigentlichen Elemente (LK, CONTROL, THERM) -->
-    //    
+    //
     private AbstractBlockInterface _selectedTextFieldToMove;
     private long _lastMouseClickTime;
     public CircuitSheet _visibleCircuitSheet = _circuitSheet;
@@ -540,7 +540,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     private void doRightMouseClickAction() {
         if (_mouseMoveMode != MouseMoveMode.MOVE_COMPONENTS) {
-            if (_mouseMoveMode != MouseMoveMode.DRAW_CONNECTION) {//              
+            if (_mouseMoveMode != MouseMoveMode.DRAW_CONNECTION) {//
                 this.maus_umschalten_selectMode_wireMode_connectorTestMode();
             }
         } else {
@@ -597,7 +597,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             super.clear();
         }
     };
-    private boolean _elementsJustInitialized;  // damit man eine laufende Initialisierung abbrechen kann, zB. mit der ESCAPE-Taste 
+    private boolean _elementsJustInitialized;  // damit man eine laufende Initialisierung abbrechen kann, zB. mit der ESCAPE-Taste
     private Point _moveStartPoint = new Point(0, 0);  // Ausgangspunkt (ScematicEntry-Koord.) fuer Verschieben/Kopieren von Elementen
     boolean connectorTestMode = false;
     public boolean wirePenVisible = false;
@@ -605,7 +605,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     public static final int WIRE_MODE_OFF = 0, WIRE_MODE_LK = 1, WIRE_MODE_CONTROL = 2, WIRE_MODE_THERM = 3, WIRE_MODE_RELUCTANCE = 4;
     //
     int[] xStift, yStift;  // Symbol Zeichenstift
-    // if connectorTestMode is set, the Potentailgebiebt can be drawn: ovals at Element-nodes and fat (colored) Verbindungen     
+    // if connectorTestMode is set, the Potentailgebiebt can be drawn: ovals at Element-nodes and fat (colored) Verbindungen
     // Markierungsrechteck, um groessere Bereiche mit der Maus zu definieren:
     int x1markRe, y1markRe, x2markRe, y2markRe;  // echte Pixel-Koord.
     boolean antialiasing = false;    //
@@ -616,7 +616,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
     public static SchematicEditor2 Singleton;
 
-    // damit man die Titelleiste modifizieren kann, wenn die Aenderungen noch nicht gespeichert sind --> 
+    // damit man die Titelleiste modifizieren kann, wenn die Aenderungen noch nicht gespeichert sind -->
     public void setFenster(MainWindow win) {
         this.win = win;
     }
@@ -790,8 +790,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         }
         return Collections.unmodifiableList(toFilter);
     }
-    
-    public List<AbstractSpecialBlock> getElementSpecial() {        
+
+    public List<AbstractSpecialBlock> getElementSpecial() {
         return Collections.unmodifiableList(_circuitSheet.getAllElements().getClassFromContainer(AbstractSpecialBlock.class));
     }
 
@@ -829,8 +829,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     public void toggleEnable(final boolean shortDisableCommand) {
         registerChangeWithNetlistUpdate();
-        // Element-Gruppe wurden gewaehlt ('innerhalb des Markierungsrechtecks'), aber noch nicht manipuliert (zB. verschoben) --> 
-        //System.out.println("deselect() --> markierungsRechteckAktiviert"); 
+        // Element-Gruppe wurden gewaehlt ('innerhalb des Markierungsrechtecks'), aber noch nicht manipuliert (zB. verschoben) -->
+        //System.out.println("deselect() --> markierungsRechteckAktiviert");
         //======================
         _mouseMoveMode = MouseMoveMode.NONE;
 
@@ -931,7 +931,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         // linke Maus-Taste 1x gedrueckt:
         // **************************
         //
-        // wenn mehrere Elemente gleichzeitig markiert sind, werden alle gleichzeitig abgesetzt  -->        
+        // wenn mehrere Elemente gleichzeitig markiert sind, werden alle gleichzeitig abgesetzt  -->
         if (!wirePenVisible && _selectedComponents.size() > 0 && !isShiftClick && (me.getClickCount() <= 1)) {
 
             if (_mouseMoveMode == MouseMoveMode.MOVE_COMPONENTS) {
@@ -959,11 +959,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         // **************************
         // linke Maus-Taste DOPPELT gedrueckt:
         // **************************
-        //        
+        //
         if (me.getClickCount() > 1) {
             _selectedComponents.clear();
             //this.deselect();
-            // starte Element-Dialoge (ParameterDialog bzw. KnotenLabelDialog) -->            
+            // starte Element-Dialoge (ParameterDialog bzw. KnotenLabelDialog) -->
             AbstractCircuitSheetComponent clickedBlock = null;
 
             for (AbstractCircuitSheetComponent elem : _visibleCircuitSheet.getLocalSheetComponents()) {
@@ -994,7 +994,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         // **************************
         // linke Maus-Taste 1x gedrueckt:
         // **************************
-        //               
+        //
 
         if (connectorTestMode) {
             _selectedComponents.clear();
@@ -1042,7 +1042,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     public void deselect() {
         switch (_mouseMoveMode) {
-            case SELECT_WINDOW: // pressing escape during dragging the selection window:                
+            case SELECT_WINDOW: // pressing escape during dragging the selection window:
                 _mouseMoveMode = MouseMoveMode.NONE;
                 break;
             case DRAW_CONNECTION:
@@ -1050,14 +1050,14 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                 break;
             case MOVE_COMPONENTS:
                 if (_elementsJustInitialized) {
-                    // Gerade geschaffenes Element, aber noch nicht abgesetzt: Loeschen und Verschwinden-lassen --> 
-                    //System.out.println("deselect() --> geradeInitialisiert_elementLK/CONTROL/THERM"); 
+                    // Gerade geschaffenes Element, aber noch nicht abgesetzt: Loeschen und Verschwinden-lassen -->
+                    //System.out.println("deselect() --> geradeInitialisiert_elementLK/CONTROL/THERM");
                     //======================
                     _elementsJustInitialized = false;
                     this.deleteSelectedComponents();
                 } else {
-                    // Selektierte Element-Gruppe wurde bereits VERSCHOBEN, aber noch nicht abgesetzt --> de-markieren und an der alten Position absetzen --> 
-                    //System.out.println("deselect() --> geradeBeimVerschieben"); 
+                    // Selektierte Element-Gruppe wurde bereits VERSCHOBEN, aber noch nicht abgesetzt --> de-markieren und an der alten Position absetzen -->
+                    //System.out.println("deselect() --> geradeBeimVerschieben");
                     //======================
                     _mouseMoveMode = MouseMoveMode.NONE;
                     _sea._typElement = null;
@@ -1249,7 +1249,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                 if (block.elementTEXTAngeklickt(x, y)) {
                     _selectedTextFieldToMove = block;
                     _mouseMoveMode = MouseMoveMode.MOVE_TEXT;
-                    _selectedTextFieldToMove._textInfo.setPositionTextClickPointInitial(x, y);  // Verschiebung des Textfeldes relativ zum Element bezieht sich auf diesen initial angeklicken Punkt                
+                    _selectedTextFieldToMove._textInfo.setPositionTextClickPointInitial(x, y);  // Verschiebung des Textfeldes relativ zum Element bezieht sich auf diesen initial angeklicken Punkt
                     _visibleCircuitSheet.repaint();
                     return true;
                 }
@@ -1307,10 +1307,10 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         //
         //---------------------------
         // Elemente (LK, CONTROL, THERM) werden ausgewaehlt und erzeugt/initialisiert  -->
-        //                  
+        //
 
         // Verbindung (LK bzw. CONTROL bzw. THERM) oder Element (LK bzw. CONTROL bzw. THERM) wird herumbewegt  -->
-        //        
+        //
         switch (_mouseMoveMode) {
             case DRAW_CONNECTION:
                 assert _selectedComponents.size() == 1;
@@ -1337,23 +1337,23 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         int xLength = xEnd - xStart;
         int yLength = yEnd - yStart;
-        
+
         int xDir = 1;
         if(xEnd < xStart) {
             xDir = -1;
         }
-        
+
         int yDir = 1;
         if(yEnd < yStart) {
             yDir = -1;
         }
-        
-        
+
+
         int i = 0, j = 0;
 
         if (startHorizontal) {
             for (; Math.abs(i-xLength) > 0; i += xDir) {
-                connector.setzeAktuellenPunktAufVerbindung(new Point(xStart + i, yStart+j));                
+                connector.setzeAktuellenPunktAufVerbindung(new Point(xStart + i, yStart+j));
             }
             for (; Math.abs(j-yLength) > 0; j += yDir) {
                 connector.setzeAktuellenPunktAufVerbindung(new Point(xStart + i, yStart + j));
@@ -1413,7 +1413,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         //place the new component
         newElement.setPositionWithoutUndo(posX, posY);
         _sea._typElement = null;
-        
+
         Set<ConnectorType> connectorTypes = new LinkedHashSet<ConnectorType>();
         for(TerminalInterface term : newElement.getAllTerminals()) {
             switch(((AbstractTerminal) term).getCategory()) {
@@ -1424,16 +1424,16 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                     connectorTypes.add(ConnectorType.THERMAL);
                     break;
                 default:
-                    connectorTypes.add(ConnectorType.LK_AND_RELUCTANCE);                    
+                    connectorTypes.add(ConnectorType.LK_AND_RELUCTANCE);
                     break;
             }
         }
-            
+
         for(ConnectorType ct : connectorTypes) {
             NetzlisteAllg.fabricNetzlistComponentLabelUpdate(newElement, ct);
-        }        
+        }
         setDirtyFlag();
-                
+
         _visibleCircuitSheet.repaint();
         return newElement;
     }
@@ -1521,7 +1521,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     @Override
     public void mouseEntered(final MouseEvent me) {
-        _visibleCircuitSheet.requestFocusInWindow();  // damit koennen KeyEvents in MainWindow() abgearbeitet werden 
+        _visibleCircuitSheet.requestFocusInWindow();  // damit koennen KeyEvents in MainWindow() abgearbeitet werden
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {
@@ -1618,7 +1618,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         return null;
     }
 
-    public void updateRenamedLabel(final String originalLabel, String neuerLabel, final ConnectorType renamedLabelType) {        
+    public void updateRenamedLabel(final String originalLabel, String neuerLabel, final ConnectorType renamedLabelType) {
 
         if (testRenameLabelWhereOldStillExists(originalLabel, _visibleCircuitSheet.getLocalComponents(renamedLabelType))) {
             return; // if the new label is already present in the model, don't do any update!
@@ -1636,15 +1636,15 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     // (1) Ein LK-Schalter wird umbenannt --> der entsprechend verknuepfte GATE-Ansteuerblock muss aktualisiert werden,
-    // also mit dem neuen LK-Schalter-Namen korrekt verknuepft --> 
-    // (2) Ein LK-Schalter wird umbenannt --> der entsprechend verknuepfte PVCHIP-THERM-Block zur Verlustmessung 
-    // muss aktualisiert werden, also mit dem neuen LK-Schalter-Namen korrekt verknuepft --> 
-    // (3) Der Name von LK_KOP2 wurde umbenannt --> eventuelle Verknuepfungen mit Kopplungen LK_M aktualisieren --> 
+    // also mit dem neuen LK-Schalter-Namen korrekt verknuepft -->
+    // (2) Ein LK-Schalter wird umbenannt --> der entsprechend verknuepfte PVCHIP-THERM-Block zur Verlustmessung
+    // muss aktualisiert werden, also mit dem neuen LK-Schalter-Namen korrekt verknuepft -->
+    // (3) Der Name von LK_KOP2 wurde umbenannt --> eventuelle Verknuepfungen mit Kopplungen LK_M aktualisieren -->
     // (4) Ein LK-Namen wurde umbenannt --> CURRENT/VIEWMOT - Messungen muessen angepasst werden -->
     // (5) Ein LK-Name wird umbenannt --> Voltage-Direct Control der LK-Quellen U und I muss angepasst werden
-    // 
-    // (1) Ein THERM-Namen wurde umbenannt --> FLOW - Messungen muessen angepasst werden --> 
-    // 
+    //
+    // (1) Ein THERM-Namen wurde umbenannt --> FLOW - Messungen muessen angepasst werden -->
+    //
     public void updateComponentCouplings(final String nameVorher, final String neuerName) {
         for (ComponentCoupable element : _circuitSheet.getAllElements().getClassFromContainer(ComponentCoupable.class)) {
             final ComponentCoupling coupling = element.getComponentCoupling();
@@ -1674,7 +1674,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         final List<String> vecCopiedLabelsALL = new ArrayList<String>();
         final List<String> allOriginalModelLabels = _visibleCircuitSheet.getAllLocalSheetLabels();
 
-        // new copied LK-elements get new names, refering CONTROL-block have to point ot the new names --> 
+        // new copied LK-elements get new names, refering CONTROL-block have to point ot the new names -->
         final List<AbstractCircuitSheetComponent> exchangeNew = new ArrayList<AbstractCircuitSheetComponent>();
         final List<TerminalInterface> allTerminals = new ArrayList<TerminalInterface>();
 
@@ -1711,11 +1711,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         _moveStartPoint = findMoveAnchorPoint(allTerminals);
         if (_mouseMoveMode == MouseMoveMode.SELECT_WINDOW) {
-            // Elemente zum Kopieren wurden mittels Rechteck selektiert (wird normalerweise so gemacht) --> 
+            // Elemente zum Kopieren wurden mittels Rechteck selektiert (wird normalerweise so gemacht) -->
             _mouseMoveMode = MouseMoveMode.NONE;
             _singleComponentMouseDrag = false;
-        } else // Ein Einzel-Element bzw. ein Einzel-Verbindung wurde zum Kopieren angeklickt 
-        // ... (eher unueblich aber nicht auszuschliessen) -->                         
+        } else // Ein Einzel-Element bzw. ein Einzel-Verbindung wurde zum Kopieren angeklickt
+        // ... (eher unueblich aber nicht auszuschliessen) -->
         {
             if (!allTerminals.isEmpty()) {
                 _mouseMoveMode = MouseMoveMode.MOVE_COMPONENTS;
@@ -1936,7 +1936,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         // some components have more therminals with the same label
         // object. Therefore, "sparsify" first, i.e. remove duplicates.
-        // this is done with a set, where objects can be inserted only once.        
+        // this is done with a set, where objects can be inserted only once.
         final Set<CircuitLabel> allLabelsSet = new HashSet<CircuitLabel>();
         for (AbstractCircuitSheetComponent elementNew : exchangeNew) {
             if (elementNew instanceof ComponentTerminable) {
@@ -1957,7 +1957,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     public void setAntialiasing(final boolean selected) {
         antialiasing = selected;
         _visibleCircuitSheet.repaint();
-        // save to the properties file:                
+        // save to the properties file:
         GeckoSim.applicationProps.setProperty("ANTI_ALIASING", ((Boolean) selected).toString());
     }
 

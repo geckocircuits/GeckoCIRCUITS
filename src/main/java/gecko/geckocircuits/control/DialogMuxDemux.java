@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,17 +31,17 @@ public class DialogMuxDemux extends javax.swing.JDialog {
 
         initComponents();
         jTextFieldIdString.setText(regelBlock.getStringID());
-        _regelBlock = regelBlock;                        
+        _regelBlock = regelBlock;
 
         if (_regelBlock instanceof ReglerMUX) {
             jSpinnerPortNumber.setValue(regelBlock.XIN.size());
         }
-        
+
         if (_regelBlock instanceof ReglerDemux) {
             jSpinnerPortNumber.setValue(regelBlock.YOUT.size());
-        }                    
+        }
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -137,7 +137,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void jTextFieldIdStringPropertyChange(java.beans.PropertyChangeEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldIdStringPropertyChange
-        
+
 
     }//GEN-LAST:event_jTextFieldIdStringPropertyChange
 
@@ -159,26 +159,26 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         if (_regelBlock instanceof ReglerFromEXTERNAL) {
             ((ReglerFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
-        
+
         if(_regelBlock instanceof ReglerMUX) {
             ((ReglerMUX) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
-        
+
         if(_regelBlock instanceof ReglerDemux) {
             ((ReglerDemux) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
-        
-        
-        
+
+
+
     }//GEN-LAST:event_jSpinnerPortNumberStateChanged
 
     private void jTextFieldIdStringActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldIdStringActionPerformed
-        
+
         try {
             _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
         } catch (NameAlreadyExistsException ex) {
             ex.printStackTrace();
-        }                
+        }
     }//GEN-LAST:event_jTextFieldIdStringActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOk;

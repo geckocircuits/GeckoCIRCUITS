@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -53,7 +53,7 @@ public final class ProjectData implements Serializable {
     public int dpix = 16;
     public int fontSize;
     public String _fontTyp;
-    public int _fensterWidth = -1, _fensterHeight = -1;  // Speicherung der individuellen Fenstergroesse 
+    public int _fensterWidth = -1, _fensterHeight = -1;  // Speicherung der individuellen Fenstergroesse
     //------------------
     private DateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
     double _dt_pre;
@@ -80,7 +80,7 @@ public final class ProjectData implements Serializable {
 
     public ProjectData(
             Dimension windowDimension,
-            OptimizerParameterData optimizerParameterData, 
+            OptimizerParameterData optimizerParameterData,
             int uniqueFileId, SimulationAccess scripter, GeckoFileManager fileMgr, SchematicEditor2 se,
             SolverSettings solverSettings) {
         this._allSheetComponents.addAll(se._circuitSheet.getAllElements());
@@ -105,7 +105,7 @@ public final class ProjectData implements Serializable {
     }
 
     public ProjectData(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer) {
-//        if(!isBackupRead) {            
+//        if(!isBackupRead) {
 //            for(String tmp : ascii) {
 //                System.out.println(tmp);
 //            }
@@ -125,20 +125,20 @@ public final class ProjectData implements Serializable {
             elem.exportASCII(asc);
             elementCounter++;
         }
-        
+
         appendAsString(asc.append("\noptimizerName"), optimizerParameterData.getNameOpt());
         appendAsString(asc.append("\noptimizerValue"), optimizerParameterData.getValueOpt());
         appendAsString(asc, "\n<scripterCode>\n" + _scripter.getScriptCode() + "\n<\\scripterCode>");
         appendAsString(asc, "\n<scripterImports>\n" + _scripter.getImportCode() + "\n<\\scripterImports>");
         appendAsString(asc, "\n<scripterDeclarations>\n" + _scripter.getDeclarationCode() + " " + "\n<\\scripterDeclarations>");
-        appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");                
-        
+        appendAsString(asc, "\n<extraScriptSourceFiles>\n" + _scripter.getExtraFilesHashes() + " " + "\n<\\extraScriptSourceFiles>");
+
         asc.append("\n");
         _fileManager.exportASCII(asc);
 //        geckoOpt.exportASCII(asc);
         asc.append("\n\n");
         //------------------
-        // aktuelles Datum: 
+        // aktuelles Datum:
         asc.append("\nDtStor ").append(dFormat.format(new Date()));
         //------------------
         // Simulations-Einstellungen:
@@ -156,7 +156,7 @@ public final class ProjectData implements Serializable {
         asc.append("\nfensterWidth ").append(_fensterWidth);
         asc.append("\nfensterHeight ").append(_fensterHeight);
         MainWindow._se._circuitSheet._worksheetSize.exportAscii(asc);
-        // 
+        //
         asc.append("\nANSICHT_SHOW_LK_NAME ").append(SchematicEditor2._lkDisplayMode.showName);
         asc.append("\nANSICHT_SHOW_LK_PARAMETER ").append(SchematicEditor2._lkDisplayMode.showParameter);
         asc.append("\nANSICHT_SHOW_LK_FLOWDIR ").append(SchematicEditor2._lkDisplayMode.showFlowSymbol);
@@ -170,7 +170,7 @@ public final class ProjectData implements Serializable {
         asc.append("\nANSICHT_SHOW_CONTROL_TEXTLINIE ").append(SchematicEditor2._controlDisplayMode.showTextLine);
         asc.append("\nFileVersion " + DialogAbout.RELEASENUMBER);
         asc.append("\nUniqueFileId " + _uniqueFileId);
-        
+
         final int globalDataSize = NetzlisteCONTROL.globalData.getRowLength();
         String[] signalNames = new String[globalDataSize];
         for (int i = 0; i < globalDataSize; i++) {
@@ -301,15 +301,15 @@ public final class ProjectData implements Serializable {
         GeckoSim._win.vItemShowTextLineTHERM.setSelected(SchematicEditor2._thermDisplayMode.showTextLine);
         GeckoSim._win.vItemShowNameTHERM.setSelected(SchematicEditor2._thermDisplayMode.showName);
 
-                
-        
+
+
         if (tokenMap.containsToken("optimizerName[]")) {
             _optimizerNames = tokenMap.readDataLineStringArray("optimizerName[]");
             _optimizerData = tokenMap.readDataLineDoubleArray("optimizerValue[]");
         }
-        
-        if(_optimizer != null) {            
-            _optimizer.clearAndInitializeWithoutUndo(_optimizerNames, _optimizerData);        
+
+        if(_optimizer != null) {
+            _optimizer.clearAndInitializeWithoutUndo(_optimizerNames, _optimizerData);
         }
 
         if (tokenMap.containsToken("<scripterCode>")) {
@@ -318,7 +318,7 @@ public final class ProjectData implements Serializable {
             _scripterDeclarations = tokenMap.createSubBlock("<scripterDeclarations>", "<\\scripterDeclarations>");
             if(tokenMap.containsToken("<extraScriptSourceFiles>")) {
                 _scripterExtraFiles = tokenMap.createSubBlock("<extraScriptSourceFiles>", "<\\extraScriptSourceFiles>");
-            }            
+            }
         }
 
 
@@ -326,7 +326,7 @@ public final class ProjectData implements Serializable {
         readFileVersion = -1;
 
         if (tokenMap.containsToken("FileVersion")) {
-            readFileVersion = tokenMap.readDataLine("FileVersion", readFileVersion);                                    
+            readFileVersion = tokenMap.readDataLine("FileVersion", readFileVersion);
             if (readFileVersion < 160) {
                 JOptionPane.showMessageDialog(null,
                         "This Model file was created with an older version of GeckoCIRCUITS.\n"
@@ -424,13 +424,13 @@ public final class ProjectData implements Serializable {
         }
 
         // the GeckoFile-Object are created after the single block creation!
-        TokenMap fileBlock = tokenMap.getSpecialBlockTokenMap("GeckoFileManager");        
+        TokenMap fileBlock = tokenMap.getSpecialBlockTokenMap("GeckoFileManager");
         if (fileBlock != null) {
             fileMgrFiles = new ArrayList<GeckoFile>();
             for (TokenMap fileSubBlock = fileBlock.getBlockTokenMap("<GeckoFile>"); fileSubBlock != null;
                     fileSubBlock = fileBlock.getBlockTokenMap("<GeckoFile>")) {
                 try {
-                    GeckoFile newFile = new GeckoFile(fileSubBlock, _allSheetComponents);                    
+                    GeckoFile newFile = new GeckoFile(fileSubBlock, _allSheetComponents);
                     fileMgrFiles.add(newFile);
                 } catch (FileNotFoundException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);
@@ -526,9 +526,9 @@ public final class ProjectData implements Serializable {
             }
         }
     }
-        
 
-    
+
+
     @SuppressWarnings("unchecked")
     public static void appendAsString(StringBuffer ascii, List<? extends Object> wert) {
         if(wert.size() > 0 && wert.get(0) instanceof String) {
@@ -541,7 +541,7 @@ public final class ProjectData implements Serializable {
             ascii.append(' ');
         }
     }
-    
+
     public static void appendStringArray(StringBuffer ascii, List<String> wert) {
         try {
             ascii.append("[]");
@@ -557,7 +557,7 @@ public final class ProjectData implements Serializable {
             ex.printStackTrace();
         }
     }
-    
+
 
     public static void appendAsString(StringBuffer ascii, double[] wert) {
         ascii.append("[] ");

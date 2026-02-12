@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,26 +37,26 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
         super(parent, true);
         initComponents();
         _thisTerminal = (AbstractBlockInterface) globalTerminal;
-        jTextFieldName.setText(globalTerminal.getStringID());        
+        jTextFieldName.setText(globalTerminal.getStringID());
         _globalTerminable = (GlobalTerminable) globalTerminal;
-        
-        _allGlobalTerminals = new HashSet<GlobalTerminable>(_globalTerminable.getAllGlobalTerminals());        
+
+        _allGlobalTerminals = new HashSet<GlobalTerminable>(_globalTerminable.getAllGlobalTerminals());
         getRootPane().setDefaultButton(jButtonOK);
         readAllGlobalsIntoComboBoxes();
         _initDone = true;
         setTitle("Set global terminal");
     }
-    
+
     private void readAllGlobalsIntoComboBoxes() {
         _initDone = false;
         jComboBoxAllNames.removeAllItems();
         jComboBoxConnections.removeAllItems();
         Set<String> allComboNames = new HashSet<String>();
-        
-        for(GlobalTerminable otherGlobal : _allGlobalTerminals) {                        
-            allComboNames.add(otherGlobal.getStringID());            
+
+        for(GlobalTerminable otherGlobal : _allGlobalTerminals) {
+            allComboNames.add(otherGlobal.getStringID());
             if(otherGlobal.getStringID().equals(_globalTerminable.getStringID())) {
-                
+
                 CircuitSheet connectedSheet = otherGlobal.getParentCircuitSheet();
                 if(connectedSheet == null || connectedSheet.getClass() == CircuitSheet.class) {
                     jComboBoxConnections.addItem("Main sheet");
@@ -64,8 +64,8 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
                     final String subName = ((SubCircuitSheet) connectedSheet)._subBlock.getStringID();
                     jComboBoxConnections.addItem(subName);
                 }
-                
-                
+
+
             }
         }
         for(String insertName : allComboNames) {
@@ -74,11 +74,11 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
                 jComboBoxAllNames.setSelectedIndex(jComboBoxAllNames.getItemCount()-1);
             }
         }
-        
+
         _initDone = true;
     }
-    
-    
+
+
 
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of
@@ -201,21 +201,21 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonOKActionPerformed
 
     private void jComboBoxAllNamesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAllNamesActionPerformed
-       
+
         if(!_initDone) {
             return;
         }
         final String nameToSet = (String) jComboBoxAllNames.getSelectedItem();
-        
+
         if(nameToSet == null) {
             return;
         }
         setComponentName(nameToSet);
-        
+
     }//GEN-LAST:event_jComboBoxAllNamesActionPerformed
 
     private void jTextFieldNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNameKeyTyped
-        
+
     }//GEN-LAST:event_jTextFieldNameKeyTyped
 
     private void jTextFieldNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldNameFocusLost
@@ -228,12 +228,12 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
                 + "name. For instance, if you create two global terminals in SUBCIRCUIT.1 and SUBCIRCUIT.2\n"
                 + "both with the name GLOBAL.1, they will be connected.\n"
                 + "Our recommendation is to use the global terminal only rarely, since your simulation model\n"
-                + "could become very confusing when many global terminals are in use.", 
+                + "could become very confusing when many global terminals are in use.",
                 "Information on global terminals",JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButtonShowInfoActionPerformed
 
     private void setComponentName(final String newName) {
-        
+
         if(!_initDone) {
             return;
         }
@@ -245,11 +245,11 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this,
                     "Object name: " + newName + " is already in use in this circuit sheet!",
                     "Warning",
-                    JOptionPane.WARNING_MESSAGE);            
+                    JOptionPane.WARNING_MESSAGE);
             throw new RuntimeException("Name is already in use!");
         }
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOK;
     private javax.swing.JButton jButtonShowInfo;

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -52,14 +52,14 @@ import java.util.Set;
 public final class SubcircuitBlock extends AbstractSpecialBlock {
 
     public static final AbstractTypeInfo tInfo = new SpecialTypeInfo(SubcircuitBlock.class, "SUBCIRCUIT", I18nKeys.SUBCIRCUIT);
-    
+
     private static final double BORDER_CLICK_OFFSET = 0.5;
     private static final int DEFAULT_BLOCK_WIDTH = 8;
     private static final int DEFAULT_BLOCK_HEIGHT = 5;
     private static final int DEFAULT_SHEET_WIDTH = 50;
     private static final int DEFAULT_SHEET_HEIGHT = 40;
     public final SubCircuitSheet _myCircuitSheet = new SubCircuitSheet(SchematicEditor2.Singleton, this);
-    
+
     final UserParameter<Integer> _blockSizeX = UserParameter.Builder.
             <Integer>start("blockSizeX", DEFAULT_BLOCK_WIDTH).
             longName(I18nKeys.X_BLOCK_DIMENSION).
@@ -78,18 +78,18 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
             shortName("SheetSizeX").
             arrayIndex(this, -1).
             build();
-    
+
     public final UserParameter<Integer> _sheetSizeY = UserParameter.Builder.
             <Integer>start("worksheetSizeY", DEFAULT_SHEET_HEIGHT).
             longName(I18nKeys.Y_SHEET_SIZE).
             shortName("SheetSizeY").
             arrayIndex(this, -1).
             build();
-    
+
     public final Set<SubCircuitTerminable> _myTerminals = new LinkedHashSet<SubCircuitTerminable>();
 
     public SubcircuitBlock() {
-        
+
         super();
 
         _blockSizeX.addActionListener(new ActionListener() {
@@ -114,11 +114,11 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
                     }
                 }
             }
-        });                
-        
+        });
+
         _myCircuitSheet._worksheetSize._worksheetDimension.addModelListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {                
+            public void actionPerformed(ActionEvent e) {
                 int newX = _myCircuitSheet._worksheetSize._worksheetDimension.getValue().x;
                 if(newX != _sheetSizeX.getValue()) {
                     _sheetSizeX.setUserValue(newX);
@@ -126,24 +126,24 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
                 int newY = _myCircuitSheet._worksheetSize._worksheetDimension.getValue().y;
                 if(newY != _sheetSizeY.getValue()) {
                     _sheetSizeY.setUserValue(newY);
-                }             
+                }
             }
         });
-        
+
         _sheetSizeX.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _myCircuitSheet._worksheetSize._worksheetDimension.setValue(new Point(_sheetSizeX.getValue(), _sheetSizeY.getValue()));
             }
         });
-        
+
         _sheetSizeY.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 _myCircuitSheet._worksheetSize._worksheetDimension.setValue(new Point(_sheetSizeX.getValue(), _sheetSizeY.getValue()));
             }
         });
-        
+
         getIDStringDialog().addActionListener(new ActionListener() {
 
             @Override
@@ -151,8 +151,8 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
                 _myCircuitSheet.setNameLabelText();
             }
         });
-        
-        
+
+
         _myCircuitSheet._worksheetSize.setNewWorksheetSize(_sheetSizeX.getValue(), _sheetSizeY.getValue());
     }
 
@@ -161,20 +161,20 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
         if(1>0) return true;
         for (SubCircuitTerminable terminal1 : _myTerminals) {
             for (SubCircuitTerminable terminal2 : _myTerminals) {
-                if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {                     
+                if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
                     return false;
                 }
             }
         }
         return true;
     }
-    
-    
+
+
     public Set<SubCircuitTerminable> getTerminalsWithWrongPosition() {
         Set<SubCircuitTerminable> returnValue = new HashSet<SubCircuitTerminable>();
         for (SubCircuitTerminable terminal1 : _myTerminals) {
             for (SubCircuitTerminable terminal2 : _myTerminals) {
-                if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {                     
+                if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
                     returnValue.add(terminal1);
                     returnValue.add(terminal2);
                 }
@@ -200,12 +200,12 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     @Override
     public void setToolbarPaintProperties() {
         _blockSizeX.setValueWithoutUndo(6);
-        _blockSizeY.setValueWithoutUndo(3);        
+        _blockSizeY.setValueWithoutUndo(3);
         _textInfo.setPositionTextClickPointInitial(0, 0);
         _textInfo.setNewRelativePosition(new Point(-15, -15));
-    }        
+    }
 
-    public void recalculateTerminalPositions() {        
+    public void recalculateTerminalPositions() {
         for (SubCircuitTerminable term : _myTerminals) {
             switch (term.getTerminalLocation()) {
                 case UP:
@@ -216,20 +216,20 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
                     pos = (int) (_blockSizeX.getValue() * 1.0 * term.getSheetPosition().x / _sheetSizeX.getValue());
                     term.getBlockTerminal().setRelativePosition(pos, _blockSizeY.getValue());
                     break;
-                case LEFT:                    
+                case LEFT:
                     double ratio = 1.0 * term.getSheetPosition().y / _sheetSizeY.getValue();
                     pos = (int) (_blockSizeY.getValue() * ratio);
-                    term.getBlockTerminal().setRelativePosition(-1, pos);                    
+                    term.getBlockTerminal().setRelativePosition(-1, pos);
                     break;
                 case RIGHT:
                     pos = (int) (_blockSizeY.getValue() * 1.0 * term.getSheetPosition().y / _sheetSizeY.getValue());
-                    term.getBlockTerminal().setRelativePosition(_blockSizeX.getValue(), pos);                    
+                    term.getBlockTerminal().setRelativePosition(_blockSizeX.getValue(), pos);
                     break;
                 default:
                     assert false;
-            }            
+            }
         }
-        
+
     }
 
     @Override
@@ -275,9 +275,9 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     public ComponentDirection getComponentDirection() {
         return ComponentDirection.NORTH_SOUTH;
     }
-    
 
-    
+
+
 
     @Override
     public AbstractCircuitSheetComponent copyFabric(final long shiftValue) {
@@ -310,7 +310,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
 
         return returnValue;
     }
-    
+
 
     @Override
     public ElementDisplayProperties getDisplayProperties() {
@@ -330,7 +330,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
 
     @Override
     protected void paintIndividualComponent(final Graphics2D graphics) {
-        final AffineTransform oldTransform = graphics.getTransform();        
+        final AffineTransform oldTransform = graphics.getTransform();
         graphics.translate(getSheetPosition().x * dpix, getSheetPosition().y * dpix);
         for (SubCircuitTerminable term : _myTerminals) {
 
@@ -409,22 +409,22 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
         } else if (terminal instanceof ReglerTERMINAL) {
             return GlobalColors.farbeFertigElementCONTROL;
         }
-        
+
         assert false;
         return GlobalColors.farbeFertigElementLK;
-    }     
+    }
 
     @Override
     protected void importIndividual(TokenMap tokenMap) {
-        super.importIndividual(tokenMap); 
-        
+        super.importIndividual(tokenMap);
+
         if(tokenMap.containsToken("sheetSizeX")) {
             _sheetSizeX.setValueWithoutUndo(tokenMap.readDataLine("sheetSizeX", _sheetSizeX.getValue()));
-            _sheetSizeY.setValueWithoutUndo(tokenMap.readDataLine("sheetSizeY", _sheetSizeY.getValue()));           
-        } 
-        
+            _sheetSizeY.setValueWithoutUndo(tokenMap.readDataLine("sheetSizeY", _sheetSizeY.getValue()));
+        }
+
         _myCircuitSheet._worksheetSize._worksheetDimension.setValueWithoutUndo(new Point(_sheetSizeX.getValue(), _sheetSizeY.getValue()));
-        
+
     }
-    
+
 }

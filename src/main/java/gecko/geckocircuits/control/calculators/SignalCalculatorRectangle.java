@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -48,12 +48,12 @@ public final class SignalCalculatorRectangle extends AbstractSignalCalculatorPer
     }
 
     /**
-     * Todo: this function is duplicated @see SignalCalculatorTriangle     
+     * Todo: this function is duplicated @see SignalCalculatorTriangle
      */
     @Override
     protected void calculateStartSignal(final double dtx, final double txEnd,
             final double phaseX) {
-        
+
         double txValue = 0;
         double txE = txEnd * phaseX / (2 * Math.PI) - (1 - 2 * _dutyRatio) / (4 * _frequency);
         if (txE < 0) {

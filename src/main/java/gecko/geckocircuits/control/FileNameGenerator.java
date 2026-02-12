@@ -7,12 +7,12 @@ import java.io.File;
  * When a file already exists, appends a number before the extension to create a unique name.
  */
 public final class FileNameGenerator {
-    
+
     private static final int MAX_FILE_COUNTER = 1000;
-    
+
     /**
      * Finds a free (non-existing) file name by appending numbers if necessary.
-     * 
+     *
      * @param origFile the original file path
      * @return a file path that doesn't exist, or the original if max attempts exceeded
      */
@@ -20,9 +20,9 @@ public final class FileNameGenerator {
         if (!new File(origFile).exists()) {
             return origFile;
         }
-        
+
         FileNameParts parts = parseFileName(origFile);
-        
+
         for (int counter = 0; counter < MAX_FILE_COUNTER; counter++) {
             final String newFileName = generateNumberedFileName(parts, counter);
             if (!new File(newFileName).exists()) {
@@ -31,10 +31,10 @@ public final class FileNameGenerator {
         }
         return origFile;
     }
-    
+
     /**
      * Generates a numbered file name by inserting a counter before the extension.
-     * 
+     *
      * @param parts the parsed file name parts
      * @param counter the number to insert
      * @return the numbered file name
@@ -42,10 +42,10 @@ public final class FileNameGenerator {
     String generateNumberedFileName(final FileNameParts parts, final int counter) {
         return parts.baseName + "_" + counter + parts.extension;
     }
-    
+
     /**
      * Parses a file name into base name and extension parts.
-     * 
+     *
      * @param fileName the file name to parse
      * @return the parsed parts
      */
@@ -62,20 +62,20 @@ public final class FileNameGenerator {
         if (underscoreIndex < filenameStart || underscoreIndex >= dotIndex) {
             underscoreIndex = dotIndex;
         }
-        
+
         String baseName = fileName.substring(0, underscoreIndex);
         String extension = fileName.substring(dotIndex);
-        
+
         return new FileNameParts(baseName, extension);
     }
-    
+
     /**
      * Value object holding the parts of a file name.
      */
     static class FileNameParts {
         final String baseName;
         final String extension;
-        
+
         FileNameParts(String baseName, String extension) {
             this.baseName = baseName;
             this.extension = extension;

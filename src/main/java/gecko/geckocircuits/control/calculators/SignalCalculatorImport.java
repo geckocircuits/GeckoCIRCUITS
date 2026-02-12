@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,9 +28,9 @@ public final class SignalCalculatorImport extends AbstractSignalCalculator imple
         for(int i = 0; i < dataTable.length; i++) {
             System.arraycopy(dataTable[i], 0, _xy[i], 0, dataTable[0].length);
         }
-        
-        // Periode (Wiederholrate) des Signals;                        
-        _signalDuration = dataTable[0][dataTable[0].length - 1] - dataTable[0][0];  
+
+        // Periode (Wiederholrate) des Signals;
+        _signalDuration = dataTable[0][dataTable[0].length - 1] - dataTable[0][0];
     }
 
     @Override
@@ -50,7 +50,7 @@ public final class SignalCalculatorImport extends AbstractSignalCalculator imple
 
         calculateSigStartTimeEstimation();
                         // ungefaehre Position bestimmen:
-        
+
         final int timePointer = calculateAccurateTimePointer();
         if (timePointer == 0) {
             _outputSignal[0][0] = _xy[1][0];
@@ -74,7 +74,7 @@ public final class SignalCalculatorImport extends AbstractSignalCalculator imple
         if(_signalDuration <= 0) {
             throw new IllegalArgumentException("The data table in the signal data file is invalid.");
         }
-        
+
         for(int i = 1; i < _xy[0].length; i++) {
             final double newTime = _xy[0][i];
             final double previousTime = _xy[0][i-1];
@@ -82,7 +82,7 @@ public final class SignalCalculatorImport extends AbstractSignalCalculator imple
                 throw new IllegalArgumentException("The data table in the signal data file has an error:\n"
                                          + "The time values are not strictly monotonicaly increasing!\n"
                                          + "Error values: " + previousTime + " " + newTime);
-            }            
+            }
         }
     }
 

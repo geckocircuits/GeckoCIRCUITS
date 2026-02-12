@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,7 +20,7 @@ public interface Nonlinearable extends GeckoFileable {
     String getNonlinearFileEnding();
 
     double[] getNonlinXDefault();
-    double[] getNonlinYDefault();            
+    double[] getNonlinYDefault();
     String getStringID();
     String getNonlinearFileExtension();
     String getIndependentVariableName();
@@ -28,5 +28,5 @@ public interface Nonlinearable extends GeckoFileable {
     String getNonlinearName();
     UserParameter<Double> getNonlinearReplacedParameter();
     double[][] getInitalNonlinValues();
-    
+
 }

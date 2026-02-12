@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -50,7 +50,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
             }
         }
     };
-    
+
     public ExtraFilesWindow(final GeckoFileable geckoFileable) {
         super();
         try {
@@ -71,21 +71,21 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
 
     }
 
-    public void addNewFiles(final List<GeckoFile> newFiles) {        
+    public void addNewFiles(final List<GeckoFile> newFiles) {
         for (GeckoFile newFile : newFiles) {
             if(!_extraFiles.contains(newFile)) {
                 _extraFiles.addElement(newFile);
-            }            
+            }
         }
     }
-    
+
     public void removeFilesFromList(final List<GeckoFile> filesToRemove) {
         for (GeckoFile removedFile : filesToRemove) {
             _extraFiles.removeElement(removedFile);
         }
     }
-    
-    
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -212,7 +212,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     //CHECKSTYLE:ON
-    
+
     private void jButtonOKActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonOKActionPerformed
         setVisible(false);
     }//GEN-LAST:event_jButtonOKActionPerformed
@@ -232,10 +232,10 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
             file = (GeckoFile) _extraFiles.getElementAt(selectedIndex);
             filesToRemove.add(file);
             _extraFiles.remove(selectedIndex);
-            selectedIndex = jListExtraSourceFiles.getMaxSelectionIndex(); 
+            selectedIndex = jListExtraSourceFiles.getMaxSelectionIndex();
         }
         _geckoFileable.removeLocalComponentFiles(filesToRemove);
-        
+
     }//GEN-LAST:event_jButtonRemoveSelectedActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddNewFiles;

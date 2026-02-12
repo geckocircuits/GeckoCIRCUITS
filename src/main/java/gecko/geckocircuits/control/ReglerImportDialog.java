@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -35,14 +35,14 @@ import javax.swing.border.TitledBorder;
  */
 class ReglerImportDialog extends DialogElementCONTROL<ReglerSignalSource>{
 
-    private FormatJTextField jtfImportStatus;  // fuer das Importieren externer Zeitverlaeufe, die dann vom SIGNAL-Block ausgegeben werden    
-    
+    private FormatJTextField jtfImportStatus;  // fuer das Importieren externer Zeitverlaeufe, die dann vom SIGNAL-Block ausgegeben werden
+
     public ReglerImportDialog(ReglerSignalSource element) {
         super(element);
     }
 
     @Override
-    void baueGuiIndividual() {     
+    void baueGuiIndividual() {
         JTextArea jtx = new JTextArea();
         jtx.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
         jtx.setText("Data Format (Space-Separator)[ time  -  value ]");
@@ -53,8 +53,8 @@ class ReglerImportDialog extends DialogElementCONTROL<ReglerSignalSource>{
         JPanel jpIMPORT = new JPanel();
         jpIMPORT.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Import ASCII File", TitledBorder.LEFT, TitledBorder.TOP));
         jpIMPORT.setLayout(new BorderLayout());
-        
-        //         
+
+        //
         /*
          * JLabel jlIN1= new JLabel(TxtI.ti_ctrSIGd1_DialogElementCONTROL); jlIN1.setFont(TxtI.ti_Font_A);
          * jlIN1.setForeground(GlobalColors.LAB_COLOR_DIALOG_1); jpIMPORT.add(jlIN1); JLabel jlIN2= new
@@ -98,9 +98,9 @@ class ReglerImportDialog extends DialogElementCONTROL<ReglerSignalSource>{
             jtfImportStatus.setText(datnam);
             jtfImportStatus.setForeground(Color.decode("0x006400"));
         }
-        
+
         //
-        
+
         JPanel jpSL4 = new JPanel();
         jpSL4.setLayout(new BorderLayout());
         JPanel jpSL5 = new JPanel();
@@ -109,10 +109,10 @@ class ReglerImportDialog extends DialogElementCONTROL<ReglerSignalSource>{
         jpSL4.add(jtfImportStatus, BorderLayout.CENTER);
         jpIMPORT.add(jtx, BorderLayout.CENTER);
         jpIMPORT.add(jpSL4, BorderLayout.SOUTH);
-        
+
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
-        jpM.add(jpIMPORT, BorderLayout.CENTER);        
-        
-    }            
+        jpM.add(jpIMPORT, BorderLayout.CENTER);
+
+    }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,20 +26,20 @@ class BJTDialog extends DialogElementLK<BJT> {
     private JRadioButton _npnButton;
     private JRadioButton _pnpButton;
     private static final int NUMBER_GRID_ROWS = 9;
-    
+
     public BJTDialog(final BJT parent) {
         super(parent);
     }
 
     @Override
     protected void baueGUIIndividual() {
-        JPanel pIN = createParameterPanel(element._forwardBeta, element._backwardBeta, 
-                element._baseResistance, element._emitterResistance, element._collectorResistance, element._forwardVoltage);        
-        
+        JPanel pIN = createParameterPanel(element._forwardBeta, element._backwardBeta,
+                element._baseResistance, element._emitterResistance, element._collectorResistance, element._forwardVoltage);
+
         ButtonGroup npnpnpGroup = new ButtonGroup();
         _npnButton = new JRadioButton("NPN type");
         _pnpButton = new JRadioButton("PNP type");
-    
+
         npnpnpGroup.add(_npnButton);
         npnpnpGroup.add(_pnpButton);
         if (element._isNpn.getValue()) {
@@ -60,9 +60,9 @@ class BJTDialog extends DialogElementLK<BJT> {
         pIN.add(_pnpButton);
         con.add(pIN, BorderLayout.CENTER);
     }
-    
+
     @Override
     public void processInputIndividual() {
-        element._isNpn.setUserValue(_npnButton.isSelected());                        
+        element._isNpn.setUserValue(_npnButton.isSelected());
     }
 }

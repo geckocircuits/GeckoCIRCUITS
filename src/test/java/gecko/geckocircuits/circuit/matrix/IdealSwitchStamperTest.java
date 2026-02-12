@@ -289,7 +289,7 @@ public class IdealSwitchStamperTest {
     public void testCreateDefaultParameters_GateOn() {
         double[] params = IdealSwitchStamper.createDefaultParameters(1.0);
 
-        assertEquals("rCurrent should be rOn when gate=1", 
+        assertEquals("rCurrent should be rOn when gate=1",
                      IdealSwitchStamper.DEFAULT_R_ON, params[IdealSwitchStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("gate", 1.0, params[IdealSwitchStamper.PARAM_GATE], TOLERANCE);
     }
@@ -298,7 +298,7 @@ public class IdealSwitchStamperTest {
     public void testCreateDefaultParameters_GateOff() {
         double[] params = IdealSwitchStamper.createDefaultParameters(0.0);
 
-        assertEquals("rCurrent should be rOff when gate=0", 
+        assertEquals("rCurrent should be rOff when gate=0",
                      IdealSwitchStamper.DEFAULT_R_OFF, params[IdealSwitchStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("gate", 0.0, params[IdealSwitchStamper.PARAM_GATE], TOLERANCE);
     }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,7 +24,7 @@ public final class TerminalRelativeFixedDirection extends AbstractTerminal {
     private final int _posX;
     private final int _posY;
     private final ComponentDirection _fixedDirection;
-    
+
     public TerminalRelativeFixedDirection(final AbstractBlockInterface relatedComponent, final int posX, final int posY) {
         super(relatedComponent);
         _posX = posX;
@@ -35,8 +35,8 @@ public final class TerminalRelativeFixedDirection extends AbstractTerminal {
     @Override
     public Point getPosition() {
         return getPointFromDirection(_fixedDirection, _parentElement.getSheetPosition(), _posX, _posY);
-    }           
-    
+    }
+
     public static Point getPointFromDirection(final ComponentDirection direction, final Point center,
             final int posX, final int posY) {
         int x1 = center.x, y1 = center.y;
@@ -48,14 +48,14 @@ public final class TerminalRelativeFixedDirection extends AbstractTerminal {
             case EAST_WEST:
                 y1 -= posX;
                 x1 += posY;
-                break;            
+                break;
             case SOUTH_NORTH:
                 y1 += posY;
                 x1 -= posX;
                 break;
             case WEST_EAST:
                 y1 -= posX;
-                x1 -= posY;                
+                x1 -= posY;
                 break;
              default:
                 assert false;
@@ -69,5 +69,5 @@ public final class TerminalRelativeFixedDirection extends AbstractTerminal {
         final AbstractTerminal returnValue = new TerminalRelativeFixedDirection(relatedComponent, _posX, _posY);
         returnValue.getLabelObject().setLabel(_label.getLabelString());
         return returnValue;
-    }                
+    }
 }

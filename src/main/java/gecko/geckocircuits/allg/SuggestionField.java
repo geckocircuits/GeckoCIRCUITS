@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -66,8 +66,8 @@ public final class SuggestionField extends JTextField {
     private final JScrollPane _scrollPane;
 
     public SuggestionField(final Frame owner) {
-        super();                        
-        
+        super();
+
         owner.addComponentListener(new ComponentListener() {
             @Override
             public void componentShown(final ComponentEvent event) {
@@ -163,7 +163,7 @@ public final class SuggestionField extends JTextField {
                     SuggestionField.this.fireActionEvent();
                     SuggestionField.this._dialog.setVisible(false);
                 }
-                this.selected = SuggestionField.this._list.getSelectedIndex();                
+                this.selected = SuggestionField.this._list.getSelectedIndex();
             }
 
             public void mouseExited(MouseEvent e) {
@@ -172,7 +172,7 @@ public final class SuggestionField extends JTextField {
             public void mouseEntered(MouseEvent e) {
             }
 
-            public void mouseClicked(MouseEvent e) {                
+            public void mouseClicked(MouseEvent e) {
                 fireActionEvent();
             }
         });
@@ -278,12 +278,12 @@ public final class SuggestionField extends JTextField {
     }
 
     private synchronized void relocate() {
-        try {            
+        try {
             Point tmpLocation = getLocationOnScreen();
-            _list.revalidate();                        
+            _list.revalidate();
             final int listHeight = _scrollPane.getHeight();
             tmpLocation.y += - listHeight;
-            this._dialog.setLocation(tmpLocation);                        
+            this._dialog.setLocation(tmpLocation);
         } catch (IllegalComponentStateException exc) {
             // exc.printStackTrace();
         }
@@ -300,7 +300,7 @@ public final class SuggestionField extends JTextField {
     }
 
     private void fireActionEvent() {
-        ActionEvent event = new ActionEvent(this, 0, getText());        
+        ActionEvent event = new ActionEvent(this, 0, getText());
         for (ActionListener listener : this._listeners) {
             listener.actionPerformed(event);
         }

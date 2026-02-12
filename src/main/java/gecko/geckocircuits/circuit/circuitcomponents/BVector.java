@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -59,8 +59,8 @@ public class BVector {
 
     public void stampBVector(double t, double dt) {
         //System.out.println("stamping B vectors at " + t + ", updateAllFlag: " + updateAllFlag);
-        
-   
+
+
         if (updateAllFlag) {
             for (int i = 0; i < b.length; i++) {
                 basisB[i] = 0;
@@ -78,7 +78,7 @@ public class BVector {
                 comp.stampVectorB(b, t, dt);
             }
             updateAllFlag = false;
-            
+
         } else {
             for (int i = 0; i < b.length; i++) {
                 b[i] = basisB[i];
@@ -89,9 +89,9 @@ public class BVector {
             }
         }
     }
-    
-    
-    
+
+
+
 
     public void setUpdateAllFlag() {
         updateAllFlag = true;
@@ -108,7 +108,7 @@ public class BVector {
         BVector BCopy = new BVector(bCopy,basisBCopy,_bStampables,_isBasisStampable,_isNotBasisStampables,updateAllFlag);
         return BCopy;
     }
-    
+
     //for registering the bstampables with the B vector which has been created as a copy
     public void registerBVector() {
         for (BStampable bstampable : _isBasisStampable) {

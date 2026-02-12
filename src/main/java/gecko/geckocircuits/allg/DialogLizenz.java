@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,7 +36,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores license text buffer for display")
 public class DialogLizenz extends JDialog implements WindowListener, ActionListener {
     private JButton knOK;
-    private StringBuffer sbInfoTxt; 
+    private StringBuffer sbInfoTxt;
 
     public DialogLizenz (StringBuffer sbInfoTxt) {
         super.setModal(true);
@@ -47,7 +47,7 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
         } catch (Exception e) {
             // Icon loading is optional - dialog works without it
         }
-        this.sbInfoTxt= sbInfoTxt; 
+        this.sbInfoTxt= sbInfoTxt;
         this.addWindowListener(this);
         this.setTitle(" Licence Information");
         this.baueGUI();
@@ -70,7 +70,7 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(new EtchedBorder());
         //
-        JTextArea jtx= new JTextArea();        
+        JTextArea jtx= new JTextArea();
         jtx.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
         //
         jtx.setText(sbInfoTxt.toString());

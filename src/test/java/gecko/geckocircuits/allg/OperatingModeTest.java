@@ -177,11 +177,11 @@ public class OperatingModeTest {
     public void testModeSwitch() {
         // Simulate mode switching
         OperatingMode mode = OperatingMode.STANDALONE;
-        
+
         // Switch to remote mode
         mode = OperatingMode.REMOTE;
         assertEquals(OperatingMode.REMOTE, mode);
-        
+
         // Switch back to standalone
         mode = OperatingMode.STANDALONE;
         assertEquals(OperatingMode.STANDALONE, mode);

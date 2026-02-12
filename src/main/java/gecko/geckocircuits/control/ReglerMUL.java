@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,14 +32,14 @@ public final class ReglerMUL extends AbstractReglerVariableInputs {
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.MULTIPLICATION_OF_INPUT};
-    }            
+    }
 
     private class TwoParameterMultiplication extends AbstractControlCalculatable {
 
         public TwoParameterMultiplication() {
             super(2, 1);
         }
-        
+
         @Override
         public void berechneYOUT(final double deltaT) {
             _outputSignal[0][0] = _inputSignal[0][0] * _inputSignal[1][0];
@@ -51,7 +51,7 @@ public final class ReglerMUL extends AbstractReglerVariableInputs {
         public MoreParameterMultiplication() {
             super(XIN.size(), 1);
         }
-        
+
         @Override
         public void berechneYOUT(final double deltaT) {
             _outputSignal[0][0] = _inputSignal[0][0];
@@ -62,7 +62,7 @@ public final class ReglerMUL extends AbstractReglerVariableInputs {
     }
 
     @Override
-    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {        
+    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         if (XIN.size() == 2) {
             return new TwoParameterMultiplication();
         } else {
@@ -80,6 +80,6 @@ public final class ReglerMUL extends AbstractReglerVariableInputs {
             // can be removed (when very old model files are not in use, anymore).
             setOutputTerminalNumber(1);
         }
-    }    
-    
+    }
+
 }

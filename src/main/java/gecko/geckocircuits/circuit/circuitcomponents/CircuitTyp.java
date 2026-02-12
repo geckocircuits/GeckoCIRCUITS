@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,11 +37,11 @@ public enum CircuitTyp implements AbstractComponentTyp {
     LK_THYR(8, Thyristor.TYPE_INFO),
     LK_M(9, MutualInductance.TYPE_INFO),
     LK_IGBT(10, IGBT.TYPE_INFO),
-    // bei Verwendung dieser Induktivitaet wird die Matrixgleichung um die Induktivitaetsstroeme 
+    // bei Verwendung dieser Induktivitaet wird die Matrixgleichung um die Induktivitaetsstroeme
     // erweitert --> bessere numerische Stabilitaet
     LK_LKOP2(12, InductorCoupable.TYPE_INFO),
     LK_LISN(13, LISN.TYPE_INFO),
-    LK_MOTOR(14, MotorDC.TYPE_INFO),     
+    LK_MOTOR(14, MotorDC.TYPE_INFO),
     LK_MOTOR_PMSM(15, MotorPMSM.TYPE_INFO),
     LK_MOTOR_SMSALIENT(16, MotorSmSalient.TYPE_INFO),
     LK_MOTOR_SMROUND(17, MotorSmRound.TYPE_INFO),
@@ -72,7 +72,7 @@ public enum CircuitTyp implements AbstractComponentTyp {
     TH_GLOBAL_TERMINAL(50, ThGlobalTerminal.TYPE_INFO),
     LK_MOTOR_PERM(51, MotorPermanent.TYPE_INFO),
     NONLIN_REL(52, NonLinearReluctance.TYPE_INFO);
-    
+
     private final int _intValue;
     private final AbstractTypeInfo _tInfo;
 
@@ -105,5 +105,5 @@ public enum CircuitTyp implements AbstractComponentTyp {
     @Override
     public AbstractTypeInfo getTypeInfo() {
         return _tInfo;
-    }        
+    }
 }

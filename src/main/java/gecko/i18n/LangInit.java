@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -80,8 +80,8 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
     }
 
     /*
-     * Inner class used to acquire progress information from the download bot 
-     * class (DLbot) from a separate thread so that the LangInit GUI doesn't 
+     * Inner class used to acquire progress information from the download bot
+     * class (DLbot) from a separate thread so that the LangInit GUI doesn't
      * freeze up.
      */
     private class Progress extends SwingWorker<Void, Void> {
@@ -98,7 +98,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
 
             // keep updating progress until task is finished
             while (!task.isDone()) {
-                setProgress(DLbot.getProgress()); // update progress                
+                setProgress(DLbot.getProgress()); // update progress
             }
             setProgress(100); // indicate task completion
             return null;
@@ -210,7 +210,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
             return transMap_single.getValue(key);
         } else {
             return key.getEnglishString();
-        }        
+        }
     }
 
     /*

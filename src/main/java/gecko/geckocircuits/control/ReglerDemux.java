@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -45,19 +45,19 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
             shortName("numberOutputTerminals").
             arrayIndex(this, -1).
             build();
-    
+
     public ReglerDemux() {
         super();
         this.setOutputTerminalNumber(DEFAULT_TERM_NUMBER);
         XIN.add(new TerminalControlInput(this, -2, -1));
-        
+
         _outputTerminalNumber.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setOutputTerminalNumber(_outputTerminalNumber.getValue());
             }
         });
-        
+
     }
 
     @Override
@@ -71,7 +71,7 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
     }
 
     @Override
-    void setInputSignal(int inputIndex, RegelBlock outputBlock, int outputIndex) {        
+    void setInputSignal(int inputIndex, RegelBlock outputBlock, int outputIndex) {
         super.setInputSignal(inputIndex, outputBlock, outputIndex); //To change body of generated methods, choose Tools | Templates.
         if(outputBlock instanceof ReglerJavaFunction) {
             _connectedJavaBlock = (ReglerJavaFunction) outputBlock;
@@ -80,19 +80,19 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
             _connectedJavaBlock = null;
         }
     }
-    
-    
+
+
 
     @Override
     public void setInputTerminalNumber(final int number) {
         // here, we don't have input terminals!
     }
-    
-    
+
+
 
     @Override
     public void setOutputTerminalNumber(final int number) {
-               
+
         while (YOUT.size() > number) {
             YOUT.pop();
         }
@@ -100,19 +100,19 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
         while (YOUT.size() < number) {
             YOUT.add(new TerminalControlOutput(this, 1, -YOUT.size()));
         }
-        
+
         if(_outputTerminalNumber != null) {
             int newsize = YOUT.size();
             if(_outputTerminalNumber.getValue() != newsize) {
                 _outputTerminalNumber.setUserValue(newsize);
-            }                        
+            }
         }
     }
 
     @SuppressWarnings("PMD")
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new DEMUXCalculator(YOUT.size(), this);                
+        return new DEMUXCalculator(YOUT.size(), this);
     }
 
     @SuppressWarnings("PMD")
@@ -138,7 +138,7 @@ public final class ReglerDemux extends RegelBlock implements VariableTerminalNum
     @Override
     protected String getCenteredDrawString() {
         return "";
-    }        
+    }
 
     @Override
     protected Window openDialogWindow() {

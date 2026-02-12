@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,7 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog; 
+import javax.swing.JDialog;
 import java.net.URL;
 
 

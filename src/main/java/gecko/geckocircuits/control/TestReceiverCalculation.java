@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,8 +17,8 @@ import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;
 import gecko.geckocircuits.newscope.Cispr16Fft;
 
-final class TestReceiverCalculation {                
-    
+final class TestReceiverCalculation {
+
     private final Cispr16Settings _settings;
     final Cispr16Fft _fftOrig;
 
@@ -30,12 +30,12 @@ final class TestReceiverCalculation {
         if (dataContainer.getContainerStatus() != ContainerStatus.FINISHED) {
             throw new RuntimeException("Error: cannot start testreceiver calculation during simulation!");
         }
-        
-        _settings = settings;        
-        _fftOrig = new Cispr16Fft(dataContainer, _settings._useBlackman.getValue());        
+
+        _settings = settings;
+        _fftOrig = new Cispr16Fft(dataContainer, _settings._useBlackman.getValue());
     }
 
-    
+
     private int getIndexFromFrequency(final double frequency) {
         if (frequency > _fftOrig.baseFrequency * _fftOrig._resampledN / 2.5) {
             throw new RuntimeException("Error: frequency " + frequency + " out of range. Please Decrease your simulation stepwidth.");
@@ -62,5 +62,5 @@ final class TestReceiverCalculation {
         final QuasiPeakCalculator thread = new QuasiPeakCalculator(getIndexFromFrequency(frequency), _fftOrig, _settings);
         return thread._peakValue;
     }
-    
+
 }

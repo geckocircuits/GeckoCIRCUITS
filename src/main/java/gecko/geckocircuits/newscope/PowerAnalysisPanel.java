@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -53,20 +53,20 @@ public final class PowerAnalysisPanel extends JPanel {
         for(int i = 0; i < pUIa.length; i++) {
             pUIa[i] = new JPanel();
             pUIa[i].setLayout(new GridBagLayout());
-            pUIa[i].setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), titles[i], 
+            pUIa[i].setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), titles[i],
                     TitledBorder.LEFT, TitledBorder.TOP));
         }
-        
+
         //
         signalListe = new String[worksheet.getRowLength()+1];
         signalListe[0] = "deactivated";
-        
+
         for(int i = 0; i < worksheet.getRowLength(); i++) {
             signalListe[i+1] = worksheet.getSignalName(i);
         }
-        
+
         setComboUIActions(powerAnalSettings);
-        
+
         setPQTextFields();
 
 
@@ -234,7 +234,7 @@ public final class PowerAnalysisPanel extends JPanel {
             try {
                 final PowerCalculator ergP = PowerCalculator.calculatorFabric(worksheet, this);
                 if (this._selCurrentInd.size() != 0) {  // dh. keine Leistungsberechnung durchzufuehren weil deaktiviert
-                    
+
                     for (int i = 0; i < _pqTextFields.length; i++) {
                         for (int j = 0; j < _pqTextFields[0].length; j++) {
                             _pqTextFields[i][j].setText("    -");

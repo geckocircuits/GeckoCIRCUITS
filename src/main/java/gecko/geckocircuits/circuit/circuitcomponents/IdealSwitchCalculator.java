@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,7 +22,7 @@ public class IdealSwitchCalculator extends AbstractSwitchCalculator implements H
 
     @Override
     public void stampMatrixA(double[][] matrix, double dt) {
-        double aW = 1.0 / _rDt;  //  +1/R        
+        double aW = 1.0 / _rDt;  //  +1/R
         assert aW < 1E60;
         matrix[matrixIndices[0]][matrixIndices[0]] += (+aW);
         matrix[matrixIndices[1]][matrixIndices[1]] += (+aW);

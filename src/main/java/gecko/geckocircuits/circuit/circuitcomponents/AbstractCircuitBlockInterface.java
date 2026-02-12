@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,14 +31,14 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
 
     static final TechFormat tcf = new TechFormat();
     static final int ARROW_LENGTH = 11, ARROW_WIDTH = 3;  // Symbol-Pfeil fuer Flussrichtung --> Pfeilspitzenabmessung
-    
+
     public double _currentInAmps;
-    public double _voltage;        
+    public double _voltage;
 
     AbstractCircuitBlockInterface() {
         // package-private constructor!!!
-    }    
-    
+    }
+
     /**
      * Careful: this is the default behavior of CurrentMeasurable interface.
      * However, some components don't implement this interface (E.g. Motors,
@@ -96,7 +96,7 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
     public final int[] getAussenabmessungenRechteckEckpunkte() {
         return new int[]{dpix * (getSheetPosition().x - 1), dpix * (getSheetPosition().y - 1), dpix * (getSheetPosition().x + 1),
             dpix * (getSheetPosition().y + 1)};
-    }  // muss individuell implementiert werden        
+    }  // muss individuell implementiert werden
 
     public final CircuitTyp getCircuitTyp() {
         return (CircuitTyp) getTypeEnum();
@@ -113,9 +113,9 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
         // this is not always used... overwrite if required!
     }
 
-    
-    
-    
+
+
+
     /**
      * the foreground is painted after the background. E.g. when you like to
      * draw text strings, they should not be covered by the background of other
@@ -161,17 +161,17 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
         }
         return returnValue;
     }
-        
+
     public void setzeParameterZustandswerteAufNULL() {
     }
-    
+
     public List<String> getParameterStringIntern() {
         return Collections.EMPTY_LIST;
     }
-    
+
     @SuppressWarnings("rawtypes")
     public abstract List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart();
-    
+
     @SuppressWarnings("rawtypes")
     static List<? extends CircuitComponent> getCalculatorsFromSubComponents(final HiddenSubCircuitable subCircuitable) {
         Collection<? extends AbstractBlockInterface> hiddenSubs = subCircuitable.getHiddenSubCircuitElements();
@@ -181,5 +181,5 @@ public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterfa
             returnValue.addAll(((AbstractCircuitBlockInterface)block).getCircuitCalculatorsForSimulationStart());
         }
         return returnValue;
-    }        
+    }
 }

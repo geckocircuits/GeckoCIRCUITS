@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,27 +29,27 @@ public class StartupWindow extends javax.swing.JDialog {
         } catch (NoClassDefFoundError err) {
             StartupWindow window = fabricDisabledFeature(featureName);
             window.setVisible(true);
-            return true;            
+            return true;
         }
         return false;
     }
-    
+
     public static boolean testOpenSourceVersion() {
         try {
             QuasiPeakCalculator.class.getName();
         } catch (NoClassDefFoundError err) {
-            return true;            
+            return true;
         }
         return false;
     }
-    
+
     private static final long START_DELAY_TIME_MILLIS = 10000;
     public static final String DONATE_CODE_KEY = "DONATE_CODE";
-   
+
     private final static Timer delayWindowTimer = new Timer();
 
     static void fabricUnBlocking() {
-        
+
         if (!testOpenSourceVersion()) {
             return;
         }
@@ -63,18 +63,18 @@ public class StartupWindow extends javax.swing.JDialog {
         super(parentFrame, true);
         initComponents();
         this.setTitle("GeckoCIRCUITS Open-Source Information");
-        this.setLocationRelativeTo(parentFrame);        
+        this.setLocationRelativeTo(parentFrame);
     }
-    
+
     public static StartupWindow fabricDisabledFeature(final String featureName) {
         StartupWindow returnValue = new StartupWindow(null);
-        returnValue.jLabel1.setText("<html><font color='red'><b>" + featureName + 
+        returnValue.jLabel1.setText("<html><font color='red'><b>" + featureName +
                 ": This feature of GeckoCIRCUITS is not included in the "
                 + "open-source release. </b><br><font color='black'>" + returnValue.jLabel1.getText().substring(24));
         returnValue.pack();
         return returnValue;
     }
- 
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -61,10 +61,10 @@ public class ParameterSupport extends javax.swing.JFrame {
             }
         });
 
-        
+
         _listAvailableParameters.setModel(_availableParametersModel);
         _availableBlocksModel = new DefaultListModel<>();
-        _listAvailableBlocks.setModel(_availableBlocksModel);       
+        _listAvailableBlocks.setModel(_availableBlocksModel);
         _listAvailableParameters.setCellRenderer(new DefaultListCellRenderer() {
             public Component getListCellRendererComponent(
                     final JList list,
@@ -80,7 +80,7 @@ public class ParameterSupport extends javax.swing.JFrame {
                         parameterString = parameterString + " ";
                     }
                     parameterString = parameterString + substrings[1];
-                } 
+                }
                 setFont(new Font("Courier New", Font.BOLD, 14));
                 setText(parameterString);
                 return this;
@@ -274,7 +274,7 @@ public class ParameterSupport extends javax.swing.JFrame {
                 }
             }
         }
-        
+
         for (List<AbstractBlockInterface> list : _allComponents) {
             for (AbstractBlockInterface block : list) {
                 _availableBlocksModel.addElement(block);
@@ -282,15 +282,15 @@ public class ParameterSupport extends javax.swing.JFrame {
         }
     }
 
-    private void updateAccessibleParameters(final AbstractTypeInfo selectedType) {                        
+    private void updateAccessibleParameters(final AbstractTypeInfo selectedType) {
         _availableBlocksModel.clear();
         _availableParametersModel.clear();
 
         for (List<AbstractBlockInterface> currentList : _allComponents) {
             AbstractBlockInterface firstElement = currentList.get(0);
             final List<UserParameter<? extends Object>> currentElemTypeFields = firstElement.getRegisteredParameters();
-            
-            
+
+
             if (currentList.get(0).getTypeInfo().equals(selectedType)) {
                 for (AbstractBlockInterface insert : currentList) {
                     _availableBlocksModel.addElement(insert);
@@ -302,7 +302,7 @@ public class ParameterSupport extends javax.swing.JFrame {
                     for (UserParameter parameter : currentElemTypeFields) {
                         if(!(parameter.getValue() instanceof String)) { // string parameters cannot be accessed!
                             _availableParametersModel.addElement(parameter.getShortName() + "\t(" + parameter.getLongName() + ")");
-                        }                        
+                        }
                     }
                 }
 
@@ -317,20 +317,20 @@ public class ParameterSupport extends javax.swing.JFrame {
                         _availableParametersModel.addElement("No output available");
                     }
                 }
-                
+
                 if (firstElement instanceof Operationable) {
                     List<Operationable.OperationInterface> ops = ((Operationable) firstElement).getOperationEnumInterfaces();
                     _availableParametersModel.addElement("-- POSSIBLE OPERATIONS (see method \"doOperation\") --");
                     for(Operationable.OperationInterface op : ops) {
-                        String opName = op.toString();                        
-                        String opDoc = op.getDocumentationString();                        
+                        String opName = op.toString();
+                        String opDoc = op.getDocumentationString();
                         _availableParametersModel.addElement("Operation name: \"" + opName + "\"  ( " + opDoc + " )");
                     }
-                    
+
                     _availableParametersModel.addElement("Operation name: \"setTextFieldPosition\" ( Example: doOperation(\"R.1\", \"setTextFieldPosition\", new double[]{2.1, 1.5});");
                 }
-                
-                
+
+
             }
         }
     }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,11 +29,11 @@ public final class ReglerExclusiveOr extends RegelBlock {
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.LOGICAL_XOR_OPERATION_ON_INPUTS};
     }
-    
+
     @Override
     public String[] getOutputNames() {
         return new String[]{"xor"};
-    }       
+    }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -43,5 +43,5 @@ public final class ReglerExclusiveOr extends RegelBlock {
     @Override
     protected Window openDialogWindow() {
         return new DialogSimpleInfoMessage(this, "y = x1 XOR x2");
-    }    
+    }
 }

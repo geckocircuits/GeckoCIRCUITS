@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,53 +43,53 @@ public final class DialogUpdate extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(10000);                    
+                    Thread.sleep(10000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(DialogUpdate.class.getName()).log(Level.SEVERE, null, ex);
-                }                
-                
+                }
+
                 doUpdateCheck(PRO_URL);
-                
+
             }
-        });        
+        });
         updateThread.start();
     }
-   
 
-    private static void doUpdateCheck(final String urlString) {        
+
+    private static void doUpdateCheck(final String urlString) {
         DialogUpdate window = new DialogUpdate();
         window.getUpdateInformation(urlString);
         String updateString = window.jLabelNewNumber.getText().trim();
         String updateLevelString = GeckoSim.applicationProps.getProperty("UPDATE_LEVEL", "MINOR");
         String lastUpdateString = GeckoSim.applicationProps.getProperty("LAST_UPDATE_INFO", "");
-       
+
         if(lastUpdateString.isEmpty()) {
             lastUpdateString = updateString;
         }
-        
+
         if(updateLevelString.equals("MINOR")) {
             if(!lastUpdateString.equals(updateString)) {
                 window.setVisible(true);
             }
         }
-        
+
         if(updateLevelString.equals("MAJOR")) {
             if(!lastUpdateString.substring(0, 13).equals(updateString.substring(0, 13))) {
                 window.setVisible(true);
             }
-        }        
-        
+        }
+
         GeckoSim.applicationProps.setProperty("LAST_UPDATE_INFO", lastUpdateString);
-        
+
     }
-        
-    
+
+
     private final DateFormat _dFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.US);
     private final DateFormat _showFormat = new SimpleDateFormat("MMMMMMMMM yyyy", Locale.US);
     private static final int BUFFER_LENGTH = 1024;
     private static final double RELEASE_DIVISOR = 100.0;
     private static final int TIMEOUT_MILLIS = 4000;
-    private static final String PRO_URL = "http://www.gecko-simulations.com/GeckoCIRCUITS/GeckoCIRCUITSreleaseHistory.html";    
+    private static final String PRO_URL = "http://www.gecko-simulations.com/GeckoCIRCUITS/GeckoCIRCUITSreleaseHistory.html";
 
     /**
      * Creates new form DialogUpdate
@@ -97,7 +97,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
     public DialogUpdate() {
         super();
         try {
-            initComponents();            
+            initComponents();
             jLabelCurrentNumber.setText(Double.toString(DialogAbout.RELEASENUMBER / RELEASE_DIVISOR) + " build " + DialogAbout.BUILD_NUMBER);
             final Date rDate = _dFormat.parse(DialogAbout.RELEASE_DATE);
             jLabelCurrentDate.setText(_showFormat.format(rDate));
@@ -443,10 +443,10 @@ public final class DialogUpdate extends javax.swing.JFrame {
         if (updateFreqString.equals("WEEKLY")) {
             updateMillisInterval = 1000L * 3600L * 24L * 7L;
         }
-        
-        
+
+
         if (System.currentTimeMillis() > (lastUpdateMillis + updateMillisInterval)) {
-            
+
             doRealUpdateCheck();
         }
         GeckoSim.applicationProps.setProperty("LAST_UPDATE_CHECK", System.currentTimeMillis() + "");

@@ -30,7 +30,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertTrue(lu.isNonsingular());
     }
@@ -44,7 +44,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertTrue(lu.isNonsingular());
     }
@@ -57,7 +57,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertTrue(lu.isNonsingular());
     }
@@ -71,7 +71,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertTrue(lu.isNonsingular());
     }
@@ -86,7 +86,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertTrue(lu.isNonsingular());
     }
 
@@ -100,7 +100,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertFalse(lu.isNonsingular());
     }
 
@@ -112,7 +112,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertFalse(lu.isNonsingular());
     }
 
@@ -126,11 +126,11 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         int[] piv = lu.getPivot();
         assertNotNull(piv);
         assertEquals(2, piv.length);
-        
+
         // Pivot should be a permutation of [0, 1]
         boolean contains0 = false, contains1 = false;
         for (int p : piv) {
@@ -150,7 +150,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         int[] piv = lu.getPivot();
         assertNotNull(piv);
         assertEquals(3, piv.length);
@@ -164,11 +164,11 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         double[] pivDouble = lu.getDoublePivot();
         assertNotNull(pivDouble);
         assertEquals(2, pivDouble.length);
-        
+
         // Should be double version of getPivot
         int[] pivInt = lu.getPivot();
         for (int i = 0; i < pivInt.length; i++) {
@@ -190,12 +190,12 @@ public class BigLUDecompositionTest {
             {new BigDecimal("4.0")},
             {new BigDecimal("6.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         assertNotNull(X);
         assertEquals(2, X.getRowDimension());
         assertEquals(1, X.getColumnDimension());
@@ -214,12 +214,12 @@ public class BigLUDecompositionTest {
             {new BigDecimal("5.0")},
             {new BigDecimal("6.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         assertNotNull(X);
         assertEquals(2, X.getRowDimension());
         assertEquals(1, X.getColumnDimension());
@@ -239,12 +239,12 @@ public class BigLUDecompositionTest {
             {new BigDecimal("4.0")},
             {new BigDecimal("9.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         assertNotNull(X);
         assertEquals(3, X.getRowDimension());
         assertEquals(1, X.getColumnDimension());
@@ -264,12 +264,12 @@ public class BigLUDecompositionTest {
             {new BigDecimal("4.0"), new BigDecimal("6.0")},
             {new BigDecimal("6.0"), new BigDecimal("9.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         assertNotNull(X);
         assertEquals(2, X.getRowDimension());
         assertEquals(2, X.getColumnDimension());
@@ -286,7 +286,7 @@ public class BigLUDecompositionTest {
             {new BigDecimal("1.0")},
             {new BigDecimal("2.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
@@ -304,7 +304,7 @@ public class BigLUDecompositionTest {
             {new BigDecimal("5.0")}
             // Only 1 row, but A has 2 rows
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
@@ -322,7 +322,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertTrue(lu.isNonsingular());
     }
@@ -338,12 +338,12 @@ public class BigLUDecompositionTest {
             {new BigDecimal("0.000005")},
             {new BigDecimal("0.000006")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         assertNotNull(X);
         assertEquals(2, X.getRowDimension());
     }
@@ -359,12 +359,12 @@ public class BigLUDecompositionTest {
             {new BigDecimal("5000000.0")},
             {new BigDecimal("6000000.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         assertNotNull(X);
         assertEquals(2, X.getRowDimension());
     }
@@ -382,22 +382,22 @@ public class BigLUDecompositionTest {
             {new BigDecimal("5.0")},
             {new BigDecimal("11.0")}
         };
-        
+
         BigMatrix A = new BigMatrix(aData);
         BigMatrix B = new BigMatrix(bData);
         BigLUDecomposition lu = new BigLUDecomposition(A);
         BigMatrix X = lu.solve(B);
-        
+
         // Verify solution: compute A*X
         BigDecimal[] result = new BigDecimal[2];
         BigDecimal[][] aArray = A.getArray();
         BigDecimal[][] xArray = X.getArray();
-        
+
         result[0] = aArray[0][0].multiply(xArray[0][0])
                     .add(aArray[0][1].multiply(xArray[1][0]));
         result[1] = aArray[1][0].multiply(xArray[0][0])
                     .add(aArray[1][1].multiply(xArray[1][0]));
-        
+
         // Compare with B
         assertTrue(result[0].subtract(new BigDecimal("5.0")).abs().doubleValue() < TOLERANCE);
         assertTrue(result[1].subtract(new BigDecimal("11.0")).abs().doubleValue() < TOLERANCE);
@@ -413,7 +413,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertFalse(lu.isNonsingular()); // This is a singular matrix (rank < 4)
     }
@@ -428,7 +428,7 @@ public class BigLUDecompositionTest {
         };
         BigMatrix m = new BigMatrix(data);
         BigLUDecomposition lu = new BigLUDecomposition(m);
-        
+
         assertNotNull(lu);
         assertTrue(lu.isNonsingular());
     }

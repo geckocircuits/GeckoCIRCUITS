@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -41,21 +41,21 @@ abstract class AbstractLossCalculatorSwitch implements AbstractLossCalculator, L
     public void calcLosses(final double current, final double temperature, final double deltaT) {
         _voltage = _parent._voltage;
         _current = current;
-        _deltaT = deltaT;        
+        _deltaT = deltaT;
         final double conductionLoss = calcConductionLoss();
         double switchingLoss = 0;
-        if (detectTurnOn()) {                        
-            switchingLoss += calcTurnOnSwitchingLoss() * calculateRelativeVoltageFactor(_oldVoltage);                        
+        if (detectTurnOn()) {
+            switchingLoss += calcTurnOnSwitchingLoss() * calculateRelativeVoltageFactor(_oldVoltage);
         }
 
         if (detectTurnOff()) {
-            switchingLoss += calcTurnOffSwitchingLoss() * calculateRelativeVoltageFactor(_voltage);                                    
+            switchingLoss += calcTurnOffSwitchingLoss() * calculateRelativeVoltageFactor(_voltage);
         }
 
         _oldCurrent = _current;
         _oldVoltage = _voltage;
         _conductionLoss = conductionLoss;
-        _switchingLoss = switchingLoss;                
+        _switchingLoss = switchingLoss;
     }
 
     boolean detectTurnOff() {
@@ -72,7 +72,7 @@ abstract class AbstractLossCalculatorSwitch implements AbstractLossCalculator, L
     public final double getTotalLosses() {
         return _switchingLoss + _conductionLoss;
     }
-        
+
 
     @Override
     public final double getSwitchingLoss() {
@@ -82,5 +82,5 @@ abstract class AbstractLossCalculatorSwitch implements AbstractLossCalculator, L
     @Override
     public final double getConductionLoss() {
         return _conductionLoss;
-    }                      
+    }
 }

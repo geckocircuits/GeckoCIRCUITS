@@ -44,13 +44,13 @@ public class CompressorIntMatrixTest {
             {1, 2, 3},
             {4, 5, 6}
         };
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         assertEquals(original.length, decompressed.length);
         assertEquals(original[0].length, decompressed[0].length);
-        
+
         for (int i = 0; i < original.length; i++) {
             for (int j = 0; j < original[0].length; j++) {
                 assertEquals("Value mismatch at [" + i + "][" + j + "]",
@@ -64,17 +64,17 @@ public class CompressorIntMatrixTest {
         int rows = 100;
         int cols = 50;
         int[][] original = new int[rows][cols];
-        
+
         // Fill with deterministic pattern
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 original[i][j] = i * cols + j;
             }
         }
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 assertEquals(original[i][j], decompressed[i][j]);
@@ -85,10 +85,10 @@ public class CompressorIntMatrixTest {
     @Test
     public void testCompressDecompress_SingleRow() {
         int[][] original = {{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}};
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         assertEquals(1, decompressed.length);
         assertArrayEquals(original[0], decompressed[0]);
     }
@@ -98,10 +98,10 @@ public class CompressorIntMatrixTest {
         int[][] original = {
             {1}, {2}, {3}, {4}, {5}
         };
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < original.length; i++) {
             assertEquals(original[i][0], decompressed[i][0]);
         }
@@ -114,10 +114,10 @@ public class CompressorIntMatrixTest {
     @Test
     public void testCompressDecompress_EmptyMatrix() {
         int[][] original = new int[0][0];
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         assertEquals(0, decompressed.length);
     }
 
@@ -127,10 +127,10 @@ public class CompressorIntMatrixTest {
             {0, 0, 0},
             {0, 0, 0}
         };
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < original.length; i++) {
             assertArrayEquals(original[i], decompressed[i]);
         }
@@ -142,10 +142,10 @@ public class CompressorIntMatrixTest {
             {-100, -50, 0},
             {50, 100, -Integer.MAX_VALUE / 2}
         };
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < original.length; i++) {
             assertArrayEquals(original[i], decompressed[i]);
         }
@@ -157,10 +157,10 @@ public class CompressorIntMatrixTest {
             {Integer.MAX_VALUE, Integer.MIN_VALUE},
             {Integer.MAX_VALUE / 2, Integer.MIN_VALUE / 2}
         };
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < original.length; i++) {
             assertArrayEquals(original[i], decompressed[i]);
         }
@@ -178,9 +178,9 @@ public class CompressorIntMatrixTest {
                 original[i][j] = i + j;  // Simple pattern - should compress well
             }
         }
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
-        
+
         // Compression ratio should be positive
         assertTrue("Compression ratio should be positive", compressor.compressionRatio > 0);
     }
@@ -188,9 +188,9 @@ public class CompressorIntMatrixTest {
     @Test
     public void testCompressionTime_Recorded() {
         int[][] original = new int[50][50];
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
-        
+
         // Time should be non-negative
         assertTrue("Compression time should be >= 0", compressor.compressionTime >= 0);
     }
@@ -198,9 +198,9 @@ public class CompressorIntMatrixTest {
     @Test
     public void testGetCompressedMemory() {
         int[][] original = new int[10][10];
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
-        
+
         int compressedMemory = compressor.getCompressedMemory();
         assertTrue("Compressed memory should be positive", compressedMemory > 0);
     }
@@ -214,17 +214,17 @@ public class CompressorIntMatrixTest {
         int rows = 20;
         int cols = 30;
         int[][] original = new int[rows][cols];
-        
+
         // Pseudo-random pattern (deterministic)
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 original[i][j] = (i * 17 + j * 31) % 1000 - 500;
             }
         }
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 assertEquals("Data corruption at [" + i + "][" + j + "]",
@@ -242,10 +242,10 @@ public class CompressorIntMatrixTest {
                 original[i][j] = 42;  // All same value
             }
         }
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < 50; i++) {
             for (int j = 0; j < 50; j++) {
                 assertEquals(42, decompressed[i][j]);
@@ -261,10 +261,10 @@ public class CompressorIntMatrixTest {
                 original[i][j] = ((i + j) % 2 == 0) ? 1 : -1;
             }
         }
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
         int[][] decompressed = compressor.deCompress();
-        
+
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 assertEquals(original[i][j], decompressed[i][j]);
@@ -282,14 +282,14 @@ public class CompressorIntMatrixTest {
             {1, 2, 3},
             {4, 5, 6}
         };
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(original);
-        
+
         // Decompress multiple times
         int[][] first = compressor.deCompress();
         int[][] second = compressor.deCompress();
         int[][] third = compressor.deCompress();
-        
+
         // All should match original
         for (int i = 0; i < original.length; i++) {
             assertArrayEquals(original[i], first[i]);
@@ -306,8 +306,8 @@ public class CompressorIntMatrixTest {
     public void testClearCache() {
         // Clear should not throw
         CompressorIntMatrix.clearCache();
-        
-        // Compression should still work after clearing - use a larger array to ensure 
+
+        // Compression should still work after clearing - use a larger array to ensure
         // sufficient data for the compression algorithm
         int[][] data = new int[5][5];
         for (int i = 0; i < 5; i++) {
@@ -315,14 +315,14 @@ public class CompressorIntMatrixTest {
                 data[i][j] = i * 10 + j;
             }
         }
-        
+
         CompressorIntMatrix compressor = new CompressorIntMatrix(data);
         int[][] decompressed = compressor.deCompress();
-        
+
         // Verify dimensions
         assertEquals(5, decompressed.length);
         assertEquals(5, decompressed[0].length);
-        
+
         // Verify data integrity
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {

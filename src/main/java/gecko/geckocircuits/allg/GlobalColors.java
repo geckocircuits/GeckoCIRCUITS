@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,7 +22,7 @@ import java.awt.Color;
 public class GlobalColors {
     public static final Color LAB_COLOR_DIALOG_1 = Color.black;
     public static final Color farbeGecko = Color.decode("0x99bb33");
-    
+
     public static final Color farbeTextLinie = Color.lightGray;  // Verbindungslinie vom Textfeld zum zugehoerigen Element
     public static final Color farbeInBearbeitungLK = Color.gray;
     public static final Color farbeFertigElementLK = Color.decode("0x00008b");
@@ -50,6 +50,6 @@ public class GlobalColors {
     public static final Color farbeOPT = Color.magenta;
     public static final Color farbeConnectorTestMode = Color.magenta;
     public static final Color farbeConnectorTestModeInternal = Color.yellow;
-    
-    
+
+
 }

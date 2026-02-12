@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,11 +20,11 @@ package gecko.geckocircuits.circuit.losscalculation;
  */
 public enum LossComponent {
     TOTAL, CONDUCTION, SWITCHING;
-    
+
     private final static String saveStringTotal = "total";
     private final static String saveStringConduction = "conduction";
     private final static String saveStringSwitching = "switching";
-    
+
     @Override
     public String toString() {
         String description;
@@ -44,7 +44,7 @@ public enum LossComponent {
         }
         return description;
     }
-    
+
     public String getSaveString() {
         String saveString;
          switch(this) {
@@ -62,18 +62,18 @@ public enum LossComponent {
         }
         return saveString;
     }
-    
-    
+
+
     public static LossComponent getEnumFromSaveString(final String saveString) {
         if (saveStringConduction.equals(saveString)) {
             return CONDUCTION;
         }
         else if (saveStringSwitching.equals(saveString)) {
-            return SWITCHING;          
+            return SWITCHING;
         }
         else {
             return TOTAL;
         }
     }
-    
+
 }

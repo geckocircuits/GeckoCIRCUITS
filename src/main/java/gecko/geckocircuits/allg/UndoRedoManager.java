@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,14 +24,14 @@ public class UndoRedoManager {
     private byte[][] undoZustaende, redoZustaende;
     private int zeigerAufUndoZustaende, zeigerAufRedoZustaende;
     private boolean undoRingspeicherErstmalsUeberschritten;
-    private int undoAnzahl, redoAnzahl;  // soviele Undo- und Redo-Aktionen sind moeglich 
+    private int undoAnzahl, redoAnzahl;  // soviele Undo- und Redo-Aktionen sind moeglich
     //------------------------------------------------------
 
     public UndoRedoManager() {
         this.init();
     }
 
-    // Neue Datei, Open File usw. --> 
+    // Neue Datei, Open File usw. -->
     public void init() {
         undoZustaende = new byte[undoZustaendeMAX][];
         redoZustaende = new byte[undoZustaendeMAX][];
@@ -43,38 +43,38 @@ public class UndoRedoManager {
     }
 
     public void speichereAutomatischAktuellenZustandFuerUndoRedo(Object daten) {
-        zeigerAufRedoZustaende = 0;  // dh. Redo nicht moeglich (Redo nur nach Undo moeglich) 
+        zeigerAufRedoZustaende = 0;  // dh. Redo nicht moeglich (Redo nur nach Undo moeglich)
         redoAnzahl = 0;
         //--------------
-        // ACHTUNG: Der folgende Bereich wird voruebergehend auskommentiert, damit die Undo/Redo-Buttons deaktiviert sind 
-        // der komplette Undo/Redo-Mechanismus muss ueberarbeitet werden, weil die hier implementierte Speicherung des kompletten 
-        // Zustandes immer wieder zu massiven Problemen (va. RAM-Speicher) fuehren, weil der RAM-Speicher mit dem OSZI-ReglerBlock 
-        // verknuepft ist 
+        // ACHTUNG: Der folgende Bereich wird voruebergehend auskommentiert, damit die Undo/Redo-Buttons deaktiviert sind
+        // der komplette Undo/Redo-Mechanismus muss ueberarbeitet werden, weil die hier implementierte Speicherung des kompletten
+        // Zustandes immer wieder zu massiven Problemen (va. RAM-Speicher) fuehren, weil der RAM-Speicher mit dem OSZI-ReglerBlock
+        // verknuepft ist
         // --> unteren Bereich NICHT  LOESCHEN!!!
         /*
         try {
         ByteArrayOutputStream outByteArray= new ByteArrayOutputStream();
         ObjectOutputStream out= new ObjectOutputStream(new DeflaterOutputStream(outByteArray));
-        out.writeObject(daten); 
+        out.writeObject(daten);
         out.flush();
         out.close();
         byte[] zustand= outByteArray.toByteArray();
         //---------
-        if (undoAnzahl<undoZustaendeMAX-1) undoAnzahl++; 
-        undoZustaende[zeigerAufUndoZustaende]= zustand; 
-        zeigerAufUndoZustaende++; 
+        if (undoAnzahl<undoZustaendeMAX-1) undoAnzahl++;
+        undoZustaende[zeigerAufUndoZustaende]= zustand;
+        zeigerAufUndoZustaende++;
         if (zeigerAufUndoZustaende==undoZustaendeMAX) {
-        undoRingspeicherErstmalsUeberschritten= true; 
-        zeigerAufUndoZustaende= 0; 
+        undoRingspeicherErstmalsUeberschritten= true;
+        zeigerAufUndoZustaende= 0;
         }
         //---------
-        } catch (Exception e) { 
-        // hier landet man, wenn das SCOPE offen ist, und man Neues hinzufuegt, weil SCOPE ein Swing-Element ist 
-        System.out.println(e+"  e0finv'");  
-        this.init();  
+        } catch (Exception e) {
+        // hier landet man, wenn das SCOPE offen ist, und man Neues hinzufuegt, weil SCOPE ein Swing-Element ist
+        System.out.println(e+"  e0finv'");
+        this.init();
         }
          */
-        //System.out.println("zeigerAufUndoZustaende= "+zeigerAufUndoZustaende+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende); 
+        //System.out.println("zeigerAufUndoZustaende= "+zeigerAufUndoZustaende+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
         //--------------
     }
 
@@ -100,7 +100,7 @@ public class UndoRedoManager {
             System.out.println(e + "   e0oiv00'er");
         }
         //---------
-        //System.out.println("zeigerAufUndoZustaende= "+zeigerAufUndoZustaende+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende); 
+        //System.out.println("zeigerAufUndoZustaende= "+zeigerAufUndoZustaende+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
         if (redoAnzahl < undoZustaendeMAX - 1) {
             redoAnzahl++;
         }

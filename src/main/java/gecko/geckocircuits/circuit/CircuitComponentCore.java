@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -45,7 +45,7 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
     protected double _oldCurrent;
     protected double _oldOldCurrent;
     protected boolean _needsOldPotCurrent = false;
-    
+
     // For stepping back in history
     protected double prev_time = -1;
     protected boolean stepped_back = false;
@@ -53,18 +53,18 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
     protected double[][] var_history;
     protected int steps_saved = 2;
     protected int steps_reversed = 0;
-    
+
     // Constants for semiconductor defaults
     public static final double DEFAULT_U_FORWARD = 0.6;
     public static final double DEFAULT_R_ON = 10e-3;
     public static final double DEFAULT_R_OFF = 10e6;
-    
+
     /**
      * Used for diode-behavior, to find a correct on/off state (Diode,
      * Thyristor, IGBT).
      */
     public static final double disturbanceValue = 0.0;
-    
+
     protected final SolverType _solverType;
 
     /**
@@ -76,11 +76,11 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
         this.matrixIndices = new int[2];
         this.var_history = new double[steps_saved][9];
     }
-    
+
     @Override
     public double getOldCurrent() {
         return _oldCurrent;
-    }        
+    }
 
     @Override
     public void init() {
@@ -130,13 +130,13 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
     @Override
     public int getTerminalIndex(int termNumber) {
         return matrixIndices[termNumber];
-    }        
+    }
 
     @Override
     public final double getCurrent() {
         return _current;
     }
-    
+
     @Override
     public SolverType getSolverType() {
         return _solverType;
@@ -217,7 +217,7 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
             System.arraycopy(var_history[j], 0, var_history[j - 1], 0, var_history[0].length);
         }
     }
-    
+
     /**
      * Get the matrix indices for this component.
      * @return array of matrix indices [index0, index1]
@@ -225,7 +225,7 @@ public abstract class CircuitComponentCore implements ICircuitCalculator {
     public int[] getMatrixIndices() {
         return matrixIndices;
     }
-    
+
     /**
      * Set the matrix indices for this component.
      * @param index0 first terminal matrix index

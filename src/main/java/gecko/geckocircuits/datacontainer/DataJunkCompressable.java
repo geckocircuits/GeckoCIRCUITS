@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -99,7 +99,7 @@ public final class DataJunkCompressable implements DataJunk {
         _startIndex = startIndex;
         _timeSerie = timeSeries;
         _rows = (int) rows;
-    }    
+    }
 
     @Override
     public float getValue(final int row, final int index) {
@@ -246,7 +246,7 @@ public final class DataJunkCompressable implements DataJunk {
         }
 
     }
-            
+
     @Override
     public AverageValue getAverageValue(final int row, final int columnStart, final int columnStop,
             final double totalMinTime, final double totalMaxTime) {
@@ -338,20 +338,20 @@ public final class DataJunkCompressable implements DataJunk {
                     assert tmpData[j] != null;
 
                     float compareValue = tmpData[j][row];
-                    
+
                     if (compareValue == compareValue) {
                         if (maxValue == maxValue) {
                             maxValue = Math.max(compareValue, maxValue);
                         } else {
                             maxValue = compareValue;
                         }
-                        
+
                         if (minValue == minValue) {
                             minValue = Math.min(compareValue, minValue);
                         } else {
                             minValue = compareValue;
-                        }                        
-                    }                                                            
+                        }
+                    }
                 }
 
                 hiLoData[row][i] = HiLoData.hiLoDataFabric(minValue, maxValue);
@@ -391,7 +391,7 @@ public final class DataJunkCompressable implements DataJunk {
         assert hld != null : correctedStart + " " + correctedStop + " " + start + " " + stop + " " + _startIndex + " " + _columns;
         return hld;
     }
-        
+
 
     private AverageValue calculateRealAverageData(final int row, final double startTime, final double stopTime) {
         double localMean = 0;

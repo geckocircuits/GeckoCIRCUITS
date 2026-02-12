@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -51,18 +51,18 @@ public final class ReglerGate extends ReglerWithSingleReference implements Compo
         return (int) (BLOCK_WIDTH * dpix);
     }
 
-    
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new GateCalculator(); 
-    }    
+        return new GateCalculator();
+    }
 
     @Override
     String getDisplayValueWithoutError() {
         return ">> " + getComponentCoupling()._coupledElements[0].getStringID();
     };
-            
-        
+
+
 
     @Override
     public I18nKeys getMissingComponentsString() {
@@ -71,7 +71,7 @@ public final class ReglerGate extends ReglerWithSingleReference implements Compo
 
     @Override
     public I18nKeys getCouplingTitle() {
-        return I18nKeys.SELECT_SWITCH_TO_BE_CONTROLLED; 
+        return I18nKeys.SELECT_SWITCH_TO_BE_CONTROLLED;
     }
 
     @Override
@@ -84,11 +84,11 @@ public final class ReglerGate extends ReglerWithSingleReference implements Compo
 
     @Override
     protected Window openDialogWindow() {
-        return new ReglerGateDialog(this);        
-    }            
+        return new ReglerGateDialog(this);
+    }
 
-    
-    
-    
-    
+
+
+
+
 }

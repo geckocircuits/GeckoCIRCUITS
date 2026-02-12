@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,17 +37,17 @@ public final class XSliderValueDrawer extends JPanel {
     private final JLabel _secondTextField = new JLabel();
     private final JLabel _thirdTextField = new JLabel();
     private final JLabel _fourthTextField = new JLabel();
-    
+
     private static final String X_NAME_DEFAULT = "t = ";
-    private static final int DRAWER_HEIGHT = 11;    
+    private static final int DRAWER_HEIGHT = 11;
     private static final String X_NAME_INV_DEFAULT = "f = ";
-    
+
     String xName = X_NAME_DEFAULT;
     String xNameInv = X_NAME_INV_DEFAULT;
-    
+
     private static final int DEF_X_DIM = 100;
     private boolean _isVisible = false;
-    
+
     public XSliderValueDrawer() {
         super();
         this.setLayout(new FlowLayout(FlowLayout.CENTER, FONT_SIZE, 1));
@@ -55,8 +55,8 @@ public final class XSliderValueDrawer extends JPanel {
         insertTextField(_secondTextField, Color.green);
         insertTextField(_thirdTextField, Color.black);
         insertTextField(_fourthTextField, Color.black);
-        setOpaque(false);        
-        setMinimumSize(new Dimension(0, DRAWER_HEIGHT));        
+        setOpaque(false);
+        setMinimumSize(new Dimension(0, DRAWER_HEIGHT));
     }
 
     /*
@@ -97,15 +97,15 @@ public final class XSliderValueDrawer extends JPanel {
         jLabel.setBorder(null);
         this.add(jLabel);
     }
-    
+
     @Override
     public boolean isVisible() {
         return _isVisible;
     }
-    
+
     @Override
     public void setVisible(final boolean value) {
         _isVisible = value;
     }
-    
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * Registry for managing component parameters (UserParameter instances).
  * Extracted from AbstractBlockInterface for better testability and separation of concerns.
- * 
+ *
  * <p>Responsibilities:
  * <ul>
  *   <li>Register and unregister parameters</li>
@@ -28,7 +28,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *   <li>Manage parameter-to-array synchronization</li>
  *   <li>Support optimizer parameter naming (nameOpt)</li>
  * </ul>
- * 
+ *
  * <p>Parameter concepts in GeckoCIRCUITS:
  * <ul>
  *   <li><b>Short name</b>: Brief identifier like "R", "L", "C"</li>
@@ -37,14 +37,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *   <li><b>nameOpt</b>: Optimizer variable name reference</li>
  *   <li><b>Index</b>: Position in parameter[] array</li>
  * </ul>
- * 
+ *
  * @author Extracted from AbstractBlockInterface
  * @since Sprint 3 - Circuit Refactoring
  * @param <P> The parameter type (typically UserParameter or a compatible interface)
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Registry stores adapter reference for parameter access")
 public class ParameterRegistry<P> {
-    
+
     /**
      * Interface for parameter access - allows working with different parameter types.
      */
@@ -64,19 +64,19 @@ public class ParameterRegistry<P> {
         void writeNameOptArray(String[] nameOpt);
         void readFromNameOptArray(String[] nameOpt);
     }
-    
+
     /** Registered parameters in order of registration */
     private final List<P> parameters;
-    
+
     /** Index by short name (case-insensitive) */
     private final Map<String, P> byShortName;
-    
+
     /** Index by alternative name (case-insensitive) */
     private final Map<String, P> byAlternativeName;
-    
+
     /** Adapter for extracting names from parameter objects */
     private final ParameterAdapter<P> adapter;
-    
+
     /**
      * Adapter interface to extract information from parameter objects.
      * Allows this registry to work with different parameter types.
@@ -89,10 +89,10 @@ public class ParameterRegistry<P> {
         double getDoubleValue(P param);
         void setFromDoubleValue(P param, double value);
     }
-    
+
     /**
      * Creates an empty parameter registry with a custom adapter.
-     * 
+     *
      * @param adapter adapter for parameter access
      */
     public ParameterRegistry(ParameterAdapter<P> adapter) {
@@ -101,7 +101,7 @@ public class ParameterRegistry<P> {
         this.byAlternativeName = new HashMap<>();
         this.adapter = adapter;
     }
-    
+
     /**
      * Creates an empty parameter registry with a default string-based adapter.
      * Used for simple testing scenarios.
@@ -110,10 +110,10 @@ public class ParameterRegistry<P> {
     public ParameterRegistry() {
         this((ParameterAdapter<P>) new SimpleParameterAdapter());
     }
-    
+
     /**
      * Registers a parameter.
-     * 
+     *
      * @param param the parameter to register
      * @throws IllegalArgumentException if parameter is null
      */
@@ -121,23 +121,23 @@ public class ParameterRegistry<P> {
         if (param == null) {
             throw new IllegalArgumentException("Parameter cannot be null");
         }
-        
+
         parameters.add(param);
-        
+
         String shortName = adapter.getShortName(param);
         if (shortName != null && !shortName.isEmpty()) {
             byShortName.put(shortName.toLowerCase(), param);
         }
-        
+
         String altName = adapter.getAlternativeShortName(param);
         if (altName != null && !altName.isEmpty()) {
             byAlternativeName.put(altName.toLowerCase(), param);
         }
     }
-    
+
     /**
      * Unregisters a parameter.
-     * 
+     *
      * @param param the parameter to unregister
      * @return true if the parameter was removed
      */
@@ -155,10 +155,10 @@ public class ParameterRegistry<P> {
         }
         return removed;
     }
-    
+
     /**
      * Finds a parameter by its short name (case-insensitive).
-     * 
+     *
      * @param name the short name to search for
      * @return the parameter, or null if not found
      */
@@ -166,10 +166,10 @@ public class ParameterRegistry<P> {
         if (name == null) return null;
         return byShortName.get(name.toLowerCase());
     }
-    
+
     /**
      * Finds a parameter by its alternative name (case-insensitive).
-     * 
+     *
      * @param name the alternative name to search for
      * @return the parameter, or null if not found
      */
@@ -177,11 +177,11 @@ public class ParameterRegistry<P> {
         if (name == null) return null;
         return byAlternativeName.get(name.toLowerCase());
     }
-    
+
     /**
      * Finds a parameter by any known name (short or alternative).
      * Short name takes precedence.
-     * 
+     *
      * @param name the name to search for
      * @return the parameter, or null if not found
      */
@@ -192,10 +192,10 @@ public class ParameterRegistry<P> {
         }
         return result;
     }
-    
+
     /**
      * Gets a parameter value by name.
-     * 
+     *
      * @param name parameter name
      * @return the double value
      * @throws IllegalArgumentException if parameter not found
@@ -207,10 +207,10 @@ public class ParameterRegistry<P> {
         }
         return adapter.getDoubleValue(param);
     }
-    
+
     /**
      * Sets a parameter value by name.
-     * 
+     *
      * @param name parameter name
      * @param value the value to set
      * @throws IllegalArgumentException if parameter not found
@@ -222,44 +222,44 @@ public class ParameterRegistry<P> {
         }
         adapter.setFromDoubleValue(param, value);
     }
-    
+
     /**
      * Checks if a parameter with the given name exists.
-     * 
+     *
      * @param name the name to check
      * @return true if a parameter with this name exists
      */
     public boolean hasParameter(String name) {
         return findByAnyName(name) != null;
     }
-    
+
     /**
      * Gets all registered parameters.
-     * 
+     *
      * @return unmodifiable list of parameters
      */
     public List<P> getAll() {
         return Collections.unmodifiableList(parameters);
     }
-    
+
     /**
      * Gets the number of registered parameters.
-     * 
+     *
      * @return parameter count
      */
     public int size() {
         return parameters.size();
     }
-    
+
     /**
      * Checks if the registry is empty.
-     * 
+     *
      * @return true if no parameters are registered
      */
     public boolean isEmpty() {
         return parameters.isEmpty();
     }
-    
+
     /**
      * Clears all registered parameters.
      */
@@ -268,10 +268,10 @@ public class ParameterRegistry<P> {
         byShortName.clear();
         byAlternativeName.clear();
     }
-    
+
     /**
      * Gets all short names of registered parameters.
-     * 
+     *
      * @return list of short names
      */
     public List<String> getAllShortNames() {
@@ -284,10 +284,10 @@ public class ParameterRegistry<P> {
         }
         return names;
     }
-    
+
     /**
      * Gets all long/verbose names of registered parameters.
-     * 
+     *
      * @return list of long names
      */
     public List<String> getAllLongNames() {
@@ -300,10 +300,10 @@ public class ParameterRegistry<P> {
         }
         return names;
     }
-    
+
     /**
      * Gets all units of registered parameters.
-     * 
+     *
      * @return list of units
      */
     public List<String> getAllUnits() {
@@ -314,10 +314,10 @@ public class ParameterRegistry<P> {
         }
         return units;
     }
-    
+
     /**
      * Gets all parameter values as an array.
-     * 
+     *
      * @return array of parameter values
      */
     public double[] getAllValues() {
@@ -327,10 +327,10 @@ public class ParameterRegistry<P> {
         }
         return values;
     }
-    
+
     /**
      * Sets all parameter values from an array.
-     * 
+     *
      * @param values array of values (must match parameter count)
      * @throws IllegalArgumentException if array size doesn't match
      */
@@ -343,10 +343,10 @@ public class ParameterRegistry<P> {
             adapter.setFromDoubleValue(parameters.get(i), values[i]);
         }
     }
-    
+
     /**
      * Creates a map of parameter names to values.
-     * 
+     *
      * @return map of short name to value
      */
     public Map<String, Double> toMap() {
@@ -359,10 +359,10 @@ public class ParameterRegistry<P> {
         }
         return map;
     }
-    
+
     /**
      * Validates that all required parameter names exist.
-     * 
+     *
      * @param requiredNames names that must exist
      * @return list of missing names (empty if all present)
      */
@@ -375,7 +375,7 @@ public class ParameterRegistry<P> {
         }
         return missing;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -391,7 +391,7 @@ public class ParameterRegistry<P> {
         }
         return sb.toString();
     }
-    
+
     /**
      * Simple adapter for testing with SimpleParameter objects.
      */
@@ -409,7 +409,7 @@ public class ParameterRegistry<P> {
         @Override
         public void setFromDoubleValue(SimpleParameter param, double value) { param.value = value; }
     }
-    
+
     /**
      * Simple parameter class for testing purposes.
      */
@@ -419,19 +419,19 @@ public class ParameterRegistry<P> {
         public String longName;
         public String unit;
         public double value;
-        
+
         public SimpleParameter(String shortName, double value) {
             this.shortName = shortName;
             this.value = value;
         }
-        
+
         public SimpleParameter(String shortName, String longName, String unit, double value) {
             this.shortName = shortName;
             this.longName = longName;
             this.unit = unit;
             this.value = value;
         }
-        
+
         public SimpleParameter withAlternativeName(String altName) {
             this.alternativeName = altName;
             return this;

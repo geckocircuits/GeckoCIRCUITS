@@ -253,7 +253,7 @@ public class WirePathCalculatorTest {
                 new GridPoint(0, 5), new GridPoint(10, 5));
 
         assertEquals(1, path.getSegmentCount());
-        assertTrue(path.getIntermediatePoints().isEmpty() || 
+        assertTrue(path.getIntermediatePoints().isEmpty() ||
                    path.getIntermediatePoints().stream().allMatch(p -> p.y == 5));
     }
 

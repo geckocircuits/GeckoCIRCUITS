@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -49,17 +49,17 @@ public abstract class AbstractJavaBlock {
             return;
         }
         SchematicEditor2.setZustandGeaendert(true);
-        
+
         String className = CompileObject.findUniqueClassName();
         String sourceString = SourceFileGenerator.createSourceCode(_javaBlockSource, className, _reglerJavaBlock.YOUT.size(), _reglerJavaBlock._variableBusWidth);
-                
+
         _compileObject = new CompileObject(sourceString, className, _additionalSourceFiles);
-        
+
         if (_compileObject.getCompileStatus() == CompileStatus.COMPILED_SUCCESSFULL) {
             findAndLoadClass();
         }
 
-        // repaint schematic entry - because color of JavaCode-Block could change            
+        // repaint schematic entry - because color of JavaCode-Block could change
         SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
@@ -75,7 +75,7 @@ public abstract class AbstractJavaBlock {
             return true;
         }
 
-        // test if one of the external files changed:        
+        // test if one of the external files changed:
         final Map<String, CompiledClassContainer> nameClassMap = _compileObject.getClassNameFileMap();
 
         final Set<String> compiledFileNames = nameClassMap.keySet();
@@ -213,7 +213,7 @@ public abstract class AbstractJavaBlock {
         } catch (UnsupportedClassVersionError classVersionError) {
             resetCompileObject();
             System.err.println(classVersionError.getMessage());
-            //classVersionError.printStackTrace();            
+            //classVersionError.printStackTrace();
         }
 
     }

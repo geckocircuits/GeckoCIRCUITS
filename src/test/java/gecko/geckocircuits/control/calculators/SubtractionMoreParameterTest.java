@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,8 +36,8 @@ public class SubtractionMoreParameterTest extends AbstractMultiInputFunctionTest
     @Override
     @Test
     public void testWithThreeInputs() {
-        double val = getValue(5,-2,3);        
+        double val = getValue(5,-2,3);
         assertEquals(4, val, 1e-7);
     }
-           
+
 }

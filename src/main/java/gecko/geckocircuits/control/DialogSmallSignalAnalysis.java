@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -189,29 +189,29 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
 
 
         double lowFreq = element._fBase.getValue();
-        
+
         double T = 1.0 / lowFreq;
 
-        
+
         SmallSignalCalculator ssc = element._lastCalculator;
         if(ssc == null) return;
         double[] ssv = ssc._smallSignalValues;
         double[] measuredValues = ssc._measuredValues;
         double dt = ssc._calculationDeltaT;
-        
+
         System.out.println("number of valid samples " + ssc._numberSamples + " " + ssc._N);
-                        
+
         double time = 0;
-        
+
         DataContainerSimple dcs1 = DataContainerSimple.fabricArrayTimeSeries(2, ssv.length);
-        
-        
-        
+
+
+
         int cIndex = ssc.circularIndex;
         int NN = ssv.length;
-        
+
         for(int i = 0; i < NN; i++) {
-            dcs1.insertValuesAtEnd(new float[]{(float) ssv[cIndex], (float) measuredValues[cIndex]}, time);            
+            dcs1.insertValuesAtEnd(new float[]{(float) ssv[cIndex], (float) measuredValues[cIndex]}, time);
             time += dt;
             cIndex++;
             if(cIndex == NN) {
@@ -219,7 +219,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
             }
         }
 
-        
+
 
 //        for (int i = 0; i < data[0].length; i++) {
 //            dcs1.insertValuesAtEnd(new float[]{(float) data[1][i], (float) data[2][i]}, data[0][i]);
@@ -235,8 +235,8 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     }
 
     @Override
-    void baueGuiIndividual() {        
-        
+    void baueGuiIndividual() {
+
         JPanel pAmpl = createParameterPanel(element._amplitude);
         jpM.add(pAmpl, BorderLayout.CENTER);
 
@@ -260,7 +260,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
             }
         });
 
-                
+
     }
 
     private void runCalculation() {

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -78,15 +78,15 @@ public final class TestReceiverWindow extends JFrame {
         _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");
         _graferNew.setSimulationTimeBoundaries(10, 100000);
         _graferPanel = new NewScope(_graferNew);
-        _graferPanel.setTabsInvisible();        
-        jPanelPlot.add(_graferPanel);        
+        _graferPanel.setTabsInvisible();
+        jPanelPlot.add(_graferPanel);
 
         if (_reglerCISPR16._zvDatenRam == null) {
             jButtonCalculate.setEnabled(false);
             jLabelStatus.setText("No simulation data available.");
         }
-        
-        _graferNew.createInitialDiagramCISPR16(true, false, NUMBER_SIGNALS);        
+
+        _graferNew.createInitialDiagramCISPR16(true, false, NUMBER_SIGNALS);
         _graferNew.setSymbolsInCurveEnabled(new int[]{3, 4, 5});
         _graferNew._manager.getDiagrams().get(0).setAllCurvesWithBars(new int[]{3, 4, 5});
         _graferNew.setSimulationTimeBoundaries(9000, 3e6);
@@ -802,7 +802,7 @@ public final class TestReceiverWindow extends JFrame {
     void importAscii(final TokenMap tokenMap) {
         _graferNew.importIndividualCONTROL(tokenMap);
         if(_graferNew._manager.getDiagrams().size() == 0) {
-            _graferNew.createInitialDiagramCISPR16(true, false, NUMBER_SIGNALS);        
+            _graferNew.createInitialDiagramCISPR16(true, false, NUMBER_SIGNALS);
         }
         _graferPanel.importIndividualCONTROL(tokenMap);
         createEmptyData();
@@ -878,10 +878,10 @@ public final class TestReceiverWindow extends JFrame {
                 _calculatorNew = new TestReceiverCalculation(_reglerCISPR16._zvDatenRam, _settings);
                 _calculationDoneForHash = getHashCodeForCalculator();
             }
-            
+
             TimeSeriesConstantDt timeSeries = new TimeSeriesConstantDt();
-            
-            
+
+
             _dataContainer = new DataContainerCompressable(NUMBER_SIGNALS, timeSeries,
                     SIGNAL_NAMES, "f");
 
@@ -903,7 +903,7 @@ public final class TestReceiverWindow extends JFrame {
 
 
             for (int i = 1; i < _calculatorNew._fftOrig._resampledN / 2; i++) {
-                double frequency = i * baseFreq;                
+                double frequency = i * baseFreq;
                 if (_abortCalculation) {
                     return;
                 }
@@ -947,13 +947,13 @@ public final class TestReceiverWindow extends JFrame {
                                 data[INDEX_AVERAGE] = calculateDbMu(calcData[2]);
                             }
                         }
-                    } catch (OutOfMemoryError err) {                        
+                    } catch (OutOfMemoryError err) {
                         JOptionPane.showMessageDialog(null,
-                                "Error: Java is out of memory. Please increase JVM memory.\nAborting calculation.\n" + 
+                                "Error: Java is out of memory. Please increase JVM memory.\nAborting calculation.\n" +
                                 err.toString(),
                                 "Memory error!",
                                 JOptionPane.ERROR_MESSAGE);
-                        _abortCalculation = true;                        
+                        _abortCalculation = true;
                         abortCalculation();
                         err.printStackTrace();
                     } catch (Throwable error) {
@@ -1031,10 +1031,10 @@ public final class TestReceiverWindow extends JFrame {
 
     private void jButtonCalculateActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonCalculateActionPerformed
         /*
-        if(StartupWindow.testDialogOpenSourceVersion("EMI Testreceiver")) {            
-            return;                        
+        if(StartupWindow.testDialogOpenSourceVersion("EMI Testreceiver")) {
+            return;
         }*/
-        
+
         startCalculation(true);
     }//GEN-LAST:event_jButtonCalculateActionPerformed
 
@@ -1048,16 +1048,16 @@ public final class TestReceiverWindow extends JFrame {
             runThread.start();
         } else {
             runThread.run();
-        }        
+        }
 
     }
 
     public void abortCalculation() {
         jButtonCalculate.setEnabled(true);
         jButtonAbort.setEnabled(false);
-                
+
         if (_calculationRunnable != null) {
-            _calculationRunnable._abortCalculation = true;        
+            _calculationRunnable._abortCalculation = true;
             _calculationRunnable = null;
         }
     }
@@ -1104,7 +1104,7 @@ public final class TestReceiverWindow extends JFrame {
     }//GEN-LAST:event_jRadioButtonRMSActionPerformed
 
     private void jButtonPlotOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlotOptionsActionPerformed
-        
+
         DialogConnectSignalsGraphs dialog = new DialogConnectSignalsGraphs(_graferNew);
         dialog.setVisible(true);
     }//GEN-LAST:event_jButtonPlotOptionsActionPerformed
@@ -1174,7 +1174,7 @@ public final class TestReceiverWindow extends JFrame {
             jCheckBoxBlackman.setSelected(_settings._useBlackman.getValue());
             jRadioButtonRMS.setSelected(_settings._showRMSValues.getValue());
             jRadioButtonAmpl.setSelected(!_settings._showRMSValues.getValue());
-            
+
             if (_settings._automaticQPSelection.getValue()) {
                 jRadioButtonAuto.setSelected(true);
                 jSpinnerThreshold.setEnabled(true);
@@ -1189,28 +1189,28 @@ public final class TestReceiverWindow extends JFrame {
     }
 
     float getClassAValue(final double freq) {
-        if (freq < 150e3) {  // f < 150kHz, Limit undefiniert 
+        if (freq < 150e3) {  // f < 150kHz, Limit undefiniert
             return Float.NaN;
-        } else if (freq < 500e3) {  // 150kHz < f < 500kHz 
+        } else if (freq < 500e3) {  // 150kHz < f < 500kHz
             return 79;
         } else if (freq < 30e6) {  // 5MHz < f < 30MHz
             return 73;
-        } else {  // f > 30MHz; Limit undefiniert 
+        } else {  // f > 30MHz; Limit undefiniert
             return Float.NaN;
         }
     }
 
     float getClassBValue(final double freq) {
 
-        if (freq < 150e3) {  // f < 150kHz, Limit undefiniert 
+        if (freq < 150e3) {  // f < 150kHz, Limit undefiniert
             return Float.NaN;
-        } else if (freq < 500e3) {  // 150kHz < f < 500kHz 
+        } else if (freq < 500e3) {  // 150kHz < f < 500kHz
             return (float) (66 - 10 * Math.log10(freq / 150e3) / Math.log10(500e3 / 150e3));
         } else if (freq < 5e6) {  // 500kHz < f < 5MHz
             return 56;
         } else if (freq < 30e6) {  // 5MHz < f < 30MHz
             return 60;
-        } else {  // f > 30MHz; Limit undefiniert 
+        } else {  // f > 30MHz; Limit undefiniert
             return Float.NaN;
         }
     }

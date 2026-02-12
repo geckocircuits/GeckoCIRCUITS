@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,20 +21,20 @@ public class TerminalControlBidirectional extends TerminalRelativePosition imple
 
     public TerminalControlBidirectional(AbstractBlockInterface relatedComponent, int posX, int posY) {
         super(relatedComponent, posX, posY);
-    }    
-    
+    }
+
     @Override
-    public void paintLabelString(Graphics2D graphics2D) {        
-        
+    public void paintLabelString(Graphics2D graphics2D) {
+
         FontRenderContext frc = graphics2D.getFontRenderContext();
-        
-        final int stringLength = (int) graphics2D.getFont().getStringBounds(_label.getLabelString(), frc).getWidth();        
+
+        final int stringLength = (int) graphics2D.getFont().getStringBounds(_label.getLabelString(), frc).getWidth();
         int xShift = 0;
         if(!_hasDoubleLabel) {
             xShift = - stringLength;
         }
-        if (!_label.getLabelString().isEmpty()) {            
-            graphics2D.drawString(_label.getLabelString(), (int) (AbstractCircuitSheetComponent.dpix * getPosition().x) + xShift, 
+        if (!_label.getLabelString().isEmpty()) {
+            graphics2D.drawString(_label.getLabelString(), (int) (AbstractCircuitSheetComponent.dpix * getPosition().x) + xShift,
                     (int) (AbstractCircuitSheetComponent.dpix * getPosition().y) + DY_TEXT);
         }
     }
@@ -42,35 +42,35 @@ public class TerminalControlBidirectional extends TerminalRelativePosition imple
     @Override
     public void paintComponent(Graphics graphics) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        graphics.drawLine( dpix * getPosition().x, dpix * getPosition().y, 
+        graphics.drawLine( dpix * getPosition().x, dpix * getPosition().y,
                 _parentElement.getSheetPosition().x * dpix, dpix * getPosition().y);
         super.paintComponent(graphics);
     }
-    
+
     @Override
     public AbstractTerminal createCopy(AbstractBlockInterface relatedComponent) {
         AbstractTerminal returnValue =  new TerminalControlInput(relatedComponent, _posX, _posY);
         returnValue.getLabelObject().setLabel(_label.getLabelString());
         return returnValue;
     }
-    
+
     private int _nodeNumber = -1;
-    
-    
+
+
     @Override
     public int getNodeNumber() {
         return _nodeNumber;
     }
-    
+
     @Override
     public void setNodeNumber(final int newValue) {
         _nodeNumber = newValue;
     }
-    
+
     @Override
     public void clearNodeNumber() {
         _nodeNumber = -1;
     }
-    
-    
+
+
 }

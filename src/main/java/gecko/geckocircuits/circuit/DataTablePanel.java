@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -71,7 +71,7 @@ public class DataTablePanel extends JPanel {
             }
         }
         _sortingDisabled = false;
-        _tableModel.sortWithFirstRow();        
+        _tableModel.sortWithFirstRow();
 
     }
 
@@ -102,11 +102,11 @@ public class DataTablePanel extends JPanel {
         return returnValue;
     }
 
-    public void clear() {  
+    public void clear() {
         _tableModel.data.clear();
         _tableModel.fireTableDataChanged();
     }
-    
+
     static int counter = 0;
 
     void clearWithoutEvent() {
@@ -141,11 +141,11 @@ public class DataTablePanel extends JPanel {
             return _columnTitles[col];
         }
 
-        public Object getValueAt(int row, int col) {            
+        public Object getValueAt(int row, int col) {
             if (row >= data.size()) {
                 return null;
             }
-            return data.get(row).get(col);           
+            return data.get(row).get(col);
         }
 
         /*
@@ -200,17 +200,17 @@ public class DataTablePanel extends JPanel {
             long oldHash = calculateTableHash();
             if (_tableModel.data.size() < 2) {
                 return;
-            }            
+            }
 
             Collections.sort(data, new MyTableComparator());
 
             long newHash = calculateTableHash();
             if (oldHash != newHash) {
-                fireTableDataChanged();                
+                fireTableDataChanged();
             }
         }
-        
-        
+
+
         private long calculateTableHash() {
             counter++;
             assert counter < 1000;

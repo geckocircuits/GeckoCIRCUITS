@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,37 +29,37 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control netlist reference for port checking")
 public class DialogControlCheck extends javax.swing.JDialog {
     private final NetzlisteCONTROL _nlc;
-    
+
     public DialogControlCheck(java.awt.Frame parent, boolean modal, final NetzlisteCONTROL nlc) {
         super(parent, modal);
         _nlc = nlc;
         initComponents();
-        
+
         DefaultListModel<String> inModel = new DefaultListModel<>();
         for(String errorPort : _nlc._inPortsStringWithoutConnection) {
             inModel.addElement(errorPort);
         }
-        jListInPort.setModel(inModel);                
+        jListInPort.setModel(inModel);
         jListInPort.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
-            public void valueChanged(final ListSelectionEvent event) {                
+            public void valueChanged(final ListSelectionEvent event) {
                 CircuitSheet.clearFind();
                 int selectionIndex = jListInPort.getSelectedIndex();
                 if(selectionIndex > -1) {
                     final Point showPoint = _nlc._inPortsWithoutConnection.get(selectionIndex).getPosition();
-                    CircuitSheet.addFindNode(showPoint);                    
+                    CircuitSheet.addFindNode(showPoint);
                     SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
-                }                                                
+                }
             }
         });
-        
+
         DefaultListModel<String> outModel = new DefaultListModel<>();
         for(String errorPort : _nlc._outPortsStringWithoutConnection) {
             outModel.addElement(errorPort);
         }
-        jListOutPort.setModel(outModel);        
-        
+        jListOutPort.setModel(outModel);
+
         jListOutPort.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
             @Override
@@ -69,9 +69,9 @@ public class DialogControlCheck extends javax.swing.JDialog {
                 if(selectionIndex > -1) {
                     CircuitSheet.addFindNode(_nlc._outPortsWithoutConnection.get(selectionIndex).getPosition());
                     SchematicEditor2.Singleton._visibleCircuitSheet.repaint();
-                }                                
+                }
             }
-        });                
+        });
         getRootPane().setDefaultButton(jButtonOk);
     }
 
@@ -171,10 +171,10 @@ public class DialogControlCheck extends javax.swing.JDialog {
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         CircuitSheet._findNodes.clear();
-        dispose();        
+        dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOk;
     private javax.swing.JLabel jLabel1;

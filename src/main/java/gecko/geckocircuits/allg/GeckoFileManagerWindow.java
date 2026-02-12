@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -93,16 +93,16 @@ public class GeckoFileManagerWindow extends JDialog {
         _jlS2b = jlS2b;
         _jbS2edit = jbS2edit;
         _fileExtension = extension;
-        _fileType = type;        
-        _geckoFileable = losses;        
-        
-        //add existing files of this extension, NOT including those already in this block        
-        final List<GeckoFile> filesAlreadyAddedToElement = _geckoFileable.getFiles();        
+        _fileType = type;
+        _geckoFileable = losses;
+
+        //add existing files of this extension, NOT including those already in this block
+        final List<GeckoFile> filesAlreadyAddedToElement = _geckoFileable.getFiles();
         _singleFileOnly = true;
         _isLossElement = true;
         jListAvailableFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         init(filesAlreadyAddedToElement, _fileExtension);
-        
+
     }
 
     private void init(final List<GeckoFile> alreadyUsedFiles, final String extension) {
@@ -594,7 +594,7 @@ public class GeckoFileManagerWindow extends JDialog {
         GeckoFile selectedFile;
         for (int i = 0; i < selectedFiles.length; i++) {
             selectedFile = (GeckoFile) selectedFiles[i];
-            try {                
+            try {
                 selectedFile.setStorageType(StorageType.EXTERNAL);
             } catch (FileNotFoundException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);

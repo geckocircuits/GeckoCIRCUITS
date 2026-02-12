@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,10 +17,10 @@ public enum SolverType {
     SOLVER_BE(0, "backward-euler"),
     SOLVER_TRZ(1, "trapezoidal"),
     SOLVER_GS(2,"gear-shichman");
-    
+
     private int _oldGeckoIndex;
     private String _displayString;
-        
+
     SolverType(final int oldGeckoIndex, final String displayString) {
         _oldGeckoIndex = oldGeckoIndex;
         _displayString = displayString;
@@ -30,11 +30,11 @@ public enum SolverType {
     public String toString() {
         return _displayString;
     }
-    
+
     public int getOldGeckoIndex() {
         return _oldGeckoIndex;
     }
-   
+
     public static SolverType getFromOldGeckoIndex(final int oldIndex) {
         for(SolverType type : values()) {
             if(type._oldGeckoIndex == oldIndex) {
@@ -44,5 +44,5 @@ public enum SolverType {
         assert false;
         return SOLVER_BE;
     }
-    
+
 }

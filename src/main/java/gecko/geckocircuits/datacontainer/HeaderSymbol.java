@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,14 +34,14 @@ public enum HeaderSymbol {
         assert false;
         return null;
     }
-    
+
     private final String _stringValue;
 
     HeaderSymbol(final String symbol) {
         _stringValue = symbol;
     }
-        
-    
+
+
     public static TextSeparator getFromCode(final int code) {
         for (TextSeparator val : TextSeparator.values()) {
             if (val.code() == code) {
@@ -50,7 +50,7 @@ public enum HeaderSymbol {
         }
         return TextSeparator.SPACE;
     }
-    
+
     public String toString() {
         return _stringValue;
     }

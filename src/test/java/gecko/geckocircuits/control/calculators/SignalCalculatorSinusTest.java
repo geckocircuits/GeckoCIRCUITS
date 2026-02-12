@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,26 +27,26 @@ public final class SignalCalculatorSinusTest {
     private static final double DELTA_T = 1e-4;
     private static final double END_TIME = 2; // sec
     private static final double TOLERANCE = 1e-6;
-    
+
     @Before
     public void setUp() {
         _signalCalc = new SignalCalculatorSinus(NO_INPUTS, AMPL, FREQUENCY, PHASE, DC_OFFSET, 1);
         _signalCalc.initializeAtSimulationStart(DELTA_T);
     }
-    
+
     @Test(expected=IllegalArgumentException.class)
     public void negativeAmplitude() {
         _signalCalc = new SignalCalculatorSinus(NO_INPUTS, -AMPL, FREQUENCY, PHASE, DC_OFFSET, 1);
     }
-    
+
     @Test
-    public void testBerechneYOUT() {                
+    public void testBerechneYOUT() {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             AbstractSignalCalculator.setTime(time);
             _signalCalc.berechneYOUT(DELTA_T);
             final double result = _signalCalc._outputSignal[0][0];
             final double expectedResult = AMPL * Math.sin(2 * Math.PI * time * FREQUENCY - PHASE) + DC_OFFSET;
             assertEquals(expectedResult, result, TOLERANCE);
-        }                
-    }    
+        }
+    }
 }

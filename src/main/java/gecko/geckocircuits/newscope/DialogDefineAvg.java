@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,7 +47,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
         jPanelBoxes.add("labelSignal", new JLabel("Signal name"));
 
         jPanelBoxes.add(new JLabel("Averaging time"));
-        
+
 
         for (int i = 0; i < origScopeSignals.size(); i++) {
             final AbstractScopeSignal origSignal = origScopeSignals.get(i);
@@ -55,11 +55,11 @@ public class DialogDefineAvg extends javax.swing.JDialog {
             final FormatJTextField textField = new FormatJTextField();
             textField.setNumberToField(1e-5);
             textField.setEnabled(false);
-            
+
             final JCheckBox newCheckBox = new JCheckBox(origSignal.getSignalName());
 
             final ScopeSignalMean isDefined = _definedMeanSignals.findMeanSignal(origSignal);
-            
+
             if (isDefined != null) {
                 textField.setEnabled(true);
                 newCheckBox.setSelected(true);
@@ -82,7 +82,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
                 @Override
                 public void keyReleased(final KeyEvent evt) {
                     try {
-                        final double newValue = textField.getNumberFromField();                        
+                        final double newValue = textField.getNumberFromField();
                         _definedMeanSignals.findMeanSignal(origSignal).setAverageTime(newValue);
                     } catch (NumberFormatException ex) {
                         // nothing to do here.
@@ -97,7 +97,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
                     final boolean isSelected = newCheckBox.isSelected();
                     textField.setEnabled(isSelected);
                     final double newValue = textField.getNumberFromField();
-                    if (isSelected) {                                                
+                    if (isSelected) {
                         _definedMeanSignals.defineNewMeanSignal(origSignal, newValue);
                     } else {
                         _definedMeanSignals.unDefineMeanSignal(_definedMeanSignals.findMeanSignal(origSignal));

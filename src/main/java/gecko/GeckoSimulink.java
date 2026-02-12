@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -33,10 +33,10 @@ public class GeckoSimulink {
         if(!setSimulinkOperatingMode()) {
             GeckoSim.main(new String[]{});
         }
-        
+
     }
 
-    public Object external_openFile(Object fileName) {        
+    public Object external_openFile(Object fileName) {
         String sFileName = "";
         if (fileName instanceof String) {
             sFileName = (String) fileName;
@@ -49,12 +49,12 @@ public class GeckoSimulink {
         return "returnValue";
     }
 
-    public GeckoSimulink(String filePath) {        
+    public GeckoSimulink(String filePath) {
         ReglerFromEXTERNAL.clearFromExternals();
         ReglerToEXTERNAL.clearToExternals();
         if(!setSimulinkOperatingMode()) {
-            GeckoSim.main(new String[]{filePath});        
-        }                
+            GeckoSim.main(new String[]{filePath});
+        }
     }
 
     //========================================================================
@@ -63,7 +63,7 @@ public class GeckoSimulink {
     //========================================================================
     //========================================================================
     //
-    public double external_init(double tend) {        
+    public double external_init(double tend) {
         if(isRunning) {
             external_end();
         }
@@ -74,29 +74,29 @@ public class GeckoSimulink {
         }
         GeckoSim._win._simRunner.external_init(tend);
         tStartSimulink = System.currentTimeMillis();
-        
+
         for (AbstractBlockInterface block : SchematicEditor2.Singleton.getElementCONTROL()) {
                 if (block instanceof ReglerOSZI) {
                     ((ReglerOSZI) block).setSimulationTimeBoundaries(0, tend);
                 }
             }
-        
+
         return -1;
     }
-    
+
     public void external_step(double t) {
         GeckoSim._geckoSim._win._simRunner.simKern.external_step(t);
     }
 
-    public double external_getdt() {        
+    public double external_getdt() {
         return GeckoSim._geckoSim._win._simRunner.simKern.getdt();
     }
 
-    public void external_end() {        
-        GeckoSim._geckoSim._win._simRunner.simKern.external_end();        
-        tEndSimulink = System.currentTimeMillis();        
-        GeckoSim._win.external_end(tStartSimulink, tEndSimulink);        
-        isRunning = false;        
+    public void external_end() {
+        GeckoSim._geckoSim._win._simRunner.simKern.external_end();
+        tEndSimulink = System.currentTimeMillis();
+        GeckoSim._win.external_end(tStartSimulink, tEndSimulink);
+        isRunning = false;
     }
 
     public int external_getTerminalNumber_TO_EXTERNAL(int portNo) {
@@ -105,7 +105,7 @@ public class GeckoSimulink {
         } else {
             return 0;
         }
-        
+
     }
 
     public static void external_setInputPortName(int index, String name) {
@@ -122,47 +122,47 @@ public class GeckoSimulink {
         }
     }
 
-    public int external_getTerminalNumber_FROM_EXTERNAL(int portNo) {        
+    public int external_getTerminalNumber_FROM_EXTERNAL(int portNo) {
         if(portNo < ReglerFromEXTERNAL.fromExternals.size()) {
             return ((ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(portNo)).getTerminalNumber();
         } else {
             return 0;
-        }        
+        }
     }
 
     public void external_setVisible(boolean value) {
         GeckoSim._win.setVisible(value);
     }
 
-    public int getNumOutputPorts() {    
+    public int getNumOutputPorts() {
         return ReglerToEXTERNAL.toExternals.size();
     }
 
     public int getNumInputPorts() {
-        int returnValue = ReglerFromEXTERNAL.fromExternals.size();        
+        int returnValue = ReglerFromEXTERNAL.fromExternals.size();
         return returnValue;
     }
 
     static double[] tmpRemove = new double[10];
-    
-    public double[] external_getValues(int portNumber) {        
+
+    public double[] external_getValues(int portNumber) {
         return ((ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(portNumber)).dataVector;
     }
 
     public void external_setScalarInputValue(double value, int portNo) {
         ReglerFromEXTERNAL reg = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(portNo);
-        reg.dataVector[0] = value;        
+        reg.dataVector[0] = value;
     }
 
-    public void external_setVectorInputValue(double value, int portNo, int index) {        
+    public void external_setVectorInputValue(double value, int portNo, int index) {
         ReglerFromEXTERNAL reg = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(portNo);
         double[] par = reg.dataVector;
-        par[index] = value;                                
+        par[index] = value;
     }
 
     private boolean setSimulinkOperatingMode() {
         GeckoSim.operatingmode = OperatingMode.SIMULINK;
-        return StartupWindow.testDialogOpenSourceVersion("Simulink coupling");                    
+        return StartupWindow.testDialogOpenSourceVersion("Simulink coupling");
     }
 
 }

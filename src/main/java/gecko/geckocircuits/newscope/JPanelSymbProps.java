@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -35,7 +35,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
         initComponents();
     }
 
-    public JPanelSymbProps(SymbolSettable lineSettable, final Component redrawComponent) {                
+    public JPanelSymbProps(SymbolSettable lineSettable, final Component redrawComponent) {
         initComponents();
         _symbSettable = lineSettable;
 
@@ -205,7 +205,7 @@ public class JPanelSymbProps extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBoxShapeActionPerformed
 
     private void jCheckBoxShowActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jCheckBoxShowActionPerformed
-        
+
         if (_redrawComponent != null) {
             _symbSettable.setSymbolEnabled(jCheckBoxShow.isSelected());
         }

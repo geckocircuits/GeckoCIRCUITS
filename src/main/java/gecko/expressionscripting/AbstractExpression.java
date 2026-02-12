@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,7 +23,7 @@
 //
 //    abstract Double evaluate() throws ScriptException;
 //
-//    public static AbstractExpression newInstance(final Object nameable, final String expression) 
+//    public static AbstractExpression newInstance(final Object nameable, final String expression)
 //    throws ScriptException {
 //        VariableExpression possibleReturnValue = new VariableExpression(nameable, expression);
 //        if (possibleReturnValue.hasNoVariable()) {
@@ -39,8 +39,8 @@
 //
 //    public boolean nameMatchesFirstTest(final String testName) {
 //        return _nameable.toString().equals(testName);
-//    }    
-//    
+//    }
+//
 //    @Override
 //    public final String toString() {
 //        return _nameable.toString() + " = " + _scriptingCodeGivenFromUser;

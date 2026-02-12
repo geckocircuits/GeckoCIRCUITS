@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,12 +21,12 @@ package gecko.geckocircuits.newscope;
 public final class TimeSeriesArray extends AbstractTimeSerie {
     private double[] _timeSeries;
     private int _maximumIndex = -1;
-    
+
     public TimeSeriesArray(final int arraySize) {
         super();
         _timeSeries = new double[arraySize];
     }
-    
+
     @Override
     public void setValue(final int index, final double value) {
         _timeSeries[index] = value;
@@ -37,7 +37,7 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
     public double getValue(final int index) {
         assert index >= 0;
         assert index < _timeSeries.length;
-        
+
         return _timeSeries[index];
     }
 
@@ -45,7 +45,7 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
     public int getMaximumIndex() {
         return _maximumIndex;
     }
-    
+
     // Counter used for debugging/assertion purposes only
     @SuppressWarnings("unused")
     private static int counter = 0;
@@ -85,7 +85,7 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
                 return Math.max(returnValue, 0);
             }
         }
-                
+
         return Math.max(returnValue, 0);
     }
 
@@ -97,5 +97,5 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
     public double getLastTimeInterval() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
+
 }

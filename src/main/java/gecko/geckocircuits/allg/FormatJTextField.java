@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -33,10 +33,10 @@ public class FormatJTextField extends JTextField {
     private static final int OFFSET2 = 5;
     private static final int OFFSET1 = 2;
     private LineSettable _lineSettable;
-    
+
     public FormatJTextField() {
         super();
-        
+
     }
 
     public FormatJTextField(final String string) {
@@ -76,7 +76,7 @@ public class FormatJTextField extends JTextField {
         this.setEnabled(isOn);
     }
 
-    public void setNumberToField(final double value) {        
+    public void setNumberToField(final double value) {
         final String string = _cf.formatT(value, _techFormatPat);
         this.setText(string);
     }
@@ -125,12 +125,12 @@ public class FormatJTextField extends JTextField {
             } catch (Exception e2) {
                 _numberOK = false;
                 this.setForeground(Color.red);
-                e2.printStackTrace();                
-                throw new RuntimeException(e2.getMessage());                                
+                e2.printStackTrace();
+                throw new RuntimeException(e2.getMessage());
             }
         }
     }
-    
+
 
     @Override
     public void paint(final Graphics graphics) {
@@ -146,10 +146,10 @@ public class FormatJTextField extends JTextField {
 
             _lineSettable.getStroke().setStrokeStyle(g2d);
             g2d.setColor(_lineSettable.getColor().getJavaColor());
-            
+
             // jetzt die Linie ziehen:
             g2d.drawRect(OFFSET1, OFFSET1, getWidth() - OFFSET2, getHeight() - OFFSET2);
-            
+
             AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, _lineSettable.getTransparency());
             alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
             g2d.setComposite(alphaComposite);
@@ -161,5 +161,5 @@ public class FormatJTextField extends JTextField {
     public void setLineSettable(final LineSettable lineSettable) {
         _lineSettable = lineSettable;
     }
-        
+
 }

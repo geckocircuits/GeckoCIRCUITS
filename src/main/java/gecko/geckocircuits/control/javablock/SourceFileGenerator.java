@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -55,9 +55,9 @@ public final class SourceFileGenerator {
 
             final StringBuilder sourceStringBuilder = new StringBuilder(estimateTotalStringSize(source));
 
-            appendClassImportsAndHeader(sourceStringBuilder, source._importsCode, className, 
+            appendClassImportsAndHeader(sourceStringBuilder, source._importsCode, className,
                     variableBusWidth._useMatrix.getValue());
-            appendVariablesCode(sourceStringBuilder, source._variablesCode, outTerminalNumber, 
+            appendVariablesCode(sourceStringBuilder, source._variablesCode, outTerminalNumber,
                     variableBusWidth);
             appendInitCode(sourceStringBuilder, source._initCode);
             appendFunctionSourceCode(sourceStringBuilder, source._sourceCode, variableBusWidth._useMatrix.getValue());
@@ -90,7 +90,7 @@ public final class SourceFileGenerator {
     }
 
     private static void appendVariablesCode(final StringBuilder sourceStringBuilder,
-            final String variablesCode, final int outTerminalNumber, 
+            final String variablesCode, final int outTerminalNumber,
             final VariableBusWidth variableBusWidth) throws IOException {
         sourceStringBuilder.append("// variables: \n");
         final BufferedReader reader = new BufferedReader(new StringReader(variablesCode));
@@ -107,7 +107,7 @@ public final class SourceFileGenerator {
                 sourceStringBuilder.append(outTerminalNumber);
                 sourceStringBuilder.append("][" + variableBusWidth._fixedOutputBusWidth.getValue() + "];\n");
 
-            } else {                
+            } else {
                 sourceStringBuilder.append("\tprivate final double[][] yOUT = new double[][]");
                 sourceStringBuilder.append("{ ");
                 for(int i = 0; i < outTerminalNumber; i++) {
@@ -117,12 +117,12 @@ public final class SourceFileGenerator {
                     }
                 }
                 sourceStringBuilder.append(" };");
-                
+
             }
             sourceStringBuilder.append("\n\t@Override");
                 sourceStringBuilder.append("\n\tpublic double[][] getOutputSignal() {\n"
                         + "\t\treturn yOUT;\n"
-                        + "\t}");                
+                        + "\t}");
 
         } else {
             sourceStringBuilder.append("\tprivate double[] yOUT = new double[");

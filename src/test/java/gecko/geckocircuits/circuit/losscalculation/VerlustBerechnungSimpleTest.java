@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,8 +31,8 @@ public final class VerlustBerechnungSimpleTest {
     private static final double R_ON = 0.04;
     private IGBT _igbt;
     private LossCalculationSimple _verlustBerechnung;
-        
-    
+
+
     @Before
     public void setUp() {
         LangInit.initEnglish();
@@ -42,13 +42,13 @@ public final class VerlustBerechnungSimpleTest {
         _verlustBerechnung = new LossCalculationSimple(_igbt);
         _verlustBerechnung._kON = KON;
         _verlustBerechnung._kOFF = KOFF;
-        _verlustBerechnung._uSWnorm = USWNORM;        
-        
+        _verlustBerechnung._uSWnorm = USWNORM;
+
     }
 
     @Test(expected=AssertionError.class)
-    public void testLossCalculatorErrorFabric() {                
+    public void testLossCalculatorErrorFabric() {
         _verlustBerechnung._uSWnorm = 0;
-        final AbstractLossCalculator result = _verlustBerechnung.lossCalculatorFabric();        
+        final AbstractLossCalculator result = _verlustBerechnung.lossCalculatorFabric();
     }
 }

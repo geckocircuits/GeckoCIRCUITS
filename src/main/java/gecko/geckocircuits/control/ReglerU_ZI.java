@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,7 +27,7 @@ public final class ReglerU_ZI extends RegelBlock {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerU_ZI.class, "UZI", I18nKeys.U_ZI_DIAGRAM);
 
     private UZiDisplay _uziDisplay = new UZiDisplay(this);
-    
+
     private int tnX;  // Nummer der Terminals fuer Signal-Anschluss
     private String[] header;
 
@@ -37,7 +37,7 @@ public final class ReglerU_ZI extends RegelBlock {
     protected Window openDialogWindow() {
         return _uziDisplay;
     }
-    
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         return new AbstractControlCalculatable(XIN.size(), 0) {
@@ -50,7 +50,7 @@ public final class ReglerU_ZI extends RegelBlock {
 
     public ReglerU_ZI() {
         super(4, 0);
-        tnX = 4;        
+        tnX = 4;
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class ReglerU_ZI extends RegelBlock {
         yKlickMin = (int) (dpix * (y - br));
         yKlickMax = (int) (dpix * (y - br + Math.max(tnX, 0)));
         Color origColor = g.getColor();
-        g.setColor(getBackgroundColor());        
+        g.setColor(getBackgroundColor());
 
         g.fillRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - br+1)), (int) (dpix * 2 * da), (int) (dpix * 1.0 * Math.max(tnX, 0)));
         g.setColor(origColor);
@@ -100,7 +100,7 @@ public final class ReglerU_ZI extends RegelBlock {
     @Override
     protected String getCenteredDrawString() {
         return "";
-    }            
+    }
 
     @Override
     protected void exportAsciiIndividual(StringBuffer ascii) {

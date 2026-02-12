@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,9 +21,9 @@ import javax.swing.JPanel;
 
 public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLossCurve> {
 
-    private final FormatJTextField _jtfUb = new FormatJTextField();;   
-        
-            
+    private final FormatJTextField _jtfUb = new FormatJTextField();;
+
+
 
     @Override
     String[] getTableCaptions() {
@@ -33,12 +33,12 @@ public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLo
     @Override
     void loadSelectedCurveIntoTable() {
         super.loadSelectedCurveIntoTable();
-        _jtfUb.setNumberToField(((SwitchingLossCurve) _selectedCurve)._uBlock.getValue());        
+        _jtfUb.setNumberToField(((SwitchingLossCurve) _selectedCurve)._uBlock.getValue());
     }
 
     @Override
     void addBlockingVoltageButton(final JPanel parent) {
-        final JLabel jLabBlockingVoltage = new JLabel("U_b [V] =");        
+        final JLabel jLabBlockingVoltage = new JLabel("U_b [V] =");
         _jtfUb.setText("600");
 
         _jtfUb.addActionListener(new ActionListener() {
@@ -53,13 +53,13 @@ public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLo
         parent.add(jLabBlockingVoltage);
         parent.add(_jtfUb);
     }
-    
-    
+
+
     @Override
-    LossCurve createNewCurve(final double curveTemperatureParameter) {        
+    LossCurve createNewCurve(final double curveTemperatureParameter) {
         final double blockingVoltage = _jtfUb.getNumberFromField();
         final SwitchingLossCurve messkurve = new SwitchingLossCurve(curveTemperatureParameter, blockingVoltage);
-        return messkurve;        
+        return messkurve;
     }
 
     @Override
@@ -76,14 +76,14 @@ public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLo
             i += di;
         }
         returnValue.setCurveData(data);
-        
+
         return returnValue;
     }
-    
+
     public final double calculateMaximumCurrentInAllCurves() {
         double returnValue = -1;
         for (LossCurve curve : _lossCurves) {
-            final int indexLast = curve.getCurveData()[0].length - 1;            
+            final int indexLast = curve.getCurveData()[0].length - 1;
             double iLast = curve.getCurveData()[0][indexLast];
             returnValue = Math.max(returnValue, iLast);
         }

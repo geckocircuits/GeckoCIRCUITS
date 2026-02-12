@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -78,7 +78,7 @@ public final class Axis {
         _direction = direction;
         _invertTickDir = invertTickDirection;
         _axisScale = new AxisLin();
-        _diagram = diagram;        
+        _diagram = diagram;
     }
 
     boolean hasIdenticalSettings(final Axis otherAxis) {
@@ -135,12 +135,12 @@ public final class Axis {
 
     abstract class AbstractAxisScale {
 
-        protected HiLoData getLimits() {            
+        protected HiLoData getLimits() {
             if (_axisType == AxisLinLog.ACHSE_LOG) {
                 _axisMinMax.setNiceScale(false);
                 HiLoData accurateLimits = Axis.this._axisMinMax.getLimits();
                 return HiLoData.hiLoDataFabric(accurateLimits._yLo, accurateLimits._yHi * 1.5f);
-            } else {                                                
+            } else {
                 return Axis.this._axisMinMax.getLimits();
             }
         }
@@ -157,7 +157,7 @@ public final class Axis {
 
         protected void drawMinorTicks(final Graphics2D g2D, final Axis otherAxis, final List<Tick> majorTicks) {
 
-            final HiLoData axisMinMax = _axisMinMax.getLimits();            
+            final HiLoData axisMinMax = _axisMinMax.getLimits();
             final double yTickSpacingMinor = _tickSpacing / _axisTickSettings.getAnzTicksMinor();
             final int yMinorTicksAnzahl = (int) (axisMinMax.getIntervalRange() / yTickSpacingMinor) + 2;
 
@@ -185,43 +185,43 @@ public final class Axis {
 
         abstract int getDefaultNumberMinorTicks();
     }
-    
+
     static int counter = 0;
-    
+
     private class AxisLog extends AbstractAxisScale {
 
         private static final int DEF_MIN_TICKS = 10;
 
         @Override
-        protected double getPixelFromValue(final double value) {                        
+        protected double getPixelFromValue(final double value) {
             double positiveValue = value;
             if (positiveValue <= 0) {
                 positiveValue = Float.MIN_VALUE;
             }
-            
+
             return getSignDirection() * getScaleFactor() * Math.log10(positiveValue / getLimits()._yLo)
                     + getDirectionOrigin();
         }
 
-                
+
         @Override
-        protected double getValueFromPixel(final int xPix) {                                    
+        protected double getValueFromPixel(final int xPix) {
             return getLimits()._yLo * Math.pow(LOG_AXIS_BASE,
                     getSignDirection() * (xPix - getDirectionOrigin()) / getScaleFactor());
         }
 
         @Override
         protected void drawMinorTicks(Graphics2D g2d, Axis otherAxis, List<Tick> majorTicks) {
-            if (majorTicks.size() > 2) {                
+            if (majorTicks.size() > 2) {
                 if(minorTicksNotTooClose(majorTicks)) {
-                    super.drawMinorTicks(g2d, otherAxis, majorTicks); 
-                }                
+                    super.drawMinorTicks(g2d, otherAxis, majorTicks);
+                }
             } else {
                 final int noTicks = 5;
                 double upperValue = getLimits()._yHi;
                 double lowerValue = getLimits()._yLo;
                 double distance = (upperValue - lowerValue) / (noTicks + 1);
-                
+
                 double tickValue = lowerValue;
                 for(int i = 0; i < noTicks; i++) {
                     tickValue += distance;
@@ -229,7 +229,7 @@ public final class Axis {
                     newTick.drawTick(g2d, TECH_FORMAT.formatT(newTick._wert, "#.#E0"),
                                 true);
                 }
-                
+
             }
 
         }
@@ -268,7 +268,7 @@ public final class Axis {
         }
 
         private static final int MINOR_LOG_TICK_MIN_DIST = 25;
-        
+
         private boolean minorTicksNotTooClose(List<Tick> majorTicks) {
             return majorTicks.size() < _axisLengthPix / MINOR_LOG_TICK_MIN_DIST;
         }
@@ -595,7 +595,7 @@ public final class Axis {
         _axisTickSettings.importASCII(axisMap);
         _axisGridSettings.importASCII(axisMap);
         _axisSettings.importASCII(axisMap);
-        _axisMinMax.importASCII(axisMap);        
+        _axisMinMax.importASCII(axisMap);
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -97,15 +97,15 @@ public final class PotentialArea {
         final PotentialArea returnValue = new PotentialArea();
         returnValue._upperLeftCorner = terminal.getPosition();
         returnValue._lowerRightCorner = terminal.getPosition();
-        
+
         /*if(!(terminal instanceof TerminalHiddenSubcircuit)) {
             returnValue._pointsSchematic.add(terminal.getPosition());
             returnValue._nodeTerminals.add(terminal.getPosition());
-        }*/               
-                
-        returnValue._pointsSchematic.add(terminal.getPosition());                        
+        }*/
+
+        returnValue._pointsSchematic.add(terminal.getPosition());
         returnValue._nodeTerminals.add(terminal.getPosition());
-        
+
         returnValue._potentialLabel = terminal.getLabelObject().getLabelString();
         final ElementNodes ens = new ElementNodes(element, terminal);
         returnValue._elementNodeTerminals.add(ens);
@@ -133,7 +133,7 @@ public final class PotentialArea {
         return _potentialLabel;
     }
 
-    // is used in SchematicEditor2 to get all nodes of elements for showing the connections --> 
+    // is used in SchematicEditor2 to get all nodes of elements for showing the connections -->
     public List<Point> getAllElementKnotenXY(final List<? extends AbstractBlockInterface> elements,
             final CircuitSheet circuitSheet) {
         final List<Point> returnValue = new ArrayList<Point>();
@@ -270,7 +270,7 @@ public final class PotentialArea {
                 verb.setLabelPriority(_highesPriority);
             }
         }
-        //assert this._potentialTyp != ConnectorType.NONE && this._potentialTyp != ConnectorType.LK_AND_RELUCTANCE;        
+        //assert this._potentialTyp != ConnectorType.NONE && this._potentialTyp != ConnectorType.LK_AND_RELUCTANCE;
         return this;
     }
 
@@ -361,7 +361,7 @@ public final class PotentialArea {
 
         adaptLabelDueToConnector();
 
-        // nun setzen wir das soeben ermittelte Potential-Label ueberall wo noetig:        
+        // nun setzen wir das soeben ermittelte Potential-Label ueberall wo noetig:
         this.updateLabel(_potentialLabel, element);
     }
 
@@ -500,7 +500,7 @@ public final class PotentialArea {
     Iterable<Point> getAllPointsOnSchematic() {
         return Collections.unmodifiableSet(_pointsSchematic);
     }
-    
+
     SubCircuitTerminable[] _memoryOptimization;
 
     SubCircuitTerminable[] getPotentialTerminals() {
@@ -510,7 +510,7 @@ public final class PotentialArea {
         assert validateMemoryOptimization();
         return _memoryOptimization;
     }
-    
+
     private boolean validateMemoryOptimization() {
         if(_memoryOptimization.length != _potentialTerminals.size()) {
             return false;
@@ -556,7 +556,7 @@ public final class PotentialArea {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    
+
 
     private static class ElementNodes {
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,8 +31,8 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
             "Loss calculation level: ");
     // Eigenschaften des Halbleiters:
     // falls detaillierte Halbleiter-Verlusteigenschaften spezifiziert sind -->
-    //        
-    private final AbstractCircuitBlockInterface _parent;    
+    //
+    private final AbstractCircuitBlockInterface _parent;
 
     public LossProperties(final AbstractSemiconductor parent) {
         _lossCalculationDetailed = new VerlustBerechnungDetailed(parent, this);
@@ -45,7 +45,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
     public VerlustBerechnungDetailed getDetailedLosses() {
         return _lossCalculationDetailed;
     }
-    
+
 
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<Verluste>");
@@ -156,7 +156,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
         @Override
         public void calcLosses(final double current, final double temperature, final double deltaT) {
             _original.calcLosses(current, temperature, deltaT);
-            final double diodeCurrent = _diode._currentInAmps;  // aktueller Strom in Diode                                    
+            final double diodeCurrent = _diode._currentInAmps;  // aktueller Strom in Diode
             _diodeLosses.calcLosses(diodeCurrent, temperature, deltaT);
             _conductionLosses = _splittable.getConductionLoss() + ((LossCalculationSplittable) _diodeLosses).getConductionLoss();
             _switchingLosses = _splittable.getSwitchingLoss() + ((LossCalculationSplittable) _diodeLosses).getSwitchingLoss();

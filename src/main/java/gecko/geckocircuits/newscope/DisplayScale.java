@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,8 +28,8 @@ public final class DisplayScale  {
     private static final int BASE = 10;
     private static final int UNITCONDITION = 1000;
     private static final int MAXSWITCHINDEX = 5;
-    
-    
+
+
     public DisplayScale() {
         _attenuation = 0;
         _unit = "V";
@@ -55,24 +55,24 @@ public final class DisplayScale  {
             _displayValue = (_stepValues[_curIndex] * scaleFactor) + _unit + "/div";
         }
     }
-    
+
     @Override
     public String toString() {
         return _displayValue;
     }
-    
+
     public int getAttenuation() {
         return _attenuation;
     }
-    
+
     public String getUnit() {
         return _unit;
     }
-    
+
     public int getCurIndex() {
         return _curIndex;
     }
-    
+
     public int getMaxIndex() {
         return _stepValues.length;
     }

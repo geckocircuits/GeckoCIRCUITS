@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -125,7 +125,7 @@ public class GeckoExternal {
         checkExternal();
         return external.getThermalElements();
     }
-    
+
     public static String[] getSpecialElements() {
         checkExternal();
         return external.getSpecialElements();
@@ -195,7 +195,7 @@ public class GeckoExternal {
         }
         return result;
     }
-        
+
 
     public static void setGlobalParameterValue(final String parameterName, final double value) {
         checkExternal();
@@ -240,8 +240,8 @@ public class GeckoExternal {
     public static void setParameters(final String elementName, final String[] parameterNames, final double[] values) {
         checkExternal();
         external.setParameters(elementName, parameterNames, values);
-    }        
-    
+    }
+
     public static Object doOperation(final String elementName, final String operationName, final Object parameterValue) {
         checkExternal();
         return external.doOperation(elementName, operationName, parameterValue);
@@ -271,7 +271,7 @@ public class GeckoExternal {
         checkExternal();
         external.initSimulation(dt, endTime);
     }
-    
+
     public static double getSimulationTime() {
         checkExternal();
         return external.getSimulationTime();
@@ -296,17 +296,17 @@ public class GeckoExternal {
         checkExternal();
         external.simulateTime(time);
     }
-    
+
     public static void setWorksheetSize(int sizeX, int sizeY) {
         checkExternal();
         external.setWorksheetSize(sizeX, sizeY);
     }
-    
+
     public static int[] getWorksheetSize() {
         checkExternal();
         return external.getWorksheetSize();
     }
-        
+
 
     public static void endSimulation() {
         checkExternal();
@@ -453,7 +453,7 @@ public class GeckoExternal {
             final int harmonics) {
         return getFourier(scopeName, 0, startTime, endTime, harmonics);
     }
-    
+
     public static void initSteadyStateDetection(final String[] stateVariables, final double[] frequencies,
             final double deltaT, final double simulationTime) {
         checkExternal();
@@ -488,30 +488,30 @@ public class GeckoExternal {
             Logger.getLogger(GeckoExternal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public final void createComponent(final String elementType, final String elementName, final int xPosition, final int yPosition) {        
+
+
+    public final void createComponent(final String elementType, final String elementName, final int xPosition, final int yPosition) {
         checkExternal();
-        external.createComponent(elementType, elementName, xPosition, yPosition);                
+        external.createComponent(elementType, elementName, xPosition, yPosition);
     }
-        
+
     public void createConnector(String elementName, int xStart, int yStart, int xEnd, int yEnd, boolean startHorizontal) {
         checkExternal();
         external.createConnector(elementName, xStart, yStart, xEnd, yEnd, startHorizontal);
     }
-    
-    
+
+
     public static void deleteComponent(final String elementName) {
         checkExternal();
         external.deleteComponent(elementName);
     }
-    
-    
+
+
     public static void deleteAllComponents(final String subcircuitName) {
         checkExternal();
         external.deleteAllComponents(subcircuitName);
     }
-    
+
 
     /**
      * Rename a component with a given name.
@@ -535,12 +535,12 @@ public class GeckoExternal {
         checkExternal();
         external.setPosition(elementName, xCoord, yCoord);
     }
-    
+
     public static int[] getPosition(final String elementName) {
         checkExternal();
         return external.getPosition(elementName);
     }
-    
+
     public static void setOutputNodeName(final String elementName, final int nodeIndex, final String nodeName) {
         checkExternal();
         external.setOutputNodeName(elementName, nodeIndex, nodeName);
@@ -550,7 +550,7 @@ public class GeckoExternal {
         checkExternal();
         external.setInputNodeName(elementName, nodeIndex, nodeName);
     }
-    
+
     public static String getOutputNodeName(final String elementName, final int nodeIndex) {
         checkExternal();
         return external.getOutputNodeName(elementName, nodeIndex);
@@ -560,7 +560,7 @@ public class GeckoExternal {
         checkExternal();
         return external.getInputNodeName(elementName, nodeIndex);
     }
-    
+
     /*
      * do a in-place fourier transform. Attention: the length of timeValues must
      * be a number of 2^N!

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,11 +24,11 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 class ReglerPTDialog extends DialogElementCONTROL<AbstractReglerPT> {
-    
+
     private static final int WIDTH_PT1 = 140;
     private static final int HEIGHT_PT1 = 45;
     private static final int DISTANCE_PT1 = 15;
-    
+
     public ReglerPTDialog(final AbstractReglerPT reglerPT) {
         super(reglerPT);
     }
@@ -37,11 +37,11 @@ class ReglerPTDialog extends DialogElementCONTROL<AbstractReglerPT> {
     protected void baueGuiIndividual() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
-        jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), 
+        jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Parameter", TitledBorder.LEFT, TitledBorder.TOP));
-        
+
         final JComponent compPT1 = new JComponent() {
-            
+
             //CHECKSTYLE:OFF this mess comes from Uwe :-(
             @Override
             public void paint(final Graphics graphics) {
@@ -49,7 +49,7 @@ class ReglerPTDialog extends DialogElementCONTROL<AbstractReglerPT> {
                 graphics.fillRect(0, 0, WIDTH_PT1, HEIGHT_PT1);
                 graphics.setColor(Color.black);
                 graphics.drawRect(0, 0, WIDTH_PT1 - 1, HEIGHT_PT1 - 1);
-                
+
                 if (element instanceof ReglerPT1) {
                     // R(s)= a1/(1+s*T)  --> Vermeiden des Ladens eines Bildes
                     graphics.setFont(GlobalFonts.FORMEL_DIALOG_GROSS);
@@ -80,8 +80,8 @@ class ReglerPTDialog extends DialogElementCONTROL<AbstractReglerPT> {
         pPT1.setLayout(new BorderLayout());
         pPT1.add(compPT1, BorderLayout.CENTER);
         jpM.add(pPT1, BorderLayout.NORTH);
-        
+
         final JPanel pPT1a = createParameterPanel(element._TVal, element._a1Val);
-        jpM.add(pPT1a, BorderLayout.CENTER);                
+        jpM.add(pPT1a, BorderLayout.CENTER);
     }
 }

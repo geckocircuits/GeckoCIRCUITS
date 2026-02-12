@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -1364,10 +1364,10 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         }
 
     }
-    
-    
-    
-    
+
+
+
+
     @Override
     //method which sets the value of field of an element, taking the name of that field as argument
     public final int[] getPosition(final String elementName) {
@@ -1375,11 +1375,11 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         final AbstractBlockInterface parentElement = IDStringDialog.getComponentByName(elementName);
 
         try {
-            return new int[]{parentElement.getSheetPosition().x, parentElement.getSheetPosition().y};            
+            return new int[]{parentElement.getSheetPosition().x, parentElement.getSheetPosition().y};
         } catch (Exception e) {
             writerOutputErrorLn("ERROR setting position of " + elementName + ": " + e.getMessage());
             throw new RuntimeException(e);
-        }        
+        }
     }
 
     @Override
@@ -1675,7 +1675,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     //these are functions for remote access, and are not needed here
     @Override
     public boolean isFree() {
-        return false; //always false since GeckoCustom is not for remote access 
+        return false; //always false since GeckoCustom is not for remote access
         // unless specifically overwritten by GeckoCustomRemote
     }
 

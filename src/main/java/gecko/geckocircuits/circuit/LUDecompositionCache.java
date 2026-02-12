@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -98,7 +98,7 @@ public class LUDecompositionCache {
     /*
      * if cache is larger than maximum cache size, then remove
      * the oldest and the two least accessed matrix entry.
-     * careful with the least accessed: put a threshold, so that 
+     * careful with the least accessed: put a threshold, so that
      * a quite new matrix is not removed immediately!
      */
     private void testForCacheShrink(double time) {

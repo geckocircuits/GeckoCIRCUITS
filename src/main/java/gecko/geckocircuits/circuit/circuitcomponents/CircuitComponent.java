@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,11 +21,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 /**
  * GUI-enabled circuit component for desktop application.
  * Extends CircuitComponentCore (pure simulation logic).
- * 
+ *
  * <p>This class adds GUI-specific functionality like terminal references
  * that connect to the visual circuit representation. The core simulation
  * logic is inherited from CircuitComponentCore.
- * 
+ *
  * @author andy
  * @since 2.0 (refactored to extend CircuitComponentCore)
  */
@@ -35,10 +35,10 @@ public abstract class CircuitComponent<T extends AbstractTwoPortLKreisBlock>
 
     /** First terminal (GUI connection) */
     protected final AbstractTerminal _term1;
-    
+
     /** Second terminal (GUI connection) */
     protected AbstractTerminal _term2;
-    
+
     /** Parent block (GUI component) */
     protected final T _parent;
 
@@ -50,7 +50,7 @@ public abstract class CircuitComponent<T extends AbstractTwoPortLKreisBlock>
         super(MainWindow._solverSettings.SOLVER_TYPE.getValue());
         _parent = parent;
         _term1 = parent.XIN.get(0);
-        _term2 = parent.YOUT.get(0);        
+        _term2 = parent.YOUT.get(0);
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class CircuitComponent<T extends AbstractTwoPortLKreisBlock>
     public T getParent() {
         return _parent;
     }
-    
+
     /**
      * Get the first terminal.
      * @return the first terminal
@@ -82,7 +82,7 @@ public abstract class CircuitComponent<T extends AbstractTwoPortLKreisBlock>
     public AbstractTerminal getTerm1() {
         return _term1;
     }
-    
+
     /**
      * Get the second terminal.
      * @return the second terminal

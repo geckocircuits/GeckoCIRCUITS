@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -169,7 +169,7 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
         }
 
         for (int i = 0; i < Math.min(values.size(), _numeratorPolynom.length); i++) {
-            _numeratorPolynom[i] = values.get(i);           
+            _numeratorPolynom[i] = values.get(i);
         }
     }
 
@@ -253,9 +253,9 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
     }
 
     @Override
-    protected Window openDialogWindow() {        
-        return new DialogTransferFunction((ReglerTransferFunction) this, this);        
-        
+    protected Window openDialogWindow() {
+        return new DialogTransferFunction((ReglerTransferFunction) this, this);
+
     }
 
     @Override
@@ -273,7 +273,7 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
 
         returnValue.add(new OperationInterface("setDenominatorPolynom", I18nKeys.SET_DENOMINATOR_POLYNOM) {
             @Override
-            public Object doOperation(final Object parameterValue) {                
+            public Object doOperation(final Object parameterValue) {
                 final Double[] parameterArray = checkParameterType(parameterValue);
                 setDeNominatorPolynom(Arrays.asList(parameterArray));
                 return null;

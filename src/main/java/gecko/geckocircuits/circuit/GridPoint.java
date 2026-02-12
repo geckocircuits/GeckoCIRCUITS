@@ -18,29 +18,29 @@ import java.util.Objects;
 
 /**
  * A GUI-free replacement for java.awt.Point for schematic grid coordinates.
- * 
+ *
  * This class represents a point on the circuit schematic grid and is designed
  * to be used in headless environments without AWT/Swing dependencies.
- * 
+ *
  * The grid coordinates are integers representing discrete positions on the
  * schematic canvas, typically in units of grid spacing (e.g., 10 pixels).
- * 
+ *
  * @author GeckoCIRCUITS Team
  * @since Sprint 15
  */
 public final class GridPoint implements Serializable, Comparable<GridPoint> {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     /** Origin point (0, 0) */
     public static final GridPoint ORIGIN = new GridPoint(0, 0);
-    
+
     /** X coordinate (horizontal position) */
     public final int x;
-    
+
     /** Y coordinate (vertical position) */
     public final int y;
-    
+
     /**
      * Creates a grid point at the specified coordinates.
      *
@@ -51,7 +51,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
         this.x = x;
         this.y = y;
     }
-    
+
     /**
      * Creates a grid point from double coordinates (truncates to int).
      *
@@ -62,7 +62,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
         this.x = (int) x;
         this.y = (int) y;
     }
-    
+
     /**
      * Creates a copy of another grid point.
      *
@@ -72,7 +72,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
         this.x = other.x;
         this.y = other.y;
     }
-    
+
     /**
      * Returns a new point translated by the given offsets.
      *
@@ -83,7 +83,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public GridPoint translate(int dx, int dy) {
         return new GridPoint(x + dx, y + dy);
     }
-    
+
     /**
      * Returns a new point at the sum of this and another point.
      *
@@ -93,7 +93,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public GridPoint add(GridPoint other) {
         return new GridPoint(x + other.x, y + other.y);
     }
-    
+
     /**
      * Returns a new point at the difference of this and another point.
      *
@@ -103,7 +103,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public GridPoint subtract(GridPoint other) {
         return new GridPoint(x - other.x, y - other.y);
     }
-    
+
     /**
      * Returns the Euclidean distance to another point.
      *
@@ -115,7 +115,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
         int dy = y - other.y;
         return Math.sqrt(dx * dx + dy * dy);
     }
-    
+
     /**
      * Returns the Manhattan (taxicab) distance to another point.
      *
@@ -125,7 +125,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public int manhattanDistanceTo(GridPoint other) {
         return Math.abs(x - other.x) + Math.abs(y - other.y);
     }
-    
+
     /**
      * Checks if this point is within a rectangular region.
      *
@@ -138,7 +138,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public boolean isWithin(int minX, int minY, int maxX, int maxY) {
         return x >= minX && x < maxX && y >= minY && y < maxY;
     }
-    
+
     /**
      * Returns the x coordinate.
      * @return x coordinate
@@ -146,7 +146,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public int getX() {
         return x;
     }
-    
+
     /**
      * Returns the y coordinate.
      * @return y coordinate
@@ -154,7 +154,7 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
     public int getY() {
         return y;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -162,32 +162,32 @@ public final class GridPoint implements Serializable, Comparable<GridPoint> {
         GridPoint other = (GridPoint) obj;
         return x == other.x && y == other.y;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
     }
-    
+
     @Override
     public String toString() {
         return "GridPoint[" + x + ", " + y + "]";
     }
-    
+
     @Override
     public int compareTo(GridPoint other) {
         int cmpY = Integer.compare(this.y, other.y);
         return cmpY != 0 ? cmpY : Integer.compare(this.x, other.x);
     }
-    
+
     /**
      * Converts to java.awt.Point for GUI compatibility.
-     * 
+     *
      * @return equivalent AWT Point
      */
     public java.awt.Point toAwtPoint() {
         return new java.awt.Point(x, y);
     }
-    
+
     /**
      * Creates a GridPoint from a java.awt.Point.
      *

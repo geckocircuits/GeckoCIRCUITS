@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -56,7 +56,7 @@ public enum ComponentDirection {
         }
         return NORTH_SOUTH;
     }
-    
+
     public static ComponentDirection getDirection(final Point start, final Point end) {
         if (start.x == end.x) {
             if (start.y > end.y) {
@@ -73,7 +73,7 @@ public enum ComponentDirection {
             }
         }
     }
-    
+
     public boolean isHorizontal() {
         return this == WEST_EAST || this == EAST_WEST;
     }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,12 +43,12 @@ import java.util.Map;
 public class GeckoGraphics2D extends Graphics2D {
         public final Graphics2D origGraphics;
         private ColorSettable colorStrategy = new ColorStragegyDisabledComponent();
-        
+
         public GeckoGraphics2D(final Graphics2D g2d) {
             super();
             origGraphics = g2d;
         }
-        
+
         @Override
         public void draw(final Shape shape) {
             origGraphics.draw(shape);
@@ -60,7 +60,7 @@ public class GeckoGraphics2D extends Graphics2D {
         }
 
         @Override
-        public void drawImage(final BufferedImage bufferedImage, final BufferedImageOp bImop, 
+        public void drawImage(final BufferedImage bufferedImage, final BufferedImageOp bImop,
             final int xValue, final int yValue) {
             origGraphics.drawImage(bufferedImage, bImop, xValue, yValue);
         }
@@ -229,7 +229,7 @@ public class GeckoGraphics2D extends Graphics2D {
         public void clip(Shape shape) {
             origGraphics.clip(shape);
         }
-        
+
         public void setColorStrategySelected() {
             colorStrategy = new ColorStrategySelected();
         }
@@ -250,8 +250,8 @@ public class GeckoGraphics2D extends Graphics2D {
         }
 
         @Override
-        public void setColor(Color color) {                        
-            colorStrategy.setColor(color, origGraphics);            
+        public void setColor(Color color) {
+            colorStrategy.setColor(color, origGraphics);
         }
 
         @Override
@@ -337,7 +337,7 @@ public class GeckoGraphics2D extends Graphics2D {
         @Override
         public void drawOval(int i, int i1, int i2, int i3) {
             origGraphics.drawOval(i, i1, i2, i3);
-            
+
         }
 
         @Override
@@ -396,7 +396,7 @@ public class GeckoGraphics2D extends Graphics2D {
         }
 
         @Override
-        public boolean drawImage(final Image image, final int i, final int i1, final int i2, final int i3, 
+        public boolean drawImage(final Image image, final int i, final int i1, final int i2, final int i3,
         final int i4, final int i5, final int i6, final int i7, final Color color, ImageObserver io) {
                 return origGraphics.drawImage(image, i, i1, i2, i3, i4, i5, i6, i7, color, io);
         }
@@ -405,5 +405,5 @@ public class GeckoGraphics2D extends Graphics2D {
         public void dispose() {
             origGraphics.dispose();
         }
-        
+
     }

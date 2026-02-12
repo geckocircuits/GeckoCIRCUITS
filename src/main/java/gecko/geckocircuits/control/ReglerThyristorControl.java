@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,7 +24,7 @@ public final class ReglerThyristorControl extends RegelBlock {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerThyristorControl.class, "THYRISTOR_CONTROL", I18nKeys.THYRISTOR_CONTROL);
 
     private DialogThyristorControl dtc;
-    private static final int TN_Y = 6;  // Nummer der Terminals fuer Signal-Anschluss    
+    private static final int TN_Y = 6;  // Nummer der Terminals fuer Signal-Anschluss
     transient final UserParameter<Double> _onTime = UserParameter.Builder.<Double>start("onTime", 4e-3).
             longName(I18nKeys.GATE_ON_TIME_SEC).
             shortName("ontime").
@@ -59,7 +59,7 @@ public final class ReglerThyristorControl extends RegelBlock {
 
     @Override
     public I18nKeys[] getOutputDescription() {
-        return new I18nKeys[]{I18nKeys.GATE_SIGNAL, I18nKeys.GATE_SIGNAL, 
+        return new I18nKeys[]{I18nKeys.GATE_SIGNAL, I18nKeys.GATE_SIGNAL,
             I18nKeys.GATE_SIGNAL,I18nKeys.GATE_SIGNAL,
             I18nKeys.GATE_SIGNAL,I18nKeys.GATE_SIGNAL};
     }
@@ -68,7 +68,7 @@ public final class ReglerThyristorControl extends RegelBlock {
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         return new ThyristorControlCalculator(_phaseShift.getValue(), _initFreq.getValue(), _onTime.getValue());
     }
-    
+
     @Override
     protected String getCenteredDrawString() {
         return "THYR\nCTRL";

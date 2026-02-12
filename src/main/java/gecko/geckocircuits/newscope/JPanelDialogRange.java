@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -55,7 +55,7 @@ public final class JPanelDialogRange extends JPanel {
         @Override
         public void keyReleased(final KeyEvent keyEvent) {
             try {
-                _xDef1 = _rngDf1.getNumberFromField(); 
+                _xDef1 = _rngDf1.getNumberFromField();
                 notifyActionListener();
             } catch (NumberFormatException ex) {
                 ex.printStackTrace();
@@ -63,17 +63,17 @@ public final class JPanelDialogRange extends JPanel {
         }
     };
     private ActionListener _listener;
-    
+
     void registerActionListener(ActionListener listener) {
         _listener = listener;
     }
-    
+
     private void notifyActionListener() {
         if(_listener != null) {
             _listener.actionPerformed(null);
         }
     }
-    
+
     private final transient KeyListener _xDef2KeyListener = new KeyListener() {
 
         @Override
@@ -89,7 +89,7 @@ public final class JPanelDialogRange extends JPanel {
         @Override
         public void keyReleased(final KeyEvent keyEvent) {
             try {
-                _xDef2 = _rngDf2.getNumberFromField(); 
+                _xDef2 = _rngDf2.getNumberFromField();
                 notifyActionListener();
             } catch (NumberFormatException ex) {
                 ex.printStackTrace();
@@ -104,7 +104,7 @@ public final class JPanelDialogRange extends JPanel {
                 TitledBorder.LEFT, TitledBorder.TOP));
 
         // Default-Bereichsgrenzen:
-        _xScope1 = worksheet.getTimeValue(0, 0);  
+        _xScope1 = worksheet.getTimeValue(0, 0);
         int index2 = worksheet.getMaximumTimeIndex(0) - 1;
         double xScope2value = worksheet.getTimeValue(index2, 0);
         while ((xScope2value == 0) && (index2 > 0)) {

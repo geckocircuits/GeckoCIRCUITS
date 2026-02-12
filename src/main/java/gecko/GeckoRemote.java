@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -49,7 +49,7 @@ public class GeckoRemote {
         // some people like to have a quick and dirty access to this
         // functions. Therefore, I keep this empty constructor.
     }
-    
+
     private static int portNumber;
     static GeckoRemoteInterface _wrapped = null;
     static GeckoRemoteIntWithoutExc _proxy;
@@ -84,16 +84,16 @@ public class GeckoRemote {
             } catch(Throwable ex) {
                 throw ex.getCause();
             }
-            
+
         }
     }
-    
+
     public static void setJavaPath(final String pathToJavaExe) {
         if(new File(pathToJavaExe).exists()) {
             _pathToJava = pathToJavaExe;
         } else {
             throw new RuntimeException("Error: Path to Java executable: " + pathToJavaExe + " does not exist!");
-        }        
+        }
     }
 
     /**
@@ -107,10 +107,10 @@ public class GeckoRemote {
                 disconnectFromGecko();
             }
             GeckoSim.operatingmode = OperatingMode.REMOTE;
-            
-            
+
+
             final List<String> argsList = new ArrayList<String>();
-            
+
             if(! _pathToJava.isEmpty()) {
                 argsList.add("-j");
                 argsList.add(_pathToJava);
@@ -148,7 +148,7 @@ public class GeckoRemote {
             throw new RuntimeException("Error connecting to GeckoCIRCUITS at port " + port, ex);
         }
     }
-    
+
     public static void connectToGecko(final int port) {
         connectToGecko("localhost",port);
     }
@@ -218,7 +218,7 @@ public class GeckoRemote {
                         disconnectFromGecko();
                     }
                     _wrapped = existingInstance;
-                    
+
                     ClassLoader loader = _wrapped.getClass().getClassLoader();
                     Class[] interfaces = new Class[]{GeckoRemoteIntWithoutExc.class};
 
@@ -334,7 +334,7 @@ public class GeckoRemote {
     }
 
     public static void simulateStep() {
-        // careful: here, i don't call _proxy.(), since this method is 
+        // careful: here, i don't call _proxy.(), since this method is
         //critical to simulation runtime (possibly called very often).
         try {
             if (checkRemote()) {
@@ -346,7 +346,7 @@ public class GeckoRemote {
     }
 
     public static void simulateSteps(final int steps) {
-        // careful: here, i don't call _proxy.(), since this method is 
+        // careful: here, i don't call _proxy.(), since this method is
         //critical to simulation runtime (possibly called very often).
         try {
             if (checkRemote()) {
@@ -383,7 +383,7 @@ public class GeckoRemote {
     public static String[] getThermalElements() {
         return _proxy.getThermalElements();
     }
-    
+
     public static String[] getSpecialElements() {
         return _proxy.getSpecialElements();
     }
@@ -419,14 +419,14 @@ public class GeckoRemote {
     public static Object doOperation(final String elementName, final String operationName, final Object parameterValue) {
         return _proxy.doOperation(elementName, operationName, parameterValue);
     }
-    
+
     public static void setWorksheetSize(int sizeX, int sizeY) {
         _proxy.setWorksheetSize(sizeX, sizeY);
-        return;        
+        return;
     }
-    
+
     public static int[] getWorksheetSize() {
-        return _proxy.getWorksheetSize();        
+        return _proxy.getWorksheetSize();
     }
 
     public static void setGlobalParameterValue(final String parameterName, final double value) {
@@ -439,7 +439,7 @@ public class GeckoRemote {
 
     public static void setParameter(final String elementName, final String parameterName, final double value) {
         _proxy.setParameter(elementName, parameterName, value);
-    }            
+    }
 
     public static void setParameters(final String elementName, final String[] parameterNames, final double[] values) {
         _proxy.setParameters(elementName, parameterNames, values);
@@ -476,8 +476,8 @@ public class GeckoRemote {
     public static void simulateTime(final double time) {
         _proxy.simulateTime(time);
     }
-    
-    
+
+
 
     public static double getSimulationTime() {
         return _proxy.getSimulationTime();
@@ -526,7 +526,7 @@ public class GeckoRemote {
     }
 
     @SuppressWarnings("PMD")
-    //CHECKSTYLE:OFF    
+    //CHECKSTYLE:OFF
     public static double get_Tend_pre() {
         return _proxy.get_Tend_pre();
     }
@@ -585,7 +585,7 @@ public class GeckoRemote {
     public static double[] getSignalCharacteristics(final String scopeName, final double startTime, final double endTime) {
         return getSignalCharacteristics(scopeName, 0, startTime, endTime);
     }
-    
+
     public static double getAvg(final String scopeName, final double startTime, final double endTime) {
         return getAvg(scopeName, 0, startTime, endTime);
     }
@@ -623,7 +623,7 @@ public class GeckoRemote {
             final double endTime, final int harmonics) {
         return _proxy.getFourier(scopeName, scopePort, startTime, endTime, harmonics);
     }
-    
+
     @Deprecated
     public static double[][] getFourier(final String scopeName, final double startTime, final double endTime,
             final int harmonics) {
@@ -635,21 +635,21 @@ public class GeckoRemote {
             final double deltaT, final double simulationTime) {
         _proxy.initSteadyStateDetection(stateVariables, frequencies, deltaT, simulationTime);
     }
-    
+
     public static void initSteadyStateDetection(String[] stateVariables, double frequency, double deltaT,
             double simulationTime) {
         _proxy.initSteadyStateDetection(stateVariables, frequency, deltaT, simulationTime);
     }
-    
+
     @Deprecated
     public static double[] simulateUntilSteadyState(final boolean supressMessages) {
         return _proxy.simulateUntilSteadyState(supressMessages);
-    }    
-    
+    }
+
     public static double[] simulateToSteadyState(final boolean supressMessages) {
         return _proxy.simulateToSteadyState(supressMessages);
     }
-    
+
     public static double[] simulateToSteadyState(final boolean supressMessages, final double targetCorrelation, final double targetMeanPctDiff) {
         return _proxy.simulateToSteadyState(supressMessages, targetCorrelation, targetMeanPctDiff);
     }
@@ -661,8 +661,8 @@ public class GeckoRemote {
     public static void deleteComponent(final String elementName) {
         _proxy.deleteComponent(elementName);
     }
-    
-    
+
+
     public static void deleteAllComponents(final String subcircuitName) {
         _proxy.deleteAllComponents(subcircuitName);
     }
@@ -676,7 +676,7 @@ public class GeckoRemote {
     public static void setNonLinear(final String elementName, final String characteristicFileName) throws FileNotFoundException {
         _proxy.setNonLinear(elementName, characteristicFileName);
     }
-    
+
     @Deprecated
     public static void create(final String elementType, final String elementName, final int xCoord, final int yCoord) {
         _proxy.create(elementType, elementName, xCoord, yCoord);
@@ -686,7 +686,7 @@ public class GeckoRemote {
     public static void delete(final String elementName) {
         _proxy.delete(elementName);
     }
-    
+
     public static void createConnector(String elementName, int xStart, int yStart, int xEnd, int yEnd, boolean startHorizontal) {
         _proxy.createConnector(elementName, xStart, yStart, xEnd, yEnd, startHorizontal);
     }
@@ -702,21 +702,21 @@ public class GeckoRemote {
     public static void setInputNodeName(final String elementName, final int nodeIndex, final String nodeName) {
         _proxy.setInputNodeName(elementName, nodeIndex, nodeName);
     }
-    
-    
-    public static String getOutputNodeName(final String elementName, final int nodeIndex) {        
+
+
+    public static String getOutputNodeName(final String elementName, final int nodeIndex) {
         return _proxy.getOutputNodeName(elementName, nodeIndex);
     }
-    
+
     public static void setPosition(final String elementName, int posX, int posY) {
         _proxy.setPosition(elementName, posX, posY);
         return;
     }
 
-    public static String getInputNodeName(final String elementName, final int nodeIndex) {        
+    public static String getInputNodeName(final String elementName, final int nodeIndex) {
         return _proxy.getInputNodeName(elementName, nodeIndex);
     }
-    
+
 
     public static double[] getTimeArray(final String signalName, final double tStart, final double tEnd, final int skipPoints) {
         return _proxy.getTimeArray(signalName, tStart, tEnd, skipPoints);

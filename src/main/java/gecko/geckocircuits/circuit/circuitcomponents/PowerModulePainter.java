@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -38,12 +38,12 @@ public class PowerModulePainter {
     private static int[] xkb5 = new int[xKB5.length], ykb5 = new int[xKB5.length], xkb6 = new int[xKB6.length], ykb6 = new int[xKB6.length], xkb7 = new int[xKB7.length], ykb7 = new int[xKB7.length];
     private static int xC = 430, yC = 250;  // Zentrum des Modul-Bildes in PixelPunkten
     private static double br = 2.5;
-    
+
     static void zeichne(Graphics graphics, ThermMODUL aThis, Color color1, int dpix) {
-    
+
         double sk = br / xC;
-    
-        
+
+
         for (int i1 = 0; i1 < xKB1.length; i1++) {
             xkb1[i1] = (int) (dpix * (0 - (xKB1[i1] - xC) * sk));
             ykb1[i1] = (int) (dpix * (0 - (yC - yKB1[i1]) * sk));
@@ -84,7 +84,7 @@ public class PowerModulePainter {
             xkb7[i1] = (int) (dpix * (0 - (xKB7[i1] - xC) * sk));
             ykb7[i1] = (int) (dpix * (0 - (yC - yKB7[i1]) * sk));
         }
-        
+
         // Modul zeichnen:
         graphics.setColor(Color.darkGray);
         graphics.fillPolygon(xkb41, ykb41, xkb41.length);
@@ -114,11 +114,11 @@ public class PowerModulePainter {
         graphics.drawPolygon(xkb3, ykb3, xkb3.length);
         graphics.drawPolygon(xkb1, ykb1, xkb1.length);
     }
-   
-    
+
+
     private PowerModulePainter() {
-        
+
     }
-    
-    
+
+
 }

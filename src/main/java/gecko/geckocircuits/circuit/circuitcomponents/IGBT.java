@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,7 +37,7 @@ public final class IGBT extends AbstractVoltageDropSwitch implements HiddenSubCi
     private static final double HEIGHT = 0.4;
     private static final int TRIANGLE_WIDTH = 5;
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IGBT.class, "IGBT", I18nKeys.IGBT, I18nKeys.INSULATED_GATE_BIPOLAR_TRANSISTOR);
-    
+
     final UserParameter<Boolean> _isSatCurEnabled = UserParameter.Builder.
             <Boolean>start("satCurEnabled", false).
             longName(I18nKeys.IF_ZERO_ISAT_DISABLED).
@@ -54,7 +54,7 @@ public final class IGBT extends AbstractVoltageDropSwitch implements HiddenSubCi
             build();
     private final AbstractTerminal outTerminal;
     private final AbstractTerminal inTerminal;
-    
+
 
     public IGBT() {
         super();
@@ -73,7 +73,7 @@ public final class IGBT extends AbstractVoltageDropSwitch implements HiddenSubCi
     }
 
     @Override
-    protected void drawForeground(final Graphics2D graphics) {        
+    protected void drawForeground(final Graphics2D graphics) {
         graphics.drawPolyline(
                 new int[]{-dpix, -dpix, (int) (-dpix * (1 + HEIGHT))},
                 new int[]{-dpix, dpix, dpix}, 3);
@@ -97,7 +97,7 @@ public final class IGBT extends AbstractVoltageDropSwitch implements HiddenSubCi
         super.addTextInfoParameters();
         addGateTextInfo();
         verluste.addTextInfoValue(_textInfo);
-    }    
+    }
 
     @Override
     public Collection<AbstractBlockInterface> getHiddenSubCircuitElements() {
@@ -151,7 +151,7 @@ public final class IGBT extends AbstractVoltageDropSwitch implements HiddenSubCi
     protected Window openDialogWindow() {
         return new IGBTDialog(this);
     }
-    
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new IGBTCalculator(this));

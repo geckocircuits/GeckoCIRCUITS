@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -402,7 +402,7 @@ public final class SaveViewFrame extends GeckoDialog {
         }
 
         File parentDirectory = null;
-        
+
         if (lastSlashIndex > 0) {
             final String parentPath = lastUsedFileName.substring(0, lastSlashIndex);
             parentDirectory = new File(parentPath);
@@ -632,7 +632,7 @@ public final class SaveViewFrame extends GeckoDialog {
                 GenericDOMImplementation.getDOMImplementation();
 
 
-        // Create an instance of org.w3c.dom.Document.        
+        // Create an instance of org.w3c.dom.Document.
         final Document document = domImpl.createDocument(SVG_URL, AvailableTypes.SVG.toString(), null);
         final SVGGraphics2D svgGenerator = createSVGGenerator(document);
 
@@ -682,7 +682,7 @@ public final class SaveViewFrame extends GeckoDialog {
             final String svgURI = svgFile.toURI().toURL().toString();
             final TranscoderInput input = new TranscoderInput(svgURI);
 
-            // Create the transcoder output.            
+            // Create the transcoder output.
             final File transcoderOutputFile = new File(jTextFieldFileName.getText());
             final OutputStream ostream = new BufferedOutputStream(new FileOutputStream(transcoderOutputFile));
             final TranscoderOutput output = new TranscoderOutput(ostream);

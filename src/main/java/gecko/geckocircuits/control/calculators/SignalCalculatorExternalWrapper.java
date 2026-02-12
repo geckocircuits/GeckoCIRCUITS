@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -50,7 +50,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
         _wrapped.setFrequency(_inputSignal[1][0]);
 
         if (_time == deltaT) { // when external parameters are used, the initialization is done 1 timestep later.
-            // the reason is that, for e.g. for setting a proper phaseshift value, we first have to calculate a 
+            // the reason is that, for e.g. for setting a proper phaseshift value, we first have to calculate a
             // proper input signal.
             initializeAtSimulationStart(deltaT);
         }
@@ -81,7 +81,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
     void setPhase(final double phase) {
         _inputSignal[PHASE_INDEX][0] = phase;
     }
-    
+
     void setDuty(final double duty) {
         _inputSignal[DUTY_INDEX][0] = duty;
     }

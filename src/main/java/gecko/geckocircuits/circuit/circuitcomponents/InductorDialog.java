@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,8 +28,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 class InductorDialog extends DialogElementLK<AbstractInductor> {
-    private JCheckBox jcbLossL;  // soll GeckoMAGNETICS aktiviert werden? 
-    
+    private JCheckBox jcbLossL;  // soll GeckoMAGNETICS aktiviert werden?
+
     public InductorDialog(final AbstractInductor parent) {
         super(parent);
     }
@@ -38,7 +38,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
     protected void baueGUIIndividual() {
         jcbLossL = new JCheckBox("Calculate Losses");
         JPanel pIN = createParameterPanel(element._inductance, element._initialCurrent);
-        
+
         final JButton jbNonLinL = GuiFabric.getJButton(I18nKeys.DEFINE_CHARACTERISTIC);
         jbNonLinL.addActionListener(new ActionListener() {
             @Override
@@ -47,9 +47,9 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
                 dialogNonLinearity.setVisible(true);
             }
         });
-        
+
         final FormatJTextField inductanceField = tf.get(0);
-        
+
         final JCheckBox jcbNonLinL = new JCheckBox("Non-Linear Behavior");
         jcbNonLinL.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
@@ -71,7 +71,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
             jbNonLinL.setEnabled(false);
             inductanceField.setEnabled(true);
         }
-        // 
+        //
         JPanel pNonLinL = new JPanel();
         pNonLinL.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Non-Linear", TitledBorder.LEFT, TitledBorder.TOP));
         pNonLinL.setLayout(new BorderLayout());
@@ -88,11 +88,11 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
                 } else {
                     jbMAG1.setEnabled(false);
                 }
-                
+
             }
         });
         if (MainWindow.INCLUDE_GeckoMAGNETICS) {
-            
+
             if (jcbLossL.isSelected()) {
                 jbMAG1.setEnabled(true);
             } else {
@@ -102,7 +102,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
             jcbLossL.setEnabled(false);
             jbMAG1.setEnabled(false);
         }
-        // 
+        //
         JPanel pMAG1 = new JPanel();
         pMAG1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Losses", TitledBorder.LEFT, TitledBorder.TOP));
         pMAG1.setLayout(new BorderLayout());
@@ -118,5 +118,5 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
         pINy.add(pMAG1, BorderLayout.SOUTH);
         con.add(pINy, BorderLayout.CENTER);
 
-    }        
+    }
 }

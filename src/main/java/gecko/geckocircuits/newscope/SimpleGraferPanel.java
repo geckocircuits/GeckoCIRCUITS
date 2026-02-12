@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -60,7 +60,7 @@ public class SimpleGraferPanel extends javax.swing.JPanel {
      */
     //CHECKSTYLE:OFF
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
     private void initComponents() {
 
         jPanelGraph = new javax.swing.JPanel();
@@ -70,11 +70,11 @@ public class SimpleGraferPanel extends javax.swing.JPanel {
 
         jPanelGraph.setOpaque(false);
         jPanelGraph.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {                
+            public void componentResized(java.awt.event.ComponentEvent evt) {
                 jPanelGraphComponentResized(evt);
             }
-        });                                
-        
+        });
+
 
         javax.swing.GroupLayout jPanelGraphLayout = new javax.swing.GroupLayout(jPanelGraph);
         jPanelGraph.setLayout(jPanelGraphLayout);
@@ -90,19 +90,19 @@ public class SimpleGraferPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()                
+                .addGroup(layout.createSequentialGroup()
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelGraph)
                 .addContainerGap()));
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)                
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanelGraph, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap()));
-    }// </editor-fold>                        
+    }// </editor-fold>
 
     //CHECKSTYLE:ON
-    private void jButtonShowAllActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD                                               
+    private void jButtonShowAllActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD
         _grafer.doZoomAutoFit();
     }
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,7 +26,7 @@ import javax.swing.JPanel;
 class ReglerHysteresisDialog extends AbstractDialogWithExternalOption<ReglerHysteresis> {
     private static final int IMAGE_COMPONENT_WIDTH = 130;
     private static final int IMAGE_COMPONENT_HEIGHT = 100;
-        
+
     private JPanel _parameterPanel;
 
     public ReglerHysteresisDialog(final ReglerHysteresis reglerHys) {
@@ -34,39 +34,39 @@ class ReglerHysteresisDialog extends AbstractDialogWithExternalOption<ReglerHyst
     }
 
     @Override
-    protected void baueGuiIndividual() {                
+    protected void baueGuiIndividual() {
         final JComponent compImG2 = createImageComponent();
         compImG2.setPreferredSize(new Dimension(IMAGE_COMPONENT_WIDTH, IMAGE_COMPONENT_HEIGHT));
-        
+
         final JPanel pImG2 = new JPanel();
         pImG2.setLayout(new BorderLayout());
         pImG2.add(compImG2, BorderLayout.CENTER);
         jpM.add(pImG2, BorderLayout.CENTER);
         //
         _parameterPanel = createParameterPanel(element._hysteresisThreshold);
-        jpM.add(_parameterPanel, BorderLayout.SOUTH);                
-        
+        jpM.add(_parameterPanel, BorderLayout.SOUTH);
+
         for(JComponent comp : getComponentsDisabledExternal()) {
             comp.setEnabled(!element.isExternalSet());
-        }        
-        
+        }
+
         jpM.add(_jCheckBoxUseExternal, BorderLayout.NORTH);
-    }    
+    }
 
     private JComponent createImageComponent() {
         //CHECKSTYLE:OFF
         final int[] polyLineXCoord = new int[]{90, 82, 82, 90, 10, 50, 50, 47, 53, 50, 50};
         final int[] polyLineYCoord = new int[]{50, 47, 47, 50, 50, 50, 10, 18, 18, 10, 90};
-        assert polyLineXCoord.length == polyLineYCoord.length;        
+        assert polyLineXCoord.length == polyLineYCoord.length;
 
         return new JComponent() {
             @Override
             public void paint(final Graphics graphics) {
                 RenderingHints oldRendering = ((Graphics2D) graphics).getRenderingHints();
-                
+
                 ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
-                
+
                 graphics.setColor(Color.white);
                 graphics.fillRect(0, 0, 100, 100);
                 graphics.setColor(Color.black);
@@ -90,9 +90,9 @@ class ReglerHysteresisDialog extends AbstractDialogWithExternalOption<ReglerHyst
     }
 
     @Override
-    JComponent[] getComponentsDisabledExternal() {        
+    JComponent[] getComponentsDisabledExternal() {
         return new JComponent[] {tf.get(0)};
     }
-        
-    
+
+
 }

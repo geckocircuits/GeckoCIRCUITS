@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -42,44 +42,44 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     private final HiLoData[] _abMinMaxValues;
     private ContainerStatus _containerStatus;
 
-    
+
     public static DataContainerSimple fabricConstantDtTimeSeries(final int rows, final int columns) {
         DataContainerSimple returnValue = new DataContainerSimple(rows, columns);
         returnValue._timeSerieArray = new TimeSeriesConstantDt();
         return returnValue;
     }
-    
+
     public static DataContainerSimple fabricArrayTimeSeries(final int rows, final int columns) {
         DataContainerSimple returnValue = new DataContainerSimple(rows, columns);
         returnValue._timeSerieArray = new TimeSeriesArray(columns);
         return returnValue;
     }
-    
-    
-    
+
+
+
     public DataContainerSimple(final int rows, final int columns) {
         _data = new float[rows][columns];
-        _abMinMaxValues = new HiLoData[rows];        
+        _abMinMaxValues = new HiLoData[rows];
         _signalNames = new String[rows];
     }
-    
+
     public void deleteDataReference() {
         _data = null;
         _timeSerieArray = null;
         // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
     }
-    
+
     public double getNiceMaximumXValue() {
-        double maxXValue = 0;                    
-        maxXValue = Math.max(maxXValue, _timeSerieArray.getValue(_timeSerieArray.getMaximumIndex()));        
-        
+        double maxXValue = 0;
+        maxXValue = Math.max(maxXValue, _timeSerieArray.getValue(_timeSerieArray.getMaximumIndex()));
+
         NiceScale niceScale = new NiceScale(HiLoData.hiLoDataFabric(0, (float) maxXValue));
         return niceScale.getNiceLimits()._yHi;
     }
 
     @Override
     public final float getValue(final int row, final int column) {
-        return _data[row][column];        
+        return _data[row][column];
     }
 
     public final void setValue(final float value, final int row, final int column) {
@@ -129,12 +129,12 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
 
     @SuppressWarnings("PMD")
     @Override
-    public void insertValuesAtEnd(final float[] values, final double timeValue) {        
-        _maximumIndex++;        
+    public void insertValuesAtEnd(final float[] values, final double timeValue) {
+        _maximumIndex++;
         _timeSerieArray.setValue(_maximumIndex, timeValue);
 //        _timeValues[_maximumIndex] = timeValue;
-        //YYY error! _abMinMaxValues[0] = HiLoData.mergeFromValue(_abMinMaxValues[0], (float) timeValue);        
-        for (int i = 0; i < values.length; i++) {            
+        //YYY error! _abMinMaxValues[0] = HiLoData.mergeFromValue(_abMinMaxValues[0], (float) timeValue);
+        for (int i = 0; i < values.length; i++) {
             _data[i][_maximumIndex] = values[i];
             _abMinMaxValues[i] = HiLoData.mergeFromValue(_abMinMaxValues[i], values[i]);
         }
@@ -151,7 +151,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
         return _abMinMaxValues[0];
     }
     static int clearCounter = 0;
-    
+
 
     @Override
     public final int findTimeIndex(final double time, final int row) {
@@ -193,7 +193,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
             }
         }
 
-        if (startIndex == stopIndex) { // in this case, there was no data point in the given interval.   
+        if (startIndex == stopIndex) { // in this case, there was no data point in the given interval.
             return null;
         }
         if (startIndex + 1 == stopIndex) { // we have exactly one datapoint in the interval.
@@ -212,12 +212,12 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
 
     @Override
     public String getSignalName(final int row) {
-        if (_signalNames.length <= row) {            
+        if (_signalNames.length <= row) {
             return " ";
         }
         if (_signalNames[row] != null) {
             return _signalNames[row];
-        }        
+        }
         return " ";
     }
 

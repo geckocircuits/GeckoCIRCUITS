@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -33,20 +33,20 @@ public class NativeCBlock {
     public NativeCBlock () {
         _customCClassLoader = new NativeCClassLoader();
     }
-    
+
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.AvoidArrayLoops"})
     void calculateYOUT(final double time, final double deltaT, final double[][] inputSignals,
             final double[][] outputSignals) throws Exception {
-        
+
 
         if ( _xINVector == null ) {
             _xINVector = new double[inputSignals.length];
         }
-        
+
         if (_xOUTVector == null) {
             _xOUTVector = new double[outputSignals.length];
         }
-        
+
         if (time == 0) {
             _nativeCWrapperObj.initParameters();
         }
@@ -54,9 +54,9 @@ public class NativeCBlock {
         for (int i = 0; i < _xINVector.length; i++) {
             _xINVector[i] = inputSignals[i][0];
         }
-        
+
         _nativeCWrapperObj.calcOutputs(_xINVector, _xOUTVector, outputSignals.length, time, deltaT);
-        
+
 
         for (int i = 0; i < _xOUTVector.length; i++) {
             outputSignals[i][0] = _xOUTVector[i];
@@ -64,7 +64,7 @@ public class NativeCBlock {
 
         checkOutputsForNANorINFValues(outputSignals);
     }
-    
+
     public boolean loadLibraries (final String name) {
         try {
             _customCClassLoader = new NativeCClassLoader();
@@ -80,7 +80,7 @@ public class NativeCBlock {
             return false;
         }
     }
-    
+
     public void unloadLibraries () {
         try {
             /*ClassLoader clLoader = this.getClass().getClassLoader();
@@ -102,7 +102,7 @@ public class NativeCBlock {
             e.printStackTrace();
         }
     }
-    
+
     private void checkOutputsForNANorINFValues(double[][] signal) {
         for (int i = 0; i < signal.length; i++) {
             if (signal[i] != signal[i]) {

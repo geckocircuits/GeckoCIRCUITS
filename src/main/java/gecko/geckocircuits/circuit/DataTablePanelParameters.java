@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -42,7 +42,7 @@ public class DataTablePanelParameters extends JPanel {
     public DataTablePanelParameters(final String[] columnTitles, final Map<String, Integer> usedParameterNames) {
         super(new GridLayout(1, 1));
         _columnTitles = columnTitles;
-                
+
         _tableModel = new DataTablePanelParameters.MyTableModel(columnTitles.length);
         _table = new JTable(_tableModel) {
 
@@ -52,17 +52,17 @@ public class DataTablePanelParameters extends JPanel {
                     return false;
                 } else {
                     return super.isCellEditable(row, column);
-                }                
+                }
             }
-            
+
         };
-        
+
         _usedParameterNames = usedParameterNames;
         _table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        
+
         _table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         _table.setFillsViewportHeight(true);
-        
+
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(_table);
 
@@ -79,9 +79,9 @@ public class DataTablePanelParameters extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 return super.getTableCellRendererComponent(table, value, false, hasFocus, row, column); //To change body of generated methods, choose Tools | Templates.
             }
-            
+
         });
-                
+
         TableColumn thirdColumn = _table.getColumnModel().getColumn(2);
         thirdColumn.setPreferredWidth(20);
         thirdColumn.setCellRenderer(new MyTableCellRenderer() {
@@ -89,7 +89,7 @@ public class DataTablePanelParameters extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 return super.getTableCellRendererComponent(table, value, false, hasFocus, row, column); //To change body of generated methods, choose Tools | Templates.
             }
-            
+
         });
 
         TableColumn firstColumn = _table.getColumnModel().getColumn(0);
@@ -100,26 +100,26 @@ public class DataTablePanelParameters extends JPanel {
                 if (value != null) {
                     valueString = value.toString();
                 }
-                
+
                 int numberOfUsages = 0;
                 if(_usedParameterNames.containsKey(valueString)) {
                     numberOfUsages = _usedParameterNames.get(valueString);
                 }
-                
+
                 JLabel returnValue = new JLabel(valueString);
-                
+
                 if (!valueString.startsWith("$")) {
                     returnValue.setForeground(Color.red);
                 } else {
                     if(valueString != null && !valueString.isEmpty() && numberOfUsages == 0) {
                         returnValue.setForeground(Color.blue);
                     }
-                }                
+                }
                 return returnValue;
             }
         });
-        
-        
+
+
 
 
     }
@@ -160,7 +160,7 @@ public class DataTablePanelParameters extends JPanel {
         return null;
     }
 
-    public void insertDataLine(final String parameterName, final double parameterValue) {       
+    public void insertDataLine(final String parameterName, final double parameterValue) {
         final int insertRow = _tableModel.getRowCount() - 1;
         _tableModel.setValueAt(parameterName, insertRow, 0);
         _tableModel.setValueAt(parameterValue, insertRow, 1);
@@ -183,20 +183,20 @@ public class DataTablePanelParameters extends JPanel {
         }
         return Collections.unmodifiableList(returnValue);
     }
-    
+
     private List<Integer> getIndicesWithValidData() {
         List<Integer> returnValue = new ArrayList<Integer>();
         for(int row = 0; row < _tableModel.getRowCount(); row++) {
             String firstColValue = (String) _tableModel.getValueAt(row, 0);
             if(firstColValue == null || firstColValue.isEmpty() || !firstColValue.startsWith("$")) {
                 continue;
-            }            
+            }
             Object secondColValue = _tableModel.getValueAt(row, 1);
             if(secondColValue == null) {
                 continue;
             }
             returnValue.add(row);
-            
+
         }
         return returnValue;
     }
@@ -208,14 +208,14 @@ public class DataTablePanelParameters extends JPanel {
         private List<Double> variableNumbers = new ArrayList<Double>();
 
         public MyTableModel(final int numberColumns) {
-            _numberColumns = numberColumns;            
+            _numberColumns = numberColumns;
         }
 
         public int getColumnCount() {
             return _numberColumns;
         }
 
-        public int getRowCount() {            
+        public int getRowCount() {
             return variableNumbers.size() + 1;
         }
 
@@ -227,14 +227,14 @@ public class DataTablePanelParameters extends JPanel {
             if (row >= variableNumbers.size()) {
                 return null;
             }
-            
+
             switch(col) {
                 case 0:
                     return variableNames.get(row);
                 case 1:
                     return variableNumbers.get(row);
                 case 2:
-                    
+
                     String variableName = variableNames.get(row);
                     if(_usedParameterNames.containsKey(variableName)) {
                         return _usedParameterNames.get(variableName);
@@ -244,7 +244,7 @@ public class DataTablePanelParameters extends JPanel {
                 default:
                     assert false : col;
                     return null;
-            }            
+            }
         }
 
         /*
@@ -321,7 +321,7 @@ public class DataTablePanelParameters extends JPanel {
         }
 
         private void createNullRow() {
-            
+
             variableNames.add(null);
             variableNumbers.add(null);
         }

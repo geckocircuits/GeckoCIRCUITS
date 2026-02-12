@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,43 +18,43 @@ import java.util.*;
 /**
  * Manages component terminal connections (input/output nodes).
  * Extracted from AbstractBlockInterface to separate terminal management.
- * 
+ *
  * <p>Terminal Types:
  * <ul>
  *   <li>Input terminals (XIN) - typically on left side of component</li>
  *   <li>Output terminals (YOUT) - typically on right side of component</li>
  * </ul>
- * 
+ *
  * <p>Thread-safety: Not thread-safe. External synchronization required.
- * 
+ *
  * @param <T> Terminal type
  * @author Sprint 3 refactoring
  */
 public class TerminalRegistry<T> {
-    
+
     /** Terminal type enumeration. */
     public enum TerminalType {
         INPUT("XIN"),
         OUTPUT("YOUT");
-        
+
         private final String legacyName;
-        
+
         TerminalType(String legacyName) {
             this.legacyName = legacyName;
         }
-        
+
         public String getLegacyName() {
             return legacyName;
         }
     }
-    
+
     // Terminal storage using lists for order preservation
     private final List<T> inputTerminals;
     private final List<T> outputTerminals;
-    
+
     // Optional terminal adapter for flexible operations
     private TerminalAdapter<T> adapter;
-    
+
     /**
      * Creates an empty terminal registry.
      */
@@ -63,22 +63,22 @@ public class TerminalRegistry<T> {
         this.outputTerminals = new ArrayList<>();
         this.adapter = null;
     }
-    
+
     /**
      * Creates a terminal registry with adapter.
-     * 
+     *
      * @param adapter Terminal adapter for operations
      */
     public TerminalRegistry(TerminalAdapter<T> adapter) {
         this();
         this.adapter = adapter;
     }
-    
+
     // ===== Input Terminal Management =====
-    
+
     /**
      * Adds an input terminal.
-     * 
+     *
      * @param terminal Terminal to add
      * @return this for chaining
      */
@@ -89,10 +89,10 @@ public class TerminalRegistry<T> {
         inputTerminals.add(terminal);
         return this;
     }
-    
+
     /**
      * Adds an input terminal at specific index.
-     * 
+     *
      * @param index Index to insert at
      * @param terminal Terminal to add
      */
@@ -105,63 +105,63 @@ public class TerminalRegistry<T> {
         }
         inputTerminals.add(index, terminal);
     }
-    
+
     /**
      * Gets input terminal at index.
-     * 
+     *
      * @param index Terminal index
      * @return Terminal at index
      */
     public T getInput(int index) {
         return inputTerminals.get(index);
     }
-    
+
     /**
      * Removes input terminal.
-     * 
+     *
      * @param terminal Terminal to remove
      * @return true if removed
      */
     public boolean removeInput(T terminal) {
         return inputTerminals.remove(terminal);
     }
-    
+
     /**
      * Removes input terminal at index.
-     * 
+     *
      * @param index Index to remove
      * @return Removed terminal
      */
     public T removeInput(int index) {
         return inputTerminals.remove(index);
     }
-    
+
     /**
      * Gets number of input terminals.
      */
     public int getInputCount() {
         return inputTerminals.size();
     }
-    
+
     /**
      * Gets all input terminals as unmodifiable list.
      */
     public List<T> getInputs() {
         return Collections.unmodifiableList(inputTerminals);
     }
-    
+
     /**
      * Checks if has any input terminals.
      */
     public boolean hasInputs() {
         return !inputTerminals.isEmpty();
     }
-    
+
     // ===== Output Terminal Management =====
-    
+
     /**
      * Adds an output terminal.
-     * 
+     *
      * @param terminal Terminal to add
      * @return this for chaining
      */
@@ -172,10 +172,10 @@ public class TerminalRegistry<T> {
         outputTerminals.add(terminal);
         return this;
     }
-    
+
     /**
      * Adds an output terminal at specific index.
-     * 
+     *
      * @param index Index to insert at
      * @param terminal Terminal to add
      */
@@ -188,63 +188,63 @@ public class TerminalRegistry<T> {
         }
         outputTerminals.add(index, terminal);
     }
-    
+
     /**
      * Gets output terminal at index.
-     * 
+     *
      * @param index Terminal index
      * @return Terminal at index
      */
     public T getOutput(int index) {
         return outputTerminals.get(index);
     }
-    
+
     /**
      * Removes output terminal.
-     * 
+     *
      * @param terminal Terminal to remove
      * @return true if removed
      */
     public boolean removeOutput(T terminal) {
         return outputTerminals.remove(terminal);
     }
-    
+
     /**
      * Removes output terminal at index.
-     * 
+     *
      * @param index Index to remove
      * @return Removed terminal
      */
     public T removeOutput(int index) {
         return outputTerminals.remove(index);
     }
-    
+
     /**
      * Gets number of output terminals.
      */
     public int getOutputCount() {
         return outputTerminals.size();
     }
-    
+
     /**
      * Gets all output terminals as unmodifiable list.
      */
     public List<T> getOutputs() {
         return Collections.unmodifiableList(outputTerminals);
     }
-    
+
     /**
      * Checks if has any output terminals.
      */
     public boolean hasOutputs() {
         return !outputTerminals.isEmpty();
     }
-    
+
     // ===== Generic Terminal Access =====
-    
+
     /**
      * Gets terminal by type and index.
-     * 
+     *
      * @param type Terminal type (INPUT or OUTPUT)
      * @param index Terminal index
      * @return Terminal at position
@@ -252,35 +252,35 @@ public class TerminalRegistry<T> {
     public T getTerminal(TerminalType type, int index) {
         return type == TerminalType.INPUT ? getInput(index) : getOutput(index);
     }
-    
+
     /**
      * Gets terminal count by type.
      */
     public int getTerminalCount(TerminalType type) {
         return type == TerminalType.INPUT ? getInputCount() : getOutputCount();
     }
-    
+
     /**
      * Gets all terminals of given type.
      */
     public List<T> getTerminals(TerminalType type) {
         return type == TerminalType.INPUT ? getInputs() : getOutputs();
     }
-    
+
     /**
      * Gets total terminal count (input + output).
      */
     public int getTotalTerminalCount() {
         return inputTerminals.size() + outputTerminals.size();
     }
-    
+
     /**
      * Checks if registry is empty (no terminals).
      */
     public boolean isEmpty() {
         return inputTerminals.isEmpty() && outputTerminals.isEmpty();
     }
-    
+
     /**
      * Gets all terminals as a combined list (inputs first, then outputs).
      */
@@ -290,12 +290,12 @@ public class TerminalRegistry<T> {
         all.addAll(outputTerminals);
         return Collections.unmodifiableList(all);
     }
-    
+
     // ===== Lookup Operations =====
-    
+
     /**
      * Finds terminal by name using adapter.
-     * 
+     *
      * @param name Terminal name
      * @return Found terminal or null
      */
@@ -303,27 +303,27 @@ public class TerminalRegistry<T> {
         if (name == null || adapter == null) {
             return null;
         }
-        
+
         // Search inputs
         for (T terminal : inputTerminals) {
             if (name.equalsIgnoreCase(adapter.getName(terminal))) {
                 return terminal;
             }
         }
-        
+
         // Search outputs
         for (T terminal : outputTerminals) {
             if (name.equalsIgnoreCase(adapter.getName(terminal))) {
                 return terminal;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Gets index of terminal in its type's list.
-     * 
+     *
      * @param terminal Terminal to find
      * @return Index or -1 if not found
      */
@@ -332,10 +332,10 @@ public class TerminalRegistry<T> {
         if (idx >= 0) return idx;
         return outputTerminals.indexOf(terminal);
     }
-    
+
     /**
      * Gets type of terminal.
-     * 
+     *
      * @param terminal Terminal to check
      * @return Terminal type or null if not found
      */
@@ -348,16 +348,16 @@ public class TerminalRegistry<T> {
         }
         return null;
     }
-    
+
     /**
      * Checks if terminal exists in registry.
      */
     public boolean contains(T terminal) {
         return inputTerminals.contains(terminal) || outputTerminals.contains(terminal);
     }
-    
+
     // ===== Bulk Operations =====
-    
+
     /**
      * Clears all terminals.
      */
@@ -365,7 +365,7 @@ public class TerminalRegistry<T> {
         inputTerminals.clear();
         outputTerminals.clear();
     }
-    
+
     /**
      * Clears terminals of specific type.
      */
@@ -376,7 +376,7 @@ public class TerminalRegistry<T> {
             outputTerminals.clear();
         }
     }
-    
+
     /**
      * Sets all input terminals (replaces existing).
      */
@@ -390,7 +390,7 @@ public class TerminalRegistry<T> {
             }
         }
     }
-    
+
     /**
      * Sets all output terminals (replaces existing).
      */
@@ -404,23 +404,23 @@ public class TerminalRegistry<T> {
             }
         }
     }
-    
+
     // ===== Adapter Operations =====
-    
+
     /**
      * Sets the terminal adapter.
      */
     public void setAdapter(TerminalAdapter<T> adapter) {
         this.adapter = adapter;
     }
-    
+
     /**
      * Gets the terminal adapter.
      */
     public TerminalAdapter<T> getAdapter() {
         return adapter;
     }
-    
+
     /**
      * Gets all terminal names (requires adapter).
      */
@@ -431,7 +431,7 @@ public class TerminalRegistry<T> {
         }
         return names;
     }
-    
+
     /**
      * Gets all output terminal names (requires adapter).
      */
@@ -442,9 +442,9 @@ public class TerminalRegistry<T> {
         }
         return names;
     }
-    
+
     // ===== Connection Status (requires adapter) =====
-    
+
     /**
      * Checks if all input terminals are connected.
      */
@@ -459,7 +459,7 @@ public class TerminalRegistry<T> {
         }
         return true;
     }
-    
+
     /**
      * Checks if all output terminals are connected.
      */
@@ -474,7 +474,7 @@ public class TerminalRegistry<T> {
         }
         return true;
     }
-    
+
     /**
      * Gets list of unconnected input terminals.
      */
@@ -489,7 +489,7 @@ public class TerminalRegistry<T> {
         }
         return unconnected;
     }
-    
+
     /**
      * Gets list of unconnected output terminals.
      */
@@ -504,7 +504,7 @@ public class TerminalRegistry<T> {
         }
         return unconnected;
     }
-    
+
     /**
      * Gets count of connected terminals.
      */
@@ -521,9 +521,9 @@ public class TerminalRegistry<T> {
         }
         return count;
     }
-    
+
     // ===== Copy/Clone =====
-    
+
     /**
      * Creates a shallow copy of this registry.
      */
@@ -533,18 +533,18 @@ public class TerminalRegistry<T> {
         copy.outputTerminals.addAll(this.outputTerminals);
         return copy;
     }
-    
+
     @Override
     public String toString() {
         return String.format("TerminalRegistry[inputs=%d, outputs=%d]",
             inputTerminals.size(), outputTerminals.size());
     }
-    
+
     // ===== Adapter Interface =====
-    
+
     /**
      * Adapter interface for terminal operations.
-     * 
+     *
      * @param <T> Terminal type
      */
     public interface TerminalAdapter<T> {
@@ -552,12 +552,12 @@ public class TerminalRegistry<T> {
          * Gets terminal name.
          */
         String getName(T terminal);
-        
+
         /**
          * Checks if terminal is connected.
          */
         boolean isConnected(T terminal);
-        
+
         /**
          * Gets terminal node index (for circuit solving).
          */
@@ -565,7 +565,7 @@ public class TerminalRegistry<T> {
             return -1;
         }
     }
-    
+
     /**
      * Simple terminal implementation for testing.
      */
@@ -573,39 +573,39 @@ public class TerminalRegistry<T> {
         private final String name;
         private boolean connected;
         private int nodeIndex;
-        
+
         public SimpleTerminal(String name) {
             this.name = name;
             this.connected = false;
             this.nodeIndex = -1;
         }
-        
+
         public String getName() {
             return name;
         }
-        
+
         public boolean isConnected() {
             return connected;
         }
-        
+
         public void setConnected(boolean connected) {
             this.connected = connected;
         }
-        
+
         public int getNodeIndex() {
             return nodeIndex;
         }
-        
+
         public void setNodeIndex(int nodeIndex) {
             this.nodeIndex = nodeIndex;
         }
-        
+
         @Override
         public String toString() {
             return "Terminal[" + name + (connected ? ", connected" : "") + "]";
         }
     }
-    
+
     /**
      * Adapter for SimpleTerminal.
      */
@@ -614,12 +614,12 @@ public class TerminalRegistry<T> {
         public String getName(SimpleTerminal terminal) {
             return terminal.getName();
         }
-        
+
         @Override
         public boolean isConnected(SimpleTerminal terminal) {
             return terminal.isConnected();
         }
-        
+
         @Override
         public int getNodeIndex(SimpleTerminal terminal) {
             return terminal.getNodeIndex();

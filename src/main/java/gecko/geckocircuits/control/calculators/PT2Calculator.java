@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,12 +18,12 @@ public final class PT2Calculator extends AbstractPTCalculator {
     private double _yalt = 0;
     private double _yaltalt = 0;
     private double _xalt = 0;  // Berechnung aus einem LC-ESB mit z als Strom i(t)
-    // G(s)= a1/(1 +(sT)^2)    
+    // G(s)= a1/(1 +(sT)^2)
 
     public PT2Calculator(final double timeConstant, final double a1Val) {
-        super(timeConstant, a1Val);        
+        super(timeConstant, a1Val);
     }
-    
+
 
     @Override
     public void berechneYOUT(final double deltaT) {

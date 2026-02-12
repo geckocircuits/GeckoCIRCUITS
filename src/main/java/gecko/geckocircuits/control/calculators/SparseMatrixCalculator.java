@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,17 +27,17 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     private static final double NUMERIC_EPSILON = 1e-12;
     private static final double DEFAULT_DUTY_RATIO = 0.5;
 
-    
-    // Dedektion eines Pulsperioden-Beginns zur Berechnung --> 
+
+    // Dedektion eines Pulsperioden-Beginns zur Berechnung -->
     private double fDRaltalt = 0, fDRalt = 0;
     private boolean neuePulsperiodeBeginnt = true;
-    private double tLokal = 0;  // Lokalzeit, wird bei Pulsperiodenbeginn auf Null gesetzt 
-    // Globale Rechengroessen --> 
+    private double tLokal = 0;  // Lokalzeit, wird bei Pulsperiodenbeginn auf Null gesetzt
+    // Globale Rechengroessen -->
     private int seIN = -1, seOUT = -1;  // Sektorinfo des Matrix-Konverters
-    private double Tp0 = 1 / 25e3, Tp = Tp0;  // initiale Annahme fuer die Schaltfrequenz (muss erst ermittelt werden und kann sich aendern) 
-    private double[] dIN = new double[2], dOUT = new double[5];  // relative Einschaltdauern 
-    private double sRp, sSp, sTp, sRm, sSm, sTm, s1, s2, s3;  // Schaltsignale --> 0 oder 1 
-    
+    private double Tp0 = 1 / 25e3, Tp = Tp0;  // initiale Annahme fuer die Schaltfrequenz (muss erst ermittelt werden und kann sich aendern)
+    private double[] dIN = new double[2], dOUT = new double[5];  // relative Einschaltdauern
+    private double sRp, sSp, sTp, sRm, sSm, sTm, s1, s2, s3;  // Schaltsignale --> 0 oder 1
+
 
     public SparseMatrixCalculator() {
         super(8, 9);
@@ -54,10 +54,10 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
     @Override
     public void berechneYOUT(final double deltaT) {
-        double ur = _inputSignal[1][0], us = _inputSignal[2][0], ut = _inputSignal[3][0];  // Eingangs- bzw. Netzseitig 
-        double uNmax = _inputSignal[4][0], uOUTmax = _inputSignal[5][0], fOUT = _inputSignal[6][0];  // Amplituden und Ausgangsfrequenz  
-        double fDR = _inputSignal[0][0];  // Taktfrequenz fuer die Pulsperiode 
-        double phi2 = _inputSignal[7][0];  // output-side angle for creating uaOUT*, ubOUT*, ucOUT* for PMSM-control; reliable alternative to fOUT 
+        double ur = _inputSignal[1][0], us = _inputSignal[2][0], ut = _inputSignal[3][0];  // Eingangs- bzw. Netzseitig
+        double uNmax = _inputSignal[4][0], uOUTmax = _inputSignal[5][0], fOUT = _inputSignal[6][0];  // Amplituden und Ausgangsfrequenz
+        double fDR = _inputSignal[0][0];  // Taktfrequenz fuer die Pulsperiode
+        double phi2 = _inputSignal[7][0];  // output-side angle for creating uaOUT*, ubOUT*, ucOUT* for PMSM-control; reliable alternative to fOUT
         if ((fDRaltalt < fDRalt) && (fDRalt > fDR)) {
             neuePulsperiodeBeginnt = true;
         }
@@ -69,12 +69,12 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 Tp = tLokal;
             }
             tLokal = 0;
-            sectorDetection(ur, us, ut, fOUT, phi2);  // Sektorindizes seIN, seOUT werden bestimmt 
-            calculateSwitchingTimes(ur, us, ut, uNmax, uOUTmax, fOUT, phi2);  // Einschaltdauern dOUT=[d1..d5] und dIN=[da,db] werden berechnet 
+            sectorDetection(ur, us, ut, fOUT, phi2);  // Sektorindizes seIN, seOUT werden bestimmt
+            calculateSwitchingTimes(ur, us, ut, uNmax, uOUTmax, fOUT, phi2);  // Einschaltdauern dOUT=[d1..d5] und dIN=[da,db] werden berechnet
             neuePulsperiodeBeginnt = false;
         }
         double switchingFrequency = safeDivide(1.0, Tp, safeDivide(1.0, Tp0, 0.0));
-        setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], switchingFrequency);  // alle 9 Schaltsignale werden generiert 
+        setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], switchingFrequency);  // alle 9 Schaltsignale werden generiert
         tLokal += deltaT;
 
         _outputSignal[0][0] = sRp;
@@ -810,7 +810,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
         // Ausgang:
         double k = safeDivide(uOUTmax, uNmax * uNmax, 0.0) / Math.sqrt(3);  // Ann.: Ideales 3-ph. Spannungsnetz am Eingang
-        double phiOUT = 2 * Math.PI * fOUT * _time - Math.PI / 2;  // old version, does not work for PMSM-control 
+        double phiOUT = 2 * Math.PI * fOUT * _time - Math.PI / 2;  // old version, does not work for PMSM-control
         if (fOUT <= 0) {
             phiOUT = phi2 - Math.PI / 2;  // phiOUT= thetaEl +dPhiEl -Math.PI/2;  --> improvement EPE 2009
         }
@@ -992,7 +992,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             seIN = 12;
         }
         // Sektor der Ausgangsspannungen:
-        double phiOUT = 2 * Math.PI * fOUT * _time;  // old version, does not work for PMSM-control 
+        double phiOUT = 2 * Math.PI * fOUT * _time;  // old version, does not work for PMSM-control
         if (fOUT <= 0) {
             phiOUT = phi2;  // phiOUT= thetaEl +dPhiEl; --> improvement EPE 2009
         }

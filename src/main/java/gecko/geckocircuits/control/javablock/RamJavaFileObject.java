@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,7 +24,7 @@ import javax.tools.SimpleJavaFileObject;
  * Class permits the compilation without a physical existing file (e.g. when loaded from
  * Applet. The Java-Compiler gets a handle to RamJavaFileObjects, where it writes its output
  * bytes and / or the compilation status/error messages
- * 
+ *
  * @author andreas
  */
 class RamJavaFileObject extends SimpleJavaFileObject {
@@ -32,14 +32,14 @@ class RamJavaFileObject extends SimpleJavaFileObject {
     RamJavaFileObject(final String name, final Kind kind) {
         super(toURI(name), kind);
     }
-    
+
     private ByteArrayOutputStream _baos;
 
     @Override
     public CharSequence getCharContent(final boolean ignoreEncodingErrors)
             throws IOException {
         throw new UnsupportedOperationException();
-        
+
     }
 
     @Override
@@ -52,7 +52,7 @@ class RamJavaFileObject extends SimpleJavaFileObject {
         _baos = new ByteArrayOutputStream();
         return _baos;
     }
-        
+
 
     public static URI toURI(final String name) {
         try {
@@ -62,9 +62,9 @@ class RamJavaFileObject extends SimpleJavaFileObject {
         }
         return null;
     }
-    
+
     public byte[] getByteArray() {
         return _baos.toByteArray();
     }
-    
+
 }

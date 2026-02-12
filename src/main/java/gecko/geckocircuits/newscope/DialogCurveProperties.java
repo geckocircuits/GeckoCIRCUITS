@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,15 +20,15 @@ package gecko.geckocircuits.newscope;
  */
 final class DialogCurveProperties extends GeckoDialog {
     private final LineSettable _lineSettable;
-    private final GraferV4 _grafer;    
+    private final GraferV4 _grafer;
     private final AbstractCurve _curve;
     private final SymbolSettable _symbSettable;
-    
+
     /** Creates new form DialogCurveProps */
-    public DialogCurveProperties(final javax.swing.JDialog parent, final boolean modal, final AbstractCurve curve, 
+    public DialogCurveProperties(final javax.swing.JDialog parent, final boolean modal, final AbstractCurve curve,
             final GraferV4 grafer) {
         super(parent, modal);
-        assert grafer != null;        
+        assert grafer != null;
         _lineSettable = curve;
         _curve = curve;
         _symbSettable = curve;
@@ -39,13 +39,13 @@ final class DialogCurveProperties extends GeckoDialog {
             jComboBoxColor.addItem(color);
         }
         jComboBoxColor.setSelectedIndex(_curve.getCurveSettings()._crvFillingDigColor.ordinal());
-        
+
         jCheckBoxIsFilling.setSelected(_curve.getCurveSettings()._crvFillDigitalCurves);
-        
-        getRootPane().setDefaultButton(jButtonOk);                        
-        
+
+        getRootPane().setDefaultButton(jButtonOk);
+
         jPanelLineProperties1.init(_lineSettable, grafer);
-        
+
         jPanelFilling.setVisible(false);
         this.pack();
     }
@@ -191,7 +191,7 @@ final class DialogCurveProperties extends GeckoDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonOkActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
@@ -199,7 +199,7 @@ final class DialogCurveProperties extends GeckoDialog {
     private void jComboBoxColorActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jComboBoxColorActionPerformed
         if(_grafer != null) {
             _curve.getCurveSettings()._crvFillingDigColor = GeckoColor.getFromOrdinal(jComboBoxColor.getSelectedIndex());
-            _grafer.repaint();            
+            _grafer.repaint();
         }
     }//GEN-LAST:event_jComboBoxColorActionPerformed
 
@@ -210,7 +210,7 @@ final class DialogCurveProperties extends GeckoDialog {
         }
     }//GEN-LAST:event_jCheckBoxIsFillingActionPerformed
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonOk;

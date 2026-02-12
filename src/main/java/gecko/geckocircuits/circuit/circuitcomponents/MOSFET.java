@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,16 +34,16 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 // Leistungskreis-IGBT (Knickkennlinie, Modifikation des THYR)
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes anti-parallel diode for MOSFET circuit model")
 public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable {
-    public static final AbstractTypeInfo TYPE_INFO = 
+    public static final AbstractTypeInfo TYPE_INFO =
             new CircuitTypeInfo(MOSFET.class, "MOSFET", I18nKeys.MOSFET, I18nKeys.IDEALIZED_METAL_OXIDE_FIELD_EFFECT);
-    
+
     private static final double WIDTH = 0.7;
     private static final double HEIGHT = 0.4;
     private static final double ANTI_DIODE_SIZE = 0.3;
-    
-    
+
+
     final Diode _antiParallelDiode;
-    
+
     UserParameter<Double> _adRon = UserParameter.Builder.
             <Double>start("antiParallelDiodeRon", RD_ON_DEFAULT).
             longName(I18nKeys.ON_RESISTANCE_ANTIPARALLEL).
@@ -71,7 +71,7 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
     public MOSFET() {
         super();
         _antiParallelDiode = (Diode) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_D, this);
-        double[] diodeParameter = new double[]{RD_OFF_DEFAULT, 550e-3, 3.9e-3, 
+        double[] diodeParameter = new double[]{RD_OFF_DEFAULT, 550e-3, 3.9e-3,
             RD_OFF_DEFAULT, 0, 0, 0, 0, -1, -1, 0, -1, 1};
         _antiParallelDiode.setParameter(diodeParameter);
         _antiParallelDiode.setInputTerminal(0, YOUT.get(0));
@@ -79,8 +79,8 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
         _antiParallelDiode.getIDStringDialog().setRandomStringID();
 
         _antiParallelDiode.kOn.setValueWithoutUndo(0.0);
-        _antiParallelDiode.kOff.setValueWithoutUndo(0.0);        
-        
+        _antiParallelDiode.kOff.setValueWithoutUndo(0.0);
+
         _adUf.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -109,8 +109,8 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
     public Diode getAntiParallelDiode() {
         return _antiParallelDiode;
     }
-    
-    
+
+
 
     public void setzeParameterZustandswerteAufNULL() {
         parameter[0] = RD_OFF_DEFAULT;
@@ -177,7 +177,7 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
         graphics.drawPolyline(
                 new int[]{(int) (-dpix * WIDTH), 0, 0},
                 new int[]{dpix, dpix, dpix * 2}, 3);
-    }            
+    }
 
     @Override
     public Collection<AbstractBlockInterface> getHiddenSubCircuitElements() {
@@ -199,23 +199,23 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
         super.importIndividual(tokenMap); //To change body of generated methods, choose Tools | Templates.
         boolean warning1AlreadyShown = false;
         boolean warning2AlreadyShown = false;
-        
+
         if (_show170_22bugfixWarning) {
             warning1AlreadyShown = true;
         }
         if (!tokenMap.containsToken("bugfix_170_22")) {
             _show170_22bugfixWarning = true;
         }
-                                
-        
+
+
         if (_show172_50bugfixWarning) {
             warning2AlreadyShown = true;
         }
-        
+
         if (!tokenMap.containsToken("bugfix_172_50")) {
             _show172_50bugfixWarning = true;
         }
-        
+
         if (_show170_22bugfixWarning) {
             _show172_50bugfixWarning = true;
         }
@@ -229,7 +229,7 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
                     + "      current in the MOSFET current measurement. If your control model depends on the MOSFET current,\n"
                     + "      measurement it might behave different, now.", "MOSFET Bugfix Information", JOptionPane.PLAIN_MESSAGE);
         }
-        
+
         if (_show172_50bugfixWarning && !warning2AlreadyShown) {
             JOptionPane.showMessageDialog(GeckoSim._win, "Your model contains MOSEFET components. Beginning from GeckoCIRCUITS release 1.72 build number 50,"
                     + "\nfrom November 2015, the following bug fix might change your model behavior:\n\n"
@@ -237,7 +237,7 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
                     + "This bug is fixed in GeckoCIRCUITS 1.72, build number 50. In case your control model depends on the MOSFET\n"
                     + "current during freewheeling state, then the simulation could behave different.", "MOSFET Bugfix Information", JOptionPane.PLAIN_MESSAGE);
         }
-        
+
     }
 
     @Override
@@ -246,9 +246,9 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
         ascii.append("\nbugfix_170_22 false");
         ascii.append("\nbugfix_172_50 false");
     }
-    
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return getCalculatorsFromSubComponents(this);        
+        return getCalculatorsFromSubComponents(this);
     }
 }

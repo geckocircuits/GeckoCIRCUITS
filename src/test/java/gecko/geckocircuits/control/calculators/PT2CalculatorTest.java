@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,13 +21,13 @@ public class PT2CalculatorTest {
     private static final double DELTA_T = 1e-4;
     private PT2Calculator _calculator;
     private static final double END_TIME = 1;
-    
+
     @Before
     public void setUp() {
         _calculator = new PT2Calculator(1, 1);
         _calculator._inputSignal[0] = new double[]{0};
     }
-    
+
 
     @Test
     public void testBerechneYOUT() {
@@ -35,11 +35,11 @@ public class PT2CalculatorTest {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             _calculator.berechneYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
-            final double expected = 1 - Math.cos(time);            
-            if(time > END_TIME/2) { // the first value is nonsense!                
+            final double expected = 1 - Math.cos(time);
+            if(time > END_TIME/2) { // the first value is nonsense!
                 assertEquals(expected, result, 1e-4);
-            }            
-        }        
+            }
+        }
     }
 
     @Test
@@ -50,12 +50,12 @@ public class PT2CalculatorTest {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             _calculator.berechneYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
-            final double expected = 1 - Math.cos(time / newTimeConstant);            
-            if(time > END_TIME/2) { // the first value is nonsense!                
+            final double expected = 1 - Math.cos(time / newTimeConstant);
+            if(time > END_TIME/2) { // the first value is nonsense!
                 assertEquals(expected, result, 1e-3);
-            }            
+            }
         }
-        
+
     }
 
     @Test
@@ -66,11 +66,11 @@ public class PT2CalculatorTest {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             _calculator.berechneYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
-            final double expected = newGain * (1 - Math.cos(time));            
-            if(time > END_TIME/2) { // the first value is nonsense!                
+            final double expected = newGain * (1 - Math.cos(time));
+            if(time > END_TIME/2) { // the first value is nonsense!
                 assertEquals(expected, result, 1e-4);
-            }            
+            }
         }
-        
+
     }
 }

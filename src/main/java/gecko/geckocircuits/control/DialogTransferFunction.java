@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,8 +47,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         this.setLocationRelativeTo(GeckoSim._win);
         jTextFieldName.setText(reglerTF.getStringID());
         _reglerTF = reglerTF;
-        _elementControl = element;        
-        
+        _elementControl = element;
+
         jRadButtPoly.setSelected(_reglerTF._inPolynomMode.getValue());
         _inPolynomialMode = !_reglerTF._inPolynomMode.getValue(); //enforce a toggle at init
         toggleMode();
@@ -59,13 +59,13 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         } else {
             jCheckBoxEnabled.setSelected(false);
         }
-        
+
         jCheckBoxInitial.setSelected(reglerTF._useInitialState.getValue());
-        
-        
+
+
         jListNom.setModel(_nomModel);
         jListDenom.setModel(_deNomModel);
-        
+
         addListeners();
 
         jTextFieldConst.setNumberToField(_reglerTF._constantFactor.getValue());
@@ -75,15 +75,15 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         _initDone = true;
         this.setVisible(true);
     }
-        
+
 
     private void readPolynomialCofficients() {
         _deNomModel.clear();
         _nomModel.clear();
-        
+
         for (int i = 0; i < _reglerTF.getDenominatorSize(); i++) {
             final double real = _reglerTF.getDenominatorCoefficients(i);
-            _deNomModel.addElement(new ComplexPrinter(new NComplex((float) real, 0f)));            
+            _deNomModel.addElement(new ComplexPrinter(new NComplex((float) real, 0f)));
         }
 
         for (int i = 0; i < _reglerTF.getNumeratorSize(); i++) {
@@ -95,12 +95,12 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     private void readPoleZeroCoefficients() {
         _deNomModel.clear();
         _nomModel.clear();
-        
+
         for (int i = 0; i < _reglerTF.getPoles().length; i += 2) {
             final double real = _reglerTF.getPoles()[i];
-            final double imag = _reglerTF.getPoles()[i + 1];            
+            final double imag = _reglerTF.getPoles()[i + 1];
             if (real != 0 || imag != 0) {
-                _deNomModel.addElement(new ComplexPrinter(new NComplex((float) real, (float) imag)));            
+                _deNomModel.addElement(new ComplexPrinter(new NComplex((float) real, (float) imag)));
             }
         }
 
@@ -114,10 +114,10 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     }
 
     private void toggleMode() {
-                
-        if (_inPolynomialMode == jRadButtPoly.isSelected() || !_inPolynomialMode == jRadButtPoleMode.isSelected()) {            
+
+        if (_inPolynomialMode == jRadButtPoly.isSelected() || !_inPolynomialMode == jRadButtPoleMode.isSelected()) {
             return; // do nothing, since the mode did not switch!
-        }        
+        }
 
         if (jRadButtPoly.isSelected()) {
             _inPolynomialMode = true;
@@ -131,7 +131,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             jTextFieldPoleZ.setVisible(false);
             ((TitledBorder) jPanelNumerator.getBorder()).setTitle("Numerator polynom Coefficients");
             ((TitledBorder) jPanelDenominator.getBorder()).setTitle("Denominator polynom Coefficients");
-            
+
             readPolynomialCofficients();
             updateTransferView();
         } else {
@@ -163,10 +163,10 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             _reglerTF.setZero(((ComplexPrinter) _nomModel.get(i))._value.getRe(), 2 * i);
             _reglerTF.setZero(((ComplexPrinter) _nomModel.get(i))._value.getIm(), 2 * i + 1);
         }
-        
-        
+
+
     }
-    
+
     private void updateReglerPolynom() {
         assert _inPolynomialMode;
         final List<Double> numerator = new ArrayList<Double>();
@@ -181,11 +181,11 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             final double value = ((ComplexPrinter) _deNomModel.get(i))._value.getRe();
             denominator.add(value);
         }
-                
+
         _reglerTF.setNumeratorPolynom(numerator);
         _reglerTF.setDeNominatorPolynom(denominator);
     }
-    
+
 
     private void updateTransferViewPoleZero() {
         jTextFieldPoleZ.hsSetText("H(s) = "
@@ -203,7 +203,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
         _reglerTF.setNumeratorPolynom(nomPolynom);
         _reglerTF.setDeNominatorPolynom(denomPolynom);
-        
+
     }
 
     private void updateTransferViewPolynom() {
@@ -212,14 +212,14 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         final List<Double> denominator = new ArrayList<Double>();
 
         for (int i = 0; i < _reglerTF.getNumeratorSize(); i++) {
-            numerator.add(_reglerTF.getNumeratorCoefficient(i));                        
+            numerator.add(_reglerTF.getNumeratorCoefficient(i));
         }
-        
+
         for (int i = 0; i < _reglerTF.getDenominatorSize(); i++) {
-            denominator.add(_reglerTF.getDenominatorCoefficients(i));            
-        }        
-        
-        
+            denominator.add(_reglerTF.getDenominatorCoefficients(i));
+        }
+
+
         if(denominator.isEmpty()) {
             final List<Double> constValue = new ArrayList<Double>();
             constValue.add(1.0);
@@ -227,13 +227,13 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         } else  {
             jTextFieldPoly.setDenominatorText(PolynomTools.getPolynomString(denominator));
         }
-        
+
         if(numerator.isEmpty()) {
             final List<Double> constValue = new ArrayList<Double>();
             constValue.add(1.0);
             jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(constValue));
         } else {
-            jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(numerator));        
+            jTextFieldPoly.setNumeratorText(PolynomTools.getPolynomString(numerator));
         }
     }
 
@@ -662,7 +662,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     //CHECKSTYLE:ON
-    
+
     private void jButtonAddNomActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAddNomActionPerformed
 
         float imagValue = Math.abs(Float.parseFloat(jTFInsertNumIm.getText()));
@@ -761,19 +761,19 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         } catch (NameAlreadyExistsException ex) {
             ex.printStackTrace();
         }
-        
+
     }//GEN-LAST:event_jTextFieldNameKeyReleased
 
     private void jCheckBoxEnabledActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jCheckBoxEnabledActionPerformed
-        
+
         if(_initDone) {
             if(jCheckBoxEnabled.isSelected()) {
                 _elementControl._isEnabled.setValue(Enabled.ENABLED);
             } else {
                 _elementControl._isEnabled.setValue(Enabled.DISABLED);
-            }                
+            }
         }
-            
+
     }//GEN-LAST:event_jCheckBoxEnabledActionPerformed
 
     private void jTextFieldConstKeyReleased(java.awt.event.KeyEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldConstKeyReleased

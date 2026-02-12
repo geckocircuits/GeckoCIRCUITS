@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -100,11 +100,11 @@ public final class GeckoFile {
                 break;
         }
     }
-    
+
     /**
      * create an initial internal file (convertion from old GeckoCIRCUITS versions)
      * @param modelFileName
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     public GeckoFile(File fileName, final String modelFileName, final byte[] contents) throws FileNotFoundException {
         setStorageStrategy(StorageType.INTERNAL);
@@ -136,8 +136,8 @@ public final class GeckoFile {
             Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, errorMessage);
             _absolutePath = _file.getAbsolutePath();
         }
-        
-        _relativePath = getRelativePath(_absolutePath, modelFileName); 
+
+        _relativePath = getRelativePath(_absolutePath, modelFileName);
         _extension = _absolutePath.substring(_absolutePath.lastIndexOf('.'));
 
         if (storageType == StorageType.INTERNAL) {
@@ -159,10 +159,10 @@ public final class GeckoFile {
      * @throws FileNotFoundException
      */
     public GeckoFile(final TokenMap tokenMap, final List<AbstractCircuitSheetComponent> allComponents) throws FileNotFoundException {
-        _separator = tokenMap.readDataLine("fileSep", File.separator);        
+        _separator = tokenMap.readDataLine("fileSep", File.separator);
         _hash = tokenMap.readDataLine("hashValue", -1);
-        
-        
+
+
         setStorageStrategy(StorageType.fromOrdinal(tokenMap.readDataLine(
                 "isExternal", StorageType.EXTERNAL.ordinal())));
 
@@ -218,7 +218,7 @@ public final class GeckoFile {
         } else {
             _file = new File("fileNotFound");
         }
-        
+
 
         //if cannot find file, use the absolute path
         if (!_file.exists()) {
@@ -254,8 +254,8 @@ public final class GeckoFile {
         }
 
         //absModelPath points to a file - should be modified to point to a directory
-        final int lastSeparatorIndex = absModelPath.lastIndexOf(File.separator);        
-        absModelPath = absModelPath.substring(0, lastSeparatorIndex); 
+        final int lastSeparatorIndex = absModelPath.lastIndexOf(File.separator);
+        absModelPath = absModelPath.substring(0, lastSeparatorIndex);
         //System.out.println(absModelPath);
 
         //this is because separator '\' does strange things with String.split()
@@ -273,7 +273,7 @@ public final class GeckoFile {
         StringBuffer result = new StringBuffer();
 
         final int common = findCommonPath(toSplit, fromSplit);
-        //first check if file path is subset of modelpath        
+        //first check if file path is subset of modelpath
         if ((fromSplit.length >= toSplit.length) && (common == toSplit.length)) {
             for (int i = common; i < fromSplit.length; i++) {
                 result.append(fromSplit[i]);
@@ -454,7 +454,7 @@ public final class GeckoFile {
      *
      * @return
      */
-    public byte[] getContentsByte() {        
+    public byte[] getContentsByte() {
         return _storageStrategy.getContentsByte();
     }
 
@@ -474,7 +474,7 @@ public final class GeckoFile {
      * @throws FileNotFoundException
      */
     public void setStorageType(final StorageType newStorageType) throws FileNotFoundException {
-        if (newStorageType == _storageStrategy.getStorageType()) { // nothing changed, so do nothing!            
+        if (newStorageType == _storageStrategy.getStorageType()) { // nothing changed, so do nothing!
             return;
         }
         byte[] originalContents = getContentsByte();
@@ -542,7 +542,7 @@ public final class GeckoFile {
      */
     public void update(final File newFile) {
         _file = newFile;
-        
+
         switch(getStorageType()) {
             case INTERNAL:
                 _fileContents = readFileIntoMemory();
@@ -552,7 +552,7 @@ public final class GeckoFile {
                 break;
             default:
                 assert false;
-        }                
+        }
     }
 
     /**
@@ -669,7 +669,7 @@ public final class GeckoFile {
             if (result == null || !new File(result).exists()) { // cancel pressed or external file is not existing!
                 setStorageType(StorageType.INTERNAL);
                 return;
-            }            
+            }
         }
 
         @Override
@@ -685,7 +685,7 @@ public final class GeckoFile {
 //    // test routine, do not remove!
 //    public static void main(String[] args) {
 //        try {
-//            GeckoFile geckoFile = new GeckoFile(new File("/home/andreas/testFile.txt"), 
+//            GeckoFile geckoFile = new GeckoFile(new File("/home/andreas/testFile.txt"),
 //                StorageType.EXTERNAL, "/home/andreas/test.ipes");
 //            System.out.println("relative: " + geckoFile._relativePath);
 //            geckoFile.setStorageType(StorageType.INTERNAL);

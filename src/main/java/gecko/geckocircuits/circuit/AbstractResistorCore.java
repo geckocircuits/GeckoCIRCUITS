@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,21 +21,21 @@ import gecko.geckocircuits.allg.SolverType;
  * Subclasses like ResistorCalculator implement actual calculation.
  */
 public abstract class AbstractResistorCore extends CircuitComponentCore {
-    
+
     protected double _resistance = 1.0;
     protected double _conductance = 1.0;
-    
+
     protected AbstractResistorCore(SolverType solverType) {
         super(solverType);
     }
-    
+
     /**
      * Get current resistance value in ohms
      */
     public double getResistance() {
         return _resistance;
     }
-    
+
     /**
      * Set resistance value and update conductance
      */
@@ -47,7 +47,7 @@ public abstract class AbstractResistorCore extends CircuitComponentCore {
         }
         this._conductance = 1.0 / this._resistance;
     }
-    
+
     /**
      * Get conductance (1/R)
      */

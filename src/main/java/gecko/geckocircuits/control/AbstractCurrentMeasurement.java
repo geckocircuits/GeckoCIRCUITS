@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,12 +37,12 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         }
 
         @Override
-        public void berechneYOUT(final double deltaT) {            
-            _outputSignal[0][0] = _coupled._currentInAmps;            
+        public void berechneYOUT(final double deltaT) {
+            _outputSignal[0][0] = _coupled._currentInAmps;
 
         }
     }
-    
+
     private class MOSFETCurrentCalculation extends AbstractControlCalculatable {
         private final MOSFET _mosefet;
         private final Diode _antiParallelDiode;
@@ -54,54 +54,54 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         }
 
         @Override
-        public void berechneYOUT(final double deltaT) {            
+        public void berechneYOUT(final double deltaT) {
             // Bugfix in 171, release 49: current of freewheeling diode had wrong sign.
             // the diode is antiparallel to the Mosfet component, therefore a "-" is required.
-            _outputSignal[0][0] = _mosefet._currentInAmps - _antiParallelDiode._currentInAmps;                        
+            _outputSignal[0][0] = _mosefet._currentInAmps - _antiParallelDiode._currentInAmps;
         }
     }
-    
+
     private class ThermPvChipFlowCalculation extends AbstractControlCalculatable {
         private final ThermPvChip _lossSource;
         private final ReglerFlowMeter _flowMeasurement;
-        
+
         public ThermPvChipFlowCalculation(final ThermPvChip loss, final ReglerFlowMeter measurement) {
             super(0,1);
             _lossSource = loss;
             _flowMeasurement = measurement;
         }
-        
+
         @Override
         public void berechneYOUT(final double deltaT) {
             switch (_flowMeasurement.getLossComponentBeingMeasured()) {
                 case TOTAL:
                     _outputSignal[0][0] = _lossSource.getTotalLosses();
                     break;
-                case CONDUCTION:                    
-                    _outputSignal[0][0] = _lossSource.getConductionLosses();                    
+                case CONDUCTION:
+                    _outputSignal[0][0] = _lossSource.getConductionLosses();
                     break;
                 case SWITCHING:
                     _outputSignal[0][0] = _lossSource.getSwitchngLosses();
                     break;
                 default:
-                    _outputSignal[0][0] = _lossSource._currentInAmps;                       
+                    _outputSignal[0][0] = _lossSource._currentInAmps;
                     break;
-            }            
+            }
         }
     }
-    
+
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         final AbstractBlockInterface coupled = (AbstractCircuitBlockInterface) _coupling._coupledElements[0];
-        if (coupled != null) {   
+        if (coupled != null) {
             if(coupled instanceof MOSFET) {
                 return new MOSFETCurrentCalculation((MOSFET) _coupling._coupledElements[0]);
             } else if (coupled instanceof ThermPvChip && this instanceof ReglerFlowMeter) {
                 return new ThermPvChipFlowCalculation((ThermPvChip) _coupling._coupledElements[0], (ReglerFlowMeter) this);
             } else {
                 return new CurrentCalculation((AbstractCircuitBlockInterface) _coupling._coupledElements[0]);
-            }            
+            }
         } else { // no signal attached, nothing todo!
             return new NothingToDoCalculator(0, 1);
         }
@@ -120,6 +120,6 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
     protected final Window openDialogWindow() {
         return new ReglerAmpereMeterDialog(this);
     }
-    
-    
+
+
 }

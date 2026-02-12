@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -219,13 +219,13 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE);
             Logger.getLogger(DialogSubCktSettings.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_jButtonOkActionPerformed
 
     private void jSpinnerSheetXStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerSheetXStateChanged
-        
-        if(_initDone) {       
-            _subBlock._myCircuitSheet._worksheetSize.setNewWorksheetSize((Integer) jSpinnerSheetX.getValue(), (Integer) jSpinnerSheetY.getValue());            
+
+        if(_initDone) {
+            _subBlock._myCircuitSheet._worksheetSize.setNewWorksheetSize((Integer) jSpinnerSheetX.getValue(), (Integer) jSpinnerSheetY.getValue());
             _subSheet.repaint();
         }
     }//GEN-LAST:event_jSpinnerSheetXStateChanged
@@ -245,8 +245,8 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
     }//GEN-LAST:event_jSpinnerBlockYStateChanged
 
     private void jSpinnerSheetYStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerSheetYStateChanged
-        if (_initDone) {            
-            _subBlock._myCircuitSheet._worksheetSize.setNewWorksheetSize((Integer) jSpinnerSheetX.getValue(), (Integer) jSpinnerSheetY.getValue());            
+        if (_initDone) {
+            _subBlock._myCircuitSheet._worksheetSize.setNewWorksheetSize((Integer) jSpinnerSheetX.getValue(), (Integer) jSpinnerSheetY.getValue());
             _subSheet.repaint();
         }
     }//GEN-LAST:event_jSpinnerSheetYStateChanged

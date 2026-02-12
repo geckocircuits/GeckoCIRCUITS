@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,9 +23,9 @@ public class CisprBlockSettings extends GeckoDialog {
     private final ReglerCISPR16 _regler;
 
     public CisprBlockSettings(final ReglerCISPR16 regler, final java.awt.Frame parent) {
-        super(parent, true);        
+        super(parent, true);
         initComponents();
-        jTextFieldName.setText(regler.getStringID());        
+        jTextFieldName.setText(regler.getStringID());
         _regler = regler;
         jCheckBoxShowName.setSelected(regler._settings._showName.getValue());
         getRootPane().setDefaultButton(jButtonOk);
@@ -120,7 +120,7 @@ public class CisprBlockSettings extends GeckoDialog {
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOkActionPerformed
         try {
             _regler.getIDStringDialog().setNewNameCheckedUndoable(jTextFieldName.getText());
-        } catch (NameAlreadyExistsException ex) {            
+        } catch (NameAlreadyExistsException ex) {
             JOptionPane.showMessageDialog(this,
                     "Object name: " + jTextFieldName.getText() + " is already in use!",
                     "Error!",
@@ -130,7 +130,7 @@ public class CisprBlockSettings extends GeckoDialog {
         _regler._settings._showName.setUserValue(jCheckBoxShowName.isSelected());
         dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
     private javax.swing.JButton jButtonOk;

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,7 +28,7 @@ public final class ReglerPOW extends RegelBlock {
     public String[] getOutputNames() {
         return new String[]{"pow"};
     }
-    
+
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -37,11 +37,11 @@ public final class ReglerPOW extends RegelBlock {
                 _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
             }
         };
-    }    
+    }
 
     protected Window openDialogWindow() {
         return new DialogSimpleInfoMessage(this, "y1 = (x1)^(x2)");
-    }                    
+    }
 
     @Override
     public I18nKeys[] getOutputDescription() {

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -37,7 +37,7 @@ public final class DialogMemory extends javax.swing.JFrame {
         jSpinnerStartup.setValue(Integer.parseInt(memorySize));
 
         String lossyCompression = GeckoSim.applicationProps.getProperty("LOSSY_COMPRESSION");
-        
+
         if (lossyCompression != null) {
             int lossValue = Integer.parseInt(lossyCompression);
             jComboBoxLossy.setSelectedIndex(lossValue);
@@ -50,7 +50,7 @@ public final class DialogMemory extends javax.swing.JFrame {
         }
 
         this.setVisible(true);
-    }    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of

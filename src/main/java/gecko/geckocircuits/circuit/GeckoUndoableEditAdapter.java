@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,13 +28,13 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Adapter must share delegate reference for undo/redo operations")
 public class GeckoUndoableEditAdapter implements UndoableEdit {
-    
+
     private final GeckoUndoableEdit delegate;
-    
+
     public GeckoUndoableEditAdapter(GeckoUndoableEdit delegate) {
         this.delegate = delegate;
     }
-    
+
     @Override
     public void undo() throws CannotUndoException {
         try {
@@ -43,7 +43,7 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
             throw new CannotUndoException();
         }
     }
-    
+
     @Override
     public void redo() throws CannotRedoException {
         try {
@@ -52,22 +52,22 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
             throw new CannotRedoException();
         }
     }
-    
+
     @Override
     public boolean canUndo() {
         return delegate.canUndo();
     }
-    
+
     @Override
     public boolean canRedo() {
         return delegate.canRedo();
     }
-    
+
     @Override
     public void die() {
         delegate.die();
     }
-    
+
     @Override
     public boolean addEdit(UndoableEdit anEdit) {
         if (anEdit instanceof GeckoUndoableEditAdapter) {
@@ -75,7 +75,7 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
         }
         return false;
     }
-    
+
     @Override
     public boolean replaceEdit(UndoableEdit anEdit) {
         if (anEdit instanceof GeckoUndoableEditAdapter) {
@@ -83,27 +83,27 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
         }
         return false;
     }
-    
+
     @Override
     public boolean isSignificant() {
         return delegate.isSignificant();
     }
-    
+
     @Override
     public String getPresentationName() {
         return delegate.getPresentationName();
     }
-    
+
     @Override
     public String getUndoPresentationName() {
         return delegate.getUndoPresentationName();
     }
-    
+
     @Override
     public String getRedoPresentationName() {
         return delegate.getRedoPresentationName();
     }
-    
+
     /**
      * Get the wrapped GUI-free edit.
      */

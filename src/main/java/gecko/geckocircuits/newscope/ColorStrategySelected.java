@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,7 +28,7 @@ public class ColorStrategySelected implements ColorSettable {
         int sub = 0;
 
         int totalSum = color.getRed() + color.getGreen() + color.getBlue();
-        totalSum /= DIVIDER; 
+        totalSum /= DIVIDER;
 
         // make all colors grey
         int red = totalSum;
@@ -43,8 +43,8 @@ public class ColorStrategySelected implements ColorSettable {
 
         green = Math.min(MAX_COL_VALUE, green);
         green = Math.max(0, green);
-        
-        
+
+
         final Color disabledColor = new Color(red, green, blue);
         g2d.setColor(disabledColor);
     }

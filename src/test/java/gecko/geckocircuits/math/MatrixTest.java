@@ -444,7 +444,7 @@ public class MatrixTest {
         // Verify m * inv = I
         Matrix product = m.times(inv);
         Matrix identity = Matrix.identity(3, 3);
-        
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 assertEquals(identity.get(i, j), product.get(i, j), 1e-9);
@@ -596,7 +596,7 @@ public class MatrixTest {
     public void testDeterminant_NonSquareThrowsException() {
         double[][] data = {{1, 2, 3}, {4, 5, 6}};
         Matrix m = new Matrix(data);
-        
+
         // Non-square matrix should throw exception
         try {
             m.det();

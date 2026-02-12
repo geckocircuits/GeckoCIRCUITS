@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,7 +30,7 @@ public abstract class AbstractVoltageSource extends AbstractCircuitSource {
     private static final int UPPER_LIMIT_INDEX = 13;
     private static final int PLUS_MINUS_X_OFFSET = -12;
     private static final double PLUSMINUS_SEPARATION = 1.5;
-    
+
     final UserParameter<Double> _lowerLimit = UserParameter.Builder.
             <Double>start("lowerLimit", Double.MIN_VALUE).
             mapDomains(getDomains()).
@@ -66,7 +66,7 @@ public abstract class AbstractVoltageSource extends AbstractCircuitSource {
         final int yHeight = (int) (PLUSMINUS_SEPARATION * dpix);
         graphics.drawLine((int) PLUS_MINUS_X_OFFSET - length / 2, yHeight, (int) PLUS_MINUS_X_OFFSET + length / 2, yHeight);
     }
-    
+
     @Override
     protected final void importIndividual(final TokenMap tokenMap) {
         // careful! if the limits are set (the user usually doesnt
@@ -134,10 +134,10 @@ public abstract class AbstractVoltageSource extends AbstractCircuitSource {
     protected final String[] getAlternativeDCValueShortNames() {
         return new String[]{"uMAX", "MMF_MAX", "T_MAX"};
     }
-    
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         return Arrays.asList(new VoltageSourceCalculator(new TimeFunctionConstant(12),this));
     }
-    
+
 }

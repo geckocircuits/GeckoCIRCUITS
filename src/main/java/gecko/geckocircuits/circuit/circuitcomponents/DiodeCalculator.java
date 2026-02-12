@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,8 +34,8 @@ public final class DiodeCalculator extends CircuitComponent<Diode> implements AS
 
     public DiodeCalculator(final Diode parent) {
         super(parent);
-        
-        _uForward = parent._forwardVoltageDrop.getValue();        
+
+        _uForward = parent._forwardVoltageDrop.getValue();
         _rOn = parent._onResistance.getValue();
         _rOff = parent._offResistance.getValue();
 
@@ -75,7 +75,7 @@ public final class DiodeCalculator extends CircuitComponent<Diode> implements AS
 
         final double resistorVoltage = _voltage - _uForward;
         _current = resistorVoltage / _rDt;
-                       
+
         // Andy bugfix/modification: _rDt * current was probably missing, also in the old GeckoCIRCUITS
         if (_voltage + _rDt * _current <= disturbanceValue * _uForward) {
             if (_rDt < _rOff) {

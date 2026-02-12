@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -117,7 +117,7 @@ public class PmsmControlCalculator extends AbstractControlCalculatable {
 
 //Inverse park transformation:
         final double valpha = vd_ref * Math.cos(phi) - vq_ref * Math.sin(phi);
-        final double vbeta = vd_ref * Math.sin(phi) + vq_ref * Math.cos(phi);       
+        final double vbeta = vd_ref * Math.sin(phi) + vq_ref * Math.cos(phi);
 
         if (fP > 999e-3) {
             valpha_last = valpha;

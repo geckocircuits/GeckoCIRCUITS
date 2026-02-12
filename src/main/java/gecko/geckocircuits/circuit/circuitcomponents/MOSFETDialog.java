@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,8 +22,8 @@ class MOSFETDialog extends AbstractDialogPowerSwitch<MOSFET> {
 
     protected FormatJTextField _antiUF;
     protected FormatJTextField _antiROn;
-    protected FormatJTextField _antiROff;    
-    
+    protected FormatJTextField _antiROff;
+
     public MOSFETDialog(final MOSFET parent) {
         super(parent);
     }
@@ -32,12 +32,12 @@ class MOSFETDialog extends AbstractDialogPowerSwitch<MOSFET> {
     @Override
     public JPanel createParameterPanel() {
         JPanel switchPanel = createParameterPanel(element._onResistance, element._offResistance, element.numberParalleled);
-        switchPanel.setBorder(new TitledBorder("Switch parameters"));        
+        switchPanel.setBorder(new TitledBorder("Switch parameters"));
         JPanel diodePanel = createParameterPanel(element._adUf, element._adRon, element._adRoff);
         diodePanel.setBorder(new TitledBorder("Antiparallel diode parameters"));
-        JPanel returnValue = new JPanel(new GridLayout(2,1));        
+        JPanel returnValue = new JPanel(new GridLayout(2,1));
         returnValue.add(switchPanel);
         returnValue.add(diodePanel);
         return returnValue;
-    }                           
+    }
 }

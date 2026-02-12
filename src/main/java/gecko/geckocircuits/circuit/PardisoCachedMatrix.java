@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,12 +31,12 @@ public class PardisoCachedMatrix extends AbstractCachedMatrix {
     int calculateMemoryRequirement() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
+
+
 
     @Override
-    void initLUDecomp() {                
-        
+    void initLUDecomp() {
+
         SymmetricDoubleSparseMatrix sysMatrix = new SymmetricDoubleSparseMatrix(N);
 
         for (int i = 0; i < N; i++) {
@@ -57,10 +57,10 @@ public class PardisoCachedMatrix extends AbstractCachedMatrix {
 
             }
         }
-        
+
         sparseMatrix = new SymmetricSparseMatrix(sysMatrix);
 
-        sparseMatrix.factorize(sysMatrix, N, N);        
+        sparseMatrix.factorize(sysMatrix, N, N);
     }
 
     @Override

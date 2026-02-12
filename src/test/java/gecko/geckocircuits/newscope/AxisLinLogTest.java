@@ -166,13 +166,13 @@ public class AxisLinLogTest {
     public void testAxisTypeSwitching() {
         // Simulate switching between linear and log
         AxisLinLog current = AxisLinLog.ACHSE_LIN;
-        
+
         // Switch to log
         if (current == AxisLinLog.ACHSE_LIN) {
             current = AxisLinLog.ACHSE_LOG;
         }
         assertEquals(AxisLinLog.ACHSE_LOG, current);
-        
+
         // Switch back to linear
         if (current == AxisLinLog.ACHSE_LOG) {
             current = AxisLinLog.ACHSE_LIN;

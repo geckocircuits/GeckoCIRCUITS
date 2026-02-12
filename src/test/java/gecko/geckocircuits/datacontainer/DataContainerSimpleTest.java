@@ -325,7 +325,7 @@ public class DataContainerSimpleTest {
 
     @Test
     public void testImplementsIScopeData() {
-        assertTrue("Should implement IScopeData", 
+        assertTrue("Should implement IScopeData",
                    container instanceof gecko.geckocircuits.api.IScopeData);
     }
 
@@ -365,9 +365,9 @@ public class DataContainerSimpleTest {
     public void testInsertValuesAtEnd() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
         float[] values = {1.0f, 2.0f, 3.0f};
-        
+
         tsContainer.insertValuesAtEnd(values, 0.0);
-        
+
         assertEquals(1.0f, tsContainer.getValue(0, 0), EPSILON);
         assertEquals(2.0f, tsContainer.getValue(1, 0), EPSILON);
         assertEquals(3.0f, tsContainer.getValue(2, 0), EPSILON);
@@ -376,23 +376,23 @@ public class DataContainerSimpleTest {
     @Test
     public void testInsertValuesAtEndMultiple() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values1 = {1.0f, 2.0f, 3.0f};
         float[] values2 = {4.0f, 5.0f, 6.0f};
         float[] values3 = {7.0f, 8.0f, 9.0f};
-        
+
         tsContainer.insertValuesAtEnd(values1, 0.0);
         tsContainer.insertValuesAtEnd(values2, 0.001);
         tsContainer.insertValuesAtEnd(values3, 0.002);
-        
+
         // First set
         assertEquals(1.0f, tsContainer.getValue(0, 0), EPSILON);
         assertEquals(2.0f, tsContainer.getValue(1, 0), EPSILON);
-        
+
         // Second set
         assertEquals(4.0f, tsContainer.getValue(0, 1), EPSILON);
         assertEquals(5.0f, tsContainer.getValue(1, 1), EPSILON);
-        
+
         // Third set
         assertEquals(7.0f, tsContainer.getValue(0, 2), EPSILON);
         assertEquals(8.0f, tsContainer.getValue(1, 2), EPSILON);
@@ -401,12 +401,12 @@ public class DataContainerSimpleTest {
     @Test
     public void testGetTimeValue() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         double timeValue = 0.001;
-        
+
         tsContainer.insertValuesAtEnd(values, timeValue);
-        
+
         double retrievedTime = tsContainer.getTimeValue(0, 0);
         assertEquals(timeValue, retrievedTime, DELTA);
     }
@@ -414,14 +414,14 @@ public class DataContainerSimpleTest {
     @Test
     public void testGetTimeValueMultiple() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         double[] times = {0.0, 0.001, 0.002, 0.003};
         float[] values = {1.0f, 2.0f, 3.0f};
-        
+
         for (double time : times) {
             tsContainer.insertValuesAtEnd(values, time);
         }
-        
+
         for (int i = 0; i < times.length; i++) {
             double retrievedTime = tsContainer.getTimeValue(i, 0);
             assertEquals(times[i], retrievedTime, DELTA);
@@ -431,15 +431,15 @@ public class DataContainerSimpleTest {
     @Test
     public void testGetMaximumTimeIndex() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
-        
+
         tsContainer.insertValuesAtEnd(values, 0.0);
         assertEquals(0, tsContainer.getMaximumTimeIndex(0));
-        
+
         tsContainer.insertValuesAtEnd(values, 0.001);
         assertEquals(1, tsContainer.getMaximumTimeIndex(0));
-        
+
         tsContainer.insertValuesAtEnd(values, 0.002);
         assertEquals(2, tsContainer.getMaximumTimeIndex(0));
     }
@@ -447,14 +447,14 @@ public class DataContainerSimpleTest {
     @Test
     public void testFindTimeIndex() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         double[] times = {0.0, 0.001, 0.002, 0.003, 0.004};
-        
+
         for (double time : times) {
             tsContainer.insertValuesAtEnd(values, time);
         }
-        
+
         // Find index for time 0.0
         int index = tsContainer.findTimeIndex(0.0005, 0);
         assertTrue("Index should be valid", index >= 0);
@@ -497,12 +497,12 @@ public class DataContainerSimpleTest {
     @Test
     public void testGetDataValueInInterval() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         tsContainer.insertValuesAtEnd(values, 0.0);
         tsContainer.insertValuesAtEnd(values, 0.001);
         tsContainer.insertValuesAtEnd(values, 0.002);
-        
+
         // Get data in interval
         Object result = tsContainer.getDataValueInInterval(0.0, 0.001, 0);
         // Result could be null, a single value, or a HiLoData depending on the interval
@@ -512,11 +512,11 @@ public class DataContainerSimpleTest {
     @Test
     public void testGetDataValueInIntervalNoMatch() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         tsContainer.insertValuesAtEnd(values, 0.0);
         tsContainer.insertValuesAtEnd(values, 0.002);
-        
+
         // Get data in interval that has no data
         Object result = tsContainer.getDataValueInInterval(0.5, 1.0, 0);
         assertNull(result);
@@ -525,12 +525,12 @@ public class DataContainerSimpleTest {
     @Test
     public void testGetNiceMaximumXValue() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         tsContainer.insertValuesAtEnd(values, 0.0);
         tsContainer.insertValuesAtEnd(values, 0.001);
         tsContainer.insertValuesAtEnd(values, 0.002);
-        
+
         double niceMax = tsContainer.getNiceMaximumXValue();
         assertTrue("Nice max should be positive", niceMax > 0.0);
     }
@@ -567,9 +567,9 @@ public class DataContainerSimpleTest {
     public void testInsertValuesZeroArray() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
         float[] zeroValues = {0.0f, 0.0f, 0.0f};
-        
+
         tsContainer.insertValuesAtEnd(zeroValues, 0.0);
-        
+
         assertEquals(0.0f, tsContainer.getValue(0, 0), EPSILON);
         assertEquals(0.0f, tsContainer.getValue(1, 0), EPSILON);
         assertEquals(0.0f, tsContainer.getValue(2, 0), EPSILON);
@@ -579,9 +579,9 @@ public class DataContainerSimpleTest {
     public void testInsertValuesNegativeArray() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
         float[] negValues = {-1.0f, -2.0f, -3.0f};
-        
+
         tsContainer.insertValuesAtEnd(negValues, 0.0);
-        
+
         assertEquals(-1.0f, tsContainer.getValue(0, 0), EPSILON);
         assertEquals(-2.0f, tsContainer.getValue(1, 0), EPSILON);
         assertEquals(-3.0f, tsContainer.getValue(2, 0), EPSILON);
@@ -591,9 +591,9 @@ public class DataContainerSimpleTest {
     public void testInsertValuesWithLargeTimestamps() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
         float[] values = {1.0f, 2.0f, 3.0f};
-        
+
         tsContainer.insertValuesAtEnd(values, 1000000.0);
-        
+
         double retrievedTime = tsContainer.getTimeValue(0, 0);
         assertEquals(1000000.0, retrievedTime, DELTA);
     }
@@ -601,14 +601,14 @@ public class DataContainerSimpleTest {
     @Test
     public void testFindTimeIndexExactMatch() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         double[] times = {0.0, 0.001, 0.002};
-        
+
         for (double time : times) {
             tsContainer.insertValuesAtEnd(values, time);
         }
-        
+
         int index = tsContainer.findTimeIndex(0.0015, 0);
         assertTrue("Index should be valid", index >= 0);
     }
@@ -616,11 +616,11 @@ public class DataContainerSimpleTest {
     @Test
     public void testFindTimeIndexBeyondMax() {
         DataContainerSimple tsContainer = DataContainerSimple.fabricConstantDtTimeSeries(3, 100);
-        
+
         float[] values = {1.0f, 2.0f, 3.0f};
         tsContainer.insertValuesAtEnd(values, 0.0);
         tsContainer.insertValuesAtEnd(values, 0.001);
-        
+
         int index = tsContainer.findTimeIndex(0.1, 0);
         // Should return the last valid index
         assertTrue(index >= 0);

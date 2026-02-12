@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -71,14 +71,14 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
             showInTextInfo(TextInfoType.SHOW_NEVER).
             arrayIndex(this, -1).
             build();
-    
-        
+
+
     @SuppressWarnings("PMD")
     private final StringBuffer _outputStringBuffer = new StringBuffer();
     private static final int THREE = 3;
     private static final int DEF_IN_TERMS = 3;
     private static final int DEF_OUT_TERMS = 2;
-        
+
     private boolean _isConsoleOutput = true;
     private static final int DIAMETER = 4;
     private static final double HEIGHT = 0.6, WIDTH = 1.4;
@@ -114,15 +114,15 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         }
         super.deleteActionIndividual();
     }
-            
-    
+
+
     class CCalculator extends AbstractControlCalculatable {
             private boolean severeErrorOccured = false; // save error to jump out of berechneYOUT
-            
+
             CCalculator() {
                 super(XIN.size(), YOUT.size());
             }
-            
+
             /**
              *  Use this function to unload the Native Library if the Simulation is paused or finished
              */
@@ -133,7 +133,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                     _nativeCBlock = null;
                 }
             }
-            
+
             @Override
             public void berechneYOUT(final double deltaT) {
                 if (_isConsoleOutput) {
@@ -146,9 +146,9 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                         severeErrorOccured = false;
                     }
                     if (!severeErrorOccured) {  // if the native library or function was not found, there is no need to execute it!
-                        
+
                         // OBSERVATION: UserParameter _paramLib*** was filled lazy with data from loaded File,
-                        //      too lazy to check them in the Constructor. 
+                        //      too lazy to check them in the Constructor.
                         //      Therefore, loading them at the latest possible chance! I couldn't find better solutions.
                         //      Inits here are usually unwanted, because of testing them on every Simulation Timestep
                         if (_libFile == null || _libFileList == null) {
@@ -207,7 +207,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                     if (ste.length > 0) {
                         System.err.println(ste[0] + "\n");
                     }
-                }    
+                }
                 SystemOutputRedirect.setOriginalOutput();
             }
         };
@@ -220,7 +220,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
         return new CCalculator();
     }
-    
+
 
     @Override
     public int istAngeklickt(final int mouseX, final int mouseY) {
@@ -232,7 +232,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
             return 2;
         }
         if (_outputTri.isIncreaseClicked(mouseX, mouseY)) {
-            setOutputTerminalNumber(YOUT.size() + 1);            
+            setOutputTerminalNumber(YOUT.size() + 1);
             return 2;
         }
         if (_inputTri.isDecreaseClicked(mouseX, mouseY)) {
@@ -240,7 +240,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
             return 2;
         }
         if (_outputTri.isDecreaseClicked(mouseX, mouseY)) {
-            setOutputTerminalNumber(Math.max(0, YOUT.size() - 1));            
+            setOutputTerminalNumber(Math.max(0, YOUT.size() - 1));
             return 2;
         }
         return 0;
@@ -317,24 +317,24 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         _outputTri._yKlickMinTerminalADD = ymOUT1;  // unteres Dreieck --> ADD / Erhoehung der Terminal-Anzahl
         _outputTri._yKlickMaxTerminalADD = ymOUT0;
         graphics.setColor(origColor);
-    }                                
-    
+    }
+
     @Override
     public void copyAdditionalParameters(final AbstractBlockInterface originalBlock) {
         super.copyAdditionalParameters(originalBlock);
 
-        
+
     }
 
     @Override
-    protected void exportAsciiIndividual(final StringBuffer ascii) {                
+    protected void exportAsciiIndividual(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\nisConsoleOutput"), _isConsoleOutput);
         ProjectData.appendAsString(ascii.append("\nclearOutput"), _clearOutput);
     }
 
     @Override
-    protected void importIndividual(final TokenMap tokenMap) {        
-        
+    protected void importIndividual(final TokenMap tokenMap) {
+
         if (tokenMap.containsToken("clearOutput")) {
             _clearOutput = tokenMap.readDataLine("clearOutput", _clearOutput);
         }
@@ -355,9 +355,9 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
         if (tokenMap.containsToken("isConsoleOutput")) {
             _isConsoleOutput = tokenMap.readDataLine("isConsoleOutput", _isConsoleOutput);
-        }                        
+        }
     }
-    
+
     public boolean isConsoleOutput() {
         return _isConsoleOutput;
     }
@@ -365,7 +365,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
     public void setConsoleOutput(final boolean value) {
         _isConsoleOutput = value;
     }
-    
+
 
     @Override
     public void setInputTerminalNumber(final int number) {
@@ -389,7 +389,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
             YOUT.add(new TerminalControlOutput(this, 2, -YOUT.size() + 1));
         }
     }
-    
+
 
     boolean isClearOutput() {
         return _clearOutput;
@@ -398,11 +398,11 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
     void setClearOutput(final boolean value) {
         _clearOutput = value;
     }
-    
+
     @Override
-    protected Window openDialogWindow() {         
-            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden 
-            
+    protected Window openDialogWindow() {
+            // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden
+
             // if Native Library has already been loaded, it's time to unload it
             // the User might want to load a different Native Library
             if (_nativeCBlock != null) {
@@ -410,19 +410,19 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                 _nativeCBlock = null;
             }
             // OBSERVATION: _paramLib*** was filled lazy with data from loaded File,
-            //      too lazy to check them in the Constructor. 
+            //      too lazy to check them in the Constructor.
             //      Therefore, loading them at the latest possible chance!
             if (_libFile == null || _libFileList == null) {
                 loadUserData ();
             }
             if (_guiWindow == null) {
-                _guiWindow = new NativeCDialog(this, GeckoSim._win, false, 
+                _guiWindow = new NativeCDialog(this, GeckoSim._win, false,
                             _libFile, _libFileList);
 //                if (_paramSelectedLibName.getValue().equals("null")) {
 //                    _guiWindow = new NativeCDialog(this, GeckoSim._win, false);
 //                } else {
 //                    String test = (_paramLibNames.getValue());
-//                    
+//
 //                }
                 //_guiWindow.setVisible(true);
                 //_guiWindow.loadSourcesText();
@@ -433,9 +433,9 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                     //_guiWindow.loadSourcesText();
                 }
             }
-            return (Window) _guiWindow;        
+            return (Window) _guiWindow;
     }
-    
+
     public void triggerUpdate () {
         _paramLibNames.setUserValue(convertList2String(_libFileList));
         if (_libFile.getFile() == null ||_libFile.getFileName() == null) {
@@ -443,9 +443,9 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         } else {
             _paramSelectedLibName.setUserValue(_libFile.getFileName());
         }
-        
+
     }
-    
+
     public DefaultListModel<String> convertString2List (final String list) {
         DefaultListModel<String> result = new DefaultListModel<>();
         String[] elements = list.split(Pattern.quote(PATH_SPLITTER));
@@ -454,7 +454,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         }
         return result;
     }
-    
+
     public String convertList2String (final DefaultListModel<String> listVec) {
         StringBuffer result = new StringBuffer();
         for (int i=0; i<listVec.size(); i++) {
@@ -462,7 +462,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         }
         return result.toString();
     }
-    
+
     public void loadUserData () {
         String selLibName = _paramSelectedLibName.getValue();
         if (selLibName.isEmpty() || selLibName.equals("null")) {

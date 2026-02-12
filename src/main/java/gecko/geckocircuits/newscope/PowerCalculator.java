@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,10 +32,10 @@ public final class PowerCalculator {
     private final double[] _rms2I;
     private final int _noOfPowerAnals;
     private static final int CALC_NUM_HARM = 50;
-        
+
     private PowerCalculator(final AbstractDataContainer worksheet,
             final PowerAnalysisPanel.PowerCalculatorSelectionIndex selectedIndices) {
-        
+
         _noOfPowerAnals = selectedIndices._selCurrentInd.size();
         _powerP = new double[_noOfPowerAnals];
         _powerQ = new double[_noOfPowerAnals];
@@ -46,43 +46,43 @@ public final class PowerCalculator {
         _rms2U = new double[_noOfPowerAnals];
         _rms2I = new double[_noOfPowerAnals];
 
-        
+
         int[] voltageIndices = new int[_noOfPowerAnals];
         int[] currentIndices = new int[_noOfPowerAnals];
-        
+
         for(int i = 0; i < _noOfPowerAnals; i++) {
             voltageIndices[i] = selectedIndices._selVoltageInd.get(i)-1;
             currentIndices[i] = selectedIndices._selCurrentInd.get(i)-1;
         }
-        
+
         calculate(worksheet, voltageIndices, currentIndices, selectedIndices.startTime, selectedIndices.stopTime);
     }
 
     public double getPowerP(final int index) {
         return _powerP[index];
     }
-    
+
     public double getPowerQ(final int index) {
         return _powerQ[index];
     }
-    
+
     public double getPowerD(final int index) {
         return _powerD[index];
     }
-    
+
     public double getPowerS(final int index) {
         return _powerS[index];
     }
-    
+
     public double getLambda(final int index) {
         return _lambda[index];
     }
-    
+
     public double getCosPhi(final int index) {
         return _cosPhi[index];
     }
-    
-    private void calculate(final AbstractDataContainer worksheet, final int[] voltageIndices, final int[] currentIndices, 
+
+    private void calculate(final AbstractDataContainer worksheet, final int[] voltageIndices, final int[] currentIndices,
             final double rng1, final double rng2) {
 
         // Startpunkt finden:
@@ -90,19 +90,19 @@ public final class PowerCalculator {
         while (worksheet.getTimeValue(startIndex, 0) <= rng1) {
             startIndex++;
         }
-        
-        
+
+
         double deltaT = worksheet.getTimeValue(startIndex + 1, 0) - worksheet.getTimeValue(startIndex, 0);
         final double totalT = rng2 - rng1;
 
-        
+
         for (int row = 0; row < _noOfPowerAnals; row++) {
             double[] anU = new double[CALC_NUM_HARM], anI = new double[CALC_NUM_HARM];
             double[] bnU = new double[CALC_NUM_HARM], bnI = new double[CALC_NUM_HARM];
             double[] cnU = new double[CALC_NUM_HARM], cnI = new double[CALC_NUM_HARM], dphiUI = new double[CALC_NUM_HARM];
-            
+
             // Rechnen bis zum Endpunkt:
-            for (int i1 = startIndex; (i1 < worksheet.getMaximumTimeIndex(0)) 
+            for (int i1 = startIndex; (i1 < worksheet.getMaximumTimeIndex(0))
                     && (worksheet.getTimeValue(i1 + 1, 0) > worksheet.getTimeValue(i1, 0))
                     && (worksheet.getTimeValue(i1, 0) <= rng2); i1++) {
                 deltaT = worksheet.getTimeValue(i1 + 1, 0) - worksheet.getTimeValue(i1, 0);
@@ -118,7 +118,7 @@ public final class PowerCalculator {
                     anI[n] += current * cosDt;
                     bnI[n] += current * sinDt;
                 }
-                
+
                 _powerP[row] += (voltage * current * deltaT);
                 _rms2U[row] += (voltage * voltage * deltaT);
                 _rms2I[row] += (current * current * deltaT);
@@ -144,8 +144,8 @@ public final class PowerCalculator {
         }
     }
 
-    public static PowerCalculator calculatorFabric(final AbstractDataContainer worksheet, 
+    public static PowerCalculator calculatorFabric(final AbstractDataContainer worksheet,
             final PowerAnalysisPanel.PowerCalculatorSelectionIndex selectedIndices) {
-        return new PowerCalculator(worksheet, selectedIndices);        
+        return new PowerCalculator(worksheet, selectedIndices);
     }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -94,7 +94,7 @@ public final class ReglerFromEXTERNAL extends RegelBlockSimulink implements Vari
             return new AbstractControlCalculatable(0, YOUT.size()) {
                 @Override
                 public void berechneYOUT(double deltaT) {
-                    
+
                 }
             };
         } else {

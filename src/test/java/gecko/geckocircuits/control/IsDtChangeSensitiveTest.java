@@ -46,7 +46,7 @@ public class IsDtChangeSensitiveTest {
     public void testImplementationCallsInitWithNewDt() {
         MockDtSensitive mock = new MockDtSensitive();
         mock.initWithNewDt(0.001);
-        
+
         assertEquals(0.001, mock.lastDt, 1e-9);
         assertTrue(mock.initCalled);
     }
@@ -54,13 +54,13 @@ public class IsDtChangeSensitiveTest {
     @Test
     public void testImplementationWithDifferentDtValues() {
         MockDtSensitive mock = new MockDtSensitive();
-        
+
         mock.initWithNewDt(0.001);
         assertEquals(0.001, mock.lastDt, 1e-9);
-        
+
         mock.initWithNewDt(0.0001);
         assertEquals(0.0001, mock.lastDt, 1e-12);
-        
+
         mock.initWithNewDt(1.0);
         assertEquals(1.0, mock.lastDt, 1e-9);
     }
@@ -69,7 +69,7 @@ public class IsDtChangeSensitiveTest {
     public void testImplementationWithVerySmallDt() {
         MockDtSensitive mock = new MockDtSensitive();
         double smallDt = 1e-9;
-        
+
         mock.initWithNewDt(smallDt);
         assertEquals(smallDt, mock.lastDt, 1e-18);
     }
@@ -78,7 +78,7 @@ public class IsDtChangeSensitiveTest {
     public void testImplementationWithZeroDt() {
         MockDtSensitive mock = new MockDtSensitive();
         mock.initWithNewDt(0.0);
-        
+
         assertEquals(0.0, mock.lastDt, 1e-9);
     }
 
@@ -86,7 +86,7 @@ public class IsDtChangeSensitiveTest {
     public void testImplementationWithNegativeDt() {
         MockDtSensitive mock = new MockDtSensitive();
         mock.initWithNewDt(-0.001);
-        
+
         assertEquals(-0.001, mock.lastDt, 1e-9);
     }
 
@@ -94,7 +94,7 @@ public class IsDtChangeSensitiveTest {
     public void testImplementationWithLargeDt() {
         MockDtSensitive mock = new MockDtSensitive();
         double largeDt = 1000.0;
-        
+
         mock.initWithNewDt(largeDt);
         assertEquals(largeDt, mock.lastDt, 1e-9);
     }
@@ -103,10 +103,10 @@ public class IsDtChangeSensitiveTest {
     public void testMultipleImplementationsIndependent() {
         MockDtSensitive impl1 = new MockDtSensitive();
         MockDtSensitive impl2 = new MockDtSensitive();
-        
+
         impl1.initWithNewDt(0.001);
         impl2.initWithNewDt(0.01);
-        
+
         assertEquals(0.001, impl1.lastDt, 1e-9);
         assertEquals(0.01, impl2.lastDt, 1e-9);
     }

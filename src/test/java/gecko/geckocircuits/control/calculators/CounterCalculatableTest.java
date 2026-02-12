@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,30 +28,30 @@ public class CounterCalculatableTest extends AbstractTwoInputsMathFunctionTest {
     }
 
     @Override
-    @Test        
+    @Test
     public void testInputTrueTrue() {
-        _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;        
+        _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs._inputSignal[1][0] = 0; 
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 0; 
+        _controlCalculatableTwoInputs._inputSignal[1][0] = 0;
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 0;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 1; 
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);        
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 0; 
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 1; 
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 0;
+        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
         assertEquals(2, _controlCalculatableTwoInputs._outputSignal[0][0], 1e-6);
     }
 
     @Override
     @Test
-    public void testInputTrueFalse() {                
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 1; 
+    public void testInputTrueFalse() {
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 0; 
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 0;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 1; 
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
@@ -60,14 +60,14 @@ public class CounterCalculatableTest extends AbstractTwoInputsMathFunctionTest {
 
     @Override
     @Test
-    public void testInputFalseFalse() {        
-        _controlCalculatableTwoInputs._inputSignal[0][0] = 1; 
+    public void testInputFalseFalse() {
+        _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
         _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[1][0] = 0; // reset;
         _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT); // counter should 
+        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT); // counter should
         // count only "flanks"
         assertEquals(0, _controlCalculatableTwoInputs._outputSignal[0][0], 1e-6);
-    }        
+    }
 }

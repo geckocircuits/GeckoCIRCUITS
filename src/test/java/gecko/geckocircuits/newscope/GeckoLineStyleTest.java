@@ -119,7 +119,7 @@ public class GeckoLineStyleTest {
     public void testStroke_SolidFat1_ThickerThanPlain() {
         BasicStroke plain = (BasicStroke) GeckoLineStyle.SOLID_PLAIN.stroke();
         BasicStroke fat1 = (BasicStroke) GeckoLineStyle.SOLID_FAT_1.stroke();
-        
+
         assertTrue("FAT_1 should be thicker than PLAIN",
             fat1.getLineWidth() > plain.getLineWidth());
     }
@@ -128,7 +128,7 @@ public class GeckoLineStyleTest {
     public void testStroke_SolidFat2_ThickerThanFat1() {
         BasicStroke fat1 = (BasicStroke) GeckoLineStyle.SOLID_FAT_1.stroke();
         BasicStroke fat2 = (BasicStroke) GeckoLineStyle.SOLID_FAT_2.stroke();
-        
+
         assertTrue("FAT_2 should be thicker than FAT_1",
             fat2.getLineWidth() > fat1.getLineWidth());
     }
@@ -137,7 +137,7 @@ public class GeckoLineStyleTest {
     public void testStroke_SolidThin_ThinnerThanPlain() {
         BasicStroke plain = (BasicStroke) GeckoLineStyle.SOLID_PLAIN.stroke();
         BasicStroke thin = (BasicStroke) GeckoLineStyle.SOLID_THIN.stroke();
-        
+
         assertTrue("THIN should be thinner than PLAIN",
             thin.getLineWidth() < plain.getLineWidth());
     }

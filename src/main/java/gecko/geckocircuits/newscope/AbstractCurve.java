@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -38,7 +38,7 @@ public abstract class AbstractCurve implements LineSettable, SymbolSettable {
     protected final CurveSettings _curveSettings;
     private final GraferV4 _grafer;
     public AbstractCurvePainter _curvePainter;
-    boolean _isSelected;    
+    boolean _isSelected;
 
     AbstractCurve(final AbstractDiagram diagram) {
         this._axisConnection = AxisConnection.ZUORDNUNG_NIX;
@@ -80,7 +80,7 @@ public abstract class AbstractCurve implements LineSettable, SymbolSettable {
     }
 
     public void setAxisConnection(final AxisConnection newConnection) {
-        if (!_axisConnection.equals(newConnection)) {            
+        if (!_axisConnection.equals(newConnection)) {
             _axisConnection = newConnection;
             AbstractDataContainer container = _grafer.getDataContainer();
             _diagram.fitYRangesFromGlobalData(container, true);
@@ -204,7 +204,7 @@ public abstract class AbstractCurve implements LineSettable, SymbolSettable {
     GeckoLineType getLineType() {
         return _curveSettings._lineType;
     }
-    
+
     void setLineType(final GeckoLineType newValue) {
         _curveSettings._lineType = newValue;
     }

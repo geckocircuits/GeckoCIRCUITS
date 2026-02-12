@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -111,7 +111,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     public final void setAccessibleParameter(final String paramname, final double paramValue) throws IllegalAccessException {
         for (UserParameter par : getRegisteredParameters()) {
-            if (paramname.equalsIgnoreCase(par.getShortName())) {                
+            if (paramname.equalsIgnoreCase(par.getShortName())) {
                 par.setFromDoubleValue(paramValue);
                 return;
             }
@@ -123,7 +123,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                 // no return here! Search all possible names.
             }
         }
-        
+
         if(paramname.equalsIgnoreCase("enabled")) { // this is only for forward compatibility.
             // the next release > 1.70 will have the same command, but implemented in a clean way!
             int intValue = (int) paramValue;
@@ -139,7 +139,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                 setCircuitEnabled(Enabled.DISABLED_SHORT);
                 return;
             }
-            
+
         }
 
         throw new IllegalAccessException("Parameter with name " + paramname + " not found in " + getStringID() + ".");
@@ -484,7 +484,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
     }
 
-   
+
     public final double[] getParameter() {
         List<UserParameter<? extends Object>> parameterList = getRegisteredParameters();
         if (!parameterList.isEmpty()) {
@@ -533,7 +533,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         return parameterString;
     }
 
-    // GeckoOPTIMIZER --> 
+    // GeckoOPTIMIZER -->
     public final String[] getNameOpt() {
         return nameOpt;
     }
@@ -765,7 +765,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         _textInfo.clearParameters();
 
         if (getDisplayProperties().showName || (this instanceof SpecialNameVisible
-                && ((SpecialNameVisible) this).isNameVisible())) {  // falls zusaetzlich auch der Name angezeigt werden soll            
+                && ((SpecialNameVisible) this).isNameVisible())) {  // falls zusaetzlich auch der Name angezeigt werden soll
             _textInfo.addParameter(getStringID());
         }
 
@@ -988,10 +988,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         final Window dialog = openDialogWindow();
         dialog.setVisible(true);
         if (dialog instanceof Frame) {
-            Frame frame = (Frame) dialog;                        
+            Frame frame = (Frame) dialog;
             int state = frame.getExtendedState();
             state &= ~JFrame.ICONIFIED;
-            frame.setExtendedState(state);            
+            frame.setExtendedState(state);
         }
     }
 
@@ -1102,5 +1102,5 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     public String getExportImportCharacters() {
         return getTypeInfo().getExportImportCharacters();
     }
-        
+
 }

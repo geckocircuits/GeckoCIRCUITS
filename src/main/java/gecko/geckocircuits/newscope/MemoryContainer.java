@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,10 +32,10 @@ public class MemoryContainer {
     private long _availablePointer;
     private static final int CACHE_SIZE = 10000;
     private static final int CLEAR_SIZE = 10;
-    private final int _numRows;    
-        
+    private final int _numRows;
+
     private static List<MemoryContainer> _containerSingletons = new ArrayList<MemoryContainer>();
-    
+
     public static MemoryContainer getMemoryContainer(final int numRows) {
         if(_containerSingletons.size() > CLEAR_SIZE) {
             _containerSingletons.clear();
@@ -45,24 +45,24 @@ public class MemoryContainer {
                 return mem;
             }
         }
-        
-        MemoryContainer newContainer = new MemoryContainer(numRows);        
+
+        MemoryContainer newContainer = new MemoryContainer(numRows);
         _containerSingletons.add(newContainer);
         return newContainer;
     }
-    
-    
+
+
     public MemoryContainer(final int numRows) {
         _memCache = new float[CACHE_SIZE][numRows];
         _numRows = numRows;
         _inUsePointer = 0;
-        _availablePointer = CACHE_SIZE - 1;    
+        _availablePointer = CACHE_SIZE - 1;
     }
 
     private float[] createNewArray() {
         return new float[_numRows];
     }
-    
+
     public float[] getArray() {
         assert _memCache != null : "Memory cache not yet initialized!";
         if (_inUsePointer < _availablePointer - 10) {
@@ -71,8 +71,8 @@ public class MemoryContainer {
             _memCache[arrayIndex] = null;
             _inUsePointer++;
 //            if(_availablePointer % 1000 == 0) {
-//            System.out.println("Cache contains " + 
-//                    (_availablePointer - _inUsePointer) * 100.0 / CACHE_SIZE 
+//            System.out.println("Cache contains " +
+//                    (_availablePointer - _inUsePointer) * 100.0 / CACHE_SIZE
 //                    + "% valid arrays.");
 //            }
             assert _inUsePointer < _availablePointer;
@@ -84,7 +84,7 @@ public class MemoryContainer {
             return createNewArray();
         }
     }
-    
+
     public float[] getArrayInitializedWithNaN() {
         float[] returnValue = getArray();
         for(int i = 0; i < returnValue.length; i++) {
@@ -99,6 +99,6 @@ public class MemoryContainer {
         _availablePointer++;
     }
 
-    
-    
+
+
 }

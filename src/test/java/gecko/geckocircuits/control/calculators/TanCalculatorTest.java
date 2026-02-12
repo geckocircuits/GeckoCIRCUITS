@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TanCalculatorTest extends AbstractSimpleMathFunctionTest {
-            
+
 
     @Override
     AbstractControlCalculatable calculatorFabric() {
@@ -35,12 +35,12 @@ public class TanCalculatorTest extends AbstractSimpleMathFunctionTest {
     @Test
     public void testBerechneYOUTValue() {
         double val = getValue(-Math.PI/3);
-        assertWithTol(-Math.sqrt(3), val);        
+        assertWithTol(-Math.sqrt(3), val);
     }
 
     @Override
     @Test(expected=AssertionError.class)
     public void testErrorValue() {
-            double val = getValue(-Math.PI/2);            
+            double val = getValue(-Math.PI/2);
     }
 }

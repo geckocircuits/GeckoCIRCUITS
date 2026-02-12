@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,7 +22,7 @@ import javax.swing.JDialog;
 class DialogDiagramProps extends JDialog {
     private final AbstractDiagram _diagram;
     private final GraferV4 _grafer;
-    
+
     // careful: This variable cannot be made private final boolean.
     // I discovered that the obfuscater will then mess the initialization up!
     private boolean _initDone = false;
@@ -31,8 +31,8 @@ class DialogDiagramProps extends JDialog {
     public DialogDiagramProps(final JDialog parent, final boolean modal, final AbstractDiagram diagram, final GraferV4 grafer) {
         super(parent, modal);
         initComponents();
-        jPanelAxisSettingsX.jCheckBoxSymmetricZero.setVisible(false);        
-        
+        jPanelAxisSettingsX.jCheckBoxSymmetricZero.setVisible(false);
+
         jTextFieldName.setText(diagram._diagramSettings.getNameDiagram());
         _diagram = diagram;
         _grafer = grafer;
@@ -195,9 +195,9 @@ class DialogDiagramProps extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     //CHECKSTYLE:ON
-    
+
     private void jTextFieldNameKeyReleased(java.awt.event.KeyEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldNameKeyReleased
-        
+
     }//GEN-LAST:event_jTextFieldNameKeyReleased
 
     private void jTextFieldNamePropertyChange(java.beans.PropertyChangeEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldNamePropertyChange
@@ -210,7 +210,7 @@ class DialogDiagramProps extends JDialog {
         this.dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOk;
     private javax.swing.JLabel jLabel1;

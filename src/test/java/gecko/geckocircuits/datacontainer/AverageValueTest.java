@@ -53,7 +53,7 @@ public class AverageValueTest {
     public void testCopyConstructor() {
         AverageValue original = new AverageValue(10.0, 1.0, 3.0);
         AverageValue copy = new AverageValue(original);
-        
+
         assertEquals(original.getAverageValue(), copy.getAverageValue(), DELTA);
         assertEquals(original.getIntervalStart(), copy.getIntervalStart(), DELTA);
         assertEquals(original.getIntervalStop(), copy.getIntervalStop(), DELTA);
@@ -90,9 +90,9 @@ public class AverageValueTest {
         // Two intervals of same span - result should be arithmetic mean
         AverageValue avg1 = new AverageValue(10.0, 0.0, 5.0);  // span=5, avg=10
         AverageValue avg2 = new AverageValue(20.0, 5.0, 10.0); // span=5, avg=20
-        
+
         avg1.appendAverage(avg2);
-        
+
         // (10*5 + 20*5) / (5+5) = 150/10 = 15
         assertEquals(15.0, avg1.getAverageValue(), DELTA);
         assertEquals(0.0, avg1.getIntervalStart(), DELTA);
@@ -104,9 +104,9 @@ public class AverageValueTest {
         // Weighted by interval length
         AverageValue avg1 = new AverageValue(10.0, 0.0, 2.0);  // span=2, avg=10
         AverageValue avg2 = new AverageValue(20.0, 2.0, 10.0); // span=8, avg=20
-        
+
         avg1.appendAverage(avg2);
-        
+
         // (10*2 + 20*8) / (2+8) = (20+160)/10 = 18
         assertEquals(18.0, avg1.getAverageValue(), DELTA);
         assertEquals(10.0, avg1.getAverageSpan(), DELTA);
@@ -116,7 +116,7 @@ public class AverageValueTest {
     public void testAppendAverage_NullAppend() {
         AverageValue avg = new AverageValue(10.0, 0.0, 5.0);
         avg.appendAverage(null);
-        
+
         // Should not change
         assertEquals(10.0, avg.getAverageValue(), DELTA);
         assertEquals(0.0, avg.getIntervalStart(), DELTA);
@@ -127,9 +127,9 @@ public class AverageValueTest {
     public void testAppendAverage_VerySmallSpan() {
         AverageValue avg1 = new AverageValue(10.0, 0.0, 100.0);  // span=100
         AverageValue avg2 = new AverageValue(1000.0, 100.0, 100.001); // span=0.001
-        
+
         avg1.appendAverage(avg2);
-        
+
         // Large span dominates - result should be close to 10
         assertTrue(avg1.getAverageValue() > 9.0 && avg1.getAverageValue() < 11.0);
     }
@@ -139,7 +139,7 @@ public class AverageValueTest {
         AverageValue avg = new AverageValue(10.0, 0.0, 1.0);
         avg.appendAverage(new AverageValue(20.0, 1.0, 2.0));
         avg.appendAverage(new AverageValue(30.0, 2.0, 3.0));
-        
+
         // (10*1 + 20*1 + 30*1) / 3 = 60/3 = 20
         assertEquals(20.0, avg.getAverageValue(), DELTA);
         assertEquals(3.0, avg.getAverageSpan(), DELTA);
@@ -149,9 +149,9 @@ public class AverageValueTest {
     public void testAppendAverage_NegativeValues() {
         AverageValue avg1 = new AverageValue(-10.0, 0.0, 5.0);
         AverageValue avg2 = new AverageValue(-20.0, 5.0, 10.0);
-        
+
         avg1.appendAverage(avg2);
-        
+
         assertEquals(-15.0, avg1.getAverageValue(), DELTA);
     }
 
@@ -159,9 +159,9 @@ public class AverageValueTest {
     public void testAppendAverage_PositiveAndNegative() {
         AverageValue avg1 = new AverageValue(10.0, 0.0, 5.0);
         AverageValue avg2 = new AverageValue(-10.0, 5.0, 10.0);
-        
+
         avg1.appendAverage(avg2);
-        
+
         // (10*5 + (-10)*5) / 10 = 0
         assertEquals(0.0, avg1.getAverageValue(), DELTA);
     }
@@ -174,7 +174,7 @@ public class AverageValueTest {
     public void testToString_ContainsAllValues() {
         AverageValue avg = new AverageValue(5.5, 1.0, 3.0);
         String str = avg.toString();
-        
+
         assertNotNull(str);
         assertTrue(str.contains("5.5"));
         assertTrue(str.contains("1.0"));
@@ -214,7 +214,7 @@ public class AverageValueTest {
         // DC signal has same average over any interval
         AverageValue dc1 = new AverageValue(5.0, 0.0, 10.0);
         AverageValue dc2 = new AverageValue(5.0, 10.0, 100.0);
-        
+
         dc1.appendAverage(dc2);
         assertEquals(5.0, dc1.getAverageValue(), DELTA);
     }

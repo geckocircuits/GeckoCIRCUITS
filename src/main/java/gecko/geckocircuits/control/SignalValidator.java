@@ -8,11 +8,11 @@ import java.util.List;
  * Ensures that signal names match their indices in the data container.
  */
 public final class SignalValidator {
-    
+
     /**
      * Validates that signal names match their indices in the data container.
      * Attempts to auto-correct mismatches by finding signals by name.
-     * 
+     *
      * @param originalNames the expected signal names
      * @param indices the signal indices to validate
      * @param data the data container
@@ -22,19 +22,19 @@ public final class SignalValidator {
             final List<String> originalNames,
             final List<Integer> indices,
             final AbstractDataContainer data) {
-        
+
         ValidationResult result = new ValidationResult();
         final int knownIndices = indices.size();
-        
+
         for (int i = 0; i < originalNames.size(); i++) {
             String expectedName = originalNames.get(i);
             int currentIndex = i < knownIndices ? indices.get(i) : -1;
-            
+
             // Check if the index is valid and points to the correct signal
             if (!isValidSignalIndex(currentIndex, expectedName, data)) {
                 // Try to find the signal by name
                 int correctedIndex = findSignalIndexByName(expectedName, data);
-                
+
                 if (correctedIndex >= 0) {
                     result.addCorrection(i, currentIndex, correctedIndex, expectedName);
                 } else {
@@ -42,13 +42,13 @@ public final class SignalValidator {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Checks if the index is valid and points to a signal with the expected name.
-     * 
+     *
      * @param index the signal index
      * @param expectedName the expected signal name
      * @param data the data container
@@ -58,14 +58,14 @@ public final class SignalValidator {
         if (index < 0 || index >= data.getRowLength()) {
             return false;
         }
-        
+
         String actualName = data.getSignalName(index);
         return expectedName.equals(actualName);
     }
-    
+
     /**
      * Finds the index of a signal by its name.
-     * 
+     *
      * @param signalName the signal name to find
      * @param data the data container
      * @return the signal index, or -1 if not found
@@ -78,7 +78,7 @@ public final class SignalValidator {
         }
         return -1;
     }
-    
+
     /**
      * Result of signal validation.
      */
@@ -87,7 +87,7 @@ public final class SignalValidator {
         private final StringBuilder missingSignals = new StringBuilder();
         private boolean hasCorrections = false;
         private boolean hasMissingSignals = false;
-        
+
         /**
          * Adds a correction to the result.
          */
@@ -98,7 +98,7 @@ public final class SignalValidator {
             }
             corrections.append(String.format("%s: %d->%d", signalName, oldIndex, newIndex));
         }
-        
+
         /**
          * Adds a missing signal to the result.
          */
@@ -109,21 +109,21 @@ public final class SignalValidator {
             }
             missingSignals.append(signalName);
         }
-        
+
         /**
          * Checks if all signals are valid (no missing signals).
          */
         public boolean isValid() {
             return !hasMissingSignals;
         }
-        
+
         /**
          * Checks if any corrections were made.
          */
         public boolean hasCorrections() {
             return hasCorrections;
         }
-        
+
         /**
          * Gets the error message for missing signals.
          */
@@ -131,10 +131,10 @@ public final class SignalValidator {
             if (!hasMissingSignals) {
                 return "";
             }
-            return String.format("The following signals are not available: %s", 
+            return String.format("The following signals are not available: %s",
                                 missingSignals.toString());
         }
-        
+
         /**
          * Gets the corrections message.
          */

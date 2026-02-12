@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,17 +25,17 @@ public enum ContainerStatus {
     /**
      * data is inserted from a simulation/fourier calculatioin, etc.
      */
-    RUNNING, 
+    RUNNING,
     /**
      * no more simulation data will be inserted into the container.
      */
-    FINISHED, 
+    FINISHED,
     /**
-     * 
+     *
      */
-    PAUSED, 
+    PAUSED,
     /**
-     * used in global data-container, when old simulation results are invalidated/deleted. 
+     * used in global data-container, when old simulation results are invalidated/deleted.
      */
-    DELETED; 
+    DELETED;
 }

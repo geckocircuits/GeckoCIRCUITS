@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
  * Tests the value object used to store element and block index connections.
  */
 public class NetzlisteCONTROLTest {
-    
+
     @Test
     public void testIndexConnectionExistence() {
         // Verify that IndexConnection class exists
@@ -18,12 +18,12 @@ public class NetzlisteCONTROLTest {
             fail("IndexConnection class not found: " + e.getMessage());
         }
     }
-    
+
     @Test
     public void testIndexConnectionFieldNames() {
         // Verify that IndexConnection has the expected field names
         String[] fieldNames = {"_elementIndex", "_inBlockIndex_outputIndex"};
-        
+
         try {
             Class<?> indexConnClass = Class.forName("gecko.geckocircuits.control.NetzlisteCONTROL$IndexConnection");
             for (String fieldName : fieldNames) {
@@ -34,7 +34,7 @@ public class NetzlisteCONTROLTest {
             fail("IndexConnection class structure check failed: " + e.getMessage());
         }
     }
-    
+
     @Test
     public void testIndexConnectionIsPublic() {
         // Verify that IndexConnection is a public class
@@ -46,7 +46,7 @@ public class NetzlisteCONTROLTest {
             fail("IndexConnection class not found: " + e.getMessage());
         }
     }
-    
+
     @Test
     public void testIndexConnectionIsInnerClass() {
         // Verify that IndexConnection is an inner class of NetzlisteCONTROL

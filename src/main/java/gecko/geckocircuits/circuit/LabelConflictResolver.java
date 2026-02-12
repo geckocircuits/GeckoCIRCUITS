@@ -49,7 +49,7 @@ public class LabelConflictResolver {
         if (existingLabels == null || copiedLabels == null) {
             return false;
         }
-        
+
         Set<String> existingSet = new HashSet<>(existingLabels);
         for (String copiedLabel : copiedLabels) {
             if (copiedLabel != null && !copiedLabel.isEmpty() && existingSet.contains(copiedLabel)) {
@@ -75,7 +75,7 @@ public class LabelConflictResolver {
             return 0;
         }
 
-        Set<String> existingSet = existingLabels != null ? 
+        Set<String> existingSet = existingLabels != null ?
                 new HashSet<>(existingLabels) : Collections.emptySet();
 
         int suffixIndex = 0;

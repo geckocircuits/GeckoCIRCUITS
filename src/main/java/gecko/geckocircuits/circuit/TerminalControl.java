@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,39 +23,39 @@ public class TerminalControl extends TerminalRelativePosition implements Control
      * _nodeNumber is a unique index for every control potential. this means, two terminals have the
      * same node-number when they have some direct connection within the netlist.
      */
-    private int _nodeNumber = -1;    
-    
+    private int _nodeNumber = -1;
+
     public TerminalControl(AbstractBlockInterface relatedComponent, int posX, int posY) {
-        super(relatedComponent, posX, posY);        
-    }        
-    
+        super(relatedComponent, posX, posY);
+    }
+
     @Override
     public int getNodeNumber() {
         return _nodeNumber;
     }
-    
+
     @Override
     public void setNodeNumber(final int newValue) {
         _nodeNumber = newValue;
     }
-    
+
     @Override
     public void clearNodeNumber() {
         _nodeNumber = -1;
-    }                                   
-    
+    }
+
     public void paintControlState(Graphics2D graphics) {
         Color oldColor = graphics.getColor();
         final int CIRCLE_DIAMETER = 6;
         RegelBlock _parentRegler = (RegelBlock) _parentElement;
-        
+
         if(_parentRegler._calculator == null) {
             return;
         }
         int index = _parentRegler.YOUT.indexOf(this);
         double value = 0;
         if(index < 0) {
-            index = _parentRegler.XIN.indexOf(this);            
+            index = _parentRegler.XIN.indexOf(this);
             value = _parentRegler._calculator._inputSignal[index][0];
         } else {
             value = _parentRegler._calculator._outputSignal[index][0];
@@ -95,8 +95,8 @@ public class TerminalControl extends TerminalRelativePosition implements Control
             graphics.drawString(valueString, dpix * getPosition().x-1, dpix * getPosition().y+3);
             graphics.setFont(oldFont);
         }
-        
-        
+
+
         graphics.setColor(oldColor);
     }
 

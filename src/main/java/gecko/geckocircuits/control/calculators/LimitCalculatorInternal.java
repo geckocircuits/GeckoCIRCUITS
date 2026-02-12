@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,16 +20,16 @@ public final class LimitCalculatorInternal extends AbstractControlCalculatable {
 
     public LimitCalculatorInternal(final double minLimit, final double maxLimit) {
         super(1, 1);
-        setMinMaxValues(minLimit, maxLimit);        
+        setMinMaxValues(minLimit, maxLimit);
     }
-                
+
 
     @Override
     public void berechneYOUT(final double deltaT) {
-        _outputSignal[0][0] = _inputSignal[0][0];        
-        if (_inputSignal[0][0] <= _lowerLimit) {            
+        _outputSignal[0][0] = _inputSignal[0][0];
+        if (_inputSignal[0][0] <= _lowerLimit) {
             _outputSignal[0][0] = _lowerLimit;
-        } else if (_inputSignal[0][0] >= _upperLimit) {            
+        } else if (_inputSignal[0][0] >= _upperLimit) {
             _outputSignal[0][0] = _upperLimit;
         }
     }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -38,7 +38,7 @@ public final class ReglerFluxMeter extends AbstractCurrentMeasurement {
     @Override
     String getVariableForDisplay() {
         return "phi";
-    }    
+    }
 
     @Override
     public I18nKeys getCouplingTitle() {
@@ -53,7 +53,7 @@ public final class ReglerFluxMeter extends AbstractCurrentMeasurement {
     @Override
     public void checkComponentCompatibility(final Object testObject, final List<AbstractBlockInterface> insertList) {
         if (testObject instanceof AbstractCircuitBlockInterface && testObject instanceof CurrentMeasurable) {
-            final Collection<? extends AbstractBlockInterface> toAdd = 
+            final Collection<? extends AbstractBlockInterface> toAdd =
                     Arrays.asList(((CurrentMeasurable) testObject).getCurrentMeasurementComponents(ConnectorType.RELUCTANCE));
             insertList.addAll(toAdd);
         }

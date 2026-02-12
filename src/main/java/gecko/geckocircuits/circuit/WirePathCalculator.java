@@ -34,7 +34,7 @@ import java.util.List;
  *
  * All methods are stateless and operate on input parameters, making them
  * easy to test without GUI dependencies.
- * 
+ *
  * Note: This class is GUI-free - it uses GridPoint instead of java.awt.Point.
  *
  * @author GeckoCIRCUITS Team

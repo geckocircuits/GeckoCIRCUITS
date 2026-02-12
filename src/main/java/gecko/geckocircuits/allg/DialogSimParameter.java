@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -51,7 +51,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
 
     public DialogSimParameter(final Frame owner, final SolverSettings callback) {
         super(owner, true);
-        
+
         try {
             @SuppressWarnings("deprecation")
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
@@ -117,7 +117,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
     }
 
     private JPanel getIntegrationPanel() {
-//      
+//
         //------------------
         JPanel jpAllg = new JPanel();
         jpAllg.setLayout(new GridLayout(1, 1));

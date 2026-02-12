@@ -28,7 +28,7 @@ public class LossCalculationDetailTest {
     @Test
     public void testEnumValues_Exist() {
         LossCalculationDetail[] values = LossCalculationDetail.values();
-        
+
         assertEquals(2, values.length);
     }
 
@@ -109,7 +109,7 @@ public class LossCalculationDetailTest {
         LossCalculationDetail original = LossCalculationDetail.SIMPLE;
         int ordinal = original.getOldGeckoCIRCUITSOrdinal();
         LossCalculationDetail restored = LossCalculationDetail.getFromDeprecatedFileVersion(ordinal);
-        
+
         assertEquals(original, restored);
     }
 
@@ -118,7 +118,7 @@ public class LossCalculationDetailTest {
         LossCalculationDetail original = LossCalculationDetail.DETAILED;
         int ordinal = original.getOldGeckoCIRCUITSOrdinal();
         LossCalculationDetail restored = LossCalculationDetail.getFromDeprecatedFileVersion(ordinal);
-        
+
         assertEquals(original, restored);
     }
 
@@ -139,7 +139,7 @@ public class LossCalculationDetailTest {
     public void testOrdinals_Unique() {
         int simpleOrdinal = LossCalculationDetail.SIMPLE.getOldGeckoCIRCUITSOrdinal();
         int detailedOrdinal = LossCalculationDetail.DETAILED.getOldGeckoCIRCUITSOrdinal();
-        
+
         assertNotEquals(simpleOrdinal, detailedOrdinal);
     }
 
@@ -147,7 +147,7 @@ public class LossCalculationDetailTest {
     public void testDisplayStrings_Unique() {
         String simpleString = LossCalculationDetail.SIMPLE.toString();
         String detailedString = LossCalculationDetail.DETAILED.toString();
-        
+
         assertNotEquals(simpleString, detailedString);
     }
 }

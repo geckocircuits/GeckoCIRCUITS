@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,7 +32,7 @@ public abstract class AbstractControlCalculatable {
     public final double[][] _inputSignal;
     public final double[][] _outputSignal;
 
-    public AbstractControlCalculatable(final int noInputs, final int noOutputs) {        
+    public AbstractControlCalculatable(final int noInputs, final int noOutputs) {
         _inputSignal = new double[noInputs][]; // careful: the array value of the input
         // signal is set when all components are connected within the netlist.
         _outputSignal = createOutputSignal(noOutputs);
@@ -40,12 +40,12 @@ public abstract class AbstractControlCalculatable {
 
     public abstract void berechneYOUT(final double deltaT);
 
-    public void setInputSignal(final int inputIndex, final AbstractControlCalculatable output, 
+    public void setInputSignal(final int inputIndex, final AbstractControlCalculatable output,
             final int outputIndex) throws Exception {
-        if (_inputSignal[inputIndex] != null) {            
+        if (_inputSignal[inputIndex] != null) {
             throw new Exception("Signal already connected: " + getClass());
-        }        
-        _inputSignal[inputIndex] = output._outputSignal[outputIndex];                
+        }
+        _inputSignal[inputIndex] = output._outputSignal[outputIndex];
     }
 
     /**
@@ -60,9 +60,9 @@ public abstract class AbstractControlCalculatable {
             return true;
         } else {
             return false;
-        }    
+        }
     }
-    
+
     /**
      * TearDownOnPause will by called if the Simulation is paused or finished.
      * Intended to be overwritten by subclasses to free resources if necessary.

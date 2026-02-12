@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,9 +29,9 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
             longName(I18nKeys.CURVE_MEASURED_AT_VOLTAGE).
             shortName("uMeasure").
             unit("V").
-            build();            
-    
-    
+            build();
+
+
     // Datenbehaelter mit folgendem Format fuer  data[][] -->
     // I [A] - Eon [Ws] - Eoff [Ws] - Etotal
     // ..      ..         ..          ..
@@ -39,7 +39,7 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
     // usw.
     // Parameter: T_junction, uBlock --> bei der Messung vorgegeben
     //
-    public SwitchingLossCurve(double tj, double uBlock) {        
+    public SwitchingLossCurve(double tj, double uBlock) {
         this.tj.setValueWithoutUndo(tj);
         _uBlock.setValueWithoutUndo(uBlock);
     }
@@ -47,16 +47,16 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
     public SwitchingLossCurve copy() {
         SwitchingLossCurve copy = new SwitchingLossCurve(-1, -1);
         copy.setCurveData(getCurveData());
-                
+
         copy.tj.setValueWithoutUndo(this.tj.getValue());
         copy._uBlock.setValueWithoutUndo(this._uBlock.getValue());
         return copy;
     }
-               
-    
+
+
     String getXMLTag() {
         return "SchaltverlusteMesskurve";
-    }        
+    }
 
     @Override
     protected void exportIndividual(final StringBuffer ascii) {
@@ -64,10 +64,10 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
     }
 
     @Override
-    protected void importIndividual(final TokenMap tokenMap) {        
-        _uBlock.readFromTokenMap(tokenMap);                        
-        
-        if(data.length == 4) { // repair wrong data count...            
+    protected void importIndividual(final TokenMap tokenMap) {
+        _uBlock.readFromTokenMap(tokenMap);
+
+        if(data.length == 4) { // repair wrong data count...
             double[][] tmpData = new double[3][data[0].length];
             for(int i = 0; i < tmpData.length; i++) {
                 for(int j = 0; j < tmpData[i].length; j++) {
@@ -75,6 +75,6 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
                 }
             }
             data = tmpData;
-        }                
-    }                                     
+        }
+    }
 }

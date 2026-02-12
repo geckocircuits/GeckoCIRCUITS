@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -51,7 +51,7 @@ public class CompileScript {
     static AbstractCompileObject _compileObject = new CompileObjectNull();
     static Map<String, CompiledClassContainer> _classNameFileMap;
     private static AbstractGeckoCustom _compiledInstance;
-    
+
     static class scriptRAMJavaFileObject extends SimpleJavaFileObject {
 
         scriptRAMJavaFileObject(String name, Kind kind) {
@@ -78,14 +78,14 @@ public class CompileScript {
             return baos = new ByteArrayOutputStream();
         }
     }
-    
+
     static void compile(final ScriptWindow sw) {
         if(GeckoSim.compiler_toolsjar_missing) {
               JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             sw._compMessagesTextArea.setText("Compilar library tools.jar is missing in the ./lib directory!");
             return;
         }
-        
+
         sw._compileStatus = CompileStatus.NOT_COMPILED;
         sw._declarations = sw._declarationsTextArea.getText();
         sw._className = "GeckoCustom" + sw._nameGenerator.nextInt(100000) + "";
@@ -155,39 +155,39 @@ public class CompileScript {
         } catch (IOException ex) {
             Logger.getLogger(ScriptWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
 
         sw._compileSourceCode += sw._sourceCode + "\n";
 
-        
-        
+
+
         //compile the constructed source code into a new class
-        try {                               
-            _compileObject = new CompileObject(sw._compileSourceCode, sw._className, sw._circuit._additionalSourceFiles);                                
+        try {
+            _compileObject = new CompileObject(sw._compileSourceCode, sw._className, sw._circuit._additionalSourceFiles);
             sw.compilerMessages = _compileObject.getCompilerMessage();
 
-            if (_compileObject.getCompileStatus() != CompileStatus.COMPILED_SUCCESSFULL) {                
-                sw._compileStatus = CompileStatus.COMPILE_ERROR;                
+            if (_compileObject.getCompileStatus() != CompileStatus.COMPILED_SUCCESSFULL) {
+                sw._compileStatus = CompileStatus.COMPILE_ERROR;
                 sw.compilerMessages = CodeWindowModern.checkForOldCompiler(sw.compilerMessages);
             } else {
-                sw._compileStatus = CompileStatus.COMPILED_SUCCESSFULL;                                
+                sw._compileStatus = CompileStatus.COMPILED_SUCCESSFULL;
             }
 
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
             Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-          
-        
+        }
+
+
 
         sw._compMessagesTextArea.setText(sw.compilerMessages);
         sw._sourceCodeCompilerTextArea.setText(sw._compileSourceCode);
         findAndLoadClass(sw);
     }
-    
-    
-        
+
+
+
     @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
             justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
     public static void findAndLoadClass(ScriptWindow sw) {
@@ -198,17 +198,17 @@ public class CompileScript {
             final Class clazz = Class.forName(_compileObject.getClassName(), false, classLoader);
 
             try {
-                
+
                 Constructor[] constructorlist = clazz.getConstructors();
                 Constructor constructor = constructorlist[0];
-                
+
                 if (sw._advancedOption) {
-                        sw._scriptObject = (AbstractGeckoCustom) constructor.newInstance(new Object[]{sw._circuit, 
+                        sw._scriptObject = (AbstractGeckoCustom) constructor.newInstance(new Object[]{sw._circuit,
                             sw.jTextAreaOutput, sw._advancedObjects});
                     } else {
-                        sw._scriptObject = (AbstractGeckoCustom) constructor.newInstance(new Object[]{sw._circuit, 
+                        sw._scriptObject = (AbstractGeckoCustom) constructor.newInstance(new Object[]{sw._circuit,
                             sw.jTextAreaOutput});
-                    }                                
+                    }
             } catch (NoClassDefFoundError err) {
                 err.printStackTrace();
             } catch (InstantiationException ex) {
@@ -226,8 +226,8 @@ public class CompileScript {
             Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
+
     private static URI toURI(String name) {
         try {
             return new URI(name);
@@ -235,5 +235,5 @@ public class CompileScript {
             throw new RuntimeException(e);
         }
     }
-    
+
 }

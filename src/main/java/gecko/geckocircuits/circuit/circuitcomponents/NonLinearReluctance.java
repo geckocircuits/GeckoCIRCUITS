@@ -2,8 +2,8 @@ package gecko.geckocircuits.circuit.circuitcomponents;
 
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -206,10 +206,10 @@ public final class NonLinearReluctance extends AbstractNonLinearCircuitComponent
     public void doInitialization() {
         parameter[0] = getActualValueLINFromLinearizedCharacteristicInverse(Math.abs(parameter[1]));
     }
-    
+
     @Override
-    public void doCalculation(final double deltaT, final double time) {        
-        parameter[0] = getActualValueLINFromLinearizedCharacteristicInverse(Math.abs(_secondarySource.parameter[6]));                                                       
+    public void doCalculation(final double deltaT, final double time) {
+        parameter[0] = getActualValueLINFromLinearizedCharacteristicInverse(Math.abs(_secondarySource.parameter[6]));
     }
 
     @Override

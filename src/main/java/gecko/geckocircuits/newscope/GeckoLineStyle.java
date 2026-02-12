@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -55,7 +55,7 @@ public enum GeckoLineStyle {
     public Stroke stroke() {
         return _stroke;
     }
-    
+
 
     public static GeckoLineStyle setzeLinienstilSelektiert(final int ordinal) {
         for (GeckoLineStyle val : values()) {
@@ -69,7 +69,7 @@ public enum GeckoLineStyle {
 
     /**
      * Warning: this method intends so modify the parameter
-     * @param g2d 
+     * @param g2d
      */
     public void setStrokeStyle(final Graphics2D g2d) {
         g2d.setStroke(this._stroke);
@@ -81,7 +81,7 @@ public enum GeckoLineStyle {
                 return val;
             }
         }
-        
+
         // default:
         return SOLID_PLAIN;
     }

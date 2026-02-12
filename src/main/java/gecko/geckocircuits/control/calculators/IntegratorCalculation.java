@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,13 +21,13 @@ public final class IntegratorCalculation extends AbstractControlCalculatable imp
     private double _a1Val = 1;
     private final double _y0Val;
     private double _min = -1;
-    private double _max = 1;  // default: G(s)= a1/s    
+    private double _max = 1;  // default: G(s)= a1/s
 
     public IntegratorCalculation(final double constantFactor, final double initValue, final double min, final double max) {
         super(2, 1);
         _a1Val = constantFactor;
-        _y0Val = initValue;        
-        setMinMax(min, max);                        
+        _y0Val = initValue;
+        setMinMax(min, max);
     }
 
     @Override
@@ -40,8 +40,8 @@ public final class IntegratorCalculation extends AbstractControlCalculatable imp
 
     @Override
     public void berechneYOUT(final double deltaT) {
-        if (_inputSignal[1][0] < 1) {   // normaler Betrieb - Integration  
-            
+        if (_inputSignal[1][0] < 1) {   // normaler Betrieb - Integration
+
             _y11 = _y1old + _a1Val * deltaT * (_inputSignal[0][0] + _xold) / 2.0;
             if (_y11 <= _min) {
                 _y11 = _min;
@@ -52,7 +52,7 @@ public final class IntegratorCalculation extends AbstractControlCalculatable imp
             _outputSignal[0][0] = _y11;
             _xold = _inputSignal[0][0];
             _y1old = _y11;
-        } else {// reset: alles auf Null bzw. Init            
+        } else {// reset: alles auf Null bzw. Init
             _xold = 0;
             _y1old = _y0Val;
             _outputSignal[0][0] = _y0Val;

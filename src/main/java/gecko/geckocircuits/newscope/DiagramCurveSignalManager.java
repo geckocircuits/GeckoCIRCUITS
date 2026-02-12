@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -33,7 +33,7 @@ import java.util.Stack;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Signal manager must share grafer reference for scope coordination")
 public final class DiagramCurveSignalManager{
   private final List<AbstractDiagram> _diagrams = new ArrayList<AbstractDiagram>();
-  
+
   private final GraferV4 _grafer;
   private Stack<AbstractScopeSignal> _inputSignals;
   private final List<AbstractScopeSignal> _allScopeSignals = new ArrayList<AbstractScopeSignal>();
@@ -117,7 +117,7 @@ public final class DiagramCurveSignalManager{
       newDiagram._xAxis._axisMinMax.setGlobalAutoScaleValues(oldLimits);
     }
 
-    _diagrams.add(newDiagram);      
+    _diagrams.add(newDiagram);
     _grafer.refreshComponentPane();
   }
 
@@ -203,7 +203,7 @@ public final class DiagramCurveSignalManager{
     this._allScopeSignals.remove(externalSignal);
   }
 
-  public void setInputSignals(final Stack<AbstractScopeSignal> scopeInputSignals){            
+  public void setInputSignals(final Stack<AbstractScopeSignal> scopeInputSignals){
     _inputSignals = scopeInputSignals;
     _allScopeSignals.clear();
     _allScopeSignals.addAll(scopeInputSignals);
@@ -243,5 +243,5 @@ public final class DiagramCurveSignalManager{
 
     updateCurveNumber(_allScopeSignals.size());
   }
-    
+
 }

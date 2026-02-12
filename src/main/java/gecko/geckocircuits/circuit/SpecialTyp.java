@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,9 +21,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Enum exposes type info for component configuration")
 public enum SpecialTyp implements AbstractComponentTyp {
     SUBCIRCUIT(27, SubcircuitBlock.tInfo),
-    TEXTFIELD(70, TextFieldBlock.tInfo);   
-    
-    public static SpecialTyp getFromIntNumber(final int intNumber) {        
+    TEXTFIELD(70, TextFieldBlock.tInfo);
+
+    public static SpecialTyp getFromIntNumber(final int intNumber) {
         for(SpecialTyp compare : values()) {
             if(compare.getTypeNumber() == intNumber) {
                 return compare;
@@ -34,9 +34,9 @@ public enum SpecialTyp implements AbstractComponentTyp {
 
     private int _intValue;
     private AbstractTypeInfo _typeInfo;
-    
+
     SpecialTyp(final int initValue, final AbstractTypeInfo typeInfo) {
-        _intValue = initValue;        
+        _intValue = initValue;
         _typeInfo = typeInfo;
         _typeInfo.addParentEnum(this);
     }
@@ -45,11 +45,11 @@ public enum SpecialTyp implements AbstractComponentTyp {
     public AbstractTypeInfo getTypeInfo() {
         return _typeInfo;
     }
-               
+
     @Override
     public int getTypeNumber() {
         return _intValue;
-    }            
-    
-        
+    }
+
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,7 +28,7 @@ public class DialogThyristorControl extends javax.swing.JFrame {
     public DialogThyristorControl(ReglerThyristorControl reglerThyrControl) {
         initComponents();
 
-        _thyrControl = reglerThyrControl;        
+        _thyrControl = reglerThyrControl;
         jSpinnerInitFreq.setValue((Double) reglerThyrControl._initFreq.getValue());
         jSpinnerPhaseShift.setValue((Double) reglerThyrControl._phaseShift.getValue());
         jSpinnerGateOn.setValue((Double) reglerThyrControl._onTime.getValue() * 1000.0);
@@ -211,7 +211,7 @@ public class DialogThyristorControl extends javax.swing.JFrame {
     private void jSpinnerPhaseShiftStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerPhaseShiftStateChanged
         _thyrControl._phaseShift.setUserValue( (Double) jSpinnerPhaseShift.getValue());
     }//GEN-LAST:event_jSpinnerPhaseShiftStateChanged
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonOK;

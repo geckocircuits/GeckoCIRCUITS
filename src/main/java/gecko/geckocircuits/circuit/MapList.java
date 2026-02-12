@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,7 +32,7 @@ public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
 
     private final Class<?>[] registeredTypes = new Class<?>[]{
         AbstractCircuitBlockInterface.class, RegelBlock.class, AbstractSpecialBlock.class, TextFieldBlock.class,
-        ComponentCoupable.class, PotentialCoupable.class, 
+        ComponentCoupable.class, PotentialCoupable.class,
         AbstractBlockInterface.class, Verbindung.class, SubcircuitBlock.class
     };
     private final Map<Class<?>, ArrayList> classMap = new HashMap<Class<?>, ArrayList>();
@@ -88,7 +88,7 @@ public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
 
     public <T> List<T> getClassFromContainer(final Class<T> type) {
         if (classMap.containsKey(type)) {
-            ArrayList<T> returnValue = classMap.get(type);            
+            ArrayList<T> returnValue = classMap.get(type);
             return Collections.unmodifiableList(returnValue);
         } else {
             return Collections.unmodifiableList(new ArrayList<T>());

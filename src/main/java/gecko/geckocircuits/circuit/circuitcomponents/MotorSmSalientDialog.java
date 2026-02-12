@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,13 +28,13 @@ class MotorSmSalientDialog extends AbstractMotorDialog<MotorSmSalient> {
         super(parent);
     }
 
-    
+
     @Override
     List<UserParameter<Double>> getDialogSortedParameters() {
         return Arrays.asList(element._frictionParameter, element._inertiaParameter, element._polePairsParameter, element._statorResistancePar,
                 element.statorLeakageInductance, element.unsaturatedMagnetizingInductanceD, element._unsatMagnetizingInductQPar,
                 element.saturatedMagnetizingInductance,
-                element.fluxAtSaturationTransition, element.tightnessOfSaturationTransition, element.fieldResistance, 
+                element.fluxAtSaturationTransition, element.tightnessOfSaturationTransition, element.fieldResistance,
                 element.fieldLeakageInductance, element.damperResistanceD, element.damperResistanceQ,
                 element.damperLeakageInductanceD, element.damperLeakageInductanceQ,
                 element._initialRotationalSpeed, element._initialRotorPosition, element.initialStatorCurrentA,
@@ -46,16 +46,16 @@ class MotorSmSalientDialog extends AbstractMotorDialog<MotorSmSalient> {
         return Arrays.asList(element._initialRotationalSpeed, element._initialRotorPosition, element.initialStatorCurrentA,
                 element.initialStatorCurrentB, element.initialFieldCurrent, element.initialStatorFluxD, element.initialStatorFluxQ);
     }
-        
-    
+
+
 
     @Override
     JPanel buildPanelInitParameter() {
-        return super.buildPanelParameters(16, 23, new int[]{2}, false);        
+        return super.buildPanelParameters(16, 23, new int[]{2}, false);
     }
 
     @Override
     JPanel buildPanelParameters() {
-        return super.buildPanelParameters(0, 16, new int[]{3,11,18}, true);                
-    }    
+        return super.buildPanelParameters(0, 16, new int[]{3,11,18}, true);
+    }
 }

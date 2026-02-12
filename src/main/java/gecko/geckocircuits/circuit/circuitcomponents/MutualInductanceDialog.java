@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -41,21 +41,21 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
     private AbstractBlockInterface _selectedCoupling1;
     private AbstractBlockInterface _selectedCoupling2;
     private final JCheckBox _jcbM = new JCheckBox(I18nKeys.SHOW_LINES.getTranslation());
-    
+
     public MutualInductanceDialog(final MutualInductance parent) {
         super(parent);
     }
 
     @Override
-    protected void baueGUIIndividual() {        
+    protected void baueGUIIndividual() {
 
-        JPanel pIN = createParameterPanel(element._couplingCoefficient);                        
+        JPanel pIN = createParameterPanel(element._couplingCoefficient);
         _jcbM.setSelected(element._showLines.getValue());
-        
+
         pIN.add(_jcbM);
-        
+
         JPanel jpR = new JPanel();
-        jpR.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), 
+        jpR.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 I18nKeys.MAGNETICALLY_COUPLED.getTranslation(), TitledBorder.LEFT, TitledBorder.TOP));
         //
         CircuitSheet parent = element.getParentCircuitSheet();
@@ -87,11 +87,11 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
             }
             combo.setSelectedIndex(indexCombo);
             combo.addActionListener(new ActionListener() {
-                
+
                 public void actionPerformed(ActionEvent ae) {
                     for (AbstractBlockInterface search : alleElementLK) {
                         if (search.getStringID().equals(combo.getSelectedItem().toString())) {
-                            _selectedCoupling1 = search;                            
+                            _selectedCoupling1 = search;
                         }
                     }
 
@@ -115,7 +115,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
 
                     for (AbstractBlockInterface search : alleElementLK) {
                         if (search.getStringID().equals(combo2.getSelectedItem().toString())) {
-                            _selectedCoupling2 = search;                            
+                            _selectedCoupling2 = search;
                         }
                     }
 
@@ -148,7 +148,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
         con.add(tabberM, BorderLayout.CENTER);
 
     }
-    
+
 
     // eine kleine Auflistung der Trafo-Gleichungen im Dialogfenster der magnetischen Kopplung
     protected JComponent schreibeFormeln_M() {
@@ -206,8 +206,8 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
 
     @Override
     public void processInputIndividual() {
-        element._showLines.setUserValue(_jcbM.isSelected());    
+        element._showLines.setUserValue(_jcbM.isSelected());
         ((ComponentCoupable) element).getComponentCoupling().setNewCouplingElementUndoable(0, _selectedCoupling1);
         ((ComponentCoupable) element).getComponentCoupling().setNewCouplingElementUndoable(1, _selectedCoupling2);
-    }        
+    }
 }

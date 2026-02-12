@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -62,7 +62,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
     private boolean _circularArrayFilled = false;
     public double _calculationDeltaT;
     public int _numberSamples = 0;
-    
+
     public SmallSignalCalculator(final double amplitude, final double freqLow, final double freqHigh,
             final SSAShape signalShape, final int noInputs, final int noOutput, boolean addOutput) {
         super(noInputs, noOutput);
@@ -103,7 +103,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
     public void berechneYOUT(final double deltaT) {
         double smallSignal = calculateSmallSignal(deltaT);
 
-        
+
         if(_calculationDeltaT == deltaT) {
             _numberSamples ++;
         } else {
@@ -112,13 +112,13 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
             _circularArrayFilled = false;
         }
         _calculationDeltaT = deltaT;
-        
+
         _outputSignal[0][0] = smallSignal;
         if (_addOutput) {
             _outputSignal[0][0] += _inputSignal[1][0];
         }
 
-        
+
         _smallSignalValues[circularIndex] = smallSignal;
         _measuredValues[circularIndex] = _inputSignal[0][0];
 
@@ -134,9 +134,9 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
     @Override
     public void tearDownOnPause() {
 
-        
+
         System.out.println("xxx " + _nMax + " " + _numberSamples);
-        if (_circularArrayFilled) {            
+        if (_circularArrayFilled) {
 
             try {
                 calculateFourier();
@@ -218,38 +218,38 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
             Logger.getLogger(SmallSignalCalculator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 
     private void calculateFourier() {
-        
+
         magnitudeValues = new double[_N];
         ss_aVals = new double[_N];
         ss_bVals = new double[_N];
-        
+
         data_aVals = new double[_N];
         data_bVals = new double[_N];
 
         double[] ddata = new double[_N];
         double[] dsmallSignalData = new double[_N];
 
-        
+
         int cIndex = circularIndex;
-        
+
         for(int i = 0; i < _N; i++) {
-            ddata[i] = _measuredValues[cIndex];            
-            dsmallSignalData[i] = this._smallSignalValues[cIndex];                        
+            ddata[i] = _measuredValues[cIndex];
+            dsmallSignalData[i] = this._smallSignalValues[cIndex];
             cIndex++;
             if(cIndex == _N) {
                 cIndex = 0;
             }
         }
-        
-        
-        
+
+
+
         //printResults(data, smallSignalData);
 
         FFTLibrary.calculateForwardFFT (ddata);
-        FFTLibrary.calculateForwardFFT (dsmallSignalData);                
+        FFTLibrary.calculateForwardFFT (dsmallSignalData);
 
         int maxHarmonic = getUsableHarmonicUpperBound();
         for (int n = 0; n <= maxHarmonic; n++) {
@@ -258,7 +258,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
             ss_aVals[n] = 2 * dsmallSignalData[2 * n] / _N;
             ss_bVals[n] = 2 * dsmallSignalData[2 * n + 1] / _N;
         }
-        
+
         for (int n = 0; n <= maxHarmonic; n++) {
 
             if (n == 0) {  // DC-Gleichanteil
@@ -268,10 +268,10 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
                         + data_bVals[n] * data_bVals[n]);
             }
         }
-        
+
 
     }
-    
+
 
     private void calculateBode() {
 
@@ -313,8 +313,8 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
             _bode[2][p] = phaseAngle;
         }
 
-        
-        
+
+
         // printResults();
 
     }
@@ -357,20 +357,20 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
 
     @Override
     public void initializeAtSimulationStart(double deltaT) {
-        
+
         double baseFreq = _freqStart;
         double baseTime = 1.0 / baseFreq;
         _N = (int) Math.round(baseTime / deltaT);
-        
+
         _N = Math.max(2, _N);
         _measuredValues = new double[_N];
         _smallSignalValues = new double[_N];
-        _circularArrayFilled = false;        
+        _circularArrayFilled = false;
     }
 
     @Override
     public void initWithNewDt(double dt) {
         initializeAtSimulationStart(dt);
     }
-    
+
 }

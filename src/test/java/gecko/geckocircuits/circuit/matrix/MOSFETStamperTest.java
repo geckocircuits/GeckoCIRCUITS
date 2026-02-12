@@ -289,7 +289,7 @@ public class MOSFETStamperTest {
     public void testCreateDefaultParameters_GateOn() {
         double[] params = MOSFETStamper.createDefaultParameters(1.0);
 
-        assertEquals("rCurrent should be rOn when gate=1", 
+        assertEquals("rCurrent should be rOn when gate=1",
                      MOSFETStamper.DEFAULT_R_ON, params[MOSFETStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("gate", 1.0, params[MOSFETStamper.PARAM_GATE], TOLERANCE);
     }
@@ -298,7 +298,7 @@ public class MOSFETStamperTest {
     public void testCreateDefaultParameters_GateOff() {
         double[] params = MOSFETStamper.createDefaultParameters(0.0);
 
-        assertEquals("rCurrent should be rOff when gate=0", 
+        assertEquals("rCurrent should be rOff when gate=0",
                      MOSFETStamper.DEFAULT_R_OFF, params[MOSFETStamper.PARAM_R_CURRENT], TOLERANCE);
         assertEquals("gate", 0.0, params[MOSFETStamper.PARAM_GATE], TOLERANCE);
     }

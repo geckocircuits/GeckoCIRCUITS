@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -91,8 +91,8 @@ public final class Matrix implements Cloneable, java.io.Serializable {
     @param m    Number of rows.
     @param n    Number of colums.
      */
-    
-    
+
+
     public Matrix(int m, int n) {
         this.m = m;
         this.n = n;
@@ -492,7 +492,7 @@ public final class Matrix implements Cloneable, java.io.Serializable {
         }
         return f;
     }
- 
+
 
     /** Infinity norm
     @return    maximum row sum.
@@ -509,7 +509,7 @@ public final class Matrix implements Cloneable, java.io.Serializable {
         return f;
     }
 
-   
+
     /**  Unary minus
     @return    -A
      */
@@ -740,7 +740,7 @@ public final class Matrix implements Cloneable, java.io.Serializable {
      */
     public CholeskyDecomposition chol() {
         return new CholeskyDecomposition(this);
-    }        
+    }
 
     /** Solve A*X = B
     @param B    right hand side
@@ -781,7 +781,7 @@ public final class Matrix implements Cloneable, java.io.Serializable {
      */
     public double det() {
         return new LUDecomposition(this).det();
-    }    
+    }
 
     /** Matrix trace.
     @return     sum of the diagonal elements.

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -29,9 +29,9 @@ public final class ScopeWrapperIndices {
     private final List<Integer> _globalIndices = new ArrayList<Integer>();
     private final List<AbstractDataContainer> _indexedDataContainers = new ArrayList<AbstractDataContainer>();
     private final DataContainerGlobal _globalDataContainer;
-    
-    
-    public ScopeWrapperIndices(final List<Integer> globalIndices, final DataContainerGlobal globalDataContainer) {        
+
+
+    public ScopeWrapperIndices(final List<Integer> globalIndices, final DataContainerGlobal globalDataContainer) {
         _originalGlobalIndices = Collections.unmodifiableList(globalIndices);
         _globalDataContainer = globalDataContainer;
         for (int index = 0; index < globalIndices.size(); index++) {
@@ -45,7 +45,7 @@ public final class ScopeWrapperIndices {
         } else {
             return 0;
         }
-        
+
     }
 
     public void reset() {

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -38,7 +38,7 @@ public final class MotorSmRound extends AbstractMotorSM {
     private static final double INIT_LEAKAGE_INDUCTANCE_Q2 = 0.002;
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorSmRound.class, "SM-RO", I18nKeys.SM_RO, I18nKeys.ROUND_ROTOR_SYNCHRONOUS_MACHINE);
     private double _damperResistanceQ2;
-    
+
     final UserParameter<Double> _damperResistanceQ2_par = UserParameter.Builder.
             <Double>start("damperResistanceQ2", INIT_DAMPER_RES_Q2_VALUE).
             longName(I18nKeys.DAMPER_RESISTANCE).
@@ -64,7 +64,7 @@ public final class MotorSmRound extends AbstractMotorSM {
             arrayIndex(this, INIT_DAMP_CURRENT_INDEX).
             build();
 
-    // Initialisiereung nach INIT&START --> 
+    // Initialisiereung nach INIT&START -->
     @Override
     public void setzeParameterZustandswerteAufNULL() {
         super.setzeParameterZustandswerteAufNULL();
@@ -80,12 +80,12 @@ public final class MotorSmRound extends AbstractMotorSM {
         double ubc = -_controlledAnchorSourceC.parameter[7];
         double uf = _controlledSource3.parameter[7];
 
-        // Berechnung der Maschinen-Diff.Gl: 
-        // Block 'vdq': 
+        // Berechnung der Maschinen-Diff.Gl:
+        // Block 'vdq':
         double ud = calculate_ud(uab, ubc);
         double uq = calculate_uq(uab, ubc);
 
-        // Block 'isdq,psimdq': 
+        // Block 'isdq,psimdq':
         double phimX1 = Math.sqrt(psimd * psimd + psimq * psimq), phimX2 = psiT / 1e3;
         double phim = (phimX1 > phimX2) ? phimX1 : phimX2;
         double inv_Lm = (Mf - Mi) / Math.PI * ((phim - psiT) * Math.atan(tauT * (phim - psiT)) - psiT * Math.atan(tauT * psiT)
@@ -98,10 +98,10 @@ public final class MotorSmRound extends AbstractMotorSM {
                 + ud / Lls + uf / Llf) / (inv_Lm + 1 / Lls + 1 / Llf + 1 / Llkd);
         double ddt_psimq = (-_omegaElectric * isd + isq * (_damperResistanceQ2 / _damperLeakageIndQ2 - _statorResistance / Lls) + (_damperResistanceQ2 / _damperLeakageIndQ2 - Rkq / Llkq1) * _ikq1
                 - _omegaElectric / Lls * psimd - _damperResistanceQ2 * inv_Lm / _damperLeakageIndQ2 * psimq + uq / Lls) / (inv_Lm + 1 / Lls + 1 / Llkq1 + 1 / _damperLeakageIndQ2);
-        
+
         psimd = psimd0 + ddt_psimd * deltaT;
         psimq = psimq0 + ddt_psimq * deltaT;
-        
+
         double ddt_ikq1 = (-Rkq * _ikq1 - ddt_psimq) / Llkq1;
         _ikq1 = _ikq1Old + ddt_ikq1 * deltaT;
 
@@ -112,7 +112,7 @@ public final class MotorSmRound extends AbstractMotorSM {
     void updateHistoryVariables() {
         super.updateHistoryVariables();
         _ikq1Old = _ikq1;
-    }            
+    }
 
     @Override
     int getSaturatedMagnetizingInductanceIndex() {

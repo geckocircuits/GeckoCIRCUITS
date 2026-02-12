@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,7 +47,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
 
     private static final int TERM_POS_X = -2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerOSZI.class, "SCOPE", I18nKeys.SCOPE, I18nKeys.COMPONENT_FOR_DATA_VISUALIZATION);
-    
+
     private transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 0).
             longName(I18nKeys.NO_INPUT_TERMINALS).
@@ -77,13 +77,13 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     //for reading the correct rows from the global DataContainer
     private transient ScopeWrapperIndices _scopeWrapperIndices;
     private String[] _saveLoadSignalNames;
-    private final ScopeSettings _scopeSettings = new ScopeSettings();  // initiale ScopeSettings definieren   ;    
+    private final ScopeSettings _scopeSettings = new ScopeSettings();  // initiale ScopeSettings definieren   ;
     private final GraferV4 _grafer = new GraferV4(_scopeSettings);
     public ScopeFrame _scopeFrame = new ScopeFrame(_grafer);
     private boolean _isShowName;
     transient Stack<AbstractScopeSignal> _scopeInputSignals = new Stack<AbstractScopeSignal>();
     private transient final DefinedMeanSignals _meanSignals = new DefinedMeanSignals(_scopeInputSignals);
-    
+
     private static final int DIAMETER = 4;
     private static final double HEIGHT = 0.6;
     private static final double WIDTH = 0.5;
@@ -93,16 +93,16 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
 
     public ReglerOSZI() {
         super(DEF_TERM_NUMBER, 0);
-        _inputTerminalNumber.setValueWithoutUndo(DEF_TERM_NUMBER);                        
-        
+        _inputTerminalNumber.setValueWithoutUndo(DEF_TERM_NUMBER);
+
         for (int i = 0; i < DEF_TERM_NUMBER; i++) {
             _scopeInputSignals.push(new ScopeSignalRegular(_scopeInputSignals.size(), this));
         }
         _grafer.getManager().setInputSignals(_scopeInputSignals);
-        _meanSignals.setGrafer(_grafer);        
+        _meanSignals.setGrafer(_grafer);
         ///* externalSignals test
         this._testcounter = 0;
-        // */                
+        // */
         _inputTerminalNumber.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -157,9 +157,9 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
 
     public void initScope() {
         // wird einmalig bei der SCOPE-Initialisierung aufgerufen
-        // Referenzen fuer SCOPE werden angemeldet ... 
+        // Referenzen fuer SCOPE werden angemeldet ...
         final DataContainerNullData nullData = new DataContainerNullData(_grafer.getManager().getAllScopeSignals());
-        nullData.setDefinedMeanSignals(_meanSignals);        
+        nullData.setDefinedMeanSignals(_meanSignals);
         _zvDatenRAM = nullData;
         _scopeFrame._scope.setDataContainer(_zvDatenRAM);
 
@@ -180,7 +180,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         // TODO ??? _zvDatenRAM.setSignalName(knotenIndex, newLabel);
     }
 
-    public void setDataContainerIndices(final int[] indices) {                
+    public void setDataContainerIndices(final int[] indices) {
         final List<Integer> globalIndices = new ArrayList<Integer>();
         for (int index : indices) {
             globalIndices.add(index);
@@ -202,7 +202,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             return 1;  // SCOPE-Symbol ist angeklickt worden --> Dialog oder Bearbeitungs-Modus
         } else {
             if (lowerTriClicked) {
-                // erhoehe Zahl der Terminals um Eins und aktualisiere SCOPE                
+                // erhoehe Zahl der Terminals um Eins und aktualisiere SCOPE
                 _inputTerminalNumber.setUserValue(_inputTerminalNumber.getValue() + 1);
                 setInputTerminalNumber(_inputTerminalNumber.getValue());
                 _grafer.setInitalCurveConnection(_inputTerminalNumber.getValue());
@@ -459,9 +459,9 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         final DataContainerScopeWrapper scopeWrapper;
         scopeWrapper = new DataContainerScopeWrapper(NetzlisteCONTROL.globalData,
                 _scopeWrapperIndices,
-                _meanSignals,                
+                _meanSignals,
                 _grafer.getManager().getAllScopeSignals());
-        
+
 
         if (_zvDatenRAM instanceof DataContainerScopeWrapper) {
             ((DataContainerScopeWrapper) _zvDatenRAM).deregisterObserver();
@@ -485,7 +485,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
 
     void importScopeSettings(final TokenMap scopeMap) {
         _scopeSettings.importASCII(scopeMap);
-        _scopeSettings.loadSettings(_scopeFrame.getGrafer());  // hier wird 'this' parametrisiert                
+        _scopeSettings.loadSettings(_scopeFrame.getGrafer());  // hier wird 'this' parametrisiert
     }
 
     public boolean isAntiAliasing() {

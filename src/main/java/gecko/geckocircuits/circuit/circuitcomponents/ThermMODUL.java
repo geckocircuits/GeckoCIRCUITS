@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,7 +25,7 @@ import java.awt.Window;
 import java.util.List;
 
 final class ThermMODUL extends AbstractCircuitBlockInterface {
-    public static final AbstractTypeInfo TYPE_INFO = 
+    public static final AbstractTypeInfo TYPE_INFO =
             new ThermalTypeInfo(ThermMODUL.class, "MOD", I18nKeys.POWER_MODULE_THERMAL_MODEL);
 
     private final double _height;
@@ -54,7 +54,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
 
 
         //_xOUT = (int) (sheetPosition.x);
-        //_yOUT = (int) (sheetPosition.y + ho + 1);        
+        //_yOUT = (int) (sheetPosition.y + ho + 1);
     }
 
     public int getChipAnzahl() {
@@ -68,7 +68,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
     public String getDateiname() {
         return _fileName;
     }
-    
+
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
@@ -92,7 +92,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
         }
     }
 
-    private void drawInputs(final Graphics graphics, final Color color1) {        
+    private void drawInputs(final Graphics graphics, final Color color1) {
         graphics.setColor(Color.lightGray);
         graphics.fillRect((int) (dpix * getSheetPosition().x) - D_E, (int) (dpix * (_yBef[0] - 1 / 2.0)),
                 2 * D_E, (int) (dpix * (_yBef[_noOfChips - 1] - _yBef[0] + 1)));
@@ -108,7 +108,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
         } else {
             graphics.setColor(color1);
         }
-        graphics.drawLine((int) (dpix * getSheetPosition().x), (int) (dpix * getSheetPosition().y), 
+        graphics.drawLine((int) (dpix * getSheetPosition().x), (int) (dpix * getSheetPosition().y),
                 (int) (dpix * getSheetPosition().x), (int) (dpix * (_yBef[_noOfChips - 1] + 1 / 2.0)));
     }
 

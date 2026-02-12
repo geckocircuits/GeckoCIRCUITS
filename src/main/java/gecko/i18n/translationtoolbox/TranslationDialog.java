@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,7 +31,7 @@ public class TranslationDialog extends javax.swing.JFrame {
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         jLabel1.setText(dialog);
-        
+
         // "OK" button
         jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -39,7 +39,7 @@ public class TranslationDialog extends javax.swing.JFrame {
             }
         });
     }
-    
+
     /**
      * Creates new form TranslationDialog with 2 messages
      * @param dialog1 First dialog message to display to the user
@@ -52,7 +52,7 @@ public class TranslationDialog extends javax.swing.JFrame {
         setResizable(false);
         jLabel1.setText(dialog1);
         jLabel2.setText(dialog2);
-        
+
         // "OK" button
         jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

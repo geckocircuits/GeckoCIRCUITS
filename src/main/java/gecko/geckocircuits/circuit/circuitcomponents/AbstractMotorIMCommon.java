@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@ import gecko.i18n.resources.I18nKeys;
  * @author andy
  */
 public abstract class AbstractMotorIMCommon extends AbstractThreePhaseMotor {
-        
+
     final UserParameter<Double> statorLeakageInductance = UserParameter.Builder.
             <Double>start("statorLeakageInductance", 0.0010).
             longName(I18nKeys.STATOR_LEAKAGE_INDUCTANCE).
@@ -42,8 +42,8 @@ public abstract class AbstractMotorIMCommon extends AbstractThreePhaseMotor {
             shortName("Lr_leak").
             unit("H").
             arrayIndex(this, 20).
-            build();  
-    
+            build();
+
     public final UserParameter<Double> initialStatorFluxD = UserParameter.Builder.
             <Double>start("initialStatorFluxD", 0.0).
             longName(I18nKeys.INITIAL_STATOR_FLUX_D).
@@ -57,8 +57,8 @@ public abstract class AbstractMotorIMCommon extends AbstractThreePhaseMotor {
             shortName("fluxS_q").
             unit("A").
             arrayIndex(this, getInitialStatorFluxIndexQ()).
-            build();           
-    
+            build();
+
     @Override
     final int getInertiaIndex() {
         return 14;
@@ -67,19 +67,19 @@ public abstract class AbstractMotorIMCommon extends AbstractThreePhaseMotor {
     @Override
     final int getFrictionCoefficientIndex() {
         return 13;
-    }        
-    
+    }
+
     int getPolePairIndex() {
         return 16;
     }
-    
+
     int getStatorResistanceIndex() {
         return 17;
     }
-    
+
     abstract int getInitialStatorCurrentIndexA();
-    abstract int getInitialStatorCurrentIndexB();            
-    
-    abstract int getInitialStatorFluxIndexD();    
-    abstract int getInitialStatorFluxIndexQ();                
+    abstract int getInitialStatorCurrentIndexB();
+
+    abstract int getInitialStatorFluxIndexD();
+    abstract int getInitialStatorFluxIndexQ();
 }

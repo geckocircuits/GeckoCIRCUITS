@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -33,7 +33,7 @@ import java.util.List;
 public final class TextFieldBlock extends AbstractSpecialBlock implements Operationable {
 
     public static final ControlTypeInfo tInfo = new ControlTypeInfo(TextFieldBlock.class, "TEXT", I18nKeys.TEXT_FIELD);
-    
+
     private static final double DEFAULT_HEIGHT = 2;
     private static final double DEFAULT_WIDTH = 5;
     private static final int DEFAULT_COLOR_INT = 245;
@@ -41,8 +41,8 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
     private static final int TEXT_DX = 1;
     private static final int SHOW_POSX = 3;
     private static final int SHOW_POSY = 2;
-    private static final Point SHOW_POS = new Point(SHOW_POSX, SHOW_POSY);    
-    
+    private static final Point SHOW_POS = new Point(SHOW_POSX, SHOW_POSY);
+
     final UserParameter<String> _titleText = UserParameter.Builder.
             <String>start("title_string", "Title").
             longName(I18nKeys.TITLE_TEXT).
@@ -95,7 +95,7 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
         _height.addActionListener(_repaintParentAction);
         _width.addActionListener(_repaintParentAction);
         _backGroundColor.addActionListener(_repaintParentAction);
-        _fontColor.addActionListener(_repaintParentAction);        
+        _fontColor.addActionListener(_repaintParentAction);
     }
     private final ActionListener _repaintParentAction = new ActionListener() {
         @Override
@@ -114,8 +114,8 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
         String newString = oldstring.replaceAll("\\\\n", "\n");
         _contentsText.setValueWithoutUndo(newString);
     }
-    
-    
+
+
 
     @Override
     public void setToolbarPaintProperties() {
@@ -124,7 +124,7 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
         _titleText.setValueWithoutUndo("Textfield");
         _contentsText.setValueWithoutUndo(" Textfields are\n useful for model\n documentation.");
         _height.setValueWithoutUndo(2.0);
-    }   
+    }
 
     @Override
     public int[] getAussenabmessungenRechteckEckpunkte() {
@@ -134,7 +134,7 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
     @Override
     public Color getForeGroundColor() {
         return _fontColor.getValue();
-    }                
+    }
 
     @Override
     public Color getBackgroundColor() {
@@ -182,12 +182,12 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
             graphics.setColor(_fontColor.getValue());
             graphics.drawRect(rectPosX, rectPosY, (int) (dpix * 1.333 * width), (int) (dpix * 3.6 * height));
             graphics.drawString(_titleText.getValue(), rectPosX + TEXT_DX, (int) (rectPosY - 0.2));
-            String[] split = _contentsText.getValue().split("\\n");            
+            String[] split = _contentsText.getValue().split("\\n");
             int lineCounter = 0;
             for (String lineString : split) {
                 final int stringPosY = lineCounter * (graphics.getFont().getSize()+1)
                         + (int) (rectPosY + dpix);
-                final int stringPosX = rectPosX + TEXT_DX;                
+                final int stringPosX = rectPosX + TEXT_DX;
                 graphics.drawString(lineString, stringPosX, stringPosY);
                 lineCounter++;
             }
@@ -197,42 +197,42 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
         }
     }
     //CHECKSTYLE:ON
-    
+
     @Override
     public List<Operationable.OperationInterface> getOperationEnumInterfaces() {
         final List<Operationable.OperationInterface> returnValue = new ArrayList<Operationable.OperationInterface>();
-        
+
         returnValue.add(new Operationable.OperationInterface("setTitle", I18nKeys.SET_TITLE) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 _titleText.setUserValue(parameterValue.toString());
                 return null;
             }
         });
-        
+
         returnValue.add(new Operationable.OperationInterface("getTitle", I18nKeys.GET_TITLE) {
-            @Override            
-            public Object doOperation(final Object parameterValue) {                
-                return _titleText.getValue();                
+            @Override
+            public Object doOperation(final Object parameterValue) {
+                return _titleText.getValue();
             }
         });
-        
+
         returnValue.add(new Operationable.OperationInterface("setText", I18nKeys.SET_TEXT) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 _contentsText.setUserValue(parameterValue.toString());
                 return null;
             }
         });
-        
+
         returnValue.add(new Operationable.OperationInterface("getText", I18nKeys.GET_TEXT) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
-                return _contentsText.getValue();                
+                return _contentsText.getValue();
             }
         });
-        
+
         return Collections.unmodifiableList(returnValue);
     }
-    
+
 }

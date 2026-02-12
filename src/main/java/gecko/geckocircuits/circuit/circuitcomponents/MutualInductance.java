@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,15 +36,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes component coupling for magnetic coupling configuration")
 public final class MutualInductance extends AbstractCircuitBlockInterface implements ComponentCoupable {
-    static final AbstractTypeInfo TYPE_INFO = 
+    static final AbstractTypeInfo TYPE_INFO =
             new CircuitTypeInfo(MutualInductance.class, "K", I18nKeys.MAGNETIC_COUPLING_K, I18nKeys.MAGNETIC_COUPLING_DESCRIPTION);
-    
+
     private static final double WIDTH = 0.5;
-    private static final double HEIGHT = 0.5;    
+    private static final double HEIGHT = 0.5;
     private static final int STRING_K_Y_FRAC = 3;
     private static final double DEFAULT_COEFFICIENT = 0.98;
     private static final String K_STRING = "k";
-    
+
     final UserParameter<Double> _couplingCoefficient = UserParameter.Builder.
             <Double>start("couplingCoefficient", DEFAULT_COEFFICIENT).
             longName(I18nKeys.MAGNETIC_COUPLING_K).
@@ -53,21 +53,21 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
             showInTextInfo(TextInfoType.SHOW_WHEN_DISPLAYPARAMETERS).
             arrayIndex(this, 0).
             build();
-        
-    
+
+
     final UserParameter<Boolean> _showLines = UserParameter.Builder.
-            <Boolean>start("showInductorLine", false).                                   
+            <Boolean>start("showInductorLine", false).
             longName(I18nKeys.SHOW_LINES).
-            shortName("showLines").                        
+            shortName("showLines").
             arrayIndex(this, -1).
-            build();                               
-    
+            build();
+
     private final ComponentCoupling _componentCoupling = new ComponentCoupling(2, this, new int[]{0, 1});
 
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
-        // Verbindungslinien zu den verkoppelten Induktivitaeten:        
+        // Verbindungslinien zu den verkoppelten Induktivitaeten:
         if (_showLines.getValue()) {
             Color origColor = graphics.getColor();
             graphics.setColor(Color.green);
@@ -107,7 +107,7 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
     @Override
     protected void drawForeground(final Graphics2D graphics) {
         graphics.drawRect((int) (-dpix * WIDTH), (int) (-dpix * HEIGHT), (int) (dpix * 2 * WIDTH), (int) (dpix * 2 * HEIGHT));
-        
+
         final FontMetrics fontMetrics = graphics.getFontMetrics();
         final int stringWidth = fontMetrics.stringWidth(K_STRING);
         final int stringHeight = fontMetrics.getHeight();
@@ -118,10 +118,10 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
     protected void addTextInfoParameters() {
         super.addTextInfoParameters();
 
-        
+
         AbstractBlockInterface firstInductor = getComponentCoupling()._coupledElements[0];
-        AbstractBlockInterface secondInductor = getComponentCoupling()._coupledElements[1];        
-        
+        AbstractBlockInterface secondInductor = getComponentCoupling()._coupledElements[1];
+
         if (firstInductor == null && secondInductor != null) {
             final String parStr = I18nKeys.NOT_DEFINED.getTranslation() + " @ " + secondInductor.getStringID();
             _textInfo.addErrorValue(parStr);
@@ -130,24 +130,24 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
         if (firstInductor != null && secondInductor == null) {
             final String parStr = firstInductor.getStringID() + " @ " + I18nKeys.NOT_DEFINED.getTranslation();
             _textInfo.addErrorValue(parStr);
-        }        
-        
-        if (firstInductor == null && secondInductor == null) {            
+        }
+
+        if (firstInductor == null && secondInductor == null) {
             _textInfo.addErrorValue(I18nKeys.NOT_DEFINED.getTranslation());
         }
-        
+
         if(firstInductor != null && secondInductor != null) {
             String parStr = firstInductor.getStringID() + " @ " + secondInductor.getStringID();
             _textInfo.addParameter(parStr);
-        }                                
+        }
     }
 
     @Override
     public ComponentCoupling getComponentCoupling() {
         return _componentCoupling;
-    }        
+    }
 
-    
+
     @Override
     public I18nKeys getCouplingTitle() {
         return I18nKeys.LC_INDUCTOR_SELECTION;
@@ -168,8 +168,8 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
     @Override
     protected Window openDialogWindow() {
         return new MutualInductanceDialog(this);
-    }                
-    
+    }
+
     @Override
     public void setToolbarPaintProperties() {
         _componentCoupling.setNewCouplingElement(0, this);
@@ -182,11 +182,11 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
         // the coupled inductors themselves!
         return Collections.EMPTY_LIST;
     }
-    
-    
-    @Override 
-    public List<OperationInterface> getOperationEnumInterfaces() {        
+
+
+    @Override
+    public List<OperationInterface> getOperationEnumInterfaces() {
         return getComponentCoupling().getOperationInterfaces();
     }
-    
+
 }

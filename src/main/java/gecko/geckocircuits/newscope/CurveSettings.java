@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,22 +21,22 @@ import gecko.geckocircuits.circuit.TokenMap;
  * @author andy
  */
 final class CurveSettings {
-            
+
     private static final double DEFAULT_TRANSPARENCY = 0.85;
     private static final double DEFAULT_AVG_SPAN = 1e-6;
-    
-    GeckoColor _curveColor = GeckoColor.getNextColor(); 
+
+    GeckoColor _curveColor = GeckoColor.getNextColor();
     GeckoColor _crvFillingDigColor = GeckoColor.LIGHTGRAY;
     boolean _crvFillDigitalCurves = true;
     GeckoSymbol _crvSymbShape = GeckoSymbol.CROSS;
     GeckoLineStyle _curveLineStyle = GeckoLineStyle.SOLID_PLAIN;
-    GeckoColor _crvSymbFarbe = GeckoColor.getNextColor();   
+    GeckoColor _crvSymbFarbe = GeckoColor.getNextColor();
     double _crvTransparency = DEFAULT_TRANSPARENCY;
-    double _averageSpan = DEFAULT_AVG_SPAN;    
-    boolean _curveShowPtSymbols = false;    
-    int _crvSymbFrequ = 1; // number for skipping the symbol shape drawing 
+    double _averageSpan = DEFAULT_AVG_SPAN;
+    boolean _curveShowPtSymbols = false;
+    int _crvSymbFrequ = 1; // number for skipping the symbol shape drawing
     GeckoLineType _lineType = GeckoLineType.CONNECT_NEIGHBOURS;
-    
+
     CurveSettings() {
         // nothing to do!
     }
@@ -64,8 +64,8 @@ final class CurveSettings {
         _crvFillDigitalCurves = curveMap.readDataLine("isFillDigitalCurves", _crvFillDigitalCurves);
         if(curveMap.containsToken("lineType")) {
             _lineType = GeckoLineType.getFromCode(curveMap.readDataLine("lineType", _lineType.code()));
-        }        
-    
+        }
+
     }
-    
+
 }

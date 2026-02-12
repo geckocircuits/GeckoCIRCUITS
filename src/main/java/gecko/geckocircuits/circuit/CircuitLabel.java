@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -17,14 +17,14 @@ import gecko.modelviewcontrol.AbstractUndoGenericModel;
 
 /**
  * GUI-free model for circuit labels.
- * 
+ *
  * @author GeckoCIRCUITS Team
  * @since Sprint 15 - GUI-free refactoring
  */
 public class CircuitLabel {
-    private String _label;      
+    private String _label;
     private LabelPriority _labelPriority = LabelPriority.NORMAL;
-    
+
     public CircuitLabel() {
         _label = "";
     }
@@ -32,32 +32,32 @@ public class CircuitLabel {
     public void setLabel(final String newLabel) {
         if(newLabel.equals(_label)) {
             return;
-        }        
-        if(!_label.equals(newLabel)) {            
+        }
+        if(!_label.equals(newLabel)) {
             RenameLabelUndoableEdit undoEdit = new RenameLabelUndoableEdit(_label, newLabel, false);
             AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(undoEdit));
-        }        
+        }
         _label = newLabel;
     }
-    
+
     public void setLabelWithoutUndo(final String newLabel) {
         assert newLabel != null;
         _label = newLabel;
     }
-    
+
 
     public String getLabelString() {
         return _label;
     }
-    
+
     public LabelPriority getLabelPriority() {
         if (_label.isEmpty() && _labelPriority == LabelPriority.NORMAL) {
             return LabelPriority.EMPTY_STRING;
         } else {
             return _labelPriority;
-        }                
+        }
     }
-    
+
     public void setLabelPriority(final LabelPriority priority) {
         _labelPriority = priority;
     }
@@ -73,22 +73,22 @@ public class CircuitLabel {
         }
         RenameLabelUndoableEdit undoEdit = new RenameLabelUndoableEdit(_label, newLabel, true);
         AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(undoEdit));
-        _label = newLabel;                
+        _label = newLabel;
     }
-    
+
     /**
      * GUI-free implementation of label rename edit.
      */
     private class RenameLabelUndoableEdit implements GeckoUndoableEdit {
-        final boolean _isSignificant;        
+        final boolean _isSignificant;
         private final String _oldLabel;
         private final String _newLabel;
 
         private RenameLabelUndoableEdit(final String oldLabel, final String newLabel,
-                final boolean isSignificant) {            
+                final boolean isSignificant) {
             _oldLabel = oldLabel;
             _newLabel = newLabel;
-            _isSignificant = isSignificant;            
+            _isSignificant = isSignificant;
         }
 
         @Override
@@ -146,6 +146,6 @@ public class CircuitLabel {
             return "Label rename from \"" + _newLabel + "\" to \"" + _oldLabel + "\"";
         }
     }
-    
-    
+
+
 }

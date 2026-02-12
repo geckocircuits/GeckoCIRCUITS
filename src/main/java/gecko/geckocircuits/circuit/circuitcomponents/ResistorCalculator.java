@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@ public final class ResistorCalculator extends CircuitComponent<AbstractResistor>
     private double _resistance = 1;
 
     public ResistorCalculator(final AbstractResistor parent) {
-        super(parent);        
+        super(parent);
         _resistance = parent._resistance.getValue();
     }
 
@@ -31,11 +31,11 @@ public final class ResistorCalculator extends CircuitComponent<AbstractResistor>
         } else {
             _resistance = resistance;
         }
-    }    
+    }
 
     @Override
     public void stampMatrixA(final double[][] matrix, final double deltaT) {
-        final double addValue = 1.0 / _resistance;  //  +1/R        
+        final double addValue = 1.0 / _resistance;  //  +1/R
         matrix[matrixIndices[0]][matrixIndices[0]] += (+addValue);
         matrix[matrixIndices[1]][matrixIndices[1]] += (+addValue);
         matrix[matrixIndices[0]][matrixIndices[1]] += (-addValue);
@@ -58,5 +58,5 @@ public final class ResistorCalculator extends CircuitComponent<AbstractResistor>
         _current = (_potential1 - _potential2) / _resistance;
         //_oldCurrent = _current;
     }
-    
+
 }

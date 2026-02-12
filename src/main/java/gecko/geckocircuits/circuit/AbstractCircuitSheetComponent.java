@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,7 +31,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "dpix is intentionally mutable; components share parent circuit sheet reference for proper circuit hierarchy")
 public abstract class AbstractCircuitSheetComponent {
 
-    public static int dpix;  // Abstand 2er Rasterpunkte in Pixelpunkten                
+    public static int dpix;  // Abstand 2er Rasterpunkte in Pixelpunkten
     public final static ModelMVC<Integer> dpixValue;
     private ComponentState _modus = ComponentState.FINISHED;
 
@@ -79,10 +79,10 @@ public abstract class AbstractCircuitSheetComponent {
 
     public abstract void paintGeckoComponent(final Graphics2D graphics);
 
-    abstract public void paintComponentForeGround(final Graphics2D graphics);    
-    
-    
-    
+    abstract public void paintComponentForeGround(final Graphics2D graphics);
+
+
+
     /**
      *
      * @param shiftIdentifier used to implement a simple group-copy operation.
@@ -98,7 +98,7 @@ public abstract class AbstractCircuitSheetComponent {
         _identifier.createNewIdentifier();
     }
 
-    public void deleteComponent() {        
+    public void deleteComponent() {
         if (this instanceof GeckoFileable) {
             List<GeckoFile> filesList = ((GeckoFileable)this).getFiles();
             if (filesList != null) {
@@ -107,11 +107,11 @@ public abstract class AbstractCircuitSheetComponent {
                     ((GeckoFileable) this).removeLocalComponentFiles(extraFiles);
                 }
             }
-        }       
+        }
 
         deleteActionIndividual();
-                
-        //assert _parentCircuitSheet.allElements.contains(this);       
+
+        //assert _parentCircuitSheet.allElements.contains(this);
         if (_parentCircuitSheet != null) {
             _parentCircuitSheet.allElements.remove(this);
         }
@@ -201,15 +201,15 @@ public abstract class AbstractCircuitSheetComponent {
 
     /**
      * @param parentCircuitSheet the _parentCircuitSheet to set
-     */    
-    public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {        
+     */
+    public void setParentCircuitSheet(final CircuitSheet parentCircuitSheet) {
         if (_parentCircuitSheet != null && _parentCircuitSheet.allElements.contains(this)) {
             _parentCircuitSheet.allElements.remove(this);
         }
         this._parentCircuitSheet = parentCircuitSheet;
-        _parentCircuitSheet.allElements.add(this);                                        
+        _parentCircuitSheet.allElements.add(this);
     }
-    
+
 
     /**
      *
@@ -232,13 +232,13 @@ public abstract class AbstractCircuitSheetComponent {
         if (rootSubcircuitName != null && !rootSubcircuitName.isEmpty()) {
             SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
             setParentCircuitSheet(rootBlock._myCircuitSheet);
-        } else {            
+        } else {
             setParentCircuitSheet(SchematicEditor2.Singleton._circuitSheet);
         }
 
 
     }
-    
+
     /**
      *
      * @param allSubs the subcircuit blocks from the NEW import (and only them!
@@ -260,7 +260,7 @@ public abstract class AbstractCircuitSheetComponent {
         if (rootSubcircuitName != null && !rootSubcircuitName.isEmpty()) {
             SubcircuitBlock rootBlock = (SubcircuitBlock) IDStringDialog.getComponentByName(rootSubcircuitName);
             setParentCircuitSheet(rootBlock._myCircuitSheet);
-        } else {            
+        } else {
             setParentCircuitSheet(SchematicEditor2.Singleton._circuitSheet);
         }
 
@@ -281,7 +281,7 @@ public abstract class AbstractCircuitSheetComponent {
     public long getUniqueObjectIdentifier() {
         return _identifier.getIdentifier();
     }
-    
+
     public abstract int elementAngeklickt(final Point clickPoint);
 
     /**
@@ -309,19 +309,19 @@ public abstract class AbstractCircuitSheetComponent {
         if (_tempParentSheetIdentifier != 0) {
             _tempParentSheetIdentifier += shiftValue;
         };
-    }    
+    }
 
     public abstract String getExportImportCharacters();
-    
-    public boolean allParentSubcircuitsEnabled() {        
+
+    public boolean allParentSubcircuitsEnabled() {
         if(_parentCircuitSheet != null && _parentCircuitSheet instanceof SubCircuitSheet) {
             SubCircuitSheet subSheet = (SubCircuitSheet) _parentCircuitSheet;
             final SubcircuitBlock subBlock = subSheet._subBlock;
             if(subBlock._isEnabled.getValue() != Enabled.ENABLED) {
                 return false;
             }
-        } 
+        }
         return true;
     }
-    
+
 }

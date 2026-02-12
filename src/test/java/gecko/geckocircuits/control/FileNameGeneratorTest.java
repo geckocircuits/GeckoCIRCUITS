@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  * Unit tests for FileNameGenerator utility class.
  */
 public class FileNameGeneratorTest {
-    
+
     private FileNameGenerator generator;
     private Path tempDir;
 
@@ -61,7 +61,7 @@ public class FileNameGeneratorTest {
     public void testFindFreeFileNameExistent() throws IOException {
         String baseFile = tempDir.toString() + "/test.txt";
         Files.createFile(Path.of(baseFile));
-        
+
         String result = generator.findFreeFileName(baseFile);
         assertNotEquals(baseFile, result);
         assertTrue(result.contains("test_0.txt"));
@@ -72,7 +72,7 @@ public class FileNameGeneratorTest {
         String baseFile = tempDir.toString() + "/test.txt";
         Files.createFile(Path.of(baseFile));
         Files.createFile(Path.of(tempDir.toString() + "/test_0.txt"));
-        
+
         String result = generator.findFreeFileName(baseFile);
         assertTrue(result.contains("test_1.txt"));
     }
@@ -81,7 +81,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameSimple() {
         String fileName = "/path/to/file.txt";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         assertEquals("/path/to/file", parts.baseName);
         assertEquals(".txt", parts.extension);
     }
@@ -90,7 +90,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameNoExtension() {
         String fileName = "/path/to/file";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         assertEquals("/path/to/file", parts.baseName);
         assertEquals("", parts.extension);
     }
@@ -99,7 +99,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameWithUnderscore() {
         String fileName = "test_file.txt";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         assertEquals("test", parts.baseName);
         assertEquals(".txt", parts.extension);
     }
@@ -108,7 +108,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameMultipleExtensions() {
         String fileName = "/path/to/archive.tar.gz";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         assertEquals("/path/to/archive.tar", parts.baseName);
         assertEquals(".gz", parts.extension);
     }
@@ -117,7 +117,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameWindowsPath() {
         String fileName = "C:\\Users\\test\\file.txt";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         assertEquals("C:\\Users\\test\\file", parts.baseName);
         assertEquals(".txt", parts.extension);
     }
@@ -125,7 +125,7 @@ public class FileNameGeneratorTest {
     @Test
     public void testGenerateNumberedFileName() {
         FileNameGenerator.FileNameParts parts = new FileNameGenerator.FileNameParts("/path/to/file", ".txt");
-        
+
         String result = generator.generateNumberedFileName(parts, 5);
         assertEquals("/path/to/file_5.txt", result);
     }
@@ -133,7 +133,7 @@ public class FileNameGeneratorTest {
     @Test
     public void testGenerateNumberedFileNameZero() {
         FileNameGenerator.FileNameParts parts = new FileNameGenerator.FileNameParts("test", ".dat");
-        
+
         String result = generator.generateNumberedFileName(parts, 0);
         assertEquals("test_0.dat", result);
     }
@@ -141,7 +141,7 @@ public class FileNameGeneratorTest {
     @Test
     public void testGenerateNumberedFileNameLargeNumber() {
         FileNameGenerator.FileNameParts parts = new FileNameGenerator.FileNameParts("file", "");
-        
+
         String result = generator.generateNumberedFileName(parts, 999);
         assertEquals("file_999", result);
     }
@@ -150,7 +150,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameWithoutPath() {
         String fileName = "myfile.log";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         assertEquals("myfile", parts.baseName);
         assertEquals(".log", parts.extension);
     }
@@ -159,7 +159,7 @@ public class FileNameGeneratorTest {
     public void testParseFileNameJustDot() {
         String fileName = "/path/.hidden";
         FileNameGenerator.FileNameParts parts = generator.parseFileName(fileName);
-        
+
         // Hidden files in Unix style start with dot, so the dot is index 0
         assertNotNull(parts.extension);
     }
@@ -168,7 +168,7 @@ public class FileNameGeneratorTest {
     public void testFindFreeFileNameReturnedFileDoesNotExist() throws IOException {
         String baseFile = tempDir.toString() + "/test.txt";
         Files.createFile(Path.of(baseFile));
-        
+
         String result = generator.findFreeFileName(baseFile);
         assertFalse(new File(result).exists());
     }

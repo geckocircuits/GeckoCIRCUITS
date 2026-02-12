@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class JavaBlockVector extends AbstractJavaBlock {
     private ControlCalculatable _compiledInstance;
     private double[] _xINVector;
-    
+
     JavaBlockVector(final ReglerJavaFunction regler) {
         super(regler);
     }
@@ -57,7 +57,7 @@ public class JavaBlockVector extends AbstractJavaBlock {
 
         checkOutputsForNANorINFValues(outputSignals);
     }
-    
+
     private void checkOutputsForNANorINFValues(double[][] ausgangssignal) {
         for (int i = 0; i < ausgangssignal.length; i++) {
             if (ausgangssignal[i] != ausgangssignal[i]) {
@@ -72,8 +72,8 @@ public class JavaBlockVector extends AbstractJavaBlock {
         super.initialize(inputSignals, outputSignals); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
+
+
     @Override
     protected void doInitialize(double[][] xIN, double[][] yOUT) {
         if (_compiledInstance == null) {
@@ -125,7 +125,7 @@ public class JavaBlockVector extends AbstractJavaBlock {
         }
     }
 
-    
+
 }
 
 

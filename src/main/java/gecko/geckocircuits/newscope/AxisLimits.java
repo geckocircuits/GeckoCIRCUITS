@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -173,7 +173,7 @@ final class AxisLimits {
      * Set the minimum-maximum values of the axis. This function only sets the number,
      * but does not immediately do the "global fit"
      */
-    public void setGlobalAutoScaleValues(final HiLoData newGlobAutoScale) {                        
+    public void setGlobalAutoScaleValues(final HiLoData newGlobAutoScale) {
         try {
             assert newGlobAutoScale.isValidNumber() : newGlobAutoScale;
         } catch (AssertionError err) {
@@ -186,7 +186,7 @@ final class AxisLimits {
         } else {
             _autoScaleGlobal = newGlobAutoScale;
         }
-                
+
     }
 
     public void setLocalAutoScaleValues(final HiLoData newAutoScale) {
@@ -233,7 +233,7 @@ final class AxisLimits {
 //        if(!_isAutoEnabled)  {
 //            if(_userScale._yHi != _userScale._yLo) {
 //                _valueScaleLocal = _userScale;
-//            }            
+//            }
 //        }
         if (axisMap.containsToken("isSymmetricZero")) {
             _isCommonZero = axisMap.readDataLine("isSymmetricZero", _isCommonZero);

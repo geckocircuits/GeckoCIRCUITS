@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -26,46 +26,46 @@ final class AxisTickSettings {
     private boolean _showLabelsMin = false;
     private int _tickLengthMaj = DEF_LENGTH_MAJ;
     private int _tickLengthMin = DEF_LENGTH_MIN;
-    private int _anzTicksMinor = 2;  // Zahl der Minor-Ticks zwischen zwei regulaeren Ticks        
-    
+    private int _anzTicksMinor = 2;  // Zahl der Minor-Ticks zwischen zwei regulaeren Ticks
+
     private static final int DEF_LENGTH_MAJ = 8;
     private static final int DEF_LENGTH_MIN = 5;
-    
-    public void setAnzTicksMinor(final int value) {        
+
+    public void setAnzTicksMinor(final int value) {
         _anzTicksMinor = value;
     }
-    
+
     public int getAnzTicksMinor() {
         return _anzTicksMinor;
     }
-    
-    
+
+
     public int getTickLengthMin() {
         return _tickLengthMin;
     }
-    
+
     public int getTickLengthMaj() {
         return _tickLengthMaj;
     }
-    
+
     public boolean isAutoTickSpacing() {
         return _autoTickSpacing;
     }
-    
+
     public void setAutoTickSpacing(final boolean value) {
         _autoTickSpacing = value;
     }
-    
-    public boolean isShowLabelsMaj() {  
+
+    public boolean isShowLabelsMaj() {
         return _showLabelsMaj;
     }
-    
+
     public boolean isShowLabelsMin() {
         return _showLabelsMin;
     }
 
-    public void setShowLabelsMaj(final boolean showLabelsMaj) {                        
-        _showLabelsMaj = showLabelsMaj;    
+    public void setShowLabelsMaj(final boolean showLabelsMaj) {
+        _showLabelsMaj = showLabelsMaj;
     }
 
     public void setShowLabelsMin(final boolean showLabelsMin) {
@@ -75,25 +75,25 @@ final class AxisTickSettings {
     void setTickLengthMaj(final int tickLengthMaj) {
         _tickLengthMaj = tickLengthMaj;
     }
-    
+
     void setTickLengthMin(final int tickLengthMin) {
         _tickLengthMin = tickLengthMin;
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\nnoMinorTicks"), _anzTicksMinor);
-        ProjectData.appendAsString(ascii.append("\nisShowLabelsMaj"), _showLabelsMaj);        
+        ProjectData.appendAsString(ascii.append("\nisShowLabelsMaj"), _showLabelsMaj);
         ProjectData.appendAsString(ascii.append("\nisShowLabelsMin"), _showLabelsMin);
         ProjectData.appendAsString(ascii.append("\ntickLengthMaj"), _tickLengthMaj);
         ProjectData.appendAsString(ascii.append("\ntickLengthMin"), _tickLengthMin);
     }
 
-    void importASCII(final TokenMap axisMap) {                
+    void importASCII(final TokenMap axisMap) {
         _anzTicksMinor = axisMap.readDataLine("noMinorTicks", _anzTicksMinor);
-        _showLabelsMaj = axisMap.readDataLine("isShowLabelsMaj", _showLabelsMaj);        
+        _showLabelsMaj = axisMap.readDataLine("isShowLabelsMaj", _showLabelsMaj);
         _showLabelsMin = axisMap.readDataLine("isShowLabelsMin", _showLabelsMin);
         _tickLengthMaj = axisMap.readDataLine("tickLengthMaj", _tickLengthMaj);
         _tickLengthMin = axisMap.readDataLine("tickLengthMin", _tickLengthMin);
     }
-    
+
 }

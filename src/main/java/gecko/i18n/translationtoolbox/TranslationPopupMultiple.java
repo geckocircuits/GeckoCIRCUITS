@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,7 +13,7 @@
  */
 /*
  * -Translation pop-up GUI class for multiple-line values.
- * 
+ *
  */
 package gecko.i18n.translationtoolbox;
 
@@ -32,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
         justification = "Static progressMonitor is a shared UI component for progress tracking")
 public class TranslationPopupMultiple extends javax.swing.JFrame implements PropertyChangeListener {
-    
+
     private boolean confirmed = false;
     private final I18nKeys key; // key of the triggering GUI element
     private String newTranslation;
@@ -42,7 +42,7 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
     private static volatile ProgressMonitor progressMonitor; // Progress Monitor GUI
     private Task task; // Background Task Thread
     private Progress progress; // getProgress Thread
-    
+
     /*
      * Inner class used to execute upload instructions from a separate
      * thread to avoid freezing up.
@@ -54,37 +54,37 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
             UPbot.addTranslationSuggestion_multiple(key, newTranslation, comment);
             return null;
         }
-        
+
         @Override
         public void done() {} // do nothing
     }
-        
+
     /*
-     * Inner class used to acquire progress information from the upload bot 
+     * Inner class used to acquire progress information from the upload bot
      * class (UPbot) from a separate thread to avoid freezing up.
      */
     private class Progress extends SwingWorker<Void, Void> {
         @Override
         public Void doInBackground() {
             setProgress(0);
-            
+
             // wait for task thread to get going
             try {
                 Thread.sleep(500);
             } catch (Exception e) {}
-            
+
             // keep updating progress until task is finished
             while (!task.isDone()) {
-                setProgress(UPbot.getProgress()); // update progress                
+                setProgress(UPbot.getProgress()); // update progress
             }
             setProgress(100); // indicate task completion
             return null;
         }
-        
+
         @Override
         public void done() {} // do nothing
     }
-    
+
     /**
      * Creates new form TranslationPopupMultiple
      * @param key Key of the pop-up triggering element text
@@ -95,46 +95,46 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
         setLocationRelativeTo(null); // display in center screen
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
-        
+
         this.key = key;
 
         jTextArea2.setText(LangInit.englishMap_multiple.getValue(key)); // "Original English"
         jTextArea2.setEditable(false); // "Original English"
         jTextArea4.setText(LangInit.transMap_multiple.getValue(key)); // "Current Translation"
         jTextArea4.setEditable(false); // "Current Translation"
-        
-        
+
+
         // "Cancel" button
         jButton1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose(); // dispose of pop-up
             }
         });
-        
+
         // "Done" button
         jButton2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (confirmed) {                    
+                if (confirmed) {
                     // initialize progressMonitor
                     progressMonitor = new ProgressMonitor(TranslationPopupMultiple.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                     progressMonitor.setProgress(0); // initialize progress
-                    
+
                     // Create new threads
                     task = new Task();
                     progress = new Progress();
                     progress.addPropertyChangeListener(TranslationPopupMultiple.this);
-                    
+
                     // Run threads
                     task.execute();
                     progress.execute();
-                    
+
                     disableButtons();
                 } else {
                     new TranslationDialog(InitParameters.CONFIRM_MESSAGE).setVisible(true);
                 }
             }
         });
-        
+
         // "Confirm" button
         jButton3.addActionListener(new ActionListener()  {
             public void actionPerformed(ActionEvent e) {
@@ -142,30 +142,30 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
                 if (newTranslation.isEmpty()) {
                     new TranslationDialog(InitParameters.EMPTY_CONFIRM_MESSAGE).setVisible(true);
                 } else {
-                    comment = jTextArea3.getText(); // get comment                    
+                    comment = jTextArea3.getText(); // get comment
                     confirmed = true; // confirm the suggestion
                 }
             }
         });
-        
+
         // "Open Translation Toolbox" button
         jButton4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (confirmed) {
                     buttonName = InitParameters.OTT_BUTTON;
-                    
+
                     progressMonitor = new ProgressMonitor(TranslationPopupMultiple.this, InitParameters.P_BAR_MESSAGE_UP, "", 0, 100);
                     progressMonitor.setProgress(0); // initialize progress
-                    
+
                     // Create new threads
                     task = new Task();
                     progress = new Progress();
                     progress.addPropertyChangeListener(TranslationPopupMultiple.this);
-                    
+
                     // Run threads
                     task.execute();
                     progress.execute();
-                    
+
                     disableButtons();
                 } else {
                     dispose(); // dispose of the pop-up
@@ -174,7 +174,7 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
             }
         });
     }
-    
+
     /*
      * Method to implement PropertyChangeListener
      */
@@ -184,16 +184,16 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
             progressMonitor.setProgress(prog); // update progress
             String info = "Completed " + prog + "%"; // information for the user
             progressMonitor.setNote(info); // update the message
-            
+
             // check if canceled
             if (progressMonitor.isCanceled()) {
                 // cancel threads
                 progress.cancel(true);
                 task.cancel(true);
-                
+
                 enableButtons();
             }
-            
+
             // check if threads completed
             if (progress.isDone()) {
                 boolean connected = UPbot.getConnectionStatus();
@@ -208,7 +208,7 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
             }
         }
     }
-    
+
     /*
      * Method to enable buttons
      */
@@ -218,7 +218,7 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
         jButton3.setEnabled(true); // "Confirm" button
         jButton4.setEnabled(true); // "Open Translation Toolbox" button
     }
-    
+
     /*
      * Method to disable buttons
      */
@@ -228,7 +228,7 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
         jButton3.setEnabled(false); // "Confirm" button
         jButton4.setEnabled(false); // "Open Translation Toolbox" button
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

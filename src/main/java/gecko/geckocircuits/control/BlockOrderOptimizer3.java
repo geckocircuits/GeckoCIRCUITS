@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,10 +34,10 @@ public final class BlockOrderOptimizer3 {
     private int _stopIteration;
 
     public BlockOrderOptimizer3(final List<RegelBlock> allControlBlocks) {
-        this._allControlsInput = Collections.unmodifiableList(allControlBlocks);        
-        for (RegelBlock regler : _allControlsInput) {            
+        this._allControlsInput = Collections.unmodifiableList(allControlBlocks);
+        for (RegelBlock regler : _allControlsInput) {
             _allNodes.add(new ControlOrderNode(regler));
-        }        
+        }
 
         for (ControlOrderNode node : _allNodes) {
             node.calculateNeighbours(_allNodes);
@@ -56,7 +56,7 @@ public final class BlockOrderOptimizer3 {
 
         _transferStops = findPossibleStops();
         _stopIteration = _allControlsInput.size();
-                                
+
         for (int i = 0; i < 1; i++) {
             for (ControlOrderNode node : _transferStops) {
                 try {
@@ -65,9 +65,9 @@ public final class BlockOrderOptimizer3 {
                     ex.printLoopMessage();
                     //Logger.getLogger(BlockOrderOptimizer3.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }                                    
+            }
         }
-        
+
         for (ControlOrderNode node : _transferStarts) {
                 try {
                     iterateIntoPositiveDirection(node.getAllDirectOutputs(), node.getPriority() + 1);
@@ -75,7 +75,7 @@ public final class BlockOrderOptimizer3 {
                     ex.printLoopMessage();
                 }
         }
-        
+
         for (int i = 0; i < 1; i++) {
             for (ControlOrderNode node : _transferStops) {
                 try {
@@ -84,18 +84,18 @@ public final class BlockOrderOptimizer3 {
                     ex.printLoopMessage();
                     //Logger.getLogger(BlockOrderOptimizer3.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }                                    
+            }
         }
-        
-               
+
+
         _optimizedList = sortNodesWithPriorities();
-        
+
         _outList = new ArrayList<RegelBlock>();
         for (int i = 0; i < _allControlsInput.size(); i++) {
-            _outList.add(_optimizedList.get(i).getElementControl());         
-        }        
+            _outList.add(_optimizedList.get(i).getElementControl());
+        }
 
-        doConsistencyChecks(_outList, _allControlsInput);                        
+        doConsistencyChecks(_outList, _allControlsInput);
         //System.out.println("number of loops " + countNumberOfOutOfOrderLoops(_optimizedList) + " of " + _optimizedList.size());
 //        System.out.println("---------- control block order: ");
 //        for(RegelBlock block : _outList) {

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,10 +24,10 @@ public final class ReglerSPARSEMATRIX extends RegelBlock {
     private static final int X_POS_IN = -2;
     private static final int X_POS_OUT = 2;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSPARSEMATRIX.class, "SPARSEMATRIX", I18nKeys.SPARSE_MATRIX_CONVERTER_CONTROL);
-    
+
     public ReglerSPARSEMATRIX() {
         super();
-        
+
         XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "fp"));
         XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "uN1"));
         XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "uN2"));
@@ -35,19 +35,19 @@ public final class ReglerSPARSEMATRIX extends RegelBlock {
         XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "uNmax"));
         XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "uLmax"));
         XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "ufL"));
-        XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "phi2"));                                
-        
-        
+        XIN.add(new TerminalControlInputWithLabel(this, X_POS_IN, -XIN.size(), "phi2"));
+
+
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s1+"));
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s2+"));
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s3+"));
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s1-"));
-        YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s2-"));        
+        YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s2-"));
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "s3-"));
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "sA"));
         YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "sB"));
-        YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "sC"));                
-        
+        YOUT.add(new TerminalControlOutputWithLabel(this, X_POS_OUT, -YOUT.size(), "sC"));
+
     }
 
     @Override
@@ -70,22 +70,22 @@ public final class ReglerSPARSEMATRIX extends RegelBlock {
     public double getXShift() {
         return 0.5;
     }
-    
+
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
         return new SparseMatrixCalculator();
     }
-    
+
 
     @Override
     protected String getCenteredDrawString() {
         return "";
-    }            
+    }
 
     @Override
     protected Window openDialogWindow() {
         return new DialogWindowWithoutInput(this);
     }
-    
+
 }

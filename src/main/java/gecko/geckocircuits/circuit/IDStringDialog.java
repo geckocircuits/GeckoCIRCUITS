@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -64,10 +64,10 @@ public final class IDStringDialog {
      * @return
      */
     public static IDStringDialog fabricVariableName(final AbstractBlockInterface parent, final String newName) {
-        
-        IDStringDialog returnValue = null;        
+
+        IDStringDialog returnValue = null;
         if (_allIDStrings.containsKey(newName) && !_allIDStrings.get(newName).contains(parent)) {
-            returnValue = new IDStringDialog(parent, findUnusedName(newName));            
+            returnValue = new IDStringDialog(parent, findUnusedName(newName));
         } else {
             returnValue = new IDStringDialog(parent, newName);
         }
@@ -170,7 +170,7 @@ public final class IDStringDialog {
 
     }
 
-    public void setNewNameChecked(final String newName) throws NameAlreadyExistsException {        
+    public void setNewNameChecked(final String newName) throws NameAlreadyExistsException {
             if (newName.equals(_idString)) {
                 return;
             }
@@ -194,14 +194,14 @@ public final class IDStringDialog {
             } else {
                 insertList = new ArrayList<AbstractBlockInterface>();
             }
-            deleteIDString(); // remove the old name reference            
+            deleteIDString(); // remove the old name reference
             _idString = newName;
             notifyListeners();
 
             insertList.add(_parent);
             if (!_allIDStrings.containsKey(newName)) {
                 _allIDStrings.put(newName, insertList);
-            }        
+            }
     }
 
     public void deleteIDString() {

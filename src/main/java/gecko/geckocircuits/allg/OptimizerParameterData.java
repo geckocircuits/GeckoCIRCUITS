@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -49,7 +49,7 @@ public final class OptimizerParameterData {
         //assert nameOpt.size() == valueOpt.size() : nameOpt.size() + " " + valueOpt.size();
         Map<String, Double> newMap = new LinkedHashMap<String, Double>();
         for (int i = 0; i < Math.min(nameOpt.size(), valueOpt.size()); i++) {
-            newMap.put(nameOpt.get(i), valueOpt.get(i));            
+            newMap.put(nameOpt.get(i), valueOpt.get(i));
         }
         _dataMap = newMap;
     }
@@ -70,7 +70,7 @@ public final class OptimizerParameterData {
     double getNumberFromNameWOException(final String nameOpt) {
         if (_dataMap.containsKey(nameOpt)) {
             return _dataMap.get(nameOpt);
-        } else {            
+        } else {
             return Double.NaN;
         }
     }

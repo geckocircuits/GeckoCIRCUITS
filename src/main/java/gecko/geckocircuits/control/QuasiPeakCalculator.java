@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -191,12 +191,12 @@ public final class QuasiPeakCalculator {
             }
         }
 
-//          Here, we just leave the original values!  
+//          Here, we just leave the original values!
 //            for (int j = -intervalSpan / 2; j <= intervalSpan / 2; j++) {
 //                final int index = fourIndex + j;
 //                if (index < 0) {
 //                    continue;
-//                }                
+//                }
 //            }
 //
 //

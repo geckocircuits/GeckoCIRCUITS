@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,7 +31,7 @@ public enum GeckoSymbol {
 
     private static final int DMCIRCLE = 8, H_CROSS = 4, A_RECT = 6, A_TRIANG = 8;
     private static final float TRIANGLE_SIZE = 0.29f;
-    
+
     private final int _code;
 
     GeckoSymbol(final int code) {
@@ -41,7 +41,7 @@ public enum GeckoSymbol {
     public int code() {
         return _code;
     }
-    
+
 
     static GeckoSymbol getFromCode(final int code) {
         for(GeckoSymbol val : values()) {
@@ -49,10 +49,10 @@ public enum GeckoSymbol {
                 return val;
             }
         }
-        
+
         return CROSS;
     }
-    
+
     static GeckoSymbol getFromOrdinal(final int ordinal) {
         for(GeckoSymbol val : values()) {
             if(val.ordinal() == ordinal) {
@@ -62,9 +62,9 @@ public enum GeckoSymbol {
         assert false;
         return null;
     }
-        
+
     void drawSymbol(final Graphics2D g2d, final float xPix, final float yPix) {
-        
+
         // I am using round instead of a simple (int) cast, since for the export to vectorgraphics
         // formats, this is more accurate!
         switch (this) {
@@ -86,7 +86,7 @@ public enum GeckoSymbol {
                 break;
             case TRIANG:
                 int[] xPoints = new int[]{round(xPix - A_TRIANG / 2), round(xPix + A_TRIANG / 2), round(xPix)};
-                int[] yPoints = new int[]{round(yPix + (int) (TRIANGLE_SIZE * A_TRIANG)), round(yPix 
+                int[] yPoints = new int[]{round(yPix + (int) (TRIANGLE_SIZE * A_TRIANG)), round(yPix
                         + (int) (TRIANGLE_SIZE * A_TRIANG)), round(yPix - (int) (2 * TRIANGLE_SIZE * A_TRIANG))};
                 g2d.drawPolygon(xPoints, yPoints, xPoints.length);
                 break;

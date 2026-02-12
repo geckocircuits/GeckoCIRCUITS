@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,14 +22,14 @@ public class VoltageSourceCalculator extends AbstractVoltageSourceCalculator imp
     private TimeFunction _function;
     private static final int THREE = 3;
     private static final int FOUR = 4;
-    
+
     public VoltageSourceCalculator(final TimeFunction timeFunction, final AbstractVoltageSource parent) {
         super(parent);
         _function = timeFunction;
         _z = -1;
     }
 
-    VoltageSourceCalculator(final double initialValue, final int mat0, final int mat1, 
+    VoltageSourceCalculator(final double initialValue, final int mat0, final int mat1,
             final int zValue, final int compNumber, final AbstractTwoPortLKreisBlock parent) {
         super(parent);
         _function = new TimeFunctionConstant(-initialValue);

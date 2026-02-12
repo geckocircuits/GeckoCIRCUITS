@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,25 +24,25 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
-/** 
+/**
  * This class encapsulates the memory-mapped file (MMF) used for the alternative GeckoRemote interface.
- * It contains the pointer to the file and the objects used to write and read to it. It is the sole interface between the memory-mapping "plumbing" and the rest 
+ * It contains the pointer to the file and the objects used to write and read to it. It is the sole interface between the memory-mapping "plumbing" and the rest
  * of GeckoCIRCUITS / GeckoRemote.
  * @author andrija s.
  */
 public final class GeckoMemoryMappedFile {
-     
+
     private final File _file; //the file being used for communication
     private final MappedByteBuffer _mmb; //the memory-mapped byte buffer the file is mapped to
-    
+
     private static final int CONNECTION_ID_POS = 0; //the position of the connection ID in the buffer
     private static final int STATUS_ID_POS = 8; //the position of the file status ID in the buffer
     private static final int BUFFER_SIZE_POS = 16; //the position of the buffer size in the buffer
     private static final int PIPE_OBJECT_SIZE_POS = 24;
     private static final int PIPE_OBJECT_POS = 32; //the position of the serialized pipe object in the buffer
-    
+
     public static final long _defaultBufferSize = 10000000; //the initial size of the buffer
-    
+
     //the status ID values
     private static final long DISCONNECTED = -1;
     private static final long IDLE = 0;
@@ -53,7 +53,7 @@ public final class GeckoMemoryMappedFile {
     private static final long METHOD_RETURN = 5;
     private static final long DISCONNECT_REQUEST = 6;
     private static final long SHUTDOWN_REQUEST = 7;
-    
+
     /**
      * Create a new memory mapped file of a given size.
      * This constructor is used on the GeckoCIRCUITS side, to open up GeckoCIRCUITS to remote access.
@@ -66,14 +66,14 @@ public final class GeckoMemoryMappedFile {
         _file = new File(fileName);
         final FileChannel fileChannel = new RandomAccessFile(_file,"rw").getChannel();
         _mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bufferSize);
-        
+
         //default connection ID is -1 - disconnected
         //default state is disconnected
         _mmb.putLong(CONNECTION_ID_POS,-1);
         _mmb.putLong(STATUS_ID_POS,DISCONNECTED);
         _mmb.putLong(BUFFER_SIZE_POS,bufferSize);
     }
-    
+
     /**
      * Create a new memory mapped file of the default size.
      * This constructor is used on the GeckoCIRCUITS side, to open up GeckoCIRCUITS to remote access.
@@ -84,7 +84,7 @@ public final class GeckoMemoryMappedFile {
     public GeckoMemoryMappedFile(final String fileName) throws FileNotFoundException, IOException {
         this(fileName,_defaultBufferSize);
     }
-    
+
     /**
      * Private constructor used by the factory method to return a GeckoMemoryMappedFile object pointing to an already existing
      * memory mapped-file created by GeckoCIRCUITS to be used for remote access.
@@ -95,7 +95,7 @@ public final class GeckoMemoryMappedFile {
         _file = file;
         _mmb = mmb;
     }
-    
+
     /**
      * Factory method used by the CLIENT connecting to GeckoCIRCUITS to receive a mapped file object for use for remote access to GeckoCIRCUITS.
      * @param fileName the name of the file
@@ -114,9 +114,9 @@ public final class GeckoMemoryMappedFile {
          final MappedByteBuffer init_mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 24);
          final long bufferSize = init_mmb.getLong(BUFFER_SIZE_POS);
          final MappedByteBuffer mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bufferSize);
-         return new GeckoMemoryMappedFile(file,mmb);        
+         return new GeckoMemoryMappedFile(file,mmb);
     }
-    
+
     /**
     *  Get the connection ID of this file.
     * @return the connection ID:
@@ -127,7 +127,7 @@ public final class GeckoMemoryMappedFile {
     public long getConnectionID() {
         return _mmb.getLong(CONNECTION_ID_POS);
     }
-    
+
     /**
      * Get the memory-mapped buffer size of this file.
      * @return the buffer size in bytes
@@ -135,7 +135,7 @@ public final class GeckoMemoryMappedFile {
     public long getBufferSize() {
         return _mmb.getLong(BUFFER_SIZE_POS);
     }
-    
+
     /**
      * Check if the file is free to accept a connection.
      * Connection ID must be -1 and status must be 'disconnected'.
@@ -144,7 +144,7 @@ public final class GeckoMemoryMappedFile {
     public boolean isFree() {
         return (-1 == _mmb.getLong(CONNECTION_ID_POS)) && (DISCONNECTED == _mmb.getLong(STATUS_ID_POS));
     }
-    
+
     /**
      * Used by CLIENT ONLY to connect to GeckoCIRCUITS via this file.
      * Will block until a connection request is answered or the timeout expires.
@@ -184,7 +184,7 @@ public final class GeckoMemoryMappedFile {
             return -1;
         }
     }
-    
+
     /**
      * Used by the SERVER (GeckoCIRCUITS) to reject a connection request.
      */
@@ -198,13 +198,13 @@ public final class GeckoMemoryMappedFile {
             Thread.sleep(wait);
         } catch (InterruptedException ex) {
             forceDisconnect();
-        } 
+        }
         if (_mmb.getLong(STATUS_ID_POS) == CONNECTION_REJECTED) {
             _mmb.putLong(STATUS_ID_POS,DISCONNECTED);
         }
     }
-    
-    
+
+
     /**
      * Used by the SERVER (GeckoCIRCUITS) to accept a connection request.
      * @param connectionID the unique random-generated connection ID for this connection (must > 0)
@@ -213,7 +213,7 @@ public final class GeckoMemoryMappedFile {
         _mmb.putLong(CONNECTION_ID_POS,connectionID);
         _mmb.putLong(STATUS_ID_POS,CONNECTION_ACCEPTED);
     }
-    
+
     /**
      * Check if the incoming connection ID of a request transaction matches the active connection ID.
      * @param connectionID the connection ID to check
@@ -223,17 +223,17 @@ public final class GeckoMemoryMappedFile {
         if (connectionID != getConnectionID()) {
             throw new RuntimeException("Given connection ID " + connectionID + " does not match active connection ID " + getConnectionID());
         }
-    }    
-    
+    }
+
     /**
      * Used by either side to send a disconnection request.
      * @param connectionID the ID of the connection to disconnect. Must match the active connection.
      */
     public void disconnect(final long connectionID) {
-        checkConnectionID(connectionID);       
+        checkConnectionID(connectionID);
         _mmb.putLong(STATUS_ID_POS,DISCONNECT_REQUEST);
     }
-    
+
     /**
      * Used by either side to confirm a disconnection request, or by GeckoCIRCUITS to forcibly disconnect a client.
      */
@@ -241,7 +241,7 @@ public final class GeckoMemoryMappedFile {
         _mmb.putLong(CONNECTION_ID_POS,-1);
         _mmb.putLong(STATUS_ID_POS,DISCONNECTED);
     }
-    
+
     /**
      * This method serializes a GeckoRemotePipeObject into a byte array, which can then be written into the file.
      * @param pipeObject the object to serialize
@@ -254,7 +254,7 @@ public final class GeckoMemoryMappedFile {
         pipeStream.writeObject(pipeObject);
         return byteStream.toByteArray();
     }
-    
+
     /**
      * This method de-serializes a GeckoRemotePipeObject from a byte array in the file.
      * @param serializedPipe
@@ -266,7 +266,7 @@ public final class GeckoMemoryMappedFile {
         final ObjectInputStream pipeStream = new ObjectInputStream(new ByteArrayInputStream(serializedPipe));
         return (GeckoRemotePipeObject) pipeStream.readObject();
     }
-    
+
     /**
      * This method calls a GeckoRemote method via the memory-mapped file.
      * The description of the method, along with the arguments, must be encapsulated in a GeckoRemotePipeObject. This object is serialized
@@ -332,7 +332,7 @@ public final class GeckoMemoryMappedFile {
             throw new RuntimeException("Given GeckoRemotePipeObject does not represent a method call!");
         }
     }
-    
+
     /**
      * Check if the active connection is idle.
      * @return true if the status of the connection is idle
@@ -340,7 +340,7 @@ public final class GeckoMemoryMappedFile {
     public boolean isIdle() {
         return _mmb.getLong(STATUS_ID_POS) == IDLE;
     }
-    
+
     /**
      * Check if a method call has been written into the file.
      * @return true if a method call is pending
@@ -348,7 +348,7 @@ public final class GeckoMemoryMappedFile {
     public boolean isMethodCallPresent() {
         return _mmb.getLong(STATUS_ID_POS) == METHOD_CALL;
     }
-    
+
     /**
      * Retrieves a pipe object if present in the file. Used by SERVER side only.
      * @param connectionID the ID of the connection. Must match the active connection ID
@@ -367,14 +367,14 @@ public final class GeckoMemoryMappedFile {
         }
         return deserializePipeObject(serializedPipe);
     }
-    
+
     /**
      * Set the status of the connection to idle.
      */
     public void setIdle() {
         _mmb.putLong(STATUS_ID_POS,IDLE);
     }
-    
+
     /**
      * Check if a client is trying to make a connection (used by SERVER only).
      * @return true if there is a connection attempt
@@ -382,7 +382,7 @@ public final class GeckoMemoryMappedFile {
     public boolean isConnectionAttempt() {
         return _mmb.getLong(STATUS_ID_POS) == CONNECTION_ATTEMPT && _mmb.getLong(CONNECTION_ID_POS) == 0;
     }
-    
+
     /**
      * Check if either side has requested a disconnection.
      * @return true if a disconnect request is present
@@ -390,7 +390,7 @@ public final class GeckoMemoryMappedFile {
     public boolean isDisconnectRequest() {
         return _mmb.getLong(STATUS_ID_POS) == DISCONNECT_REQUEST;
     }
-    
+
     /**
      * Respond to a method call from the client via the memory-mapped file.
      * The response (whatever it might be) is encapsulated in a GeckoRemotePipeObject. This object is serialized, and written
@@ -415,7 +415,7 @@ public final class GeckoMemoryMappedFile {
             _mmb.putLong(STATUS_ID_POS,METHOD_RETURN);
         }
     }
-    
+
     /**
      * Delete the memory-mapped file. Used ONLY BY GeckoCIRCUITS (SERVER)!
      * This object becomes useless after this method is called. Used only for disabling remote access completely via this file.
@@ -426,7 +426,7 @@ public final class GeckoMemoryMappedFile {
             System.err.println("Warning: Could not delete file: " + _file.getAbsolutePath());
         }
     }
-    
+
     /**
      * Get the name of the file used for memory-mapped access.
      * @return the absolute path to the file
@@ -434,7 +434,7 @@ public final class GeckoMemoryMappedFile {
     public String getFileName() {
         return _file.getAbsolutePath();
     }
-    
+
     /**
      * Used by the client to tell GeckoCIRCUITS to shutdown.
      * @param connectionID the session ID, must match active session
@@ -443,7 +443,7 @@ public final class GeckoMemoryMappedFile {
         checkConnectionID(connectionID);
          _mmb.putLong(STATUS_ID_POS,SHUTDOWN_REQUEST);
     }
-    
+
     /**
      * Check if the client has requested a shutdown.
      * @return true if a shutdown request is present

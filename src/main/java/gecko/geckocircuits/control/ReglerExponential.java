@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,15 +18,15 @@ import gecko.geckocircuits.control.calculators.ExpCalculator;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
-public final class ReglerExponential extends AbstractReglerSingleInputSingleOutput {                
+public final class ReglerExponential extends AbstractReglerSingleInputSingleOutput {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerExponential.class, "EXP", I18nKeys.EXP);
-    
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new ExpCalculator();        
+        return new ExpCalculator();
     }
-        
-    
+
+
     @Override
     protected Window openDialogWindow() {
         return new DialogSimpleInfoMessage(this, "y1 = exp (x1)");

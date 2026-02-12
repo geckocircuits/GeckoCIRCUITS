@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -86,7 +86,7 @@ public class GeckoSim {
         System.setProperty("polyglot", "true");
         System.setProperty("org.graalvm.polyglot.js.nashorn-compat", "true");
         ScriptEngine engine = new ScriptEngineManager().getEngineByExtension("js");
-        
+
         // Initialize SyntaxPane's script engine if GraalVM JavaScript is available
         if (engine != null) {
             System.setProperty("script.engine", "org.graalvm.polyglot.js.script.JSBindings");
@@ -163,7 +163,7 @@ public class GeckoSim {
                     javaCommand = args[i+1];
                 }
             }
-                        
+
             if (JavaMemoryRestart.startNewGeckoCIRCUITSJVM(reqMem, args, javaCommand)) {
                 System.out.println("GeckoCIRCUITS should now be running outside of MATLAB at port " + args[1]);
                 remoteLoaded = true;
@@ -183,7 +183,7 @@ public class GeckoSim {
                     javaCommand = args[i+1];
                 }
             }
-                        
+
             if (JavaMemoryRestart.startNewGeckoCIRCUITSJVM(reqMem, args, javaCommand)) {
                 System.out.println("GeckoCIRCUITS should now be running outside of MATLAB and accessible via file " + args[1] + " of size " + args[2]);
                 mmfLoaded = true;
@@ -233,15 +233,15 @@ public class GeckoSim {
                     loadFileSwingThreadSave(file.getAbsolutePath());
                 }
 
-                //set up remote access                
+                //set up remote access
                 if (args.length > 0) {
                     //search for argument -p - next argument is port number
                     for (int i = 0; i < args.length; i++) {
                         if (args[i].equals("-p")) {
-                            //create GeckoRemote object and add to listener                            
+                            //create GeckoRemote object and add to listener
                             try {
-                                //if args is -p, without anything following it, it is a mistake, but to catch the error, set to default port number 
-                                //otherwise parse the next argument                             
+                                //if args is -p, without anything following it, it is a mistake, but to catch the error, set to default port number
+                                //otherwise parse the next argument
 
                                 if (i != (args.length - 1)) {
                                     GeckoRemoteRegistry.setRemoteAccessPort(Integer.parseInt(args[i + 1]));
@@ -302,7 +302,7 @@ public class GeckoSim {
     }
 
     private void initialisiere() {
-        //new LangInit(args); 
+        //new LangInit(args);
         LangInit.initEnglish();
 
         GlobalFilePathes.PFAD_JAR_HOME = GetJarPath.getJarPath();
@@ -316,7 +316,7 @@ public class GeckoSim {
         loadApplicationProperties();
         this.loadPropertyFile();
 
-        
+
         if (Arrays.asList("gnome-shell", "mate", "other...").contains(System.getenv("DESKTOP_SESSION"))) {
             try {
                 Class<?> xwm = Class.forName("sun.awt.X11.XWM");
@@ -333,7 +333,7 @@ public class GeckoSim {
                 x.printStackTrace();
             }
         }
-       
+
         _win = new MainWindow();
 
 
@@ -432,7 +432,7 @@ public class GeckoSim {
         }
     }
 
-    // funktioniert nur, wenn Java 1.6 installiert ist -> 
+    // funktioniert nur, wenn Java 1.6 installiert ist ->
     private void checkJavaVersion() {
         try {
             Properties sysProp = System.getProperties();
@@ -471,7 +471,7 @@ public class GeckoSim {
     }
 
     public static boolean scriptEngineAvailable = false;
-    
+
     private void checkIfLibraryIsMissing() {
         try {
             javax.tools.JavaCompiler compiler = javax.tools.ToolProvider.getSystemJavaCompiler();
@@ -485,7 +485,7 @@ public class GeckoSim {
                 System.err.println("Java vendor: " + System.getProperty("java.vendor"));
                 System.err.println("Java home: " + System.getProperty("java.home"));
             }
-            
+
             ScriptEngineManager manager = new ScriptEngineManager();
             ScriptEngine engine = manager.getEngineByName("js");
             if (engine == null) {
@@ -498,7 +498,7 @@ public class GeckoSim {
                 engine = manager.getEngineByMimeType("application/javascript");
             }
             scriptEngineAvailable = (engine != null);
-            
+
         } catch (NoClassDefFoundError | SecurityException err) {
             scriptEngineAvailable = false;
         } catch (Throwable ex) {
@@ -632,7 +632,7 @@ public class GeckoSim {
         }
     }
 
-    private static void checkIfOpenedFromZipfile() {        
+    private static void checkIfOpenedFromZipfile() {
         if (GlobalFilePathes.PFAD_JAR_HOME.contains(".zip")) {
             JOptionPane.showMessageDialog(null,
                     "Warning: Probably GeckoCIRCUITS was executed from within a compressed"

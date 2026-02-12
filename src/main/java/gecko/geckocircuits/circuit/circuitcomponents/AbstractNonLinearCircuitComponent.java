@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -49,20 +49,20 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock
 implements Operationable, Nonlinearable {
 
-    private static final Random RANDOM = new Random();       
-    
-    public final UserParameter<Boolean> _isNonlinear = UserParameter.Builder.
-            <Boolean>start("isNonlinear", false).                       
-            longName(I18nKeys.IF_TRUE_USE_NONLINEAR_CHARACTERISTIC).
-            shortName("isNonlinear").            
-            arrayIndex(this, -1).
-            build();                               
+    private static final Random RANDOM = new Random();
 
-    // if we would use the UserParameter _isNonlinear, many Boolean object would 
+    public final UserParameter<Boolean> _isNonlinear = UserParameter.Builder.
+            <Boolean>start("isNonlinear", false).
+            longName(I18nKeys.IF_TRUE_USE_NONLINEAR_CHARACTERISTIC).
+            shortName("isNonlinear").
+            arrayIndex(this, -1).
+            build();
+
+    // if we would use the UserParameter _isNonlinear, many Boolean object would
     // be autoboxed every simulation-step!
     public boolean _isNonlinearForCalculationUsage = false;
 
-    
+
     // nonlinX --> {u1, u2, u3 ... un} ... u-Points on the nonlinear characteristic C=C(u)
     // nonlinY --> {C1, C2, C3 ... Cn} ... C-Points on the nonlinear characteristic C=C(u)
     public double[][] nonlinearData = new double[0][0];
@@ -81,13 +81,13 @@ implements Operationable, Nonlinearable {
     static final double[] NONLIN_IND_Y_DEFAULT = new double[]{500e-6, 500e-6, 150e-6, 100e-6};
 
     static final double[] NONLIN_REL_X_DEFAULT = new double[]{0, 100, 300, 400};
-    static final double[] NONLIN_REL_Y_DEFAULT = new double[]{2, 2, 4, 5};    
-    
-    
-    
+    static final double[] NONLIN_REL_Y_DEFAULT = new double[]{2, 2, 4, 5};
+
+
+
     public AbstractNonLinearCircuitComponent() {
         super();
-        nonlinearData = getInitalNonlinValues();  
+        nonlinearData = getInitalNonlinValues();
         _isNonlinear.addActionListener(new ActionListener() {
 
             @Override
@@ -95,16 +95,16 @@ implements Operationable, Nonlinearable {
                 _isNonlinearForCalculationUsage = _isNonlinear.getValue();
             }
         });
-    }               
-    
-    public void setNonLinearFile(File file) throws IllegalAccessException {        
+    }
+
+    public void setNonLinearFile(File file) throws IllegalAccessException {
         if (!file.getName().endsWith(getNonlinearFileEnding())) {
             throw new IllegalAccessException("Non-linear characteristic file must end with extension " + getNonlinearFileEnding());
-        } else {            
-            try {                
-                GeckoFile newFile = new GeckoFile(file, GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());                
-                ArrayList<GeckoFile> newFileList = new ArrayList<GeckoFile>();                
-                newFileList.add(newFile);                
+        } else {
+            try {
+                GeckoFile newFile = new GeckoFile(file, GeckoFile.StorageType.EXTERNAL, MainWindow.getOpenFileName());
+                ArrayList<GeckoFile> newFileList = new ArrayList<GeckoFile>();
+                newFileList.add(newFile);
                 addFiles(newFileList);
                 _isNonlinear.setValueWithoutUndo(true);
             } catch (Exception e) {
@@ -125,8 +125,8 @@ implements Operationable, Nonlinearable {
             MainWindow._fileManager.maintain(nonLinearChar);
             nonLinearChar = null;
         }
-    }    
-    
+    }
+
     @Override
     public void addFiles(final List<GeckoFile> newFiles) {
         if (newFiles.size() > 0) {
@@ -157,22 +157,22 @@ implements Operationable, Nonlinearable {
 
     @Override
     public AbstractCircuitSheetComponent copyFabric(long shiftValue) {
-        AbstractNonLinearCircuitComponent copy = (AbstractNonLinearCircuitComponent) super.copyFabric(shiftValue);        
-        
+        AbstractNonLinearCircuitComponent copy = (AbstractNonLinearCircuitComponent) super.copyFabric(shiftValue);
+
         if(nonLinearChar != null) {
-            copy.nonLinearCharHashValueForInit = nonLinearChar.getHashValue();        
+            copy.nonLinearCharHashValueForInit = nonLinearChar.getHashValue();
         } else {
-            copy.nonLinearCharHashValueForInit = 0;        
+            copy.nonLinearCharHashValueForInit = 0;
         }
-        
+
         copy.initNonLinFromFile = true;
         copy.initExternalFile();
-                
+
         copy.nonlinearData = new double[2][nonlinearData[0].length];
-        
+
         System.arraycopy(nonlinearData[0], 0, copy.nonlinearData[0], 0, nonlinearData[0].length);
         System.arraycopy(nonlinearData[1], 0, copy.nonlinearData[1], 0, nonlinearData[1].length);
-        
+
         return copy;
     }
 
@@ -199,12 +199,12 @@ implements Operationable, Nonlinearable {
             if (this instanceof AbstractInductor) {
                 displayValue = ((AbstractInductor) this)._inductance.getValue();
             }
-                        
+
             String uTxt = getFixedIDString() + "=" + (_isNonlinear.getValue() ? "nonlin" : tcf.formatENG(displayValue, 3));
             if (getNonlinearReplacedParameter() != null && getNonlinearReplacedParameter().getNameOpt().isEmpty()) {
                 _textInfo.addParameter(uTxt);
             } else {
-                
+
             }
         }
     }
@@ -225,15 +225,15 @@ implements Operationable, Nonlinearable {
             public Object doOperation(final Object parameterValue) {
                 if(!(parameterValue instanceof String)) {
                     throw new IllegalArgumentException("Argument must be a file path as String type.");
-                }                
-                String characteristicFileName = (String) parameterValue;                
-                File nonLinFile = new File(characteristicFileName);                
+                }
+                String characteristicFileName = (String) parameterValue;
+                File nonLinFile = new File(characteristicFileName);
                 //if it doesn't exist, try first to see if it is in the same directory as the currently open model file
                 if (!nonLinFile.exists()) {
                     final File modelFile = new File(MainWindow.getOpenFileName());
                     final String currentModelDirectory = modelFile.getParent();
                     final String nonLinFileName = currentModelDirectory + System.getProperty("file.separator") + characteristicFileName;
-                    nonLinFile = new File(nonLinFileName);                    
+                    nonLinFile = new File(nonLinFileName);
                 }
                 if (nonLinFile.exists() && !nonLinFile.isDirectory()) {
                     try {
@@ -243,16 +243,16 @@ implements Operationable, Nonlinearable {
                         ex.printStackTrace();
                         throw new RuntimeException(ex);
                     }
-                } else {                    
+                } else {
                     throw new RuntimeException("Specified non-linear characteristic file: " + characteristicFileName + " does not exist or is a directory.");
-                }                
+                }
                 return null;
             }
         });
 
         return Collections.unmodifiableList(returnValue);
-    }                
-    
+    }
+
 
     public double[][] getNonlinearCharacteristic() {
         if ((nonLinearChar != null) && (nonLinearLastModified != nonLinearChar.checkModificationTimeStamp())) {
@@ -263,7 +263,7 @@ implements Operationable, Nonlinearable {
 
     public void updateNonLinearCharacteristic() {
         try {
-            nonlinearData = readNonLinearCharacteristicFromFile(nonLinearChar);             
+            nonlinearData = readNonLinearCharacteristicFromFile(nonLinearChar);
             nonLinearLastModified = nonLinearChar.checkModificationTimeStamp();
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -300,18 +300,18 @@ implements Operationable, Nonlinearable {
             tokens = new StringTokenizer(currentLine, " ");
             if (tokens.countTokens() != 2) {
                 throw new NumberFormatException("Impromer data point in file: " + currentLine);
-            }            
+            }
             nonLinX[i] = Double.parseDouble(tokens.nextToken());
             nonLinY[i] = Double.parseDouble(tokens.nextToken());
         }
 
         return new double[][]{nonLinX, nonLinY};
     }
-    
 
-    
 
-    public void initialize() {                
+
+
+    public void initialize() {
         if (_isNonlinear.getValue() && (nonLinearChar != null)) {
             if (nonLinearLastModified != nonLinearChar.checkModificationTimeStamp()) {
                 updateNonLinearCharacteristic();
@@ -319,9 +319,9 @@ implements Operationable, Nonlinearable {
         }
     }
 
-    public void setNonlinearCharacteristic(double[][] data) {        
+    public void setNonlinearCharacteristic(double[][] data) {
         if (nonLinearChar == null) {
-            String newFileName = getStringID() + "NonLinearity" + ((int) 100 * Math.random()) + 
+            String newFileName = getStringID() + "NonLinearity" + ((int) 100 * Math.random()) +
                     getNonlinearFileEnding();
             setNonlinearCharacteristic(data, newFileName);
         } else {
@@ -366,12 +366,12 @@ implements Operationable, Nonlinearable {
     public GeckoFile getNonLinearFile() {
         return nonLinearChar;
     }
-    
+
     //===================================
     // ASSUMPTION: x- and y-axis both linear
     // also employed with LKOP2
-    // nlX,nlY define the picewise non-linear characteristic, x is the actual value 
-    public double getActualValueLINFromLinearizedCharacteristic(double x) {        
+    // nlX,nlY define the picewise non-linear characteristic, x is the actual value
+    public double getActualValueLINFromLinearizedCharacteristic(double x) {
         int i1 = 0;
         int pkt = nonlinearData[0].length;
         while ((i1 < pkt) && (nonlinearData[0][i1] < x)) {
@@ -388,13 +388,13 @@ implements Operationable, Nonlinearable {
         double interval = x2 - x1;
         return (nonlinearData[1][i1 - 1] * (x2 - x) + nonlinearData[1][i1] * (x - x1)) / interval;
     }
-    
-    
+
+
     //===================================
     // ASSUMPTION: x- and y-axis both linear
     // also employed with LKOP2
-    // nlX,nlY define the picewise non-linear characteristic, x is the actual value 
-    public double getActualValueLINFromLinearizedCharacteristicInverse(double x) {        
+    // nlX,nlY define the picewise non-linear characteristic, x is the actual value
+    public double getActualValueLINFromLinearizedCharacteristicInverse(double x) {
         int i1 = 0;
 //        boolean debug = false;
 //        if( x > -23.513443326778713) {
@@ -403,25 +403,25 @@ implements Operationable, Nonlinearable {
         int pkt = nonlinearData[0].length;
         while ((i1 < pkt) && (nonlinearData[0][i1] < x)) {
             i1++;
-        }        
-        
-        
+        }
+
+
 //        if(debug) {
 //            System.out.println("compare end value " + nonlinearData[0][pkt-1] + " " + x);
 //        }
-        
-        if (i1 == 0) {            
+
+        if (i1 == 0) {
             return 1.0 / nonlinearData[1][i1];  // left boarder
         }
-        if (i1 >= pkt) {            
+        if (i1 >= pkt) {
             return 1.0 / nonlinearData[1][pkt - 1];  // right boarder
         }
         double x1 = nonlinearData[0][i1 - 1];
         double x2 = nonlinearData[0][i1];
-        double interval = x2 - x1;        
+        double interval = x2 - x1;
         return (1.0 / nonlinearData[1][i1 - 1] * (x2 - x) + 1.0 / nonlinearData[1][i1] * (x - x1)) / interval;
     }
-    
+
 
     //===================================
     // ASSUMPTION: x-axis is linear, but y-axis is logarithmic
@@ -448,7 +448,7 @@ implements Operationable, Nonlinearable {
     }
 
     @Override
-    public void exportAsciiIndividual(final StringBuffer ascii) {        
+    public void exportAsciiIndividual(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\nnonlinX"), nonlinearData[0]);
         ProjectData.appendAsString(ascii.append("\nnonlinY"), nonlinearData[1]);
         if (nonLinearChar != null) {
@@ -460,37 +460,37 @@ implements Operationable, Nonlinearable {
 
     @Override
     protected void importIndividual(final TokenMap tokenMap) {
-        if (tokenMap.containsToken("isNonlinear")) {            
+        if (tokenMap.containsToken("isNonlinear")) {
             double[] nonlinX = tokenMap.readDataLine("nonlinX[]", new double[0]);
             double[] nonlinY = tokenMap.readDataLine("nonlinY[]", new double[0]);
             nonlinearData = new double[][] {nonlinX, nonlinY};
         }
 
         if (nonlinearData.length != 2 || (nonlinearData[0].length < 2) || (nonlinearData[1].length < 2)) {
-            nonlinearData = getInitalNonlinValues();            
+            nonlinearData = getInitalNonlinValues();
         }
-        
+
         if (tokenMap.containsToken("nonLinearCharHashValue")) {
             nonLinearCharHashValueForInit = tokenMap.readDataLine("nonLinearCharHashValue", nonLinearCharHashValueForInit);
             initNonLinFromFile = true;
         }
     }
-    
-    public void initExternalFile() {        
+
+    public void initExternalFile() {
         if (_isNonlinear.getValue()) {
             if (initNonLinFromFile) {
                 try {
                     nonLinearChar = MainWindow._fileManager.getFile(nonLinearCharHashValueForInit);
                     updateNonLinearCharacteristic();
                 } catch (FileNotFoundException e) {
-                    createNewInitialInternalFile();                    
+                    createNewInitialInternalFile();
                 }
             } else {
                 createNewInitialInternalFile();
             }
         }
     }
-    
+
     //writes a non-linear characteristic to file
     public static File writeNonLinearCharacteristicToFile(double[][] data, File nonLinFile) throws IOException {
 
@@ -502,9 +502,9 @@ implements Operationable, Nonlinearable {
         out.close();
         return nonLinFile;
     }
-    
-    
-    
+
+
+
     /**
      * this is for backwards-compatibility from older versions. Since the
      * file object was not yet created, we create an internal file that
@@ -523,7 +523,7 @@ implements Operationable, Nonlinearable {
             Logger.getLogger(AbstractNonLinearCircuitComponent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public byte[] writeNonLinearCharacteristicToBytes() {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -541,7 +541,7 @@ implements Operationable, Nonlinearable {
         return new byte[0];
     }
 
-    
-    
-    
+
+
+
 }

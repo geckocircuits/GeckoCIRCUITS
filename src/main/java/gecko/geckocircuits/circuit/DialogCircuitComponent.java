@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -46,7 +46,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
     final List<UserParameter<? extends Number>> registeredParameters = new ArrayList<UserParameter<? extends Number>>();
     private static final int TEXT_FIELD_LENGTH = 10;
     public static final int NO_TF_COLS = 6;
-    private SchematicEditor2 _se;  // callback fuer registerChange()        
+    private SchematicEditor2 _se;  // callback fuer registerChange()
     public final T element;
     public String _originalName;
     public final List<FormatJTextField> tf = new ArrayList<FormatJTextField>();
@@ -170,7 +170,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
             }
         }
     };
-    
+
 
     public void processInputIndividual() {
     }
@@ -188,7 +188,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         this.setTitle(" " + element.getTypeDescription().getTranslation());
         this.setBackground(Color.lightGray);
         this.baueGUI();
-        this.pack();        
+        this.pack();
         this.setResizable(true);
         getRootPane().setDefaultButton(jButtonOk);
         jButtonOk.requestFocus();
@@ -327,7 +327,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         }
 
         pPD.add(new JLabel(" "));  // Abstandhalter
-        //        
+        //
         return pPD;
     }
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,7 +36,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
 
     public static final AbstractTypeInfo TYPE_INFO =
             new CircuitTypeInfo(OperationalAmplifier.class, "OP-AMP", I18nKeys.OPERATIONAL_AMPLIFIER);
-    
+
     UserParameter<Double> inputResistance = UserParameter.Builder.
             <Double>start("inputResistance", 90000.0).
             longName(I18nKeys.INPUT_RESISTANCE).
@@ -187,7 +187,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
         _Rb._resistance.setValueWithoutUndo(voltageDividerRb.getValue());
     }
 
-    // Initialisiereung nach INIT&START --> 
+    // Initialisiereung nach INIT&START -->
     public void setzeParameterZustandswerteAufNULL() {
         this.initPar();
         _outputCapacitor.parameter[1] = 0;
@@ -218,7 +218,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
         _qLK[6] = _Rf;
         // Cp (defining pole) -->
         _qLK[7] = _outputCapacitor;
-        // internal voltage-source at output side -->        
+        // internal voltage-source at output side -->
         _qLK[8] = _outputVoltageSource;
 
         _rIN.setInputTerminal(0, XIN.get(0)); // RIN
@@ -310,7 +310,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     protected Window openDialogWindow() {
         return new OperationalAmplifierDialog(this);
     }
-    
+
     @Override
     @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {

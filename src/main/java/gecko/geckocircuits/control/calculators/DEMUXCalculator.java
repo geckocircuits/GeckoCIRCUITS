@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,30 +36,30 @@ public final class DEMUXCalculator extends AbstractControlCalculatable implement
     public String toString() {
         return super.toString() + " " + _parent.getStringID();
     }
-    
-    
+
+
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
         if(_parent._connectedJavaBlock != null) {
             _inputSignal[0] = _parent._connectedJavaBlock._calculator._outputSignal[_parent._connectedJavaOutputIndex];
         }
-        if (_outputSignal.length != _inputSignal[0].length) {            
+        if (_outputSignal.length != _inputSignal[0].length) {
             throw new RuntimeException("Signals of DEMUX \"" + _parent.getStringID() +"\" input are not consistent:\n"
                     + "Input size: " + _inputSignal[0].length + "\n"
                     + "Output size: " + _outputSignal.length);
         }
     }
-    
-    public boolean checkInputWithoutConnectionAndFill(final int inputIndex) {        
+
+    public boolean checkInputWithoutConnectionAndFill(final int inputIndex) {
         if(_inputSignal[inputIndex] == null) {
-            final int dummyLength = _outputSignal.length;            
+            final int dummyLength = _outputSignal.length;
             _inputSignal[inputIndex] = new double[dummyLength];
             return true;
         } else {
             return false;
-        }                        
+        }
     }
-    
-        
+
+
 }

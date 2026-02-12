@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,7 +27,7 @@ public class TerminalVerbindung implements TerminalInterface {
     private final Location _loc;
     private final Verbindung _verb;
     private final List<Point> _connectorPoints;
-    
+
 
     @Override
     public ConnectorType getCategory() {
@@ -47,7 +47,7 @@ public class TerminalVerbindung implements TerminalInterface {
         START,
         END;
     }
-    
+
     public TerminalVerbindung(final Verbindung verb, final List<Point> connectorPoints, final Location loc) {
         _loc = loc;
         _verb = verb;
@@ -56,8 +56,8 @@ public class TerminalVerbindung implements TerminalInterface {
 
     public final void setLabelPriority(final LabelPriority labelPriority) {
         _verb.setLabelPriority(labelPriority);
-    }        
-    
+    }
+
     @Override
     public Point getPosition() {
         switch(_loc) {
@@ -79,11 +79,11 @@ public class TerminalVerbindung implements TerminalInterface {
     @Override
     public void paintComponent(final Graphics graphics) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        graphics.fillOval((int) (dpix * getPosition().x) - AbstractTerminal.POINT_DIAMETER / 2, 
+        graphics.fillOval((int) (dpix * getPosition().x) - AbstractTerminal.POINT_DIAMETER / 2,
                 (int) (dpix * getPosition().y) - AbstractTerminal.POINT_DIAMETER / 2,
                 AbstractTerminal.POINT_DIAMETER, AbstractTerminal.POINT_DIAMETER);
     }
-    
-    
-    
+
+
+
 }

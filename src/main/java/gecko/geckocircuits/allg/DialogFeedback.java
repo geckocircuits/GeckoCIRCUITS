@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,7 +25,7 @@ import javax.swing.JFrame;
 public class DialogFeedback extends javax.swing.JDialog {
 
     private static final String BUGZILLA_URL = "www.bugs.gecko-simulations.org";
-    
+
     public DialogFeedback(final JFrame parentFrame) {
         super(parentFrame, true);
         try {
@@ -121,7 +121,7 @@ public class DialogFeedback extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     //CHECKSTYLE:ON
-    
+
     private void jButtonCloseActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonCloseActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonCloseActionPerformed

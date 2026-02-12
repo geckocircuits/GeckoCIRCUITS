@@ -193,7 +193,7 @@ public class IGBTStamper implements IStatefulStamper {
         // but also has voltage/current conditions
         // This method can be called for automatic switching detection
         // but main control is via setGateSignal()
-        
+
         boolean previousState = isOn;
         double vForward = vx - vy;
 
@@ -262,14 +262,14 @@ public class IGBTStamper implements IStatefulStamper {
      */
     public void setGateSignal(double gateSignal) {
         boolean previousState = isOn;
-        
+
         if (gateSignal == 0) {
             // Gate OFF -> IGBT turns OFF unconditionally
             isOn = false;
         }
         // Gate ON alone doesn't turn on IGBT - needs voltage condition too
         // Use updateStateWithGate() for full control
-        
+
         stateChanged = (isOn != previousState);
     }
 
@@ -391,7 +391,7 @@ public class IGBTStamper implements IStatefulStamper {
      * @param gateSignal gate control signal (0 = OFF, 1 = ON)
      * @return parameter array for use with this stamper
      */
-    public static double[] createParameters(double rCurrent, double uForward, 
+    public static double[] createParameters(double rCurrent, double uForward,
                                             double rOn, double rOff, double gateSignal) {
         double[] params = new double[PARAM_GATE + 1];
         params[PARAM_R_CURRENT] = rCurrent;

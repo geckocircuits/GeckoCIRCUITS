@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -35,24 +35,24 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores parent reference for positioning and modal behavior")
 public class GeckoDialog extends JDialog {
-    
+
 
     private final Component _parent;
 
-    public GeckoDialog(final Window parent, final boolean modal) {       
-        super(parent);        
+    public GeckoDialog(final Window parent, final boolean modal) {
+        super(parent);
         setModal(modal);
         _parent = parent;
-        init();        
+        init();
     }
-    
-    public GeckoDialog(final Dialog parent, final boolean modal) {       
-        super(parent);        
+
+    public GeckoDialog(final Dialog parent, final boolean modal) {
+        super(parent);
         setModal(modal);
         _parent = parent;
-        init();        
+        init();
     }
-        
+
 
     private void init() {
         try {
@@ -84,14 +84,14 @@ public class GeckoDialog extends JDialog {
         if(rootPane == null) {
             rootPane = new JRootPane();
         }
-        
+
         final InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(stroke, "ESCAPE");
-        
+
         rootPane.getActionMap().put("ESCAPE", actionListener);
         return rootPane;
-    }        
-    
+    }
+
     public void setGeckoIconImage() {
         try {
             URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
@@ -100,5 +100,5 @@ public class GeckoDialog extends JDialog {
             // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }
     }
-    
+
 }

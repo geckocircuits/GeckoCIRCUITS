@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,7 +20,7 @@ import java.util.Collections;
 /**
  * Sparse matrix formulation as defined in the csr format
  * See Intel mkl user's guide for more details
- * 
+ *
  */
 public final class SymmetricSparseMatrix {
 
@@ -33,38 +33,38 @@ public final class SymmetricSparseMatrix {
     private Paradiso _paradiso;
     private final int _N;
 
-    
+
     public int getMatrixSize() {
         return _N;
     }
-        
+
 
     /**
-     * 
+     *
      * @param fullComplexMatrix
      * @param rows
      * @param cols
      * @param rhs
      * @return
      */
-    public void factorize(final SymmetricDoubleSparseMatrix matrix, final int rows, final int cols) {        
-        _paradiso = new Paradiso();                        
-        Paradiso.factorize(adns, AI, AJ, _N, -2, _paradiso);                        
+    public void factorize(final SymmetricDoubleSparseMatrix matrix, final int rows, final int cols) {
+        _paradiso = new Paradiso();
+        Paradiso.factorize(adns, AI, AJ, _N, -2, _paradiso);
     }
 
-    public double[] solve(double[] rhs) {        
-        return Paradiso.solve(adns, AI, AJ, rhs, rhs.length, -2, 1, _paradiso);        
+    public double[] solve(double[] rhs) {
+        return Paradiso.solve(adns, AI, AJ, rhs, rhs.length, -2, 1, _paradiso);
     }
 
-    
+
     /**
      * constructs a sparse matrix from the byte[][] representation
      * @param fullMatrix
      */
-    public SymmetricSparseMatrix(final SymmetricDoubleSparseMatrix matrix) {        
+    public SymmetricSparseMatrix(final SymmetricDoubleSparseMatrix matrix) {
         _N = matrix.getMatrixSize();
         int nzmax = 0;
-            
+
         // determine number of nonzero entries:
 
         nzmax = matrix.getNumberOfNonZeros();
@@ -102,7 +102,7 @@ public final class SymmetricSparseMatrix {
                 }
             }
         }
-        AI[AI.length - 1] = nzmax + 1;        
+        AI[AI.length - 1] = nzmax + 1;
     }
-                
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -84,20 +84,20 @@ public final class WorksheetSize {
         //CHECKSTYLE:ON
     }
 
-    public void setNewWorksheetSize(final int sizeX, final int sizeY) {        
+    public void setNewWorksheetSize(final int sizeX, final int sizeY) {
         try {
             if (isComponentOutsideDrawingArea(sizeX, sizeY)) {
                 JOptionPane.showMessageDialog(null, "There are circuit components located outside the selected sheet size "
                         + sizeX + "x" + sizeY + "."
                         + "\nPlease move all components within the target sheet size, before resizing \n"
                         + "the worksheet.", "Error!",
-                        JOptionPane.ERROR_MESSAGE);                
+                        JOptionPane.ERROR_MESSAGE);
                 throw new IllegalArgumentException("Cannot resize due to bad component location.");
-            } else {                                
-                
+            } else {
+
                 if (_parent instanceof SubCircuitSheet) {
                     SubCircuitSheet subSheet = (SubCircuitSheet) _parent;
-                    final Collection<SubCircuitTerminable> allSheetTerminals = subSheet._subBlock._myTerminals;                                                            
+                    final Collection<SubCircuitTerminable> allSheetTerminals = subSheet._subBlock._myTerminals;
                     if(allSheetTerminals != null)
                     for (SubCircuitTerminable term : allSheetTerminals) {
                         if (term.getTerminalLocation() == EnumTerminalLocation.RIGHT) {
@@ -118,11 +118,11 @@ public final class WorksheetSize {
 
                     }
                 }
-                
-                Point newSheetSize = new Point(Math.max(sizeX, MIN_SIZE), Math.max(sizeY, MIN_SIZE));                                                                
+
+                Point newSheetSize = new Point(Math.max(sizeX, MIN_SIZE), Math.max(sizeY, MIN_SIZE));
                 _worksheetDimension.setValue(newSheetSize);
-                                
-            }            
+
+            }
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
@@ -166,9 +166,9 @@ public final class WorksheetSize {
                 continue;
             }
 
-            allPoints.addAll(elem.getAllDimensionPoints());            
+            allPoints.addAll(elem.getAllDimensionPoints());
         }
-                
+
 
         for (Point testPt : allPoints) {
             if (testPt.x + BORDER_OFFSET > worksheetSizeX) {
@@ -181,23 +181,23 @@ public final class WorksheetSize {
         return false;
     }
 
-    public void exportAscii(final StringBuffer strBuf) {                
+    public void exportAscii(final StringBuffer strBuf) {
         strBuf.append("\nworksheetSizeX ").append(_worksheetDimension.getValue().x);
-        strBuf.append("\nworksheetSizeY ").append(_worksheetDimension.getValue().y);                
-    }        
+        strBuf.append("\nworksheetSizeY ").append(_worksheetDimension.getValue().y);
+    }
 
     public static Point getSize(final TokenMap tokenMap) {
-        if (tokenMap.containsToken("worksheetSizeX")) {            
+        if (tokenMap.containsToken("worksheetSizeX")) {
             final int sizeX = tokenMap.readDataLine("worksheetSizeX", DEFAULT_SIZE);
-            final int sizeY = tokenMap.readDataLine("worksheetSizeY", DEFAULT_SIZE);                        
+            final int sizeY = tokenMap.readDataLine("worksheetSizeY", DEFAULT_SIZE);
             return new Point(sizeX, sizeY);
-        } 
+        }
         return new Point(DEFAULT_SIZE, DEFAULT_SIZE);
     }
 
     @Override
     public String toString() {
         return "Subcircuit " + hashCode() + " " + _worksheetDimension.getValue().x + " " + _worksheetDimension.getValue().y;
-    }            
-    
+    }
+
 }

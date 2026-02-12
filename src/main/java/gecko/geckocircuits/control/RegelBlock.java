@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,18 +43,18 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     static final TechFormat tcf = new TechFormat();
     public static final double SIGNAL_THRESHOLD = 0.5;
     static final int DISP_DIGITS = 3;
-    
+
     protected ControlTyp _controlTyp;
 
-    
+
     public AbstractControlCalculatable _calculator;
     private int _priority;
 
     RegelBlock() {
         // package-private constructor!
-    }        
+    }
 
-    protected RegelBlock(final int noInputs, final int noOutputs) {                
+    protected RegelBlock(final int noInputs, final int noOutputs) {
         if (this instanceof VariableTerminalNumber) {
             ((VariableTerminalNumber) this).setInputTerminalNumber(noInputs);
             ((VariableTerminalNumber) this).setOutputTerminalNumber(noOutputs);
@@ -70,11 +70,11 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         }
 
     }
-    
+
     public int getPriority() {
         return _priority;
     }
-    
+
     public void setPriority(int value) {
         _priority = value;
     }
@@ -92,8 +92,8 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         }
     }
 
-    
-    
+
+
     protected void setInputTerminalNumber(final int noInputs) {
         try {
             while (XIN.size() > noInputs) {
@@ -122,7 +122,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }        
+    }
 
     public abstract String[] getOutputNames();
 
@@ -182,7 +182,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     // zum Ueberschreiben bei PI-Block und aehnlichen:
     public void initAtSimulationStart() {
     }
-    
+
 
     /**
      * is overwritten in some components for additional functionality, e.g. the
@@ -243,10 +243,10 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
             }
         }
     }
-            
+
     public final void setTyp(final ControlTyp controTyp) {
         _controlTyp = controTyp;
-    }            
+    }
 
     @Override
     public final void rotiereSymbol() {
@@ -260,7 +260,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     public final Color getForeGroundColor() {
         return GlobalColors.farbeFertigElementCONTROL;
     }
-    
+
 
     @Override
     public final void paintGeckoComponent(final Graphics2D g) {
@@ -272,8 +272,8 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     public void setComponentDirection(final ComponentDirection orientation) {
         super.setComponentDirection(ComponentDirection.NORTH_SOUTH);
     }
-    
-    
+
+
 
     @Override
     protected void paintIndividualComponent(final Graphics2D graphics) {
@@ -284,7 +284,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     public void drawCenteredString(final Graphics2D g2d) {
         String toDraw = getCenteredDrawString();
         final Font oldFont = g2d.getFont();
-        
+
         int newFontSize = Math.min(dpix-3, oldFont.getSize());
         final Font newFont = new Font(oldFont.getName(), oldFont.getStyle(), newFontSize);
         g2d.setFont(newFont);
@@ -319,7 +319,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         return _controlTyp;
     }
 
-    
+
 
     public int getBlockHeight() {
         int maxTerminals = Math.max(XIN.size(), YOUT.size());
@@ -373,14 +373,14 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         graphics.setColor(origColor);
         graphics.drawRect(startx, starty, width, height);
 
-        // Klickbereich:        
+        // Klickbereich:
         xKlickMin = startx;
         xKlickMax = startx + width;
         yKlickMin = starty;
         yKlickMax = starty + height;
-    }            
+    }
 
-    protected String getCenteredDrawString() {        
+    protected String getCenteredDrawString() {
         return getFixedIDString();
     }
 
@@ -392,18 +392,18 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     final void setActiveCalculator(final AbstractControlCalculatable calc) {
         _calculator = calc;
     }
-    
+
     void setInputSignal(final int inputIndex, final RegelBlock outputBlock, final int outputIndex) {
-        try {                                    
+        try {
             _calculator.setInputSignal(inputIndex, outputBlock._calculator, outputIndex);
-        } catch (Exception ex) {            
+        } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException("Error in control netlist: The output signal of control block\n"
-                    + outputBlock.getStringID() + ", no. " + outputIndex + " " + 
-                    outputBlock.YOUT.get(outputIndex).getLabelObject().getLabelString()                     
+                    + outputBlock.getStringID() + ", no. " + outputIndex + " " +
+                    outputBlock.YOUT.get(outputIndex).getLabelObject().getLabelString()
                     +  "\nis already connected to another output signal.\n"
                     + "This is an error in your GeckoCIRCUITS simulation model.\nAborting simulation.");
-        }                        
+        }
     }
 
     final AbstractControlCalculatable getControlCalculatable() {
@@ -422,24 +422,24 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         if(XIN.size() > 0 && YOUT.size() > 0) {
             return ControlType.TRANSFER;
         }
-        
+
         if(XIN.size() == 0 && YOUT.size() > 0) {
             return ControlType.SOURCE;
         }
-        
+
         if(XIN.size() > 0 && YOUT.size() == 0) {
             return ControlType.SINK;
         }
-        
+
         if(XIN.size() == 0 && YOUT.size() == 0) {
             // data export has no inputs, but should be executed at the end
             return ControlType.SINK;
         }
-        
+
         return ControlType.TRANSFER;
     }
-    
-    
+
+
     void setExpandedParameterListener(final UserParameter<Boolean> useExternal) {
         assert this instanceof ControlInputTwoTerminalStateable;
         useExternal.addActionListener(new ActionListener() {
@@ -448,9 +448,9 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
                 if (useExternal.getValue()) {
                     ((ControlInputTwoTerminalStateable) RegelBlock.this).setExpanded();
                 } else {
-                    ((ControlInputTwoTerminalStateable) RegelBlock.this).setFolded();                    
+                    ((ControlInputTwoTerminalStateable) RegelBlock.this).setFolded();
                 }
             }
         });
-    }                    
+    }
 }

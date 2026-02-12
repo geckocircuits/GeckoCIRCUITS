@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -16,35 +16,35 @@ package gecko.geckocircuits.allg;
 import gecko.GeckoSim;
 
 public class DialogUpdateSettings extends javax.swing.JFrame {
-    
+
     public DialogUpdateSettings() {
-        initComponents();        
+        initComponents();
         this.setVisible(true);
-        
+
         String updateFreq = GeckoSim.applicationProps.getProperty("UPDATE_FREQ", "NEVER");
-        
+
         if(updateFreq.equals("NEVER")) {
             jRadioButtonNever.setSelected(true);
         }
-        
+
         if(updateFreq.equals("DAILY")) {
             jRadioButtonDaily.setSelected(true);
         }
-        
+
         if(updateFreq.equals("WEEKLY")) {
             jRadioButtonWeekly.setSelected(true);
         }
-        
+
         String updateLevel = GeckoSim.applicationProps.getProperty("UPDATE_LEVEL", "MINOR");
-        
+
         if(updateLevel.equals("MINOR")) {
             jRadioButtonMinor.setSelected(true);
         }
-        
+
         if(updateLevel.equals("MAJOR")) {
             jRadioButtonMajor.setSelected(true);
         }
-    }    
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -139,27 +139,27 @@ public class DialogUpdateSettings extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonOkActionPerformed
-        
+
         if(jRadioButtonNever.isSelected()) {
             GeckoSim.applicationProps.setProperty("UPDATE_FREQ", "NEVER");
         }
-    
+
         if(jRadioButtonDaily.isSelected()) {
             GeckoSim.applicationProps.setProperty("UPDATE_FREQ", "DAILY");
         }
-        
+
         if(jRadioButtonWeekly.isSelected()) {
             GeckoSim.applicationProps.setProperty("UPDATE_FREQ", "WEEKLY");
-        }     
-        
+        }
+
         if(jRadioButtonMinor.isSelected()) {
             GeckoSim.applicationProps.setProperty("UPDATE_LEVEL", "MINOR");
         }
-        
+
         if(jRadioButtonMajor.isSelected()) {
             GeckoSim.applicationProps.setProperty("UPDATE_LEVEL", "MAJOR");
         }
-        
+
         GeckoSim.saveProperties();
         this.dispose();
     }//GEN-LAST:event_jButtonOkActionPerformed

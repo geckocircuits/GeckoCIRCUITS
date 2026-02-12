@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -104,7 +104,7 @@ public class NonLinearDialogPanel extends JPanel {
 
         ch = _nonlinearParent.getNonlinearCharacteristic();
         if ((ch == null) || (ch[0].length == 0)) {
-            // default-characteristic: 
+            // default-characteristic:
             data = _nonlinearParent.getInitalNonlinValues();
         } else {
             data = new double[2][];
@@ -178,7 +178,7 @@ public class NonLinearDialogPanel extends JPanel {
         jpCOND.setLayout(new BorderLayout());
         jpCOND.add(newScope1, BorderLayout.CENTER);
         jpCOND.add(jpCONDdataGes, BorderLayout.EAST);
-        //==========================        
+        //==========================
         return jpCOND;
     }
 
@@ -267,8 +267,8 @@ public class NonLinearDialogPanel extends JPanel {
                 if(data.length != nonlinearData.length) {
                     return true;
                 }
-                
-                for(int i = 0; i < data.length; i++) {                    
+
+                for(int i = 0; i < data.length; i++) {
                     for(int j = 0; j < data[0].length; j++) {
                         if(data[i][j] != nonlinearData[i][j]) {
                             return true;

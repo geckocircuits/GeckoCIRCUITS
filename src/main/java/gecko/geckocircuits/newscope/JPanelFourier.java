@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -35,7 +35,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Public grafer for external access to plot data")
 public class JPanelFourier extends javax.swing.JPanel {
-    
+
 
     public GraferV4 _graferNew;
     private NewScope _graferPanel;
@@ -51,14 +51,14 @@ public class JPanelFourier extends javax.swing.JPanel {
         _graferPanel = new NewScope(_graferNew);
         _dataContainer = null;
     }
-    
+
     public JPanelFourier(final double baseFrequency, final double[][][] erg) {
-        initComponents();                
-    }   
-    
+        initComponents();
+    }
+
     public void insertData(double baseFrequency, double[][][] erg) {
         _graferNew = new GraferV4(new ScopeSettings());
-        _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");        
+        _graferNew.setNewXNames("f [Hz] = ", "t [sec] = ");
         _graferNew.setSimulationTimeBoundaries(0, erg[0][0].length * baseFrequency);
         _graferPanel = new NewScope(_graferNew);
         jPanelPlot.add(_graferPanel);
@@ -89,8 +89,8 @@ public class JPanelFourier extends javax.swing.JPanel {
         }
         _graferNew._manager.setInputSignals(inputSignals);
     }
-    
-    
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -195,5 +195,5 @@ public class JPanelFourier extends javax.swing.JPanel {
     private javax.swing.JPanel jPanelPlot;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
-       
+
 }

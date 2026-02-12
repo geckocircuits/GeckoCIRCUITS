@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,10 +47,10 @@ import java.util.logging.Logger;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer reference for RMI invocation")
 public class GeckoRemoteObject {
 
-    public GeckoRemoteObject() {        
+    public GeckoRemoteObject() {
         //use factory method instead of constructor
     }
-    
+
     private int portNumber;
     GeckoRemoteInterface _wrapped = null;
     GeckoRemoteIntWithoutExc _proxy;
@@ -61,7 +61,7 @@ public class GeckoRemoteObject {
     private RemoteInvocationHandler _invocationHandler;
     private boolean doProxyCheck = true;
     private static String _pathToJava = "";
-    
+
     public final class RemoteInvocationHandler implements InvocationHandler {
 
         private final Object object;
@@ -107,7 +107,7 @@ public class GeckoRemoteObject {
             argsList.add("-p");
             argsList.add(Integer.toString(port));
             final String[] args = argsList.toArray(new String[argsList.size()]);
-            
+
             for(String arg : args) {
                 System.out.println("arg " + arg);
             }
@@ -117,7 +117,7 @@ public class GeckoRemoteObject {
             } catch (InterruptedException ex) {
                 Logger.getLogger(GeckoRemoteObject.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if (GeckoSim.remoteLoaded) {                
+            if (GeckoSim.remoteLoaded) {
                 return connectToExistingInstance(port);
             }
         } else {
@@ -252,7 +252,7 @@ public class GeckoRemoteObject {
         }
 
     }
-    
+
     /**
      * Set the path of the java executable to use (needed when starting GeckoCIRCUITS from a Netbeans platform application)
      * @param pathToJavaExe the path to the java executable
@@ -262,9 +262,9 @@ public class GeckoRemoteObject {
             _pathToJava = pathToJavaExe;
         } else {
             throw new RuntimeException("Error: Path to Java executable: " + pathToJavaExe + " does not exist!");
-        }        
+        }
     }
-    
+
     /**
      * Allow additional clients to simultaneously connect to the connected-to instance of GeckoCIRCUITS.
      * @param additionalClients the number of additional (!) clients (beside the original one) that can be allowed to connect remotely to GeckoCIRCUITS
@@ -277,13 +277,13 @@ public class GeckoRemoteObject {
         try {
             if (checkRemote()) {
                 _wrapped.acceptExtraConnections(additionalClients);
-            } 
+            }
         } catch (RemoteException e) {
             throw new RuntimeException("Error trying to enable additional client connections!",e);
         }
     }
-    
-    
+
+
     @SuppressWarnings("PMD.NonThreadSafeSingleton")
     public void disconnectFromGecko() {
         try {
@@ -362,7 +362,7 @@ public class GeckoRemoteObject {
     }
 
     public void simulateStep() {
-        // careful: here, i don't call _proxy.(), since this method is 
+        // careful: here, i don't call _proxy.(), since this method is
         //critical to simulation runtime (possibly called very often).
         try {
             if (checkRemote()) {
@@ -374,7 +374,7 @@ public class GeckoRemoteObject {
     }
 
     public void simulateSteps(final int steps) {
-        // careful: here, i don't call _proxy.(), since this method is 
+        // careful: here, i don't call _proxy.(), since this method is
         //critical to simulation runtime (possibly called very often).
         try {
             if (checkRemote()) {
@@ -400,7 +400,7 @@ public class GeckoRemoteObject {
     public String[] getThermalElements() {
         return _proxy.getThermalElements();
     }
-    
+
     public String[] getSpecialElements() {
         return _proxy.getSpecialElements();
     }
@@ -532,7 +532,7 @@ public class GeckoRemoteObject {
     }
 
     @SuppressWarnings("PMD")
-    //CHECKSTYLE:OFF    
+    //CHECKSTYLE:OFF
     public double get_Tend_pre() {
         return _proxy.get_Tend_pre();
     }
@@ -548,7 +548,7 @@ public class GeckoRemoteObject {
     public void set_Tend_pre(final double value) {
         _proxy.set_Tend_pre(value);
     }
-    
+
     @Deprecated
     public double[][] getFourier(final String scopeName, final int scopePort, final double startTime,
             final double endTime, final int harmonics) {
@@ -560,27 +560,27 @@ public class GeckoRemoteObject {
             final int harmonics) {
         return getFourier(scopeName, 0, startTime, endTime, harmonics);
     }
-    
+
     @Deprecated
     public void initSteadyStateDetection(final String[] stateVariables, final double[] frequencies,
             final double deltaT, final double simulationTime) {
         _proxy.initSteadyStateDetection(stateVariables, frequencies, deltaT, simulationTime);
     }
-    
+
     public void initSteadyStateDetection(String[] stateVariables, double frequency, double deltaT,
             double simulationTime) {
         _proxy.initSteadyStateDetection(stateVariables, frequency, deltaT, simulationTime);
     }
-    
+
     @Deprecated
     public double[] simulateUntilSteadyState(final boolean supressMessages) {
         return _proxy.simulateUntilSteadyState(supressMessages);
     }
-    
+
     public double[] simulateToSteadyState(final boolean supressMessages) {
         return _proxy.simulateToSteadyState(supressMessages);
     }
-    
+
     public double[] simulateToSteadyState(final boolean supressMessages, final double targetCorrelation, final double targetMeanPctDiff) {
         return _proxy.simulateToSteadyState(supressMessages, targetCorrelation, targetMeanPctDiff);
     }
@@ -588,7 +588,7 @@ public class GeckoRemoteObject {
     public void setPosition(final String elementName, final int xCoord, final int yCoord) {
         _proxy.setPosition(elementName, xCoord, yCoord);
     }
-    
+
     public int[] getPosition(final String elementName) {
         return _proxy.getPosition(elementName);
     }
@@ -596,11 +596,11 @@ public class GeckoRemoteObject {
     public void deleteComponent(final String elementName) {
         _proxy.deleteComponent(elementName);
     }
-    
+
     public void deleteAllComponents(final String subcircuitName) {
         _proxy.deleteAllComponents(subcircuitName);
     }
-   
+
 
     public void createComponent(final String elementType, final String elementName, final int xCoord, final int yCoord) {
         _proxy.createComponent(elementType, elementName, xCoord, yCoord);
@@ -613,7 +613,7 @@ public class GeckoRemoteObject {
     public void setInputNodeName(final String elementName, final int nodeIndex, final String nodeName) {
         _proxy.setInputNodeName(elementName, nodeIndex, nodeName);
     }
-    
+
     public String getOutputNodeName(final String elementName, final int nodeIndex) {
         return _proxy.getOutputNodeName(elementName, nodeIndex);
     }

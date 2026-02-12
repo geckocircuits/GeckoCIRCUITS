@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -123,7 +123,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
             return new AbstractControlCalculatable(XIN.size(), 0) {
                 @Override
                 public void berechneYOUT(double deltaT) {
-                    
+
                 }
             };
         } else {
@@ -134,7 +134,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
                     try {
                         for (int i1 = 0; i1 < XIN.size(); i1++) {
                             dataVector[i1] = _inputSignal[i1][0];
-                            // von 'parameter[]' kann der Vektor mit den Signal-Werte vom externen 
+                            // von 'parameter[]' kann der Vektor mit den Signal-Werte vom externen
                             // Programm abgeholt werden
                         }
                     } catch (ArrayIndexOutOfBoundsException ex) {

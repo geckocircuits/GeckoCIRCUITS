@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -94,15 +94,15 @@ public abstract class AbstractTerminal implements TerminalInterface {
     public int getIndex() {
         return _circuitTerminalIndex;
     }
-    
+
     protected void paintFlowSymbol(int orientierung, Graphics g) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
         int x = getPosition().x;
         int y = getPosition().y;
         int[] xFl = new int[3];
         int[] yFl = new int[3];
-                
-        if (_parentElement.getSheetPosition().y < y) {            
+
+        if (_parentElement.getSheetPosition().y < y) {
             xFl[0] = (int) (dpix * x);
             xFl[1] = xFl[0] - _pFb;
             xFl[2] = xFl[0] + _pFb;
@@ -110,7 +110,7 @@ public abstract class AbstractTerminal implements TerminalInterface {
             yFl[1] = yFl[0] - _pFa;
             yFl[2] = yFl[1];
         }
-            
+
         if (_parentElement.getSheetPosition().y > y) {
             xFl[0] = (int) (dpix * x);
             xFl[1] = xFl[0] - _pFb;
@@ -119,7 +119,7 @@ public abstract class AbstractTerminal implements TerminalInterface {
             yFl[1] = yFl[0] + _pFa;
             yFl[2] = yFl[1];
         }
-        
+
         if (_parentElement.getSheetPosition().x < x) {
             xFl[0] = (int) (dpix * x);
             xFl[1] = xFl[0] - _pFa;
@@ -128,7 +128,7 @@ public abstract class AbstractTerminal implements TerminalInterface {
             yFl[1] = yFl[0] - _pFb;
             yFl[2] = yFl[0] + _pFb;
           }
-        
+
 
         if(_parentElement.getSheetPosition().x > x) {
             xFl[0] = (int) (dpix * x);

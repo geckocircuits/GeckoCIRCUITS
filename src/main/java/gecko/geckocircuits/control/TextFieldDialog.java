@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,7 +24,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores text field block reference for property configuration")
 public class TextFieldDialog extends javax.swing.JDialog {
     private TextFieldBlock _tfb;
-    
+
     /** Creates new form NewJDialog */
     public TextFieldDialog(final java.awt.Frame parent, final TextFieldBlock tfb) {
         super(parent, true);
@@ -247,8 +247,8 @@ public class TextFieldDialog extends javax.swing.JDialog {
         String oldText = _tfb._titleText.getValue();
         if(!newText.equals(oldText)) {
             _tfb._titleText.setUserValue(newText);
-        }        
-        
+        }
+
     }//GEN-LAST:event_jTextFieldTitleKeyReleased
 
     private void jSpinnerBreiteStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerBreiteStateChanged
@@ -264,7 +264,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         String oldText = _tfb._contentsText.getValue();
         if(!newText.equals(oldText)) {
             _tfb._contentsText.setUserValue(newText);
-        }        
+        }
     }//GEN-LAST:event_jTextAreaContentsKeyReleased
 
     private void jButtonBackColorActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonBackColorActionPerformed
@@ -286,7 +286,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jButtonTextColor.setBackground(newColor);
         _tfb._fontColor.setUserValue(newColor);
     }//GEN-LAST:event_jButtonTextColorActionPerformed
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBackColor;

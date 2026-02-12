@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -16,8 +16,8 @@ package gecko.geckocircuits.circuit.losscalculation;
 import java.io.Serializable;
 
 // Datenbehaelter fuer eine Messkurve -->
-public class LeitverlusteMesskurve extends LossCurve implements Serializable {    
-   
+public class LeitverlusteMesskurve extends LossCurve implements Serializable {
+
     // Datenbehaelter mit folgendem Format fuer  data[][] -->
     // U [V] - I [A]
     // ..      ..
@@ -39,10 +39,10 @@ public class LeitverlusteMesskurve extends LossCurve implements Serializable {
         }
         copy.tj.setValueWithoutUndo(this.tj.getValue());
         return copy;
-    }            
+    }
 
     @Override
     String getXMLTag() {
         return "LeitverlusteMesskurve";
-    }                
+    }
 }

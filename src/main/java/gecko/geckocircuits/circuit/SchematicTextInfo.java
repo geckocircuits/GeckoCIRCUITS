@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -105,13 +105,13 @@ public final class SchematicTextInfo {
 
     public void importASCII(final TokenMap tokenMap) {
         _dxTxt = tokenMap.readDataLine("dxTxt", _dxTxt);
-        _dyTxt = tokenMap.readDataLine("dyTxt", _dyTxt);       
-        
+        _dyTxt = tokenMap.readDataLine("dyTxt", _dyTxt);
+
         _dxTxtBeforeMove = _dxTxt;
-        _dyTxtBeforeMove = _dyTxt;        
+        _dyTxtBeforeMove = _dyTxt;
     }
 
-    public void exportASCII(final StringBuffer ascii) {        
+    public void exportASCII(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\ndxTxt"), _dxTxt);
         ProjectData.appendAsString(ascii.append("\ndyTxt"), _dyTxt);
     }
@@ -124,17 +124,17 @@ public final class SchematicTextInfo {
             final MoveTextFieldUndoAction undoAction = new MoveTextFieldUndoAction(_dxTxtBeforeMove, _dyTxtBeforeMove, _dxTxt, _dyTxt);
             AbstractUndoGenericModel.undoManager.addEdit(undoAction);
         }
-        
+
         _dxTxtBeforeMove = _dxTxt;
         _dyTxtBeforeMove = _dyTxt;
     }
-    
-    public void setNewRelativePosition(final Point relPosition) {        
-        final int dpix = AbstractCircuitSheetComponent.dpix;                
+
+    public void setNewRelativePosition(final Point relPosition) {
+        final int dpix = AbstractCircuitSheetComponent.dpix;
         _dxTxt = _txtKlickPoint.x - _element.getSheetPosition().x + relPosition.x * 1.0 / dpix - _txtKlickPoint.x;
-        _dyTxt = _txtKlickPoint.y - _element.getSheetPosition().y + relPosition.y * 1.0 / dpix - _txtKlickPoint.y;        
-        
-    }        
+        _dyTxt = _txtKlickPoint.y - _element.getSheetPosition().y + relPosition.y * 1.0 / dpix - _txtKlickPoint.y;
+
+    }
 
     private void updateRanges(final int dpix, final int xPos, final int yPos) {
         _xTxtKlickMin = (int) (dpix * (xPos + _dxTxt));
@@ -142,8 +142,8 @@ public final class SchematicTextInfo {
         _yTxtKlickMax = (int) (dpix * (yPos + _dyTxt));
         _yTxtKlickMax = (int) (dpix * (yPos + _dyTxt + _lyTxt));
     }
-    
-    public void setPositionTextClickPointInitial(final int xTxtK1, final int yTxtK1) {        
+
+    public void setPositionTextClickPointInitial(final int xTxtK1, final int yTxtK1) {
         _dxTxtBeforeMove = _dxTxt;
         _dyTxtBeforeMove = _dyTxt;
         _txtKlickPoint = new Point(xTxtK1, yTxtK1);
@@ -153,10 +153,10 @@ public final class SchematicTextInfo {
         _printParameter.add(new ErrorParameter(errorText));
     }
 
-    public void paint(final Graphics2D graphics) {        
+    public void paint(final Graphics2D graphics) {
         if (_neverVisible) {
             return;
-        }                
+        }
 
         final int xPos = _element.getSheetPosition().x;
         final int yPos = _element.getSheetPosition().y;
@@ -169,12 +169,12 @@ public final class SchematicTextInfo {
 
         int counter = 0;
         final double textHeight = graphics.getFont().getSize() * 0.8;
-        _yTxtKlickMin = (int) (dpix * (yPos + _dyTxt - textHeight / dpix));        
-                
+        _yTxtKlickMin = (int) (dpix * (yPos + _dyTxt - textHeight / dpix));
+
         for (PrintParameter par : _printParameter) {
             final String toDraw = par._parameterString;
             final int stringYPos = (int) (_yTxtKlickMin + textHeight + counter * graphics.getFont().getSize());
-            par.drawString(graphics, toDraw, _xTxtKlickMin, stringYPos);            
+            par.drawString(graphics, toDraw, _xTxtKlickMin, stringYPos);
             final double thisLength = graphics.getFont().getStringBounds(toDraw, frc).getWidth() * 1.0 / dpix;
             _maxLengthText = Math.max(_maxLengthText, thisLength);
             _lyTxt = Math.max(_lyTxt, stringYPos * 1.0 / dpix - (yPos + _dyTxt));
@@ -211,11 +211,11 @@ public final class SchematicTextInfo {
         }
 
         for (UserParameter<? extends Object> par : parameters) {
-            
+
             if(!par.isShowTypeInfoConditionFromEnum()) {
                 return;
             }
-            
+
             if(_element instanceof Nonlinearable) {
                 UserParameter<Double> replacedParameter = ((Nonlinearable) _element).getNonlinearReplacedParameter();
                 AbstractNonLinearCircuitComponent component = (AbstractNonLinearCircuitComponent) _element;
@@ -255,21 +255,21 @@ public final class SchematicTextInfo {
         }
     }
 
-    void setPositionDeselect() {        
+    void setPositionDeselect() {
         _dxTxt = _dxTxtBeforeMove;
         _dyTxt = _dyTxtBeforeMove;
     }
 
-    private void addUserParameter(final UserParameter<? extends Object> userParameter) {        
+    private void addUserParameter(final UserParameter<? extends Object> userParameter) {
         String uTxt = "";
-        
+
         Object value = userParameter.getValue();
         if(value instanceof Enum<?>) {
             uTxt += userParameter.getShortName() + "= " + value.toString();
         } else {
             uTxt += userParameter.getShortName() + "= " + tcf.formatENG(userParameter.getDoubleValue(), 3);
         }
-        
+
         addParameter(uTxt);
     }
 
@@ -282,7 +282,7 @@ public final class SchematicTextInfo {
     public void doShowParameters(final boolean value) {
         _doShowParameters = value;
     }
-    
+
 
     public static class PrintParameter {
 
@@ -348,7 +348,7 @@ public final class SchematicTextInfo {
             _oldPosX = oldPosX;
             _oldPosY = oldPosY;
             _newPosX = newPosX;
-            _newPosY = newPosY;            
+            _newPosY = newPosY;
         }
 
         @Override

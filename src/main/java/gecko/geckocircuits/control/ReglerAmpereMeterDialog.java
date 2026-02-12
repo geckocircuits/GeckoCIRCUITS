@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,9 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 class ReglerAmpereMeterDialog extends DialogElementCONTROL<AbstractCurrentMeasurement> {
-    
+
     private JComboBox<LossComponent> _comboLossType;
-    
+
     public ReglerAmpereMeterDialog(final AbstractCurrentMeasurement reglerAMP) {
         super(reglerAMP);
     }
@@ -48,11 +48,11 @@ class ReglerAmpereMeterDialog extends DialogElementCONTROL<AbstractCurrentMeasur
                 jpM.add(lossLabel);
                 psw2.add(_comboLossType);
                 jpM.setLayout(new GridLayout(3, 1));
-                jpM.add(psw2);                                                
+                jpM.add(psw2);
             }
-        }        
+        }
     }
-    
+
     @Override
     public void processInputs() {
         if (_comboLossType != null && element instanceof ReglerFlowMeter) {

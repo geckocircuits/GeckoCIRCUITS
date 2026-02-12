@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -59,7 +59,7 @@ public final class UserParameter<T> {
     private final Enum _enumConditionValue;
     private static final String NAME_OPT_EXTENSION = "$ParameterName";
     private final String _identifierNameOpt;
-    
+
     private UserParameter(final Builder<T> builder) {
         _unit = builder._units;
         _index = builder._index;
@@ -83,15 +83,15 @@ public final class UserParameter<T> {
                 @Override
                 public String toString() {
                     return _parameterableObject.getIDStringDialog() + ", value " + getShortName();
-                }                                
+                }
             };
         }
-        
+
         _value = new ModelMVC<T>(builder._initialValue, description);
         _textInfoType = builder._textInfoType;
         _enumConditionParameter = builder._enumConditionParameter;
         _enumConditionValue = builder._enumConditionValue;
-        
+
         if (_index >= 0) {
             _value.addModelListener(new ActionListener() {
                 @Override
@@ -101,7 +101,7 @@ public final class UserParameter<T> {
             });
         }
     }
-    
+
     public boolean isShowTypeInfoConditionFromEnum() {
         if(_enumConditionParameter == null || _enumConditionValue == null) {
             return true;
@@ -112,7 +112,7 @@ public final class UserParameter<T> {
     public TextInfoType getTextInfoType() {
         return _textInfoType;
     }
-        
+
 
     public String getNameOpt() {
         return _nameOpt;
@@ -176,7 +176,7 @@ public final class UserParameter<T> {
     }
 
     public T getValue() {
-        if (!_nameOpt.isEmpty() && _value.getValue() instanceof Number) {            
+        if (!_nameOpt.isEmpty() && _value.getValue() instanceof Number) {
             Double returnValue = (Double) MainWindow.optimizerParameterData.getNumberFromNameWOException(_nameOpt);
             if(_value.getValue() instanceof Integer) {
                 return (T) (Integer) returnValue.intValue();
@@ -195,7 +195,7 @@ public final class UserParameter<T> {
         _value.setValueWithoutUndo(newValue);
     }
 
-    public void setFromDoubleValue(double newValue) {        
+    public void setFromDoubleValue(double newValue) {
         if (_value.getValue() instanceof Double) {
             _value.setValue((T) (Double) newValue);
             return;
@@ -262,8 +262,8 @@ public final class UserParameter<T> {
             CircuitSourceType type = (CircuitSourceType) _value.getValue();
             return type.getOldGeckoID();
         }
-        
-        if(_value.getValue() instanceof SSAShape) {            
+
+        if(_value.getValue() instanceof SSAShape) {
             return ((SSAShape) _value.getValue()).ordinal();
         }
 
@@ -276,17 +276,17 @@ public final class UserParameter<T> {
     }
 
     public void readFromTokenMap(final TokenMap tokenMap) {
-        final T oldValue = _value.getValue();                                
-        
-        if (tokenMap.containsToken(_identifier)) {                        
-            
+        final T oldValue = _value.getValue();
+
+        if (tokenMap.containsToken(_identifier)) {
+
             if(tokenMap.containsToken(_identifierNameOpt)) {
-                _nameOpt = tokenMap.readDataLine(_identifierNameOpt, "");            
+                _nameOpt = tokenMap.readDataLine(_identifierNameOpt, "");
             }
-            
+
             if (oldValue instanceof Double) {
                 final Double newValue = tokenMap.readDataLine(_identifier, (Double) _value.getValue());
-                _value.setValueWithoutUndo((T) newValue);                                                
+                _value.setValueWithoutUndo((T) newValue);
                 return;
             }
             if (oldValue instanceof Boolean) {
@@ -306,8 +306,8 @@ public final class UserParameter<T> {
                 _value.setValueWithoutUndo((T) newValue);
                 return;
             }
-            
-            if(oldValue instanceof SSAShape) {                
+
+            if(oldValue instanceof SSAShape) {
                 final SSAShape newValue = SSAShape.getFromOrdinal(tokenMap.readDataLine(_identifier, SSAShape.RECTANGLE.ordinal()));
                 _value.setValueWithoutUndo((T) newValue);
                 return;
@@ -329,7 +329,7 @@ public final class UserParameter<T> {
                 final Color newValue = new Color(tokenMap.readDataLine(_identifier, ((Color) _value.getValue()).getRGB()));
                 _value.setValueWithoutUndo((T) newValue);
                 return;
-            }                        
+            }
 
             assert false;
         } else {
@@ -338,7 +338,7 @@ public final class UserParameter<T> {
 
     }
 
-    public void readFromNameOptArray(String[] nameOpt) {       
+    public void readFromNameOptArray(String[] nameOpt) {
         if (_index < 0) {
             return;
         }
@@ -489,12 +489,12 @@ public final class UserParameter<T> {
 
     public void writeXMLToFile(final StringBuffer ascii) {
         T value = getValue();
-        
+
         final String nameOptString = getNameOpt();
         if(!getNameOpt().isEmpty()) {
             ProjectData.appendAsString(ascii.append("\n" + _identifierNameOpt), nameOptString);
         }
-        
+
         if (value instanceof Double) {
             ProjectData.appendAsString(ascii.append("\n" + _identifier), (Double) value);
             return;
@@ -518,18 +518,18 @@ public final class UserParameter<T> {
             ProjectData.appendAsString(ascii.append("\n" + _identifier), ((CircuitSourceType) value).getOldGeckoID());
             return;
         }
-        
+
         if (value instanceof SSAShape) {
             ProjectData.appendAsString(ascii.append("\n" + _identifier), ((SSAShape) value).ordinal());
             return;
         }
-        
-        
+
+
 
         if (value instanceof String) {
             String writeString = (String) value;
-            if(writeString.contains("\n")) {                
-                writeString = writeString.replaceAll("\n", "\\\\n");                                
+            if(writeString.contains("\n")) {
+                writeString = writeString.replaceAll("\n", "\\\\n");
             }
             ProjectData.appendAsString(ascii.append("\n" + _identifier), writeString);
             return;
@@ -538,7 +538,7 @@ public final class UserParameter<T> {
         if (value instanceof Color) {
             ProjectData.appendAsString(ascii.append("\n" + _identifier), ((Color) value).getRGB());
             return;
-        }                
+        }
 
         try {
             assert false;
@@ -633,8 +633,8 @@ public final class UserParameter<T> {
         public static <T> Builder<T> start(final String saveIdentifier, final T initValue) {
             return new Builder<T>(saveIdentifier, initValue);
         }
-                
-        
+
+
         private AbstractBlockInterface _paramterableObject;
         private TextInfoType _textInfoType = TextInfoType.SHOW_NEVER;
         private UserParameter<? extends Enum> _enumConditionParameter;
@@ -687,7 +687,7 @@ public final class UserParameter<T> {
          * Reason: Existing GeckoSCRIPT-Code may rely on old "short names"
          * @param alternativeName
          * @param additionalAlternativeNames
-         * @return 
+         * @return
          */
         public Builder<T> addAlternativeShortName(final String... additionalAlternativeNames) {
             Collections.addAll(_alternativeShortNames, additionalAlternativeNames);
@@ -696,7 +696,7 @@ public final class UserParameter<T> {
 
         public Builder<T> mapDomains(final ConnectorType... connectorTypes) {
             assert connectorTypes.length > 0;
-            this._connectorTypeMap = new ArrayList<ConnectorType>();            
+            this._connectorTypeMap = new ArrayList<ConnectorType>();
             Collections.addAll(_connectorTypeMap, connectorTypes);
             return this;
         }
@@ -709,6 +709,6 @@ public final class UserParameter<T> {
             return returnValue;
         }
 
-        
+
     }
 }

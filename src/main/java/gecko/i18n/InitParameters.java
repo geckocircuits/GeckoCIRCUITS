@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -13,7 +13,7 @@
  */
 /*
  * This class defines all constant parameters for the i18n toolkit.
- * -Note: Changing values here without changing the same respective values in 
+ * -Note: Changing values here without changing the same respective values in
  * the Admin Tool (class: admintool.InitParameters) will cause the i18n toolkit
  * to malfunction.
  */
@@ -21,11 +21,11 @@ package gecko.i18n;
 
 
 public class InitParameters {
-    
+
     private InitParameters(){} // prevents instantiation
-    
+
     // **********   To Be Adjusted:    **********
-    
+
     /**
      * Set this to "true" if you want database connection DEBUG messages to appear in the console
      */
@@ -66,19 +66,19 @@ public class InitParameters {
      * Wiki page for multiple-line suggestions
      */
     public static final String MULTIPLE_SUGGESTIONS_PAGE = "GeckoSuggestionsMul";
-    
-    // supported languages with their respective language codes                    
-    
+
+    // supported languages with their respective language codes
+
     /**
      * Method to get language code (if the language != English)
      * @return Language code of the chosen language
      */
-    public static final String getCurrentLanguageCode() {        
-        return LangInit.language.getLanguageCode();        
+    public static final String getCurrentLanguageCode() {
+        return LangInit.language.getLanguageCode();
     }
-    
+
     // **********   No Need To Change:    **********
-    
+
     /**
      * Connection error message 1
      */
@@ -100,7 +100,7 @@ public class InitParameters {
      */
     public static final String END_DELIMITER = "-END-";
     /**
-     * Used to separate suggestions from comments pages 
+     * Used to separate suggestions from comments pages
      * IMPORTANT: This has to be a regex expression!)
      */
     public static final String SEPARATOR = "#::#:::##:";
@@ -147,5 +147,5 @@ public class InitParameters {
     /**
      * Done button identifier
      */
-    public static final String DONE_BUTTON = "Done";  
+    public static final String DONE_BUTTON = "Done";
 }

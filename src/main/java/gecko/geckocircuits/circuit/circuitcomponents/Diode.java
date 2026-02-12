@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -28,13 +28,13 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP"},
         justification = "Public diode characteristic for simulation access; exposes parameters for circuit configuration")
 public final class Diode extends AbstractSemiconductor implements ForwardVoltageDropable {
-    static final AbstractTypeInfo TYPE_INFO = 
+    static final AbstractTypeInfo TYPE_INFO =
             new CircuitTypeInfo(Diode.class, "D", I18nKeys.DIODE, I18nKeys.IDEAL_DIODE_WITH_ON_RESISTANCE);
-    
+
     private static final double WIDTH = 0.5;
     private static final double HEIGHT = 0.6;
     private static final int NUMBER_POLYGON_POINTS = 3;
-    
+
     final UserParameter<Double> _forwardVoltageDrop = UserParameter.Builder.
             <Double>start("forwardVoltageDrop", AbstractSwitch.UF_DEFAULT).
             longName(I18nKeys.FORWARD_VOLTAGE_DROP).
@@ -42,15 +42,15 @@ public final class Diode extends AbstractSemiconductor implements ForwardVoltage
             unit("V").
             arrayIndex(this, 1).
             build();
-    
+
     public final UserParameter<Boolean> useNonlinearChar = UserParameter.Builder.
-            <Boolean>start("useNonlinearChar", false).                       
+            <Boolean>start("useNonlinearChar", false).
             longName(I18nKeys.IF_TRUE_USE_NONLINEAR_CHARACTERISTIC).
             shortName("useNonlinearChar").
             arrayIndex(this, -1).
-            build();                               
-        
-    
+            build();
+
+
     private final LossProperties _losses = new LossProperties(this);
     public DiodeCharacteristic _diodeChar;
 
@@ -69,13 +69,13 @@ public final class Diode extends AbstractSemiconductor implements ForwardVoltage
         parameter[0] = parameter[3];
         parameter[4] = 0;
         parameter[5] = 0;
-        
+
         if(_losses._lossType.getValue() == LossCalculationDetail.DETAILED
                 && useNonlinearChar.getValue()) {
             initializeDiodeCharacteristic();
         } else {
             _diodeChar = null;
-        }        
+        }
     }
 
     @Override
@@ -103,7 +103,7 @@ public final class Diode extends AbstractSemiconductor implements ForwardVoltage
     }
 
     @Override
-    public UserParameter<Double> getForwardVoltageDropParameter() {        
+    public UserParameter<Double> getForwardVoltageDropParameter() {
         return _forwardVoltageDrop;
     }
 

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -36,7 +36,7 @@ public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterf
     public AbstractCircuitTerminal() {
         super();
         XIN.add(new TerminalTwoPortComponent(this, 0));
-        // this is only a dummy terminal, so that we get the correct label name 
+        // this is only a dummy terminal, so that we get the correct label name
         // when loading from file. It will be replaced when the references are
         // set correctly.
         YOUT.add(new TerminalHiddenSubcircuit(this));
@@ -136,16 +136,16 @@ public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterf
     void drawConnectorLines(final Graphics2D graphics) {
         // no connector lines to draw!
     }
-    
+
     @Override
     public int getForeGroundColorRgb() {
         java.awt.Color c = super.getForeGroundColor();
         return (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
     }
-    
+
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

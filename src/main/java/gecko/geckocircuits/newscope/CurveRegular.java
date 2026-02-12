@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,15 +21,15 @@ import java.awt.Graphics2D;
  */
 class CurveRegular extends AbstractCurve {
 
-    private final CurveLabel _curveLabel = new CurveLabelRegular(this);        
-    
+    private final CurveLabel _curveLabel = new CurveLabelRegular(this);
+
     public CurveRegular(final AbstractDiagram diagram) {
         super(diagram);
         _curvePainter = new CurvePainterRegular(this);
     }
 
     /*
-     * conversion constructor 
+     * conversion constructor
      * @Param curve old curve, to convert from
      */
     public CurveRegular(final AbstractCurve curve, final AbstractDiagram diagram) {
@@ -44,20 +44,20 @@ class CurveRegular extends AbstractCurve {
     }
 
     @Override
-    public void drawCurve(final Graphics2D g2d, final SliderContainer slider) {                
+    public void drawCurve(final Graphics2D g2d, final SliderContainer slider) {
         if (getAxisConnection() != AxisConnection.ZUORDNUNG_Y && getAxisConnection() != AxisConnection.ZUORDNUNG_Y2) {
             return;
-        }        
-        
+        }
+
         if (getAxisConnection() == AxisConnection.ZUORDNUNG_Y2) {
             _yAxis = _diagram._yAxis2;
         } else {
             _yAxis = _diagram._yAxis1;
-        }        
-                
-        g2d.setColor(_curveSettings._curveColor.getJavaColor());        
-        _curvePainter.paintComponent(g2d);        
-        drawCurveLine(g2d);        
+        }
+
+        g2d.setColor(_curveSettings._curveColor.getJavaColor());
+        _curvePainter.paintComponent(g2d);
+        drawCurveLine(g2d);
     }
 
     private void drawCurveLine(final Graphics2D g2d) {

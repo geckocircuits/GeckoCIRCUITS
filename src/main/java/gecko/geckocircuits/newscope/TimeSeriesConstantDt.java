@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,13 +25,13 @@ public final class TimeSeriesConstantDt extends AbstractTimeSerie {
     private double _minTimeValue = Double.MAX_VALUE;
     private double _minDt = Double.MAX_VALUE;
     private int _maximumIndex = -1;
-    
+
     private static final double MAX_DT_CHECK = 1.05;
     private static final double DEFAULT_DT = 1e-10;
     private static final int ADAPT_THRESHOLD = 100;
-   
+
     @Override
-    public void setValue(final int index, final double value) {        
+    public void setValue(final int index, final double value) {
         _maxDefinedIndex = Math.max(_maxDefinedIndex, index);
         if (_maxDefinedIndex == 0) {
             _minTimeValue = value;
@@ -41,7 +41,7 @@ public final class TimeSeriesConstantDt extends AbstractTimeSerie {
                 // varying results of the time column during the simulation!
                 _dt = (value - _minTimeValue) / _maxDefinedIndex;
             }
-            
+
 
             // just enshure that nobody uses this class with variable step-width in the future...
             if (index > 1) {
@@ -57,7 +57,7 @@ public final class TimeSeriesConstantDt extends AbstractTimeSerie {
     @Override
     public double getValue(final int index) {
         assert index >= 0 : index;
-        if (index <= _maxDefinedIndex) {            
+        if (index <= _maxDefinedIndex) {
             return _minTimeValue + index * _dt;
         } else { // this is nonsense, but Uwe's scope needs this probably! Improve later...
             return 0;
@@ -66,11 +66,11 @@ public final class TimeSeriesConstantDt extends AbstractTimeSerie {
 
     @Override
     public int getMaximumIndex() {
-        return _maximumIndex;        
-    }        
+        return _maximumIndex;
+    }
 
     @Override
-    public int findTimeIndex(final double time) {        
+    public int findTimeIndex(final double time) {
         final int returnValue = (int) ((time - _minTimeValue) / _dt);
         return Math.max(0, Math.min(returnValue, _maximumIndex));
     }
@@ -79,5 +79,5 @@ public final class TimeSeriesConstantDt extends AbstractTimeSerie {
     public double getLastTimeInterval() {
         return _dt;
     }
-    
+
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,19 +27,19 @@ public abstract class AbstractSwitch extends AbstractSemiconductor implements Cu
     public static final double RD_ON_DEFAULT = 10e-3;
     public static final double RD_OFF_DEFAULT = 1e7;
     ReglerGate _connectedGateBlock;
-    
+
     protected final LossProperties verluste = new LossProperties(this);
 
     @Override
     public final void doReferenceAddAction(final ComponentCoupling added) {
-        if (added.getParent() instanceof ReglerGate) {            
-            _connectedGateBlock = ((ReglerGate) added.getParent());            
+        if (added.getParent() instanceof ReglerGate) {
+            _connectedGateBlock = ((ReglerGate) added.getParent());
         }
     }
 
     @Override
     public final void doReferenceRemoveAction(final ComponentCoupling removed) {
-        if (removed.getParent() instanceof ReglerGate) {            
+        if (removed.getParent() instanceof ReglerGate) {
             _connectedGateBlock = null;
         }
     }
@@ -51,8 +51,8 @@ public abstract class AbstractSwitch extends AbstractSemiconductor implements Cu
     @Override
     public final void initExtraFiles() {
         verluste.getDetailedLosses().initLossFile();
-    }             
-    
+    }
+
     void addGateTextInfo() {
         if (_connectedGateBlock == null) {
             _textInfo.addErrorValue("no gate-signal");
@@ -61,9 +61,9 @@ public abstract class AbstractSwitch extends AbstractSemiconductor implements Cu
             _textInfo.addParameter(gateString);
         }
     }
-    
+
     @Override
     public void setToolbarPaintProperties() {
-        _connectedGateBlock = new ReglerGate();        
+        _connectedGateBlock = new ReglerGate();
     }
 }

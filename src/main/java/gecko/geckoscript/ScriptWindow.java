@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -66,8 +66,8 @@ public final class ScriptWindow extends JFrame {
     String compilerMessages = "";
     final DefaultListModel<FunctionDescription> _listModel;
     final DefaultComboBoxModel<MethodCategory> _categoryModel;
-    final PrintStream _outputStream;        
-    
+    final PrintStream _outputStream;
+
 
     /**
      * Creates new form ScriptWindow
@@ -134,8 +134,8 @@ public final class ScriptWindow extends JFrame {
         JOptionPane optPane = new JOptionPane(displayText,
                 JOptionPane.INFORMATION_MESSAGE, JOptionPane.PLAIN_MESSAGE);
 
-        //Listen for the JOptionPane button click. It comes through as property change 
-        //event with the propety called "value". 
+        //Listen for the JOptionPane button click. It comes through as property change
+        //event with the propety called "value".
         optPane.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent e) {
@@ -148,7 +148,7 @@ public final class ScriptWindow extends JFrame {
         optionPaneDialog.setContentPane(optPane);
 
         //Let the JDialog figure out how big it needs to be
-        //based on the size of JOptionPane by calling the 
+        //based on the size of JOptionPane by calling the
         //pack() method
         optionPaneDialog.pack();
         optionPaneDialog.setLocationRelativeTo(this);
@@ -555,10 +555,10 @@ public final class ScriptWindow extends JFrame {
     }//GEN-LAST:event_jButtonRunActionPerformed
 
     public void runNewComputationThread() {
-        
+
     }
-    
-    
+
+
     private void jButtonFunctionDetails1ActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonFunctionDetails1ActionPerformed
 
         ParameterSupport _paramSupport = new ParameterSupport(_circuit);
@@ -613,7 +613,7 @@ public final class ScriptWindow extends JFrame {
     JTextArea jTextAreaOutput;
     // End of variables declaration//GEN-END:variables
 
-    private void compileCode() {        
+    private void compileCode() {
         CompileScript.compile(this);
     }
 
@@ -704,7 +704,7 @@ public final class ScriptWindow extends JFrame {
     void clearObject() {
         _scriptObject = null;
         _compileStatus = CompileStatus.NOT_COMPILED;
-    }            
-    
+    }
+
 
 }

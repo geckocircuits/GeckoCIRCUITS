@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -27,10 +27,10 @@ import javax.swing.JOptionPane;
  * @author Andrija
  */
 public final class DialogRemotePort extends javax.swing.JDialog {
-    
+
     private String[] _localIPs;
     private String _externalIP;
-    
+
     public DialogRemotePort(final java.awt.Frame parent, final boolean modal) {
         super(parent, modal);
         this.setLocationByPlatform(true);
@@ -69,7 +69,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
         }
         checkStatusMMF();
     }
-    
+
     private void setSelectedIP(final String selectedIP) {
         boolean foundMatch = false;
         if (selectedIP.equals(_externalIP)) {
@@ -93,7 +93,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
                     JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -545,7 +545,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
             ex.printStackTrace();
         }
     }
-    
+
     /**
      * Enable/disable GUI input fields properly.
      */
@@ -560,7 +560,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
         _jTextFieldMMFile.setEnabled(_jCheckBoxEnableMMF.isSelected());
         _jSpinnerMMFSize.setEnabled(_jCheckBoxEnableMMF.isSelected());
     }
-    
+
     /**
      * Get the IP numbers that can be used for connecting to GeckoCIRCUITS via the network.
      */
@@ -578,7 +578,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
                                         "Error getting local IPs!",
                     JOptionPane.ERROR_MESSAGE);
         }
-        
+
         try {
             _externalIP = GeckoRemoteRegistry.getExternalIPAddress();
             _jComboBoxIPs.addItem(_externalIP + " (ext.)");
@@ -599,7 +599,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
                                         "Error getting external IP!",
                     JOptionPane.ERROR_MESSAGE);
         }
-        
+
         if (_localIPs == null || _localIPs.length == 0) {
             if (_externalIP == null) {
                 JOptionPane.showMessageDialog(this,
@@ -620,7 +620,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
             }
         }
     }
-    
+
     private void processUserInputMMF() {
         try {
             if (_jCheckBoxEnableMMF.isSelected()) { //if user wants to enable access
@@ -654,7 +654,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
             ex.printStackTrace();
         }
     }
-    
+
     private void checkStatusMMF() {
         if (MainWindow._mmf_access == null) {
             jTextAreaMMFStatus.setText("Status: access via m.m.f. is not enabled.");

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -31,38 +31,38 @@ abstract class AbstractCurvePainter {
   ConcurrentLinkedQueue<Point2D.Float> _allPoints = new ConcurrentLinkedQueue<Point2D.Float>();
 
     abstract void paintComponent(final Graphics2D g2d);
-    
+
     /*
      * load the full data range up to the given pixel value
      */
     abstract void reLoadData(final int minimumPixel, final int maximumPixel);
-    
+
     /*
      * load only part of the data, from startPixel to stopPixel
      */
     abstract void loadDataRange(final int startPixel, final int stopPixel);
-    
-                
-  
+
+
+
     abstract List<Axis> getSensitiveAxis();
-  
+
   public AbstractCurvePainter(final AbstractCurve curve){
     _curve = curve;
     _xAxis = curve._xAxis;
 
   }
 
-  
+
   public AbstractDataContainer getRamData(){
     return _ramData;
   }
 
-  
+
   public void setRamData(final AbstractDataContainer newData){
     _ramData = newData;
   }
 
-  
+
   public Axis getXAxis(){
     return _xAxis;
   }

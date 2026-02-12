@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -39,36 +39,36 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
             longName(I18nKeys.IF_TRUE_PRINT_HEADER).
             shortName("printHeader").
             arrayIndex(this, -1).
-            build();                               
-    
+            build();
+
     final transient UserParameter<Boolean> _transposeData = UserParameter.Builder.
             <Boolean>start("transposeData", false).
             longName(I18nKeys.IF_TRUE_TRANSPOSE_DATA).
             shortName("transposeData").
             arrayIndex(this, -1).
-            build();                               
-    
+            build();
+
     final transient UserParameter<Integer> _skipDataPoints = UserParameter.Builder.
             <Integer>start("skipDataPoints", 1).
             longName(I18nKeys.SKIP_DATA_POINTS).
             shortName("skipDataPoints").
             arrayIndex(this, -1).
-            build();             
-    
+            build();
+
     final transient UserParameter<Integer> _significDigits = UserParameter.Builder.
             <Integer>start("significantDigits", DEFAULT_DIGITS).
             longName(I18nKeys.SIGNIFICANT_DIGITS).
             shortName("significantDigits").
             arrayIndex(this, -1).
-            build();     
-    
+            build();
+
     final transient UserParameter<String> _file = UserParameter.Builder.
             <String>start("filename", findInitialFile()).
             longName(I18nKeys.FILENAME).
             shortName("fileName").
             arrayIndex(this, -1).
-            build();             
-    
+            build();
+
     private static final int HUNDRED_PERCENT = 100;
     private static final int BLOCK_HEIGHT = 3;
     private static final int BLOCK_WIDTH = 6;
@@ -76,12 +76,12 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     private transient DataSaver _dataSaver;
     private String _statusTxt = "waiting";
 
-    
+
     public ReglerSaveData() {
         super(0, 0);
         _textInfo.setTextNeverVisible();
     }
-    
+
     enum OutputType {
 
         BINARY,
@@ -125,7 +125,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     private static final int DEFAULT_DIGITS = 4;
     SaveModus _saveModus = SaveModus.MANUAL;
     OutputType _outputType = OutputType.TEXT;
-    
+
     FileOverwrite _fileOverwrite = FileOverwrite.OVERWRITE;
     private final List<String> _selectedSignalNames = new ArrayList<String>();
     private final List<Integer> _selectedSignalIndices = new ArrayList<Integer>();
@@ -188,7 +188,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
             File ipesFile = new File(GlobalFilePathes.DATNAM);
             String parentDirectory = ipesFile.getParent();
             int testCounter = 1;
-            
+
             while (testCounter < 100) {
                 String filePath = parentDirectory + "/data" + testCounter + ".txt";
                 File file = new File(filePath);
@@ -196,12 +196,12 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
                     return filePath;
                 }
                 testCounter++;
-                
+
             }
         }
-        
+
         return "data.txt";
-    }            
+    }
 
     @Override
     public String[] getOutputNames() {
@@ -258,7 +258,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     @Override
-    protected void exportAsciiIndividual(final StringBuffer ascii) {        
+    protected void exportAsciiIndividual(final StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\nselectedSignalNames"), _selectedSignalNames.toArray(
                 new String[_selectedSignalNames.size()]));
         ProjectData.appendAsString(ascii.append("\nselectedSignalIndices"), _selectedSignalIndices);
@@ -269,7 +269,7 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     }
 
     @Override
-    protected void importIndividual(final TokenMap tokenMap) {        
+    protected void importIndividual(final TokenMap tokenMap) {
         _itemSeparator = TextSeparator.getFromOrdinal(tokenMap.readDataLine("itemSeparator", _itemSeparator.ordinal()));
         _headerSymbol = HeaderSymbol.getFromOrdinal(tokenMap.readDataLine("headerSymbol", _headerSymbol.ordinal()));
         _selectedSignalNames.clear();
@@ -282,9 +282,9 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
             _selectedSignalIndices.add(value);
         }
         _saveModus = SaveModus.getFromOrdinal(tokenMap.readDataLine("saveModus", _saveModus.ordinal()));
-        _fileOverwrite = FileOverwrite.getFromOrdinal(tokenMap.readDataLine("fileOverwrite", _fileOverwrite.ordinal()));        
+        _fileOverwrite = FileOverwrite.getFromOrdinal(tokenMap.readDataLine("fileOverwrite", _fileOverwrite.ordinal()));
     }
-    
+
 
     @Override
     protected Window openDialogWindow() {
@@ -296,31 +296,31 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
     @Override
     public List<OperationInterface> getOperationEnumInterfaces() {
         final List<OperationInterface> returnValue = new ArrayList<OperationInterface>();
-        
+
         returnValue.add(new OperationInterface("doSaveFile", I18nKeys.SAVE_DATA_DOC) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 _dataSaver.doManualSave();
                 return null;
             }
         });
-        
+
         returnValue.add(new OperationInterface("doSaveFileBlocking", I18nKeys.SAVE_DATA_DOC_BLOCKING) {
-            @Override            
-            public Object doOperation(final Object parameterValue) {                
+            @Override
+            public Object doOperation(final Object parameterValue) {
                 _dataSaver.doManualSaveBlocking();
                 return null;
             }
         });
-        
+
         returnValue.add(new OperationInterface("setOutputFileName", I18nKeys.SAVE_DATA_DOC_BLOCKING) {
-            @Override            
+            @Override
             public Object doOperation(final Object parameterValue) {
                 _file.setUserValue(parameterValue.toString());
                 return null;
             }
         });
-        
+
         return Collections.unmodifiableList(returnValue);
     }
 }

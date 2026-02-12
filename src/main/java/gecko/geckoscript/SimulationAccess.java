@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -308,7 +308,7 @@ public final class SimulationAccess implements GeckoFileable {
             element.absetzenElement();
         }
     }
-        
+
 
     private boolean isPositionValid(/*
              * ElementInterface element,
@@ -395,11 +395,11 @@ public final class SimulationAccess implements GeckoFileable {
 
         NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);
 
-        se.updateRenamedLabel(oldLabel, labelName, terminalType);                
+        se.updateRenamedLabel(oldLabel, labelName, terminalType);
         se.setDirtyFlag();
     }
-    
-    
+
+
     //set the label for a model element
     public String getElementNodeLabel(final AbstractBlockInterface element, final AbstractGeckoCustom.StartOrStopNode labelType,
             final int nodeIndex) throws Exception {
@@ -415,13 +415,13 @@ public final class SimulationAccess implements GeckoFileable {
             default:
                 throw new Exception("Invalid label type: neither output nor input node!");
         }
-        
-                       
-        final CircuitLabel label = terminal.getLabelObject();        
-        return label.getLabelString();        
+
+
+        final CircuitLabel label = terminal.getLabelObject();
+        return label.getLabelString();
     }
 
-    public double getSimulationTime() {        
+    public double getSimulationTime() {
         return GeckoSim._win._simRunner.simKern.getZeitAktuell();
     }
 

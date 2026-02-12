@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -82,7 +82,7 @@ public class LKMatrices {
         try {
             this.setzeAnfangsbedingungen(getAnfangsbedVomDialogfenster, solverType);  // pALT und iALT werden gesetzt, zB. u(0) bei C oder i(0) bei L
         } catch (RuntimeException ex) {
-            // Calculate difference in days      
+            // Calculate difference in days
             ex.printStackTrace();
             throw new RuntimeException("The following error occured at the circuit initialization:\n"
                     + ex.getMessage()
@@ -165,7 +165,7 @@ public class LKMatrices {
                     a[y][x] += (-aW);
 
                     break;
-                case LK_L:                    
+                case LK_L:
                 case NONLIN_REL:
                     aW = getAWForInductance(netzliste.parameter[i1][0], netzliste.parameter[i1], dt);
                     netzliste.parameter[i1][11] = aW;
@@ -253,7 +253,7 @@ public class LKMatrices {
                     break;
                 case LK_U:
                 case REL_MMF:
-                case TH_TEMP:  //  +1                    
+                case TH_TEMP:  //  +1
                     a[x][z] += (+1.0);
                     a[y][z] += (-1.0);
                     if (!((int) netzliste.parameter[i1][0] == SourceType.QUELLE_VOLTAGECONTROLLED_TRANSFORMER_NEW)
@@ -328,7 +328,7 @@ public class LKMatrices {
 //                }
 //                System.out.println("");
 //            }
-//                
+//
 //        }
 //        if(a.length > 1) {
 //        long hashValue = -7;
@@ -352,7 +352,7 @@ public class LKMatrices {
 ////                }
 ////                System.out.println(k + " xxx: " + time + " " + hash);
 ////            }
-////            
+////
 ////            for(int l = 0; l <= 21; l++) {
 ////                System.out.print(a[21][l] + " ");
 ////            }
@@ -396,15 +396,15 @@ public class LKMatrices {
                             bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * FAST_NULL_L);
                         } else if (_solverType == SolverType.SOLVER_GS) {
                             bW = -4.0 / 3.0 * iALT[i1] + 1.0 / 3.0 * iALTALT[i1];
-                        }                        
-                    } else {//bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * netzliste.parameter[i1][0]);                        
+                        }
+                    } else {//bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * netzliste.parameter[i1][0]);
                         if (_solverType == SolverType.SOLVER_BE) {
                             bW = -iALT[i1];
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
                             bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * netzliste.parameter[i1][0]);
                         } else if (_solverType == SolverType.SOLVER_GS) {
                             bW = -4.0 / 3.0 * iALT[i1] + 1.0 / 3.0 * iALTALT[i1];
-                        }                        
+                        }
                     }
                     bVector[x] += (+bW);
                     bVector[y] += (-bW);
@@ -426,12 +426,12 @@ public class LKMatrices {
                         anzahlKoppelPartner = zuLKOP2gehoerigeM_spgQnr[i1].length;
                         if (_solverType == SolverType.SOLVER_BE) {
                             for (int i7 = 0; i7 < anzahlKoppelPartner; i7++) {
-                                bVector[z] += (-p[netzliste.knotenMAX + (int) zuLKOP2gehoerigeM_spgQnr[i1][i7]] * (zuLKOP2gehoerigeM_kWerte[i1][i7] / dt));  //  +iALT*(M)/dt                                
+                                bVector[z] += (-p[netzliste.knotenMAX + (int) zuLKOP2gehoerigeM_spgQnr[i1][i7]] * (zuLKOP2gehoerigeM_kWerte[i1][i7] / dt));  //  +iALT*(M)/dt
                                 // weil bei Typ.LK_LKOP2 --> i[i1]= p[netzliste.knotenMAX +netzliste.spgQuelleNr[i1]];  (siehe in berechneBauteilStroeme()!)
                             }
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
                             for (int i7 = 0; i7 < anzahlKoppelPartner; i7++) {
-                                bVector[z] += (-p[netzliste.knotenMAX + (int) zuLKOP2gehoerigeM_spgQnr[i1][i7]] * (2 * zuLKOP2gehoerigeM_kWerte[i1][i7] / dt));  //  +iALT*(2*M)/dt                                
+                                bVector[z] += (-p[netzliste.knotenMAX + (int) zuLKOP2gehoerigeM_spgQnr[i1][i7]] * (2 * zuLKOP2gehoerigeM_kWerte[i1][i7] / dt));  //  +iALT*(2*M)/dt
                             }
                         } else if (_solverType == SolverType.SOLVER_GS) {
                             for (int i7 = 0; i7 < anzahlKoppelPartner; i7++) {
@@ -496,7 +496,7 @@ public class LKMatrices {
                     }
 
                     //
-                    //bW= -i[i1];                    
+                    //bW= -i[i1];
                     bVector[x] += (+bW);
                     bVector[y] += (-bW);
 
@@ -531,7 +531,7 @@ public class LKMatrices {
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
                             // does not add a voltage --> voltage is function of node-potentials and, therefore, calculated in matrix A
-                            //b[z] += (netzliste.parameter[i1][1]);                                                        
+                            //b[z] += (netzliste.parameter[i1][1]);
                             break;
                         case SourceType.QUELLE_DIDTCURRENTCONTROLLED_NEW:
                         case SourceType.QUELLE_DIDTCURRENTCONTROLLED:
@@ -576,14 +576,14 @@ public class LKMatrices {
 //            System.out.println(i + " " + bVector[i]);
 //        }
 //        System.out.println("-------");
-//        
+//
 //        long bHash = 0;
 //        for(int i = 0; i < bVector.length; i++) {
 //            bHash+= Math.abs(Double.doubleToRawLongBits(bVector[i]) + i);
 //        }
 //        System.out.println(bHash);
 //        System.exit(2);
-//        
+//
 //        if(t == 2e-6) {
 //            for(int i = 0; i < bVector.length; i++) {
 //                System.out.println(i + " " + bVector[i]);
@@ -645,10 +645,10 @@ public class LKMatrices {
                 case LK_L:
                 case NONLIN_REL:
 
-                    AbstractNonLinearCircuitComponent element = (AbstractNonLinearCircuitComponent) netzliste.eLKneu[i1];                    
+                    AbstractNonLinearCircuitComponent element = (AbstractNonLinearCircuitComponent) netzliste.eLKneu[i1];
                     if (netzliste.parameter[i1][0] < FAST_NULL_L) {
                         if (_solverType == SolverType.SOLVER_BE) {
-                            netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / FAST_NULL_L * (p[x] - p[y]);                            
+                            netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / FAST_NULL_L * (p[x] - p[y]);
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
                             netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / (2 * FAST_NULL_L) * (p[x] - p[y] + (pALT[x] - pALT[y]));
                         } else if (_solverType == SolverType.SOLVER_GS) {
@@ -687,13 +687,13 @@ public class LKMatrices {
 //                            double correctionCurrent = (netzliste.parameter[i1][10] - inductanceInAMatrix) / netzliste.parameter[i1][10] * (bVector[x] - bVector[y]) / 2;
 //                            bVector[x] -= correctionCurrent;
 //                            bVector[y] += correctionCurrent;
-//                            
+//
 //                            //netzliste.eLKneu[i1]._currentLosses *= correctionFactor;
 //                            System.out.println("compare " + correctionCurrent + " " + iALT[i1]);
 //                            netzliste.eLKneu[i1]._currentLosses += correctionCurrent;
 //                            iALT[i1] += correctionCurrent;
-//                            iALTALT[i1] += correctionCurrent;                            
-//                            iALTALTALT[i1] += correctionCurrent;                            
+//                            iALTALT[i1] += correctionCurrent;
+//                            iALTALTALT[i1] += correctionCurrent;
                         }
                     }
 
@@ -814,7 +814,7 @@ public class LKMatrices {
                             double aNEU = 1.0 / netzliste.parameter[i1][0];
                             double bNEU = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
 
-                            //System.out.println("Diode t " + errorCounter + " " +  netzliste.eLKneu[i1].getIDStringDialog() + " " + netzliste.parameter[i1][0] + " " +  netzliste.parameter[i1][2] + "  "+ netzliste.parameter[i1][3] + " " + netzliste.parameter[i1][4]); 
+                            //System.out.println("Diode t " + errorCounter + " " +  netzliste.eLKneu[i1].getIDStringDialog() + " " + netzliste.parameter[i1][0] + " " +  netzliste.parameter[i1][2] + "  "+ netzliste.parameter[i1][3] + " " + netzliste.parameter[i1][4]);
                             // Korrektur Matrix a:
                             a[x][x] += (-aALT + aNEU);
                             a[y][y] += (-aALT + aNEU);
@@ -844,7 +844,7 @@ public class LKMatrices {
 //                                }
 //                            }
 //                        }
-                            //System.out.println("Diode t " + errorCounter + " " +  netzliste.eLKneu[i1].getIDStringDialog() + " " + netzliste.parameter[i1][0] + " " +  netzliste.parameter[i1][2] + "  "+ netzliste.parameter[i1][3] + " " + netzliste.parameter[i1][4]); 
+                            //System.out.println("Diode t " + errorCounter + " " +  netzliste.eLKneu[i1].getIDStringDialog() + " " + netzliste.parameter[i1][0] + " " +  netzliste.parameter[i1][2] + "  "+ netzliste.parameter[i1][3] + " " + netzliste.parameter[i1][4]);
                             // Korrektur Matrix a:
                             a[x][x] += (-aALT + aNEU);
                             a[y][y] += (-aALT + aNEU);
@@ -893,7 +893,7 @@ public class LKMatrices {
 ////                                }
 ////                            }
 ////                        }
-//                        //System.out.println("Diode t " + errorCounter + " " +  netzliste.eLKneu[i1].getIDStringDialog() + " " + netzliste.parameter[i1][0] + " " +  netzliste.parameter[i1][2] + "  "+ netzliste.parameter[i1][3] + " " + netzliste.parameter[i1][4]); 
+//                        //System.out.println("Diode t " + errorCounter + " " +  netzliste.eLKneu[i1].getIDStringDialog() + " " + netzliste.parameter[i1][0] + " " +  netzliste.parameter[i1][2] + "  "+ netzliste.parameter[i1][3] + " " + netzliste.parameter[i1][4]);
 //                        // Korrektur Matrix a:
 //                        a[x][x] += (-aALT + aNEU);
 //                        a[y][y] += (-aALT + aNEU);
@@ -931,7 +931,7 @@ public class LKMatrices {
                     //--------------------------
                     // Logik fuer THYR-Abfrage:
                     // bei 'stoergroesse=1.0' bleibt die Simulation oft haengen!!
-                    if (((p[x] - p[y]) < (stoergroesse * uf + acceptanceThreshold)) && (rD < 0.5 * netzliste.parameter[i1][3])) {  // (uD < uf) und Thyristor "ON"                        
+                    if (((p[x] - p[y]) < (stoergroesse * uf + acceptanceThreshold)) && (rD < 0.5 * netzliste.parameter[i1][3])) {  // (uD < uf) und Thyristor "ON"
                         double aALT = 1.0 / netzliste.parameter[i1][0];  // (1/rD)
                         double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];  // (Uf/rD)
                         if (t - netzliste.parameter[i1][11] > 3 * netzliste.parameter[i1][9]) {
@@ -939,7 +939,7 @@ public class LKMatrices {
                         }
 
                         if (t - netzliste.parameter[i1][11] >= netzliste.parameter[i1][9]) {
-                            netzliste.parameter[i1][0] = netzliste.parameter[i1][3];  // Thyristor auf "OFF" setzen                            
+                            netzliste.parameter[i1][0] = netzliste.parameter[i1][3];  // Thyristor auf "OFF" setzen
                             double aNEU = 1.0 / netzliste.parameter[i1][0];
                             double bNEU = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
                             einSchrittZurueck = true;
@@ -954,7 +954,7 @@ public class LKMatrices {
                         }
                     }
                     // in 'parameter[8]' wird beim Thyristor das aktuelle Gate-Signal hineingeschrieben (siehe 'Simulationskern.runSimulation()')
-                    if ((netzliste.parameter[i1][8] == 1) && ((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD == AbstractSwitch.RD_OFF_DEFAULT)) {  // gate==1  und  (uD > uf) und Thyristor "OFF"                        
+                    if ((netzliste.parameter[i1][8] == 1) && ((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD == AbstractSwitch.RD_OFF_DEFAULT)) {  // gate==1  und  (uD > uf) und Thyristor "OFF"
                         double aALT = 1.0 / netzliste.parameter[i1][0];
                         double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
                         netzliste.parameter[i1][0] = netzliste.parameter[i1][2];  // Thyristor auf "ON" setzen
@@ -1123,7 +1123,7 @@ public class LKMatrices {
                 case REL_MMF:
                 case TH_TEMP:
                 case LK_LKOP2:
-                    netzliste.eLKneu[i1]._currentInAmps = p[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]];  // SpgQuellen-Stroeme stehen als Unbekannte ausnahmsweise auch im Knotenpotetial-Vektor                    
+                    netzliste.eLKneu[i1]._currentInAmps = p[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]];  // SpgQuellen-Stroeme stehen als Unbekannte ausnahmsweise auch im Knotenpotetial-Vektor
                     break;
                 case LK_M:
                     // wird in LK_LKOP2 abgehandelt
@@ -1295,7 +1295,7 @@ public class LKMatrices {
 //        for (int i1=0;  i1<pALT.length;  i1++)  pALT[i1]= 0;  // default --> alle Knotenpotentiale auf Null
         //=======================================
         // Anfangsbedingung, im Dialogfenster gesetzt, zB. bei INIT/START -->
-        //        
+        //
         if (getAnfangsbedVomDialogfenster && (matrixSize > 1)) {
             for (int i1 = 0; i1 < pALT.length; i1++) {
                 pALT[i1] = 0;  // default --> alle Knotenpotentiale auf Null
@@ -1326,10 +1326,10 @@ public class LKMatrices {
             // Loesen der Matrizen-Gleichungen in der Zeitschleife:
             System.arraycopy(lkmInit.bVector, 1, bInit, 0, lkmInit.matrixSize - 1);
             Matrix bMInit = new Matrix(bInit, bInit.length);
-            
-             
-            Matrix pMInit = aMInit.solve(bMInit);                        
-            
+
+
+            Matrix pMInit = aMInit.solve(bMInit);
+
             pInit = pMInit.getColumnPackedCopy();
 
             System.arraycopy(pInit, 0, lkmInit.p, 1, pInit.length);
@@ -1381,7 +1381,7 @@ public class LKMatrices {
             // the following code was originally writte by Andi
             // uwe removed it because it is just a single time-step to check the initial capacitor values
             // very often instabilities occored with this code block (especially OpAmp-implementation)
-            // not a clean solution yet but much more stability >> to be improved/fixed ni the future ... 
+            // not a clean solution yet but much more stability >> to be improved/fixed ni the future ...
             // .........
             /*
              * // Diodenschaltfehler? --> int switchingErrorCounter = 0; // 'stoergroesse<1.0' verhindert, dass der Algorithmus
@@ -1410,7 +1410,7 @@ public class LKMatrices {
         //
         // ACHTUNG: Funktioniert nur, wenn die Schaltungsstruktur dh. die Knotenanzahl nicht veraendert wird!!!!
         //
-        if (!getAnfangsbedVomDialogfenster) {  // gespeicherte Spannung zb. bei CONTINUE            
+        if (!getAnfangsbedVomDialogfenster) {  // gespeicherte Spannung zb. bei CONTINUE
             for (int i1 = 0; i1 < elementANZAHL; i1++) {
                 int x = netzliste.knotenX[i1];
                 int y = netzliste.knotenY[i1];
@@ -1496,7 +1496,7 @@ public class LKMatrices {
                             break;
                     }
                     //pALT[netzliste.knotenMAX + netzliste.spgQuelleNr[i1] + 1] = 2000;
-                    //p[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]] = 2000;                    
+                    //p[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]] = 2000;
                     break;
                 default:
                     break;

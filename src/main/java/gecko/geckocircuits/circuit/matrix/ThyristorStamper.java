@@ -171,7 +171,7 @@ public class ThyristorStamper implements IStatefulStamper {
         // When ON (low resistance), compensate for forward voltage drop
         double resistance = getCurrentResistance(parameter);
         double rOffThreshold = ON_STATE_FACTOR * getROff(parameter);
-        
+
         if (resistance < rOffThreshold) {
             double uf = getUForward(parameter);
             if (uf > 0) {
@@ -212,7 +212,7 @@ public class ThyristorStamper implements IStatefulStamper {
     public void updateState(double vx, double vy, double current, double time) {
         // Basic state update based on voltage/current only
         // For full thyristor behavior, use updateStateWithGate()
-        
+
         boolean previousState = isOn;
         double vForward = vx - vy;
 
@@ -223,7 +223,7 @@ public class ThyristorStamper implements IStatefulStamper {
                 if (time - lastSwitchOffTime > 3 * recoveryTime) {
                     lastSwitchOffTime = time;
                 }
-                
+
                 if (time - lastSwitchOffTime >= recoveryTime) {
                     isOn = false;
                 }
@@ -257,7 +257,7 @@ public class ThyristorStamper implements IStatefulStamper {
                 if (time - lastSwitchOffTime > 3 * recoveryTime) {
                     lastSwitchOffTime = time;
                 }
-                
+
                 if (time - lastSwitchOffTime >= recoveryTime) {
                     isOn = false;
                 }
@@ -266,7 +266,7 @@ public class ThyristorStamper implements IStatefulStamper {
         } else {
             // Currently OFF: check for turn-on condition
             // Requires gate trigger AND forward voltage above threshold AND recovery time elapsed
-            if (gateTrigger && 
+            if (gateTrigger &&
                 vForward > (PERTURBATION_FACTOR * uForward - ACCEPTANCE_THRESHOLD)) {
                 // Check if recovery time has elapsed since last turn-off
                 if (time - lastSwitchOffTime >= recoveryTime) {
@@ -296,7 +296,7 @@ public class ThyristorStamper implements IStatefulStamper {
             if (parameter.length > PARAM_LAST_SWITCH_TIME) {
                 this.lastSwitchOffTime = parameter[PARAM_LAST_SWITCH_TIME];
             }
-            
+
             updateStateWithGate(parameter[PARAM_GATE], vx, vy, time);
         }
     }
@@ -482,7 +482,7 @@ public class ThyristorStamper implements IStatefulStamper {
      * @param lastSwitchTime last switch-off time
      * @return parameter array for use with this stamper
      */
-    public static double[] createParameters(double rCurrent, double uForward, 
+    public static double[] createParameters(double rCurrent, double uForward,
                                             double rOn, double rOff, double gateSignal,
                                             double recoveryTime, double lastSwitchTime) {
         double[] params = new double[PARAM_LAST_SWITCH_TIME + 1];
@@ -504,7 +504,7 @@ public class ThyristorStamper implements IStatefulStamper {
      */
     public static double[] createDefaultParameters(double gateSignal) {
         double rCurrent = (gateSignal != 0) ? DEFAULT_R_ON : DEFAULT_R_OFF;
-        return createParameters(rCurrent, DEFAULT_U_FORWARD, DEFAULT_R_ON, DEFAULT_R_OFF, 
+        return createParameters(rCurrent, DEFAULT_U_FORWARD, DEFAULT_R_ON, DEFAULT_R_OFF,
                                gateSignal, DEFAULT_RECOVERY_TIME, Double.NEGATIVE_INFINITY);
     }
 

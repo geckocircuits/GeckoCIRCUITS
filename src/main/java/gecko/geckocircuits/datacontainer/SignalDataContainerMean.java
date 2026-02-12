@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -19,7 +19,7 @@ package gecko.geckocircuits.datacontainer;
  */
 public class SignalDataContainerMean extends AbstractDataContainerSignal {
     AbstractDataContainerSignal _origSignal;
-    
+
     public SignalDataContainerMean(AbstractDataContainerSignal origSignal, DataContainerMeanWrapper meanContainer, int meanWrapperIndex) {
         super(meanContainer, meanWrapperIndex);
         _origSignal = origSignal;
@@ -28,5 +28,5 @@ public class SignalDataContainerMean extends AbstractDataContainerSignal {
     @Override
     public String getSignalName() {
         return _origSignal.getSignalName() + "_mean";
-    }            
+    }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -117,7 +117,7 @@ public final class SliderUtils {
                     return nextVal >= currVal;
                 } else {
                     return nextVal <= currVal;
-                }                
+                }
             case DESCEND:
                 if (direction == IterationDirection.FORWARD) {
                     return nextVal <= currVal;
@@ -149,22 +149,22 @@ public final class SliderUtils {
 
             double before = iterator.iterateAndGetValue();
             int beginIndex = iterator.getIndex();
-            
+
             double value = iterator.iterateAndGetValue();
-            
+
             double after = iterator.iterateAndGetValue();
-            int endIndex = iterator.getIndex();                                    
+            int endIndex = iterator.getIndex();
 
             while (true) {
                 if (extremaCondition(minMax, before, value, after)) {
-                    return wsRAM.getTimeValue((beginIndex + endIndex) / 2, 0);                                        
+                    return wsRAM.getTimeValue((beginIndex + endIndex) / 2, 0);
                 } else {
                     before = value;
                     value = after;
                     beginIndex = endIndex;
                     while (value == after) {
                         iterator.iterate();
-                        after = iterator.getDataValue();                                                
+                        after = iterator.getDataValue();
                     }
                     endIndex = iterator.getIndex();
                 }
@@ -194,7 +194,7 @@ public final class SliderUtils {
 
             double currentValue = iterator.iterateAndGetValue();
             double nextValue = iterator.iterateAndGetValue();
-            
+
             while (signalFlankCondition(flankType, direction, currentValue, nextValue)) {
                 currentValue = nextValue;
                 nextValue = iterator.iterateAndGetValue();
@@ -232,7 +232,7 @@ public final class SliderUtils {
         double nextValue = iterator.iterateAndGetValue();
         try {
             // difference in signum
-            while ((currentValue - comparisonValue) * (nextValue - comparisonValue) > 0 
+            while ((currentValue - comparisonValue) * (nextValue - comparisonValue) > 0
                     || ((currentValue - comparisonValue) == 0 && (nextValue - comparisonValue) == 0)) {
                 currentValue = nextValue;
                 nextValue = iterator.iterateAndGetValue();
@@ -242,7 +242,7 @@ public final class SliderUtils {
                     JOptionPane.INFORMATION_MESSAGE);
             return xValue;
         }
-        
+
         return wsRAM.getTimeValue(iterator.getIndex(), 0);
     }
 }

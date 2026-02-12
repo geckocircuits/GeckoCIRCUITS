@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -88,13 +88,13 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
     }
 
     @Override
-    public final int getMaximumTimeIndex(final int row) {        
-        return _timeSerieArray[row].getMaximumIndex();                
+    public final int getMaximumTimeIndex(final int row) {
+        return _timeSerieArray[row].getMaximumIndex();
     }
 
     @SuppressWarnings("PMD")
     @Override
-    public void insertValuesAtEnd(final float[] values, final double timeValue) {        
+    public void insertValuesAtEnd(final float[] values, final double timeValue) {
 
         for (int j = 0; j < _timeSerieArray.length; j++) {
             int index = _timeSerieArray[j].getMaximumIndex()+1;
@@ -156,7 +156,7 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
     }
 
     @Override
-    public Object getDataValueInInterval(double intervalStart, double intervalStop, int rowIndex) {        
+    public Object getDataValueInInterval(double intervalStart, double intervalStop, int rowIndex) {
 //        int index = _timeSerieArray.findTimeIndex(intervalStop, _maximumIndex);
 //        return getValue(0, index);
 //        System.out.println("Interval Start:" + intervalStart + "\tIntervallStop: " + intervalStop + "\t columnIndex: " + columnIndex);
@@ -171,7 +171,7 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
             }
         }
 
-        if (startIndex == stopIndex) { // in this case, there was no data point in the given interval.   
+        if (startIndex == stopIndex) { // in this case, there was no data point in the given interval.
             return null;
         }
         if (startIndex + 1 == stopIndex) { // we have exactly one datapoint in the interval.
@@ -233,7 +233,7 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
         for(AbstractTimeSerie ts : _timeSerieArray) {
             maxXValue = Math.max(maxXValue, ts.getValue(ts.getMaximumIndex()));
         }
-        
+
         NiceScale niceScale = new NiceScale(HiLoData.hiLoDataFabric(0, (float) maxXValue));
         return niceScale.getNiceLimits()._yHi;
     }

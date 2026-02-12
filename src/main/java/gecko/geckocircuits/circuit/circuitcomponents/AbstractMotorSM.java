@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,7 +25,7 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
 
     AbstractCurrentSource _controlledSource3;
     AbstractResistor _resistor;
-    
+
     double Lls;
     final UserParameter<Double> statorLeakageInductance = UserParameter.Builder.
             <Double>start("statorLeakageInductance", 0.0010).
@@ -96,7 +96,7 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
             unit("A").
             arrayIndex(this, getInitialFieldCurrentIndex()).
             build();
-    
+
     double Llkd;
     final UserParameter<Double> damperLeakageInductanceD = UserParameter.Builder.
             <Double>start("damperLeakageInductanceD", 0.0015).
@@ -137,9 +137,9 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
             unit("H").
             arrayIndex(this, getSaturatedMagnetizingInductanceIndex()).
             build();
-            
+
     double psimd0 = 0, psimq0 = 0, psimd = 0, psimq = 0;
-    // weitere interne Parameter: 
+    // weitere interne Parameter:
     double Mf, Mi, tauT;
 
     @Override
@@ -157,12 +157,12 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
         super.setSubCircuit();
         // Erregerstromquelle fuer ifx(t) -->
         _controlledSource3 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
-        // hochohmiger Widerstand zur Anbindung des Rotorkreises --> 
+        // hochohmiger Widerstand zur Anbindung des Rotorkreises -->
         _resistor = (AbstractResistor) fabricHiddenSub(CircuitTyp.LK_R, this);
 
         _controlledSource3.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_SIGNALGESTEUERT);
         _resistor._resistance.setValueWithoutUndo(1e8);
-        
+
         _controlledSource3.setInputTerminal(0, YOUT.get(0));
         _controlledSource3.setOutputTerminal(0, YOUT.get(1));
 
@@ -193,7 +193,7 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
     public final int getIndexForLoadTorque() {
         return 15;
     }
-    
+
     abstract int getInitialStatorFluxIndexD();
 
     abstract int getInitialStatorFluxIndexQ();
@@ -213,13 +213,13 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
 
     @Override
     public void setzeParameterZustandswerteAufNULL() {
-        super.setzeParameterZustandswerteAufNULL();        
+        super.setzeParameterZustandswerteAufNULL();
         Rkd = damperResistanceD.getValue();
         Rkq = damperResistanceQ.getValue();
         Llkd = damperLeakageInductanceD.getValue();
         Llkq1 = damperLeakageInductanceQ.getValue();
         Llf = fieldLeakageInductance.getValue();
-        
+
         isa = isa0 = initialStatorCurrentA.getValue();
         isb = isb0 = initialStatorCurrentB.getValue();
 
@@ -246,35 +246,35 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
         tauT = fT / psiT * Lmd0 / Lmdsat;
         _controlledAnchorSourceA.parameter[1] = isa0;
         _controlledAnchorSourceC.parameter[1] = -(isa0 + isb0);
-        _controlledSource3.parameter[1] = ifd0;        
-    }        
-    
+        _controlledSource3.parameter[1] = ifd0;
+    }
+
     final void updateSourceParameters() {
         super.updateSourceParameters();
-        _controlledSource3.parameter[1] = ifd;   
+        _controlledSource3.parameter[1] = ifd;
     }
 
     void updateHistoryVariables() {
         super.updateHistoryVariables();
         psimd0 = psimd;
         psimq0 = psimq;
-        ifd0 = ifd;        
-    }            
+        ifd0 = ifd;
+    }
 
-    void updateIsIfPsis(double deltaT, double ud, double uq, double uf, double ddt_psimd, double ddt_psimq) {                
-        double ddt_isd = (-_statorResistance * isd + Lls * _omegaElectric * isq + _omegaElectric * psimq + ud - ddt_psimd) / Lls;                                        
+    void updateIsIfPsis(double deltaT, double ud, double uq, double uf, double ddt_psimd, double ddt_psimq) {
+        double ddt_isd = (-_statorResistance * isd + Lls * _omegaElectric * isq + _omegaElectric * psimq + ud - ddt_psimd) / Lls;
         double ddt_isq = (-Lls * _omegaElectric * isd - _statorResistance * isq - psimd * _omegaElectric + uq - ddt_psimq) / Lls;
         double ddt_ifd = (-Rf * ifd + uf - ddt_psimd) / Llf;
         isd = isd0 + ddt_isd * deltaT;
-                
-                
-        
+
+
+
         isq = isq0 + ddt_isq * deltaT;
         ifd = ifd0 + ddt_ifd * deltaT;
         psisd = Lls * isd + psimd;
-        psisq = Lls * isq + psimq;                                                        
+        psisq = Lls * isq + psimq;
     }
-    
+
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
@@ -285,26 +285,26 @@ abstract class AbstractMotorSM extends AbstractThreePhaseMotor {
 
     @Override
     void updateOldSolverParameters() {
-        super.updateOldSolverParameters();        
+        super.updateOldSolverParameters();
         parameter[7] = ifd;
         parameter[8] = psisd;
         parameter[9] = psisq;
-    }    
-    
+    }
+
 
     @Override
     public final List<String> getParameterStringIntern() {
         return Arrays.asList("isa [A]", "isb [A]", "isc [A]", "omega", "n [rpm]",
                 "theta [rad]", "Tel [Nm]");
-    }    
-    
-    
+    }
+
+
 
     double calculate_ud(final double uab, final double ubc) {
         return (2 * uab * Math.cos(_thetaElectric) + ubc * (Math.cos(_thetaElectric) + Math.sqrt(3) * Math.sin(_thetaElectric))) / 3;
     }
 
     double calculate_uq(final double uab, final double ubc) {
-        return -(2 * uab * Math.sin(_thetaElectric) + ubc * (Math.sin(_thetaElectric) - Math.sqrt(3) * Math.cos(_thetaElectric))) / 3;        
+        return -(2 * uab * Math.sin(_thetaElectric) + ubc * (Math.sin(_thetaElectric) - Math.sqrt(3) * Math.cos(_thetaElectric))) / 3;
     }
 }

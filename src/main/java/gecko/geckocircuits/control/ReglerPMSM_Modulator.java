@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,16 +25,16 @@ public final class ReglerPMSM_Modulator extends RegelBlock {
 
     public ReglerPMSM_Modulator() {
         super();
-        
+
         XIN.add(new TerminalControlInputWithLabel(this, -2, -XIN.size(), "Ua"));
         XIN.add(new TerminalControlInputWithLabel(this, -2, -XIN.size(), "Ub"));
         XIN.add(new TerminalControlInputWithLabel(this, -2, -XIN.size(), "Uc"));
         XIN.add(new TerminalControlInputWithLabel(this, -2, -XIN.size(), "Uref"));
-        
+
         YOUT.add(new TerminalControlOutputWithLabel(this, 2, -YOUT.size(), "gRm"));
         YOUT.add(new TerminalControlOutputWithLabel(this, 2, -YOUT.size(), "gSm"));
         YOUT.add(new TerminalControlOutputWithLabel(this, 2, -YOUT.size(), "gTm"));
-        
+
     }
 
     @Override
@@ -56,17 +56,17 @@ public final class ReglerPMSM_Modulator extends RegelBlock {
     public double getXShift() {
         return 1/2.0;
     }
-    
-    
+
+
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        return new PmsmModulatorCalculator();        
-    }        
+        return new PmsmModulatorCalculator();
+    }
 
     @Override
     protected String getCenteredDrawString() {
         return "PMSM\nMOD";
-    }    
+    }
 
     @Override
     protected Window openDialogWindow() {

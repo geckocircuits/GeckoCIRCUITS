@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -56,7 +56,7 @@ final class CurvePixelPainterHiLow extends AbstractCurvePixelPainter{
     }
 
     if(_previousPixelPainter instanceof CurvePixelPainterHiLow){
-      // if two HiLo-Painters sit next to each other, 
+      // if two HiLo-Painters sit next to each other,
       // and have a big overlap, dont continue path simplificationi
       final double overlap = calculateOverlap(this, (CurvePixelPainterHiLow)_previousPixelPainter);
       if(overlap > 1){

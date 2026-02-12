@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -51,12 +51,12 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
         if (element._reversed.getDoubleValue() == 1) {
             reverse.setSelected(true);
         }
-        
+
         final FormatJTextField windingsField1 = getRegisteredTextField(element._windings1);
         final FormatJTextField windingsField2 = getRegisteredTextField(element._windings2);
         final FormatJTextField windingsRatio = getRegisteredTextField(element._windingsRatio);
-        
-        pIN2.add(jln);                
+
+        pIN2.add(jln);
 
         windingsRatio.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent ke) {
@@ -75,8 +75,8 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
         JLabel m_n = labelFabric("m : n =  ");
         pIN2.add(new JLabel(" "));
         pIN2.add(m_n);
-        
-        
+
+
         windingsField1.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent ke) {
             }
@@ -94,8 +94,8 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
                 }
             }
         });
-        
-        pIN2.add(windingsField1);       
+
+        pIN2.add(windingsField1);
         pIN2.add(windingsField2);
         pIN2.add(reverse);
 
@@ -128,7 +128,7 @@ class IdealTransformerDialog extends DialogElementLK<IdealTransformer> {
     }
 
     @Override
-    public void processInputIndividual() {        
+    public void processInputIndividual() {
         if (reverse.isSelected()) {
             element._reversed.setUserValue(1.0);
         } else {

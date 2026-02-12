@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -61,7 +61,7 @@ public class SubCircuitSheet extends CircuitSheet {
         _settingsButton = GuiFabric.getJButton(I18nKeys.SHEET_SETTINGS);
         _settingsButton.setBackground(new Color(0, 0, 0, 0));
         _settingsButton.setOpaque(false);
-        _settingsButton.setFont(new Font("Arial", Font.PLAIN, 10));        
+        _settingsButton.setFont(new Font("Arial", Font.PLAIN, 10));
         _settingsButton.setBounds(BUTTON_WIDTH, 0, BUTTON_WIDTH, 20);
         _settingsButton.addActionListener(new ActionListener() {
 
@@ -84,7 +84,7 @@ public class SubCircuitSheet extends CircuitSheet {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                AbstractBlockInterface newElement = null;                                
+                AbstractBlockInterface newElement = null;
                 switch(SchematicEditor2.Singleton.wireModeVersteckt) {
                     case SchematicEditor2.WIRE_MODE_LK:
                     case SchematicEditor2.WIRE_MODE_RELUCTANCE:
@@ -96,12 +96,12 @@ public class SubCircuitSheet extends CircuitSheet {
                         break;
                     default:
                         assert false;
-                }                
+                }
                 SchematicEditor2.Singleton.insertNewElement(newElement);
             }
         });
 
-        
+
         _infoButton = GuiFabric.getJButton(I18nKeys.SHOW_INFORMATION);
         _infoButton.setBackground(new Color(0, 0, 0, 0));
         _infoButton.setOpaque(false);
@@ -124,8 +124,8 @@ public class SubCircuitSheet extends CircuitSheet {
                         + "circuit by clicking on the subcircuit block."
                         , "Subcircuit documentation", JOptionPane.INFORMATION_MESSAGE);
             }
-        });    
-        
+        });
+
         setNewScaling(AbstractCircuitSheetComponent.dpix);
     }
 
@@ -133,12 +133,12 @@ public class SubCircuitSheet extends CircuitSheet {
     public void drawCircuitSheet(Graphics2D g2d) {
         super.drawCircuitSheet(g2d);
         g2d.setColor(Color.decode("0xaaaaaa"));  // zwischen GRAY (808080) und LIGHTGREY (d3d3d3)
-        int dpix = AbstractCircuitSheetComponent.dpix;        
+        int dpix = AbstractCircuitSheetComponent.dpix;
         g2d.drawRect(0, 0, dpix * _worksheetSize.getSizeX(), dpix * _worksheetSize.getSizeY());
-    }       
-    
+    }
+
     public void doSetVisibleAction() {
-        super.doSetVisibleAction();    
+        super.doSetVisibleAction();
         _nameLabel = new JLabel();
         setNameLabelText();
         MainWindow._northPanel.add(_nameLabel);
@@ -147,17 +147,17 @@ public class SubCircuitSheet extends CircuitSheet {
         MainWindow._northPanel.add(_newTerminalButton);
         MainWindow._northPanel.add(_infoButton);
         MainWindow._northPanel.revalidate();
-        //this.add(upButton);        
+        //this.add(upButton);
     }
-    
+
     public void setNameLabelText() {
         if(_nameLabel != null) {
             _nameLabel.setText(getCircuitSheetName()  + "   ");
-        }        
+        }
     }
-    
-    
-    public String getCircuitSheetName() {    
+
+
+    public String getCircuitSheetName() {
         return _subBlock.getStringID();
-    }        
+    }
 }

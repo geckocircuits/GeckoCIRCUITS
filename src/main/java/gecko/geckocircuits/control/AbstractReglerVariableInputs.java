@@ -14,16 +14,16 @@ import java.awt.event.ActionListener;
 public abstract class AbstractReglerVariableInputs extends RegelBlock implements VariableTerminalNumber {
 
     private final static int DEFAULT_NUMBER_INPUTS = 1;
-    
+
     public final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("anzXIN", DEFAULT_NUMBER_INPUTS).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
             arrayIndex(this, -1).
             build();
-    
+
     public AbstractReglerVariableInputs(final int defaultInputs) {
-        super(defaultInputs, 1); 
+        super(defaultInputs, 1);
         _inputTerminalNumber.setValueWithoutUndo(defaultInputs);
         _inputTerminalNumber.addActionListener(new ActionListener() {
             @Override
@@ -32,7 +32,7 @@ public abstract class AbstractReglerVariableInputs extends RegelBlock implements
             }
         });
     }
-    
+
     @Override
     @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
             justification = "Null check protects against uninitialized field access from superclass constructor")
@@ -49,11 +49,11 @@ public abstract class AbstractReglerVariableInputs extends RegelBlock implements
     public final void setOutputTerminalNumber(final int number) {
         setOutputTerminalNumber(number, 1);
     }
-    
+
     @Override
-    protected Window openDialogWindow() {        
-        return new DialogReglerVariableInputs(this);        
+    protected Window openDialogWindow() {
+        return new DialogReglerVariableInputs(this);
     }
-        
-        
+
+
 }

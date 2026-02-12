@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -23,7 +23,7 @@ public class MutualCouplingCalculator {
     private InductorCouplingCalculator _l1;
     private InductorCouplingCalculator _l2;
 
-    
+
     public MutualCouplingCalculator(InductorCouplingCalculator l1, InductorCouplingCalculator l2, double k) {
         _k = k;
 

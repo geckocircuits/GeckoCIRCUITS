@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,7 +30,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "ClassLoader stores class map reference for dynamic class loading")
 public final class JavaBlockClassLoader extends URLClassLoader {
-    
+
     private final Map<String, CompiledClassContainer> _classMap;
 
     public JavaBlockClassLoader(final Map<String, CompiledClassContainer> classMap) {
@@ -39,13 +39,13 @@ public final class JavaBlockClassLoader extends URLClassLoader {
          * as parent for this classLoader. This works, but when GeckoCIRCUITS is run as
          * applet in the browser, the classloader won't find ControlCalculatable.jar.
          * But, when using the getContextClassLoader(), it will work.
-         * 
+         *
          */
-        
+
         super(new URL[0], Thread.currentThread().getContextClassLoader());
-        
+
         _classMap = classMap;
-        
+
     }
 
     /**
@@ -77,7 +77,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
             ClassNotFoundException {
 
         // extendClassPath();
-        if (_classMap.containsKey(name)) {   
+        if (_classMap.containsKey(name)) {
             final byte[] classBytes = _classMap.get(name).getClassBytes();
             return defineClass(name, classBytes, 0, classBytes.length);
         } else {

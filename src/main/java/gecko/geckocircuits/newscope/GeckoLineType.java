@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,7 +18,7 @@ public enum GeckoLineType {
      * WARNING: Don't change the order of the enumeration constants, ordinal() is used!
      */
     CONNECT_NEIGHBOURS(0, "Connect neigbours"),
-    BAR(1, "Bar to x-Axis");    
+    BAR(1, "Bar to x-Axis");
 
     static GeckoLineStyle getFromOrdinal(final int ordinal) {
         for (GeckoLineStyle val : GeckoLineStyle.values()) {
@@ -31,7 +31,7 @@ public enum GeckoLineType {
     }
     private final int _code;
     private final String _description;
-    
+
     GeckoLineType(final int code, final String description) {
         this._code = code;
         _description = description;
@@ -39,7 +39,7 @@ public enum GeckoLineType {
 
     public int code() {
         return _code;
-    }        
+    }
 
     public static GeckoLineStyle setzeLinienstilSelektiert(final int ordinal) {
         for (GeckoLineStyle val : GeckoLineStyle.values()) {
@@ -50,7 +50,7 @@ public enum GeckoLineType {
         assert false;
         return null;
     }
-    
+
 
     public static GeckoLineType getFromCode(final int gLSCode) {
         for (GeckoLineType val : values()) {
@@ -58,7 +58,7 @@ public enum GeckoLineType {
                 return val;
             }
         }
-        
+
         // default:
         return CONNECT_NEIGHBOURS;
     }
@@ -67,6 +67,6 @@ public enum GeckoLineType {
     public String toString() {
         return _description;
     }
-    
-    
+
+
 }

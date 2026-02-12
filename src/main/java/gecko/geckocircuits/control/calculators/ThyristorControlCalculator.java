@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -20,19 +20,19 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
     private static final int TN_X = 2, TN_Y = 6;  // Nummer der Terminals fuer Signal-Anschluss
     private static final double THREE = 3;
     private static final double THREE_HALF = 1.5;
-    private double _lastFallingZero = -1;    
+    private double _lastFallingZero = -1;
     private double _synchTime;
     private double _synchOld = 0;
-    private double _synchFreq;    
+    private double _synchFreq;
     private double _onTime;
     private double _phaseShift;
-        
-    
+
+
     private final List<GateEvent> _gateEvents = new ArrayList<GateEvent>();
     private double[] _lastOnTimePoint = new double[]{-1, -1, -1, -1, -1, -1};
-    
+
     /**
-     * 
+     *
      * @param phaseShift measured in degrees
      * @param initFreq in Hz
      * @param onTime in seconds
@@ -41,11 +41,11 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
         super(TN_X, TN_Y);
         _onTime = onTime;
         _phaseShift = phaseShift;
-        _synchFreq = initFreq;        
+        _synchFreq = initFreq;
         _lastOnTimePoint = new double[]{-1, -1, -1, -1, -1, -1};
-        _lastFallingZero = -1;        
+        _lastFallingZero = -1;
         _synchTime = 0;
-        _synchOld = 0;        
+        _synchOld = 0;
     }
 
     public void setOnTime(final double onTime) {
@@ -55,8 +55,8 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
     public void setPhaseShift(final double phaseShift) {
         _phaseShift = phaseShift;
     }
-    
-    
+
+
 
     @Override
     public void berechneYOUT(final double deltaT) {
@@ -80,12 +80,12 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
         final double alpha = Math.toRadians(_phaseShift + _inputSignal[0][0]);
 
         for (int i = 0; i < TN_Y; i++) {
-            double onTimePoint = 
-                    _synchTime + 1 / _synchFreq * alpha / (2 * Math.PI) 
+            double onTimePoint =
+                    _synchTime + 1 / _synchFreq * alpha / (2 * Math.PI)
                     + (i - TN_Y) * 1 / (THREE * _synchFreq);
 
-            if (i > 2) {                
-                onTimePoint -= THREE_HALF / _synchFreq;                
+            if (i > 2) {
+                onTimePoint -= THREE_HALF / _synchFreq;
             }
 
             if (Math.abs(_lastOnTimePoint[i] - onTimePoint) > epsilon) {
@@ -106,8 +106,8 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
 
         _synchOld = _inputSignal[1][0];
     }
-    
-    
+
+
     class GateEvent {
         private static final double SMALL_VALUE = 1e-20;
         private final double _onTime;

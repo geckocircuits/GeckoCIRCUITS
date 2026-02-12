@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,27 +47,27 @@ public final class DataLoader{
       _curvePaintable.setRamData(newData);
       final int maxExtendedPixel = getMaximumExtendedPixel(newData.getMaximumTimeIndex(_curvePaintable._curve.getValueDataIndex()));
       _oldAxisHash = calculateAxisHash(_curvePaintable.getSensitiveAxis());
-      final int minExtendedPixel = getMinimumExtendedPixel();                            
-      _curvePaintable.reLoadData(minExtendedPixel, maxExtendedPixel);        
+      final int minExtendedPixel = getMinimumExtendedPixel();
+      _curvePaintable.reLoadData(minExtendedPixel, maxExtendedPixel);
       _maxLoadedPixel = maxExtendedPixel;
       return;
     }
 
     final long newAxisHash = calculateAxisHash(_curvePaintable.getSensitiveAxis());
     final int maxExtendedPixel = getMaximumExtendedPixel(newData.getMaximumTimeIndex(_curvePaintable._curve.getValueDataIndex()));
-    if(_oldAxisHash != newAxisHash || forceLoad){ // do full load when axis properties changed            
+    if(_oldAxisHash != newAxisHash || forceLoad){ // do full load when axis properties changed
       _oldAxisHash = newAxisHash;
-      final int minExtendedPixel = getMinimumExtendedPixel();      
+      final int minExtendedPixel = getMinimumExtendedPixel();
       _curvePaintable.reLoadData(minExtendedPixel, maxExtendedPixel);
       _maxLoadedPixel = maxExtendedPixel;
       return;
     }
 
-    final int newMaximumIndex = _curvePaintable.getRamData().getMaximumTimeIndex(_curvePaintable._curve.getValueDataIndex());      
+    final int newMaximumIndex = _curvePaintable.getRamData().getMaximumTimeIndex(_curvePaintable._curve.getValueDataIndex());
     final Axis xAxis = _curvePaintable.getXAxis();
     if(_maxDataIndex != newMaximumIndex && _maxDataIndex >= 0
             || _maxLoadedPixel < xAxis._axisOriginPixel.x + xAxis.getAxisLengthPixel()){
-      _maxDataIndex = newMaximumIndex;        
+      _maxDataIndex = newMaximumIndex;
       _curvePaintable.loadDataRange(Math.max(_maxLoadedPixel, xAxis._axisOriginPixel.x), maxExtendedPixel);
       _maxLoadedPixel = maxExtendedPixel;
     }
@@ -82,8 +82,8 @@ public final class DataLoader{
    * @param maximumDataContainerIndex
    * @return
    */
-  private int getMaximumExtendedPixel(final int maximumDataContainerIndex){      
-      
+  private int getMaximumExtendedPixel(final int maximumDataContainerIndex){
+
     final Axis xAxis = _curvePaintable.getXAxis();
     if(maximumDataContainerIndex < 0){
       return Integer.MIN_VALUE;
@@ -94,14 +94,14 @@ public final class DataLoader{
 
     final AbstractTimeSerie timeSerie = _curvePaintable.getRamData().getTimeSeries(_curvePaintable._curve.getValueDataIndex());
     final int maxAxisIndex = timeSerie.findTimeIndex(xAxis.getValueFromPixel(maxAxisPixel));
-      
-    if(maxAxisIndex + 1 < maximumDataContainerIndex){                                
+
+    if(maxAxisIndex + 1 < maximumDataContainerIndex){
         return Math.min(maxDataPixel, (int)xAxis.getPixelFromValue(timeSerie.getValue(maxAxisIndex + 2)));
     } else {
         return Math.min(maxDataPixel+1, maxAxisPixel);
-    }         
+    }
 
-    
+
   }
 
   /**
@@ -111,11 +111,11 @@ public final class DataLoader{
    */
   private int getMinimumExtendedPixel(){
     final Axis xAxis = _curvePaintable.getXAxis();
-    final double axisOriginValue = xAxis.getValueFromPixel(xAxis._axisOriginPixel.x);      
+    final double axisOriginValue = xAxis.getValueFromPixel(xAxis._axisOriginPixel.x);
     final AbstractTimeSerie timeSerie = _curvePaintable.getRamData().getTimeSeries(0);
-    final int originDataIndex = timeSerie.findTimeIndex(axisOriginValue);      
+    final int originDataIndex = timeSerie.findTimeIndex(axisOriginValue);
     final int indexToLoad = Math.max(0, originDataIndex - 1);
-    final double loadXValue = timeSerie.getValue(indexToLoad);      
+    final double loadXValue = timeSerie.getValue(indexToLoad);
     int returnValue = (int) xAxis.getPixelFromValue(loadXValue);
     return returnValue;
   }

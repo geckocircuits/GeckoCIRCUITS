@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,23 +22,23 @@ import gecko.geckocircuits.allg.SolverType;
  * Subclasses implement actual calculation methods.
  */
 public abstract class AbstractInductorCore extends CircuitComponentCore {
-    
+
     protected double _inductance = 3.0E-4;  // Default 0.3 mH
     protected double _initialCurrent = 0.0;
     protected double _linearizedInductance;
-    
+
     protected AbstractInductorCore(SolverType solverType) {
         super(solverType);
         _linearizedInductance = _inductance;
     }
-    
+
     /**
      * Get inductance value in Henries
      */
     public double getInductance() {
         return _inductance;
     }
-    
+
     /**
      * Set inductance value
      */
@@ -50,28 +50,28 @@ public abstract class AbstractInductorCore extends CircuitComponentCore {
         }
         this._linearizedInductance = this._inductance;
     }
-    
+
     /**
      * Get initial current in Amperes
      */
     public double getInitialCurrent() {
         return _initialCurrent;
     }
-    
+
     /**
      * Set initial current condition
      */
     public void setInitialCurrent(double initialCurrent) {
         this._initialCurrent = initialCurrent;
     }
-    
+
     /**
      * Get linearized inductance value (for nonlinear inductors)
      */
     public double getLinearizedInductance() {
         return _linearizedInductance;
     }
-    
+
     /**
      * Set linearized inductance
      */

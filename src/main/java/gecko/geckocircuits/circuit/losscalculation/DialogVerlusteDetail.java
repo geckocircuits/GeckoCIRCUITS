@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -47,7 +47,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
 
     public static DialogVerlusteDetail fabricCreateNew(final VerlustBerechnungDetailed lossCalculation, final Window parent) {
         DialogVerlusteDetail returnValue = new DialogVerlusteDetail(lossCalculation, parent);
-        returnValue._jButtonSaveChanged.setEnabled(false);        
+        returnValue._jButtonSaveChanged.setEnabled(false);
         return returnValue;
     }
 
@@ -56,7 +56,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
         returnValue._jButtonSaveChanged.setEnabled(true);
         return returnValue;
     }
-    
+
     private DialogVerlusteDetail(final VerlustBerechnungDetailed lossCalculation, final Window parent) {
         super(parent, true);
         getContentPane().setLayout(new BorderLayout());
@@ -82,8 +82,8 @@ public final class DialogVerlusteDetail extends GeckoDialog {
         // vorhandene Verlust-Details werden zum Editieren geladen
         _lossCalculation = lossCalculation;
         // Kurvendaten der Messkurven einlesen:
-        _switchingLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfSchaltverlusteMesskurvenArray());        
-        _conductionLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfLeitverlusteMesskurvenArray());        
+        _switchingLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfSchaltverlusteMesskurvenArray());
+        _conductionLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfLeitverlusteMesskurvenArray());
 
         if (_lossCalculation.lossFile != null) {
             this.setTitle(" " + _lossCalculation.lossFile.getName());
@@ -99,11 +99,11 @@ public final class DialogVerlusteDetail extends GeckoDialog {
         if(_lossCalculation._parent instanceof Diode) {
             _conductionLossPanel.useNonlinearInElectric((Diode) _lossCalculation._parent);
         }
-        
+
         this.buildMainPanel();
 
         this.pack();
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);        
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     private final transient ActionListener _saveChangeListener = new ActionListener() {
@@ -124,7 +124,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
             doSaveAsNew();
         }
     };
-    
+
     private void doSaveAsNew() {
         String fileName = getNewFileNameDialog();
             if (fileName == null) {
@@ -171,7 +171,7 @@ public final class DialogVerlusteDetail extends GeckoDialog {
     private void applyChanges(final String fileName) {
 
         // (1) Verluste werden neu gesetzt:
-        _lossCalculation.setzeNeueParameter(_switchingLossPanel._lossCurves, _conductionLossPanel._lossCurves);        
+        _lossCalculation.setzeNeueParameter(_switchingLossPanel._lossCurves, _conductionLossPanel._lossCurves);
         // (2) Entsprechende neue Datei wird gespeichert:
         //Making detailed loss file use the Gecko File Manager (Andrija):
         //NOTE - HERE I PASS "FALSE" BY DEFAULT ("FALSE" means losses are saved into .ipes file)

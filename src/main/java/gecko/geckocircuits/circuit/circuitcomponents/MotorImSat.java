@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -24,7 +24,7 @@ import java.awt.Window;
 import java.util.Arrays;
 import java.util.List;
 
-// Saettigbare Asynchronmaschine 
+// Saettigbare Asynchronmaschine
 public final class MotorImSat extends AbstractMotorIMCommon {
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorImSat.class, "IM-SAT", I18nKeys.IM_SAT, I18nKeys.SATURABLE_INDUCTION_MACHINE);
 
@@ -59,7 +59,7 @@ public final class MotorImSat extends AbstractMotorIMCommon {
     private int drMpix = 3;
     private double Lls = 1e-3;
     private double Rr = 1.0, Llr = 1.8e-3, Lm0 = 50e-3, Lmsat = 50e-3, psiT = 0.25, fT = 0.9;
-    // interne Variablen: 
+    // interne Variablen:
     private double isd = 0, isd0 = 0, isq = 0, isq0 = 0;
     private double Mf, Mi, tauT, psimd, psimq;
     private double psimd0 = 0, psimq0 = 0;
@@ -83,11 +83,11 @@ public final class MotorImSat extends AbstractMotorIMCommon {
     @Override
     void setSubCircuit() {
         super.setSubCircuit();
-        // Eingangsstromquelle fuer iax(t) --> 
+        // Eingangsstromquelle fuer iax(t) -->
         _controlledSource3 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
-        // Eingangsstromquelle fuer icx(t) --> 
+        // Eingangsstromquelle fuer icx(t) -->
         _controlledSource4 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
-        // hochohmiger Widerstand zur Anbindung des Rotorkreises --> 
+        // hochohmiger Widerstand zur Anbindung des Rotorkreises -->
         _resistor = (AbstractResistor) fabricHiddenSub(CircuitTyp.LK_R, this);
 
 
@@ -109,7 +109,7 @@ public final class MotorImSat extends AbstractMotorIMCommon {
         return 15;
     }
 
-    // Initialisiereung nach INIT&START --> 
+    // Initialisiereung nach INIT&START -->
     @Override
     public void setzeParameterZustandswerteAufNULL() {
         super.setzeParameterZustandswerteAufNULL();
@@ -155,7 +155,7 @@ public final class MotorImSat extends AbstractMotorIMCommon {
         double urab = _controlledSource3.parameter[7];
         double urbc = -_controlledSource4.parameter[7];
         //------
-        // Block 'usab,usbc -> udq': 
+        // Block 'usab,usbc -> udq':
         double usd = 2 * usab / 3 + usbc / 3;
         double usq = usbc / Math.sqrt(3);
         double psim = Math.sqrt(psimd * psimd + psimq * psimq);
@@ -164,10 +164,10 @@ public final class MotorImSat extends AbstractMotorIMCommon {
         }
         double inv_Lm = (Mf - Mi) / Math.PI * ((psim - psiT) * Math.atan(tauT * (psim - psiT)) - psiT * Math.atan(tauT * psiT)
                 + 0.5 / tauT * (Math.log(1 + tauT * psiT * tauT * psiT) - Math.log(1 + tauT * tauT * (psim - psiT) * (psim - psiT)))) / psim + 0.5 * (Mf + Mi);
-        // Block 'vrdq': 
+        // Block 'vrdq':
         double urd = 2.0 / 3.0 * (urab * Math.cos(_thetaElectric) - urbc * Math.cos(_thetaElectric - 2 * Math.PI / 3));
         double urq = 2.0 / 3.0 * (urab * Math.sin(_thetaElectric) - urbc * Math.sin(_thetaElectric - 2 * Math.PI / 3));
-        // Block 'isdq,psimdq': 
+        // Block 'isdq,psimdq':
         double ddt_psimd = ((Rr / Llr - _statorResistance / Lls) * isd + isq * _omegaElectric - Rr * inv_Lm / Llr * psimd - _omegaElectric * psimq * (inv_Lm + 1 / Llr)
                 + usd / Lls + urd / Llr) / (inv_Lm + 1 / Lls + 1 / Llr);
         double ddt_psimq = (-_omegaElectric * isd + (Rr / Llr - _statorResistance / Lls) * isq + _omegaElectric * (inv_Lm + 1 / Llr) * psimd - Rr * inv_Lm / Llr * psimq
@@ -178,27 +178,27 @@ public final class MotorImSat extends AbstractMotorIMCommon {
         psimq = psimq0 + ddt_psimq * deltaT;
         isd = isd0 + ddt_isd * deltaT;
         isq = isq0 + ddt_isq * deltaT;
-        // Block 'psisdq': 
+        // Block 'psisdq':
         psisd = Lls * isd + psimd;
         psisq = Lls * isq + psimq;
         // Block 'irdq':
         double ird = inv_Lm * psimd - isd;
         double irq = inv_Lm * psimq - isq;
-        // Block 'ira,irb': 
+        // Block 'ira,irb':
         ira = ird * Math.cos(_thetaElectric) + irq * Math.sin(_thetaElectric);
         irb = ird * Math.cos(_thetaElectric + 2 * Math.PI / 3) + irq * Math.sin(_thetaElectric + 2 * Math.PI / 3);
     }
 
     @Override
     void updateSourceParameters() {
-        // Block 'isa,isb': 
+        // Block 'isa,isb':
         isa = isd;
         isb = 0.5 * (-isd + Math.sqrt(3) * isq);
         isc = 0.5 * (-isd - Math.sqrt(3) * isq);
         _controlledAnchorSourceA.parameter[1] = isa;
         _controlledAnchorSourceC.parameter[1] = -(isa + isb);  // isc
         _controlledSource3.parameter[1] = ira;
-        _controlledSource4.parameter[1] = -(ira + irb);  // irc         
+        _controlledSource4.parameter[1] = -(ira + irb);  // irc
     }
 
     @Override
@@ -219,14 +219,14 @@ public final class MotorImSat extends AbstractMotorIMCommon {
 
     @Override
     protected void drawOnTop(final Graphics2D graphics) {
-        // Saturation-Symbol: 
+        // Saturation-Symbol:
         graphics.drawOval((int) (-dpix * RADIUS_MOTOR_SYMBOL) + drMpix, (int) (-dpix * RADIUS_MOTOR_SYMBOL) + drMpix,
                 (int) (dpix * 2 * RADIUS_MOTOR_SYMBOL) - 2 * drMpix, (int) (dpix * 2 * RADIUS_MOTOR_SYMBOL) - 2 * drMpix);
         double h1 = 0.1, h2 = 0.3, h3 = 0.4;
         graphics.drawLine((int) (dpix * (-h1 - h2)), (int) (dpix * h3), (int) (-dpix * h1), (int) (dpix * h3));
         graphics.drawLine((int) (dpix * (h1 + h2)), (int) (-dpix * h3), (int) (dpix * h1), (int) (-dpix * h3));
         graphics.drawLine((int) (-dpix * h1), (int) (dpix * h3), (int) (dpix * h1), (int) (-dpix * h3));
-    }    
+    }
 
     @Override
     protected Window openDialogWindow() {
@@ -274,5 +274,5 @@ public final class MotorImSat extends AbstractMotorIMCommon {
     @Override
     int getInitialStatorFluxIndexQ() {
         return 30;
-    }        
+    }
 }

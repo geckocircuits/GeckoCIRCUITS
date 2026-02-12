@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -30,7 +30,7 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
     }
 
     @Override
-    protected void baueGuiIndividual() {        
+    protected void baueGuiIndividual() {
         //
         final int b = 30,
                 h = 45,
@@ -47,7 +47,7 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
         pIm.add(compIm, BorderLayout.CENTER);
         jpM.add(pIm, BorderLayout.NORTH);
         //
-        
+
         JPanel pPI = createParameterPanel(element._r0, element._a1, element._TimeConstant);
         jpM.add(pPI, BorderLayout.CENTER);
 
@@ -55,9 +55,9 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
         double r0Value = r0TextField.getNumberFromField();
         final FormatJTextField a1TextField = tf.get(1);
         double a1Value = a1TextField.getNumberFromField();
-        
+
         final FormatJTextField timeTextField = tf.get(2);
-        
+
         if (a1Value != 0) {
             timeTextField.setNumberToField(r0Value / a1Value);
         }
@@ -67,9 +67,9 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
                 try {
                     double r0Value = r0TextField.getNumberFromField();
                     double timeValue = timeTextField.getNumberFromField();
-                    
+
                     if (timeValue != 0) {
-                        double newA1Value = r0Value / timeValue;                                                
+                        double newA1Value = r0Value / timeValue;
                         a1TextField.setNumberToField(newA1Value);
                     }
                 } catch (Throwable ex) {
@@ -79,13 +79,13 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
         };
 
         r0TextField.addKeyListener(adapter);
-        timeTextField.addKeyListener(adapter);        
+        timeTextField.addKeyListener(adapter);
 
         a1TextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 try {
-                    double a1Value = a1TextField.getNumberFromField();                     
+                    double a1Value = a1TextField.getNumberFromField();
                     if (a1Value != 0) {
                         timeTextField.setNumberToField(r0TextField.getNumberFromField() / a1Value);
                     }
@@ -93,6 +93,6 @@ class ReglerPIDialog extends DialogElementCONTROL<ReglerPI> {
                     // really, here, I don't want any output messages!
                 }
             }
-        });                               
+        });
     }
 }

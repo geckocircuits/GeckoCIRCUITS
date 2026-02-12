@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -43,8 +43,8 @@ public final class ComponentCoupling {
         _parStringIndices = new int[parStringIndices.length];
         System.arraycopy(parStringIndices, 0, _parStringIndices, 0, parStringIndices.length);
     }
-    
-    public void setNewCouplingElement(final int index, final AbstractBlockInterface element) {        
+
+    public void setNewCouplingElement(final int index, final AbstractBlockInterface element) {
         _internalStringIndex = -1;
         _internalString = "";
         if (element == null) {
@@ -53,9 +53,9 @@ public final class ComponentCoupling {
                 _coupledElements[index]._isReferencedBy.remove(this);
             }
             _coupledElements[index] = null;
-        } else {                                    
+        } else {
             _coupledIdentifiers[index] = element.getUniqueObjectIdentifier();
-            if (_coupledElements[index] != null) {                                
+            if (_coupledElements[index] != null) {
                 _coupledElements[index]._isReferencedBy.remove(this);
             }
 
@@ -66,14 +66,14 @@ public final class ComponentCoupling {
         updateCouplingParameterStrings();
     }
 
-    public void setNewCouplingElement(int index, AbstractBlockInterface element, String is) {        
+    public void setNewCouplingElement(int index, AbstractBlockInterface element, String is) {
         if (element == null) {
             _coupledIdentifiers[index] = 0;
             if (_coupledElements[index] != null) {
                 _coupledElements[index]._isReferencedBy.remove(this);
             }
             _coupledElements[index] = null;
-        } else {                        
+        } else {
             _coupledIdentifiers[index] = element.getUniqueObjectIdentifier();
 
             if (_coupledElements[index] != null) {
@@ -84,10 +84,10 @@ public final class ComponentCoupling {
             _coupledElements[index]._isReferencedBy.add(this);
         }
 
-        
-        
-        
-        
+
+
+
+
         updateCouplingParameterStrings();
         if (!(element instanceof AbstractCircuitBlockInterface)) {
             return;
@@ -111,35 +111,35 @@ public final class ComponentCoupling {
         if (element == _coupledElements[index]) {
             return;
         }
-        
+
         if(element != null) {
             removeWithSingleReference(element, index); // this is for removing Gate connections that
             // already exist. Could be done in a nicer way, e.g. creating a sub-class of ComponentCouling...!
         }
-        
+
         final CouplingUndoableEdit edit = new CouplingUndoableEdit(_coupledElements[index], element, index, true);
         AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(edit));
         setNewCouplingElement(index, element);
-        
+
     }
 
     public void setNewCouplingElementInvisibleUndoable(final int index, final AbstractBlockInterface element) {
         if (element == _coupledElements[index]) {
             return;
-        }                
+        }
 
         final CouplingUndoableEdit edit = new CouplingUndoableEdit(_coupledElements[index], element, index, false);
         AbstractUndoGenericModel.undoManager.addEdit(new GeckoUndoableEditAdapter(edit));
         setNewCouplingElement(index, element);
     }
 
-    
+
 
     public AbstractBlockInterface getParent() {
         return _parentElement;
     }
 
-    public void updateCouplingParameterStrings() {        
+    public void updateCouplingParameterStrings() {
         for (int i = 0; i < _coupledElements.length; i++) {
             if (_coupledElements[i] == null) {
                 _parentElement.getParameterString()[_parStringIndices[i]] = "";
@@ -148,7 +148,7 @@ public final class ComponentCoupling {
 
                 if (_internalStringIndex >= 0) {
                     setString += _internalString;
-                }                
+                }
                 _parentElement.getParameterString()[_parStringIndices[i]] = setString;
             }
         }
@@ -163,12 +163,12 @@ public final class ComponentCoupling {
         return returnValue;
     }
 
-    public void importASCII(final TokenMap tokenMap) {        
-                
-                        
+    public void importASCII(final TokenMap tokenMap) {
+
+
         if (tokenMap.containsToken("coupledReferenceID[]")) {
-            long[] coupledIdentifiers = tokenMap.readDataLine("coupledReferenceID[]", _coupledIdentifiers);                                                
-            System.arraycopy(coupledIdentifiers, 0, _coupledIdentifiers, 0, coupledIdentifiers.length);            
+            long[] coupledIdentifiers = tokenMap.readDataLine("coupledReferenceID[]", _coupledIdentifiers);
+            System.arraycopy(coupledIdentifiers, 0, _coupledIdentifiers, 0, coupledIdentifiers.length);
         }
 
         if (tokenMap.containsToken("copyCoupledReferenceID[]")) {
@@ -182,7 +182,7 @@ public final class ComponentCoupling {
 
     }
 
-    public void exportASCII(StringBuffer ascii) {        
+    public void exportASCII(StringBuffer ascii) {
         ProjectData.appendAsString(ascii.append("\ncoupledReferenceID"), _coupledIdentifiers);
         /**
          * careful: this is used fore restoring connections, when copy export ->
@@ -194,15 +194,15 @@ public final class ComponentCoupling {
     }
 
     public void refreshCoupledReferences(final List<? extends AbstractCircuitSheetComponent> allSheetElements) {
-                
-        
+
+
         String[] parameterString = _parentElement.getParameterString();
         List<AbstractBlockInterface> allElements = new ArrayList<AbstractBlockInterface>();
         for(AbstractCircuitSheetComponent comp : allSheetElements) {
             if(comp instanceof AbstractBlockInterface) {
                 allElements.add((AbstractBlockInterface) comp);
             }
-        }                
+        }
         for (AbstractCircuitSheetComponent elem : allSheetElements) {
             if (elem instanceof HiddenSubCircuitable) {
                 for (AbstractBlockInterface sub : ((HiddenSubCircuitable) elem).getHiddenSubCircuitElements()) {
@@ -210,24 +210,24 @@ public final class ComponentCoupling {
                 }
             }
         }
-                
-        
+
+
         for (int i = 0; i < _coupledElements.length; i++) {
-            int parStringIndex = _parStringIndices[i];            
-            if (parameterString[parStringIndex].isEmpty() && _coupledElements[i] == null) {                             
+            int parStringIndex = _parStringIndices[i];
+            if (parameterString[parStringIndex].isEmpty() && _coupledElements[i] == null) {
                 return;
             }
-            
+
             if ((!parameterString[parStringIndex].isEmpty() && _coupledElements[i] == null)
-                    || _coupledElements[i].getUniqueObjectIdentifier() != _coupledIdentifiers[i]) {                                
+                    || _coupledElements[i].getUniqueObjectIdentifier() != _coupledIdentifiers[i]) {
                 for (AbstractBlockInterface elem : allElements) {
                     boolean internStringAdded = false;
                     //System.out.println("searching: " + elem.getStringID() + " " + elem.getUniqueObjectIdentifier());
                     if (elem instanceof AbstractCircuitBlockInterface) {
                         AbstractCircuitBlockInterface lkblock = (AbstractCircuitBlockInterface) elem;
                         List<String> internStrings = lkblock.getParameterStringIntern();
-                        if (internStrings != null && !internStrings.isEmpty()) {                                                        
-                            
+                        if (internStrings != null && !internStrings.isEmpty()) {
+
                             internStringAdded = true;
                             for (int index = 0; index < internStrings.size(); index++) {
                                 final String internString = parameterString[parStringIndex];
@@ -239,18 +239,18 @@ public final class ComponentCoupling {
                                     if (_coupledElements[i] != null && _coupledElements[i] != elem) {
                                         _coupledElements[i]._isReferencedBy.remove(this);
                                     }
-                                    _coupledElements[i] = elem;                                    
-                                    elem._isReferencedBy.add(this);                                    
+                                    _coupledElements[i] = elem;
+                                    elem._isReferencedBy.add(this);
                                 }
                             }
                         }
-                    } 
+                    }
                     if (!internStringAdded && elem.getUniqueObjectIdentifier() == _coupledIdentifiers[i]
                             || _coupledIdentifiers[i] == 0 && elem.getStringID().equals(parameterString[parStringIndex])) {
                         _coupledIdentifiers[i] = elem.getUniqueObjectIdentifier();
                         if (_coupledElements[i] != null) {
                             _coupledElements[i]._isReferencedBy.remove(this);
-                        }                        
+                        }
                         _coupledElements[i] = elem;
                         elem._isReferencedBy.add(this);
                     }
@@ -262,9 +262,9 @@ public final class ComponentCoupling {
                 assert _coupledIdentifiers[i] == _coupledElements[i].getUniqueObjectIdentifier();
             }
         }
-        
+
         updateCouplingParameterStrings();
-        
+
     }
 
     /**
@@ -276,15 +276,15 @@ public final class ComponentCoupling {
      * @param vecIndexExchangeAllNew
      * @param originElement
      */
-    public void trySetCopyReference(final List<AbstractCircuitSheetComponent> allNewElements) {   
-                
+    public void trySetCopyReference(final List<AbstractCircuitSheetComponent> allNewElements) {
+
         for (int i = 0; i < _coupledElements.length; i++) {
-            long searchCouplingIdentifier = _coupledIdentifiers[i];            
+            long searchCouplingIdentifier = _coupledIdentifiers[i];
             setNewCouplingElement(i, null, _internalString);
             for (AbstractCircuitSheetComponent elem : allNewElements) {
                 if (elem instanceof AbstractBlockInterface) {
-                    long elemIdentifier = elem.getIdentifier().getIdentifier();                    
-                    if (elemIdentifier != 0 && elemIdentifier == searchCouplingIdentifier) {                                                
+                    long elemIdentifier = elem.getIdentifier().getIdentifier();
+                    if (elemIdentifier != 0 && elemIdentifier == searchCouplingIdentifier) {
                         this.setNewCouplingElement(i, (AbstractBlockInterface) elem, _internalString);
                     }
                 }
@@ -310,9 +310,9 @@ public final class ComponentCoupling {
     }
 
     void shiftCopyCouplingIDsFrom(final ComponentCoupling oldCoupling, final long shiftValue) {
-        for(int i = 0; i < oldCoupling._coupledIdentifiers.length; i++) {            
-            _coupledIdentifiers[i] = oldCoupling._coupledIdentifiers[i] + shiftValue;            
-        }        
+        for(int i = 0; i < oldCoupling._coupledIdentifiers.length; i++) {
+            _coupledIdentifiers[i] = oldCoupling._coupledIdentifiers[i] + shiftValue;
+        }
     }
 
     void refreshCouplingReferences() {
@@ -321,18 +321,18 @@ public final class ComponentCoupling {
         }
     }
 
-    private void removeWithSingleReference(final AbstractBlockInterface partner, final int index) {                
-        for(ComponentCoupling otherCoup : partner._isReferencedBy.toArray(new ComponentCoupling[partner._isReferencedBy.size()])) {                        
-            if(otherCoup._parentElement instanceof ReglerGate 
-                    && _parentElement instanceof ReglerGate) {  
+    private void removeWithSingleReference(final AbstractBlockInterface partner, final int index) {
+        for(ComponentCoupling otherCoup : partner._isReferencedBy.toArray(new ComponentCoupling[partner._isReferencedBy.size()])) {
+            if(otherCoup._parentElement instanceof ReglerGate
+                    && _parentElement instanceof ReglerGate) {
                 otherCoup.setNewCouplingElementUndoable(index, null);
-            }            
+            }
         }
     }
-    
+
     class SetOperation extends Operationable.OperationInterface {
         final int _index;
-        SetOperation(final int index) {            
+        SetOperation(final int index) {
             super((index == 0) ? "setComponentCoupling" : "setSecondComponentCoupling", I18nKeys.SET_COMPONENT_COUPLING);
             _index = index;
         }
@@ -341,11 +341,11 @@ public final class ComponentCoupling {
                 if (!(parameterValue instanceof String)) {
                     throw new IllegalArgumentException("Parameter type must be a String!");
                 }
-                
+
                 final AbstractBlockInterface toCouple = IDStringDialog.getComponentByName((String) parameterValue);
-                
-                ComponentCoupable coupable = (ComponentCoupable) _parentElement;                
-                    
+
+                ComponentCoupable coupable = (ComponentCoupable) _parentElement;
+
                     List<AbstractBlockInterface> insertList = new ArrayList<AbstractBlockInterface>();
                     coupable.checkComponentCompatibility(toCouple, insertList);
 
@@ -368,22 +368,22 @@ public final class ComponentCoupling {
 
                     throw new RuntimeException("Component " + _parentElement.getStringID()
                             + " cannot be coupled to component " + parameterValue);
-                                                
+
             }
-        
-    }    
+
+    }
 
     public List<Operationable.OperationInterface> getOperationInterfaces() {
         List<Operationable.OperationInterface> returnValue = new ArrayList<Operationable.OperationInterface>();
-        
+
         Operationable.OperationInterface op0 = new SetOperation(0);
         returnValue.add(op0);
-        
+
         if(_coupledElements.length == 2) {
             Operationable.OperationInterface op1 = new SetOperation(1);
             returnValue.add(op1);
-        }        
-        
+        }
+
        return returnValue;
     }
 
@@ -395,7 +395,7 @@ public final class ComponentCoupling {
         private final AbstractBlockInterface _newReference;
 
         private CouplingUndoableEdit(final AbstractBlockInterface oldReference, final AbstractBlockInterface newReference, final int index,
-                final boolean isSignificant) {            
+                final boolean isSignificant) {
             _index = index;
             _oldReference = oldReference;
             _newReference = newReference;
@@ -403,7 +403,7 @@ public final class ComponentCoupling {
         }
 
         @Override
-        public void undo() throws IllegalStateException {            
+        public void undo() throws IllegalStateException {
             setNewCouplingElement(_index, _oldReference);
         }
 
@@ -473,12 +473,12 @@ public final class ComponentCoupling {
             return "Component reference from \"" + newRefString + "\" to \"" + oldRefString + "\"";
         }
     }
-    
+
     void shiftReferenceIDs(final long shiftValue) {
         for(int i = 0; i < _coupledIdentifiers.length; i++) {
-            if(_coupledIdentifiers[i] != 0) {                                
+            if(_coupledIdentifiers[i] != 0) {
                 _coupledIdentifiers[i] += shiftValue;
-            }            
-        }        
+            }
+        }
     }
 }

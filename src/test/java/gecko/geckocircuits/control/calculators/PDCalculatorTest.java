@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  Foobar is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,8 +22,8 @@ public class PDCalculatorTest {
     private static final double ACCURACY = 1e-4;
     private static final double END_TIME = 0.2;
     private PDCalculator _pdCalculator;
-        
-    
+
+
     @Before
     public void setUp() {
         _pdCalculator = new PDCalculator(1);
@@ -37,16 +37,16 @@ public class PDCalculatorTest {
         // the result should be 10 * cos(time) (differentiation)
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             final double value = 2 * Math.sin(5 * time);
-            _pdCalculator._inputSignal[0][0] = value;            
+            _pdCalculator._inputSignal[0][0] = value;
             _pdCalculator.berechneYOUT(DELTA_T);
-            final double result = _pdCalculator._outputSignal[0][0];            
-            final double expected = 10 * Math.cos(5 * time);                        
-            
+            final double result = _pdCalculator._outputSignal[0][0];
+            final double expected = 10 * Math.cos(5 * time);
+
             if(time > 0) { // the first value is nonsense...!
                 assertEquals(expected, result, ACCURACY);
-            }            
+            }
         }
-        
+
     }
 
     @Test
@@ -56,14 +56,14 @@ public class PDCalculatorTest {
         // the result should be -2 * 10 * cos(time) (differentiation)
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             double value = 2 * Math.sin(5 * time);
-            _pdCalculator._inputSignal[0][0] = value;            
+            _pdCalculator._inputSignal[0][0] = value;
             _pdCalculator.berechneYOUT(DELTA_T);
-            double result = _pdCalculator._outputSignal[0][0];            
-            double expected = -20 * Math.cos(5 * time);                        
-            
+            double result = _pdCalculator._outputSignal[0][0];
+            double expected = -20 * Math.cos(5 * time);
+
             if(time > 0) { // the first value is nonsense...!
                 assertEquals(expected, result, ACCURACY);
-            }            
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,48 +22,48 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Public data array for loss curve data access and serialization")
 public abstract class LossCurve {
-    
+
     public double[][] data;
-    
+
     final UserParameter<Double> tj = UserParameter.Builder.
-            <Double>start("tj", 0.0).            
+            <Double>start("tj", 0.0).
             longName(I18nKeys.TEMP_AT_WHICH).
             shortName("curveTemperature").
-            unit("C").            
-            build();            
+            unit("C").
+            build();
 
-    
-    final void importASCII(final TokenMap tokenMap) {        
+
+    final void importASCII(final TokenMap tokenMap) {
         data = tokenMap.readDataLine("data[][]", data);
-                
+
         importIndividual(tokenMap);
-        tj.readFromTokenMap(tokenMap);        
+        tj.readFromTokenMap(tokenMap);
     }
 
     final void exportASCII(final StringBuffer ascii) {
-        
+
         ascii.append("\n<" + getXMLTag() + ">");
         ProjectData.appendAsString(ascii.append("\ndata"), data);
         tj.writeXMLToFile(ascii);
         exportIndividual(ascii);
-        ascii.append("\n<\\" + getXMLTag() + ">");                        
+        ascii.append("\n<\\" + getXMLTag() + ">");
     }
-    
+
     public String getName() {
         return ((int) (double) tj.getValue()) + "°C";
     }
 
     abstract String getXMLTag();
 
-    protected void exportIndividual(final StringBuffer ascii) {        
+    protected void exportIndividual(final StringBuffer ascii) {
         // nothing todo - template method pattern
     }
 
     protected void importIndividual(final TokenMap tokenMap) {
         // nothing todo - template method pattern
     }
-    
-    
+
+
     public void setCurveData(double[][] newData) {
         this.data = new double[newData.length][];
         for(int i = 0; i < newData.length; i++) {
@@ -71,7 +71,7 @@ public abstract class LossCurve {
             System.arraycopy(newData[i], 0, data[i], 0, newData[i].length);
         }
     }
-    
+
     public double[][] getCurveData() {
         double[][] returnValue = new double[data.length][];
         for(int i = 0; i < data.length; i++) {
@@ -80,5 +80,5 @@ public abstract class LossCurve {
         }
         return returnValue;
     }
-    
+
 }

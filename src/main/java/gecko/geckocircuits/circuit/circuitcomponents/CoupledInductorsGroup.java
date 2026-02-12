@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -99,9 +99,9 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
                 tmp2[indexMinus][j] -= tmp0[k][j];
             }
         }
-        
+
         double solverCoeff = 1.0; //coefficient to multiply dt*tmp2, depends on solver type used
-        
+
         SolverType solver = getSolverType();
         if (solver == SolverType.SOLVER_BE) {
             solverCoeff = 1.0;
@@ -112,7 +112,7 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
         else if (solver == SolverType.SOLVER_GS) {
             solverCoeff = 2.0 / 3.0;
         }
-        
+
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix.length; j++) {
                 matrix[i][j] += solverCoeff * dt * tmp2[i][j];
@@ -124,10 +124,10 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
      public void calculateCurrent(double[] p, double dt, double t) {
 
         SolverType solver = getSolverType();
-        
+
         if (pOld == null)
             pOld = new double[p.length]; //ugly, should be removed later!
-           
+
         int n = inductanceMatrix.length;
         double[] AP2 = new double[n];
         for (int i = 0; i < n; i++) {
@@ -148,7 +148,7 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
                 oldAP2[i] -= pOld[globalAdjIndicesMinus[i]];
             }
         }
-        
+
         for (int i = 0; i < _allInductors.size(); i++) {
             InductorCouplingCalculator ind = _allInductors.get(i);
             double outValue = 0;
@@ -161,10 +161,10 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
 
             ind.addNewCurrent(dt * outValue);
         }
-        
+
         if (solver == SolverType.SOLVER_TRZ)
              pOld = p; //we need the old potential for the trapezoidal solver - yes, this is UGLY and should be replaced with a better implementation
-        
+
 
     }
 
@@ -227,21 +227,21 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
 
         return ainv;
     }
-    
+
     private SolverType getSolverType() {
         return _allInductors.get(0).getSolverType();
     }
-    
+
     //to make the TRZ solver work - yes, ugly, should be redone better!
     public double getLPproductForTRZ(InductorCouplingCalculator inductor) {
-        
+
         int n = inductanceMatrix.length;
         double[] oldAP2 = new double[n];
         if (pOld != null) {
             for (int i = 0; i < n; i++) {
                 oldAP2[i] += pOld[globalAdjIndicesPlus[i]];
                 oldAP2[i] -= pOld[globalAdjIndicesMinus[i]];
-            }   
+            }
         }
         else { //QUESTION: this should somehow perhaps be initialized to the initial value of the voltages??? -> or do we never set a non-zero initial voltage for coupled inductors?
             for (int i = 0; i < n; i++) {
@@ -249,7 +249,7 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
                 oldAP2[i] -= 0.0;
             }
         }
-        
+
         for (int i = 0; i < _allInductors.size(); i++) {
             InductorCouplingCalculator ind = _allInductors.get(i);
             if (ind == inductor) {
@@ -260,11 +260,11 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
                 return outValue;
             }
         }
-        return 0.0;        
+        return 0.0;
     }
-    
-    @Override 
+
+    @Override
     public double getCurrent() {
         return 0;
-    }               
+    }
 }

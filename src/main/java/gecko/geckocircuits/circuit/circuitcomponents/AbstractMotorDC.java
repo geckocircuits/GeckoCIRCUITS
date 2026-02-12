@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -66,7 +66,7 @@ abstract class AbstractMotorDC extends AbstractMotor {
     AbstractResistor _RAnker;
     AbstractVoltageSource _uEMK;
     double _emk = 0;
-    double _anchorCurrent; // anker strom               
+    double _anchorCurrent; // anker strom
 
     @Override
     void setTerminals() {
@@ -77,7 +77,7 @@ abstract class AbstractMotorDC extends AbstractMotor {
     }
 
     @Override
-    public void setzeParameterZustandswerteAufNULL() {        
+    public void setzeParameterZustandswerteAufNULL() {
         super.setzeParameterZustandswerteAufNULL();
         _armatureInductance = _armatureInductancePar.getValue();
         _armatureResistance = _armatureResistancePar.getValue();
@@ -85,13 +85,13 @@ abstract class AbstractMotorDC extends AbstractMotor {
         _LAnker._inductance.setValueWithoutUndo(_armatureInductance);
         _RAnker._resistance.setValueWithoutUndo(_armatureResistance);
         _LAnker.parameter[1] = _initialArmatureCurrent;  // iALT in La setzen
-        _LAnker.parameter[2] = _initialArmatureCurrent;  // iALT in La setzen                
+        _LAnker.parameter[2] = _initialArmatureCurrent;  // iALT in La setzen
     }
 
     @Override
     void calculateMotorEquations(final double deltaT, double time) {
-        _anchorCurrent = _LAnker.parameter[2];  // Ankerstrom        
-        // Motor-Gleichungen durchrechnen -->         
+        _anchorCurrent = _LAnker.parameter[2];  // Ankerstrom
+        // Motor-Gleichungen durchrechnen -->
         calculateEMK();
     }
 
@@ -128,15 +128,15 @@ abstract class AbstractMotorDC extends AbstractMotor {
         if (SchematicEditor2._lkDisplayMode.showFlowSymbol) {
             this.defineFlowSymbol(getComponentDirection(), graphics);
         }
-    }    
+    }
 
     @Override
     void setSubCircuit() {
-        // La im Ankerstromkreis --> 
+        // La im Ankerstromkreis -->
         _LAnker = (InductorWOCoupling) fabricHiddenSub(CircuitTyp.LK_L, this);
-        // Ra im Ankerstromkreis --> 
+        // Ra im Ankerstromkreis -->
         _RAnker = (AbstractResistor) fabricHiddenSub(CircuitTyp.LK_R, this);
-        // EMK im Ankerstromkreis --> 
+        // EMK im Ankerstromkreis -->
         _uEMK = (AbstractVoltageSource) fabricHiddenSub(CircuitTyp.LK_U, this);
 
         _LAnker._inductance.setValueWithoutUndo(_armatureInductance);
@@ -166,7 +166,7 @@ abstract class AbstractMotorDC extends AbstractMotor {
 
     @Override
     void updateSourceParameters() {
-        _uEMK.parameter[1] = _emk;  // DC-Wert der internen WSpg.Quelle                 
+        _uEMK.parameter[1] = _emk;  // DC-Wert der internen WSpg.Quelle
     }
 
     @Override

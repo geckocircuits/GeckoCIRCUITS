@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -34,38 +34,38 @@ import javax.swing.SwingUtilities;
 
 final class JPanelHalbleiterDetailButtons extends JPanel {
     private static final int BUTTON_WIDTH = 500;
-    
+
     private final FormatJTextField _jlS2 = new FormatJTextField("-");
     private final FormatJTextField _jlS2b = new FormatJTextField();
     private final VerlustBerechnungDetailed _detailedLosses;
     private final JButton jbS2edit = GuiFabric.getJButton(I18nKeys.EDIT_SEMICONDUCTOR);
-    
+
     JPanelHalbleiterDetailButtons(final VerlustBerechnungDetailed detailedLosses) {
         super();
         _detailedLosses = detailedLosses;
         setBorder(BorderFactory.createTitledBorder("Detailed Loss Model"));
         setLayout(new GridLayout(5, 1));
-        
-        checkFileLink();                
-        
+
+        checkFileLink();
+
         JButton jbS2load = GuiFabric.getJButton(I18nKeys.LOAD_SEMICONDUCTOR);
         jbS2load.setMaximumSize(new Dimension(BUTTON_WIDTH, 25));
 
         jbS2load.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(final ActionEvent actionEvent) {                                
+            public void actionPerformed(final ActionEvent actionEvent) {
                 GeckoFileManagerWindow dialog = new GeckoFileManagerWindow(_detailedLosses, ".scl", "Semicond. losses", _jlS2, _jlS2b, jbS2edit);
-                dialog.setVisible(true);                                
+                dialog.setVisible(true);
                 checkFileLink();
             }
         });
-        //--------------        
+        //--------------
         final Window parentWindow = SwingUtilities.getWindowAncestor(JPanelHalbleiterDetailButtons.this);
-        jbS2edit.setMaximumSize(new Dimension(BUTTON_WIDTH, 25));        
-        jbS2edit.addActionListener(new ActionListener() {            
+        jbS2edit.setMaximumSize(new Dimension(BUTTON_WIDTH, 25));
+        jbS2edit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                //focusIstFreigegeben= true;  // damit kann der Focus an das nun zu Oeffnende Fenster weitergegeben werden                                
+                //focusIstFreigegeben= true;  // damit kann der Focus an das nun zu Oeffnende Fenster weitergegeben werden
                 final DialogVerlusteDetail dialog = DialogVerlusteDetail.fabricCreateExisiting(_detailedLosses, parentWindow);
                 dialog.setVisible(true);
                 checkFileLink();
@@ -83,20 +83,20 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
                 dialog.setVisible(true);
                 checkFileLink();
             }
-        });        
-        
+        });
+
         add(_jlS2b);
         add(_jlS2);
         add(jbS2load);
         add(jbS2edit);
         add(jbS2new);
         setEnabled(false);
-        
-        
+
+
     }
 
-    
-    
+
+
     @Override
     public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled); //To change body of generated methods, choose Tools | Templates.
@@ -121,7 +121,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
                 _jlS2.setText(absolutePath.substring(0, absolutePath.lastIndexOf('\\')));
             }
 
-        } else {  // Datei nicht gefunden oder fehlerhaft            
+        } else {  // Datei nicht gefunden oder fehlerhaft
             //jlS2.setVisible(false);
             _jlS2.setText("-");
             _jlS2b.setText("Loss file not found!");
@@ -134,5 +134,5 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
         _jlS2.setForeground(fS2);
         _jlS2b.setForeground(fS2);
     }
-    
+
 }

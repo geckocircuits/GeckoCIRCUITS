@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,27 +22,27 @@ import gecko.geckocircuits.control.Point;
 public class TerminalRelativePosition extends AbstractTerminal {
     protected int _posX;
     protected int _posY;
-    
+
     public TerminalRelativePosition(AbstractBlockInterface relatedComponent, int posX, int posY) {
         super(relatedComponent);
         _posX = posX;
         _posY = posY;
-    } 
-        
+    }
+
 
     public int getRelativeX() {
         return _posX;
     }
-    
+
     public int getRelativeY() {
         return _posY;
     }
-    
+
     @Override
     public Point getPosition() {
         return getPointFromDirection(_parentElement.getComponentDirection(), _parentElement.getSheetPosition(), _posX, _posY);
-    }           
-    
+    }
+
     public static Point getPointFromDirection(ComponentDirection direction, Point center, int posX, int posY) {
 
 
@@ -55,14 +55,14 @@ public class TerminalRelativePosition extends AbstractTerminal {
             case EAST_WEST:
                 y1 += posX;
                 x1 += posY;
-                break;            
+                break;
             case SOUTH_NORTH:
                 y1 += posY;
                 x1 -= posX;
                 break;
             case WEST_EAST:
                 y1 -= posX;
-                x1 -= posY;                
+                x1 -= posY;
                 break;
              default:
                 assert false;
@@ -77,5 +77,5 @@ public class TerminalRelativePosition extends AbstractTerminal {
         returnValue.getLabelObject().setLabel(_label.getLabelString());
         return returnValue;
     }
-    
+
 }

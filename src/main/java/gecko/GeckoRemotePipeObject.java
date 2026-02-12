@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,16 +22,16 @@ import java.io.Serializable;
  * @author andrija s.
  */
 public class GeckoRemotePipeObject implements Serializable {
-    
+
     //internal enum which defines which type of action this objects represents - a method call, a return variable, successful void return, or an error message
     public enum GeckoRemotePipeObjectType { METHOD_CALL, METHOD_RETURN_VALUE, METHOD_VOID_RETURN, ERROR_MESSAGE };
-    
+
     private final GeckoRemotePipeObjectType _type; //the type of action this object represents
     private final String _methodName; //the name of the method - must be set for all types (method calls and returns and errors)
     private final Object[] _methodArguments; //method arguments for method call - null in other cases
     private final Object _methodReturnValue; //the return value of the method - null if void or if not a return action
     private final String _errorMessage; //the error message - empty string if none required
-    
+
     /**
      * Constructor to create an object representing a method call.
      * @param methodName the name of the method
@@ -44,7 +44,7 @@ public class GeckoRemotePipeObject implements Serializable {
         _methodReturnValue = null;
         _errorMessage = "";
     }
-    
+
     /**
      * Constructor to create an object representing a method return value.
      * @param methodName the name of the method
@@ -57,7 +57,7 @@ public class GeckoRemotePipeObject implements Serializable {
         _methodReturnValue = returnValue;
         _errorMessage = "";
     }
-    
+
     /**
      * Constructor to create an object representing a successful void return from a method.
      * @param methodName the name of the method
@@ -69,7 +69,7 @@ public class GeckoRemotePipeObject implements Serializable {
         _methodReturnValue = null;
         _errorMessage = "";
     }
-    
+
     /**
      * Constructor to create an object representing an error message (e.g. exception thrown).
      * @param methodName the name of the method
@@ -82,7 +82,7 @@ public class GeckoRemotePipeObject implements Serializable {
         _methodReturnValue = null;
         _errorMessage = errorMessage;
     }
-    
+
     /**
      * Check if this object represents a method call.
      * @return true if it is a method call
@@ -90,7 +90,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public boolean isMethodCall() {
         return _type == GeckoRemotePipeObjectType.METHOD_CALL;
     }
-    
+
     /**
      * Check if this object represents a successful void return of a method.
      * @return true if it is a successful void return of a method
@@ -98,7 +98,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public boolean isVoidReturn() {
         return _type == GeckoRemotePipeObjectType.METHOD_VOID_RETURN;
     }
-    
+
     /**
      * Check if this object represents a successful return value of a method.
      * @return true if it is a return value
@@ -106,7 +106,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public boolean isReturnValue() {
         return _type == GeckoRemotePipeObjectType.METHOD_RETURN_VALUE;
     }
-    
+
     /**
      * Check if this object represents an error message.
      * @return true if it is an error message
@@ -114,7 +114,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public boolean isErrorMessage() {
         return _type == GeckoRemotePipeObjectType.ERROR_MESSAGE;
     }
-    
+
     /**
      * Check the name of this method.
      * @return the name of the method associated with this object
@@ -122,7 +122,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public String getMethodName() {
         return _methodName;
     }
-    
+
     /**
      * Get the arguments of this method.
      * @return the arguments of the method associated with this object
@@ -130,7 +130,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public Object[] getMethodArguments() {
         return _methodArguments != null ? _methodArguments.clone() : null;
     }
-    
+
     /**
      * Get the return value of this method.
      * @return the return value of the method associated with this object
@@ -138,7 +138,7 @@ public class GeckoRemotePipeObject implements Serializable {
     public Object getMethodReturnValue() {
         return _methodReturnValue;
     }
-    
+
     /**
      * Get the error message.
      * @return the error message contained within this object

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -65,10 +65,10 @@ public class SignalDataContainerTest {
     public void testMultipleSignalsRegular() {
         SignalDataContainerRegular signal1 = new SignalDataContainerRegular(dataContainer, 0);
         SignalDataContainerRegular signal2 = new SignalDataContainerRegular(dataContainer, 1);
-        
+
         signal1.setSignalName("Signal1");
         signal2.setSignalName("Signal2");
-        
+
         assertEquals("Signal1", signal1.getSignalName());
         assertEquals("Signal2", signal2.getSignalName());
     }
@@ -77,10 +77,10 @@ public class SignalDataContainerTest {
     public void testSignalDataContainerRegularWithMultipleDataContainers() {
         DataContainerSimple container1 = DataContainerSimple.fabricConstantDtTimeSeries(5, 10);
         DataContainerSimple container2 = DataContainerSimple.fabricConstantDtTimeSeries(3, 8);
-        
+
         SignalDataContainerRegular signal1 = new SignalDataContainerRegular(container1, 0);
         SignalDataContainerRegular signal2 = new SignalDataContainerRegular(container2, 1);
-        
+
         assertEquals(container1, signal1.getDataContainer());
         assertEquals(container2, signal2.getDataContainer());
     }
@@ -89,7 +89,7 @@ public class SignalDataContainerTest {
     public void testSignalIndependenceRegular() {
         SignalDataContainerRegular signal = new SignalDataContainerRegular(dataContainer, 4);
         signal.setSignalName("IndependentSignal");
-        
+
         assertEquals("IndependentSignal", signal.getSignalName());
         assertEquals(4, signal.getContainerSignalIndex());
     }

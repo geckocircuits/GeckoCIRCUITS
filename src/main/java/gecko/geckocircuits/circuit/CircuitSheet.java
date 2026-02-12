@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -80,7 +80,7 @@ public class CircuitSheet extends JPanel {
      * draws the raster points visible in the background of the sheet
      */
     public void drawCircuitSheet(Graphics2D g2d) {
-        final JViewport viewport = (JViewport) this.getParent().getParent();        
+        final JViewport viewport = (JViewport) this.getParent().getParent();
         if(g2d instanceof SVGGraphics2D) {
             return; // don't paint the pixels points for exporting to images!
         }
@@ -125,8 +125,8 @@ public class CircuitSheet extends JPanel {
             graphics.drawOval((int) (point.x * dpix) - RAD_CTM,
                     (int) (point.y * dpix) - RAD_CTM, 2 * RAD_CTM, 2 * RAD_CTM);
         }
-    }        
-    
+    }
+
 
     @Override
     public void paintComponent(final Graphics graphics) {
@@ -136,7 +136,7 @@ public class CircuitSheet extends JPanel {
             drawCircuitSheet(g2d);
 
             Graphics2D g2dDisabled = new GeckoGraphics2D(g2d);
-            
+
             GeckoGraphics2D g2dSelected = new GeckoGraphics2D(g2d);
             g2dSelected.setColorStrategySelected();
 
@@ -233,7 +233,7 @@ public class CircuitSheet extends JPanel {
                 graphics.drawOval((int) (pt.x * dpix) - 2 * RAD_CTM, (int) (pt.y * dpix) - 2 * RAD_CTM, 4 * RAD_CTM, 4 * RAD_CTM);
             }
             g2d.setStroke(oldStroke);
-            super.paintComponent(g2d);            
+            super.paintComponent(g2d);
         } catch (ConcurrentModificationException ex) {
             System.err.println("Concurrent modification in paint: " + ex.getMessage());
         }
@@ -262,11 +262,11 @@ public class CircuitSheet extends JPanel {
                 break;
             default:
                 NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.LK_AND_RELUCTANCE), getLocalComponents(ConnectorType.LK));
-                break;                
+                break;
         }
-        
-        
-        
+
+
+
     }
 
     private Set<String> findElementInterface(Collection<? extends AbstractCircuitSheetComponent> elements, final String searchString, final boolean ignoreCase,
@@ -355,7 +355,7 @@ public class CircuitSheet extends JPanel {
     }
 
     private boolean selectPotentialNodesToShow(PotentialArea[] pot, Point clickPoint,
-            final List<? extends AbstractBlockInterface> elements) {        
+            final List<? extends AbstractBlockInterface> elements) {
         for (PotentialArea potArea : pot) {
             if (potArea.isPointOnPotential(clickPoint)) {
                 for (Point pt : potArea.getAllElementKnotenXY(elements, this)) {
@@ -366,16 +366,16 @@ public class CircuitSheet extends JPanel {
                         _showNodesInternal.add(term.getPosition());
                     }
 
-                }                                            
+                }
                 return true;
             }
-        }                
+        }
         return false;
     }
 
     public void maus_connectorTest(final Point clickPoint) {
         // damit man nicht (wie unten) beim 'return' vorzeitig aussteigt und eine Verbindung versehentlich
-        // im Bearbeitungs-Modus laesst, die folgende kleine Schleife:        
+        // im Bearbeitungs-Modus laesst, die folgende kleine Schleife:
         _showNodesInternal.clear();
 
         List<AbstractBlockInterface> localElementsLK = getLocalComponents(ConnectorType.LK_AND_RELUCTANCE);
@@ -397,21 +397,21 @@ public class CircuitSheet extends JPanel {
 
         }
 
-        // (1) LK-Check --> 
+        // (1) LK-Check -->
         PotentialArea[] pot = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.LK_AND_RELUCTANCE), localElementsLK).getPotentiale();
 
         if (selectPotentialNodesToShow(pot, clickPoint, localElementsLK)) {
             return;
         }
 
-        // (2) CONTROL-Check --> 
+        // (2) CONTROL-Check -->
 
         PotentialArea[] pot2 = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), localElementsCONTROL).getPotentiale();
         if (selectPotentialNodesToShow(pot2, clickPoint, localElementsCONTROL)) {
             return;
         }
 
-        // (3) THERM-Check --> 
+        // (3) THERM-Check -->
         PotentialArea[] pot3 = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.THERMAL),
                 localElementsTHERM).getPotentiale();
         if (selectPotentialNodesToShow(pot3, clickPoint, localElementsTHERM)) {

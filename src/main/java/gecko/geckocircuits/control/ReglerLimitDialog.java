@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -25,14 +25,14 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-class ReglerLimitDialog extends AbstractDialogWithExternalOption<ReglerLimit> {    
+class ReglerLimitDialog extends AbstractDialogWithExternalOption<ReglerLimit> {
 
     public ReglerLimitDialog(final ReglerLimit reglerLimit) {
         super(reglerLimit);
     }
 
     @Override
-    protected void baueGuiIndividual() {        
+    protected void baueGuiIndividual() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Parameter", TitledBorder.LEFT, TitledBorder.TOP));
@@ -45,13 +45,13 @@ class ReglerLimitDialog extends AbstractDialogWithExternalOption<ReglerLimit> {
         jpM.add(pImLIMIT, BorderLayout.CENTER);
         //
         JPanel pLIMIT = createParameterPanel(element._minLimit, element._maxLimit);
-        jpM.add(pLIMIT, BorderLayout.SOUTH);                
-        
+        jpM.add(pLIMIT, BorderLayout.SOUTH);
+
         for(JComponent comp : getComponentsDisabledExternal()) {
             comp.setEnabled(!element.isExternalSet());
-        }        
-        
-        jpM.add(_jCheckBoxUseExternal, BorderLayout.NORTH);        
+        }
+
+        jpM.add(_jCheckBoxUseExternal, BorderLayout.NORTH);
     }
 
     @Override
@@ -63,15 +63,15 @@ class ReglerLimitDialog extends AbstractDialogWithExternalOption<ReglerLimit> {
     private JComponent createImageComponent() {
         final int[] polyXCoords = new int[]{90, 82, 82, 90, 10, 50, 50, 47, 53, 50, 50};
         final int[] polyYCoords = new int[]{50, 47, 53, 50, 50, 50, 10, 18, 18, 10, 90};
-        
+
         assert polyXCoords.length == polyYCoords.length;
-        
-        
+
+
         return new JComponent() {
             @Override
             public void paint(final Graphics graphics) {
                 RenderingHints oldRendering = ((Graphics2D) graphics).getRenderingHints();
-                
+
                 ((Graphics2D) graphics).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
                 graphics.setColor(Color.white);
@@ -90,10 +90,10 @@ class ReglerLimitDialog extends AbstractDialogWithExternalOption<ReglerLimit> {
                 graphics.setFont(GlobalFonts.FORMEL_DIALOG_GROSS);
                 graphics.drawString("max", 65, 22);
                 graphics.drawString("min", 6, 72);
-                
+
                 ((Graphics2D) graphics).setRenderingHints(oldRendering);
             }
-        };   
+        };
         //CHECKSTYLE:OFF
     }
 }

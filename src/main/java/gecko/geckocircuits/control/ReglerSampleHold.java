@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -18,9 +18,9 @@ import gecko.geckocircuits.control.calculators.SampleHoldCalculator;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
-public final class ReglerSampleHold extends RegelBlock {    
+public final class ReglerSampleHold extends RegelBlock {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerSampleHold.class, "SHLD", I18nKeys.SAMPLE_HOLD);
-    
+
     public ReglerSampleHold() {
         super(2, 1);
     }
@@ -33,7 +33,7 @@ public final class ReglerSampleHold extends RegelBlock {
     @Override
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.SAMPLED_INPUT};
-    }        
+    }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -44,12 +44,12 @@ public final class ReglerSampleHold extends RegelBlock {
     protected String getCenteredDrawString() {
         return "S-H";
     }
-    
-    
+
+
     @Override
     protected  Window openDialogWindow() {
         final String message = "<html>if (z > 0.5)  ...  y1 = x1;  sh = x1<br>"
                 + "if (z < 0.5)  ...  y1 = sh";
-        return new DialogSimpleInfoMessage(this, message);        
+        return new DialogSimpleInfoMessage(this, message);
     }
 }

@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -55,7 +55,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
         Y0xi = X0xi;
         Y0yi = X0yi;
         _baseFrequency = baseFreqency;
-        
+
         this.setPreferredSize(new Dimension(bi + 2 * X0xi, X0yi + X0yi - hi));  // fuer pack() im uebergeordneten JFrame
         // Bereichsgrenzen fuers Maus-Klicken:
         xGrfMIN = new int[]{0};
@@ -168,7 +168,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             g.setColor(Color.black);
             g.drawString("x = " + (int) xSchieberWert[0], x0, y0);
             g.drawString("f = " + (int) xSchieberWert[1], x0, y0 + dy);
-            
+
             g.setColor(Color.blue);
             g.drawString("y = " + cf.formatT(yNeuWert[0], TechFormat.FORMAT_AUTO), x0, y0 + 2 * dy);
         }
@@ -217,7 +217,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
     protected void setzeKurven() {
         //=========================================
         // anhand der Worksheet-Daten zu setzen -->
-        //------------------------------------- 
+        //-------------------------------------
         this.setzeKurvenAnzahl(1);
         this.setzeZugehoerigkeitKurveAchsen(new int[]{0}, new int[]{0});
         this.setzeKurveIndexWorksheetKolonnenXY(new int[][]{{0, 1}});
@@ -331,7 +331,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             }
             xSchieberWert[0] = Math.round(getValueFromPixel(xSchieberPix, 0)[0]);  // x-Wert der Schieber-Position, nur ganzzahlige n-Werte
             xSchieberWert[1] = xSchieberWert[0] * _baseFrequency;
-            
+
             for (int i1 = 1; i1 < xNeu.length; i1++) {
                 if ((xNeu[i1 - 1] <= xSchieberWert[0]) && (xSchieberWert[0] <= xNeu[i1])) {
                     yNeuWert[0] = yNeu[i1];

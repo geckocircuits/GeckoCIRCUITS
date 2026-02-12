@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -22,7 +22,7 @@ import java.util.*;
         justification = "Public field for singularity indices shared with matrix operations")
 public final class NetzlisteAllg {
 
-    
+
 
     private final List<PotentialArea> _potentialAreas = new ArrayList<PotentialArea>();
     final List<Verbindung> _connections = new ArrayList<Verbindung>();
@@ -61,15 +61,15 @@ public final class NetzlisteAllg {
 
         final NetzlisteAllg returnValue = new NetzlisteAllg(connectors, components);
 
-        returnValue.createPotentialSheetConnectedGeometric();  // --> pot[]                       
-        returnValue.mergePotentialAreasViaLabels();  // --> potUeberLabelsVerbunden[] 
+        returnValue.createPotentialSheetConnectedGeometric();  // --> pot[]
+        returnValue.mergePotentialAreasViaLabels();  // --> potUeberLabelsVerbunden[]
 
         returnValue.resetAllLabelPriorities();
         returnValue.connectSubCircuitInOutTerminals();
 
         returnValue.connectGlobalTerminals();
         returnValue.removeEmptyPotentials();
-        
+
         return returnValue;
     }
 
@@ -94,8 +94,8 @@ public final class NetzlisteAllg {
 
         return fabricNetzlistComplete(vFilteredParentsEnabled, eFilteredParentsEnabled);
     }
-    
-    public static NetzlisteAllg fabricNetzlistComponentLabelUpdate(AbstractBlockInterface element, ConnectorType terminalType) {        
+
+    public static NetzlisteAllg fabricNetzlistComponentLabelUpdate(AbstractBlockInterface element, ConnectorType terminalType) {
 
         CircuitSheet elementParent = element.getParentCircuitSheet();
 
@@ -107,10 +107,10 @@ public final class NetzlisteAllg {
             if (ab.getParentCircuitSheet() == elementParent) {
                 filteredList.add(ab);
             }
-        }                         
-        
+        }
+
         NetzlisteAllg returnValue = new NetzlisteAllg(verbindung, filteredList);
-        returnValue.createPotentialSheetConnectedGeometric();  // --> pot[] 
+        returnValue.createPotentialSheetConnectedGeometric();  // --> pot[]
         returnValue.resetAllLabelPriorities();
         return returnValue;
     }
@@ -128,12 +128,12 @@ public final class NetzlisteAllg {
 
         final NetzlisteAllg returnValue = new NetzlisteAllg(connectors, components);
 
-        returnValue.createPotentialSheetConnectedGeometric();  // --> pot[] 
-        returnValue.resetAllLabelPriorities();                
-        
+        returnValue.createPotentialSheetConnectedGeometric();  // --> pot[]
+        returnValue.resetAllLabelPriorities();
+
         return returnValue;
     }
-    
+
 
     // Verbindungen und Element-Knoten werden in PotentialGebieten zusammengefasst --> pot[]
     private void createPotentialSheetConnectedGeometric() {

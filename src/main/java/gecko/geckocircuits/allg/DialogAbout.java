@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -53,7 +53,7 @@ public class DialogAbout extends JDialog {
     public static final String VERSION = "GeckoCIRCUITS - v?.?";
     public static final int RELEASENUMBER = 202;
     public static final int BUILD_NUMBER = 82;
-    
+
 
     /**
      * Creates and initializes the About dialog.
@@ -102,12 +102,12 @@ public class DialogAbout extends JDialog {
 
         JButton knOK = GuiFabric.getJButton(I18nKeys.OK);
         knOK.addActionListener(e -> dispose());
-        
+
         JPanel px = new JPanel();
         px.add(knOK);
         JTextArea jtx = new JTextArea();
         jtx.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
-                
+
         jtx.setLineWrap(true);
         jtx.setWrapStyleWord(true);
         jtx.setBackground(Color.white);

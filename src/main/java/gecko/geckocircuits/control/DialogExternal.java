@@ -45,10 +45,10 @@ public class DialogExternal extends javax.swing.JDialog {
 
         initComponents();
         jTextFieldIdString.setText(regelBlock.getStringID());
-        _regelBlock = regelBlock;        
-        
-        orderList = regelBlock.getOrderList();                        
-        jSpinnerPortNumber.setValue(_regelBlock.getVariableTerminals().size());                                       
+        _regelBlock = regelBlock;
+
+        orderList = regelBlock.getOrderList();
+        jSpinnerPortNumber.setValue(_regelBlock.getVariableTerminals().size());
         populateListView();
 
     }

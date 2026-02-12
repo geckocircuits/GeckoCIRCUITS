@@ -1,7 +1,7 @@
 /*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
  *
- *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under 
- *  the terms of the GNU General Public License as published by the Free Software 
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
  *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -86,11 +86,11 @@ public abstract class AbstractUndoGenericModel<T> extends ModelMVCGeneric<T> imp
    * overrides super method, to add the undo/redo functionality.
    */
   @Override
-  public void setValue(final T value){     
+  public void setValue(final T value){
     if(!value.equals(_value) && !_redoUndoFlag && _initialized){
       undoManager.addEdit(new UndoableAction(this, this._value, value));
     }
-    _initialized = true;      
+    _initialized = true;
     super.setValue(value);
     fireGlobalEvent();
   }
