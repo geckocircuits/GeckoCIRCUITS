@@ -264,13 +264,13 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `ea309a7` Update project docs after static analysis cleanup sprint
 - `9ffedb0` Fix 183 Tier 3 PMD violations: empty blocks, unused code, stray semicolons
 - `b8b8f1f` Strip trailing whitespace from 974 Java source files
 - `50f62f7` Fix 565 PMD violations: UselessParentheses, UnnecessaryImport, UnnecessaryModifier
 - `84388dd` Fix 694 UnnecessaryFullyQualifiedName PMD violations across 111 files
 - `49da720` Add PMD and Checkstyle configuration files with third-party exclusions
 - `7d91719` Update project docs after losscalculation GUI decoupling sprint
-- `351c2e7` Decouple VerlustBerechnungDetailed from MainWindow for GUI-free testability
 
 ## Key Interfaces for Headless Operation
 

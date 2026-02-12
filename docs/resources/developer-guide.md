@@ -616,16 +616,24 @@ Check `CorePackageValidationTest` for enforced boundaries—any Swing/AWT import
 
 ## Code Quality
 
+### Configuration
+
+The project uses custom configurations for static analysis tools:
+
+- **SpotBugs**: Default rules + 204 inline `@SuppressFBWarnings` annotations — **0 bugs**
+- **PMD**: Custom ruleset `pmd-ruleset.xml` (quickstart rules, excludes `com/intel/mkl/`)
+- **Checkstyle**: Custom config `checkstyle.xml` (150-char line length, relaxed naming for `_prefix` convention)
+
 ### Running Code Quality Checks
 
 ```bash
-# SpotBugs (bug detection)
+# SpotBugs (bug detection) — must remain at 0 bugs
 mvn spotbugs:check
 
-# Checkstyle (coding standards)
+# Checkstyle (coding standards, custom config)
 mvn checkstyle:check
 
-# PMD (code smell detection)
+# PMD (code smell detection, custom ruleset)
 mvn pmd:check
 
 # All checks
@@ -640,11 +648,15 @@ mvn verify
 | GUI imports in core | Move to separate `*UI` class or GUI package |
 | Missing unit tests | Minimum 60% coverage on core packages |
 | Unused parameters | Prefix with `@SuppressWarnings("unused")` or remove |
+| Empty catch blocks | Add `// intentionally empty` comment or handle the exception |
+| Unused private methods/fields | Remove them — dead code masks real issues |
 
 ### Style Guide
 
 - **Naming**: `camelCase` for variables, `PascalCase` for classes
+- **Member fields**: `_camelCase` prefix convention (configured in Checkstyle)
 - **Constants**: `UPPER_SNAKE_CASE`
+- **Line length**: 150 characters maximum (configured in Checkstyle)
 - **Methods**: Prefer descriptive names (`calculateCurrent` not `calc`)
 - **Javadoc**: Required for public classes/methods
 - **Access**: Package-private by default, public only if necessary
