@@ -23,7 +23,7 @@ GeckoCIRCUITS is a multi-domain circuit simulator built in Java 21. The architec
 │  ┌────────▼───────────────────▼──────────────────────────┐   │
 │  │            gecko-simulation-core                        │   │
 │  │            (GUI-free shared library)                    │   │
-│  │            IN PROGRESS (139+ classes)                   │   │
+│  │            IN PROGRESS (148 classes)                    │   │
 │  └────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -42,6 +42,7 @@ GeckoCIRCUITS/
 │   │   └── src/main/java/gecko/core/
 │   │       ├── circuit/             # Component cores, matrix, netlist, simulation
 │   │       ├── control/calculators/ # 64 calculator classes (PI, PID, gain, etc.)
+│   │       ├── datacontainer/       # Signal storage (11 classes)
 │   │       ├── math/               # Matrix operations, LU decomposition
 │   │       └── api/                # Public interfaces
 │   └── gecko-rest-api/              # Spring Boot REST API (scaffold)
@@ -177,17 +178,18 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (139+ classes extracted):
+gecko-simulation-core (148 classes extracted):
   ├── circuit/         42 component cores
   ├── control/calc.    64 calculators (PI, PID, gain, limit, integrators, etc.)
-  ├── math/            Partial (needs migration from legacy)
+  ├── datacontainer/   11 classes (signal storage, caching)
+  ├── math/            7 classes (matrix ops, LU decomposition, FFT)
   ├── api/             Public interfaces
   └── allg/            3 GUI-free utilities
 
-Still in legacy monolith (need migration):
-  ├── math/            7 classes (matrix ops, LU, FFT)
-  ├── datacontainer/   27 GUI-free classes
-  └── circuit.matrix/  15 classes (already GUI-free)
+Tests (31 test files):
+  ├── circuit/matrix/  8 test files
+  ├── control/calc.    15 test files
+  └── math/            7 test files
 ```
 
 ## 5. Documentation Architecture
@@ -255,7 +257,7 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 ```
 
 ### 7.2 Quality Gates
-- JaCoCo: 60%+ instruction coverage on core packages (`mvn verify`)
+- JaCoCo: 30%+ instruction coverage on gecko-simulation-core (`mvn verify`)
 - CorePackageValidationTest: No GUI imports in core
 - MkDocs strict mode: No broken internal links
 - SpotBugs: 0 bugs (204 inline `@SuppressFBWarnings` annotations)

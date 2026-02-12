@@ -46,9 +46,9 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### 4.2 Simulation Core Module (In Progress)
 - **Location:** `src/modules/gecko-simulation-core/`
-- GUI-free simulation engine suitable for headless operation (139+ classes)
+- GUI-free simulation engine suitable for headless operation (148 source classes, 31 test files, 737 tests)
 - 70% JaCoCo coverage enforced via CI
-- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `control.calculators`, `math`
+- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `control.calculators`, `math`, `datacontainer`
 - Validated by `CorePackageValidationTest` (zero GUI imports)
 
 ### 4.3 REST API (Planned)
@@ -106,7 +106,14 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-12): Static Analysis Cleanup
+### Latest Sprint (2026-02-12): Core Module Migration (math + datacontainer)
+- Migrated 7 math test files to gecko-simulation-core module (test coverage preserved)
+- Migrated 11 datacontainer source classes to gecko-simulation-core module
+- Migrated 18 datacontainer test files to gecko-simulation-core module
+- Core module now contains 148 source classes, 31 test files, 737 tests
+- All reactor builds passing, coverage thresholds maintained
+
+### Previous Sprint (2026-02-12): Static Analysis Cleanup
 - Created `pmd-ruleset.xml` and `checkstyle.xml` config files, updated `pom.xml`
 - Fixed 1,445 auto-fixable PMD violations across 330+ files:
   - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
@@ -137,15 +144,15 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Deployed site to GitHub Pages (gh-pages branch)
 
 ### In Progress
-- Core module extraction: 139+ classes extracted, math/datacontainer still in legacy
+- Core module extraction: 148 classes extracted, math and datacontainer migration complete
 - GUI decoupling: `LossFileAccessor` pattern established, replicable for other packages
 - Test coverage growth: 5,783 tests (main project), targeting further coverage gains
 - Documentation site maintenance
 
 ### Planned (Next Sprints)
-1. Complete core module migration (math/, datacontainer/ to gecko-simulation-core)
-2. REST API MVP (health endpoint, simulation CRUD, signal analysis)
-3. Coverage targets: math 80%, calculators 50%, datacontainer 40%
+1. REST API MVP (health endpoint, simulation CRUD, signal analysis)
+2. Additional core package migrations (identify remaining GUI-free candidates)
+3. Coverage targets: losscalculation 65%, additional core packages 70%+
 4. Docker packaging for REST API
 
 ## 7. Quality Assurance

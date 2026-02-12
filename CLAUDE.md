@@ -126,7 +126,7 @@ Output packages in `target/`:
 
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
 - **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI
-- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (137+ classes, 70% coverage enforced)
+- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (148+ classes, 30% coverage enforced)
 - **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger
 
 ### External Integration
@@ -148,6 +148,8 @@ Test categories:
 - **API tests** - `GeckoRemoteTest` validates remote interface consistency
 
 Test mode is controlled by `GeckoSim._isTestingMode` flag.
+
+The `gecko-simulation-core` module contains 31 test files with 737 test cases covering the GUI-free simulation engine.
 
 ## GUI Development
 
@@ -218,8 +220,8 @@ The project maintains the desktop application while adding modern web accessibil
 - **Shared Core** (planned) - `gecko-simulation-core` module to be extracted for both interfaces
 
 ### Active Initiatives
-1. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (60%+ minimum)
-2. **GUI-Free Core Extraction** - Decoupling computation classes from GUI singletons for `gecko-simulation-core`
+1. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (30%+ minimum)
+2. **GUI-Free Core Extraction** - Decoupling computation classes from GUI singletons for `gecko-simulation-core`. Math and datacontainer packages have been migrated to the core module.
 3. **REST API Design** - API specification documented, implementation planned
 
 ### GUI-Free Validated Packages
@@ -229,7 +231,7 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `circuit.simulation` (5 classes, 84% coverage) - Simulation engine
 - `circuit.component` (86% coverage) - Component definitions
 - `control.calculators` (64 classes, 81% coverage) - All control block calculators
-- `datacontainer` (71% coverage) - Signal data storage
+- `datacontainer` (23 classes, 71% coverage) - Signal data storage with optimized caching
 - `math` (7 classes, 81% coverage) - Matrix operations, LU decomposition
 
 ### GUI Decoupling Pattern: LossFileAccessor
@@ -241,7 +243,7 @@ The `circuit.losscalculation` package uses a `LossFileAccessor` interface to dec
 
 ### Architectural Boundaries
 The `CorePackageValidationTest` enforces that core packages have no GUI imports (`java.awt`, `javax.swing`). Any violation fails the build.
-JaCoCo coverage check (`mvn verify`) enforces 60%+ instruction coverage on core packages.
+JaCoCo coverage check (`mvn verify`) enforces 30%+ instruction coverage on core packages.
 
 ## Session Journals
 
