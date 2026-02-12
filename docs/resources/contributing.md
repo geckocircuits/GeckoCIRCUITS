@@ -59,7 +59,7 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true \
 GeckoCIRCUITS is organized with a clear separation of concerns:
 
 ```
-src/main/java/ch/technokrat/gecko/
+src/main/java/gecko/
 ├── GeckoSim.java                  # Entry point and operating mode selection
 ├── geckocircuits/
 │   ├── allg/                      # Global settings, file management, dialogs

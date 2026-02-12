@@ -188,7 +188,7 @@ run_shell_validation() {
         count=$((count + 1))
         local name=$(basename "$file")
 
-        local cmd="java -Xmx1G -Dpolyglot.js.nashorn-compat=true -cp $jar_path ch.technokrat.systemtests.CircuitValidator"
+        local cmd="java -Xmx1G -Dpolyglot.js.nashorn-compat=true -cp $jar_path gecko.systemtests.CircuitValidator"
 
         if [ "$WITH_SIM" = true ]; then
             cmd="$cmd --run-simulation"

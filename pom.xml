@@ -205,7 +205,7 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>ch.technokrat.gecko.GeckoSim</mainClass>
+                <mainClass>gecko.GeckoSim</mainClass>
               </manifest>
             </archive>
           </configuration>
@@ -228,7 +228,7 @@
             <archive>
               <manifest>
                 <addClasspath>true</addClasspath>
-                <mainClass>ch.technokrat.gecko.GeckoSim</mainClass>
+                <mainClass>gecko.GeckoSim</mainClass>
               </manifest>
             </archive>
           </configuration>
@@ -275,13 +275,13 @@
                 <rule>
                   <element>PACKAGE</element>
                   <includes>
-                    <include>ch.technokrat.gecko.geckocircuits.control.calculators</include>
-                    <include>ch.technokrat.gecko.geckocircuits.math</include>
-                    <include>ch.technokrat.gecko.geckocircuits.datacontainer</include>
-                    <include>ch.technokrat.gecko.geckocircuits.circuit.matrix</include>
-                    <include>ch.technokrat.gecko.geckocircuits.circuit.netlist</include>
-                    <include>ch.technokrat.gecko.geckocircuits.circuit.simulation</include>
-                    <include>ch.technokrat.gecko.geckocircuits.circuit.component</include>
+                    <include>gecko.geckocircuits.control.calculators</include>
+                    <include>gecko.geckocircuits.math</include>
+                    <include>gecko.geckocircuits.datacontainer</include>
+                    <include>gecko.geckocircuits.circuit.matrix</include>
+                    <include>gecko.geckocircuits.circuit.netlist</include>
+                    <include>gecko.geckocircuits.circuit.simulation</include>
+                    <include>gecko.geckocircuits.circuit.component</include>
                   </includes>
                   <limits>
                     <limit>

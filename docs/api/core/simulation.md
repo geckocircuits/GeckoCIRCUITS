@@ -4,7 +4,7 @@ title: Simulation Engine API
 
 # Simulation Engine API
 
-Package: `ch.technokrat.gecko.core.simulation`
+Package: `gecko.core.simulation`
 
 The simulation engine provides headless circuit simulation without any GUI dependencies.
 

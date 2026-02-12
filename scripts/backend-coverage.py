@@ -11,35 +11,35 @@ from pathlib import Path
 
 # Backend packages (pure logic, minimal/no GUI)
 BACKEND_PACKAGES = [
-    "ch.technokrat.gecko.geckocircuits.circuit.matrix",
-    "ch.technokrat.gecko.geckocircuits.control.calculators",
-    "ch.technokrat.gecko.geckocircuits.math",
-    "ch.technokrat.gecko.geckocircuits.datacontainer",
-    "ch.technokrat.gecko.geckocircuits.circuit.losscalculation",
-    "ch.technokrat.gecko.geckocircuits.api",
-    "ch.technokrat.gecko.i18n",
-    "ch.technokrat.gecko.i18n.resources",
+    "gecko.geckocircuits.circuit.matrix",
+    "gecko.geckocircuits.control.calculators",
+    "gecko.geckocircuits.math",
+    "gecko.geckocircuits.datacontainer",
+    "gecko.geckocircuits.circuit.losscalculation",
+    "gecko.geckocircuits.api",
+    "gecko.i18n",
+    "gecko.i18n.resources",
 ]
 
 # Mixed packages (have both backend logic and GUI)
 MIXED_PACKAGES = [
-    "ch.technokrat.gecko.geckocircuits.newscope",
-    "ch.technokrat.gecko.geckocircuits.circuit.circuitcomponents",
-    "ch.technokrat.gecko.geckocircuits.circuit",
-    "ch.technokrat.gecko.geckocircuits.control",
-    "ch.technokrat.gecko.geckocircuits.allg",
-    "ch.technokrat.modelviewcontrol",
+    "gecko.geckocircuits.newscope",
+    "gecko.geckocircuits.circuit.circuitcomponents",
+    "gecko.geckocircuits.circuit",
+    "gecko.geckocircuits.control",
+    "gecko.geckocircuits.allg",
+    "gecko.modelviewcontrol",
 ]
 
 # GUI-heavy packages (mostly UI, low priority for backend testing)
 GUI_PACKAGES = [
-    "ch.technokrat.gecko.geckocircuits.scope",
-    "ch.technokrat.gecko.geckocircuits.control.javablock",
-    "ch.technokrat.gecko.i18n.translationtoolbox",
-    "ch.technokrat.gecko.i18n.bot",
-    "ch.technokrat.gecko.geckoscript",
-    "ch.technokrat.gecko",
-    "ch.technokrat.gecko.geckocircuits.nativec",
+    "gecko.geckocircuits.scope",
+    "gecko.geckocircuits.control.javablock",
+    "gecko.i18n.translationtoolbox",
+    "gecko.i18n.bot",
+    "gecko.geckoscript",
+    "gecko",
+    "gecko.geckocircuits.nativec",
 ]
 
 def parse_jacoco_html(html_path):

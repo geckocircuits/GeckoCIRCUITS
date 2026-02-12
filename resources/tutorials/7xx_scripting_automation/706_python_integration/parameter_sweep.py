@@ -47,7 +47,7 @@ def validate_circuit(jar_path: Path, ipes_file: Path, timeout: int = 30) -> dict
         "java", "-Xmx1G",
         "-Dpolyglot.js.nashorn-compat=true",
         "-cp", str(jar_path),
-        "ch.technokrat.systemtests.CircuitValidator",
+        "gecko.systemtests.CircuitValidator",
         str(ipes_file)
     ]
 

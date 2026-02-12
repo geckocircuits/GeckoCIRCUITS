@@ -101,7 +101,7 @@ Output packages in `target/`:
 ## Architecture
 
 ### Entry Point & Operating Modes
-- **GeckoSim** (`ch.technokrat.gecko.GeckoSim`) - Main class handling startup and operating mode selection
+- **GeckoSim** (`gecko.GeckoSim`) - Main class handling startup and operating mode selection
 - Operating modes (defined in `OperatingMode` enum):
   - **STANDALONE** - Desktop GUI application (default)
   - **REMOTE** - RMI-based remote control for MATLAB/Octave integration
@@ -111,7 +111,7 @@ Output packages in `target/`:
 
 ### Key Package Structure
 
-**`ch.technokrat.gecko.geckocircuits/`** - Main simulation engine:
+**`gecko.geckocircuits/`** - Main simulation engine:
 - `allg/` - Global settings, file management, dialogs
 - `circuit/` - Circuit components, terminals, netlist generation, matrix operations
 - `control/` - 64+ calculator classes for control blocks (PI/PID, integration, gain, limiters)
@@ -120,9 +120,9 @@ Output packages in `target/`:
 - `newscope/` & `scope/` - Oscilloscope visualization
 - `nativec/` - Native C integration layer
 
-**`ch.technokrat.gecko.i18n/`** - Internationalization (968+ translation keys)
+**`gecko.i18n/`** - Internationalization (968+ translation keys)
 
-**`ch.technokrat.expressionscripting/`** - GraalVM JavaScript expression evaluation
+**`gecko.expressionscripting/`** - GraalVM JavaScript expression evaluation
 
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
 - **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI
@@ -250,7 +250,7 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 Recent commits:
 - `53d7b9f` Fix 87 broken internal links on tutorials and examples index pages
 - `0768a2d` Fix broken docs links, integrate articles/tutorials, add core API docs
-- `293e5f5` Simplify Maven groupId from ch.technokrat.gecko to gecko
+- `293e5f5` Simplify Maven groupId from gecko to gecko
 - `7fce3f5` v1.1.0: Multi-module reactor build, zero-crossing detection, REST API test fixes
 - `f5d8fba` v1.0.0: Production release polish and URL fixes
 - `3eb4e2d` v0.5.0: Add developer guide, contributor onboarding, and example docs

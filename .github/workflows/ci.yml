@@ -30,7 +30,7 @@ jobs:
 
       - name: Build native test libraries
         run: |
-          cd src/test/java/ch/technokrat/gecko/geckocircuits/nativec/testJNI_DLL
+          cd src/test/java/gecko/geckocircuits/nativec/testJNI_DLL
           chmod +x build_native_libraries.sh
           ./build_native_libraries.sh
 
@@ -81,7 +81,7 @@ jobs:
           for row in p.rows:
               if len(row)>=3:
                   name=row[0]
-                  short=name.replace('ch.technokrat.gecko.geckocircuits.','').replace('ch.technokrat.','')
+                  short=name.replace('gecko.geckocircuits.','').replace('gecko.','')
                   if any(c in short for c in core):
                       cov=row[2] if '%' in row[2] else row[1] if len(row)>1 and '%' in row[1] else '?'
                       print(f'| {short} | {cov} |')

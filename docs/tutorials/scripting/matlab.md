@@ -51,7 +51,7 @@ Once GeckoCIRCUITS is running, add the JAR to MATLAB's classpath and connect:
 javaaddpath('path/to/gecko-1.0-jar-with-dependencies.jar');
 
 % Import the remote interface class
-import ch.technokrat.gecko.GeckoRemoteInterface;
+import gecko.GeckoRemoteInterface;
 
 % Get singleton instance (connects to running GeckoCIRCUITS)
 gecko = GeckoRemoteInterface.getInstance();

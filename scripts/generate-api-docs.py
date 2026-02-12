@@ -26,11 +26,11 @@ DOCS_DIR = PROJECT_ROOT / "docs" / "api" / "core"
 
 # Packages to document
 TARGET_PACKAGES = {
-    "simulation": "ch/technokrat/gecko/core/simulation",
-    "circuit.matrix": "ch/technokrat/gecko/core/circuit/matrix",
-    "circuit.netlist": "ch/technokrat/gecko/core/circuit/netlist",
-    "control.calculators": "ch/technokrat/gecko/core/control/calculators",
-    "math": "ch/technokrat/gecko/core/math",
+    "simulation": "gecko/core/simulation",
+    "circuit.matrix": "gecko/core/circuit/matrix",
+    "circuit.netlist": "gecko/core/circuit/netlist",
+    "control.calculators": "gecko/core/control/calculators",
+    "math": "gecko/core/math",
 }
 
 

@@ -131,7 +131,7 @@ def run_circuit(
         "java", "-Xmx1G",
         "-Dpolyglot.js.nashorn-compat=true",
         "-cp", str(jar_path),
-        "ch.technokrat.systemtests.CircuitValidator",
+        "gecko.systemtests.CircuitValidator",
         str(ipes_file)
     ]
 

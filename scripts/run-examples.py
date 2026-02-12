@@ -67,7 +67,7 @@ def main():
                     "java", "-Xmx1G",
                     "-Dpolyglot.js.nashorn-compat=true",
                     "-cp", str(jar_path),
-                    "ch.technokrat.systemtests.CircuitValidator",
+                    "gecko.systemtests.CircuitValidator",
                     str(circuit)
                 ],
                 capture_output=True, text=True,
