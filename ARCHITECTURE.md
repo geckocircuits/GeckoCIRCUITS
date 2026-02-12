@@ -140,10 +140,31 @@ Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 | `circuit.simulation` | 5 | 97% | API-ready |
 | `control.calculators` | 71 | ~81% | API-ready (2 GUI exceptions) |
 | `math` | 7 | ~71% | API-ready |
-| `circuit.losscalculation` | 18 | ~54% | Partial (6 GUI classes) |
+| `circuit.losscalculation` | 18+2 | 61% | Partial (6 GUI classes, 18 computation classes GUI-free) |
 | `circuit` (main) | 54 | ~57% | Partial (41 GUI classes) |
 
-### 4.2 Prohibited Imports in Core
+### 4.2 GUI Decoupling Pattern
+
+For packages that mix computation and GUI classes, the project uses **interface injection** to decouple computation code from GUI singletons:
+
+```
+┌──────────────────────────┐     ┌─────────────────────────────┐
+│ VerlustBerechnungDetailed │────►│ LossFileAccessor (interface)│
+│ (computation, GUI-free)   │     ├─────────────────────────────┤
+└──────────────────────────┘     │ getFile(hash)               │
+                                  │ maintain(file)              │
+    ┌─────────────────────────┐   │ addFile(file)               │
+    │ MainWindowLossFileAccessor│  │ getOpenFileName()           │
+    │ (GUI adapter)            │──►│ getFilesByExtension(ext)    │
+    │ delegates to MainWindow  │   └─────────────────────────────┘
+    └─────────────────────────┘
+```
+
+- **Default constructor** chains to `MainWindowLossFileAccessor` (preserves all existing callers)
+- **Injectable constructor** accepts any `LossFileAccessor` (enables headless testing with mocks)
+- Pattern is replicable for other classes with `MainWindow` static dependencies
+
+### 4.3 Prohibited Imports in Core
 
 ```
 java.awt.*
@@ -153,7 +174,7 @@ javax.swing.event.*
 java.applet.*
 ```
 
-### 4.3 Extraction Status
+### 4.4 Extraction Status
 
 ```
 gecko-simulation-core (139+ classes extracted):
@@ -254,7 +275,8 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 ## 9. Architecture Roadmap
 
 ### Near-Term
-- Complete core module migration (math, datacontainer, matrix)
+- Apply `LossFileAccessor` pattern to other GUI-coupled computation classes
+- Complete core module migration (math, datacontainer, matrix, losscalculation)
 - Implement REST API MVP with real simulation integration
 - Add Maven enforcer rules to prevent GUI leakage into API module
 

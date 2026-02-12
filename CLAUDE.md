@@ -210,7 +210,7 @@ The project maintains the desktop application while adding modern web accessibil
 
 ### Active Initiatives
 1. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (60%+ minimum)
-2. **GUI-Free Core Identification** - Identifying packages suitable for future `gecko-simulation-core` extraction
+2. **GUI-Free Core Extraction** - Decoupling computation classes from GUI singletons for `gecko-simulation-core`
 3. **REST API Design** - API specification documented, implementation planned
 
 ### GUI-Free Validated Packages
@@ -222,6 +222,13 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `control.calculators` (64 classes, 81% coverage) - All control block calculators
 - `datacontainer` (71% coverage) - Signal data storage
 - `math` (7 classes, 81% coverage) - Matrix operations, LU decomposition
+
+### GUI Decoupling Pattern: LossFileAccessor
+The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access. The pattern:
+- `LossFileAccessor` - Interface for file I/O operations (getFile, maintain, addFile, getOpenFileName)
+- `MainWindowLossFileAccessor` - GUI adapter (delegates to `MainWindow._fileManager`)
+- Injectable constructor enables headless testing with mock implementations
+- This pattern can be replicated for other packages with `MainWindow` dependencies
 
 ### Architectural Boundaries
 The `CorePackageValidationTest` enforces that core packages have no GUI imports (`java.awt`, `javax.swing`). Any violation fails the build.
@@ -248,13 +255,13 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `351c2e7` Decouple VerlustBerechnungDetailed from MainWindow for GUI-free testability
+- `138b3ed` Update project docs after package rename sprint
 - `d4cfa77` Merge branch 'refactor/remove-ch-technokrat': remove ch.technokrat from packages
 - `3c5838e` Remove ch.technokrat from package structure: ch.technokrat.* -> gecko.*
 - `7c026c3` Add ARCHITECTURE.md, update PRD.md and CLAUDE.md with current sprint status
 - `53d7b9f` Fix 87 broken internal links on tutorials and examples index pages
 - `0768a2d` Fix broken docs links, integrate articles/tutorials, add core API docs
-- `293e5f5` Simplify Maven groupId from ch.technokrat.gecko to gecko
-- `7fce3f5` v1.1.0: Multi-module reactor build, zero-crossing detection, REST API test fixes
 
 ## Key Interfaces for Headless Operation
 
@@ -267,3 +274,6 @@ SolverContext - SOLVER_BE (Backward Euler), SOLVER_TRZ (Trapezoidal), SOLVER_GS 
 
 // Component registry
 StamperRegistry - getStamper(CircuitTyp)
+
+// Loss file I/O abstraction (GUI-free)
+LossFileAccessor - getFile(hash), maintain(file), addFile(file), getOpenFileName()

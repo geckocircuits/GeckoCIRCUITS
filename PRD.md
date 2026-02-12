@@ -106,12 +106,19 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-12): Package Rename
+### Latest Sprint (2026-02-12): LossCalculation GUI Decoupling
+- Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
+- Replaced 11 static `MainWindow` references with injectable accessor pattern
+- Added 22 new tests for previously-untestable file I/O methods (mock-based)
+- `losscalculation` package coverage: 51% -> 61% (exceeds 60% threshold)
+- `VerlustBerechnungDetailed` coverage: 92% instruction, 87% branch
+- Added 8 new test files for losscalculation package (including existing untracked tests)
+
+### Previous Sprint (2026-02-12): Package Rename
 - Removed `ch.technokrat` from all packages: `ch.technokrat.*` -> `gecko.*`
 - Updated 1,391 files (1,288 Java, 21 config/scripts/docs, 5 .ipes, 2 JNI native)
 - Rebuilt JNI native libraries with new symbol names
 - All modules compile and pass tests (reactor build verified)
-- Updated PostToolUse hook to trigger on both `git commit` and `git push`
 
 ### Previous Sprint (2026-02-11): Documentation Overhaul
 - Fixed 95+ broken internal links across docs site
@@ -123,7 +130,8 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### In Progress
 - Core module extraction: 139+ classes extracted, math/datacontainer still in legacy
-- Test coverage growth: 696+ tests, targeting 750+
+- GUI decoupling: `LossFileAccessor` pattern established, replicable for other packages
+- Test coverage growth: 5,783 tests (main project), targeting further coverage gains
 - Documentation site maintenance
 
 ### Planned (Next Sprints)
@@ -150,8 +158,9 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 | Metric | Current | Target |
 |--------|---------|--------|
-| Total tests | 696+ | 750+ |
+| Total tests (main) | 5,783 | 6,000+ |
 | Core module coverage | 70%+ | 80%+ |
+| losscalculation coverage | 61% | 65%+ |
 | Docs site pages | 82+ | 100+ |
 | Broken links | 0 | 0 |
 | REST API endpoints | 0 | 10+ |
