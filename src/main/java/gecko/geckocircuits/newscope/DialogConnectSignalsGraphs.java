@@ -49,7 +49,6 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
     private static final int ROT_ANGLE = -90;
     private static final int SIGN_NAME_LENTH = 90;
     private Color _origBackColor;
-    ;
   private AbstractDiagram _selectedDiagram;
     private final DiagramCurveSignalManager _manager;
     private int modifiedWeightIndex = -1;
@@ -330,6 +329,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                     //final Dialog dialog = new DialogDigitalGraphProperties(_grafer, rowIndex);
                     //dialog.setVisible(true);
                 } else {
+                    // intentionally empty
                     final Dialog dialog = new DialogDiagramProps(DialogConnectSignalsGraphs.this, true, diagram, _grafer);
                     dialog.setVisible(true);
                     baueGUI();

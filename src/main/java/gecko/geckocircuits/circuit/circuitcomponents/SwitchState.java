@@ -19,7 +19,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Switch state must share reference to circuit element for state tracking")
 public class SwitchState {
 
-    public enum State {ON, OFF};
+    public enum State {ON, OFF}
 
     private final State _state;
     private final AbstractCircuitBlockInterface _circuitElement;

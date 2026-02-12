@@ -69,7 +69,7 @@ public final class SaveViewFrame extends GeckoDialog {
         public String toString() {
             return _displayString;
         }
-    };
+    }
 
     /**
      * Creates new form SaveViewFrame

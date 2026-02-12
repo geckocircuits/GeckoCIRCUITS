@@ -87,7 +87,6 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
             arrayIndex(this, OUTPUT_REV_INDEX).
             build();
     private final AbstractBlockInterface[] _qLK = new AbstractCircuitBlockInterface[2];
-    ;
 
     private final AbstractVoltageSource _primarySource =
             (AbstractVoltageSource) AbstractTypeInfo.fabricHiddenSub(CircuitTyp.LK_U, this);

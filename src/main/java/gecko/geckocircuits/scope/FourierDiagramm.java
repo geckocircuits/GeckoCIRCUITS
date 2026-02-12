@@ -136,6 +136,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             this.setzeTickSpacing(new double[]{(cnSG.length / 10.0)}, new double[]{empf[4]});
             repaint();
         } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+            // intentionally empty
         } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
             //------------------------------------
             xSchieberAktiv = true;
@@ -301,6 +302,7 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
     public void mouseDragged(final MouseEvent mouseEvent) {
         if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
         } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+            // intentionally empty
         } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
             if (!imDragModus) {
                 return;
@@ -386,33 +388,6 @@ class FourierDiagramm extends GraferV3 implements MouseListener, MouseMotionList
             yWert = achseYmin_ + (yAchseY_ - yPix) / sfY_;
         }
         return new double[]{xWert, yWert, indexDiagrammYachse};
-        //-------------------
-    }
-
-    // Ermittle (x/y)-Wert in Pixel zu einem Wertepaar -->
-    private int[] getPixelFromValue(double xWert, double yWert, int index_xAchse, int index_yAchse) {
-        //-------------------
-        double achseXmin_ = achseXmin[index_xAchse];
-        int xAchseX_ = _xAchseX[index_xAchse];
-        double sfX_ = sfX[index_xAchse];
-        int xAchseTyp_ = xAchseTyp[index_xAchse];
-        double achseYmin_ = achseYmin[index_yAchse];
-        int yAchseY_ = _yAchseY[index_yAchse];
-        double sfY_ = sfY[index_yAchse];
-        int yAchseTyp_ = yAchseTyp[index_yAchse];
-        //-------------------
-        int xPix = -1, yPix = -1;
-        if (xAchseTyp_ == ACHSE_LOG) {
-            xPix = xAchseX_ + (int)(sfX_ * Math.log10(xWert / achseXmin_));
-        } else if (xAchseTyp_ == ACHSE_LIN) {
-            xPix = xAchseX_ + (int)((xWert - achseXmin_) * sfX_);
-        }
-        if (yAchseTyp_ == ACHSE_LOG) {
-            yPix = yAchseY_ - (int)(sfY_ * Math.log10(yWert / achseYmin_));
-        } else if (yAchseTyp_ == ACHSE_LIN) {
-            yPix = yAchseY_ - (int)((yWert - achseYmin_) * sfY_);
-        }
-        return new int[]{xPix, yPix};
         //-------------------
     }
 }

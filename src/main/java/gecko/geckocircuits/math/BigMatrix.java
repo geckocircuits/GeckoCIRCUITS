@@ -652,7 +652,9 @@ public final class BigMatrix implements java.io.Serializable {
       java.util.Vector v = new java.util.Vector();
 
       // Ignore initial empty lines
-      while (tokenizer.nextToken() == StreamTokenizer.TT_EOL);
+      while (tokenizer.nextToken() == StreamTokenizer.TT_EOL) {
+          // intentionally empty
+      }
       if (tokenizer.ttype == StreamTokenizer.TT_EOF)
 	throw new java.io.IOException("Unexpected EOF on matrix read.");
       do {
@@ -682,18 +684,4 @@ public final class BigMatrix implements java.io.Serializable {
       v.copyInto(A);  // copy the rows out of the vector
       return new Matrix(A);
    }
-
-
-/* ------------------------
-   Private Methods
- * ------------------------ */
-
-   /** Check if size(A) == size(B) **/
-
-   private void checkMatrixDimensions (BigMatrix B) {
-      if (B.m != m || B.n != n) {
-         throw new IllegalArgumentException("Matrix dimensions must agree.");
-      }
-   }
-
 }

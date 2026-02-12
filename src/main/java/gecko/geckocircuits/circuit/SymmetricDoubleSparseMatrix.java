@@ -117,9 +117,7 @@ public final class SymmetricDoubleSparseMatrix {
         int counter = 0;
         for (int i = 0; i < _N; i++) {
             if (rowEntries.containsKey(i)) {
-                for (int j : rowEntries.get(i)) {
-                    counter++;
-                }
+                counter += rowEntries.get(i).size();
             }
         }
 

@@ -60,7 +60,7 @@ public final class ReglerGate extends ReglerWithSingleReference implements Compo
     @Override
     String getDisplayValueWithoutError() {
         return ">> " + getComponentCoupling()._coupledElements[0].getStringID();
-    };
+    }
 
 
 

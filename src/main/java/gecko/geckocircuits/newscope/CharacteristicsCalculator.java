@@ -197,11 +197,9 @@ public final class CharacteristicsCalculator {
         final double rng1 = bounderies[0];
         final double rng2 = bounderies[1];
 
-        boolean isContinusRowsCalculation = true;
 
         for(int i = 0; i < rows.length; i++) {
             if(rows[i] != i) {
-                isContinusRowsCalculation = false;
             }
         }
 

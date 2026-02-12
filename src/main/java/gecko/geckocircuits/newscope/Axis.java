@@ -522,7 +522,7 @@ public final class Axis {
             }
             g2d.draw(GRL);
         }
-    };
+    }
 
     void drawAxisLabel(final Graphics2D g2d) {
         switch (_direction) {

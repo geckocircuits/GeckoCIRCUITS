@@ -48,8 +48,6 @@ public class CapacitorStamper implements IMatrixStamper {
     /** Index for previous voltage in previousValues array */
     private static final int PREV_VOLTAGE = 0;
 
-    /** Index for previous current in previousValues array */
-    private static final int PREV_CURRENT = 1;
 
     @Override
     public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,

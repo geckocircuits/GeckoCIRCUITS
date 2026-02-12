@@ -422,7 +422,6 @@ public class GeckoRemote {
 
     public static void setWorksheetSize(int sizeX, int sizeY) {
         _proxy.setWorksheetSize(sizeX, sizeY);
-        return;
     }
 
     public static int[] getWorksheetSize() {
@@ -710,7 +709,6 @@ public class GeckoRemote {
 
     public static void setPosition(final String elementName, int posX, int posY) {
         _proxy.setPosition(elementName, posX, posY);
-        return;
     }
 
     public static String getInputNodeName(final String elementName, final int nodeIndex) {

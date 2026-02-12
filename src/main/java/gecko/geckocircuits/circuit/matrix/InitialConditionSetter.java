@@ -244,7 +244,7 @@ public class InitialConditionSetter {
             int matrixSize,
             double[][][] couplingData) {
 
-        InitMatrixSystem system = new InitMatrixSystem(matrixSize, solverType);
+        InitMatrixSystem system = new InitMatrixSystem(matrixSize);
 
         // Create modified netlist with C replaced by Udc
         NetListLK initNetlist = NetListLK.ersetze_C_durch_Udc_Fuer_init(netlist);
@@ -408,11 +408,9 @@ public class InitialConditionSetter {
         double[] p;
         double[] pALT;
         int matrixSize;
-        private final SolverType solverType;
 
-        InitMatrixSystem(int size, SolverType solverType) {
+        InitMatrixSystem(int size) {
             this.matrixSize = size;
-            this.solverType = solverType;
             a = new double[size][size];
             b = new double[size];
             p = new double[size];

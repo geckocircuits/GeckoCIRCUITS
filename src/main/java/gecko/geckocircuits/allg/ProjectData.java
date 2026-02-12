@@ -351,6 +351,7 @@ public final class ProjectData implements Serializable {
             String[] sigNames = new String[0];
             sigNames = tokenMap.readDataLine("dataContainerSignals[]", sigNames);
             for (int row = 0; row < sigNames.length; row++) {
+                // intentionally empty
                 // TODO ??? NetzlisteCONTROL.globalData.setSignalName(row, sigNames[row]);
             }
         }
@@ -632,7 +633,6 @@ public final class ProjectData implements Serializable {
     public static void appendAsTextBlock(StringBuffer ascii, final String wert) {
         if (wert.equals("")) {
             ascii.append(" " + NIX);
-            return;
         } else {
             String singleLine = wert.replaceAll("\n", "\\\\n");
             ascii.append(' ');
@@ -678,6 +678,7 @@ public final class ProjectData implements Serializable {
                 return neuerPfadDETAIL;
             }
         } catch (Exception e) {
+            // intentionally empty
         }
         return GlobalFilePathes.DATNAM_NOT_DEFINED;
     }

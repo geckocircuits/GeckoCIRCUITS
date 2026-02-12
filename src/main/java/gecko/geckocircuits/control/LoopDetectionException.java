@@ -25,11 +25,9 @@ import java.util.List;
  */
 class LoopDetectionException extends Exception {
 
-    private final ControlOrderNode _startBlock;
     private final List<ControlOrderNode> _loopList;
 
     public LoopDetectionException(ControlOrderNode firstComponent, List<ControlOrderNode> loopList) {
-        _startBlock = firstComponent;
         _loopList = loopList;
     }
 

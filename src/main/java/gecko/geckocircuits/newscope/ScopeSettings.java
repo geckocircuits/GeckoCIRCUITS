@@ -282,15 +282,11 @@ public class ScopeSettings implements Serializable {
                     y1Axis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(ORIGjcmYlinStyl[i]));
                 }
 
-                int diagNo = 0;
-                int curveNo = 0;
                 manager.updateCurveNumber(noInputSignals);
                 for (int jj = 1; jj < noInputSignals + 1; jj++) {
                     AxisConnection axisConnection = AxisConnection.getFromCode(matrixZuordnungKurveDiagram[i][jj]);
                     diag.getCurve(jj - 1).setAxisConnection(axisConnection);
                     if (axisConnection == AxisConnection.ZUORDNUNG_SIGNAL) {
-                        diagNo = manager.getDiagrams().indexOf(diag);
-                        curveNo = diag.getCurves().indexOf(diag.getCurve(jj - 1));
                     }
                 }
 

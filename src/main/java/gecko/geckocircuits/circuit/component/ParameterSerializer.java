@@ -39,8 +39,6 @@ public final class ParameterSerializer {
     /** Default parameter array size (matches legacy AbstractBlockInterface). */
     public static final int DEFAULT_ARRAY_SIZE = 40;
 
-    /** Current format version for future compatibility. */
-    private static final int FORMAT_VERSION = 1;
 
     private final int arraySize;
 

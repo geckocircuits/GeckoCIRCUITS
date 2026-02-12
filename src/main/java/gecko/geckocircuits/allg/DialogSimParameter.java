@@ -57,6 +57,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception e) {
+            // intentionally empty
         }
         this._solverSettings = callback;
         _dt = callback.dt.getValue();

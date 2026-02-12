@@ -652,10 +652,6 @@ public final class TestReceiverWindow extends JFrame {
         return returnValue;
     }
 
-    private double relativeMeasure(float value1, float value2) {
-        return Math.abs((value1 - value2) / (1e-10 + value1 + value2));
-    }
-
     private List<Integer> eliminateDataPointsTooClose200Hz(TestReceiverCalculation calculator, float[] maximumCalculation, List<Integer> originalList) {
 
         final List<Integer> returnValue = new ArrayList<Integer>();
@@ -682,33 +678,6 @@ public final class TestReceiverWindow extends JFrame {
                 i = nextValueOf_i;
             }
             returnValue.add(originalList.get(i));
-        }
-        return returnValue;
-    }
-
-    private List<Integer> eliminateBelowMedian200Hz(TestReceiverCalculation calculator, float[] maximumCalculation, List<Integer> originalList) {
-
-        double medianSum = 0;
-        int counter = 0;
-        for (Integer index : originalList) {
-            double freq = calculator._fftOrig.baseFrequency * index;
-            if (freq > 150000) {
-                break;
-            }
-            medianSum += maximumCalculation[index];
-            counter++;
-        }
-
-        medianSum = medianSum / originalList.size() / 2.0;
-        final List<Integer> returnValue = new ArrayList<Integer>();
-
-        for (int i = 0; i < originalList.size(); i++) {
-            int indexCandidate = originalList.get(i);
-            float value = maximumCalculation[indexCandidate];
-
-            if (value > medianSum) {
-                returnValue.add(indexCandidate);
-            }
         }
         return returnValue;
     }
@@ -869,7 +838,6 @@ public final class TestReceiverWindow extends JFrame {
     class CalculationRunnable implements Runnable {
 
         public boolean _abortCalculation = false;
-        private MemoryContainer _memoryContainer;
 
         @Override
         public void run() {

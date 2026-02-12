@@ -87,7 +87,7 @@ public class SimulationsKern implements ISimulationEngine {
         RUNNING,
         PAUSED,
         FINISHED
-    };
+    }
     public SimulationStatus _simulationStatus = SimulationStatus.NOT_INIT;
 
     @Override
@@ -659,7 +659,7 @@ public class SimulationsKern implements ISimulationEngine {
 
     private void definiereInteraktion_MaschineLK_VIEWMOT() {
         //--------
-        String iA = "", iA1 = "", iA2 = "";
+        String iA2 = "";
         int[][] zeiger_VIEWMOT_MaschineLK_temp = new int[controlANZAHL][3];
         jjZeiger = 0;
         for (int i1 = 0; i1 < controlANZAHL; i1++) {
@@ -667,8 +667,6 @@ public class SimulationsKern implements ISimulationEngine {
                 ReglerVIEWMOT reglerVIEWMOT = (ReglerVIEWMOT) c[i1];
                 AbstractBlockInterface selectedMotor = reglerVIEWMOT.getComponentCoupling()._coupledElements[0];
                 if (selectedMotor != null) {
-                    iA = c[i1].getParameterString()[0];         // zB. "M-DC.4.omega"
-                    iA1 = c[i1].getParameterString()[1];  // --> "M-DC.4"
                     iA2 = c[i1].getParameterString()[2];  // --> "omega"
                     for (int i2 = 0; i2 < nl.elements.length; i2++) {
                         AbstractCircuitBlockInterface el = nl.elements[i2];

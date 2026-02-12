@@ -769,7 +769,7 @@ public class LKMatrices {
                             } else if (_solverType == SolverType.SOLVER_TRZ) {
                                 bWNew = 2 * netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + iALT[i1] + facNew * netzliste.parameter[i1][10];
                             } else if (_solverType == SolverType.SOLVER_GS) {
-                                bWNew = netzliste.parameter[i1][6] / dt * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + facNew * netzliste.parameter[i1][10];;
+                                bWNew = netzliste.parameter[i1][6] / dt * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + facNew * netzliste.parameter[i1][10];
                             }
                             bVector[x] += bWNew;
                             bVector[y] -= bWNew;
@@ -1059,8 +1059,6 @@ public class LKMatrices {
                         case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY:
                             int[][] nodePairDVC = netzliste.nodePairDirVoltContSrc;
-                            int x1 = nodePairDVC[i1][0],
-                             y1 = nodePairDVC[i1][1];
                             netzliste.eLKneu[i1]._currentInAmps = 0;//gain * (p[x1] - p[y1]);
                             //System.out.println("cur: " + (gain * (p[x1] - p[y1])) + " " + x1 + " " + y1);
                             break;

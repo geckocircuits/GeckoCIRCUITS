@@ -169,7 +169,7 @@ public final class ReglerToEXTERNAL extends RegelBlockSimulink implements Compar
         graphics.drawRect((int) (dpix * (posX - WIDTH)), (int) (dpix * (posY - WIDTH)),
                 (int) (dpix * 2 * WIDTH), (int) (dpix * XIN.size()));
         // Pfeil-Symbol:
-        int d1 = 10, d2 = 4, dpfx = 8, dpfy = 3;
+        int d2 = 4, dpfx = 8, dpfy = 3;
         double pf = 2.0;  // Pfeilspitzen-X-Abstand
         double pfym = posY - WIDTH + XIN.size() / 2.0;  // Pfeil-Y-Koordinate
         graphics.drawPolygon(new int[]{(int) (dpix * (posX + pf)) - dpfx, (int) (dpix * (posX + pf)) - dpfx,

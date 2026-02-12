@@ -294,7 +294,6 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
         }
         try {
             if (containerStatus == ContainerStatus.PAUSED) {
-                int maxIndex = getMaximumTimeIndex(0);
                 calculateMinMax(_lastMinMaxJunk, _lastMinMaxJunk + 1, getMaximumTimeIndex(0));
                 _memoryContainer = null;
             }
@@ -371,7 +370,6 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
         return _signalPathNames[row];
     }
 
-    ;
 
     @Override
     void setSignalPathName(int row, String subcircuitPath) {

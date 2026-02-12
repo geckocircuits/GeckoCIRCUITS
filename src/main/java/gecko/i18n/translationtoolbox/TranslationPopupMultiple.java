@@ -71,7 +71,9 @@ public class TranslationPopupMultiple extends javax.swing.JFrame implements Prop
             // wait for task thread to get going
             try {
                 Thread.sleep(500);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                // intentionally empty
+            }
 
             // keep updating progress until task is finished
             while (!task.isDone()) {

@@ -161,7 +161,7 @@ public final class DataSaver extends Observable implements Observer {
             _data.deleteObserver(DataSaver.this);
 
         }
-    };
+    }
 
     public int getPercentage() {
         return _percentage;

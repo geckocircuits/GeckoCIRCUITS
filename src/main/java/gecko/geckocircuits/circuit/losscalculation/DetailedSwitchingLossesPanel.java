@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 
 public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLossCurve> {
 
-    private final FormatJTextField _jtfUb = new FormatJTextField();;
+    private final FormatJTextField _jtfUb = new FormatJTextField();
 
 
 

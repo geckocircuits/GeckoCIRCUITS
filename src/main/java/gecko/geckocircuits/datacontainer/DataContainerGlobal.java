@@ -196,5 +196,5 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
     @Override
     public String getSubcircuitSignalPath(final int row) {
       return _data.getSubcircuitSignalPath(row);
-  };
+  }
 }

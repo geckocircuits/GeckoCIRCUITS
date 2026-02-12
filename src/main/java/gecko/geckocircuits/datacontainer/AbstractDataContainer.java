@@ -68,7 +68,7 @@ public abstract class AbstractDataContainer extends Observable implements IScope
 
   public String getSubcircuitSignalPath(final int row) {
       return "";
-  };
+  }
 
     void setSignalPathName(int containerRowIndex, String subcircuitPath) {
     }

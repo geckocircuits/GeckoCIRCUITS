@@ -602,6 +602,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @Override
     public void moveComponent(final Point moveToPoint) {
         if (this instanceof ThermAmbient) {
+            // intentionally empty
             // nix machen!
         } else {
             for (AbstractTerminal term : XIN) {

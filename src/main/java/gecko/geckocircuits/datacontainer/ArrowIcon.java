@@ -27,7 +27,7 @@ class ArrowIcon implements Icon {
     enum IconDirection {
 
         UP, DOWN;
-    };
+    }
     private final IconDirection _direction;
     private final Polygon _pagePolygon = new Polygon(new int[]{2, 4, 4, 10, 10, 2},
             new int[]{4, 4, 2, 2, 12, 12}, 6);

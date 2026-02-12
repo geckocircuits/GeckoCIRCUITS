@@ -270,5 +270,5 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 _jbCALC.setEnabled(true);
             }
         }
-    };
+    }
 }

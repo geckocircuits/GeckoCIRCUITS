@@ -36,7 +36,6 @@ public class CompressorIntMatrix {
     private static final int BYTE_BLOCK_SIZE = 1024;
     public final float compressionRatio;
     public final float compressionTime;
-    private int bytesCompressed = 0;
     private final int _m;
     private final int _n;
 
@@ -73,7 +72,7 @@ public class CompressorIntMatrix {
         while (!compressor.finished()) {
             byte[] compressed = new byte[BYTE_BLOCK_SIZE];
             compressedByteSize += BYTE_BLOCK_SIZE;
-            bytesCompressed += compressor.deflate(compressed);
+            compressor.deflate(compressed);
             byteContainer.add(compressed);
         }
     }

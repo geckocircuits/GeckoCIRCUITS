@@ -25,7 +25,6 @@ public class ColorStrategySelected implements ColorSettable {
     private static final int DIVIDER = 2;
     @Override
     public void setColor(final Color color, final Graphics2D g2d) {
-        int sub = 0;
 
         int totalSum = color.getRed() + color.getGreen() + color.getBlue();
         totalSum /= DIVIDER;

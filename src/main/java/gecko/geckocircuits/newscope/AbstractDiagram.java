@@ -206,7 +206,7 @@ public abstract class AbstractDiagram extends JPanel {
             }
 
         }
-    };
+    }
 
     @Override
     public Dimension getPreferredSize() {

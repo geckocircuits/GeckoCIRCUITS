@@ -81,6 +81,7 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
             URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
             setIconImage(new ImageIcon(new URL(picsUrl, "gecko.gif")).getImage());
         } catch (Exception e) {
+            // intentionally empty
         }
         _an = erg[0];
         _bn = erg[1];

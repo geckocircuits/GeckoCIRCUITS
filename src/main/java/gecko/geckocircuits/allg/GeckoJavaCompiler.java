@@ -64,7 +64,7 @@ public class GeckoJavaCompiler {
     public enum COMPILESTATUS {
 
         NOT_COMPILED, COMPILED_SUCCESSFULL, COMPILE_ERROR
-    };
+    }
     private COMPILESTATUS _compileStatus = COMPILESTATUS.NOT_COMPILED;
     //-------------------------------------------------------------------
     private MainWindow gecko;

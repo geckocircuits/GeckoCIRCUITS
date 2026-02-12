@@ -45,4 +45,4 @@ enum AxisLinLog {
         }
         return ACHSE_LIN;
     }
-};
+}

@@ -186,4 +186,4 @@ final class JavaMemoryRestart {
         commands.addAll(Arrays.asList(args));
         return commands;
     }
-};
+}

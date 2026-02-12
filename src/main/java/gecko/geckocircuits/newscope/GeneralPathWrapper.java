@@ -37,7 +37,6 @@ final class GeneralPathWrapper{
 
   void paintSymbols(final Graphics2D g2d, final GeckoSymbol symbol){
     if(symbol == null){
-      return;
     }
 
   }

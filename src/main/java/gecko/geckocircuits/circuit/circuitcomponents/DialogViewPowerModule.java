@@ -44,6 +44,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception e) {
+            // intentionally empty
         }
         this.addWindowListener(this);
         //------------------------

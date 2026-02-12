@@ -19,4 +19,4 @@ public enum TextInfoType {
     SHOW_ALWAYS,
     SHOW_WHEN_DISPLAYPARAMETERS,
     SHOW_WHEN_NON_EXTERNAL
-};
+}

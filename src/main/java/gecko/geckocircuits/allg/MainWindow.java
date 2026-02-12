@@ -178,12 +178,14 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         } catch (UnsupportedLookAndFeelException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            // intentionally empty
         }
         try {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
+            // intentionally empty
         }
 
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
@@ -235,6 +237,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
 
         if (!IS_BRANDED) {
+            // intentionally empty
             //StartupWindow.fabricUnBlocking();
         }
 
@@ -1458,6 +1461,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                     "3Dtherm")) {
             } else if (befehl.equals(
                     "geckoScript")) {
+                        // intentionally empty
                 _scripter.makeVisible();
             } else if (befehl.equals(
                     "magnet")) {
@@ -1917,7 +1921,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             pauseSimulation();
             _simRunner.simKern._simulationStatus = SimulationsKern.SimulationStatus.FINISHED;
             jtfStatus.setText("Simulation aborted.");
-            return;
         }
     }
 

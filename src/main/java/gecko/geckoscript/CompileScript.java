@@ -50,7 +50,6 @@ public class CompileScript {
 
     static AbstractCompileObject _compileObject = new CompileObjectNull();
     static Map<String, CompiledClassContainer> _classNameFileMap;
-    private static AbstractGeckoCustom _compiledInstance;
 
     static class scriptRAMJavaFileObject extends SimpleJavaFileObject {
 

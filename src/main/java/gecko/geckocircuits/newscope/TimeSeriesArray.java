@@ -59,16 +59,13 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
         final double minTime = getValue(0);
 
         int estimatedIndex = (int) (maxIndex * (time - minTime) / (maxTime - minTime));
-        int firstestimation = estimatedIndex;
         if (estimatedIndex > maxIndex) {
             estimatedIndex = maxIndex;
         }
         if (estimatedIndex < 0) {
             estimatedIndex = 0;
         }
-        int whilecounter = 0;
         while (getValue(estimatedIndex) > time) {
-            whilecounter++;
             estimatedIndex -= FIND_OVER_STEP;
             if (estimatedIndex < 0) {
                 estimatedIndex = 0;
@@ -78,7 +75,6 @@ public final class TimeSeriesArray extends AbstractTimeSerie {
 
         int returnValue = estimatedIndex;
         for (int i = estimatedIndex; i < maxIndex; i++) {
-            whilecounter ++;
             if (getValue(i) < time) {
                 returnValue = i;
             } else {

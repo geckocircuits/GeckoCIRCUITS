@@ -59,6 +59,7 @@ public final class DialogSSAPlot extends GeckoDialog {
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
+            // intentionally empty
         }
 
         @SuppressWarnings("deprecation")

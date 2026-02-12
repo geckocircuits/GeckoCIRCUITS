@@ -57,10 +57,6 @@ public class CompressedData {
 
     }
 
-    private static int getRandomInt(int min, int max) {
-        return (int) (Math.floor(Math.random() * (max - min + 1)) + min);
-    }
-
     private byte trimByte(byte value, int length) {
         byte trimmer = (byte) (-1 << length);
         return (byte) ((value | trimmer) ^ trimmer);

@@ -308,7 +308,7 @@ public abstract class AbstractCircuitSheetComponent {
         }
         if (_tempParentSheetIdentifier != 0) {
             _tempParentSheetIdentifier += shiftValue;
-        };
+        }
     }
 
     public abstract String getExportImportCharacters();

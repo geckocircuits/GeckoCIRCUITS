@@ -103,7 +103,6 @@ public class DialogFourier extends JDialog {
         con.setLayout(new BorderLayout());
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        int cols = 7;
 
 
         //
@@ -323,21 +322,15 @@ public class DialogFourier extends JDialog {
 
 
         i1 = startIndex;
-        double dt = worksheet.getTimeValue(i1 + 1, 0) - worksheet.getTimeValue(i1, 0);
         //-------------------
         // Rechnen bis zum Endpunkt:
-        double q = 2 * Math.PI * f1;  // Hilfskonstante
+        // q was the angular frequency constant for the Fourier integral (currently unused)
+        // double q = 2 * Math.PI * f1;
         while ((i1 < worksheet.getMaximumTimeIndex(0)) && (worksheet.getTimeValue(i1 + 1, 0) > worksheet.getTimeValue(i1, 0))
                 && (rng1 <= worksheet.getTimeValue(i1, 0)) && (worksheet.getTimeValue(i1, 0) <= rng2)) {  // Schleife Zeitbereich [t1...t2]
-            try {
-                dt = worksheet.getTimeValue(i1 + 1, 0) - worksheet.getTimeValue(i1, 0);
-            } catch (Exception e) {
-            }  // wenn wir ganz am Ende sind --> Exception --> altes 'dt' wird verwendet
             for (int i2 = 1; i2 < worksheet.getRowLength() + 1; i2++) {  // Schleife ueber alle Fourier-zu-zerlegenden Kurven
                 if (jcbZV[i2 - 1].isSelected()) {
                     signalFourierAnalysiert[i2] = true;
-                    double wert = worksheet.getValue(i2 - 1, i1);
-                    double arg = q * worksheet.getTimeValue(i1, 0);
 //                    for (int n = nMin; n <= nMax; n++) {  // Schleife ueber alle Grundfrequenz-Vielfachen [nMin...nMax]
 //                        an[i2 - 1][n - nMin] += (wert * Math.cos(arg * n) * dt) / (0.5 * dT);
 //                        bn[i2 - 1][n - nMin] += (wert * Math.sin(arg * n) * dt) / (0.5 * dT);

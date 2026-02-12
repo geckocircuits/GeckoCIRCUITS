@@ -65,7 +65,7 @@ public final class GeckoFileChooser {
 
         OK,
         CANCEL
-    };
+    }
 
     public FileChooserResult getUserResult() {
         return _userResult;

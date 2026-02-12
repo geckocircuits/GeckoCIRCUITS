@@ -48,30 +48,6 @@ public final class JavaBlockClassLoader extends URLClassLoader {
 
     }
 
-    /**
-     * this enables to create local classes in the .ipes-folder, this classload will find them, then.
-     */
-    private void extendClassPath() {
-
-
-        final File tmpfile = new File(GlobalFilePathes.DATNAM);
-        final File file = new File(tmpfile.getAbsolutePath());
-        final File directory = file.getParentFile();
-        if (directory.isDirectory()) {
-            try {
-                final String path = directory.getAbsolutePath();
-                final URL url = new URL("file://" + path + "/");
-		this.addURL(url);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
     @Override
     protected Class<?> findClass(final String name) throws
             ClassNotFoundException {
@@ -90,7 +66,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
 
                 return Class.forName(name, true, createUrlClassLoader(url));
             } catch (MalformedURLException | ClassNotFoundException ex) {
-
+                // intentionally empty
             }
             return null;
             // return super.findClass(name);

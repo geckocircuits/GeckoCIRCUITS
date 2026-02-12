@@ -70,6 +70,7 @@ import java.util.logging.Logger;
         if(node.getElementControl().getStringID().equals("OR.1") || node.getElementControl().getStringID().equals("SPARSEMATRIX.2")) {
             System.out.println("yyyy: " + node.getElementControl().getStringID());
             try {
+                // intentionally empty
 //                assert false;
             } catch (AssertionError err) {
                 System.out.flush();
@@ -131,6 +132,7 @@ import java.util.logging.Logger;
             if(_availableBlocks.contains(directNeighbour)) {
                 _nextInsertBlocks.add(directNeighbour);
             } else {
+                // intentionally empty
 
             }
 //            for (ControlOrderNode nextNode : _availableBlocks) {

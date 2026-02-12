@@ -154,7 +154,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
         // for sine wave excitation, try to limit he amount of sinus evaluations
         // for all other, do all uneven (odd) harmonics
 
-        int noPossibleFreqs = (int) Math.ceil(Math.floor(_freqEnd / _freqStart) / 2);;
+        int noPossibleFreqs = (int) Math.ceil(Math.floor(_freqEnd / _freqStart) / 2);
         double[] possibleSimFreqs = new double[noPossibleFreqs];
         for (int i = 0; i < noPossibleFreqs; i++) {
             possibleSimFreqs[i] = _freqStart * (2 * i + 1);
@@ -162,7 +162,6 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
 
         if (_signalType != SSAShape.SINE) {
             _bode[0] = possibleSimFreqs;
-            return;
         } else {
             // Calculation of logarithmically spaced index
             int[] index1 = new int[_noFreqs];
@@ -205,18 +204,6 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
                 assert false;
         }
         return returnValue;
-    }
-
-    private void printResults(float[] data, float[] smallData) {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        String filePath = tempDir + "/gecko_small_signal_data.txt";
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
-            for (int i = 0; i < data.length; i++) {
-                writer.print(data[i] + " " + smallData[i] + "\n");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(SmallSignalCalculator.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
 
@@ -325,13 +312,6 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
                 Math.min(ss_aVals.length, ss_bVals.length)) - 1;
         arrayBound = Math.min(arrayBound, magnitudeValues.length - 1);
         return Math.min(Math.min(_nMax, fftBound), arrayBound);
-    }
-
-    private void printResults() {
-        System.out.println("printing results ------------------------");
-        for (int i = 0; i < _bode[0].length; i++) {
-            System.out.println("bode " + i + " " + _bode[0][i] + "\t" + _bode[1][i] + "\t" + _bode[2][i]);
-        }
     }
 
     private int[] removeDuplicates(final int[] arr, final int noValues) {

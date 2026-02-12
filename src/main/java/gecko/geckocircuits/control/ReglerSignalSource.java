@@ -124,7 +124,6 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
     private String[] _labelsBeforeFold;
     private transient Stack<TerminalControlInput> _terminalStack = new Stack<TerminalControlInput>();
 
-    ;
 
     public ReglerSignalSource() {
         super(0, 1);

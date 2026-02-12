@@ -470,6 +470,7 @@ public final class PotentialArea {
             }
 
         } else {
+            // intentionally empty
 //            for (ElementNodes nodes : _elementNodeTerminals) {
 //                boolean allTerminalCircuits = true;
 //                if( ! (nodes._element instanceof TerminalCircuit)) {

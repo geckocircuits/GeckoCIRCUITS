@@ -24,7 +24,6 @@ import javax.swing.JLabel;
  * @author andy
  */
 public final class FractionPrinter extends javax.swing.JPanel {
-    private static final double STRING_LENTH_FAC = 0.85;
 
     public FractionPrinter() {
         super();

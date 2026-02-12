@@ -179,18 +179,6 @@ public final class HiLoData {
         return hiLoDataFabric(minValue, maxValue);
     }
 
-    private static float correctWithNotANumber(float value1, float value2) {
-        if(value1 != value1 && value2 != value2) {
-            return Float.NaN;
-        }
-        if(value1 != value1) {
-            return value2;
-        } else {
-        // value2 != value2 {
-            return value2;
-        }
-    }
-
     public float getIntervalRange() {
         return _yHi - _yLo;
     }

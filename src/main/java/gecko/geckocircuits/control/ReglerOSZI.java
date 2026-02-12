@@ -450,7 +450,6 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     }
 
     public void doInitialCalculation() {
-        List<ExternalSignal> externalSignals;
         // (b) wenn die Simulation ein zweites, drittes usw. weiteres Mal neugestartet wird
         if (_zvDatenRAM != null) {
             _zvDatenRAM.deleteObservers();

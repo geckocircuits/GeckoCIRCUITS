@@ -210,7 +210,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                 }
                 SystemOutputRedirect.setOriginalOutput();
             }
-        };
+        }
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
@@ -254,6 +254,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         final Color origColor = graphics.getColor();
         graphics.setColor(getBackgroundColor());  // default
         if (getModus() == ComponentState.FINISHED) {
+            // intentionally empty
 //            if (_javaBlock.getCompileStatus() == CompileStatus.NOT_COMPILED) {
 //                graphics.setColor(Color.WHITE);
 //            } else if (_javaBlock.getCompileStatus() == CompileStatus.COMPILED_SUCCESSFULL) {
@@ -430,6 +431,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
                 if (_guiWindow.isVisible()) {
                     _guiWindow.toFront();
                 } else {
+                    // intentionally empty
                     //_guiWindow.loadSourcesText();
                 }
             }

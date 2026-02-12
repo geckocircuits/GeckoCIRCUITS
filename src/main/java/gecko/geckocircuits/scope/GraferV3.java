@@ -484,6 +484,7 @@ public class GraferV3 extends JPanel {
             if (linienStilAchsenX[i1] == SOLID_PLAIN) {
                 g2.setStroke(str_SOLID_PLAIN);
             } else if (linienStilAchsenX[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+                // intentionally empty
             } else if (linienStilAchsenX[i1] == SOLID_FAT_1) {
                 g2.setStroke(str_SOLID_FAT_1);
             } else if (linienStilAchsenX[i1] == SOLID_FAT_2) {
@@ -509,6 +510,7 @@ public class GraferV3 extends JPanel {
             if (linienStilAchsenY[i1] == SOLID_PLAIN) {
                 g2.setStroke(str_SOLID_PLAIN);
             } else if (linienStilAchsenY[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+                // intentionally empty
             } else if (linienStilAchsenY[i1] == SOLID_FAT_1) {
                 g2.setStroke(str_SOLID_FAT_1);
             } else if (linienStilAchsenY[i1] == SOLID_FAT_2) {
@@ -587,6 +589,7 @@ public class GraferV3 extends JPanel {
         if (kurveLinienstil[i1] == SOLID_PLAIN) {
             g2.setStroke(str_SOLID_PLAIN);
         } else if (kurveLinienstil[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+            // intentionally empty
         } else if (kurveLinienstil[i1] == SOLID_FAT_1) {
             g2.setStroke(str_SOLID_FAT_1);
         } else if (kurveLinienstil[i1] == SOLID_FAT_2) {
@@ -1069,6 +1072,7 @@ public class GraferV3 extends JPanel {
                             if (linStilGridNormalXminor[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
                             } else if (linStilGridNormalXminor[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+                                // intentionally empty
                             } else if (linStilGridNormalXminor[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalXminor[i1] == SOLID_FAT_2) {
@@ -1101,6 +1105,7 @@ public class GraferV3 extends JPanel {
                             if (linStilGridNormalX[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
                             } else if (linStilGridNormalX[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+                                // intentionally empty
                             } else if (linStilGridNormalX[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalX[i1] == SOLID_FAT_2) {
@@ -1150,6 +1155,7 @@ public class GraferV3 extends JPanel {
                             if (linStilGridNormalYminor[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
                             } else if (linStilGridNormalYminor[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+                                // intentionally empty
                             } else if (linStilGridNormalYminor[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalYminor[i1] == SOLID_FAT_2) {
@@ -1182,6 +1188,7 @@ public class GraferV3 extends JPanel {
                             if (linStilGridNormalY[i1] == SOLID_PLAIN) {
                                 g2.setStroke(str_SOLID_PLAIN);
                             } else if (linStilGridNormalY[i1] == INVISIBLE) {     // nix machen, weil unsichtbar
+                                // intentionally empty
                             } else if (linStilGridNormalY[i1] == SOLID_FAT_1) {
                                 g2.setStroke(str_SOLID_FAT_1);
                             } else if (linStilGridNormalY[i1] == SOLID_FAT_2) {
@@ -1324,7 +1331,7 @@ public class GraferV3 extends JPanel {
         // achse= [z1 .. z2] --> gesuchte Werte sollen 'rund'zahlig und eventuell ein bischen groesser als z1, z2 sein
         // ACHTUNG: LIN- und LOG-Skalierung wird unterschiedliche behandelt!!
         double z1empfLIN, z2empfLIN, z1empfLOG, z2empfLOG;
-        double schrittEmpfLIN = 1.0, schrittEmpfLOG = 1.0;
+        double schrittEmpfLIN = 1.0;
         double z1lg = z1, z2lg = z2;
         //----------------
         // LIN -->

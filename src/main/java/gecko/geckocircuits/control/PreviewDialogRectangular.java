@@ -29,7 +29,7 @@ public class PreviewDialogRectangular extends PreviewDialog {
 
     @Override
     JComponent createComponent() {
-        final int b = 160, h = 110, p1 = 10, p2 = 3, rand = 10, rd = 2, q = 0;
+        final int b = 160, h = 110, p1 = 10, p2 = 3, rand = 10, q = 0;
         final int x2 = rand, x0 = x2 + 20, x1 = x0 + b, y1 = rand, y0 = y1 + h, y2 = y0 + x2;
         final int[] kordX = new int[]{x0, x0, x0 - p2, x0 + p2, x0, x0, x2, x1 + rand, x1 - p1 + rand, x1 - p1 + rand, x1 + rand};
         final int[] kordY = new int[]{y2, y1, y1 + p1, y1 + p1, y1, y0, y0, y0, y0 - p2, y0 + p2, y0};
@@ -88,6 +88,7 @@ public class PreviewDialogRectangular extends PreviewDialog {
                     triX[i1] = triX[i1 - 1];
                 }
             } catch (Exception e) {
+                // intentionally empty
             }  // damit es senkrechte Linien gibt
             tx += dt;
             i1++;

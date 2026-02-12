@@ -263,14 +263,6 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
 
     }
 
-    private void runCalculation() {
-        oldTend = GeckoExternal.get_Tend();
-        GeckoExternal.set_Tend(GeckoExternal.getSimulationTime() + 1.0 / element._fBase.getValue());
-        GeckoExternal.continueSimulation();
-
-        GeckoExternal.set_Tend(oldTend);
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

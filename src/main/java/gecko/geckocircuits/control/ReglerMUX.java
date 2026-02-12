@@ -31,9 +31,6 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
 
     private static final double WIDTH = 0.3;
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ReglerMUX.class, "MUX", I18nKeys.CONTROL_MUX);
-    // carful: this variable is only used when the model is read
-    // it is not updated when the terminal is changed in the current model.
-    private int externalOrderNumber = -1;
 
     transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
             <Integer>start("tn", 3).
@@ -117,7 +114,6 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
         graphics.drawRect((int) (dpix * (posX - WIDTH)), (int) (dpix * (posY - WIDTH)),
                 (int) (dpix * 2 * WIDTH), (int) (dpix * XIN.size()));
         // Pfeil-Symbol:
-        int d1 = 10, d2 = 4, dpfx = 8, dpfy = 3;
         double pf = 1.4;  // Pfeilspitzen-X-Abstand
         double pfym = YOUT.get(0).getPosition().y;  // Pfeil-Y-Koordinate
         graphics.drawLine((int) (dpix * (posX + WIDTH)), (int) (dpix * pfym), (int) (dpix * (posX + pf)),

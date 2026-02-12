@@ -27,4 +27,4 @@ public enum CompileStatus {
         assert false;
         return null;
     }
-};
+}

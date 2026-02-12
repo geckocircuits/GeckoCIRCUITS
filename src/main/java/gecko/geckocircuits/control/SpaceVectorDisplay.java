@@ -227,7 +227,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
                 super.paintComponent(g);
                 SpaceVectorPaint(g);
             }
-        }; ;
+        }; 
         jPanel2 = new javax.swing.JPanel();
         jSpinnerLength1 = new JSpinner();
         jLabel1 = new javax.swing.JLabel();

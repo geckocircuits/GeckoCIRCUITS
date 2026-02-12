@@ -38,7 +38,6 @@ public final class PolynomTools {
         // private static - make this a utility-class
     }
 
-    ;
 
 
     public static String getPolynomString(double[] polynom) {

@@ -24,7 +24,7 @@ import java.io.Serializable;
 public class GeckoRemotePipeObject implements Serializable {
 
     //internal enum which defines which type of action this objects represents - a method call, a return variable, successful void return, or an error message
-    public enum GeckoRemotePipeObjectType { METHOD_CALL, METHOD_RETURN_VALUE, METHOD_VOID_RETURN, ERROR_MESSAGE };
+    public enum GeckoRemotePipeObjectType { METHOD_CALL, METHOD_RETURN_VALUE, METHOD_VOID_RETURN, ERROR_MESSAGE }
 
     private final GeckoRemotePipeObjectType _type; //the type of action this object represents
     private final String _methodName; //the name of the method - must be set for all types (method calls and returns and errors)

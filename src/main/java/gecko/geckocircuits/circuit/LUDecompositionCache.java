@@ -83,18 +83,6 @@ public class LUDecompositionCache {
         }
     }
 
-    private void printDebugMessages(final double time) {
-        _cacheHitCounter++;
-
-        System.out.println("cache size: " + _cachedMatrices.size());
-        //for (int key : _cachedMatrices.keySet()) {
-        //    final AbstractCachedMatrix mat = _cachedMatrices.get(key);
-        //    System.out.println("cache: " + mat + " " + (time - mat.getLatestAccessTime()) + " " + mat.getAccessCounter());
-        //}
-        System.out.println("cache hits: " + _cacheHitCounter + " " + _cacheMissCounter + " " + (100.0 * _cacheHitCounter / (_cacheHitCounter + _cacheMissCounter)) + "%");
-        System.out.println("memory requirement in MB: " + memoryBytes / 1024 / 1024);
-    }
-
     /*
      * if cache is larger than maximum cache size, then remove
      * the oldest and the two least accessed matrix entry.

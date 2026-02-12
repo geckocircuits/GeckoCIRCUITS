@@ -222,25 +222,6 @@ public abstract class AbstractJavaBlock {
         _compileObject = new CompileObjectNull();
     }
 
-    private void saveSourcesForDebug(final String className, final String sourceCode) {
-        FileWriter fstream = null;
-        try {
-            fstream = new FileWriter("/home/andy/tmp/" + className + ".java", StandardCharsets.UTF_8);
-            BufferedWriter out = new BufferedWriter(fstream);
-            out.write(sourceCode);
-            out.close();
-            fstream.close();
-        } catch (IOException ex) {
-            Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, "IOException while saving debug sources: " + ex.getMessage(), ex);
-        } finally {
-            try {
-                fstream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(AbstractJavaBlock.class.getName()).log(Level.SEVERE, "IOException while closing debug file: " + ex.getMessage(), ex);
-            }
-        }
-    }
-
     final void createNewJavaSourceCopy(AbstractJavaBlock returnValue) {
         returnValue._javaBlockSource = new JavaBlockSource.Builder().sourceCode(
                 this._javaBlockSource._sourceCode).

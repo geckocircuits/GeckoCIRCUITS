@@ -668,7 +668,6 @@ public final class GeckoFile {
             final String result = DialogMakeExternal.dialogResultFabric(GeckoFile.this, originalContents);
             if (result == null || !new File(result).exists()) { // cancel pressed or external file is not existing!
                 setStorageType(StorageType.INTERNAL);
-                return;
             }
         }
 

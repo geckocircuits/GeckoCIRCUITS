@@ -306,6 +306,7 @@ public final class NetzlisteCONTROL {
                     }
                 }
             } else {
+                // intentionally empty
                 //System.out.println("mux without input:  " + muxEntry.getValue().getStringID());
             }
         }
@@ -432,7 +433,6 @@ public final class NetzlisteCONTROL {
         List<List<AbstractTerminal>> inputCoords = new ArrayList<List<AbstractTerminal>>();
         List<Integer> scopeIndices = new ArrayList<Integer>();
         potIndex = new ArrayList<Integer>();
-        int numRows = 0;
 
         int maxNumOfInput = 0;
         for (int i = 0; i < _orderedControlBlocks.length; i++) {
@@ -461,7 +461,6 @@ public final class NetzlisteCONTROL {
                         if (!potIndex.contains(potGebInd)) {
                             _scopePotentialMap.put(potGebInd, new IndexConnection(scopeIndices.get(scopeInd), inputInd));
                             potIndex.add(potGebInd);
-                            numRows++;
                         }
                         dataIndex[inputInd] = potIndex.indexOf(potGebInd);
                     }
