@@ -204,8 +204,8 @@ mvn pmd:check
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules + allowCommentedBlocks) | **3,316** | Code-style only, no bugs |
-| Checkstyle | `checkstyle.xml` (150-char lines) | **4,618** | Down from 56,673 with default Sun config |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 8 excluded rules, allowCommentedBlocks) | **823** | Code-style only, no bugs |
+| Checkstyle | `checkstyle.xml` (150-char lines) | **4,618** | Unchanged |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
 
@@ -264,6 +264,7 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `d69f9f5` Fix 2,620 PMD violations via auto-fixes and ruleset tuning
 - `4233f74` Fix 127 PMD violations: empty blocks, empty catches, unused code, stray imports
 - `ea309a7` Update project docs after static analysis cleanup sprint
 - `9ffedb0` Fix 183 Tier 3 PMD violations: empty blocks, unused code, stray semicolons
@@ -271,7 +272,6 @@ Recent commits:
 - `50f62f7` Fix 565 PMD violations: UselessParentheses, UnnecessaryImport, UnnecessaryModifier
 - `84388dd` Fix 694 UnnecessaryFullyQualifiedName PMD violations across 111 files
 - `49da720` Add PMD and Checkstyle configuration files with third-party exclusions
-- `7d91719` Update project docs after losscalculation GUI decoupling sprint
 
 ## Key Interfaces for Headless Operation
 
