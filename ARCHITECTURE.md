@@ -258,7 +258,9 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 - JaCoCo: 60%+ instruction coverage on core packages (`mvn verify`)
 - CorePackageValidationTest: No GUI imports in core
 - MkDocs strict mode: No broken internal links
-- SpotBugs, Checkstyle, PMD available for static analysis
+- SpotBugs: 0 bugs (204 inline `@SuppressFBWarnings` annotations)
+- PMD: Custom ruleset `pmd-ruleset.xml` (quickstart rules, excludes `com/intel/mkl/`), 3,444 violations
+- Checkstyle: Custom config `checkstyle.xml` (150-char lines, relaxed naming), 4,661 violations
 
 ## 8. Key Dependencies
 

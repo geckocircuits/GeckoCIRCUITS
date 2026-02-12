@@ -190,15 +190,24 @@ mkdocs gh-deploy --force
 ## Code Quality Tools
 
 ```bash
-# SpotBugs analysis
+# SpotBugs analysis (0 bugs enforced)
 mvn spotbugs:check
 
-# Checkstyle
+# Checkstyle (custom config: checkstyle.xml)
 mvn checkstyle:check
 
-# PMD
+# PMD (custom ruleset: pmd-ruleset.xml)
 mvn pmd:check
 ```
+
+### Static Analysis Status (2026-02-12)
+| Tool | Config | Violations | Notes |
+|------|--------|-----------|-------|
+| SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
+| PMD | `pmd-ruleset.xml` (quickstart rules) | **3,444** | Code-style only, no bugs |
+| Checkstyle | `checkstyle.xml` (150-char lines) | **4,661** | Down from 56,673 with default Sun config |
+
+Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
 
 ## Current Development Focus
 
@@ -255,13 +264,13 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `9ffedb0` Fix 183 Tier 3 PMD violations: empty blocks, unused code, stray semicolons
+- `b8b8f1f` Strip trailing whitespace from 974 Java source files
+- `50f62f7` Fix 565 PMD violations: UselessParentheses, UnnecessaryImport, UnnecessaryModifier
+- `84388dd` Fix 694 UnnecessaryFullyQualifiedName PMD violations across 111 files
+- `49da720` Add PMD and Checkstyle configuration files with third-party exclusions
+- `7d91719` Update project docs after losscalculation GUI decoupling sprint
 - `351c2e7` Decouple VerlustBerechnungDetailed from MainWindow for GUI-free testability
-- `138b3ed` Update project docs after package rename sprint
-- `d4cfa77` Merge branch 'refactor/remove-ch-technokrat': remove ch.technokrat from packages
-- `3c5838e` Remove ch.technokrat from package structure: ch.technokrat.* -> gecko.*
-- `7c026c3` Add ARCHITECTURE.md, update PRD.md and CLAUDE.md with current sprint status
-- `53d7b9f` Fix 87 broken internal links on tutorials and examples index pages
-- `0768a2d` Fix broken docs links, integrate articles/tutorials, add core API docs
 
 ## Key Interfaces for Headless Operation
 

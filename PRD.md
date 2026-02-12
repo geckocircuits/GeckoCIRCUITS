@@ -106,7 +106,15 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-12): LossCalculation GUI Decoupling
+### Latest Sprint (2026-02-12): Static Analysis Cleanup
+- Created `pmd-ruleset.xml` and `checkstyle.xml` config files, updated `pom.xml`
+- Fixed 1,445 auto-fixable PMD violations across 330+ files:
+  - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
+- Fixed 183 Tier 3 PMD violations: EmptyCatchBlock (20), EmptyControlStatement (44), UnnecessarySemicolon (34), UnnecessaryReturn (33), UnusedLocalVariable (28), UnusedPrivateMethod (13), UnusedPrivateField (11)
+- Stripped trailing whitespace from 974 Java source files (13,359 lines)
+- SpotBugs: 0 bugs (maintained), PMD: 3,444 violations (down from ~4,800), Checkstyle: 4,661 (down from 56,673)
+
+### Previous Sprint (2026-02-12): LossCalculation GUI Decoupling
 - Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
 - Replaced 11 static `MainWindow` references with injectable accessor pattern
 - Added 22 new tests for previously-untestable file I/O methods (mock-based)
@@ -152,7 +160,9 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - JaCoCo: 60%+ instruction coverage on core packages
 - `CorePackageValidationTest`: Zero GUI imports in core module
 - `mkdocs build --strict`: Zero broken links in documentation
-- SpotBugs, Checkstyle, PMD available for static analysis
+- SpotBugs: 0 bugs enforced (204 inline `@SuppressFBWarnings` annotations)
+- PMD: Custom ruleset (`pmd-ruleset.xml`), 3,444 remaining violations (code-style, not bugs)
+- Checkstyle: Project-tuned config (`checkstyle.xml`), 4,661 remaining violations
 
 ### Success Metrics
 
@@ -163,6 +173,9 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | losscalculation coverage | 61% | 65%+ |
 | Docs site pages | 82+ | 100+ |
 | Broken links | 0 | 0 |
+| SpotBugs bugs | 0 | 0 |
+| PMD violations | 3,444 | <2,000 |
+| Checkstyle violations | 4,661 | <2,000 |
 | REST API endpoints | 0 | 10+ |
 
 ## 8. Content Inventory
