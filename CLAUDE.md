@@ -166,7 +166,7 @@ Swing dialogs use NetBeans GUI Designer `.form` files. To edit:
 
 ## Documentation Site
 
-The MkDocs documentation site is in `docs/`. Key scripts:
+Live at: https://tinix84.github.io/GeckoCIRCUITS/ (deployed via gh-pages branch)
 
 ```bash
 # Sync resources/ content (tutorials, examples, articles) into docs/
@@ -180,7 +180,12 @@ mkdocs build --strict
 
 # Preview docs locally
 mkdocs serve
+
+# Deploy to GitHub Pages
+mkdocs gh-deploy --force
 ```
+
+**Important:** `docs/tutorials/index.md` and `docs/examples/index.md` are hand-maintained (not overwritten by sync-docs.py) because they use different path conventions than the source READMEs.
 
 ## Code Quality Tools
 
@@ -231,13 +236,25 @@ Development journals are stored in `.claude/journals/` with detailed context:
 - `QUICK_REFERENCE.md` - Current session status and metrics
 - `OPCODE_GUIDE.md` - Complete development guide
 
+## Project Documents
+
+Keep these documents updated after each sprint/push:
+- **`PRD.md`** - Product requirements, sprint status, release history, success metrics
+- **`ARCHITECTURE.md`** - System architecture, module structure, GUI-free boundary, integration points
+- **`CLAUDE.md`** (this file) - Build commands, development context, session continuity
+
+A PostToolUse hook in `.claude/settings.json` reminds to update these after `git push`.
+
 ## Recent Git Activity
 
-Recent commits focus on:
-- v0.4.0: Test coverage improvements and JaCoCo CI integration
-- v0.3.0: Scripting tutorials (GeckoSCRIPT, MATLAB, Python, Java Blocks)
-- v0.2.0: Comprehensive documentation site
-- v0.1.0: CI pipeline, launcher scripts, distribution packaging
+Recent commits:
+- `53d7b9f` Fix 87 broken internal links on tutorials and examples index pages
+- `0768a2d` Fix broken docs links, integrate articles/tutorials, add core API docs
+- `293e5f5` Simplify Maven groupId from ch.technokrat.gecko to gecko
+- `7fce3f5` v1.1.0: Multi-module reactor build, zero-crossing detection, REST API test fixes
+- `f5d8fba` v1.0.0: Production release polish and URL fixes
+- `3eb4e2d` v0.5.0: Add developer guide, contributor onboarding, and example docs
+- `bf50d6f` v0.4.0: Add JaCoCo coverage enforcement and 125 new tests
 
 ## Key Interfaces for Headless Operation
 

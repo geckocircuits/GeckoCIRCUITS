@@ -1,189 +1,197 @@
 # GeckoCIRCUITS Product Requirements Document
 
-## Overview
+**Version:** 1.1.0
+**Last Updated:** 2026-02-11
+**Status:** Active Development
 
-GeckoCIRCUITS is an open-source circuit simulator for power electronics, originally developed at ETH Zurich. It provides multi-domain simulation capabilities including electrical, thermal, and EMI analysis, with integration support for MATLAB/Simulink.
+---
 
-## Target Users
+## 1. Product Vision
 
-1. **Power Electronics Engineers** - Design and simulate converters, inverters, rectifiers
-2. **Researchers** - Academic research in power electronics topologies
-3. **Educators** - Teaching power electronics concepts with interactive simulations
-4. **Students** - Learning circuit behavior through hands-on simulation
+GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics, originally developed at ETH Zurich. It provides multi-domain simulation (electrical, thermal, EMI) with integration support for MATLAB/Simulink. The project follows a **dual-track strategy**: maintaining the mature desktop application for power users while adding modern web/API accessibility for automation, cloud deployment, and education.
 
-## Supported Platforms
+## 2. Target Users
+
+| Persona | Interface | Use Case |
+|---------|-----------|----------|
+| **Power electronics researchers** | Desktop GUI + RMI | Interactive circuit design, MATLAB/Simulink co-simulation |
+| **University students** | Desktop GUI / Browser (future) | Learning power electronics through tutorials and examples |
+| **Automation engineers** | REST API (planned) | CI/CD pipeline validation, batch parameter sweeps |
+| **Educators** | Documentation site | Teaching with curated tutorials, examples, articles |
+
+## 3. Supported Platforms
 
 | Platform | Distribution | Launcher Script |
 |----------|-------------|-----------------|
-| Windows 10/11 | `GeckoCIRCUITS-x.x-windows.zip` | `run-gecko.bat` |
-| Linux (Ubuntu, Fedora, Arch) | `GeckoCIRCUITS-x.x-linux.zip` | `run-gecko-linux.sh` |
-| macOS (Intel/Apple Silicon) | `GeckoCIRCUITS-x.x-macos.zip` | `run-gecko-macos.sh` |
-| WSL2 (Windows 11 WSLg) | `GeckoCIRCUITS-x.x-wsl.zip` | `run-gecko-wsl.sh` |
+| Windows 10/11 | `GeckoCIRCUITS-1.0-windows.zip` | `run-gecko.bat` |
+| Linux (Ubuntu, Fedora, Arch) | `GeckoCIRCUITS-1.0-linux.zip` | `run-gecko-linux.sh` |
+| macOS (Intel/Apple Silicon) | `GeckoCIRCUITS-1.0-macos.zip` | `run-gecko-macos.sh` |
+| WSL2 (Windows 11 WSLg) | `GeckoCIRCUITS-1.0-wsl.zip` | `run-gecko-wsl.sh` |
 
-## System Requirements
-
-### Minimum Requirements
+### System Requirements
 - **Java**: OpenJDK 21 or later
 - **Memory**: 4 GB RAM (8 GB recommended)
-- **Storage**: 200 MB for application, additional space for circuit files
-- **Display**: 1280x720 resolution
+- **Storage**: 200 MB for application
+- **Display**: 1280x720 resolution (HiDPI supported via `--hidpi` flag)
 
-### HiDPI Support
-- 4K/Retina displays supported via `--hidpi` flag
-- Automatic scaling with `-Dsun.java2d.uiScale=2`
+## 4. Product Components
 
-## Core Features
+### 4.1 Desktop Application (Production)
+- Swing-based GUI with oscilloscope visualization
+- Multi-domain simulation: electrical, thermal, EMI
+- MATLAB/Simulink integration via RMI and memory-mapped files
+- GraalVM JavaScript scripting engine (GeckoSCRIPT)
+- 64+ control blocks (PI/PID, integrators, differentiators, limiters)
+- Supports `.ipes` circuit files (gzip-compressed XML)
 
-### 1. Circuit Simulation
-- **Electrical domain**: Passive components (R, L, C), semiconductors (diodes, MOSFETs, IGBTs), transformers
-- **Thermal domain**: Junction temperature calculation, thermal networks
+### 4.2 Simulation Core Module (In Progress)
+- **Location:** `src/modules/gecko-simulation-core/`
+- GUI-free simulation engine suitable for headless operation (139+ classes)
+- 70% JaCoCo coverage enforced via CI
+- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `control.calculators`, `math`
+- Validated by `CorePackageValidationTest` (zero GUI imports)
+
+### 4.3 REST API (Planned)
+- **Location:** `src/modules/gecko-rest-api/`
+- Spring Boot 3.2.1 with OpenAPI/Swagger
+- Planned endpoints: simulation CRUD, signal analysis (RMS, THD, FFT), health check
+
+### 4.4 Documentation Site (Live)
+- **URL:** https://tinix84.github.io/GeckoCIRCUITS/
+- **Technology:** MkDocs with Material theme, deployed via GitHub Pages (gh-pages branch)
+- Content synced from `resources/` via `scripts/sync-docs.py`
+- Sections: Getting Started, Tutorials (9 series), Examples (6 categories), Articles (10 newsletters), API Reference
+
+## 5. Core Features
+
+### Circuit Simulation
+- **Electrical domain**: R, L, C, diodes, MOSFETs, IGBTs, transformers
+- **Thermal domain**: Junction temperature calculation, thermal networks, heatsink design
 - **EMI domain**: EMI filter design and analysis
-- **Solver methods**: Backward Euler, Trapezoidal, Gear-Shichman
+- **Solver methods**: Backward Euler (BE), Trapezoidal (TRZ), Gear-Shichman (GS)
 
-### 2. Control System Modeling
+### Control System Modeling
 - 64+ control blocks (PI/PID controllers, integrators, differentiators, limiters)
 - Signal processing (FFT, filters, math operations)
 - PWM generation (carrier-based, space vector)
 - State machines and logic blocks
 
-### 3. Visualization
+### Visualization
 - Real-time oscilloscope with multiple channels
-- FFT spectrum analyzer
-- XY plots and Bode plots
+- FFT spectrum analyzer, XY plots, Bode plots
 - Export to CSV, images, SVG
 
-### 4. Scripting & Automation
+### Scripting & Automation
 - GeckoSCRIPT for batch simulations
 - JavaScript expression evaluation (GraalVM)
 - Parameter sweeps and optimization
 - Custom Java blocks
 
-### 5. External Integration
+### External Integration
 - **MATLAB/Simulink**: RMI-based remote control, memory-mapped file communication
-- **REST API**: Headless operation for automation and cloud deployment
+- **REST API** (planned): Headless operation for automation and cloud deployment
 - **Native C**: JNI integration for custom components
 
-## Distribution Packages
+## 6. Current Sprint Status
 
-### Platform Packages
+### Release History
+
+| Version | Milestone | Key Deliverables |
+|---------|-----------|-----------------|
+| v0.1.0 | CI/CD Foundation | GitHub Actions pipeline, launcher scripts, distribution packaging |
+| v0.2.0 | Documentation Site | MkDocs site with tutorials, examples structure |
+| v0.3.0 | Scripting Content | GeckoSCRIPT, MATLAB, Python, Java Blocks tutorials |
+| v0.4.0 | Test Coverage | JaCoCo enforcement (60%+ for core), 125 new tests |
+| v0.5.0 | Developer Onboarding | Developer guide, contributor docs, example docs |
+| v1.0.0 | Production Release | URL fixes, polished packaging |
+| v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
+
+### Latest Sprint (2026-02-11): Documentation Overhaul
+- Fixed 95+ broken internal links across docs site
+- Integrated 10 newsletter articles from `resources/articles/`
+- Added EMI/EMC and Advanced Topics tutorial sections
+- Created Javadoc extraction script (`scripts/generate-api-docs.py`)
+- Generated Core Module API reference (4 pages)
+- Deployed site to GitHub Pages (gh-pages branch)
+- Set up PostToolUse hook for sprint documentation reminders
+
+### In Progress
+- Core module extraction: 139+ classes extracted, math/datacontainer still in legacy
+- Test coverage growth: 696+ tests, targeting 750+
+- Documentation site maintenance
+
+### Planned (Next Sprints)
+1. Complete core module migration (math/, datacontainer/ to gecko-simulation-core)
+2. REST API MVP (health endpoint, simulation CRUD, signal analysis)
+3. Coverage targets: math 80%, calculators 50%, datacontainer 40%
+4. Docker packaging for REST API
+
+## 7. Quality Assurance
+
+### Testing
+- Unit tests for calculators and core components
+- Integration tests with real circuit files (`ModelResultsTest`)
+- API consistency tests (`GeckoRemoteTest`)
+- GUI-free validation tests (`CorePackageValidationTest`)
+
+### Quality Gates
+- JaCoCo: 60%+ instruction coverage on core packages
+- `CorePackageValidationTest`: Zero GUI imports in core module
+- `mkdocs build --strict`: Zero broken links in documentation
+- SpotBugs, Checkstyle, PMD available for static analysis
+
+### Success Metrics
+
+| Metric | Current | Target |
+|--------|---------|--------|
+| Total tests | 696+ | 750+ |
+| Core module coverage | 70%+ | 80%+ |
+| Docs site pages | 82+ | 100+ |
+| Broken links | 0 | 0 |
+| REST API endpoints | 0 | 10+ |
+
+## 8. Content Inventory
+
+### Tutorials (9 series, 36 tutorials)
+- 1xx Getting Started (7), 2xx DC-DC Converters (4), 3xx AC-DC Rectifiers (3)
+- 4xx DC-AC Inverters (3), 5xx Thermal Simulation (3), 6xx EMI/EMC (2)
+- 7xx Scripting & Automation (6), 8xx Advanced Topics (4), 9xx Magnetics & Mechanical (4)
+
+### Examples (6 categories)
+- Basic Topologies, Power Supplies, Motor Drives, Thermal, Automotive, Renewable Energy
+
+### Articles (10 newsletters)
+- Technical papers from 2009-2010 covering topology debugging, control techniques, EMI analysis
+
+### API Reference (4 pages)
+- Core module overview, Simulation Engine, Matrix Stampers, Control Calculators
+
+## 9. Distribution Packages
+
 Each platform package includes:
 - `GeckoCIRCUITS.jar` - Main application (fat JAR with all dependencies)
 - Platform-specific launcher script with proper JVM options
 - README with quick start instructions
 
-### Examples Package
-Separate download containing:
-- **Tutorials** (organized by topic):
-  - `1xx_getting_started/` - First simulation, basic circuits, PWM basics
-  - `2xx_dcdc_converters/` - Buck, Boost, Buck-Boost converters
-  - `3xx_acdc_rectifiers/` - Diode rectifiers, PFC, Vienna rectifier
-  - `4xx_dcac_inverters/` - Single-phase and three-phase inverters
-  - `5xx_thermal_simulation/` - Loss calculation, junction temperature
-  - `6xx_emi_emc/` - EMI filter design
-  - `7xx_scripting_automation/` - GeckoSCRIPT, MATLAB integration
-  - `8xx_advanced_topics/` - Motor drives, matrix converters, optimization
-- **Application examples** - Real-world circuit designs
-- **Articles** - Technical articles with supporting circuit files
-
-## Build System
-
-### Development Build
+Build commands:
 ```bash
-mvn clean package assembly:single -DskipTests
+mvn clean package -Pdist-all -DskipTests    # All platforms
+mvn clean package -Pdist-windows -DskipTests # Single platform
 ```
 
-### Distribution Build
-```bash
-# All platforms
-mvn clean package -Pdist-all -DskipTests
-
-# Single platform
-mvn clean package -Pdist-windows -DskipTests
-mvn clean package -Pdist-linux -DskipTests
-mvn clean package -Pdist-macos -DskipTests
-mvn clean package -Pdist-wsl -DskipTests
-mvn clean package -Pdist-examples -DskipTests
-```
-
-### Build Scripts
-- `_build/build-distributions.sh` - Linux/macOS/WSL build script
-- `_build/build-distributions.bat` - Windows build script
-- `_build/assembly/` - Maven assembly descriptors
-
-## Architecture
-
-### Module Structure
-```
-GeckoCIRCUITS/
-├── src/main/java/           # Main application source
-├── src/test/java/           # Test sources
-├── src/modules/
-│   ├── gecko-simulation-core/   # GUI-free simulation engine
-│   └── gecko-rest-api/          # REST API module
-├── scripts/                 # Platform launcher scripts
-├── _build/                  # Distribution build configuration
-│   ├── assembly/            # Maven assembly descriptors
-│   └── README-*.txt         # Platform-specific READMEs
-└── resources/               # Example circuits and documentation
-```
-
-### Key Components
-- **GeckoSim** - Main entry point, mode selection
-- **MainWindow** - Primary Swing GUI
-- **SchematicEditor** - Circuit diagram editor
-- **SimulationRunner** - Simulation execution engine
-- **DataContainer** - Signal storage and caching
-
-## Quality Assurance
-
-### Testing
-- Unit tests for calculators and core components
-- Integration tests with real circuit files
-- API consistency tests for remote interface
-- GUI-free validation tests for core packages
-
-### Code Quality
-```bash
-mvn spotbugs:check    # Static analysis
-mvn checkstyle:check  # Style checking
-mvn pmd:check         # Code quality rules
-```
-
-### Coverage Targets
-- Core packages: 70%+ line coverage
-- Matrix stampers: 85%+
-- Netlist building: 99%+
-
-## Roadmap
-
-### Current Focus
-1. GUI-free core extraction for headless operation
-2. REST API development for cloud deployment
-3. Test coverage improvement
-4. Cross-platform distribution packaging
-
-### Future Enhancements
-- Web-based simulation interface
-- Cloud simulation service
-- Enhanced MATLAB/Python integration
-- Component library expansion
-
-## File Formats
+## 10. File Formats
 
 | Extension | Description |
 |-----------|-------------|
 | `.ipes` | Circuit schematic (gzip-compressed XML) |
 | `.scl` | GeckoSCRIPT source files |
 | `.gmd` | GeckoMAGNETICS design files |
-| `.gmw` | GeckoMAGNETICS waveform files |
 | `.prp` | Application properties |
 
-## Support & Resources
+## 11. License
 
-- **Documentation**: See `resources/tutorials/` and `resources/articles/`
-- **Issue Tracking**: GitHub Issues
-- **Source Code**: GitHub repository
+Open-source software (GPL v3). See LICENSE file for details.
 
-## License
+---
 
-Open-source software. See LICENSE file for details.
+*This document is kept in sync with development progress. Updated after each sprint/push.*
