@@ -1,7 +1,7 @@
 # GeckoCIRCUITS Product Requirements Document
 
 **Version:** 1.1.0
-**Last Updated:** 2026-02-11
+**Last Updated:** 2026-02-12
 **Status:** Active Development
 
 ---
@@ -106,14 +106,20 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-11): Documentation Overhaul
+### Latest Sprint (2026-02-12): Package Rename
+- Removed `ch.technokrat` from all packages: `ch.technokrat.*` -> `gecko.*`
+- Updated 1,391 files (1,288 Java, 21 config/scripts/docs, 5 .ipes, 2 JNI native)
+- Rebuilt JNI native libraries with new symbol names
+- All modules compile and pass tests (reactor build verified)
+- Updated PostToolUse hook to trigger on both `git commit` and `git push`
+
+### Previous Sprint (2026-02-11): Documentation Overhaul
 - Fixed 95+ broken internal links across docs site
 - Integrated 10 newsletter articles from `resources/articles/`
 - Added EMI/EMC and Advanced Topics tutorial sections
 - Created Javadoc extraction script (`scripts/generate-api-docs.py`)
 - Generated Core Module API reference (4 pages)
 - Deployed site to GitHub Pages (gh-pages branch)
-- Set up PostToolUse hook for sprint documentation reminders
 
 ### In Progress
 - Core module extraction: 139+ classes extracted, math/datacontainer still in legacy

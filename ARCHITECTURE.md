@@ -1,7 +1,7 @@
 # Architecture Document
 
 **Project:** GeckoCIRCUITS
-**Last Updated:** 2026-02-11
+**Last Updated:** 2026-02-12
 **Status:** Dual-track architecture (Desktop + API)
 
 ---

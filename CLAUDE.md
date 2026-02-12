@@ -243,18 +243,18 @@ Keep these documents updated after each sprint/push:
 - **`ARCHITECTURE.md`** - System architecture, module structure, GUI-free boundary, integration points
 - **`CLAUDE.md`** (this file) - Build commands, development context, session continuity
 
-A PostToolUse hook in `.claude/settings.json` reminds to update these after `git push`.
+A PostToolUse hook in `.claude/settings.json` reminds to update these after `git commit` or `git push`.
 
 ## Recent Git Activity
 
 Recent commits:
+- `d4cfa77` Merge branch 'refactor/remove-ch-technokrat': remove ch.technokrat from packages
+- `3c5838e` Remove ch.technokrat from package structure: ch.technokrat.* -> gecko.*
+- `7c026c3` Add ARCHITECTURE.md, update PRD.md and CLAUDE.md with current sprint status
 - `53d7b9f` Fix 87 broken internal links on tutorials and examples index pages
 - `0768a2d` Fix broken docs links, integrate articles/tutorials, add core API docs
-- `293e5f5` Simplify Maven groupId from gecko to gecko
+- `293e5f5` Simplify Maven groupId from ch.technokrat.gecko to gecko
 - `7fce3f5` v1.1.0: Multi-module reactor build, zero-crossing detection, REST API test fixes
-- `f5d8fba` v1.0.0: Production release polish and URL fixes
-- `3eb4e2d` v0.5.0: Add developer guide, contributor onboarding, and example docs
-- `bf50d6f` v0.4.0: Add JaCoCo coverage enforcement and 125 new tests
 
 ## Key Interfaces for Headless Operation
 
