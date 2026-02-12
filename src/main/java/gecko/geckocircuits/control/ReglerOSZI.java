@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -305,18 +304,18 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         Color origColor = graphics.getColor();
         graphics.setColor(getBackgroundColor());
 
-        graphics.fillRect((int) (dpix * (x - WIDTH)), (int) (dpix * (y - WIDTH)), (int) (dpix * (2 * WIDTH)), (int) (dpix * (1.0 * _inputTerminalNumber.getValue())));
+        graphics.fillRect((int) (dpix * (x - WIDTH)), (int) (dpix * (y - WIDTH)), (int) (dpix * 2 * WIDTH), (int) (dpix * 1.0 * _inputTerminalNumber.getValue()));
         graphics.setColor(origColor);
-        graphics.drawRect((int) (dpix * (x - WIDTH)), (int) (dpix * (y - WIDTH)), (int) (dpix * (2 * WIDTH)), (int) (dpix * (1.0 * _inputTerminalNumber.getValue())));
+        graphics.drawRect((int) (dpix * (x - WIDTH)), (int) (dpix * (y - WIDTH)), (int) (dpix * 2 * WIDTH), (int) (dpix * 1.0 * _inputTerminalNumber.getValue()));
 
-        graphics.drawRect((int) (dpix * (x - WIDTH)) + INSIDE_RECT, (int) (dpix * (y - WIDTH)) + 2 * INSIDE_RECT, (int) (dpix * (2 * WIDTH)) - 2 * INSIDE_RECT,
-                (int) (dpix * (1.0 * _inputTerminalNumber.getValue())) - 4 * INSIDE_RECT);
+        graphics.drawRect((int) (dpix * (x - WIDTH)) + INSIDE_RECT, (int) (dpix * (y - WIDTH)) + 2 * INSIDE_RECT, (int) (dpix * 2 * WIDTH) - 2 * INSIDE_RECT,
+                (int) (dpix * 1.0 * _inputTerminalNumber.getValue()) - 4 * INSIDE_RECT);
 
         // Rote Dreiecke zum Klicken --> Aenderung der Terminal-Anzahl:
         graphics.setColor(Color.red);
 
 
-        final int[] triXCoords = new int[]{(int) (dpix * x), (int) (dpix * (x) + DIAMETER), (int) (dpix * (x)) - DIAMETER};
+        final int[] triXCoords = new int[]{(int) (dpix * x), (int) (dpix * x + DIAMETER), (int) (dpix * x) - DIAMETER};
         final int yp0 = (int) (dpix * (y - WIDTH - HEIGHT) - DELTA), yp1 = (int) (dpix * (y - WIDTH) - DELTA);
         final int ym1 = (int) (dpix * (y - WIDTH + _inputTerminalNumber.getValue()) + DELTA),
                 ym0 = (int) (dpix * (y - WIDTH + _inputTerminalNumber.getValue() + HEIGHT) + DELTA);
@@ -433,7 +432,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
             _fourEnd = end;
         }
 
-        if (channel >= (XIN.size()) || (channel < 0)) {
+        if (channel >= XIN.size() || (channel < 0)) {
             throw new Exception("Invalid scope port supplied for Fourier analysis!");
         }
 
@@ -542,7 +541,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
     }
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         _scopeFrame.setTitle(" " + getStringID());
         return _scopeFrame;
     }

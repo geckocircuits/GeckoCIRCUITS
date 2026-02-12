@@ -14,12 +14,7 @@
 
 package gecko.geckocircuits.scope;
 
-import gecko.geckocircuits.allg.SaveViewFrame;
-import gecko.geckocircuits.control.ScopeSignalSimpleName;
-import gecko.geckocircuits.newscope.AbstractScopeSignal;
-import gecko.geckocircuits.newscope.DialogConnectSignalsGraphs;
 import gecko.geckocircuits.newscope.NewScope;
-import java.io.BufferedWriter;
 
 /**
  *

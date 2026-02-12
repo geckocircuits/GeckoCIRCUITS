@@ -16,7 +16,6 @@ package gecko.geckocircuits.circuit.circuitcomponents;
 import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
-import static gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ComponentDirection;
 import gecko.geckocircuits.circuit.ConnectorType;
@@ -228,7 +227,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
             xFl[2] = xFl[0] + ARROW_WIDTH;
             yFl[0] = (int) reversed * ((int) (-dpix * 2) + 2);
             yFl[1] = (int) (yFl[0] + reversed * ARROW_LENGTH);
-            yFl[2] = (int) (yFl[1]);
+            yFl[2] = (int) yFl[1];
 
             graphics.setColor(Color.magenta);
             graphics.drawPolygon(xFl, yFl, POLYGON_CORNERS);
@@ -236,7 +235,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
     }
 
     private double getRadiusQ() {
-        return Math.round(dpix * (2 * HEIGHT) / ARC_CONST_3);
+        return Math.round(dpix * 2 * HEIGHT / ARC_CONST_3);
     }
 
     @Override

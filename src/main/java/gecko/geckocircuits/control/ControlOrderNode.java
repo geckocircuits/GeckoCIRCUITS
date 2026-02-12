@@ -15,7 +15,6 @@ package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.ControlTerminable;
-import gecko.geckocircuits.circuit.TerminalControl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

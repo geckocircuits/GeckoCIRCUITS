@@ -68,7 +68,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import gecko.modelviewcontrol.AbstractUndoGenericModel;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SE_BAD_FIELD", "SF_SWITCH_FALLTHROUGH"},
         justification = "MainWindow is effectively a singleton - static fields hold application-wide state; public fields for menu item access across UI components; JFrame is not serialized in this application; switch fallthrough in schliesseProgramm is intentional for save-then-exit flow")
@@ -791,7 +790,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "DB_DUPLICATE_BRANCHES",
             justification = "Both RECENT_CIRCUITS_4 match and new name require same shift operation")
     private void aktualisierePropertiesRECENT(String datnam) {
-        if ((datnam.equals(GlobalFilePathes.RECENT_CIRCUITS_1)) || (datnam.isEmpty())) {
+        if (datnam.equals(GlobalFilePathes.RECENT_CIRCUITS_1) || datnam.isEmpty()) {
             return;
         }
         //--------------
@@ -1331,7 +1330,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 }                
                     final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();                    
                     try {
-                        if((new File(fileName)).exists()) {
+                        if(new File(fileName).exists()) {
                             String[] fileLines = getLinesArrayFromIpesFile(fileName);
                             _se.readSelectedElementsFromASCIIString(fileLines);                    
                         } else {
@@ -1931,7 +1930,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public static ProjectData loadProjectDataFromFile(String dateiName, boolean isAutoBackupFile, OptimizerParameterData optimizer) throws FileNotFoundException {
-        if (!(new File(dateiName).exists())) {
+        if (!new File(dateiName).exists()) {
             throw new FileNotFoundException("File: " + GlobalFilePathes.DATNAM + " not found!");
         }
 

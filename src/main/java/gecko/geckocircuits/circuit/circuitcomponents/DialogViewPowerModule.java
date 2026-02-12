@@ -42,12 +42,12 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         try {
             @SuppressWarnings("deprecation")
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
-            this.setIconImage((new ImageIcon(url)).getImage());
+            this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception e) {
         }
         this.addWindowListener(this);
         //------------------------
-        this.setTitle(" " + ((ThermMODUL) (elementTH)).getDateiname());
+        this.setTitle(" " + ((ThermMODUL) elementTH).getDateiname());
         JTabbedPane tabber = new JTabbedPane();
         tabber.addTab("RthCth-Network Model", c);
         tabber.addTab("3D Structure", this.baueGUI());
@@ -83,7 +83,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         try {
             @SuppressWarnings("deprecation")
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "modulIntern.png");
-            imgMx = (new ImageIcon(url)).getImage();
+            imgMx = new ImageIcon(url).getImage();
         } catch (Exception e) {
             System.out.println(e);
         }

@@ -82,10 +82,10 @@ public class UndoRedoManager {
         undoAnzahl--;
         zeigerAufUndoZustaende--;
         int zeiger = zeigerAufUndoZustaende - 1;
-        if ((undoRingspeicherErstmalsUeberschritten) && (zeigerAufUndoZustaende == -1)) {
+        if (undoRingspeicherErstmalsUeberschritten && (zeigerAufUndoZustaende == -1)) {
             zeigerAufUndoZustaende = undoZustaendeMAX - 1;
             zeiger = zeigerAufUndoZustaende - 1;
-        } else if ((undoRingspeicherErstmalsUeberschritten) && (zeigerAufUndoZustaende == 0)) {
+        } else if (undoRingspeicherErstmalsUeberschritten && (zeigerAufUndoZustaende == 0)) {
             zeiger = undoZustaendeMAX - 1;
         }
         byte[] zustand = undoZustaende[zeiger];

@@ -13,7 +13,6 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.allg.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -142,7 +142,7 @@ public final class GeckoMemoryMappedFile {
      * @return true if it is free, false otherwise
      */
     public boolean isFree() {
-        return ((-1 == _mmb.getLong(CONNECTION_ID_POS)) && (DISCONNECTED == _mmb.getLong(STATUS_ID_POS)));
+        return (-1 == _mmb.getLong(CONNECTION_ID_POS)) && (DISCONNECTED == _mmb.getLong(STATUS_ID_POS));
     }
     
     /**
@@ -264,7 +264,7 @@ public final class GeckoMemoryMappedFile {
      */
     private GeckoRemotePipeObject deserializePipeObject(final byte[] serializedPipe) throws IOException, ClassNotFoundException {
         final ObjectInputStream pipeStream = new ObjectInputStream(new ByteArrayInputStream(serializedPipe));
-        return ((GeckoRemotePipeObject) pipeStream.readObject());
+        return (GeckoRemotePipeObject) pipeStream.readObject();
     }
     
     /**
@@ -338,7 +338,7 @@ public final class GeckoMemoryMappedFile {
      * @return true if the status of the connection is idle
      */
     public boolean isIdle() {
-        return (_mmb.getLong(STATUS_ID_POS) == IDLE);
+        return _mmb.getLong(STATUS_ID_POS) == IDLE;
     }
     
     /**
@@ -346,7 +346,7 @@ public final class GeckoMemoryMappedFile {
      * @return true if a method call is pending
      */
     public boolean isMethodCallPresent() {
-        return (_mmb.getLong(STATUS_ID_POS) == METHOD_CALL);
+        return _mmb.getLong(STATUS_ID_POS) == METHOD_CALL;
     }
     
     /**
@@ -380,7 +380,7 @@ public final class GeckoMemoryMappedFile {
      * @return true if there is a connection attempt
      */
     public boolean isConnectionAttempt() {
-        return (_mmb.getLong(STATUS_ID_POS) == CONNECTION_ATTEMPT && _mmb.getLong(CONNECTION_ID_POS) == 0);
+        return _mmb.getLong(STATUS_ID_POS) == CONNECTION_ATTEMPT && _mmb.getLong(CONNECTION_ID_POS) == 0;
     }
     
     /**
@@ -388,7 +388,7 @@ public final class GeckoMemoryMappedFile {
      * @return true if a disconnect request is present
      */
     public boolean isDisconnectRequest() {
-        return (_mmb.getLong(STATUS_ID_POS) == DISCONNECT_REQUEST);
+        return _mmb.getLong(STATUS_ID_POS) == DISCONNECT_REQUEST;
     }
     
     /**
@@ -449,6 +449,6 @@ public final class GeckoMemoryMappedFile {
      * @return true if a shutdown request is present
      */
     public boolean isShutdownRequest() {
-        return (_mmb.getLong(STATUS_ID_POS) == SHUTDOWN_REQUEST);
+        return _mmb.getLong(STATUS_ID_POS) == SHUTDOWN_REQUEST;
     }
 }

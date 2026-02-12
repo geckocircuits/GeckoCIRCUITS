@@ -21,12 +21,12 @@ public interface Nonlinearable extends GeckoFileable {
 
     double[] getNonlinXDefault();
     double[] getNonlinYDefault();            
-    public String getStringID();
-    public String getNonlinearFileExtension();
-    public String getIndependentVariableName();
-    public abstract String getNonlinearNameShort();
-    public String getNonlinearName();
-    public UserParameter<Double> getNonlinearReplacedParameter();
-    public double[][] getInitalNonlinValues();
+    String getStringID();
+    String getNonlinearFileExtension();
+    String getIndependentVariableName();
+    String getNonlinearNameShort();
+    String getNonlinearName();
+    UserParameter<Double> getNonlinearReplacedParameter();
+    double[][] getInitalNonlinValues();
     
 }

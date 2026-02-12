@@ -35,7 +35,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JCheckBox;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import java.net.URI;
 import java.net.URL;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -126,7 +125,7 @@ public class DialogFourier extends JDialog {
         //
         ftff1 = new FormatJTextField();
         ftff1.setPreferredSize(tfDimension);
-        ftff1.setText(cf.formatT((1.0 / (_jPanelRange.getStopTimeValue() - _jPanelRange.getStartTimeValue())), TechFormat.FORMAT_AUTO));
+        ftff1.setText(cf.formatT(1.0 / (_jPanelRange.getStopTimeValue() - _jPanelRange.getStartTimeValue()), TechFormat.FORMAT_AUTO));
         ftff1.setEditable(false);
 
         c.gridy = 0;

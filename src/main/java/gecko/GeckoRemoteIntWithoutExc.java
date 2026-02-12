@@ -24,7 +24,7 @@ package gecko;
  */
 public interface GeckoRemoteIntWithoutExc {
     
-    static final MethodNameChecker CHECKER = 
+    MethodNameChecker CHECKER = 
             MethodNameChecker.checkFabric(GeckoRemoteIntWithoutExc.class, GeckoRemoteInterface.class);
     
     

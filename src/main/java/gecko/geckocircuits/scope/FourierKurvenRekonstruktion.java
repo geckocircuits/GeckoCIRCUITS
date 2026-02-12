@@ -59,7 +59,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         X0yi = hi + 30;
         Y0xi = X0xi;
         Y0yi = X0yi;
-        this.setPreferredSize(new Dimension(bi + 2 * X0xi, X0yi + (X0yi - hi)));  // fuer pack() im uebergeordneten JFrame
+        this.setPreferredSize(new Dimension(bi + 2 * X0xi, X0yi + X0yi - hi));  // fuer pack() im uebergeordneten JFrame
         // Bereichsgrenzen fuers Maus-Klicken:
         xGrfMIN = new int[]{0};
         xGrfMAX = new int[]{this.getWidth()};
@@ -198,7 +198,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
 
     // wird ueberschrieben, um Text dazuschreiben zu koennen -->
     protected void zeichne(Graphics g) {
-        if ((mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) && (imDragModus)) {
+        if ((mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) && imDragModus) {
             g.setColor(GlobalColors.farbeZoomRechteck);
             int b = Math.abs(x2Zoom - x1Zoom), h = Math.abs(y2Zoom - y1Zoom);
             if ((x1Zoom > x2Zoom) && (y1Zoom > y2Zoom)) {
@@ -211,7 +211,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
                 g.drawRect(x1Zoom, y1Zoom, b, h);
             }
         }
-        if ((mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) || (xSchieberAktiv)) {
+        if ((mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) || xSchieberAktiv) {
             g.setColor(Color.red);
             g.drawLine(xSchieberPix, X0yi, xSchieberPix, X0yi - hi);
             int x0 = X0xi + bi - 15, y0 = X0yi - hi + 12, dy = 15;
@@ -269,7 +269,7 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         }
         //
         this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{empf[0]}, new double[]{empf[1]}, new boolean[]{true});
-        this.setzeTickSpacing(new double[]{(0.2 / (f1))}, new double[]{empf[4]});
+        this.setzeTickSpacing(new double[]{(0.2 / f1)}, new double[]{empf[4]});
         //-------------------------------------
     }
 
@@ -423,12 +423,12 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         //-------------------
         double xWert = -1, yWert = -1;
         if (xAchseTyp_ == ACHSE_LOG) {
-            xWert = achseXmin_ * Math.pow(10.0, ((xPix - xAchseX_) / sfX_));
+            xWert = achseXmin_ * Math.pow(10.0, (xPix - xAchseX_) / sfX_);
         } else if (xAchseTyp_ == ACHSE_LIN) {
             xWert = achseXmin_ + (xPix - xAchseX_) / sfX_;
         }
         if (yAchseTyp_ == ACHSE_LOG) {
-            yWert = achseYmin_ * Math.pow(10.0, ((yAchseY_ - yPix) / sfY_));
+            yWert = achseYmin_ * Math.pow(10.0, (yAchseY_ - yPix) / sfY_);
         } else if (yAchseTyp_ == ACHSE_LIN) {
             yWert = achseYmin_ + (yAchseY_ - yPix) / sfY_;
         }

@@ -198,7 +198,7 @@ public final class Cispr16Fft {
             data[-1 + 1] = (float) (h1r = data[-1 + 2]) + data[-1 + 2];
             data[-1 + 2] = (float) h1r - data[-1 + 2];
         } else {
-            data[-1 + 1] = (float) (COEFF_1 * ((h1r = data[-1 + 1] + data[-1 + 2])));
+            data[-1 + 1] = (float) (COEFF_1 * (h1r = data[-1 + 1] + data[-1 + 2]));
             data[-1 + 2] = (float) (COEFF_1 * (h1r - data[-1 + 2]));
             ffour1(data, nnn >> 1, -1);
         }

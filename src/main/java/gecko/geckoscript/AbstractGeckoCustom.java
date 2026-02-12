@@ -713,7 +713,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         return getRipple(scopeName, 0, startTime, endTime);
     }
 
-    private final int getSignalRow(String signalName) {
+    private int getSignalRow(String signalName) {
         int signalRow = -1;
         for (int row = 0; row < NetzlisteCONTROL.globalData.getRowLength(); row++) {
             String tmpSignalName = NetzlisteCONTROL.globalData.getSignalName(row);
@@ -1033,7 +1033,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
             simulateStep();
             time += _steadyStateDt;
             for (int i = 0; i < _periods.length; i++) {
-                if (Math.abs((time - potentialCycleStartTime) - _periods[i]) <= (2.1 * _steadyStateDt)/*
+                if (Math.abs(time - potentialCycleStartTime - _periods[i]) <= (2.1 * _steadyStateDt)/*
                          * (dt/1000)
                          */) {
                     /*
@@ -1073,7 +1073,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
             }
         }
         double[] result = new double[3];
-        result[0] = (steadyStateReached) ? 1 : 0; //1 if steady state reached, zero otherwise
+        result[0] = steadyStateReached ? 1 : 0; //1 if steady state reached, zero otherwise
         result[1] = time; //time at which steady state was reached
         result[2] = period;
         endSimulation();
@@ -1174,7 +1174,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
             }
         }
         double[] result = new double[3];
-        result[0] = (steadyStateReached) ? 1 : 0; //1 if steady state reached, zero otherwise
+        result[0] = steadyStateReached ? 1 : 0; //1 if steady state reached, zero otherwise
         result[1] = time; //time at which steady state was reached
         result[2] = period;
         endSimulation();

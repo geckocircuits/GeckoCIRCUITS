@@ -16,7 +16,6 @@ package gecko.geckocircuits.control;
 import gecko.geckocircuits.allg.*;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import gecko.geckocircuits.control.javablock.ReglerJavaFunction;
 import gecko.i18n.LangInit;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -195,8 +194,8 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
      */
     @Override
     public int istAngeklickt(final int mousePixelX, final int mousePixelY) {
-        if (((xKlickMin <= mousePixelX) && (mousePixelX <= xKlickMax)
-                && (yKlickMin <= mousePixelY) && (mousePixelY <= yKlickMax))) {
+        if ((xKlickMin <= mousePixelX) && (mousePixelX <= xKlickMax)
+                && (yKlickMin <= mousePixelY) && (mousePixelY <= yKlickMax)) {
             return 1;
         } else {
             return 0;
@@ -299,7 +298,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         Rectangle2D sb = g2d.getFont().getStringBounds(toDraw, frc);
         int[] points = getAussenabmessungenRechteckEckpunkte();
         int centerX = (int) ((points[0] + points[2]) / 2.0 - sb.getWidth() / 2);
-        int centerY = (int) ((0.6 * points[1] + 0.4 * points[3]) + sb.getHeight() / 2);
+        int centerY = (int) (0.6 * points[1] + 0.4 * points[3] + sb.getHeight() / 2);
 
         if (secondLine.isEmpty()) {
             g2d.drawString(toDraw, centerX, centerY);
@@ -309,7 +308,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
             sb = g2d.getFont().getStringBounds(secondLine, frc);
             points = getAussenabmessungenRechteckEckpunkte();
             centerX = (int) ((points[0] + points[2]) / 2.0 - sb.getWidth() / 2);
-            centerY = (int) ((0.6 * points[1] + 0.4 * points[3]) + sb.getHeight() / 2);
+            centerY = (int) (0.6 * points[1] + 0.4 * points[3] + sb.getHeight() / 2);
             g2d.drawString(secondLine, centerX, centerY + g2d.getFont().getSize() / 2 + 1);
         }
 
@@ -324,7 +323,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     public int getBlockHeight() {
         int maxTerminals = Math.max(XIN.size(), YOUT.size());
-        int height = (int) (dpix * (maxTerminals));
+        int height = (int) (dpix * maxTerminals);
         return height;
     }
 
@@ -332,7 +331,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         int x = getSheetPosition().x;
         int startx = (int) (dpix * (x - WIDTH));
 
-        int width = (int) (dpix * (1.333 * WIDTH));
+        int width = (int) (dpix * 1.333 * WIDTH);
         if (!YOUT.isEmpty()) {
             int outXPos = YOUT.get(0).getPosition().x * dpix;
 

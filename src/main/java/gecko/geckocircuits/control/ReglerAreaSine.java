@@ -26,7 +26,7 @@ public final class ReglerAreaSine extends AbstractInversTrigFunction {
     }                   
     
     @Override
-    public final I18nKeys[] getOutputDescription() {
+    public I18nKeys[] getOutputDescription() {
         return new I18nKeys[]{I18nKeys.AREA_SINE_MEASURED_IN_RAD};
     }
     

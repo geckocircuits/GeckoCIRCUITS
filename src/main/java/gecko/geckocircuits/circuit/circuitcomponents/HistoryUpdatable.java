@@ -14,5 +14,5 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 public interface HistoryUpdatable {
-    public abstract void updateHistory(double[] p);
+    void updateHistory(double[] p);
 }

@@ -18,7 +18,6 @@ import gecko.geckocircuits.allg.GeckoFile;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.geckocircuits.circuit.DirectVoltageMeasurable;
-import gecko.geckocircuits.circuit.losscalculation.LossCalculatable;
 import gecko.geckocircuits.circuit.losscalculation.LossCalculationSimple;
 import gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import gecko.geckocircuits.control.Operationable;

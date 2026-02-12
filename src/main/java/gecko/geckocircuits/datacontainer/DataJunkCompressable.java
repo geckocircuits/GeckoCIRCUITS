@@ -494,7 +494,7 @@ public final class DataJunkCompressable implements DataJunk {
     }
 
     private int findCachedIndex(final int searchColumn) {
-        int returnValue = ((searchColumn - _startIndex) * VALUE_CACHE_SIZE) / _columns;
+        int returnValue = (searchColumn - _startIndex) * VALUE_CACHE_SIZE / _columns;
         returnValue = Math.max(0, returnValue);
         returnValue = Math.min(VALUE_CACHE_SIZE, returnValue);
         return returnValue;

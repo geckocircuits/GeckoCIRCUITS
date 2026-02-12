@@ -13,9 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.control.ReglerOSZI;
-import gecko.geckocircuits.control.SubCircuitSheet;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**

@@ -17,7 +17,6 @@ import gecko.geckocircuits.allg.GeckoFile;
 import gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.circuit.GeckoFileable;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;

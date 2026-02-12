@@ -159,10 +159,10 @@ public class ComponentPositioner {
         double fracY = (double) pixelY / gridSize;
 
         // Snap to next grid line if within click radius
-        if (Math.abs((gridX + 1) - fracX) < clickRadius) {
+        if (Math.abs(gridX + 1 - fracX) < clickRadius) {
             gridX++;
         }
-        if (Math.abs((gridY + 1) - fracY) < clickRadius) {
+        if (Math.abs(gridY + 1 - fracY) < clickRadius) {
             gridY++;
         }
 

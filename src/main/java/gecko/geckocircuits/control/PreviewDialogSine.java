@@ -36,7 +36,7 @@ public class PreviewDialogSine extends PreviewDialog {
         final int[] sinX = new int[b / 2], sinY = new int[sinX.length];
         final int offset = 20, ac = 55, phase = 60;
         for (int i1 = 0; i1 < sinX.length; i1++) {
-            sinX[i1] = x0 + (int) (i1 * (b * 1.0) / sinX.length);
+            sinX[i1] = x0 + (int) (i1 * b * 1.0 / sinX.length);
             sinY[i1] = y0 - (offset + (int) (ac * Math.sin((i1 * 2 * Math.PI / sinX.length) - phase * Math.PI / 180.0)));
         }
         final int xPh = (int) (phase / 360.0 * b), xMx = xPh + b / 4;

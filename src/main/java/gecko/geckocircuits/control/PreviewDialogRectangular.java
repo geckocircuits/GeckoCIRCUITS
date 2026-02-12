@@ -43,8 +43,8 @@ public class PreviewDialogRectangular extends PreviewDialog {
         if (tE < 0) {
             tE += tEnd;
         }
-        double dyUP = (2 * frequenz * dt) / 0.5;
-        double dyDOWN = (2 * frequenz * dt) / (1 - 0.5);
+        double dyUP = 2 * frequenz * dt / 0.5;
+        double dyDOWN = 2 * frequenz * dt / (1 - 0.5);
         boolean aufsteigend = true;
         while (tx < tE) {
             if (aufsteigend) {
@@ -81,7 +81,7 @@ public class PreviewDialogRectangular extends PreviewDialog {
             if (dreieck > 1 - 2 * tastverhaeltnis) {
                 triY[i1] = y0 - (int) (amplitudeAC + anteilDC);
             } else {
-                triY[i1] = y0 - (int) (anteilDC);
+                triY[i1] = y0 - (int) anteilDC;
             }
             try {
                 if (triY[i1] != triY[i1 - 1]) {

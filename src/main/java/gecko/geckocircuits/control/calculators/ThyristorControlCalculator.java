@@ -81,8 +81,8 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
 
         for (int i = 0; i < TN_Y; i++) {
             double onTimePoint = 
-                    (_synchTime + 1 / _synchFreq * alpha / (2 * Math.PI) 
-                    + (i - TN_Y) * 1 / (THREE * _synchFreq));
+                    _synchTime + 1 / _synchFreq * alpha / (2 * Math.PI) 
+                    + (i - TN_Y) * 1 / (THREE * _synchFreq);
 
             if (i > 2) {                
                 onTimePoint -= THREE_HALF / _synchFreq;                

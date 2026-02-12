@@ -415,23 +415,23 @@ public class GraferV3 extends JPanel {
     }
 
     public static double lg10(double x) {
-        return (Math.log(x) / Math.log(10.0));
+        return Math.log(x) / Math.log(10.0);
     }
 
     protected int berechne_x_PixLinear(double wert, int index) {
-        return (_xAchseX[index] + (int) (sfX[index] * (wert - achseXmin[index])));
+        return _xAchseX[index] + (int) (sfX[index] * (wert - achseXmin[index]));
     }
 
     protected int berechne_x_PixLogarithmisch(double wert, int index) {
-        return (_xAchseX[index] + (int) (sfX[index] * this.lg10(wert / achseXmin[index])));
+        return _xAchseX[index] + (int) (sfX[index] * this.lg10(wert / achseXmin[index]));
     }
 
     protected int berechne_y_PixLinear(double wert, int index) {
-        return (_yAchseY[index] - (int) (sfY[index] * (wert - achseYmin[index])));
+        return _yAchseY[index] - (int) (sfY[index] * (wert - achseYmin[index]));
     }
 
     protected int berechne_y_PixLogarithmisch(double wert, int index) {
-        return (_yAchseY[index] - (int) (sfY[index] * this.lg10(wert / achseYmin[index])));
+        return _yAchseY[index] - (int) (sfY[index] * this.lg10(wert / achseYmin[index]));
     }
 
     protected void zeichneKurven(Graphics g) {
@@ -559,7 +559,7 @@ public class GraferV3 extends JPanel {
             double x = worksheetDaten.getValue(kurve_index_worksheetKolonnen_XY[i1][0], i2);
             if (xAchseTyp[indexZurKurveGehoerigeXachse[i1]] == ACHSE_LIN) {
                 xPix[i2] = (float) (x0Kurve + (sfX[indexZurKurveGehoerigeXachse[i1]] * (x - achseXmin[indexZurKurveGehoerigeXachse[i1]])));
-            } else if ((xAchseTyp[indexZurKurveGehoerigeXachse[i1]] == ACHSE_LOG)) {
+            } else if (xAchseTyp[indexZurKurveGehoerigeXachse[i1]] == ACHSE_LOG) {
                 xPix[i2] = (float) (x0Kurve + (sfX[indexZurKurveGehoerigeXachse[i1]] * this.lg10(x / achseXmin[indexZurKurveGehoerigeXachse[i1]])));
             }
 
@@ -570,7 +570,7 @@ public class GraferV3 extends JPanel {
 //                    System.out.println(y + " " + yPix[i2]);
 //                }
                 //System.out.println(yPix[i2]);
-            } else if ((yAchseTyp[indexZurKurveGehoerigeYachse[i1]] == ACHSE_LOG)) {
+            } else if (yAchseTyp[indexZurKurveGehoerigeYachse[i1]] == ACHSE_LOG) {
                 if (y <= 0) {
                     y = 1e-99;  //y=achseYmin[indexZurKurveGehoerigeYachse[i1]];
                 }
@@ -775,7 +775,7 @@ public class GraferV3 extends JPanel {
             int[] tickX_temp = new int[anzTicks];
             int j = 0;
             for (int i2 = 0; i2 < anzTicks; i2++) {
-                double wert = Math.pow(10, ((int) this.lg10(achseXmin[i1]) - 1 + i2));
+                double wert = Math.pow(10, (int) this.lg10(achseXmin[i1]) - 1 + i2);
                 int tick = this.berechne_x_PixLogarithmisch(wert, i1);
                 if ((achseXmin[i1] <= wert) && (wert <= achseXmax[i1])) {
                     wertTickX_temp[j] = wert;
@@ -950,12 +950,12 @@ public class GraferV3 extends JPanel {
             }
             // zwingend -->  yTickSpacing[i1]=AUTO  weil nur sinnvollerweise die Zehner-Dekaden mit Ticks versehen werden
             sfY[i1] = hoehePix[i1] / this.lg10(achseYmax[i1] / achseYmin[i1]);
-            int anzTicks = (int) (this.lg10(achseYmax[i1] / achseYmin[i1])) + 3;
+            int anzTicks = (int) this.lg10(achseYmax[i1] / achseYmin[i1]) + 3;
             double[] wertTickY_temp = new double[anzTicks];
             int[] tickY_temp = new int[anzTicks];
             int j = 0;
             for (int i2 = 0; i2 < anzTicks; i2++) {
-                double wert = Math.pow(10, ((int) this.lg10(achseYmin[i1]) - 1 + i2));
+                double wert = Math.pow(10, (int) this.lg10(achseYmin[i1]) - 1 + i2);
                 int tick = this.berechne_y_PixLogarithmisch(wert, i1);
                 if ((achseYmin[i1] <= wert) && (wert <= achseYmax[i1])) {
                     wertTickY_temp[j] = wert;
@@ -1063,7 +1063,7 @@ public class GraferV3 extends JPanel {
             if ((indexAchseX != -1) && (indexAchseY != -1)) {
                 // Minor-Grids -->
                 for (int i3 = 0; i3 < showGridNormalXminor.length; i3++) {
-                    if ((showGridNormalXminor[i3][0] == indexAchseX) && ((showGridNormalXminor[i3][1] == indexAchseY)) && (tickXminor[indexAchseX] != null)) {
+                    if ((showGridNormalXminor[i3][0] == indexAchseX) && (showGridNormalXminor[i3][1] == indexAchseY) && (tickXminor[indexAchseX] != null)) {
                         for (int i2 = 0; i2 < tickXminor[indexAchseX].length; i2++) {
                             g.setColor(farbeGridNormalXminor[i1]);
                             if (linStilGridNormalXminor[i1] == SOLID_PLAIN) {
@@ -1095,7 +1095,7 @@ public class GraferV3 extends JPanel {
                 }
                 // Major-Ticks -->
                 for (int i3 = 0; i3 < showGridNormalXmajor.length; i3++) {
-                    if ((showGridNormalXmajor[i3][0] == indexAchseX) && ((showGridNormalXmajor[i3][1] == indexAchseY)) && (tickX[indexAchseX] != null)) {
+                    if ((showGridNormalXmajor[i3][0] == indexAchseX) && (showGridNormalXmajor[i3][1] == indexAchseY) && (tickX[indexAchseX] != null)) {
                         for (int i2 = 0; i2 < tickX[indexAchseX].length; i2++) {
                             g.setColor(farbeGridNormalX[i1]);
                             if (linStilGridNormalX[i1] == SOLID_PLAIN) {
@@ -1144,7 +1144,7 @@ public class GraferV3 extends JPanel {
             if ((indexAchseX != -1) && (indexAchseY != -1)) {
                 // Minor-Grids -->
                 for (int i3 = 0; i3 < showGridNormalYminor.length; i3++) {
-                    if ((showGridNormalYminor[i3][0] == indexAchseX) && ((showGridNormalYminor[i3][1] == indexAchseY)) && (tickYminor[indexAchseY] != null)) {
+                    if ((showGridNormalYminor[i3][0] == indexAchseX) && (showGridNormalYminor[i3][1] == indexAchseY) && (tickYminor[indexAchseY] != null)) {
                         for (int i2 = 0; i2 < tickYminor[indexAchseY].length; i2++) {
                             g.setColor(farbeGridNormalYminor[i1]);
                             if (linStilGridNormalYminor[i1] == SOLID_PLAIN) {
@@ -1176,7 +1176,7 @@ public class GraferV3 extends JPanel {
                 }
                 // Major-Ticks -->
                 for (int i3 = 0; i3 < showGridNormalYmajor.length; i3++) {
-                    if ((showGridNormalYmajor[i3][0] == indexAchseX) && ((showGridNormalYmajor[i3][1] == indexAchseY)) && (tickY[indexAchseY] != null)) {
+                    if ((showGridNormalYmajor[i3][0] == indexAchseX) && (showGridNormalYmajor[i3][1] == indexAchseY) && (tickY[indexAchseY] != null)) {
                         for (int i2 = 0; i2 < tickY[indexAchseY].length; i2++) {
                             g.setColor(farbeGridNormalY[i1]);
                             if (linStilGridNormalY[i1] == SOLID_PLAIN) {

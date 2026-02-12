@@ -14,5 +14,5 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 public interface PostProcessable {
-    public void doPostProcess(double dt, double time);
+    void doPostProcess(double dt, double time);
 }

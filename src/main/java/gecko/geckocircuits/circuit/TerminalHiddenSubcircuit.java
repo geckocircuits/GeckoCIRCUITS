@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.control.Point;
 import java.awt.Graphics;
 
 /**

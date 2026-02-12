@@ -200,7 +200,7 @@ public final class ThermPvChip extends AbstractCircuitBlockInterface implements 
         // 'Erde'  -->
 
         graphics.fillRect((int) (dpix * (- WIDTH - DIAMETER_A - EARTH_X)), 
-                (int) (dpix * HEIGHT), (int) (dpix * (2 * EARTH_X)), EARTH_Y);
+                (int) (dpix * HEIGHT), (int) (dpix * 2 * EARTH_X), EARTH_Y);
     }
 
     @Override

@@ -15,7 +15,6 @@ package gecko.geckocircuits.circuit;
 
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal;
-import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.control.Point;
 import gecko.geckocircuits.control.ReglerTERMINAL;
 import gecko.geckocircuits.control.SubCircuitSheet;

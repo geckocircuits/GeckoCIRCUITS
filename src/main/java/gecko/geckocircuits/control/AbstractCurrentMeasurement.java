@@ -100,7 +100,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
             } else if (coupled instanceof ThermPvChip && this instanceof ReglerFlowMeter) {
                 return new ThermPvChipFlowCalculation((ThermPvChip) _coupling._coupledElements[0], (ReglerFlowMeter) this);
             } else {
-                return new CurrentCalculation(((AbstractCircuitBlockInterface) _coupling._coupledElements[0]));
+                return new CurrentCalculation((AbstractCircuitBlockInterface) _coupling._coupledElements[0]);
             }            
         } else { // no signal attached, nothing todo!
             return new NothingToDoCalculator(0, 1);

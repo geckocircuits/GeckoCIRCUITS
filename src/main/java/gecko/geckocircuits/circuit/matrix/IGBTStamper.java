@@ -220,7 +220,7 @@ public class IGBTStamper implements IStatefulStamper {
     public void updateStateWithGate(double gateSignal, double vx, double vy) {
         boolean previousState = isOn;
         double vForward = vx - vy;
-        boolean gateOn = (gateSignal == 1);
+        boolean gateOn = gateSignal == 1;
 
         if (isOn) {
             // Currently ON

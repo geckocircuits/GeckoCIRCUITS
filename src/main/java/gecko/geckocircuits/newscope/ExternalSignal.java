@@ -147,7 +147,7 @@ public class ExternalSignal extends AbstractScopeSignal{
    * @return The data value of the external signal at index.
    */
   public final double getValue(final int index){
-    assert (index < this.size() && index >= 0) : "Error: Index out of bounds!";
+    assert index < this.size() && index >= 0 : "Error: Index out of bounds!";
     return this._signalValues[index] + this._offsetY;
   }
 
@@ -220,7 +220,7 @@ public class ExternalSignal extends AbstractScopeSignal{
    * @return The time value of the external signal at index.
    */
   public final double getTime(final int index){
-    assert (index < this.size() && index >= 0) : "Error: Index out of bounds!";
+    assert index < this.size() && index >= 0 : "Error: Index out of bounds!";
     return this._signalTimes[index] + this._offsetX;
   }
   // </editor-fold>

@@ -98,7 +98,7 @@ implements Operationable, Nonlinearable {
     }               
     
     public void setNonLinearFile(File file) throws IllegalAccessException {        
-        if (!(file.getName().endsWith(getNonlinearFileEnding()))) {
+        if (!file.getName().endsWith(getNonlinearFileEnding())) {
             throw new IllegalAccessException("Non-linear characteristic file must end with extension " + getNonlinearFileEnding());
         } else {            
             try {                

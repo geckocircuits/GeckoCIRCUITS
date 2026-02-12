@@ -232,7 +232,7 @@ public final class GeckoFile {
         }
 
         //if the file still does not exist, throw an exception if the file is specified as external
-        if (!(_file.exists()) && _storageStrategy.getStorageType() == StorageType.EXTERNAL) {
+        if (!_file.exists() && _storageStrategy.getStorageType() == StorageType.EXTERNAL) {
             throw new FileNotFoundException("Error: Specified external file with relative path: "
                     + relPathToUse + "\n and absolute path:" + absPathToUse + "\n NOT FOUND!");
         }
@@ -666,7 +666,7 @@ public final class GeckoFile {
         void switchToNewType(final byte[] originalContents) throws FileNotFoundException {
 
             final String result = DialogMakeExternal.dialogResultFabric(GeckoFile.this, originalContents);
-            if (result == null || !(new File(result)).exists()) { // cancel pressed or external file is not existing!
+            if (result == null || !new File(result).exists()) { // cancel pressed or external file is not existing!
                 setStorageType(StorageType.INTERNAL);
                 return;
             }            

@@ -44,7 +44,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

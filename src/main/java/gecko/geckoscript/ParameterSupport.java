@@ -239,7 +239,7 @@ public class ParameterSupport extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void _listSelectBlockTypeValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event__listSelectBlockTypeValueChanged
-        final AbstractTypeInfo selectedType = (AbstractTypeInfo) (_listSelectBlockType.getSelectedValue());
+        final AbstractTypeInfo selectedType = (AbstractTypeInfo) _listSelectBlockType.getSelectedValue();
         updateAccessibleParameters(selectedType);
     }//GEN-LAST:event__listSelectBlockTypeValueChanged
 

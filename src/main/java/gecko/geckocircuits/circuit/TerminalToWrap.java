@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.GeckoRuntimeException;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.control.Point;

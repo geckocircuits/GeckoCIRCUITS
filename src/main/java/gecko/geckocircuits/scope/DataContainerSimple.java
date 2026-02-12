@@ -68,7 +68,7 @@ public final class DataContainerSimple implements DataContainer {
     }
 
     public double getTimeIntervalResolution() {
-        return (_data[0][2] - _data[0][1]);
+        return _data[0][2] - _data[0][1];
     }
 
     public HiLoData getHiLoValue(final int row, final int columnStart, final int columnStop) {

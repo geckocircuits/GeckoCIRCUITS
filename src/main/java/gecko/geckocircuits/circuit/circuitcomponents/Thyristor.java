@@ -14,7 +14,6 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.geckocircuits.allg.UserParameter;
-import static gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.i18n.resources.I18nKeys;
@@ -86,7 +85,7 @@ public final class Thyristor extends AbstractVoltageDropSwitch {
     protected void drawForeground(final Graphics2D graphics) {                                                
         graphics.drawPolygon(new int[]{0, (int) (-dpix * WIDTH), (int) (dpix * WIDTH)}, 
                 new int[]{(int) (dpix * HEIGHT), (int) (-dpix * HEIGHT), (int) (-dpix * HEIGHT)}, POLYGON_POINTS);
-        graphics.fillRect((int) (-dpix * WIDTH), (int) (dpix * HEIGHT - 2), (int) (dpix * (2 * WIDTH)), 2);        
+        graphics.fillRect((int) (-dpix * WIDTH), (int) (dpix * HEIGHT - 2), (int) (dpix * 2 * WIDTH), 2);        
     }
     
    

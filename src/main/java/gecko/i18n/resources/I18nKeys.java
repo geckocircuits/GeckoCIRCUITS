@@ -989,7 +989,7 @@ public enum I18nKeys {
     }
         
     @Override
-    public final String toString() {
+    public String toString() {
         if(_keyName == null) {
             return super.toString();
         } else {

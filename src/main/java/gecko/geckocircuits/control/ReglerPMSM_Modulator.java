@@ -69,7 +69,7 @@ public final class ReglerPMSM_Modulator extends RegelBlock {
     }    
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new DialogWindowWithoutInput(this);
     }
 }

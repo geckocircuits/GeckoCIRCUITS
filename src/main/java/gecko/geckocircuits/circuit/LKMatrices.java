@@ -19,8 +19,6 @@ import gecko.geckocircuits.allg.SolverType;
 
 import gecko.geckocircuits.allg.TechFormat;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
-import static gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.LK_LKOP2;
-import static gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp.REL_RELUCTANCE;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.circuit.circuitcomponents.DiodeCharacteristic;
 import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
@@ -397,7 +395,7 @@ public class LKMatrices {
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
                             bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * FAST_NULL_L);
                         } else if (_solverType == SolverType.SOLVER_GS) {
-                            bW = (-4.0 / 3.0) * iALT[i1] + (1.0 / 3.0) * iALTALT[i1];
+                            bW = -4.0 / 3.0 * iALT[i1] + 1.0 / 3.0 * iALTALT[i1];
                         }                        
                     } else {//bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * netzliste.parameter[i1][0]);                        
                         if (_solverType == SolverType.SOLVER_BE) {
@@ -405,7 +403,7 @@ public class LKMatrices {
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
                             bW = -iALT[i1] - dt * (pALT[x] - pALT[y]) / (2 * netzliste.parameter[i1][0]);
                         } else if (_solverType == SolverType.SOLVER_GS) {
-                            bW = (-4.0 / 3.0) * iALT[i1] + (1.0 / 3.0) * iALTALT[i1];
+                            bW = -4.0 / 3.0 * iALT[i1] + 1.0 / 3.0 * iALTALT[i1];
                         }                        
                     }
                     bVector[x] += (+bW);
@@ -450,15 +448,15 @@ public class LKMatrices {
                     netzliste.parameter[i1][7] = netzliste.parameter[i1][0];
                     /* falls through */
                 case LK_C:
-                    double fac = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
+                    double fac = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                     //bW = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
                     if (_solverType == SolverType.SOLVER_BE) {
-                        bW = (netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + fac * netzliste.parameter[i1][10];
+                        bW = netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + fac * netzliste.parameter[i1][10];
                     } else if (_solverType == SolverType.SOLVER_TRZ) {
-                        bW = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
+                        bW = 2 * netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + iALT[i1] + fac * netzliste.parameter[i1][10];
                     } else if (_solverType == SolverType.SOLVER_GS) {
                         //bW = (1.5 * netzliste.parameter[i1][6] / dt) * ((4/3)*(pALT[x] - pALT[y]) - (1/3)*(pALTALT[x] - pALTALT[y])) + fac * netzliste.parameter[i1][10]; simplifies to:
-                        bW = (netzliste.parameter[i1][6] / dt) * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + fac * netzliste.parameter[i1][10];
+                        bW = netzliste.parameter[i1][6] / dt * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + fac * netzliste.parameter[i1][10];
                     }
                     // bW = (netzliste.parameter[i1][0] / dt) * (pALT[x] - pALT[y]);
                     bVector[x] += (+bW);
@@ -509,11 +507,11 @@ public class LKMatrices {
                     switch ((int) netzliste.parameter[i1][0]) {
                         case SourceType.QUELLE_DC_NEW:
                         case SourceType.QUELLE_DC:
-                            bVector[z] += (netzliste.parameter[i1][1]);
+                            bVector[z] += netzliste.parameter[i1][1];
                             break;
                         case SourceType.QUELLE_SIGNALGESTEUERT_NEW:
                         case SourceType.QUELLE_SIGNALGESTEUERT:
-                            bVector[z] += (netzliste.parameter[i1][1]);
+                            bVector[z] += netzliste.parameter[i1][1];
                             break;
                         case SourceType.QUELLE_SIN_NEW:
                         case SourceType.QUELLE_SIN:
@@ -652,16 +650,16 @@ public class LKMatrices {
                         if (_solverType == SolverType.SOLVER_BE) {
                             netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / FAST_NULL_L * (p[x] - p[y]);                            
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
-                            netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / (2 * FAST_NULL_L) * ((p[x] - p[y]) + (pALT[x] - pALT[y]));
+                            netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / (2 * FAST_NULL_L) * (p[x] - p[y] + (pALT[x] - pALT[y]));
                         } else if (_solverType == SolverType.SOLVER_GS) {
-                            netzliste.eLKneu[i1]._currentInAmps = (2.0 / 3.0) * dt / FAST_NULL_L * (p[x] - p[y]) + (4.0 / 3.0) * iALT[i1] - (1.0 / 3.0) * iALTALT[i1];
+                            netzliste.eLKneu[i1]._currentInAmps = 2.0 / 3.0 * dt / FAST_NULL_L * (p[x] - p[y]) + 4.0 / 3.0 * iALT[i1] - 1.0 / 3.0 * iALTALT[i1];
                         }
                     } else if (_solverType == SolverType.SOLVER_BE) {
                         netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / netzliste.parameter[i1][0] * (p[x] - p[y]);
                     } else if (_solverType == SolverType.SOLVER_TRZ) {
-                        netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / (2 * netzliste.parameter[i1][0]) * ((p[x] - p[y]) + (pALT[x] - pALT[y]));
+                        netzliste.eLKneu[i1]._currentInAmps = +iALT[i1] + dt / (2 * netzliste.parameter[i1][0]) * (p[x] - p[y] + (pALT[x] - pALT[y]));
                     } else if (_solverType == SolverType.SOLVER_GS) {
-                        netzliste.eLKneu[i1]._currentInAmps = (2.0 / 3.0) * dt / netzliste.parameter[i1][0] * (p[x] - p[y]) + (4.0 / 3.0) * iALT[i1] - (1.0 / 3.0) * iALTALT[i1];
+                        netzliste.eLKneu[i1]._currentInAmps = 2.0 / 3.0 * dt / netzliste.parameter[i1][0] * (p[x] - p[y]) + 4.0 / 3.0 * iALT[i1] - 1.0 / 3.0 * iALTALT[i1];
                     }
 
                     if (!isNewIteration && element._isNonlinearForCalculationUsage) {
@@ -708,9 +706,9 @@ public class LKMatrices {
                     double nonLinearCorrectionCurrent = -fac * netzliste.parameter[i1][10];
                     if (isNewIteration) {
                         if (_solverType == SolverType.SOLVER_BE) {
-                            netzliste.eLKneu[i1]._currentInAmps = netzliste.parameter[i1][6] / dt * ((p[x] - p[y]) - (pALT[x] - pALT[y]));
+                            netzliste.eLKneu[i1]._currentInAmps = netzliste.parameter[i1][6] / dt * (p[x] - p[y] - (pALT[x] - pALT[y]));
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
-                            netzliste.eLKneu[i1]._currentInAmps = 2 * netzliste.parameter[i1][6] / dt * ((p[x] - p[y]) - (pALT[x] - pALT[y])) - iALT[i1];
+                            netzliste.eLKneu[i1]._currentInAmps = 2 * netzliste.parameter[i1][6] / dt * (p[x] - p[y] - (pALT[x] - pALT[y])) - iALT[i1];
                         } else if (_solverType == SolverType.SOLVER_GS) {
                             netzliste.eLKneu[i1]._currentInAmps = netzliste.parameter[i1][6] / dt * (1.5 * (p[x] - p[y]) - 2 * (pALT[x] - pALT[y]) + 0.5 * (pALTALT[x] - pALTALT[y]));
                         }
@@ -718,9 +716,9 @@ public class LKMatrices {
                         netzliste.eLKneu[i1]._currentInAmps += nonLinearCorrectionCurrent;
                     } else {
                         if (_solverType == SolverType.SOLVER_BE) {
-                            netzliste.eLKneu[i1]._currentInAmps = netzliste.parameter[i1][6] / dt * ((p[x] - p[y]) - (pALT[x] - pALT[y]));
+                            netzliste.eLKneu[i1]._currentInAmps = netzliste.parameter[i1][6] / dt * (p[x] - p[y] - (pALT[x] - pALT[y]));
                         } else if (_solverType == SolverType.SOLVER_TRZ) {
-                            netzliste.eLKneu[i1]._currentInAmps = 2 * netzliste.parameter[i1][6] / dt * ((p[x] - p[y]) - (pALT[x] - pALT[y])) - iALT[i1];
+                            netzliste.eLKneu[i1]._currentInAmps = 2 * netzliste.parameter[i1][6] / dt * (p[x] - p[y] - (pALT[x] - pALT[y])) - iALT[i1];
                         } else if (_solverType == SolverType.SOLVER_GS) {
                             netzliste.eLKneu[i1]._currentInAmps = netzliste.parameter[i1][6] / dt * (1.5 * (p[x] - p[y]) - 2 * (pALT[x] - pALT[y]) + 0.5 * (pALTALT[x] - pALTALT[y]));
                         }
@@ -734,14 +732,14 @@ public class LKMatrices {
 
                         if (capCorrection) {
                             einSchrittZurueck = true;
-                            double facOld = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
+                            double facOld = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                             double bWOld = 0;
                             if (_solverType == SolverType.SOLVER_BE) {
-                                bWOld = (netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + facOld * netzliste.parameter[i1][10];
+                                bWOld = netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + facOld * netzliste.parameter[i1][10];
                             } else if (_solverType == SolverType.SOLVER_TRZ) {
-                                bWOld = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + facOld * netzliste.parameter[i1][10];
+                                bWOld = 2 * netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + iALT[i1] + facOld * netzliste.parameter[i1][10];
                             } else if (_solverType == SolverType.SOLVER_GS) {
-                                bWOld = (netzliste.parameter[i1][6] / dt) * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + facOld * netzliste.parameter[i1][10];
+                                bWOld = netzliste.parameter[i1][6] / dt * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + facOld * netzliste.parameter[i1][10];
                             }
                             //double bWOld = (netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + facOld * netzliste.parameter[i1][10];
                             //double aWOld = netzliste.parameter[i1][6] / dt;  //  +C/dt
@@ -763,15 +761,15 @@ public class LKMatrices {
                             netzliste.parameter[i1][10] = netzliste.eLKneu[i1]._currentInAmps;
                             bVector[x] -= bWOld;
                             bVector[y] += bWOld;
-                            double facNew = (1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6]);
+                            double facNew = 1 - netzliste.parameter[i1][7] / netzliste.parameter[i1][6];
                             double bWNew = 0;
                             //double bWNew = (netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + facNew * netzliste.parameter[i1][10];
                             if (_solverType == SolverType.SOLVER_BE) {
-                                bWNew = (netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + facNew * netzliste.parameter[i1][10];
+                                bWNew = netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + facNew * netzliste.parameter[i1][10];
                             } else if (_solverType == SolverType.SOLVER_TRZ) {
-                                bWNew = (2 * netzliste.parameter[i1][6] / dt) * (pALT[x] - pALT[y]) + iALT[i1] + facNew * netzliste.parameter[i1][10];
+                                bWNew = 2 * netzliste.parameter[i1][6] / dt * (pALT[x] - pALT[y]) + iALT[i1] + facNew * netzliste.parameter[i1][10];
                             } else if (_solverType == SolverType.SOLVER_GS) {
-                                bWNew = (netzliste.parameter[i1][6] / dt) * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + facNew * netzliste.parameter[i1][10];;
+                                bWNew = netzliste.parameter[i1][6] / dt * (2 * (pALT[x] - pALT[y]) - 0.5 * (pALTALT[x] - pALTALT[y])) + facNew * netzliste.parameter[i1][10];;
                             }
                             bVector[x] += bWNew;
                             bVector[y] -= bWNew;
@@ -802,7 +800,7 @@ public class LKMatrices {
                     double rD = netzliste.parameter[i1][0];
                     double uf = netzliste.parameter[i1][1];
                     double diodeVoltage = p[x] - p[y];
-                    netzliste.eLKneu[i1]._currentInAmps = ((p[x] - p[y]) - uf) / rD;
+                    netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y] - uf) / rD;
 
                     if (diode._diodeChar != null) {
                         DiodeCharacteristic dc = diode._diodeChar;
@@ -828,9 +826,9 @@ public class LKMatrices {
 
                         }
                     } else {
-                        if (((diodeVoltage /*
+                        if ((diodeVoltage /*
                                  * + i[i1] * rD
-                                 */) < (stoergroesse * uf) + acceptanceThreshold) && (rD < 10000/*
+                                 */ < (stoergroesse * uf) + acceptanceThreshold) && (rD < 10000/*
                                  * Typ.rDoffDEFAULT
                                  */)) {  // (uD < uf) und Diode "ON"
                             double aALT = 1.0 / netzliste.parameter[i1][0];  // (1/rD)
@@ -856,9 +854,9 @@ public class LKMatrices {
                             bVector[x] += (-bALT + bNEU);
                             bVector[y] += (+bALT - bNEU);
                         }
-                        if ((((diodeVoltage) > (stoergroesse * uf - acceptanceThreshold)) && (rD > 10000/*
+                        if ((diodeVoltage > (stoergroesse * uf - acceptanceThreshold)) && (rD > 10000/*
                                  * == Typ.rDoffDEFAULT
-                                 */))) {  // (uD > uf) und Diode "OFF"
+                                 */)) {  // (uD > uf) und Diode "OFF"
 
                             double aALT = 1.0 / netzliste.parameter[i1][0];
                             double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
@@ -928,7 +926,7 @@ public class LKMatrices {
                 case LK_THYR:
                     rD = netzliste.parameter[i1][0];
                     uf = netzliste.parameter[i1][1];
-                    netzliste.eLKneu[i1]._currentInAmps = ((p[x] - p[y]) - uf) / rD;
+                    netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y] - uf) / rD;
 
                     //--------------------------
                     // Logik fuer THYR-Abfrage:
@@ -956,7 +954,7 @@ public class LKMatrices {
                         }
                     }
                     // in 'parameter[8]' wird beim Thyristor das aktuelle Gate-Signal hineingeschrieben (siehe 'Simulationskern.runSimulation()')
-                    if ((netzliste.parameter[i1][8] == 1) && (((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD == AbstractSwitch.RD_OFF_DEFAULT))) {  // gate==1  und  (uD > uf) und Thyristor "OFF"                        
+                    if ((netzliste.parameter[i1][8] == 1) && ((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD == AbstractSwitch.RD_OFF_DEFAULT)) {  // gate==1  und  (uD > uf) und Thyristor "OFF"                        
                         double aALT = 1.0 / netzliste.parameter[i1][0];
                         double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
                         netzliste.parameter[i1][0] = netzliste.parameter[i1][2];  // Thyristor auf "ON" setzen
@@ -978,7 +976,7 @@ public class LKMatrices {
                     rD = netzliste.parameter[i1][0];
                     uf = netzliste.parameter[i1][1];
 
-                    netzliste.eLKneu[i1]._currentInAmps = ((p[x] - p[y]) - uf) / rD;
+                    netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y] - uf) / rD;
                     //--------------------------
                     // Logik fuer IGBT-Abfrage:
                     // rD(t) - uf - rON - rOFF - i(t) - u(t) - xxx - xxx - gateStatusOnOff   --> aehnlich wie THYR
@@ -986,11 +984,11 @@ public class LKMatrices {
                     // Wenn ploetzlich 'gateStatusOnOff==0' gesetzt wird, dann wird der Schalter hochohmig
                     //
                     // ... bei 'stoergroesse=1.0' bleibt die Simulation oft haengen!!
-                    if ((((p[x] - p[y] /*
+                    if (((p[x] - p[y] /*
                              * + i[i1] * rD
                              */) < (stoergroesse * uf + acceptanceThreshold)) && (rD < 10000/*
                              * Typ.rDoffDEFAULT
-                             */)) && (netzliste.parameter[i1][8] == 1)) {  // (uD < uf) und IGBT-Serien-Diode "ON" und gateStatusOnOff==1
+                             */) && (netzliste.parameter[i1][8] == 1)) {  // (uD < uf) und IGBT-Serien-Diode "ON" und gateStatusOnOff==1
                         double aALT = 1.0 / netzliste.parameter[i1][0];  // (1/rD)
                         double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];  // (Uf/rD)
                         netzliste.parameter[i1][0] = netzliste.parameter[i1][3];  // --> IGBT auf "OFF" setzen
@@ -1007,9 +1005,9 @@ public class LKMatrices {
                         bVector[y] += (+bALT - bNEU);
                     }
                     // in 'parameter[8]' wird beim IGBT das aktuelle Gate-Signal hineingeschrieben (siehe 'Simulationskern.runSimulation()')
-                    if ((netzliste.parameter[i1][8] == 1) && (((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD > 10000/*
+                    if ((netzliste.parameter[i1][8] == 1) && ((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD > 10000/*
                              * == Typ.rDoffDEFAULT
-                             */))) {  // gateStatusOnOff==1  und  (uD > uf) und Thyristor "OFF"
+                             */)) {  // gateStatusOnOff==1  und  (uD > uf) und Thyristor "OFF"
                         double aALT = 1.0 / netzliste.parameter[i1][0];
                         double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
                         netzliste.parameter[i1][0] = netzliste.parameter[i1][2];  // --> IGBT auf "ON" setzen
@@ -1298,7 +1296,7 @@ public class LKMatrices {
         //=======================================
         // Anfangsbedingung, im Dialogfenster gesetzt, zB. bei INIT/START -->
         //        
-        if ((getAnfangsbedVomDialogfenster) && (matrixSize > 1)) {
+        if (getAnfangsbedVomDialogfenster && (matrixSize > 1)) {
             for (int i1 = 0; i1 < pALT.length; i1++) {
                 pALT[i1] = 0;  // default --> alle Knotenpotentiale auf Null
                 pALTALT[i1] = 0;
@@ -1488,7 +1486,7 @@ public class LKMatrices {
                     break;
                 case LK_U:
                 case REL_MMF:
-                    switch ((int) (netzliste.parameter[i1][0])) {
+                    switch ((int) netzliste.parameter[i1][0]) {
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW:
                         case SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY:
                             pALT[netzliste.knotenMAX + netzliste.spgQuelleNr[i1]] = netzliste.parameter[i1][10];
@@ -1514,7 +1512,7 @@ public class LKMatrices {
             } else if (_solverType == SolverType.SOLVER_TRZ) {
                 aW = 0.5 * dt / FAST_NULL_L;
             } else if (_solverType == SolverType.SOLVER_GS) {
-                aW = (2.0 / 3.0) * (dt / FAST_NULL_L);
+                aW = 2.0 / 3.0 * (dt / FAST_NULL_L);
             }
             parameter[10] = FAST_NULL_L;
         } else {
@@ -1524,7 +1522,7 @@ public class LKMatrices {
             } else if (_solverType == SolverType.SOLVER_TRZ) {
                 aW = 0.5 * dt / usedInductance;
             } else if (_solverType == SolverType.SOLVER_GS) {
-                aW = (2.0 / 3.0) * (dt / usedInductance);
+                aW = 2.0 / 3.0 * (dt / usedInductance);
             }
             parameter[10] = usedInductance;
 

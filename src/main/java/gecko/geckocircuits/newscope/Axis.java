@@ -159,7 +159,7 @@ public final class Axis {
 
             final HiLoData axisMinMax = _axisMinMax.getLimits();            
             final double yTickSpacingMinor = _tickSpacing / _axisTickSettings.getAnzTicksMinor();
-            final int yMinorTicksAnzahl = (int) ((axisMinMax.getIntervalRange()) / yTickSpacingMinor) + 2;
+            final int yMinorTicksAnzahl = (int) (axisMinMax.getIntervalRange() / yTickSpacingMinor) + 2;
 
             if (yMinorTicksAnzahl <= 0 || majorTicks.size() < 2) {
                 return;
@@ -252,7 +252,7 @@ public final class Axis {
             List<Tick> returnValue = new ArrayList<Tick>();
             int anzTicks = (int) Math.round(Math.log10(getLimits()._yHi / getLimits()._yLo)) + MIN_LOG_TICKS;
             for (int i2 = 0; i2 < anzTicks; i2++) {
-                final double wert = Math.pow(10, ((int) Math.log10(getLimits()._yLo) - 1 + i2));
+                final double wert = Math.pow(10, (int) Math.log10(getLimits()._yLo) - 1 + i2);
                 final int tick = (int) getPixelFromValue(wert);
                 if ((getLimits()._yLo <= wert) && (wert <= getLimits()._yHi)) {
                     Tick newTick = new Tick(wert, tick, _axisTickSettings.getTickLengthMaj(), true);
@@ -382,7 +382,7 @@ public final class Axis {
             return _axisMinMax.getLimits().getIntervalRange() / 2;
         }
 
-        final double returnValue = (_axisMinMax.getLimits().getIntervalRange()) / ANZ_AUTO_TICKS;
+        final double returnValue = _axisMinMax.getLimits().getIntervalRange() / ANZ_AUTO_TICKS;
 
         if (_axisLengthPix > LONG_AXIS_THRES) {
             return returnValue / 2;
@@ -489,7 +489,7 @@ public final class Axis {
                 if (_direction == Direction.Y) {
 
                     if (_invertTickDir) {
-                        g2d.drawString(label, _axisOriginPixel.x + (_axisTickSettings.getTickLengthMaj() + THREE),
+                        g2d.drawString(label, _axisOriginPixel.x + _axisTickSettings.getTickLengthMaj() + THREE,
                                 _pixelValue + FONT_TICK_LABEL.getSize() / 2 - 2);
                     } else {
                         g2d.drawString(label, _axisOriginPixel.x - (_axisTickSettings.getTickLengthMaj() + THREE)

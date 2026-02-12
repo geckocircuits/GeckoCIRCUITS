@@ -50,7 +50,7 @@ public class InductorCalculator extends CircuitComponent implements BStampable,
         } else if (_solverType == SolverType.SOLVER_TRZ) {
             bW = stampVectorBTRZ(dt);
         } else if (_solverType == SolverType.SOLVER_GS) {
-            bW = (-4.0 / 3.0) * _oldCurrent + (1.0 / 3.0) * _oldOldCurrent;
+            bW = -4.0 / 3.0 * _oldCurrent + 1.0 / 3.0 * _oldOldCurrent;
         }
 
         //b[matrixIndices[0]] -= _oldCurrent;
@@ -61,7 +61,7 @@ public class InductorCalculator extends CircuitComponent implements BStampable,
 
     //because of coupled inductors, so that inductor coupling can override this method - also UGLY, just a temporary solution
     protected double stampVectorBTRZ(double dt) {
-        return (-_oldCurrent - dt * (_potential1 - _potential2) / (2 * _inductance));
+        return -_oldCurrent - dt * (_potential1 - _potential2) / (2 * _inductance);
     }
 
     @Override

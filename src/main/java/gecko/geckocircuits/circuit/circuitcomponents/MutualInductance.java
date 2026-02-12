@@ -79,7 +79,7 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
             }
 
             if (_componentCoupling._coupledElements[1] != null) {
-                final InductorCoupable lkop = (InductorCoupable) (_componentCoupling._coupledElements[1]);
+                final InductorCoupable lkop = (InductorCoupable) _componentCoupling._coupledElements[1];
                 graphics.drawLine(0, 0,
                         (int) (dpix * (lkop.getSheetPosition().x - getSheetPosition().x)),
                         (int) (dpix * (lkop.getSheetPosition().y - getSheetPosition().y)));  // Verbindungslinie zu L1
@@ -101,7 +101,7 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
     @Override
     protected void drawBackground(final Graphics2D graphics) {
         graphics.fillRect((int) (-dpix * WIDTH), (int) (-dpix * HEIGHT),
-                (int) (dpix * (2 * WIDTH)), (int) (dpix * (2 * HEIGHT)));
+                (int) (dpix * 2 * WIDTH), (int) (dpix * 2 * HEIGHT));
     }
 
     @Override

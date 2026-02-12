@@ -178,9 +178,9 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
             final int rectPosY = (int) (dpix * (yPos - height));
             final Color origColor = graphics.getColor();
             graphics.setColor(_backGroundColor.getValue());
-            graphics.fillRect(rectPosX, rectPosY, (int) (dpix * (1.333 * width)), (int) (dpix * (3.6 * height)));
+            graphics.fillRect(rectPosX, rectPosY, (int) (dpix * 1.333 * width), (int) (dpix * 3.6 * height));
             graphics.setColor(_fontColor.getValue());
-            graphics.drawRect(rectPosX, rectPosY, (int) (dpix * (1.333 * width)), (int) (dpix * (3.6 * height)));
+            graphics.drawRect(rectPosX, rectPosY, (int) (dpix * 1.333 * width), (int) (dpix * 3.6 * height));
             graphics.drawString(_titleText.getValue(), rectPosX + TEXT_DX, (int) (rectPosY - 0.2));
             String[] split = _contentsText.getValue().split("\\n");            
             int lineCounter = 0;

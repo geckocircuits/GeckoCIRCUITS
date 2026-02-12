@@ -308,8 +308,8 @@ public class NetListLK {
             CircuitTyp circuitTyp = (CircuitTyp) elem.getTypeEnum();
             typ[i1] = circuitTyp;
             parameter[i1] = elem.getParameter();
-            spgQuelleNr[i1] = (circuitTyp == CircuitTyp.REL_MMF || circuitTyp == CircuitTyp.LK_U
-                    || circuitTyp == CircuitTyp.LK_LKOP2) || circuitTyp == CircuitTyp.TH_TEMP ? (spgQuelleZaehler++) : -1;
+            spgQuelleNr[i1] = circuitTyp == CircuitTyp.REL_MMF || circuitTyp == CircuitTyp.LK_U
+                    || circuitTyp == CircuitTyp.LK_LKOP2 || circuitTyp == CircuitTyp.TH_TEMP ? (spgQuelleZaehler++) : -1;
             //------------------
             // Anfangsknoten:            
             List<AbstractTerminal> startTerminals = elem.XIN;

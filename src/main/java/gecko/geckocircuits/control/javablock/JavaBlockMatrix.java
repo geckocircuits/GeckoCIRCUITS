@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.control.javablock;
 
-import gecko.ControlCalculatable;
 import gecko.ControlCalculatableMatrix;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.logging.Level;

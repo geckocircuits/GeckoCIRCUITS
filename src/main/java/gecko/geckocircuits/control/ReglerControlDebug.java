@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.control;
 
-import static gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Window;

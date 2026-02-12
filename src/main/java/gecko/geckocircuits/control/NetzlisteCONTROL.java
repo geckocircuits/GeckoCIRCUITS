@@ -20,7 +20,6 @@ import gecko.geckocircuits.datacontainer.DataContainerGlobal;
 import gecko.geckocircuits.circuit.NetzlisteAllg;
 import gecko.geckocircuits.circuit.PotentialArea;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -469,7 +468,7 @@ public final class NetzlisteCONTROL {
                 }
             }
             // TIBOR System.out.println(Arrays.toString(dataIndex));
-            ((ReglerOSZI) (_orderedControlBlocks[scopeIndices.get(scopeInd)])).setDataContainerIndices(dataIndex);
+            ((ReglerOSZI) _orderedControlBlocks[scopeIndices.get(scopeInd)]).setDataContainerIndices(dataIndex);
         }
 
         String[] dataNames = new String[potIndex.size()];

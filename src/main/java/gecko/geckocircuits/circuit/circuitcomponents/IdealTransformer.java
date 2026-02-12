@@ -248,7 +248,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         int y = getSheetPosition().y;
         //-----------------
         // Klickbereich:        
-        double rq = Math.round(dpix * (2 * HEIGHT) / 7.0);
+        double rq = Math.round(dpix * 2 * HEIGHT / 7.0);
 
         g2.setStroke(new BasicStroke((float) 2.0));
         for (int yq = (int) (dpix * (0 - HEIGHT)); yq <= (int) (dpix * (0 + HEIGHT)); yq += (int) (2 * rq)) {
@@ -308,7 +308,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         int pkd = (int) (0.4 * dpix);  // Durchmesser des Kopplungspunktes in Pixel
         double pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen
         graphics.fillOval((int) (dpix * (+pk2) - pkd / 2.0), (int) (dpix * (-1.4) - pkd / 2.0), pkd, pkd);
-        graphics.fillOval((int) (dpix * (-pk2) - pkd / 2.0), (int) (dpix * (+_reversed.getValue() * 1.4) - pkd / 2.0), pkd, pkd);
+        graphics.fillOval((int) (dpix * (-pk2) - pkd / 2.0), (int) (dpix * +_reversed.getValue() * 1.4 - pkd / 2.0), pkd, pkd);
     }
 
     @Override

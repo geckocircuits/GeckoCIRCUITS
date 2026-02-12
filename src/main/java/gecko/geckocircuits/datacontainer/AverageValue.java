@@ -45,7 +45,7 @@ public final class AverageValue {
         }
         // do this in double precision
         final double newInterval = getAverageSpan() + append.getAverageSpan();
-        double newValue = (_avgValue * getAverageSpan() + append.getAverageSpan() * append._avgValue); 
+        double newValue = _avgValue * getAverageSpan() + append.getAverageSpan() * append._avgValue; 
         newValue /=  newInterval;
         _avgValue = newValue;
         

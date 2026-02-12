@@ -260,10 +260,10 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
-        graphics.drawLine((int) (-dpix), (int) (-dpix * 2), (int) (-dpix), (int) (-dpix));
-        graphics.drawLine((int) (dpix), (int) (-dpix * 2), (int) (dpix), (int) (-dpix));
+        graphics.drawLine((int) -dpix, (int) (-dpix * 2), (int) -dpix, (int) -dpix);
+        graphics.drawLine((int) dpix, (int) (-dpix * 2), (int) dpix, (int) -dpix);
         graphics.drawLine(0, 0, (int) (dpix * 0), (int) (dpix * 3));
-        graphics.drawLine(0, (int) (dpix), -(int) (dpix * 2), (int) (dpix * 1));
+        graphics.drawLine(0, (int) dpix, -(int) (dpix * 2), (int) (dpix * 1));
     }
 
     @Override
@@ -296,7 +296,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
             return;
         }
 
-        if ((voltageLimitationMin.getNameOpt().isEmpty() && voltageLimitationMax.getNameOpt().isEmpty())) {
+        if (voltageLimitationMin.getNameOpt().isEmpty() && voltageLimitationMax.getNameOpt().isEmpty()) {
             _textInfo.addParameter("u=[" + voltageLimitationMin.getValue() + ".." + voltageLimitationMax.getValue() + "]");
         }
     }
@@ -307,7 +307,7 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
     }
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new OperationalAmplifierDialog(this);
     }
     

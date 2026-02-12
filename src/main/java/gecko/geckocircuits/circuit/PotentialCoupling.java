@@ -196,7 +196,7 @@ public class PotentialCoupling {
     class SetOperation extends Operationable.OperationInterface {
         final int _index;
         SetOperation(final int index) {            
-            super(((index == 0) ? "setCouplingLabel" : "setSecondCouplingLabel"), I18nKeys.SET_COUPLING_LABEL);
+            super((index == 0) ? "setCouplingLabel" : "setSecondCouplingLabel", I18nKeys.SET_COUPLING_LABEL);
             _index = index;
         }
         @Override

@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.GlobalFilePathes;
-import java.net.URI;
 import java.net.URL;
 import java.text.NumberFormat;
 import javax.swing.ImageIcon;

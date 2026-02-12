@@ -17,7 +17,6 @@ import gecko.geckocircuits.allg.TechFormat;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ConnectorType;
-import static gecko.geckocircuits.circuit.ConnectorType.CONTROL;
 import gecko.geckocircuits.circuit.ElementDisplayProperties;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import gecko.geckocircuits.circuit.SchematicEditor2;

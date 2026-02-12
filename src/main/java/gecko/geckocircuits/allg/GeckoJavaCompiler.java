@@ -61,7 +61,7 @@ public class GeckoJavaCompiler {
     private String _className;
     //
 
-    public static enum COMPILESTATUS {
+    public enum COMPILESTATUS {
 
         NOT_COMPILED, COMPILED_SUCCESSFULL, COMPILE_ERROR
     };
@@ -260,7 +260,7 @@ public class GeckoJavaCompiler {
             // Compile --> 
 
 
-            _workingDirectory = (new File(GlobalFilePathes.PFAD_JAR_HOME)).getParent();
+            _workingDirectory = new File(GlobalFilePathes.PFAD_JAR_HOME).getParent();
             if (_workingDirectory == null) {
                 _workingDirectory = System.getProperty("user.dir");
             }

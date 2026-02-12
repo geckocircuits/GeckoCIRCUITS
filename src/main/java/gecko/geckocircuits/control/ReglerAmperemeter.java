@@ -16,7 +16,6 @@ package gecko.geckocircuits.control;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
-import gecko.geckocircuits.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 import java.util.Arrays;
 import java.util.List;

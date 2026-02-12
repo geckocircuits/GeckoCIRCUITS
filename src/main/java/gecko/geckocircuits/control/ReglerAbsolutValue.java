@@ -39,7 +39,7 @@ public final class ReglerAbsolutValue extends AbstractReglerSingleInputSingleOut
     
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new DialogWindowWithoutInput(this);        
     }            
 }

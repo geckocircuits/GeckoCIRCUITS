@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control.javablock;
 
 import gecko.geckocircuits.allg.GeckoFile;
-import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
@@ -22,8 +21,6 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;

@@ -15,7 +15,6 @@ package gecko.geckocircuits.circuit.matrix;
 
 import gecko.geckocircuits.allg.SolverType;
 import gecko.geckocircuits.circuit.NetListLK;
-import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import gecko.geckocircuits.math.Matrix;
 

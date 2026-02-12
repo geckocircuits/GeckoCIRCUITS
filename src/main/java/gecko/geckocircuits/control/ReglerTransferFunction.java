@@ -253,7 +253,7 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
     }
 
     @Override
-    protected final Window openDialogWindow() {        
+    protected Window openDialogWindow() {        
         return new DialogTransferFunction((ReglerTransferFunction) this, this);        
         
     }

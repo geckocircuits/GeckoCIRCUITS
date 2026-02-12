@@ -16,7 +16,6 @@ package gecko.geckocircuits.circuit;
 import gecko.geckocircuits.circuit.circuitcomponents.IdealTransformer;
 import gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInductor;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
-import gecko.geckocircuits.circuit.circuitcomponents.TerminalCircuit;
 import gecko.geckocircuits.control.Point;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;

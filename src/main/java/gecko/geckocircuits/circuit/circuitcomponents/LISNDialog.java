@@ -45,7 +45,7 @@ class LISNDialog extends DialogElementLK {
                 try {
                     g.setColor(Color.white);
                     g.fillRect(0, 0, 999, 999);
-                    Image img = (new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "lisn.png").toURL())).getImage();
+                    Image img = new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "lisn.png").toURL()).getImage();
                     g.drawImage(img, 10, 0, new JFrame());
                 } catch (Exception e) {
                     System.out.println(e + "   srthrszhj5shj");

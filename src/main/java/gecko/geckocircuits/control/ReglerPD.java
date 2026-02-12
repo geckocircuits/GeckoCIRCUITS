@@ -65,7 +65,7 @@ public final class ReglerPD extends AbstractReglerSingleInputSingleOutput {
     
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new ReglerPDDialog(this);
     }
 }

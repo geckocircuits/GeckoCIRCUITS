@@ -19,8 +19,6 @@ import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ConnectorType;
-import static gecko.geckocircuits.circuit.ConnectorType.LK;
-import static gecko.geckocircuits.circuit.ConnectorType.RELUCTANCE;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
@@ -29,8 +27,6 @@ import gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.geckocircuits.circuit.TerminalRelativePositionReluctance;
 import gecko.geckocircuits.circuit.TokenMap;
-import static gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent.NONLIN_IND_X_DEFAULT;
-import static gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent.NONLIN_IND_Y_DEFAULT;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -134,14 +130,14 @@ public final class NonLinearReluctance extends AbstractNonLinearCircuitComponent
     }
 
     @Override
-    protected final void drawForeground(final Graphics2D graphics) {
+    protected void drawForeground(final Graphics2D graphics) {
         graphics.drawRect((int) (-dpix * WIDTH), (int) (-dpix * HEIGHT), (int) (dpix * 2 * WIDTH), (int) (dpix * 2 * HEIGHT));
         int length = (int) (dpix * 0.6);
         graphics.drawLine(-length, -length, length, length);
     }
 
     @Override
-    protected final void drawBackground(final Graphics2D graphics) {
+    protected void drawBackground(final Graphics2D graphics) {
         graphics.fillRect((int) (-dpix * WIDTH), (int) (-dpix * HEIGHT), (int) (dpix * 2 * WIDTH), (int) (dpix * 2 * HEIGHT));
     }
 
@@ -153,22 +149,22 @@ public final class NonLinearReluctance extends AbstractNonLinearCircuitComponent
     }
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new NonlinearReluctanceDialog(this);
     }
 
     @Override
-    public final String getNonlinearFileExtension() {
+    public String getNonlinearFileExtension() {
         return ".nlr";
     }
 
     @Override
-    public final String getIndependentVariableName() {
+    public String getIndependentVariableName() {
         return "i";
     }
 
     @Override
-    public final String getNonlinearName() {
+    public String getNonlinearName() {
         return "reluctance";
     }
 
@@ -178,7 +174,7 @@ public final class NonLinearReluctance extends AbstractNonLinearCircuitComponent
     }
 
     @Override
-    public final double[][] getInitalNonlinValues() {
+    public double[][] getInitalNonlinValues() {
         double[][] returnValue = new double[2][NONLIN_IND_X_DEFAULT.length];
         for (int i = 0; i < NONLIN_IND_X_DEFAULT.length; i++) {
             returnValue[0][i] = NONLIN_REL_X_DEFAULT[i];
@@ -192,32 +188,32 @@ public final class NonLinearReluctance extends AbstractNonLinearCircuitComponent
     }
 
     @Override
-    public final String getNonlinearFileEnding() {
+    public String getNonlinearFileEnding() {
         return ".nlr";
     }
 
     @Override
-    public final double[] getNonlinXDefault() {
+    public double[] getNonlinXDefault() {
         return NONLIN_IND_X_DEFAULT;
     }
 
     @Override
-    public final double[] getNonlinYDefault() {
+    public double[] getNonlinYDefault() {
         return NONLIN_IND_Y_DEFAULT;
     }
 
     @Override
-    public final void doInitialization() {
+    public void doInitialization() {
         parameter[0] = getActualValueLINFromLinearizedCharacteristicInverse(Math.abs(parameter[1]));
     }
     
     @Override
-    public final void doCalculation(final double deltaT, final double time) {        
+    public void doCalculation(final double deltaT, final double time) {        
         parameter[0] = getActualValueLINFromLinearizedCharacteristicInverse(Math.abs(_secondarySource.parameter[6]));                                                       
     }
 
     @Override
-    public final void setzeParameterZustandswerteAufNULL() {
+    public void setzeParameterZustandswerteAufNULL() {
         parameter[2] = 0;
         parameter[3] = 0;
         parameter[4] = 0;

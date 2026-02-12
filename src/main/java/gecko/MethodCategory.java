@@ -25,7 +25,7 @@ public enum MethodCategory {
     
     private I18nKeys _tranlsationKey;
 
-    private MethodCategory(final I18nKeys translationKey) {
+    MethodCategory(final I18nKeys translationKey) {
         _tranlsationKey = translationKey;
     }    
 

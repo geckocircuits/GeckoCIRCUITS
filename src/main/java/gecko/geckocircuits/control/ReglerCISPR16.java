@@ -298,7 +298,7 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
     }
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return _testReceiverCISPR16;
     }
 }

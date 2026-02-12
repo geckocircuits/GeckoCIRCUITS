@@ -61,6 +61,6 @@ public class JLabelRot extends JLabel {
     public void paintComponent(final Graphics graphics) {
         final Graphics2D g2d = (Graphics2D) graphics;
         g2d.transform(AffineTransform.getRotateInstance(_phiDegClockWise * Math.PI / 180.0));
-        g2d.drawString(_txt, (-this.getHeight() + X_OFFSET), (this.getWidth() - (this.getWidth() - g2d.getFont().getSize()) / 2));
+        g2d.drawString(_txt, -this.getHeight() + X_OFFSET, this.getWidth() - (this.getWidth() - g2d.getFont().getSize()) / 2);
     }
 }

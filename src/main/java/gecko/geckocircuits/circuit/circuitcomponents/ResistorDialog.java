@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.circuit.DialogNonLinearity;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 

@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.circuit.netlist;
 
-import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import java.util.*;
 
 /**

@@ -15,9 +15,7 @@ package gecko.geckocircuits.control;
 
 import gecko.GeckoSim;
 import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
 import gecko.geckocircuits.circuit.*;
-import gecko.geckocircuits.circuit.losscalculation.LossComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;

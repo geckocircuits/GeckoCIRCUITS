@@ -16,7 +16,6 @@ package gecko.geckocircuits.control;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.swing.ImageIcon; 
-import java.net.URI;
 import java.net.URL;
 
 

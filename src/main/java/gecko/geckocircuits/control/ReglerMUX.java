@@ -111,11 +111,11 @@ public final class ReglerMUX extends RegelBlock implements VariableTerminalNumbe
         graphics.setColor(getBackgroundColor());
 
         graphics.fillRect((int) (dpix * (posX - WIDTH)), (int) (dpix * (posY - WIDTH)),
-                (int) (dpix * (2 * WIDTH)), (int) (dpix * XIN.size()));
+                (int) (dpix * 2 * WIDTH), (int) (dpix * XIN.size()));
 
         graphics.setColor(origColor);
         graphics.drawRect((int) (dpix * (posX - WIDTH)), (int) (dpix * (posY - WIDTH)),
-                (int) (dpix * (2 * WIDTH)), (int) (dpix * XIN.size()));
+                (int) (dpix * 2 * WIDTH), (int) (dpix * XIN.size()));
         // Pfeil-Symbol:
         int d1 = 10, d2 = 4, dpfx = 8, dpfy = 3;
         double pf = 1.4;  // Pfeilspitzen-X-Abstand

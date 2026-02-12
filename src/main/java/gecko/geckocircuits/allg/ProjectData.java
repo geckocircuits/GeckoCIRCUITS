@@ -205,10 +205,10 @@ public final class ProjectData implements Serializable {
             _tDURATION = tokenMap.readDataLine("tDURATION", _tDURATION);
             _dt = tokenMap.readDataLine("dt", _dt);
             String nameString = tokenMap.getLineString("path", "path ");
-            GlobalFilePathes.datnamAbsLoadIPES = nameString.substring(("path ").length());  // wichtig, weil Pfadname Leerzeichen enthalten kann
+            GlobalFilePathes.datnamAbsLoadIPES = nameString.substring("path ".length());  // wichtig, weil Pfadname Leerzeichen enthalten kann
             fontSize = tokenMap.readDataLine("fontSize", fontSize);
             final String fontString = tokenMap.getLineString("fontTyp", "fontTyp ");
-            _fontTyp = fontString.substring(("fontTyp ").length());  // wichtig, falls FontName Leerzeichen enthaelt!
+            _fontTyp = fontString.substring("fontTyp ".length());  // wichtig, falls FontName Leerzeichen enthaelt!
             _fensterWidth = tokenMap.readDataLine("fensterWidth", _fensterWidth);
             _fensterHeight = tokenMap.readDataLine("fensterHeight", _fensterHeight);
         }
@@ -654,7 +654,7 @@ public final class ProjectData implements Serializable {
         String datnamAbsLoadIPES = GlobalFilePathes.datnamAbsLoadIPES;
         //-------------------------
         // (1) Ist die Pfadstruktur unveraendert? Kann man den alten (gespeicherten) absoluten Pfad der Zusatzdatei verwenden?
-        if ((new File(datnamAbsLoadDETAIL)).exists()) {
+        if (new File(datnamAbsLoadDETAIL).exists()) {
             return datnamAbsLoadDETAIL;
         }
         //-------------------------
@@ -669,12 +669,12 @@ public final class ProjectData implements Serializable {
             if (File.separatorChar == '/' && datnamAbsLoadIPES.contains("\\")) {
                 datnamAbsLoadIPES = datnamAbsLoadIPES.replace('\\', '/');
             }
-            String localRootAlt = (new File(datnamAbsLoadIPES)).getParent();
-            String localRootNeu = (new File(datnamAbsolutIPES)).getParent();
+            String localRootAlt = new File(datnamAbsLoadIPES).getParent();
+            String localRootNeu = new File(datnamAbsolutIPES).getParent();
             String relativerPfadDETAIL = datnamAbsLoadDETAIL.substring(localRootAlt.length());
             String neuerPfadDETAIL = localRootNeu + relativerPfadDETAIL;
 
-            if ((new File(neuerPfadDETAIL)).exists()) {
+            if (new File(neuerPfadDETAIL).exists()) {
                 return neuerPfadDETAIL;
             }
         } catch (Exception e) {

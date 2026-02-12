@@ -333,7 +333,7 @@ public final class ComponentCoupling {
     class SetOperation extends Operationable.OperationInterface {
         final int _index;
         SetOperation(final int index) {            
-            super(((index == 0) ? "setComponentCoupling" : "setSecondComponentCoupling"), I18nKeys.SET_COMPONENT_COUPLING);
+            super((index == 0) ? "setComponentCoupling" : "setSecondComponentCoupling", I18nKeys.SET_COMPONENT_COUPLING);
             _index = index;
         }
         @Override

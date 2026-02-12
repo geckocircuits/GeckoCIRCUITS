@@ -13,9 +13,6 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.newscope.AbstractDiagram;
-import gecko.geckocircuits.newscope.Axis;
-import gecko.geckocircuits.newscope.HiLoData;
 import java.awt.Color;
 import java.awt.Graphics;
 

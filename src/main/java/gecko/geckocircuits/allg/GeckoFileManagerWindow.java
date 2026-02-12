@@ -110,7 +110,7 @@ public class GeckoFileManagerWindow extends JDialog {
         try {
             @SuppressWarnings("deprecation")
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
-            this.setIconImage((new ImageIcon(url)).getImage());
+            this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception ex) {
             System.err.println("could not load image icon!");
         }

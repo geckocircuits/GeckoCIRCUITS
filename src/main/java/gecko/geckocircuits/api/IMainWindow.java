@@ -14,7 +14,6 @@
 package gecko.geckocircuits.api;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Interface for the main application window.

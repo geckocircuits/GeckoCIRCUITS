@@ -73,12 +73,12 @@ public class LossCurvePlotPanel extends SimpleGraferPanel {
             dcs1.setSignalName(curve.getName(), lossCurves.indexOf(curve));                                    
             try {
             for(int i = 0; i < curve.data[0].length; i++) {
-                float yValue = (float) (curve.data[1][i]);
+                float yValue = (float) curve.data[1][i];
                 double xValue = curve.data[0][i];                
                 dcs1.insertValueAtEnd(yValue , xValue , lossCurves.indexOf(curve));
                 
                 if(curve.data.length > 2) {
-                    float yValue2 = (float) (curve.data[2][i]);                    
+                    float yValue2 = (float) curve.data[2][i];                    
                     dcs1.insertValueAtEnd(yValue2 , xValue , lossCurves.size() + lossCurves.indexOf(curve));
                 }                                
             }

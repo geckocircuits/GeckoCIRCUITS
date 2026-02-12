@@ -79,7 +79,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     }
 
     @Override
-    public final void stampVectorB(double[] b, double t, double dt) {
+    public void stampVectorB(double[] b, double t, double dt) {
 
         //double fac = (1 - _lkCap.getParameter()[7] / _lkCap.getParameter()[6]);
         //double bW = (_lkCap.getParameter()[6] / dt) * (pALT[matrixIndices[0]] - pALT[matrixIndices[1]])
@@ -93,20 +93,20 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
             if (_isNonLinear) {
                 //bW = (_capacitance / dt) * (_potential1 - _potential2) + _newOldCapRatio*_oldCurrent; 
                 if (_solverType == SolverType.SOLVER_BE) {
-                    bW = (_capacitance / dt) * (_potential1 - _potential2) + _newOldCapRatio * _oldCurrent;
+                    bW = _capacitance / dt * (_potential1 - _potential2) + _newOldCapRatio * _oldCurrent;
                 } else if (_solverType == SolverType.SOLVER_TRZ) {
                     bW = 2 * (_capacitance / dt) * (_potential1 - _potential2) + _oldCurrent + _newOldCapRatio * _oldCurrent;
                 } else if (_solverType == SolverType.SOLVER_GS) {
-                    bW = (_capacitance / dt) * (2 * (_potential1 - _potential2) - 0.5 * (_potential1 - _potential2)) + _newOldCapRatio * _oldCurrent;
+                    bW = _capacitance / dt * (2 * (_potential1 - _potential2) - 0.5 * (_potential1 - _potential2)) + _newOldCapRatio * _oldCurrent;
                 }
             } else {
                 //bW = (_capacitance /*_lkCap.getParameter()[0]*/ / dt) * (_potential1 - _potential2); 
                 if (_solverType == SolverType.SOLVER_BE) {
-                    bW = (_capacitance / dt) * (_potential1 - _potential2);
+                    bW = _capacitance / dt * (_potential1 - _potential2);
                 } else if (_solverType == SolverType.SOLVER_TRZ) {
                     bW = 2 * (_capacitance / dt) * (_potential1 - _potential2) + _oldCurrent;
                 } else if (_solverType == SolverType.SOLVER_GS) {
-                    bW = (_capacitance / dt) * (2 * (_potential1 - _potential2) - 0.5 * (_potential1 - _potential2));
+                    bW = _capacitance / dt * (2 * (_potential1 - _potential2) - 0.5 * (_potential1 - _potential2));
                 }
             }
             b[matrixIndices[0]] += (+bW);
@@ -116,7 +116,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     }
 
     @Override
-    public final void calculateCurrent(final double[] p, final double dt, final double t) {
+    public void calculateCurrent(final double[] p, final double dt, final double t) {
 
 //        _updateMatrixFlag = false;
 //
@@ -163,16 +163,16 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
             _current = initVoltageSource.getCurrent();
         } else {
             if (_solverType == SolverType.SOLVER_BE) {
-                _current = _capacitance / dt * ((p[matrixIndices[0]] - p[matrixIndices[1]]) - (_potential1 - _potential2));
+                _current = _capacitance / dt * (p[matrixIndices[0]] - p[matrixIndices[1]] - (_potential1 - _potential2));
             } else if (_solverType == SolverType.SOLVER_TRZ) {
-                _current = 2 * (_capacitance / dt) * ((p[matrixIndices[0]] - p[matrixIndices[1]]) - (_potential1 - _potential2)) - _oldCurrent;
+                _current = 2 * (_capacitance / dt) * (p[matrixIndices[0]] - p[matrixIndices[1]] - (_potential1 - _potential2)) - _oldCurrent;
             } else if (_solverType == SolverType.SOLVER_GS) {
                 _current = _capacitance / dt * (1.5 * (p[matrixIndices[0]] - p[matrixIndices[1]]) - 2 * (_potential1 - _potential2) + 0.5 * (_potOld1 - _potOld2));
             }
 
             if (_isNonLinear) {
                 if (!DiodeCalculator.inSwitchErrorMode) {
-                    if (((_current + _nonLinearCorrectionCurrent) * (_oldCurrent)) < 0) //wrong value of current calculated, capacitance must be changed!
+                    if (((_current + _nonLinearCorrectionCurrent) * _oldCurrent) < 0) //wrong value of current calculated, capacitance must be changed!
                     {
                         capError = true;
                         _capacitance = (1 - _newOldCapRatio) * _capacitance; //set capacitance to new value (reconstructed from the ratio, see updateNonLinearCapacitance method
@@ -219,7 +219,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     }
 
     @Override
-    public final void updateHistory(double[] p) {
+    public void updateHistory(double[] p) {
         _voltage = p[matrixIndices[0]] - p[matrixIndices[1]];
         _potOld1 = _potential1;
         _potOld2 = _potential2;

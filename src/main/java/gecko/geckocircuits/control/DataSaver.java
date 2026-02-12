@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import gecko.geckocircuits.control.ReglerSaveData;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import java.io.*;
@@ -234,7 +233,7 @@ public final class DataSaver extends Observable implements Observer {
 
 
                 _linePrinter.printLine(line);
-                final int newPercentage = (int) Math.round((PERCENT_CONST * line) / maxIndex);
+                final int newPercentage = (int) Math.round(PERCENT_CONST * line / maxIndex);
                 if (newPercentage != savePercentage) {
                     savePercentage = newPercentage;
                     _percentage = savePercentage;

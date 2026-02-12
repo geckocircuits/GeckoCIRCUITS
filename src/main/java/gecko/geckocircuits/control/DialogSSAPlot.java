@@ -25,7 +25,6 @@ import gecko.geckocircuits.newscope.SimpleGraferPanel;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.net.URI;
 import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;

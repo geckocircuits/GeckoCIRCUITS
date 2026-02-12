@@ -43,7 +43,7 @@ public class DialogLizenz extends JDialog implements WindowListener, ActionListe
         try {
             @SuppressWarnings("deprecation")
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
-            this.setIconImage((new ImageIcon(url)).getImage());
+            this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception e) {
             // Icon loading is optional - dialog works without it
         }

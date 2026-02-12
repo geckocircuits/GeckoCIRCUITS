@@ -80,7 +80,7 @@ public class CircuitSheet extends JPanel {
      * draws the raster points visible in the background of the sheet
      */
     public void drawCircuitSheet(Graphics2D g2d) {
-        final JViewport viewport = ((JViewport) this.getParent().getParent());        
+        final JViewport viewport = (JViewport) this.getParent().getParent();        
         if(g2d instanceof SVGGraphics2D) {
             return; // don't paint the pixels points for exporting to images!
         }
@@ -208,15 +208,15 @@ public class CircuitSheet extends JPanel {
                 g2d.setColor(Color.orange);
                 if (_se.x1markRe < _se.x2markRe) {
                     if (_se.y1markRe < _se.y2markRe) {
-                        g2d.drawRect(_se.x1markRe, _se.y1markRe, (_se.x2markRe - _se.x1markRe), (_se.y2markRe - _se.y1markRe));
+                        g2d.drawRect(_se.x1markRe, _se.y1markRe, _se.x2markRe - _se.x1markRe, _se.y2markRe - _se.y1markRe);
                     } else {
-                        g2d.drawRect(_se.x1markRe, _se.y2markRe, (_se.x2markRe - _se.x1markRe), (-_se.y2markRe + _se.y1markRe));
+                        g2d.drawRect(_se.x1markRe, _se.y2markRe, _se.x2markRe - _se.x1markRe, -_se.y2markRe + _se.y1markRe);
                     }
                 } else {
                     if (_se.y1markRe < _se.y2markRe) {
-                        g2d.drawRect(_se.x2markRe, _se.y1markRe, (-_se.x2markRe + _se.x1markRe), (_se.y2markRe - _se.y1markRe));
+                        g2d.drawRect(_se.x2markRe, _se.y1markRe, -_se.x2markRe + _se.x1markRe, _se.y2markRe - _se.y1markRe);
                     } else {
-                        g2d.drawRect(_se.x2markRe, _se.y2markRe, (-_se.x2markRe + _se.x1markRe), (-_se.y2markRe + _se.y1markRe));
+                        g2d.drawRect(_se.x2markRe, _se.y2markRe, -_se.x2markRe + _se.x1markRe, -_se.y2markRe + _se.y1markRe);
                     }
                 }
             }
@@ -398,7 +398,7 @@ public class CircuitSheet extends JPanel {
         }
 
         // (1) LK-Check --> 
-        PotentialArea[] pot = (NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.LK_AND_RELUCTANCE), localElementsLK)).getPotentiale();
+        PotentialArea[] pot = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.LK_AND_RELUCTANCE), localElementsLK).getPotentiale();
 
         if (selectPotentialNodesToShow(pot, clickPoint, localElementsLK)) {
             return;
@@ -406,14 +406,14 @@ public class CircuitSheet extends JPanel {
 
         // (2) CONTROL-Check --> 
 
-        PotentialArea[] pot2 = (NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), localElementsCONTROL)).getPotentiale();
+        PotentialArea[] pot2 = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), localElementsCONTROL).getPotentiale();
         if (selectPotentialNodesToShow(pot2, clickPoint, localElementsCONTROL)) {
             return;
         }
 
         // (3) THERM-Check --> 
-        PotentialArea[] pot3 = (NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.THERMAL),
-                localElementsTHERM)).getPotentiale();
+        PotentialArea[] pot3 = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.THERMAL),
+                localElementsTHERM).getPotentiale();
         if (selectPotentialNodesToShow(pot3, clickPoint, localElementsTHERM)) {
             return;
         }
@@ -552,7 +552,7 @@ public class CircuitSheet extends JPanel {
             for (TerminalInterface term : elem.getAllTerminals()) {
                 String existingCompareLabel = term.getLabelObject().getLabelString();
 
-                if ((!originalLabelBeforeRename.equals("")) && (existingCompareLabel.equals(originalLabelBeforeRename))) {
+                if ((!originalLabelBeforeRename.equals("")) && existingCompareLabel.equals(originalLabelBeforeRename)) {
                     /**
                      * special case: control input terminal. This terminal does
                      * not generate "output" values, therefore don't consider

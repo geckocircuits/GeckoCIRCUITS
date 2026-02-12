@@ -41,7 +41,7 @@ class ReglerViewMotDialog extends DialogElementCONTROL<ReglerVIEWMOT> {
                 getClassFromContainer(AbstractCircuitBlockInterface.class);
         for (AbstractCircuitBlockInterface elem : possibleElements) {
             if (elem instanceof AbstractMotor) {
-                for (String parameterString : ((AbstractCircuitBlockInterface) (elem)).getParameterStringIntern()) {
+                for (String parameterString : ((AbstractCircuitBlockInterface) elem).getParameterStringIntern()) {
                     labelListeElementLK2.add(elem.getStringID() + "." + parameterString);
                 }
             }

@@ -26,8 +26,8 @@ public final class SignalCalculatorTriangle extends AbstractSignalCalculatorPeri
     protected void calculateStartSignal(final double dtx, final double txEnd, final double phaseX) {
         double txValue = 0;
         while (txValue < (txEnd * phaseX / (2 * Math.PI))) {
-            final double dyUPx = (_amplitudeAC * 2 * _frequency * dtx) / _dutyRatio;
-            final double dyDOWNx = (_amplitudeAC * 2 * _frequency * dtx) / (1 - _dutyRatio);
+            final double dyUPx = _amplitudeAC * 2 * _frequency * dtx / _dutyRatio;
+            final double dyDOWNx = _amplitudeAC * 2 * _frequency * dtx / (1 - _dutyRatio);
                         
             if (_aufsteigend) {
                 _triangle += dyUPx;
@@ -52,8 +52,8 @@ public final class SignalCalculatorTriangle extends AbstractSignalCalculatorPeri
     @Override
     public void berechneYOUT(final double deltaT) {
         //signal= amplitudeAC*(2/Math.PI*Math.asin(Math.sin(2*Math.PI*frequenz*t -phase))) +anteilDC; 
-        _dyUP = (_amplitudeAC * 2 * _frequency * deltaT) / _dutyRatio;
-        _dyDOWN = (_amplitudeAC * 2 * _frequency * deltaT) / (1 - _dutyRatio);
+        _dyUP = _amplitudeAC * 2 * _frequency * deltaT / _dutyRatio;
+        _dyDOWN = _amplitudeAC * 2 * _frequency * deltaT / (1 - _dutyRatio);
                         
         
         if (_aufsteigend) {

@@ -77,7 +77,7 @@ public abstract class AbstractInductor extends AbstractNonLinearCircuitComponent
     }
 
     private double getRQ() {
-        return Math.round(dpix * (2 * HEIGHT) / 7.0);
+        return Math.round(dpix * 2 * HEIGHT / 7.0);
     }
 
     @Override

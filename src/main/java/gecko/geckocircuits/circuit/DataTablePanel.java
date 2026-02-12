@@ -225,7 +225,7 @@ public class DataTablePanel extends JPanel {
                     numberHash += hashList.get(0).hashCode();
                 }
 
-                hash += (7 + hashList.hashCode() + numberHash) * (13 + (9 + data.indexOf(hashList)));
+                hash += (7 + hashList.hashCode() + numberHash) * (13 + 9 + data.indexOf(hashList));
             }
             return hash;
         }

@@ -116,7 +116,7 @@ public final class ReglerHysteresis extends RegelBlock implements ControlInputTw
 
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new ReglerHysteresisDialog(this);
     }
 

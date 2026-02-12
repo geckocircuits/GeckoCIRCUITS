@@ -75,7 +75,7 @@ public final class ScriptWindow extends JFrame {
     public ScriptWindow(SimulationAccess circuitSim) {
         _extSourceWindow = new ExtraFilesWindow(circuitSim);
         _circuit = circuitSim;
-        _nameGenerator = new Random((new Date()).getTime());
+        _nameGenerator = new Random(new Date().getTime());
         initComponents();
         _listModel = new DefaultListModel<>();
         jListFunctions.setModel(_listModel);

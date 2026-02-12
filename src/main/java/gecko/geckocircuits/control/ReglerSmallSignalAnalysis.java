@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.UserParameter;
-import static gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.control.calculators.SmallSignalCalculator;

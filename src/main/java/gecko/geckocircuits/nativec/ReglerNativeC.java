@@ -25,7 +25,6 @@ import gecko.geckocircuits.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.geckocircuits.control.ControlTypeInfo;
 import gecko.geckocircuits.control.RegelBlock;
-import gecko.geckocircuits.control.SpecialNameVisible;
 import gecko.geckocircuits.control.VariableTerminalNumber;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.control.javablock.ReglerJavaTriangles;
@@ -268,8 +267,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
 
         xKlickMin = (int) (dpix * (xPos - WIDTH));
         yKlickMin = (int) (dpix * (yPos - WIDTH));
-        xKlickMax = xKlickMin + (int) (dpix * (2 * WIDTH));
-        yKlickMax = yKlickMin + (int) (dpix * (1.0 * Math.max(XIN.size(), YOUT.size())));
+        xKlickMax = xKlickMin + (int) (dpix * 2 * WIDTH);
+        yKlickMax = yKlickMin + (int) (dpix * 1.0 * Math.max(XIN.size(), YOUT.size()));
 
         graphics.fillRect(xKlickMin, yKlickMin,
                 xKlickMax - xKlickMin, yKlickMax - yKlickMin);
@@ -284,7 +283,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         // Rote Dreiecke zum Klicken --> Aenderung der Terminal-Anzahl:
         graphics.setColor(Color.red);
         final int delta = THREE;  // Abstand vom roten Dreieck vom SCOPE-Block (nach oben bzw. nach unten)
-        final int xd0 = (dpix * xPos) - dpix, xd1 = (dpix * (xPos) + DIAMETER) - dpix, xd2 = (dpix * (xPos)) - DIAMETER - dpix;
+        final int xd0 = (dpix * xPos) - dpix, xd1 = dpix * xPos + DIAMETER - dpix, xd2 = (dpix * xPos) - DIAMETER - dpix;
         final int yp0 = (int) (dpix * (yPos - WIDTH - HEIGHT) - delta), yp1 = (int) (dpix * (yPos - WIDTH) - delta);
         final int ym1 = (int) (dpix * (yPos - WIDTH + Math.max(XIN.size(), YOUT.size())) + delta),
                 ym0 = (int) (dpix * (yPos - WIDTH + Math.max(XIN.size(), YOUT.size()) + HEIGHT) + delta);
@@ -292,8 +291,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
         graphics.fillPolygon(new int[]{xd0, xd1, xd2}, new int[]{yp0, yp1, yp1}, THREE);
         graphics.fillPolygon(new int[]{xd0, xd1, xd2}, new int[]{ym0, ym1, ym1}, THREE);
 
-        final int xdOUT0 = (dpix * xPos) + dpix, xdOUT1 = (dpix * (xPos) + DIAMETER) + dpix,
-                xdOUT2 = (dpix * (xPos)) - DIAMETER + dpix;
+        final int xdOUT0 = (dpix * xPos) + dpix, xdOUT1 = dpix * xPos + DIAMETER + dpix,
+                xdOUT2 = (dpix * xPos) - DIAMETER + dpix;
         final int ypOUT0 = (int) (dpix * (yPos - WIDTH - HEIGHT) - delta), ypOUT1 = (int) (dpix * (yPos - WIDTH) - delta);
         final int ymOUT1 = (int) (dpix * (yPos - WIDTH + Math.max(XIN.size(), YOUT.size())) + delta),
                 ymOUT0 = (int) (dpix * (yPos - WIDTH + Math.max(XIN.size(), YOUT.size()) + HEIGHT) + delta);
@@ -401,7 +400,7 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
     }
     
     @Override
-    protected final Window openDialogWindow() {         
+    protected Window openDialogWindow() {         
             // alles OK, 'tools.jar' ist vorhanden und der JAVA-Block kann korrekt hochgefahren werden 
             
             // if Native Library has already been loaded, it's time to unload it

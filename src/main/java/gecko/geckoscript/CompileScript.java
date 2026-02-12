@@ -15,8 +15,6 @@
 package gecko.geckoscript;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoRuntimeException;
 import gecko.geckocircuits.control.javablock.AbstractCompileObject;
 import gecko.geckocircuits.control.javablock.CodeWindowModern;
 import gecko.geckocircuits.control.javablock.CompileObject;

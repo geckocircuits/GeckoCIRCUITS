@@ -23,7 +23,7 @@ public interface Operationable {
 
     @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
             justification = "Abstract class - assertions are design-time checks for programmer error, not runtime exceptions")
-    public abstract class OperationInterface {
+    abstract class OperationInterface {
 
         final String _operationName;
         private final I18nKeys _documentation;

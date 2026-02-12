@@ -127,7 +127,7 @@ public final class SuggestionField extends JTextField {
             public void focusLost(FocusEvent e) {
                 SuggestionField.this._dialog.setVisible(false);
 
-                if ((SuggestionField.this.getText().equals("")) && (e.getOppositeComponent() != null) && (e.getOppositeComponent().getName() != null)) {
+                if (SuggestionField.this.getText().equals("") && (e.getOppositeComponent() != null) && (e.getOppositeComponent().getName() != null)) {
                     if (!e.getOppositeComponent().getName().equals("suggestFieldDropdownButton")) {
                         SuggestionField.this.setText(SuggestionField.this._hint);
                     }

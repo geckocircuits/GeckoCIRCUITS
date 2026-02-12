@@ -15,9 +15,6 @@
 package gecko.geckocircuits.nativec;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Vector;
 
 /**
  * Used to maintain the Classloader and call Native Functions

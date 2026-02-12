@@ -208,8 +208,8 @@ public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCi
     @Override
     public Collection<AbstractBlockInterface> getHiddenSubCircuitElements() {
 
-        controlledSource1.directPotentialGain.setValueWithoutUndo(_forwardBeta.getValue() / (_baseResistance.getValue()));
-        controlledSource2.directPotentialGain.setValueWithoutUndo(_backwardBeta.getValue() / (_baseResistance.getValue()));
+        controlledSource1.directPotentialGain.setValueWithoutUndo(_forwardBeta.getValue() / _baseResistance.getValue());
+        controlledSource2.directPotentialGain.setValueWithoutUndo(_backwardBeta.getValue() / _baseResistance.getValue());
 
         _resistor1._resistance.setValueWithoutUndo(_baseResistance.getValue());
 

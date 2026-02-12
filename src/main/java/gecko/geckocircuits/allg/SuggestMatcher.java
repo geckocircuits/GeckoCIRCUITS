@@ -14,7 +14,7 @@
 package gecko.geckocircuits.allg;
 
 
-public abstract interface SuggestMatcher
+public interface SuggestMatcher
 {
-  public abstract boolean matches(String paramString1, String paramString2);
+  boolean matches(String paramString1, String paramString2);
 }

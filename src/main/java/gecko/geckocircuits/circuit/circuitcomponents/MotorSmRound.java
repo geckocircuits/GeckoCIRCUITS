@@ -88,8 +88,8 @@ public final class MotorSmRound extends AbstractMotorSM {
         // Block 'isdq,psimdq': 
         double phimX1 = Math.sqrt(psimd * psimd + psimq * psimq), phimX2 = psiT / 1e3;
         double phim = (phimX1 > phimX2) ? phimX1 : phimX2;
-        double inv_Lm = (Mf - Mi) / Math.PI * (((phim - psiT) * Math.atan(tauT * (phim - psiT)) - psiT * Math.atan(tauT * psiT))
-                + 0.5 / tauT * (Math.log(1 + (tauT * psiT) * (tauT * psiT)) - Math.log(1 + tauT * tauT * (phim - psiT) * (phim - psiT)))) / phim
+        double inv_Lm = (Mf - Mi) / Math.PI * ((phim - psiT) * Math.atan(tauT * (phim - psiT)) - psiT * Math.atan(tauT * psiT)
+                + 0.5 / tauT * (Math.log(1 + tauT * psiT * tauT * psiT) - Math.log(1 + tauT * tauT * (phim - psiT) * (phim - psiT)))) / phim
                 + 0.5 * (Mf + Mi);
 
         double ddt_psimd = (isd * (Rkd / Llkd - _statorResistance / Lls)

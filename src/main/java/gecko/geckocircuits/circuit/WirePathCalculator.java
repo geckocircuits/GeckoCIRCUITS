@@ -352,8 +352,8 @@ public class WirePathCalculator {
             GridPoint next = points.get(i + 1);
 
             // Check if direction changes at this point
-            boolean prevHorizontal = (prev.y == current.y);
-            boolean nextHorizontal = (current.y == next.y);
+            boolean prevHorizontal = prev.y == current.y;
+            boolean nextHorizontal = current.y == next.y;
 
             if (prevHorizontal != nextHorizontal) {
                 corners++;
@@ -385,8 +385,8 @@ public class WirePathCalculator {
             GridPoint next = points.get(i + 1);
 
             // Keep point if it's a corner (direction changes)
-            boolean prevHorizontal = (prev.y == current.y);
-            boolean nextHorizontal = (current.y == next.y);
+            boolean prevHorizontal = prev.y == current.y;
+            boolean nextHorizontal = current.y == next.y;
 
             if (prevHorizontal != nextHorizontal) {
                 simplified.add(new GridPoint(current));

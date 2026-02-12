@@ -20,7 +20,7 @@ package gecko;
  * @author andy
  */
 public interface ControlCalculatableMatrix {
-    static final long serialVersionUID = 36474232114L;
+    long serialVersionUID = 36474232114L;
     @SuppressWarnings("PMD")
     double[][] calculateYOUT(double[][] xIN, double time, double deltaT) throws Exception;
     void init();

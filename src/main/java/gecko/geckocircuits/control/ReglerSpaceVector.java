@@ -32,7 +32,7 @@ public final class ReglerSpaceVector extends RegelBlock {
     private static final double WIDTH = 1.4;
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return svd;
     }
 
@@ -79,13 +79,13 @@ public final class ReglerSpaceVector extends RegelBlock {
         Color origColor = graphics.getColor();
         graphics.setColor(getBackgroundColor());  // default        
 
-        graphics.fillRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - WIDTH + 1)), (int) (dpix * (2 * DA_VALUE)), (int) (dpix * NO_INPUTS));
+        graphics.fillRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - WIDTH + 1)), (int) (dpix * 2 * DA_VALUE), (int) (dpix * NO_INPUTS));
         graphics.setColor(origColor);
-        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - WIDTH + 1)), (int) (dpix * (2 * DA_VALUE)), (int) (dpix * NO_INPUTS));
+        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - WIDTH + 1)), (int) (dpix * 2 * DA_VALUE), (int) (dpix * NO_INPUTS));
         int ds1 = 3, ds2 = 3;
-        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - 1 + 1)) - ds2, ds1, (int) (dpix * (2)) + 2 * ds2);
-        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y + 2 + 1)) - ds2, ds1, (int) (dpix * (2)) + 2 * ds2);
-        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y + 5 + 1)) - ds2, ds1, (int) (dpix * (2)) + 2 * ds2);
+        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - 1 + 1)) - ds2, ds1, (int) (dpix * 2) + 2 * ds2);
+        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y + 2 + 1)) - ds2, ds1, (int) (dpix * 2) + 2 * ds2);
+        graphics.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y + 5 + 1)) - ds2, ds1, (int) (dpix * 2) + 2 * ds2);
 
     }
 

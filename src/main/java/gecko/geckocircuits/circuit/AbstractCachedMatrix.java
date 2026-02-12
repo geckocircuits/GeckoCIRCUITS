@@ -34,7 +34,7 @@ abstract class AbstractCachedMatrix {
             long newHashCode = 0;
 
             for (int i = 0; i < _originalMatrix.length; i++) {
-                newHashCode += java.util.Arrays.hashCode(_originalMatrix[i]) * (991 * (i + 3));
+                newHashCode += java.util.Arrays.hashCode(_originalMatrix[i]) * 991 * (i + 3);
             }
             _secondHashCode = newHashCode;
         }
@@ -47,9 +47,9 @@ abstract class AbstractCachedMatrix {
         if (_hashCode == -1) {
             long newHashCode = HASH_13;
             for (int i = 0; i < _originalMatrix.length; i++) {
-                newHashCode += java.util.Arrays.hashCode(_originalMatrix[i]) * (829 * (i + 7));                
+                newHashCode += java.util.Arrays.hashCode(_originalMatrix[i]) * 829 * (i + 7);                
             }
-            _hashCode = (int) ((int) (newHashCode ^ (newHashCode >>> INT_LENGTH)));
+            _hashCode = (int) (int) (newHashCode ^ (newHashCode >>> INT_LENGTH));
         }
         return _hashCode;
     }

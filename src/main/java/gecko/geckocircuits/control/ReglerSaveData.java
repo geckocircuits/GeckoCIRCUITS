@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.Enabled;

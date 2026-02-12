@@ -23,12 +23,12 @@ import gecko.geckocircuits.control.Point;
  * @since Sprint 15 - GUI-free refactoring
  */
 public interface SubCircuitTerminable {
-    public TerminalSubCircuitBlock getBlockTerminal();
-    public EnumTerminalLocation getTerminalLocation();
-    public Point getSheetPosition();
-    public void setSheetPositionWithoutUndo(Point sheetPosition);
-    public String getStringID();
-    public CircuitSheet getParentCircuitSheet();
+    TerminalSubCircuitBlock getBlockTerminal();
+    EnumTerminalLocation getTerminalLocation();
+    Point getSheetPosition();
+    void setSheetPositionWithoutUndo(Point sheetPosition);
+    String getStringID();
+    CircuitSheet getParentCircuitSheet();
     
     /**
      * Get foreground color as RGB integer.

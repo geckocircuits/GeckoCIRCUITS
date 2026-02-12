@@ -18,7 +18,6 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.net.URI;
 import java.net.URL;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -96,7 +95,7 @@ public class GeckoDialog extends JDialog {
     public void setGeckoIconImage() {
         try {
             URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
-            this.setIconImage((new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL())).getImage());
+            this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
         } catch (java.net.URISyntaxException | java.net.MalformedURLException e) {
             // Exception intentionally ignored: Icon loading is optional - dialog works without it
         }

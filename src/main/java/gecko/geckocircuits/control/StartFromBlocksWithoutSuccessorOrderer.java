@@ -41,7 +41,7 @@ final class StartFromBlocksWithoutSuccessorOrderer extends AbstractSinkControlOr
     }
     
     @Override
-    final String getRemainingWarningString() {
+    String getRemainingWarningString() {
         return "The following control blocks don't have any"
                 + " path to any control block: ";
     }

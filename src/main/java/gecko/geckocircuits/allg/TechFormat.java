@@ -36,7 +36,7 @@ public class TechFormat implements Serializable {
     //------------------------------
 
     public TechFormat() {
-        df = (DecimalFormat) (NumberFormat.getNumberInstance(Locale.of("en", "US")));
+        df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.of("en", "US"));
     }
 
     public void setMaximumDigits(int anzDigits) {

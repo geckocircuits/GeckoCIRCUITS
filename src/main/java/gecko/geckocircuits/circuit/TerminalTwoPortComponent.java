@@ -79,7 +79,7 @@ public final class TerminalTwoPortComponent extends AbstractTerminal {
         super.paintComponent(graphics);
     }        
     
-    public final void setIsFlowSymbolTerminal(final boolean value) {
+    public void setIsFlowSymbolTerminal(final boolean value) {
         _isFlowSymbolTerminal = value;
     }
 }

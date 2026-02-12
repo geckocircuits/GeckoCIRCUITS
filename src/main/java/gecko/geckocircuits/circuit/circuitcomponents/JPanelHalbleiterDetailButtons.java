@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.allg.FormatJTextField;
 import gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import gecko.geckocircuits.allg.GlobalFonts;
@@ -127,7 +126,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
             _jlS2.setText("-");
             _jlS2b.setText("Loss file not found!");
         }
-        Color fS2 = (isFileLinkOK) ? Color.decode("0x006400") : Color.red;
+        Color fS2 = isFileLinkOK ? Color.decode("0x006400") : Color.red;
         int cls = 20;
         _jlS2.setColumns(cls);
         //jlS2.setFont(GlobalFonts.LAB_FONT_DIALOG_1);

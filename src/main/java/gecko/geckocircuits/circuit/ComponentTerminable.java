@@ -20,6 +20,6 @@ import java.util.Collection;
  * @author andy
  */
 public interface ComponentTerminable {
-    public Collection<String> getAllNodeLabels();
-    public Collection<? extends TerminalInterface> getAllTerminals();
+    Collection<String> getAllNodeLabels();
+    Collection<? extends TerminalInterface> getAllTerminals();
 }

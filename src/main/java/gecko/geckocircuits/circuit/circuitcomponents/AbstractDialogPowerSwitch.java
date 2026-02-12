@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.circuit.losscalculation.LossCalculationDetail;
 import static gecko.geckocircuits.circuit.losscalculation.LossCalculationDetail.DETAILED;
 import static gecko.geckocircuits.circuit.losscalculation.LossCalculationDetail.SIMPLE;
 import gecko.geckocircuits.circuit.losscalculation.LossProperties;

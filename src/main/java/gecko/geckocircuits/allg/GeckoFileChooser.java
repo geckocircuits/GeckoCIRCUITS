@@ -78,7 +78,7 @@ public final class GeckoFileChooser {
         
         String fileName = _fileChooser.getSelectedFile().getAbsolutePath();
         if (!fileName.endsWith(_fileEnding)) {
-            fileName += (_fileEnding);
+            fileName += _fileEnding;
         }
         return new File(fileName);
     }

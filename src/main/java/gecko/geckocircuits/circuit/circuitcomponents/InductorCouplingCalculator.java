@@ -29,7 +29,7 @@ public class InductorCouplingCalculator extends InductorCalculator {
         else if (_solverType == SolverType.SOLVER_TRZ)
             _current = _oldCurrent + 0.5*addCurrent; 
         else if (_solverType == SolverType.SOLVER_GS)
-            _current = (2.0 / 3.0) * addCurrent + (4.0 / 3.0) * _oldCurrent - (1.0 / 3.0) * _oldOldCurrent; 
+            _current = 2.0 / 3.0 * addCurrent + 4.0 / 3.0 * _oldCurrent - 1.0 / 3.0 * _oldOldCurrent; 
     }
     
     //for making TRZ working with coupled inductors - this is ugly, should be implemented in a better way later
@@ -37,7 +37,7 @@ public class InductorCouplingCalculator extends InductorCalculator {
     protected double stampVectorBTRZ(double dt) {
         double LPproduct = couplingGroup.getLPproductForTRZ(this); //really ugly - that's why it should be implemented in a better way!
         
-        return (-_oldCurrent - 0.5*dt*LPproduct);
+        return -_oldCurrent - 0.5*dt*LPproduct;
     }
     
     public void setGroup(CoupledInductorsGroup group) {

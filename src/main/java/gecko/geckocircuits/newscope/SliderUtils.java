@@ -98,9 +98,9 @@ public final class SliderUtils {
             final double value, final double after) {
         switch (maxMin) {
             case MAXIMUM:
-                return (before < value && value > after);
+                return before < value && value > after;
             case MINIMUM:
-                return (before > value && value < after);
+                return before > value && value < after;
             default:
                 assert false;
                 return false;
@@ -157,7 +157,7 @@ public final class SliderUtils {
 
             while (true) {
                 if (extremaCondition(minMax, before, value, after)) {
-                    return wsRAM.getTimeValue(((beginIndex + endIndex) / 2), 0);                                        
+                    return wsRAM.getTimeValue((beginIndex + endIndex) / 2, 0);                                        
                 } else {
                     before = value;
                     value = after;

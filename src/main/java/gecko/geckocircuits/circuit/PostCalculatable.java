@@ -19,6 +19,6 @@ package gecko.geckocircuits.circuit;
  * @author andreas
  */
 public interface PostCalculatable {
-    public void doInitialization();
+    void doInitialization();
     void doCalculation(double dt, double t);    
 }

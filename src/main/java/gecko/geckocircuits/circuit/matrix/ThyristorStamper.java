@@ -246,7 +246,7 @@ public class ThyristorStamper implements IStatefulStamper {
     public void updateStateWithGate(double gateSignal, double vx, double vy, double time) {
         boolean previousState = isOn;
         double vForward = vx - vy;
-        boolean gateTrigger = (gateSignal == 1);
+        boolean gateTrigger = gateSignal == 1;
 
         if (isOn) {
             // Currently ON: check for turn-off condition (current zero)

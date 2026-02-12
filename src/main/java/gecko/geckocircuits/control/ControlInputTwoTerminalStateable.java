@@ -14,9 +14,9 @@
 package gecko.geckocircuits.control;
 
 public interface ControlInputTwoTerminalStateable {
-    abstract void setFolded();
-    abstract void setExpanded(); 
+    void setFolded();
+    void setExpanded(); 
     
-    abstract boolean isExternalSet();
-    abstract void setExternalUsed(final boolean value);
+    boolean isExternalSet();
+    void setExternalUsed(final boolean value);
 }

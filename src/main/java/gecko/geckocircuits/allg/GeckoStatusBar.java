@@ -212,7 +212,7 @@ public class GeckoStatusBar extends JPanel {
         // 20 MB for the program itself!
         try {
             _dataMemMB = (int) (1.35 * dc.getUsedRAMSizeInMB()) + 35;
-            final int percentage = (int) ((100 * _dataMemMB) / _usedMemMB);
+            final int percentage = (int) (100 * _dataMemMB / _usedMemMB);
             double fraction = _dataMemMB * 1.0 / _totalMemMB;
             fraction = Math.min(fraction, 1);
 

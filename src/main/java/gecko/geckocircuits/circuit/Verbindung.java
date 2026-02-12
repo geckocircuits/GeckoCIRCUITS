@@ -17,7 +17,6 @@ import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.control.DialogLabelEingeben;
 import gecko.geckocircuits.control.Point;
-import gecko.geckocircuits.control.NetzlisteCONTROL;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;

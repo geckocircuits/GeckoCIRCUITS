@@ -14,7 +14,6 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.geckocircuits.allg.UserParameter;
-import static gecko.geckocircuits.circuit.AbstractCircuitSheetComponent.dpix;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ComponentDirection;
 import gecko.geckocircuits.circuit.TerminalFixedPosition;

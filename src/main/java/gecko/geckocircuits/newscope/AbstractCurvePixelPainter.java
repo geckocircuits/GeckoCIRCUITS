@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.control.PreviewDialogRectangular;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 

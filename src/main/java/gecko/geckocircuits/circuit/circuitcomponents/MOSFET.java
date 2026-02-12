@@ -160,12 +160,12 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
 
     private void drawAntiParallelDiode(final Graphics2D graphics) {
 
-        graphics.drawLine((int) (dpix * (WIDTH - ANTI_DIODE_SIZE)), (int) (-dpix * (ANTI_DIODE_SIZE)),
-                (int) (dpix * (WIDTH + ANTI_DIODE_SIZE)), (int) (-dpix * (ANTI_DIODE_SIZE)));
+        graphics.drawLine((int) (dpix * (WIDTH - ANTI_DIODE_SIZE)), (int) (-dpix * ANTI_DIODE_SIZE),
+                (int) (dpix * (WIDTH + ANTI_DIODE_SIZE)), (int) (-dpix * ANTI_DIODE_SIZE));
         graphics.fillPolygon(
                 new int[]{(int) (dpix * WIDTH), (int) (dpix * (WIDTH - ANTI_DIODE_SIZE)), (int) (dpix * (WIDTH + ANTI_DIODE_SIZE))},
-                new int[]{(int) (-dpix * (ANTI_DIODE_SIZE)), (int) (dpix * (ANTI_DIODE_SIZE)),
-            (int) (dpix * (ANTI_DIODE_SIZE))}, 3);
+                new int[]{(int) (-dpix * ANTI_DIODE_SIZE), (int) (dpix * ANTI_DIODE_SIZE),
+            (int) (dpix * ANTI_DIODE_SIZE)}, 3);
     }
 
     @Override

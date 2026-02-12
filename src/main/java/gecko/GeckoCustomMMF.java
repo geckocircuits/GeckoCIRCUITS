@@ -210,7 +210,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
         if (_mmf == null) {
           return false;  
         } 
-        return !(_mmf.isFree());
+        return !_mmf.isFree();
     }
     
     /**

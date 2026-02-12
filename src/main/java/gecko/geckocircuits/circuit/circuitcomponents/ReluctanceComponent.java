@@ -19,5 +19,5 @@ package gecko.geckocircuits.circuit.circuitcomponents;
  * @author andreas
  */
 public interface ReluctanceComponent {
-    abstract AbstractCircuitBlockInterface getReluctanceMeasurementComponent();    
+    AbstractCircuitBlockInterface getReluctanceMeasurementComponent();    
 }

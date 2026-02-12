@@ -34,7 +34,7 @@ public abstract class AbstractCurrentSource extends AbstractCircuitSource {
         graphics.fillPolygon(new int[]{0, (int) (ARROW_HEAD_WIDTH * WIDTH * dpix), (int) (-ARROW_HEAD_WIDTH * WIDTH * dpix)},
                 new int[]{(int) (ARROW_HEAD_LENGTH * WIDTH * dpix), 0, 0}, NO_TRI_POINTS);
         graphics.fillRect((int) (-ARROW_LINE_WIDTH * WIDTH * dpix),
-                (int) (dpix * (-I_ARROW_LENGTH * WIDTH) + 1),
+                (int) (dpix * -I_ARROW_LENGTH * WIDTH + 1),
                 (int) (dpix * 2 * ARROW_LINE_WIDTH * WIDTH), (int) (dpix * I_ARROW_LENGTH * WIDTH));
     }
     

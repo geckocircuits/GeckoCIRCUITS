@@ -65,7 +65,7 @@ public class DelegateIntSpinner<M extends ModelMVC<Integer>> extends JSpinner
     }
 
     public Integer getIntegerValue() {
-        return (Integer) (super.getValue());
+        return (Integer) super.getValue();
     }
 
     /**

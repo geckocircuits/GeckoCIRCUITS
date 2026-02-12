@@ -14,7 +14,6 @@
 package gecko.geckocircuits.api;
 
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
-import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.control.RegelBlock;
 import java.util.List;

@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

@@ -14,7 +14,6 @@
 package gecko.modelviewcontrol;
 
 
-import gecko.modelviewcontrol.ModelMVCGeneric;
 
 /**
  *
@@ -27,9 +26,9 @@ public interface IGenericMVCView <L extends ModelMVCGeneric> {
      * @param pointModel
      * @param undoRedoText
      */
-    abstract public void registerModel(final L pointModel, String undoRedoText);
+    void registerModel(final L pointModel, String undoRedoText);
     /**
      * 
      */
-    abstract public void unregisterModel();
+    void unregisterModel();
 }

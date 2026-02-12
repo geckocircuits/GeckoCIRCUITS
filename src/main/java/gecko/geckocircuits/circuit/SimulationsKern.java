@@ -18,7 +18,6 @@ import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterfa
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractMotor;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractVoltageSource;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCurrentSource;
-import gecko.geckocircuits.allg.DialogWarningNodeNumber;
 import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInductor;
 import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
@@ -293,7 +292,7 @@ public class SimulationsKern implements ISimulationEngine {
         for (int i1 = 0; i1 < interessanteKnotenLK.length; i1 += 2) {
             double potentialdifferenz = -1;
             if (interessanteKnotenLK[i1 + 1] == 0) {
-                potentialdifferenz = (lkmLK.p[1 + interessanteKnotenLK[i1] - 1]);
+                potentialdifferenz = lkmLK.p[1 + interessanteKnotenLK[i1] - 1];
             } else if (interessanteKnotenLK[i1] == 0) {
                 potentialdifferenz = (0 - lkmLK.p[interessanteKnotenLK[i1 + 1]]);
             } else if ((interessanteKnotenLK[i1 + 1] == 0) && (interessanteKnotenLK[i1] == 0)) {

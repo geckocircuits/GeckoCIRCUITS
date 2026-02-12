@@ -13,8 +13,6 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import static gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitchCalculator.NEARLY_ZERO_R;
-import static gecko.geckocircuits.circuit.CircuitComponentCore.disturbanceValue;
 
 
 public class ThyristorCalculator extends AbstractSwitchCalculator implements CurrentCalculatable {
@@ -106,6 +104,6 @@ public class ThyristorCalculator extends AbstractSwitchCalculator implements Cur
     }
 
     private boolean isTurnOnNeeded() {
-        return _gateValue && (((_voltage) > (disturbanceValue * _uForward)) && (_rDt > _rON));
+        return _gateValue && (_voltage > (disturbanceValue * _uForward)) && (_rDt > _rON);
     }
 }

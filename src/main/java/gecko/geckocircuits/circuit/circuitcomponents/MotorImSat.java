@@ -163,7 +163,7 @@ public final class MotorImSat extends AbstractMotorIMCommon {
             psim = 0.001 * psiT;
         }
         double inv_Lm = (Mf - Mi) / Math.PI * ((psim - psiT) * Math.atan(tauT * (psim - psiT)) - psiT * Math.atan(tauT * psiT)
-                + 0.5 / tauT * (Math.log(1 + (tauT * psiT) * (tauT * psiT)) - Math.log(1 + tauT * tauT * (psim - psiT) * (psim - psiT)))) / psim + 0.5 * (Mf + Mi);
+                + 0.5 / tauT * (Math.log(1 + tauT * psiT * tauT * psiT) - Math.log(1 + tauT * tauT * (psim - psiT) * (psim - psiT)))) / psim + 0.5 * (Mf + Mi);
         // Block 'vrdq': 
         double urd = 2.0 / 3.0 * (urab * Math.cos(_thetaElectric) - urbc * Math.cos(_thetaElectric - 2 * Math.PI / 3));
         double urq = 2.0 / 3.0 * (urab * Math.sin(_thetaElectric) - urbc * Math.sin(_thetaElectric - 2 * Math.PI / 3));
@@ -234,7 +234,7 @@ public final class MotorImSat extends AbstractMotorIMCommon {
     }
 
     @Override // im-sat
-    final double calculateElectricTorque() {
+    double calculateElectricTorque() {
         return 1.5 * (isq * psisd - isd * psisq);
     }
 

@@ -240,7 +240,7 @@ public final class SimulationAccess implements GeckoFileable {
         mainWindow.openFile(fileName);
     }
 
-    public final void importFromFile(final String fileName, final String importIntoSubcircuit)
+    public void importFromFile(final String fileName, final String importIntoSubcircuit)
             throws FileNotFoundException {
         MainWindow.importComponentsFromFile(fileName, importIntoSubcircuit);
     }

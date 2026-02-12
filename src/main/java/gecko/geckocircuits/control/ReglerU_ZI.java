@@ -34,7 +34,7 @@ public final class ReglerU_ZI extends RegelBlock {
     private static double br = 1.4, da = 0.4;
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return _uziDisplay;
     }
     
@@ -88,13 +88,13 @@ public final class ReglerU_ZI extends RegelBlock {
         Color origColor = g.getColor();
         g.setColor(getBackgroundColor());        
 
-        g.fillRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - br+1)), (int) (dpix * (2 * da)), (int) (dpix * (1.0 * Math.max(tnX, 0))));
+        g.fillRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - br+1)), (int) (dpix * 2 * da), (int) (dpix * 1.0 * Math.max(tnX, 0)));
         g.setColor(origColor);
-        g.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - br+1)), (int) (dpix * (2 * da)), (int) (dpix * (1.0 * Math.max(tnX, 0))));
+        g.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y - br+1)), (int) (dpix * 2 * da), (int) (dpix * 1.0 * Math.max(tnX, 0)));
 
         int ds1 = 3, ds2 = 3;
-        g.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y )) - ds2, ds1, (int) (dpix * (1)) + 2 * ds2);
-        g.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y + 2)) - ds2, ds1, (int) (dpix * (1)) + 2 * ds2);
+        g.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * y ) - ds2, ds1, (int) (dpix * 1) + 2 * ds2);
+        g.drawRect((int) (dpix * (x - 0.4)), (int) (dpix * (y + 2)) - ds2, ds1, (int) (dpix * 1) + 2 * ds2);
     }
 
     @Override

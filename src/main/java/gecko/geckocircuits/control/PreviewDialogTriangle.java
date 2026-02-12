@@ -39,8 +39,8 @@ public class PreviewDialogTriangle extends PreviewDialog {
         //------------------
         double tx = 0, tEnd = b, dt = 1, dreieck = 0;
         double phaseX = phase * Math.PI / 180.0, amplitudeAC = ac, frequenz = 1.0 / b, tastverhaeltnis = duty;
-        double dyUP = (amplitudeAC * 2 * frequenz * dt) / tastverhaeltnis;
-        double dyDOWN = (amplitudeAC * 2 * frequenz * dt) / (1 - tastverhaeltnis);
+        double dyUP = amplitudeAC * 2 * frequenz * dt / tastverhaeltnis;
+        double dyDOWN = amplitudeAC * 2 * frequenz * dt / (1 - tastverhaeltnis);
         boolean aufsteigend = true;
         while (tx < (tEnd * phaseX / (2 * Math.PI))) {
             if (aufsteigend) {

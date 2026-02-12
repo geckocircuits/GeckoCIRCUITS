@@ -14,7 +14,6 @@
 package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.SaveViewFrame;
-import gecko.geckocircuits.allg.StartupWindow;
 import gecko.geckocircuits.allg.TechFormat;
 import gecko.geckocircuits.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -27,7 +26,6 @@ import gecko.geckocircuits.newscope.MemoryContainer;
 import gecko.geckocircuits.newscope.NewScope;
 import gecko.geckocircuits.newscope.ScopeSettings;
 import gecko.geckocircuits.newscope.TimeSeriesConstantDt;
-import gecko.geckocircuits.control.QuasiPeakCalculator;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.ArrayList;
@@ -572,7 +570,7 @@ public final class TestReceiverWindow extends JFrame {
     }//GEN-LAST:event_formComponentResized
 
     private List<Integer> eliminateWithSlope(final double baseFreq, float[] maximumCalculation, List<Integer> filtered) {
-        final double userFilterStrength = ((Double) jSpinnerThreshold.getValue());
+        final double userFilterStrength = (Double) jSpinnerThreshold.getValue();
 
         if (userFilterStrength < 1e-3) {
             return filtered;
@@ -924,7 +922,7 @@ public final class TestReceiverWindow extends JFrame {
                 }
 
 
-                double lowerLimit = ((Double) jSpinnerMinFreq.getValue());
+                double lowerLimit = (Double) jSpinnerMinFreq.getValue();
                 double upperLimit = (Double) jSpinnerMaximum.getValue();
 
                 double roundedLowerLimit = ((long) (lowerLimit / baseFreq)) * baseFreq;

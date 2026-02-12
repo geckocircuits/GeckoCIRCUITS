@@ -18,7 +18,7 @@ package gecko.geckocircuits.circuit;
  * @author andreas
  */
 public interface ControlTerminable {
-    public int getNodeNumber();    
+    int getNodeNumber();    
     void setNodeNumber(final int newValue);    
     void clearNodeNumber();                  
 }

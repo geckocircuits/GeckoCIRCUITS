@@ -116,7 +116,7 @@ public final class ReglerPI extends AbstractReglerSingleInputSingleOutput {
         
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new ReglerPIDialog(this);
     }
     

@@ -14,6 +14,6 @@
 package gecko.geckocircuits.control;
 
 public interface VariableTerminalNumber {
-    abstract void setInputTerminalNumber(final int number);
-    abstract void setOutputTerminalNumber(final int number);
+    void setInputTerminalNumber(final int number);
+    void setOutputTerminalNumber(final int number);
 }

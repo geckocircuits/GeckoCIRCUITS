@@ -379,9 +379,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         //remove all extra files (loss files, extra java files, nonlinearity files, etc.)
         LossProperties lossDescription = null;
         if (this instanceof AbstractSwitch) {
-            lossDescription = ((AbstractSwitch) (this)).getVerlustBerechnung();
+            lossDescription = ((AbstractSwitch) this).getVerlustBerechnung();
         } else if (this instanceof Diode) {
-            lossDescription = ((Diode) (this)).getVerlustBerechnung();
+            lossDescription = ((Diode) this).getVerlustBerechnung();
         }
         if (lossDescription != null) {
             lossDescription._lossCalculationDetailed.removeLossFile();

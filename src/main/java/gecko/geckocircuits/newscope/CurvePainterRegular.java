@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.datacontainer.DataContainerCompressable;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Stroke;

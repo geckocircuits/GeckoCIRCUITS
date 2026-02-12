@@ -143,7 +143,7 @@ public final class DataContainerNullData extends AbstractDataContainer implement
   }
 
   @Override
-  public final float getAVGValueInInterval(double intervalStart, double intervalStop, int columnIndex){
+  public float getAVGValueInInterval(double intervalStart, double intervalStop, int columnIndex){
     throw new UnsupportedOperationException("Not supported yet.");
   }
 

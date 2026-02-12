@@ -59,8 +59,8 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
             
             switch (_data.get(i)._outputData) {
                 case ABS:
-                    _outputSignal[i][0] = 2 * Math.sqrt((_freqsReal[index] * _freqsReal[index]
-                            + _freqsImag[index] * _freqsImag[index])) / _size;
+                    _outputSignal[i][0] = 2 * Math.sqrt(_freqsReal[index] * _freqsReal[index]
+                            + _freqsImag[index] * _freqsImag[index]) / _size;
                     break;
                 case REAL:
                     _outputSignal[i][0] = 2 * _freqsReal[index] / _size;
@@ -81,7 +81,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
     private void doSlidingFourierStep() {
         final double deltaReal = _newestDataReal - _oldestDataReal;        
         for (int i : _frequencyIndicesSet) {
-            final int index = (i * _idx) % _size;
+            final int index = i * _idx % _size;
             final double argument = -Math.PI *2* index / ((double) _size);            
             _freqsReal[i] += deltaReal * Math.cos(argument);
             _freqsImag[i] += deltaReal * Math.sin(argument);
@@ -106,7 +106,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
         final List<Integer> freqIndicesReduced = new ArrayList<Integer>();
         for (int i = 0; i < _data.size(); i++) {
             final double freq = _data.get(i)._frequency.getDoubleValue();
-            final int index = (int) Math.round((freq * _averageSpanSecs));
+            final int index = (int) Math.round(freq * _averageSpanSecs);
             if (!freqIndicesReduced.contains(index)) {
                 freqIndicesReduced.add(index);
             }
@@ -147,7 +147,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
         } else {
             assert _size == _timeData.length;
             for (int i = 0; i < _size; i++) {
-                _timeData[i] = inRealOld[(int) (i / (scalingFactor))];
+                _timeData[i] = inRealOld[(int) (i / scalingFactor)];
             }
         }
     }

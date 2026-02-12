@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URI;
 import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

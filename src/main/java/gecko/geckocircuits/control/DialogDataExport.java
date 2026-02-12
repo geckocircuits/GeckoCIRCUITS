@@ -15,7 +15,6 @@ package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.allg.GeckoFileChooser;
-import gecko.geckocircuits.allg.GetJarPath;
 import gecko.geckocircuits.control.ReglerSaveData.OutputType;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -217,7 +216,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
                 if (_initDone && !_inFillLists) {
                     DataIndexItem[] listItems = new DataIndexItem[jListSelected.getModel().getSize()];
                     for (int i = 0; i < listItems.length; i++) {
-                        listItems[i] = (DataIndexItem) (jListSelected.getModel().getElementAt(i));
+                        listItems[i] = (DataIndexItem) jListSelected.getModel().getElementAt(i);
                     }
                     _reglerDataSave.setSelectedSignals(listItems);
                 }

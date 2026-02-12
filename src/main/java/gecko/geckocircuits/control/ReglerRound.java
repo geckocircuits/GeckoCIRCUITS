@@ -38,7 +38,7 @@ public final class ReglerRound extends AbstractReglerSingleInputSingleOutput {
     }                
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new DialogWindowWithoutInput(this);
     }
     

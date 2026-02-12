@@ -21,7 +21,6 @@ package gecko.i18n.bot;
 
 import gecko.i18n.InitParameters;
 import java.util.Random;
-import java.lang.StringBuilder;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import gecko.i18n.translationtoolbox.TranslationDialog;

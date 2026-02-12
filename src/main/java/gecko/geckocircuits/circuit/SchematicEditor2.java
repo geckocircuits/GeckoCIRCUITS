@@ -99,7 +99,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             for (TerminalInterface term : elem.getAllTerminals()) {
                 final String existingCompareLabel = term.getLabelObject().getLabelString();
 
-                if ((!originalLabelBeforeRename.equals("")) && (existingCompareLabel.equals(originalLabelBeforeRename))) {
+                if ((!originalLabelBeforeRename.equals("")) && existingCompareLabel.equals(originalLabelBeforeRename)) {
                     /**
                      * special case: control input terminal. This terminal does
                      * not generate "output" values, therefore don't consider
@@ -165,10 +165,10 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         int px = mx / dpix;
         int py = my / dpix;
         final double pxd = mx * 1.0 / dpix, pyd = my * 1.0 / dpix;
-        if (Math.abs((px + 1) - pxd) < CLICK_RADIUS_RELATIVE) {
+        if (Math.abs(px + 1 - pxd) < CLICK_RADIUS_RELATIVE) {
             px++;
         }
-        if (Math.abs((py + 1) - pyd) < CLICK_RADIUS_RELATIVE) {
+        if (Math.abs(py + 1 - pyd) < CLICK_RADIUS_RELATIVE) {
             py++;
         }
         return new Point(px, py);
@@ -932,7 +932,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         // **************************
         //
         // wenn mehrere Elemente gleichzeitig markiert sind, werden alle gleichzeitig abgesetzt  -->        
-        if (!wirePenVisible && (_selectedComponents.size() > 0 && !isShiftClick) && (me.getClickCount() <= 1)) {
+        if (!wirePenVisible && _selectedComponents.size() > 0 && !isShiftClick && (me.getClickCount() <= 1)) {
 
             if (_mouseMoveMode == MouseMoveMode.MOVE_COMPONENTS) {
                 for (SubcircuitBlock testClickSub : _circuitSheet.getAllElements().getClassFromContainer(SubcircuitBlock.class)) {

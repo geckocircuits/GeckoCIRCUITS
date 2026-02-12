@@ -14,7 +14,6 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.control.ReglerOSZI;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;

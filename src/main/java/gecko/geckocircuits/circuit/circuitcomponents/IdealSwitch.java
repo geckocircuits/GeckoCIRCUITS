@@ -36,7 +36,7 @@ public final class IdealSwitch extends AbstractSwitch {
      * @return 
      */    
     @Override
-    final int getOnResistanceIndex() {
+    int getOnResistanceIndex() {
         return 1;
     }
     
@@ -47,7 +47,7 @@ public final class IdealSwitch extends AbstractSwitch {
      * @return 
      */
     @Override
-    final int getOffResistanceIndex() {
+    int getOffResistanceIndex() {
         return 2;
     }
     
@@ -64,7 +64,7 @@ public final class IdealSwitch extends AbstractSwitch {
         graphics.drawLine(0, -2 * dpix, 0, (int) (-dpix * WIDTH / 2));
         graphics.drawLine(0, 2 * dpix, 0, (int) (dpix * WIDTH / 2));
         graphics.fillPolygon(
-                new int[]{0, (int) (dpix * (ddx)), (int) (dpix * (HEIGHT + ddx)), (int) (dpix * HEIGHT)},
+                new int[]{0, (int) (dpix * ddx), (int) (dpix * (HEIGHT + ddx)), (int) (dpix * HEIGHT)},
                 new int[]{(int) (-dpix * WIDTH / 2), (int) (-dpix * (WIDTH / 2 + ddy)), 
                     (int) (dpix * (WIDTH / 2 - ddy)), (int) (dpix * WIDTH / 2)}, 4);
     }

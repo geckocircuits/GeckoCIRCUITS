@@ -19,7 +19,6 @@ import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.GeckoSim;
 import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.circuit.*;
-import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.*;
@@ -135,7 +134,7 @@ public class SubCircuitSheet extends CircuitSheet {
         super.drawCircuitSheet(g2d);
         g2d.setColor(Color.decode("0xaaaaaa"));  // zwischen GRAY (808080) und LIGHTGREY (d3d3d3)
         int dpix = AbstractCircuitSheetComponent.dpix;        
-        g2d.drawRect(0, 0, dpix * (_worksheetSize.getSizeX()), dpix * (_worksheetSize.getSizeY()));
+        g2d.drawRect(0, 0, dpix * _worksheetSize.getSizeX(), dpix * _worksheetSize.getSizeY());
     }       
     
     public void doSetVisibleAction() {

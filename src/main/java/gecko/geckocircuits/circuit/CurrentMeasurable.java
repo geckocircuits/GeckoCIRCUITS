@@ -20,5 +20,5 @@ import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterfa
  * @author andreas
  */
 public interface CurrentMeasurable {
-    abstract AbstractCircuitBlockInterface[] getCurrentMeasurementComponents(final ConnectorType connectorType);
+    AbstractCircuitBlockInterface[] getCurrentMeasurementComponents(final ConnectorType connectorType);
 }

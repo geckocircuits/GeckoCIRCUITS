@@ -17,7 +17,6 @@ import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
-import gecko.geckocircuits.control.calculators.NothingToDoCalculator;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -55,8 +54,8 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
         
     @Override
     public int istAngeklickt(final int mouseX, final int mouseY) {        
-        if (((getSheetPosition().x*dpix - dpix/2 <= mouseX) && mouseX <= (getSheetPosition().x*dpix + dpix/2) 
-                && (getSheetPosition().y*dpix - dpix/2 <= mouseY) && (mouseY <= getSheetPosition().y*dpix + dpix/2 ))) {
+        if ((getSheetPosition().x*dpix - dpix/2 <= mouseX) && mouseX <= (getSheetPosition().x*dpix + dpix/2) 
+                && (getSheetPosition().y*dpix - dpix/2 <= mouseY) && (mouseY <= getSheetPosition().y*dpix + dpix/2 )) {
             return 1;
         } else {
             return 0;

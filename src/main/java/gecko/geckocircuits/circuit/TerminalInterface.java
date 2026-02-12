@@ -24,5 +24,5 @@ public interface TerminalInterface extends Labable {
     Point getPosition();
     CircuitSheet getCircuitSheet();
     void paintComponent(final Graphics graphics);    
-    public ConnectorType getCategory();
+    ConnectorType getCategory();
 }

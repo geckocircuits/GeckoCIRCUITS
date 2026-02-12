@@ -13,7 +13,6 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.GeckoLineStyle;
 
 public enum TextSeparator {
 

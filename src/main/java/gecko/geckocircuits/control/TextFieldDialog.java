@@ -33,7 +33,7 @@ public class TextFieldDialog extends javax.swing.JDialog {
         jTextFieldTitle.setText(_tfb._titleText.getValue());
         int width = (int) (double) _tfb._width.getValue();
         jSpinnerBreite.setValue( (Integer) width);
-        jSpinnerHoehe.setValue( (Integer) ((int) (2.0 * _tfb._height.getValue())));
+        jSpinnerHoehe.setValue( (Integer) (int) (2.0 * _tfb._height.getValue()));
         jTextAreaContents.setText(_tfb._contentsText.getValue());
         jButtonBackColor.setBackground(_tfb._backGroundColor.getValue());
         jButtonTextColor.setBackground(_tfb._fontColor.getValue());

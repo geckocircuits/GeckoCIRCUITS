@@ -98,7 +98,7 @@ public final class DetailedLossLookupTable {
         double wheigt1 = (upperTemp - temp) / (upperTemp - lowerTemp);
 
         assert wheigt1 + wheigt2 < 1.01 && wheigt1 + wheigt2 > 0.99;
-        double returnValue = (lowerTempEnergy * wheigt1 + upperTempEnergy * wheigt2);
+        double returnValue = lowerTempEnergy * wheigt1 + upperTempEnergy * wheigt2;
         // only return positive energies!        
         return Math.max(returnValue, 0);
     }
@@ -128,7 +128,7 @@ public final class DetailedLossLookupTable {
         double wheigt1 = (upperTemp - temp) / (upperTemp - lowerTemp);
 
         assert wheigt1 + wheigt2 < 1.01 && wheigt1 + wheigt2 > 0.99;
-        double returnValue = (lowerTempEnergy * wheigt1 + upperTempEnergy * wheigt2);
+        double returnValue = lowerTempEnergy * wheigt1 + upperTempEnergy * wheigt2;
         // changed: negative values are possible here, since then both voltage and current could be negative!
         return returnValue;
     }
@@ -157,7 +157,7 @@ public final class DetailedLossLookupTable {
         double wheigt1 = (xRight - searchXValue) / (xRight - xLeft);
 
         assert wheigt1 + wheigt2 < 1.01 && wheigt1 + wheigt2 > 0.99;
-        double returnValue = (en1 * wheigt1 + en2 * wheigt2);                
+        double returnValue = en1 * wheigt1 + en2 * wheigt2;                
         return returnValue;
     }
         

@@ -18,7 +18,6 @@ import gecko.geckocircuits.newscope.DefinedMeanSignals;
 import gecko.geckocircuits.newscope.HiLoData;
 import gecko.geckocircuits.newscope.MemoryContainer;
 import gecko.geckocircuits.newscope.ScopeSignalMean;
-import gecko.geckocircuits.newscope.TimeSeriesConstantDt;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -115,7 +114,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     private void checkContainerSize(final int column) {
         if (column >= _totalDataSize) {
             if (!_data.isEmpty() && _data.get(0) instanceof DataJunkCompressable) {
-                ((DataJunkCompressable) (_data.get(_data.size() - 1))).doCompression();
+                ((DataJunkCompressable) _data.get(_data.size() - 1)).doCompression();
             }
 
             _data.add(new DataJunkCompressable(_memoryContainer, _totalDataSize, _rows, JUNK_SIZE, _timeSerie));

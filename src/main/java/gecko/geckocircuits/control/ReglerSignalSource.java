@@ -175,7 +175,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         final ReglerSignalSource other = (ReglerSignalSource) originalBlock;
 
         this._datnamXY = other._datnamXY;
-        if (!(_datnamXY.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) && other._externalDataFile != null) {
+        if (!_datnamXY.equals(GlobalFilePathes.DATNAM_NOT_DEFINED) && other._externalDataFile != null) {
             final List<GeckoFile> externalFile = new ArrayList<GeckoFile>();
             externalFile.add(other._externalDataFile);
             addFiles(externalFile);
@@ -283,7 +283,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
                     default:
                         assert false;
                 }
-                typus.append((" = " + tcf.formatENG(_amplitudeAC.getValue(), 2)));
+                typus.append(" = " + tcf.formatENG(_amplitudeAC.getValue(), 2));
                 _textInfo.addParameter(typus.toString());
             }
         }

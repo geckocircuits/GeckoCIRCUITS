@@ -73,8 +73,8 @@ public final class MotorSmSalient extends AbstractMotorSM {
         double phimuX1 = Math.sqrt(psimd * psimd + psimq * psimq / _m2), phimuX2 = psiT / 1e3;
         double phimu = (phimuX1 > phimuX2) ? phimuX1 : phimuX2;                
         
-        double inv_Lmd = (Mf - Mi) / Math.PI * (((phimu - psiT) * Math.atan(tauT * (phimu - psiT)) - psiT * Math.atan(tauT * psiT))
-                + 0.5 / tauT * (Math.log(1 + (tauT * psiT) * (tauT * psiT)) - Math.log(1 + tauT * tauT * (phimu - psiT) * (phimu - psiT)))) / phimu
+        double inv_Lmd = (Mf - Mi) / Math.PI * ((phimu - psiT) * Math.atan(tauT * (phimu - psiT)) - psiT * Math.atan(tauT * psiT)
+                + 0.5 / tauT * (Math.log(1 + tauT * psiT * tauT * psiT) - Math.log(1 + tauT * tauT * (phimu - psiT) * (phimu - psiT)))) / phimu
                 + 0.5 * (Mf + Mi);
         double inv_Lmq = inv_Lmd / _m2;
         

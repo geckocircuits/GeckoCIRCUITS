@@ -69,7 +69,7 @@ public final class ReglerDelay extends AbstractReglerSingleInputSingleOutput {
     }            
 
     @Override
-    protected final Window openDialogWindow() {
+    protected Window openDialogWindow() {
         return new ReglerDelayDialog(this);        
     }
                 

@@ -14,7 +14,6 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 
-import gecko.geckocircuits.circuit.circuitcomponents.ThermMODUL;
 import java.awt.Color;
 import java.awt.Graphics;
 

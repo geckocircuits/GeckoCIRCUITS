@@ -67,10 +67,10 @@ public class DialogAbout extends JDialog {
         try {
             @SuppressWarnings("deprecation")
             URL url1 = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
-            this.setIconImage((new ImageIcon(url1)).getImage());
+            this.setIconImage(new ImageIcon(url1).getImage());
             @SuppressWarnings("deprecation")
             URL url2 = new URL(GlobalFilePathes.PFAD_PICS_URL, "GeckoSimulationsLogo_50.png");
-            geckoBild = (new ImageIcon(url2)).getImage();
+            geckoBild = new ImageIcon(url2).getImage();
         } catch (MalformedURLException | RuntimeException e) {
 
         }

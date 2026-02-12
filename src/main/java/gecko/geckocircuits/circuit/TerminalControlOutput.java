@@ -15,7 +15,6 @@ package gecko.geckocircuits.circuit;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.font.FontRenderContext;
 
 public class TerminalControlOutput extends TerminalControl {
 

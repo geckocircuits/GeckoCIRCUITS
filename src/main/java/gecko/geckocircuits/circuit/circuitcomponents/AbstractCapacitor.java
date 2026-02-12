@@ -86,9 +86,9 @@ implements CurrentMeasurable, DirectVoltageMeasurable {
     protected final void drawForeground(final Graphics2D g2d) {
         double hoi = 0.2;
         g2d.drawLine(0, dpix * 2, 0, -dpix * 2);
-        g2d.fillRect((int) (-dpix * WIDTH), (int) (-dpix * HEIGHT), (int) (dpix * (2 * WIDTH)), (int) (dpix * (2 * HEIGHT)));
+        g2d.fillRect((int) (-dpix * WIDTH), (int) (-dpix * HEIGHT), (int) (dpix * 2 * WIDTH), (int) (dpix * 2 * HEIGHT));
         g2d.setColor(Color.white);
-        g2d.fillRect((int) (-dpix * WIDTH), (int) (-dpix * hoi), (int) (dpix * (2 * WIDTH)), (int) (dpix * (2 * hoi - 0.05)));
+        g2d.fillRect((int) (-dpix * WIDTH), (int) (-dpix * hoi), (int) (dpix * 2 * WIDTH), (int) (dpix * (2 * hoi - 0.05)));
     }
         
     @Override

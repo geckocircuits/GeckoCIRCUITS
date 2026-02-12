@@ -16,11 +16,9 @@ package gecko.geckocircuits.control.calculators;
 import gecko.geckocircuits.control.IsDtChangeSensitive;
 import gecko.geckocircuits.control.SSAShape;
 import static gecko.geckocircuits.control.calculators.AbstractSignalCalculator.TWO_PI;
-import gecko.geckocircuits.newscope.Cispr16Fft;
 import gecko.geckocircuits.newscope.FFTLibrary;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -156,7 +154,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
         // for sine wave excitation, try to limit he amount of sinus evaluations
         // for all other, do all uneven (odd) harmonics
 
-        int noPossibleFreqs = (int) Math.ceil((Math.floor(_freqEnd / _freqStart)) / 2);;
+        int noPossibleFreqs = (int) Math.ceil(Math.floor(_freqEnd / _freqStart) / 2);;
         double[] possibleSimFreqs = new double[noPossibleFreqs];
         for (int i = 0; i < noPossibleFreqs; i++) {
             possibleSimFreqs[i] = _freqStart * (2 * i + 1);
@@ -169,7 +167,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
             // Calculation of logarithmically spaced index
             int[] index1 = new int[_noFreqs];
             for (int i = 0; i < index1.length; i++) {
-                index1[i] = (int) Math.pow(noPossibleFreqs, ((double) i / (_noFreqs - 1))) - 1;
+                index1[i] = (int) Math.pow(noPossibleFreqs, (double) i / (_noFreqs - 1)) - 1;
             }
 
             // Make sure that no index appears more than once
