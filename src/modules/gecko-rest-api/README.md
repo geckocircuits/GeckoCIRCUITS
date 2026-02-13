@@ -12,7 +12,54 @@ Headless REST API for circuit simulation using the GeckoCIRCUITS simulation engi
 
 ## Quick Start
 
-### Using Docker (Recommended)
+### Using Docker Desktop (Windows, macOS, Linux)
+
+**Prerequisites:**
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Ensure Docker Desktop is running (check the system tray/menu bar)
+
+**Step 1: Clone and Navigate**
+```bash
+git clone https://github.com/tinix84/GeckoCIRCUITS.git
+cd GeckoCIRCUITS
+```
+
+**Step 2: Build the Image**
+
+Using Docker Desktop's built-in compose:
+```bash
+# Open terminal in Docker Desktop or use your system terminal
+docker compose up --build -d
+```
+
+Or using the helper script (Linux/macOS/WSL):
+```bash
+./scripts/build-docker.sh
+```
+
+**Step 3: Verify Deployment**
+- Open Docker Desktop
+- Go to "Containers" tab
+- Look for `gecko-rest-api` container (should show "Running")
+- Click the container name to view logs
+
+**Step 4: Access the API**
+- **Health Check**: http://localhost:8080/api/health
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **OpenAPI Spec**: http://localhost:8080/api-docs
+
+**Docker Desktop Management:**
+- **View Logs**: Click container → "Logs" tab
+- **Stop Container**: Click container → "Stop" button
+- **Restart**: Click container → "Restart" button
+- **Delete**: Click container → "Delete" button
+
+**Troubleshooting (Docker Desktop):**
+- **Port conflict**: If port 8080 is in use, edit `docker-compose.yml` and change `ports: - "9090:8080"`
+- **Container won't start**: Check logs in Docker Desktop, ensure 4GB+ RAM allocated in Settings → Resources
+- **Slow build**: Increase CPU cores in Settings → Resources → CPUs
+
+### Using Docker CLI (Alternative)
 
 ```bash
 # Build the Docker image
