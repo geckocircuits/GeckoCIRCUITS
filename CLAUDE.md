@@ -257,12 +257,14 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `circuit.simulation` (5 classes) - Simulation engine
 - `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation
 - `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries
-- `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files ✨ NEW
+- `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
-- `io` SerializationUtils - ASCII format serialization for .ipes files ✨ NEW
-- `allg` GlobalFilePathes, CircuitFileConstants - File paths and parsing constants ✨ NEW
+- `io` SerializationUtils - ASCII format serialization for .ipes files
+- `i18n` SelectableLanguages (43 languages) - Internationalization support ✨ NEW
+- `allg` SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants ✨ NEW
+- `core` GeckoRuntimeException - Custom runtime exception ✨ NEW
 
 ### GUI Decoupling Pattern: LossFileAccessor
 The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access. The pattern:

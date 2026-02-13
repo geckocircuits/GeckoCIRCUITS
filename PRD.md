@@ -108,7 +108,17 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-13): Serialization Utilities & expressionscripting Assessment
+### Latest Sprint (2026-02-13): Phase 1 Utilities Migration (Enums + i18n)
+- Migrated 4 foundational utility classes to gecko-simulation-core:
+  - OperatingMode enum (6 modes: STANDALONE, SIMULINK, EXTERNAL, REMOTE, MMF, HEADLESS)
+  - LaunchBrowser utility (cross-platform browser launching)
+  - GeckoRuntimeException (custom runtime exception with OutOfMemoryError support)
+  - SelectableLanguages enum (43 supported languages with ISO 639-1 codes)
+- Created gecko.core.i18n package for internationalization support
+- Added 39 comprehensive tests (1,161 total, was 1,122)
+- Core module: 177 classes, 1,161 tests, 30%+ coverage maintained
+
+### Previous Sprint (2026-02-13): Serialization Utilities & expressionscripting Assessment
 - Created SerializationUtils in gecko.core.io (7 utility methods for .ipes file serialization)
 - Extracted from ProjectData.appendAsString() - enables future GeckoFile migration without full ProjectData abstraction
 - Assessed expressionscripting package (5 classes): 4/5 files completely commented out, package deprecated, not worth migrating

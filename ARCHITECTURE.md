@@ -181,30 +181,35 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (171 classes extracted):
+gecko-simulation-core (177 classes extracted):
   ├── circuit/              52 classes
   │   ├── matrix/          15 classes (MNA stampers)
   │   ├── netlist/         4 classes (netlist building)
   │   ├── simulation/      5 classes (simulation engine)
-  │   ├── terminal/        3 classes ✨ NEW (ConnectionPath, ConnectionValidator, ITerminalPosition)
-  │   ├── component/       3 classes ✨ NEW (ParameterRegistry, ParameterSerializer, TerminalRegistry)
+  │   ├── terminal/        3 classes (ConnectionPath, ConnectionValidator, ITerminalPosition)
+  │   ├── component/       3 classes (ParameterRegistry, ParameterSerializer, TerminalRegistry)
   │   └── circuitcomponents/ 22 component cores
   ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
   ├── datacontainer/       11 classes (signal storage, caching)
   ├── math/                7 classes (matrix ops, LU decomposition, FFT)
-  ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization) ✨ NEW
+  ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization)
+  ├── i18n/                1 class (SelectableLanguages - 43 supported languages) ✨ NEW
   ├── api/                 Public interfaces
-  ├── allg/                2 classes (GlobalFilePathes, CircuitFileConstants)
-  └── Circuit file parsing: TokenMap (41 tests) ✨ NEW
+  ├── allg/                5 classes ✨ NEW (GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser)
+  ├── GeckoRuntimeException (top-level) ✨ NEW
+  └── Circuit file parsing: TokenMap (41 tests)
 
-Tests (35 test files, 1,122 tests):
+Tests (39 test files, 1,161 tests):
   ├── circuit/terminal/    3 test files (138 tests)
   ├── circuit/component/   3 test files (206 tests)
-  ├── circuit/             1 test file (41 tests - TokenMap) ✨ NEW
+  ├── circuit/             1 test file (41 tests - TokenMap)
   ├── circuit/matrix/      8 test files
   ├── control/calc.        15 test files
   ├── datacontainer/       18 test files
-  └── math/                7 test files
+  ├── math/                7 test files
+  ├── allg/                2 test files (14 tests - OperatingMode, LaunchBrowser) ✨ NEW
+  ├── i18n/                1 test file (17 tests - SelectableLanguages) ✨ NEW
+  └── core/                1 test file (8 tests - GeckoRuntimeException) ✨ NEW
 ```
 
 ## 5. Documentation Architecture
