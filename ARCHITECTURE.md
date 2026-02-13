@@ -181,7 +181,7 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (170 classes extracted):
+gecko-simulation-core (171 classes extracted):
   ├── circuit/              52 classes
   │   ├── matrix/          15 classes (MNA stampers)
   │   ├── netlist/         4 classes (netlist building)
@@ -192,6 +192,7 @@ gecko-simulation-core (170 classes extracted):
   ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
   ├── datacontainer/       11 classes (signal storage, caching)
   ├── math/                7 classes (matrix ops, LU decomposition, FFT)
+  ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization) ✨ NEW
   ├── api/                 Public interfaces
   ├── allg/                2 classes (GlobalFilePathes, CircuitFileConstants)
   └── Circuit file parsing: TokenMap (41 tests) ✨ NEW

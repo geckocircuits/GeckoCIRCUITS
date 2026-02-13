@@ -261,6 +261,7 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
+- `io` SerializationUtils - ASCII format serialization for .ipes files ✨ NEW
 - `allg` GlobalFilePathes, CircuitFileConstants - File paths and parsing constants ✨ NEW
 
 ### GUI Decoupling Pattern: LossFileAccessor
