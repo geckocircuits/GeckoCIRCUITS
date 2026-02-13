@@ -130,7 +130,7 @@ Defined in `OperatingMode` enum, selected at startup:
 
 ## 4. GUI-Free Boundary
 
-### 4.1 Validated Packages (168 classes in core module)
+### 4.1 Validated Packages (176 classes in core module)
 
 Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 
@@ -181,7 +181,7 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (183 classes extracted):
+gecko-simulation-core (176 classes extracted):
   ├── circuit/              52 classes
   │   ├── matrix/          15 classes (MNA stampers)
   │   ├── netlist/         4 classes (netlist building)
@@ -192,7 +192,8 @@ gecko-simulation-core (183 classes extracted):
   ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
   ├── datacontainer/       11 classes (signal storage, caching)
   ├── math/                7 classes (matrix ops, LU decomposition, FFT)
-  ├── nativec/             7 classes (Native C/C++ integration via JNI) ✨ NEW
+  ├── nativec/             7 classes (Native C/C++ integration via JNI)
+  ├── signal/              3 classes (CharacteristicsCalculator, FourierGUIless, Cispr16Fft) ✨ NEW
   ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization)
   ├── i18n/                1 class (SelectableLanguages - 43 supported languages)
   ├── api/                 Public interfaces
@@ -200,7 +201,7 @@ gecko-simulation-core (183 classes extracted):
   ├── GeckoRuntimeException (top-level)
   └── Circuit file parsing: TokenMap (41 tests)
 
-Tests (44 test files, 1,207 tests):
+Tests (50 test files, 1,276 tests):
   ├── circuit/terminal/    3 test files (138 tests)
   ├── circuit/component/   3 test files (206 tests)
   ├── circuit/             1 test file (41 tests - TokenMap)
@@ -208,8 +209,9 @@ Tests (44 test files, 1,207 tests):
   ├── control/calc.        15 test files
   ├── datacontainer/       18 test files
   ├── math/                7 test files
-  ├── nativec/             5 test files (46 tests) ✨ NEW
-  ├── allg/                2 test files (14 tests - OperatingMode, LaunchBrowser)
+  ├── nativec/             5 test files (46 tests)
+  ├── signal/              3 test files (29 tests - CharacteristicsCalculator, FourierGUIless, Cispr16Fft) ✨ NEW
+  ├── allg/                3 test files (55 tests - OperatingMode, LaunchBrowser, TechFormat) ✨ NEW
   ├── i18n/                1 test file (17 tests - SelectableLanguages)
   └── core/                1 test file (8 tests - GeckoRuntimeException)
 ```

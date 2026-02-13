@@ -108,7 +108,21 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-13): Phase 2 Native C Integration
+### Latest Sprint (2026-02-13): Phase 3 Signal Analysis Migration
+- Created gecko.core.signal package for signal analysis utilities
+- Migrated 4 classes to support REST API signal analysis endpoints:
+  - GeckoInvalidArgumentException (gecko.core) - Exception for invalid arguments
+  - CharacteristicsCalculator (gecko.core.signal) - RMS, THD, AVG, MIN/MAX, ripple, distortion factor
+  - FourierGUIless (gecko.core.signal) - GUI-less Fourier analysis for GeckoSCRIPT
+  - Cispr16Fft (gecko.core.signal) - FFT computation with Blackman filtering
+- Added 4 comprehensive test files with 66 tests (1,276 total):
+  - TechFormatTest (gecko.core.allg) - 41 tests for engineering notation parsing
+  - CharacteristicsCalculatorTest - 11 tests for signal characteristics
+  - FourierGUIlessTest - 6 tests for Fourier analysis
+  - Cispr16FftTest - 12 tests for FFT algorithms
+- Core module: 176 classes, 50 test files, 1,276 tests, 30%+ coverage maintained
+
+### Previous Sprint (2026-02-13): Phase 2 Native C Integration
 - Migrated 7 Native C/C++ integration classes to gecko-simulation-core:
   - CompileStatus enum (compilation status tracking)
   - InterfaceNativeCWrapper (JNI interface for native functions)
