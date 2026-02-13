@@ -261,10 +261,11 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
+- `nativec` (7 classes, 46 tests) - Native C/C++ library integration via JNI ✨ NEW
 - `io` SerializationUtils - ASCII format serialization for .ipes files
-- `i18n` SelectableLanguages (43 languages) - Internationalization support ✨ NEW
-- `allg` SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants ✨ NEW
-- `core` GeckoRuntimeException - Custom runtime exception ✨ NEW
+- `i18n` SelectableLanguages (43 languages) - Internationalization support
+- `allg` SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants
+- `core` GeckoRuntimeException - Custom runtime exception
 
 ### GUI Decoupling Pattern: LossFileAccessor
 The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access. The pattern:

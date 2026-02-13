@@ -181,7 +181,7 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (177 classes extracted):
+gecko-simulation-core (183 classes extracted):
   ├── circuit/              52 classes
   │   ├── matrix/          15 classes (MNA stampers)
   │   ├── netlist/         4 classes (netlist building)
@@ -192,14 +192,15 @@ gecko-simulation-core (177 classes extracted):
   ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
   ├── datacontainer/       11 classes (signal storage, caching)
   ├── math/                7 classes (matrix ops, LU decomposition, FFT)
+  ├── nativec/             7 classes (Native C/C++ integration via JNI) ✨ NEW
   ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization)
-  ├── i18n/                1 class (SelectableLanguages - 43 supported languages) ✨ NEW
+  ├── i18n/                1 class (SelectableLanguages - 43 supported languages)
   ├── api/                 Public interfaces
-  ├── allg/                5 classes ✨ NEW (GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser)
-  ├── GeckoRuntimeException (top-level) ✨ NEW
+  ├── allg/                5 classes (GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser)
+  ├── GeckoRuntimeException (top-level)
   └── Circuit file parsing: TokenMap (41 tests)
 
-Tests (39 test files, 1,161 tests):
+Tests (44 test files, 1,207 tests):
   ├── circuit/terminal/    3 test files (138 tests)
   ├── circuit/component/   3 test files (206 tests)
   ├── circuit/             1 test file (41 tests - TokenMap)
@@ -207,9 +208,10 @@ Tests (39 test files, 1,161 tests):
   ├── control/calc.        15 test files
   ├── datacontainer/       18 test files
   ├── math/                7 test files
-  ├── allg/                2 test files (14 tests - OperatingMode, LaunchBrowser) ✨ NEW
-  ├── i18n/                1 test file (17 tests - SelectableLanguages) ✨ NEW
-  └── core/                1 test file (8 tests - GeckoRuntimeException) ✨ NEW
+  ├── nativec/             5 test files (46 tests) ✨ NEW
+  ├── allg/                2 test files (14 tests - OperatingMode, LaunchBrowser)
+  ├── i18n/                1 test file (17 tests - SelectableLanguages)
+  └── core/                1 test file (8 tests - GeckoRuntimeException)
 ```
 
 ## 5. Documentation Architecture

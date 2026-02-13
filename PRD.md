@@ -108,7 +108,20 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-13): Phase 1 Utilities Migration (Enums + i18n)
+### Latest Sprint (2026-02-13): Phase 2 Native C Integration
+- Migrated 7 Native C/C++ integration classes to gecko-simulation-core:
+  - CompileStatus enum (compilation status tracking)
+  - InterfaceNativeCWrapper (JNI interface for native functions)
+  - CompiledClassContainer (compiled class storage with TokenMap support)
+  - NativeCClassLoader (garbage-collectable classloader for native wrappers)
+  - NativeCLibraryFile (library file management with timestamp tracking)
+  - NativeCWrapper (JNI native method declarations)
+  - NativeCBlock (lifecycle management for native library integration)
+- Created gecko.core.nativec package for scientific computing
+- Added 46 comprehensive tests (1,207 total, was 1,161)
+- Core module: 183 classes, 1,207 tests, 30%+ coverage maintained
+
+### Previous Sprint (2026-02-13): Phase 1 Utilities Migration (Enums + i18n)
 - Migrated 4 foundational utility classes to gecko-simulation-core:
   - OperatingMode enum (6 modes: STANDALONE, SIMULINK, EXTERNAL, REMOTE, MMF, HEADLESS)
   - LaunchBrowser utility (cross-platform browser launching)
