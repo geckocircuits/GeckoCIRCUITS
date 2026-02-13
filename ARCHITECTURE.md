@@ -244,6 +244,11 @@ POST   /api/v1/analysis/harmonics       Harmonic analysis
 GET    /api/health                       Health check
 ```
 
+**Docker Support:**
+- Multi-stage Dockerfile using Alpine JRE 21 (~180MB image)
+- `docker-compose.yml` for local development
+- Production-ready for cloud deployment (AWS ECS, Kubernetes, Cloud Run)
+
 ## 7. Build & CI Pipeline
 
 ### 7.1 Build Commands
@@ -286,8 +291,8 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 
 ### Mid-Term
 - Desktop `--rest-server` mode (GUI + API simultaneously)
-- Docker containerization for REST API
 - Python SDK for REST API
+- Enhanced Docker deployment (health checks, multi-arch builds)
 
 ### Long-Term
 - WebAssembly browser edition (GraalVM Native Image or TeaVM)

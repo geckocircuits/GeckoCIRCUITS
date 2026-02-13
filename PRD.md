@@ -1,7 +1,7 @@
 # GeckoCIRCUITS Product Requirements Document
 
 **Version:** 1.1.0
-**Last Updated:** 2026-02-12
+**Last Updated:** 2026-02-13
 **Status:** Active Development
 
 ---
@@ -55,6 +55,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - **Location:** `src/modules/gecko-rest-api/`
 - Spring Boot 3.2.1 with OpenAPI/Swagger
 - Planned endpoints: simulation CRUD, signal analysis (RMS, THD, FFT), health check
+- Docker packaging available (multi-stage Alpine JRE 21 build, ~180MB image)
 
 ### 4.4 Documentation Site (Live)
 - **URL:** https://tinix84.github.io/GeckoCIRCUITS/
@@ -106,7 +107,14 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-12): Core Module Migration (math + datacontainer)
+### Latest Sprint (2026-02-13): Docker Packaging for REST API
+- Created multi-stage Dockerfile for gecko-rest-api module (Alpine JRE 21, ~180MB final image)
+- Added docker-compose.yml for local development and testing
+- Created Docker build and run scripts (`build-docker.sh`, `run-docker.sh`)
+- Updated REST API README with comprehensive Docker documentation
+- Dockerfile optimized with layer caching, non-root user, and health checks
+
+### Previous Sprint (2026-02-12): Core Module Migration (math + datacontainer)
 - Migrated 7 math test files to gecko-simulation-core module (test coverage preserved)
 - Migrated 11 datacontainer source classes to gecko-simulation-core module
 - Migrated 18 datacontainer test files to gecko-simulation-core module
@@ -153,7 +161,6 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 1. REST API MVP (health endpoint, simulation CRUD, signal analysis)
 2. Additional core package migrations (identify remaining GUI-free candidates)
 3. Coverage targets: losscalculation 65%, additional core packages 70%+
-4. Docker packaging for REST API
 
 ## 7. Quality Assurance
 

@@ -30,6 +30,12 @@ mvn test -Dtest=ClassName
 
 # Run tests with coverage report (output: target/site/jacoco/index.html)
 mvn clean test jacoco:report
+
+# Build Docker image for REST API
+./scripts/build-docker.sh
+
+# Run REST API container
+docker-compose up -d
 ```
 
 ## Running GeckoCIRCUITS
@@ -70,6 +76,26 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar target
 # Load specific circuit file
 java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar path/to/file.ipes
 ```
+
+### Running REST API via Docker
+
+The `gecko-rest-api` module can be deployed as a Docker container:
+
+```bash
+# Quick start with docker-compose
+docker-compose up -d
+
+# Build Docker image manually
+./scripts/build-docker.sh
+
+# Run container with custom port mapping
+docker run -p 8080:8080 gecko-rest-api:latest
+
+# Stop container
+docker-compose down
+```
+
+See `scripts/build-docker.sh` and `scripts/run-docker.sh` for advanced options.
 
 ## Building Distribution Packages
 
@@ -127,7 +153,7 @@ Output packages in `target/`:
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
 - **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI
 - **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (148+ classes, 30% coverage enforced)
-- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger
+- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (Docker packaging available)
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
