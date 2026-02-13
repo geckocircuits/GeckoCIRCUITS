@@ -46,9 +46,10 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### 4.2 Simulation Core Module (In Progress)
 - **Location:** `src/modules/gecko-simulation-core/`
-- GUI-free simulation engine suitable for headless operation (168 source classes, 34 test files, 1,081 tests)
+- GUI-free simulation engine suitable for headless operation (170 source classes, 35 test files, 1,122 tests)
 - 30% JaCoCo coverage enforced via CI (exceeds threshold)
-- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `circuit.terminal`, `circuit.component`, `control.calculators`, `math`, `datacontainer`
+- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `circuit.terminal`, `circuit.component`, `control.calculators`, `math`, `datacontainer`, `allg` (file paths)
+- Circuit file parsing: TokenMap, CircuitFileConstants for .ipes file processing
 - Validated by `CorePackageValidationTest` (zero GUI imports)
 
 ### 4.3 REST API (Planned)
@@ -107,7 +108,14 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-13): Tier 1 Package Migration (terminal + component)
+### Latest Sprint (2026-02-13): Phase 1 Migration - Circuit File Parsing
+- Migrated TokenMap to gecko-simulation-core (689 lines, 41 tests) - Key class for parsing .ipes circuit files
+- Created CircuitFileConstants for circuit file parsing constants (NIX, SEPARATOR)
+- Migrated GlobalFilePathes (47 lines) - Static file path variables
+- Assessment: GeckoFile and GeckoFileable deferred (dependencies on ProjectData static refs, DialogMakeExternal GUI)
+- Core module: 170 classes, 1,122 tests, 30%+ coverage maintained
+
+### Previous Sprint (2026-02-13): Tier 1 Package Migration (terminal + component)
 - Migrated `circuit.terminal` package to gecko-simulation-core (3 source classes, 3 test files, 138 tests)
   - Created minimal GUI-free `ConnectorType` enum in core
   - ConnectionPath, ConnectionValidator, ITerminalPosition (path routing and validation logic)

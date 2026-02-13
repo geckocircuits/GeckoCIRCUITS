@@ -152,7 +152,7 @@ Output packages in `target/`:
 
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
 - **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI (5,783 tests)
-- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (168 classes, 1,081 tests, 30%+ coverage enforced)
+- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (170 classes, 1,122 tests, 30%+ coverage enforced)
 - **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (78 tests, Docker packaging available)
 
 ### External Integration
@@ -175,7 +175,7 @@ Test categories:
 
 Test mode is controlled by `GeckoSim._isTestingMode` flag.
 
-The `gecko-simulation-core` module contains 34 test files with 1,081 test cases covering the GUI-free simulation engine.
+The `gecko-simulation-core` module contains 35 test files with 1,122 test cases covering the GUI-free simulation engine.
 
 ## GUI Development
 
@@ -255,11 +255,13 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `circuit.matrix` (15 classes) - MNA matrix stampers
 - `circuit.netlist` (4 classes) - Netlist building
 - `circuit.simulation` (5 classes) - Simulation engine
-- `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation ✨ NEW
-- `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries ✨ NEW
+- `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation
+- `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries
+- `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files ✨ NEW
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
+- `allg` GlobalFilePathes, CircuitFileConstants - File paths and parsing constants ✨ NEW
 
 ### GUI Decoupling Pattern: LossFileAccessor
 The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access. The pattern:
