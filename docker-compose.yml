@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # GeckoCIRCUITS REST API service
+  gecko-rest-api:
+    build:
+      context: .
+      dockerfile: src/modules/gecko-rest-api/Dockerfile
+
+    image: geckocircuits/rest-api:1.0.0
+
+    container_name: gecko-rest-api
+
+    ports:
+      - "8080:8080"  # REST API endpoints
+
+    environment:
+      # JVM settings
+      JAVA_OPTS: "-Xmx1g -Xms512m"
+
+      # Spring Boot settings
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: dev
+
+      # Logging
+      LOG_LEVEL: INFO
+      LOGGING_LEVEL_GECKO: DEBUG
+
+      # Application settings
+      CIRCUITS_PATH: /app/circuits
+
+    volumes:
+      # Mount example circuits (read-only)
+      - ./resources/examples:/app/circuits:ro
+
+      # Mount logs directory (for persistence)
+      - ./logs:/app/logs
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
+
+    restart: unless-stopped
+
+    networks:
+      - gecko-network
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1536M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  gecko-network:
+    driver: bridge
+
+# Usage:
+# docker-compose up -d              # Start in background
+# docker-compose logs -f            # View logs
+# docker-compose down               # Stop and remove
+# docker-compose ps                 # Show status
+#
+# Access:
+# - REST API: http://localhost:8080/api/health
+# - Swagger UI: http://localhost:8080/swagger-ui.html
+# - API Docs: http://localhost:8080/api-docs
