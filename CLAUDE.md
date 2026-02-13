@@ -151,9 +151,9 @@ Output packages in `target/`:
 **`gecko.expressionscripting/`** - GraalVM JavaScript expression evaluation
 
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
-- **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI
-- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (148+ classes, 30% coverage enforced)
-- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (Docker packaging available)
+- **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI (5,783 tests)
+- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (168 classes, 1,081 tests, 30%+ coverage enforced)
+- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (78 tests, Docker packaging available)
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
@@ -175,7 +175,7 @@ Test categories:
 
 Test mode is controlled by `GeckoSim._isTestingMode` flag.
 
-The `gecko-simulation-core` module contains 31 test files with 737 test cases covering the GUI-free simulation engine.
+The `gecko-simulation-core` module contains 34 test files with 1,081 test cases covering the GUI-free simulation engine.
 
 ## GUI Development
 
@@ -252,13 +252,14 @@ The project maintains the desktop application while adding modern web accessibil
 
 ### GUI-Free Validated Packages
 These packages are confirmed GUI-free and safe for headless/API use:
-- `circuit.matrix` (15 classes, 65% coverage) - MNA matrix stampers
-- `circuit.netlist` (4 classes, 89% coverage) - Netlist building
-- `circuit.simulation` (5 classes, 84% coverage) - Simulation engine
-- `circuit.component` (86% coverage) - Component definitions
-- `control.calculators` (64 classes, 81% coverage) - All control block calculators
-- `datacontainer` (23 classes, 71% coverage) - Signal data storage with optimized caching
-- `math` (7 classes, 81% coverage) - Matrix operations, LU decomposition
+- `circuit.matrix` (15 classes) - MNA matrix stampers
+- `circuit.netlist` (4 classes) - Netlist building
+- `circuit.simulation` (5 classes) - Simulation engine
+- `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation ✨ NEW
+- `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries ✨ NEW
+- `control.calculators` (71 classes) - All control block calculators
+- `datacontainer` (11 classes) - Signal data storage with optimized caching
+- `math` (7 classes) - Matrix operations, LU decomposition, FFT
 
 ### GUI Decoupling Pattern: LossFileAccessor
 The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access. The pattern:

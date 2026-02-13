@@ -130,19 +130,22 @@ Defined in `OperatingMode` enum, selected at startup:
 
 ## 4. GUI-Free Boundary
 
-### 4.1 Validated Packages (171 GUI-free classes)
+### 4.1 Validated Packages (168 classes in core module)
 
 Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 
-| Package | Classes | Coverage | Status |
-|---------|---------|----------|--------|
-| `circuit.matrix` | 15 | 85% | API-ready |
-| `circuit.netlist` | 4 | 99% | API-ready |
-| `circuit.simulation` | 5 | 97% | API-ready |
-| `control.calculators` | 71 | ~81% | API-ready (2 GUI exceptions) |
-| `math` | 7 | ~71% | API-ready |
-| `circuit.losscalculation` | 18+2 | 61% | Partial (6 GUI classes, 18 computation classes GUI-free) |
-| `circuit` (main) | 54 | ~57% | Partial (41 GUI classes) |
+| Package | Classes | Tests | Status |
+|---------|---------|-------|--------|
+| `circuit.matrix` | 15 | 183 | API-ready |
+| `circuit.netlist` | 4 | 89 | API-ready |
+| `circuit.simulation` | 5 | 91 | API-ready |
+| `circuit.terminal` | 3 | 138 | API-ready ✨ NEW |
+| `circuit.component` | 3 | 206 | API-ready ✨ NEW |
+| `control.calculators` | 71 | ~320 | API-ready (2 GUI exceptions) |
+| `math` | 7 | 97 | API-ready |
+| `datacontainer` | 11 | ~180 | API-ready |
+| `circuit.losscalculation` | 20 | - | Deferred (needs ProjectData, TokenMap in core) |
+| `circuit` (main) | 54 | - | Partial (41 GUI classes) |
 
 ### 4.2 GUI Decoupling Pattern
 
@@ -178,18 +181,27 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (148 classes extracted):
-  ├── circuit/         42 component cores
-  ├── control/calc.    64 calculators (PI, PID, gain, limit, integrators, etc.)
-  ├── datacontainer/   11 classes (signal storage, caching)
-  ├── math/            7 classes (matrix ops, LU decomposition, FFT)
-  ├── api/             Public interfaces
-  └── allg/            3 GUI-free utilities
+gecko-simulation-core (168 classes extracted):
+  ├── circuit/              52 classes
+  │   ├── matrix/          15 classes (MNA stampers)
+  │   ├── netlist/         4 classes (netlist building)
+  │   ├── simulation/      5 classes (simulation engine)
+  │   ├── terminal/        3 classes ✨ NEW (ConnectionPath, ConnectionValidator, ITerminalPosition)
+  │   ├── component/       3 classes ✨ NEW (ParameterRegistry, ParameterSerializer, TerminalRegistry)
+  │   └── circuitcomponents/ 22 component cores
+  ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
+  ├── datacontainer/       11 classes (signal storage, caching)
+  ├── math/                7 classes (matrix ops, LU decomposition, FFT)
+  ├── api/                 Public interfaces
+  └── allg/                3 GUI-free utilities
 
-Tests (31 test files):
-  ├── circuit/matrix/  8 test files
-  ├── control/calc.    15 test files
-  └── math/            7 test files
+Tests (34 test files, 1,081 tests):
+  ├── circuit/terminal/    3 test files (138 tests) ✨ NEW
+  ├── circuit/component/   3 test files (206 tests) ✨ NEW
+  ├── circuit/matrix/      8 test files
+  ├── control/calc.        15 test files
+  ├── datacontainer/       18 test files
+  └── math/                7 test files
 ```
 
 ## 5. Documentation Architecture
