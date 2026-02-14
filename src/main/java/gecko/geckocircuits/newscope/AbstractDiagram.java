@@ -15,7 +15,7 @@ package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.DataContainerNullData;
 import java.awt.Color;

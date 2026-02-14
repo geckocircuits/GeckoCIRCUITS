@@ -16,7 +16,7 @@ package gecko.geckocircuits.newscope;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.GlobalFonts;
 import gecko.geckocircuits.allg.TechFormat;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;

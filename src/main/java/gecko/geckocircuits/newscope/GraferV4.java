@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.circuit.SimulationsKern;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.ReglerOSZI;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;

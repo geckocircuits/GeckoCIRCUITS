@@ -17,7 +17,7 @@ import gecko.GeckoRuntimeException;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;

@@ -18,7 +18,7 @@ import gecko.geckocircuits.circuit.AbstractSpecialBlock;
 import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.circuit.ElementDisplayProperties;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Color;

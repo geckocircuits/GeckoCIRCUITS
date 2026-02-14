@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.nativec;
 
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import java.io.Serializable;
 
 /**

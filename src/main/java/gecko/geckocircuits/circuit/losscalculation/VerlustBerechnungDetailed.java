@@ -17,7 +17,7 @@ import gecko.geckocircuits.allg.ProjectData;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.circuit.GeckoFileable;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -32,7 +32,7 @@ import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUE
 import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIN;
 import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 import java.awt.Window;

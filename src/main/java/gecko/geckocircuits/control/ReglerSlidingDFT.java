@@ -16,7 +16,7 @@ package gecko.geckocircuits.control;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.control.calculators.SlidingDFTCalculator;

@@ -19,7 +19,7 @@ import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ControlSourceType;
 import gecko.geckocircuits.circuit.GeckoFileable;
 import gecko.geckocircuits.circuit.TerminalControlInput;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.control.calculators.AbstractSignalCalculator;
 import gecko.geckocircuits.control.calculators.AbstractSignalCalculatorPeriodic;

@@ -19,7 +19,7 @@ import gecko.geckocircuits.allg.MainWindow;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.Operationable;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.event.ActionEvent;

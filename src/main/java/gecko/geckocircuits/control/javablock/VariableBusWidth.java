@@ -15,7 +15,7 @@ package gecko.geckocircuits.control.javablock;
 
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.UserParameter;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.i18n.resources.I18nKeys;
 import java.util.HashMap;

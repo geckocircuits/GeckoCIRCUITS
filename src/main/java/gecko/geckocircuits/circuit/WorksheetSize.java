@@ -12,6 +12,7 @@
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
 package gecko.geckocircuits.circuit;
+import gecko.core.circuit.TokenMap;
 
 import gecko.geckocircuits.control.Point;
 import gecko.geckocircuits.control.SubCircuitSheet;

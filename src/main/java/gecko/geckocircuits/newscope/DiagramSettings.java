@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 
 public final class DiagramSettings {
     private static final double DEFAULT_SPACING = 0.2;

@@ -15,7 +15,7 @@ package gecko.geckocircuits.api;
 
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.newscope.AbstractTimeSerie;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 
 /**
  * Interface for scope data access.

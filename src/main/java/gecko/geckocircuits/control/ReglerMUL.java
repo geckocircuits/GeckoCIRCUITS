@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.i18n.resources.I18nKeys;
 

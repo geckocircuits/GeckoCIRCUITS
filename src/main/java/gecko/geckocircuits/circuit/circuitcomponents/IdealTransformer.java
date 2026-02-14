@@ -26,7 +26,7 @@ import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.BasicStroke;
 import java.awt.Color;

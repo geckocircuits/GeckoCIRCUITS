@@ -18,7 +18,7 @@ import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.allg.StartupWindow;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.TerminalControlOutput;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Color;

@@ -17,7 +17,7 @@ import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.ControlSourceType;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.geckocircuits.control.SSAShape;

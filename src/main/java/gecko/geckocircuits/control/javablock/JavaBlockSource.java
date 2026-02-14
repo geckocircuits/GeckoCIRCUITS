@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control.javablock;
 
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import java.util.Arrays;
 import java.util.Iterator;
 

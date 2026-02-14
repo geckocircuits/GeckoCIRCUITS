@@ -15,7 +15,7 @@ package gecko.geckocircuits.datacontainer;
 
 import gecko.GeckoSim;
 import gecko.geckocircuits.newscope.AbstractTimeSerie;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.MemoryContainer;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

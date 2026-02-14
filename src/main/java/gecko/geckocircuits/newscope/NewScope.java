@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.newscope.SliderUtils.ExtremumType;
 import gecko.geckocircuits.newscope.SliderUtils.FlankType;

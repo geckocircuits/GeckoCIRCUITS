@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.allg.UserParameter;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 
 import java.io.Serializable;

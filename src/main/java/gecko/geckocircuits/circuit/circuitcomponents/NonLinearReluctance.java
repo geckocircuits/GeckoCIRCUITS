@@ -26,7 +26,7 @@ import gecko.geckocircuits.circuit.PostCalculatable;
 import gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.geckocircuits.circuit.TerminalRelativePositionReluctance;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

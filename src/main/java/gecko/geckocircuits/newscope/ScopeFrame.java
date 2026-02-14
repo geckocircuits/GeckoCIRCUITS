@@ -17,7 +17,7 @@ import gecko.GeckoSim;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.allg.SaveViewFrame;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.RegelBlock;
 import gecko.geckocircuits.control.ReglerOSZI;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;

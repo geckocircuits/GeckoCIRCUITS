@@ -15,7 +15,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.AbstractTimeSerie;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.TimeSeriesConstantDt;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

@@ -18,7 +18,7 @@ import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ComponentDirection;
 import gecko.geckocircuits.circuit.TerminalFixedPosition;
 import gecko.geckocircuits.circuit.TerminalTwoPortRelativeFixedDirection;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.Point;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;

@@ -13,6 +13,7 @@
  */
 
 package gecko.geckocircuits.circuit;
+import gecko.core.circuit.TokenMap;
 
 import gecko.geckocircuits.allg.AbstractComponentTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;

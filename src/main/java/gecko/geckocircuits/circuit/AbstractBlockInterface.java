@@ -14,6 +14,7 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.core.circuit.ComponentIdentifiable;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.ControlTypeInfo;
 import gecko.geckocircuits.allg.AbstractComponentTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;

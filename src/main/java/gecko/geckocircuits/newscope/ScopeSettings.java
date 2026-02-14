@@ -19,7 +19,7 @@ package gecko.geckocircuits.newscope;
  *
  */
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.Serializable;

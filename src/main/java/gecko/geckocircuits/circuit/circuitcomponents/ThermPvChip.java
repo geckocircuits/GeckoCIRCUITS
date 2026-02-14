@@ -27,7 +27,7 @@ import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.TerminalFixedPositionInvisible;
 import gecko.geckocircuits.circuit.TerminalTwoPortRelativeFixedDirection;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.losscalculation.AbstractLossCalculator;
 import gecko.geckocircuits.circuit.losscalculation.AbstractLossCalculatorFabric;
 import gecko.geckocircuits.circuit.losscalculation.LossCalculatable;

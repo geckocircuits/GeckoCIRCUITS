@@ -23,7 +23,7 @@ import gecko.geckocircuits.circuit.TerminalInterface;
 import gecko.geckocircuits.circuit.TerminalSubCircuitBlock;
 import gecko.geckocircuits.circuit.TerminalToWrap;
 import gecko.geckocircuits.circuit.TerminalTwoPortComponent;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.Point;
 import java.awt.Graphics2D;
 import java.awt.Window;

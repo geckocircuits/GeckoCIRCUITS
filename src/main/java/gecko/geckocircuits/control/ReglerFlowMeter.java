@@ -17,7 +17,7 @@ import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.ThermPvChip;
 import gecko.geckocircuits.circuit.losscalculation.LossComponent;

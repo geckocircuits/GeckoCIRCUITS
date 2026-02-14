@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit.losscalculation;
 import gecko.geckocircuits.allg.ProjectData;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import gecko.geckocircuits.circuit.SchematicTextInfo;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSemiconductor;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;

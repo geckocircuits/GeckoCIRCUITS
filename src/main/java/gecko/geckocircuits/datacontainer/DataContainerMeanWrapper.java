@@ -14,7 +14,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.AbstractTimeSerie;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.ScopeSignalMean;
 import gecko.geckocircuits.newscope.ScopeSignalRegular;
 import java.util.ArrayList;

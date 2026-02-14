@@ -26,7 +26,7 @@ import gecko.geckocircuits.circuit.PostCalculatable;
 import gecko.geckocircuits.circuit.PotentialCoupable;
 import gecko.geckocircuits.circuit.PotentialCoupling;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 import java.util.ArrayList;

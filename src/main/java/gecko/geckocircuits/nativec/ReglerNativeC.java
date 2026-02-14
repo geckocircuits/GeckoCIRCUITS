@@ -21,7 +21,7 @@ import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ComponentState;
 import gecko.geckocircuits.circuit.TerminalControlInput;
 import gecko.geckocircuits.circuit.TerminalControlOutput;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.geckocircuits.control.ControlTypeInfo;
 import gecko.geckocircuits.control.RegelBlock;

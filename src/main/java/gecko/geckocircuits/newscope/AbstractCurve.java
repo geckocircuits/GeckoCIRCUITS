@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;

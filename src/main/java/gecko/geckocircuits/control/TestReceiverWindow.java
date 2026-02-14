@@ -15,7 +15,7 @@ package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.allg.SaveViewFrame;
 import gecko.geckocircuits.allg.TechFormat;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerCompressable;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;

@@ -19,7 +19,7 @@ import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
 import java.awt.Window;

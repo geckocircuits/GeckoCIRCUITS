@@ -14,6 +14,7 @@
 package gecko.geckocircuits.allg;
 
 import gecko.core.allg.GeckoFile;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.GeckoSim;
@@ -21,7 +22,7 @@ import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.ControlTyp;
 import gecko.geckocircuits.control.NetzlisteCONTROL;
 import gecko.geckocircuits.control.Point;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckoscript.SimulationAccess;
 import java.awt.Dimension;
 import java.io.File;

@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.control.DialogLabelEingeben;

@@ -18,7 +18,7 @@ import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.Enabled;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.datacontainer.*;
 import gecko.i18n.resources.I18nKeys;

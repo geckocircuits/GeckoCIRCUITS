@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 
 /**
  *
