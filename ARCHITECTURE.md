@@ -1,7 +1,7 @@
 # Architecture Document
 
 **Project:** GeckoCIRCUITS
-**Last Updated:** 2026-02-12
+**Last Updated:** 2026-02-14
 **Status:** Dual-track architecture (Desktop + API)
 
 ---
@@ -23,7 +23,7 @@ GeckoCIRCUITS is a multi-domain circuit simulator built in Java 21. The architec
 │  ┌────────▼───────────────────▼──────────────────────────┐   │
 │  │            gecko-simulation-core                        │   │
 │  │            (GUI-free shared library)                    │   │
-│  │            IN PROGRESS (148 classes)                    │   │
+│  │            IN PROGRESS (179 classes)                    │   │
 │  └────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -130,7 +130,7 @@ Defined in `OperatingMode` enum, selected at startup:
 
 ## 4. GUI-Free Boundary
 
-### 4.1 Validated Packages (176 classes in core module)
+### 4.1 Validated Packages (179 classes in core module)
 
 Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 
@@ -144,7 +144,8 @@ Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 | `control.calculators` | 71 | ~320 | API-ready (2 GUI exceptions) |
 | `math` | 7 | 97 | API-ready |
 | `datacontainer` | 11 | ~180 | API-ready |
-| `circuit.losscalculation` | 20 | - | Deferred (needs ProjectData, TokenMap in core) |
+| `circuit.losscalculation` | 20 | - | Deferred (needs HiLoData migration) |
+| `allg` | 8 | 36 | API-ready (GeckoFile + interfaces) ✨ NEW |
 | `circuit` (main) | 54 | - | Partial (41 GUI classes) |
 
 ### 4.2 GUI Decoupling Pattern
@@ -168,6 +169,24 @@ For packages that mix computation and GUI classes, the project uses **interface 
 - **Injectable constructor** accepts any `LossFileAccessor` (enables headless testing with mocks)
 - Pattern is replicable for other classes with `MainWindow` static dependencies
 
+**GeckoFile Pattern (External Storage):**
+```
+┌──────────────────────────┐     ┌──────────────────────────────────┐
+│ GeckoFile                 │────►│ ExternalStorageConverter (interface)│
+│ (file handling, GUI-free) │     ├──────────────────────────────────┤
+└──────────────────────────┘     │ promptForExternalPath()          │
+                                  └──────────────────────────────────┘
+    ┌───────────────────────────┐              ▲
+    │DialogExternalStorageConverter│             │
+    │ (GUI adapter)              │──────────────┘
+    │ delegates to DialogMakeExternal│
+    └───────────────────────────┘
+```
+
+- **Default constructor** uses reflection fallback to GUI dialog (preserves backward compatibility)
+- **Injectable constructor** accepts `ExternalStorageConverter` (enables headless/API use)
+- **ComponentIdentifiable interface** abstracts component identification for deserialization
+
 ### 4.3 Prohibited Imports in Core
 
 ```
@@ -181,8 +200,8 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (176 classes extracted):
-  ├── circuit/              52 classes
+gecko-simulation-core (179 classes extracted):
+  ├── circuit/              54 classes
   │   ├── matrix/          15 classes (MNA stampers)
   │   ├── netlist/         4 classes (netlist building)
   │   ├── simulation/      5 classes (simulation engine)
@@ -197,14 +216,18 @@ gecko-simulation-core (176 classes extracted):
   ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization)
   ├── i18n/                1 class (SelectableLanguages - 43 supported languages)
   ├── api/                 Public interfaces
-  ├── allg/                5 classes (GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser)
+  ├── allg/                8 classes ✨ UPDATED
+  │   ├── GeckoFile (file handling for Java blocks, loss models, nonlinear characteristics)
+  │   ├── ExternalStorageConverter (interface for GUI abstraction)
+  │   ├── GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser
   ├── GeckoRuntimeException (top-level)
-  └── Circuit file parsing: TokenMap (41 tests)
+  └── Circuit file parsing: TokenMap (41 tests) - migrated to gecko.core.circuit
 
-Tests (50 test files, 1,276 tests):
+Tests (52 test files, 1,307 tests):
   ├── circuit/terminal/    3 test files (138 tests)
   ├── circuit/component/   3 test files (206 tests)
-  ├── circuit/             1 test file (41 tests - TokenMap)
+  ├── circuit/             2 test files (72 tests - TokenMap + ComponentIdentifiable)
+  ├── allg/                2 test files (36 tests - GeckoFile + LaunchBrowser) ✨ NEW
   ├── circuit/matrix/      8 test files
   ├── control/calc.        15 test files
   ├── datacontainer/       18 test files

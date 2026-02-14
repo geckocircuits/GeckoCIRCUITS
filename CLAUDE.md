@@ -257,22 +257,34 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `circuit.simulation` (5 classes) - Simulation engine
 - `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation
 - `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries
-- `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files
+- `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files (migrated to gecko.core.circuit)
+- `circuit` ComponentIdentifiable (interface) - Component identification for deserialization ✨ NEW
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
-- `nativec` (7 classes, 46 tests) - Native C/C++ library integration via JNI ✨ NEW
+- `nativec` (7 classes, 46 tests) - Native C/C++ library integration via JNI
+- `signal` (3 classes, 29 tests) - Signal analysis utilities (CharacteristicsCalculator, FourierGUIless, Cispr16Fft)
 - `io` SerializationUtils - ASCII format serialization for .ipes files
 - `i18n` SelectableLanguages (43 languages) - Internationalization support
-- `allg` SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants
+- `allg` (8 classes, 36 tests) - GeckoFile, ExternalStorageConverter, SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants ✨ UPDATED
 - `core` GeckoRuntimeException - Custom runtime exception
 
-### GUI Decoupling Pattern: LossFileAccessor
-The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access. The pattern:
+### GUI Decoupling Patterns
+
+**LossFileAccessor Pattern:**
+The `circuit.losscalculation` package uses a `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow` static access:
 - `LossFileAccessor` - Interface for file I/O operations (getFile, maintain, addFile, getOpenFileName)
 - `MainWindowLossFileAccessor` - GUI adapter (delegates to `MainWindow._fileManager`)
 - Injectable constructor enables headless testing with mock implementations
-- This pattern can be replicated for other packages with `MainWindow` dependencies
+
+**GeckoFile Pattern (NEW):**
+The `allg` package uses `ExternalStorageConverter` interface to abstract GUI dialogs for external file storage:
+- `ExternalStorageConverter` - Interface for prompting user for external file path
+- `DialogExternalStorageConverter` - GUI adapter (delegates to `DialogMakeExternal`)
+- Default constructor uses reflection fallback for backward compatibility
+- Injectable constructor accepts custom converter for headless/API use
+
+These patterns can be replicated for other packages with GUI dependencies.
 
 ### Architectural Boundaries
 The `CorePackageValidationTest` enforces that core packages have no GUI imports (`java.awt`, `javax.swing`). Any violation fails the build.
@@ -299,6 +311,13 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `769f1dc6` WIP: Resolve TokenMap dual-version issue (partial)
+- `86c2a65a` Sprint 4a: Migrate GeckoFile to gecko-simulation-core
+- `cfd7f579` Phase 3: Migrate signal analysis utilities to core module
+- `19e4bb5a` Phase 2: Native C integration for scientific computing
+- `99a2e661` Phase 1 utilities migration: enums + i18n support
+- `a96db893` Add SerializationUtils to gecko-simulation-core
+- `5ad047c1` Complete Phase 1 migration: Circuit file parsing utilities to gecko-simulation-core
 - `03a3301` Fix CI: run jacoco:report per-module instead of reactor-wide
 - `e5940e0` Update project docs and developer guide with static analysis config details
 - `ea309a7` Update project docs after static analysis cleanup sprint

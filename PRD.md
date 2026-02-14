@@ -1,7 +1,7 @@
 # GeckoCIRCUITS Product Requirements Document
 
 **Version:** 1.1.0
-**Last Updated:** 2026-02-13
+**Last Updated:** 2026-02-14
 **Status:** Active Development
 
 ---
@@ -108,7 +108,21 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-13): Phase 3 Signal Analysis Migration
+### Latest Sprint (2026-02-14): Sprint 4a - GeckoFile Migration
+
+- Migrated GeckoFile (750 LOC) from main project to gecko.core.allg
+- Created interface injection pattern for GUI abstraction:
+  - ExternalStorageConverter interface (gecko.core.allg) - abstracts GUI dialog for external storage
+  - DialogExternalStorageConverter (main) - GUI adapter delegating to DialogMakeExternal
+  - ComponentIdentifiable interface (gecko.core.circuit) - abstracts component identification for deserialization
+- Refactored GeckoFile with constructor injection and reflection fallback for backward compatibility
+- Migrated GeckoFileTest (31 tests) from JUnit 4 to JUnit 5
+- Updated 29 files with new import paths
+- **TokenMap dual-version resolution:** Removed duplicate TokenMap from main project, unified on gecko.core.circuit.TokenMap (78 files updated)
+- Core module: 179 classes, 52 test files, 1,307 tests, 30%+ coverage maintained
+- **Known issue:** HiLoData class hierarchy incompatibility blocks main project compilation (requires separate migration)
+
+### Previous Sprint (2026-02-13): Phase 3 Signal Analysis Migration
 - Created gecko.core.signal package for signal analysis utilities
 - Migrated 4 classes to support REST API signal analysis endpoints:
   - GeckoInvalidArgumentException (gecko.core) - Exception for invalid arguments
