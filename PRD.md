@@ -16,7 +16,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 |---------|-----------|----------|
 | **Power electronics researchers** | Desktop GUI + RMI | Interactive circuit design, MATLAB/Simulink co-simulation |
 | **University students** | Desktop GUI / Browser (future) | Learning power electronics through tutorials and examples |
-| **Automation engineers** | REST API (planned) | CI/CD pipeline validation, batch parameter sweeps |
+| **Automation engineers** | REST API (in progress) | CI/CD pipeline validation, batch parameter sweeps, loss calculations |
 | **Educators** | Documentation site | Teaching with curated tutorials, examples, articles |
 
 ## 3. Supported Platforms
@@ -53,10 +53,16 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Loss calculation: Temperature-dependent loss curves, bilinear interpolation, switching/conduction losses
 - Validated by `CorePackageValidationTest` (zero GUI imports)
 
-### 4.3 REST API (Planned)
+### 4.3 REST API (In Progress - Sprint 5)
 - **Location:** `src/modules/gecko-rest-api/`
-- Spring Boot 3.2.1 with OpenAPI/Swagger
-- Planned endpoints: simulation CRUD, signal analysis (RMS, THD, FFT), health check
+- Spring Boot 3.2.1 with OpenAPI/Swagger documentation
+- **Live Endpoints (Phase 1):**
+  - POST /api/v1/loss/switching - Switching loss calculation (voltage/energy scaling)
+  - POST /api/v1/loss/conduction - Conduction loss calculation (resistance model)
+  - POST /api/v1/loss/detailed - Detailed loss with temperature-dependent curve interpolation
+- Planned endpoints: circuit file loading, signal analysis (RMS, THD, FFT), simulation CRUD
+- Uses gecko-simulation-core (DetailedLossLookupTable, SwitchingLossCurve, LeitverlusteMesskurve)
+- 94 tests passing (16 new loss calculation tests)
 - Docker packaging available (multi-stage Alpine JRE 21 build, ~180MB image)
 
 ### 4.4 Documentation Site (Live)
@@ -109,7 +115,31 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-14): Sprint 4b - Loss Calculation Migration
+### Latest Sprint (2026-02-14): Sprint 5 - REST API Implementation
+
+**Phase 1: Loss Calculation Endpoints (COMPLETED)**
+- Implemented 3 REST API endpoints for semiconductor loss calculations:
+  - POST /api/v1/loss/switching - Simple voltage/energy scaling (E = E_ref * V/V_ref)
+  - POST /api/v1/loss/conduction - Resistance model (P = I * (Vth + I * Ron))
+  - POST /api/v1/loss/detailed - Bilinear interpolation from temperature-dependent curves
+- Created 10 files (~920 LOC):
+  - 5 model classes (DTOs): SwitchingLossRequest, ConductionLossRequest, DetailedLossRequest, LossCurveData, LossResponse
+  - 1 service: LossCalculationService (uses gecko-simulation-core classes)
+  - 1 controller: LossCalculationController (OpenAPI/Swagger annotations)
+  - 3 test files: 16 new tests (service unit, controller mock, E2E integration)
+- Uses gecko-simulation-core classes:
+  - DetailedLossLookupTable - Bilinear interpolation engine
+  - SwitchingLossCurve & LeitverlusteMesskurve - Temperature-dependent curves
+  - UserParameterCore - Headless parameter management
+- REST API module: 94 tests passing (0 failures)
+- Swagger UI available at http://localhost:8080/swagger-ui.html
+- **Architecture Validation:** Proves gecko-simulation-core works headless for REST API ✅
+
+**Phase 2: Circuit File Operations (PLANNED)**
+- POST /api/v1/circuit/load - Parse .ipes files with TokenMap
+- GET /api/v1/circuit/info - Circuit metadata extraction
+
+### Previous Sprint (2026-02-14): Sprint 4b - Loss Calculation Migration
 
 **Phase 2B: UserParameter Abstraction + Curve Class Migration (COMPLETED)**
 - Created UserParameterCore abstraction for headless parameter management:

@@ -151,9 +151,9 @@ Output packages in `target/`:
 **`gecko.expressionscripting/`** - GraalVM JavaScript expression evaluation
 
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
-- **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI (5,783 tests)
-- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (170 classes, 1,122 tests, 30%+ coverage enforced)
-- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (78 tests, Docker packaging available)
+- **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI (5,373 tests)
+- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (183 classes, 1,686 tests, 30%+ coverage enforced)
+- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (94 tests, 3 loss calculation endpoints live, Docker packaging available)
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
@@ -242,13 +242,13 @@ Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
 ### Strategic Direction (Dual-Track Approach)
 The project maintains the desktop application while adding modern web accessibility:
 - **Desktop** - Mature Swing GUI for power users, researchers, MATLAB/Simulink integration
-- **REST API** (planned) - Spring Boot server for automation, cloud deployment, CI/CD pipelines
-- **Shared Core** (planned) - `gecko-simulation-core` module to be extracted for both interfaces
+- **REST API** (in progress) - Spring Boot 3.2.1 server for automation, cloud deployment, CI/CD pipelines
+- **Shared Core** ✅ - `gecko-simulation-core` module extracted (183 classes, 1,686 tests)
 
 ### Active Initiatives
 1. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (30%+ minimum)
-2. **GUI-Free Core Extraction** - Decoupling computation classes from GUI singletons for `gecko-simulation-core`. Math and datacontainer packages have been migrated to the core module.
-3. **REST API Design** - API specification documented, implementation planned
+2. **GUI-Free Core Extraction** - Decoupling computation classes from GUI singletons for `gecko-simulation-core`. Math, datacontainer, losscalculation, and signal packages migrated.
+3. **REST API Implementation** - Sprint 5 Phase 1 complete: 3 loss calculation endpoints live (switching, conduction, detailed interpolation)
 
 ### GUI-Free Validated Packages
 These packages are confirmed GUI-free and safe for headless/API use:
@@ -319,7 +319,12 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
-- Sprint 4b Phase 2B: UserParameter abstraction + curve class migration (PENDING)
+- `41fe6900` Sprint 5 Phase 1: Implement loss calculation REST endpoints
+  - 3 endpoints: POST /api/v1/loss/{switching,conduction,detailed}
+  - Uses gecko-simulation-core (DetailedLossLookupTable, curves)
+  - 94 tests passing (16 new), OpenAPI/Swagger docs
+  - Validates GUI-free architecture works for REST API
+- `ab5f214a` Sprint 4b Phase 2B: UserParameter abstraction + curve class migration
   - Created UserParameterCore interface for headless parameters
   - Migrated LossCurve, SwitchingLossCurve, LeitverlusteMesskurve, DetailedLossLookupTable
   - Fixed TokenMap 2D array serialization format
@@ -328,7 +333,6 @@ Recent commits:
 - `e26eda78` Update PRD.md: Remove HiLoData known issue, add resolution details
 - `0df8ba91` Resolve HiLoData dual-version compatibility issue
 - `fa0c3638` Update documentation after Sprint 4a GeckoFile migration
-- `769f1dc6` WIP: Resolve TokenMap dual-version issue (partial)
 - `86c2a65a` Sprint 4a: Migrate GeckoFile to gecko-simulation-core
 - `cfd7f579` Phase 3: Migrate signal analysis utilities to core module
 - `19e4bb5a` Phase 2: Native C integration for scientific computing

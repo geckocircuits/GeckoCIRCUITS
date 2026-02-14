@@ -290,17 +290,31 @@ These files are NOT overwritten by `sync-docs.py` (path convention mismatch):
 - `GeckoCustomMMF` enables high-performance data exchange
 - Used for Simulink co-simulation with minimal latency
 
-### 6.3 REST API (Planned)
+### 6.3 REST API (In Progress - Sprint 5)
+**Live Endpoints (Phase 1 - Loss Calculation):**
 ```
-POST   /api/v1/simulations              Start simulation
-GET    /api/v1/simulations/{id}         Get status/results
-DELETE /api/v1/simulations/{id}         Cancel simulation
-GET    /api/v1/simulations/{id}/signals Signal data
-POST   /api/v1/analysis/rms             RMS calculation
-POST   /api/v1/analysis/thd             THD calculation
-POST   /api/v1/analysis/harmonics       Harmonic analysis
-GET    /api/health                       Health check
+POST   /api/v1/loss/switching           Switching loss (voltage/energy scaling)
+POST   /api/v1/loss/conduction          Conduction loss (resistance model)
+POST   /api/v1/loss/detailed            Detailed loss (temperature interpolation)
 ```
+
+**Planned Endpoints (Phase 2-3):**
+```
+POST   /api/v1/circuit/load             Load and parse .ipes circuit files
+GET    /api/v1/circuit/info             Circuit metadata extraction
+POST   /api/v1/signal/fft               Fast Fourier Transform
+POST   /api/v1/signal/cispr16           EMI analysis
+POST   /api/v1/signal/characteristics   RMS, THD, min/max calculation
+POST   /api/v1/simulations              Start simulation (existing)
+GET    /api/v1/simulations/{id}         Get status/results (existing)
+GET    /api/health                       Health check (existing)
+```
+
+**Implementation Details:**
+- Uses gecko-simulation-core classes (DetailedLossLookupTable, SwitchingLossCurve, LeitverlusteMesskurve)
+- OpenAPI/Swagger documentation at http://localhost:8080/swagger-ui.html
+- Jakarta Bean Validation for request parameters
+- 94 tests passing (16 new loss calculation tests)
 
 **Docker Support:**
 - Multi-stage Dockerfile using Alpine JRE 21 (~180MB image)
@@ -342,10 +356,12 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 ## 9. Architecture Roadmap
 
 ### Near-Term
-- Apply `LossFileAccessor` pattern to other GUI-coupled computation classes
-- Complete core module migration (math, datacontainer, matrix, losscalculation)
-- Implement REST API MVP with real simulation integration
-- Add Maven enforcer rules to prevent GUI leakage into API module
+- ✅ Complete core module migration (math, datacontainer, matrix, losscalculation, signal)
+- ✅ Implement REST API Phase 1 (loss calculation endpoints)
+- 🔄 REST API Phase 2: Circuit file operations (TokenMap, GeckoFile integration)
+- 🔄 REST API Phase 3: Signal analysis endpoints (FFT, CISPR16, characteristics)
+- Apply `UserParameterCore` pattern to other GUI-coupled computation classes
+- Maven enforcer already prevents GUI leakage into API module ✅
 
 ### Mid-Term
 - Desktop `--rest-server` mode (GUI + API simultaneously)
