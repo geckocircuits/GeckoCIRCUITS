@@ -40,7 +40,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 &
           sleep 1
           mvn -f pom-reactor.xml test --no-transfer-progress -Dmaven.test.failure.ignore=true
-          mvn jacoco:report --no-transfer-progress
+          mvn -f pom.xml jacoco:report --no-transfer-progress
           mvn -f src/modules/gecko-simulation-core/pom.xml jacoco:report --no-transfer-progress
 
       - name: Check test results
