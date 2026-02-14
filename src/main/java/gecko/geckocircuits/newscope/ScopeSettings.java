@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 /**
  * this class is probably the biggest bullshit you have ever seen! This was from Uwe's old Scope implementation, for
  * compatibility reasons, it is still here. It should be refactored or removed, soon!

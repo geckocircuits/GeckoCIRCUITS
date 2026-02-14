@@ -23,6 +23,7 @@ import gecko.geckocircuits.datacontainer.DataContainerNullData;
 import gecko.geckocircuits.datacontainer.DataContainerScopeWrapper;
 import gecko.geckocircuits.datacontainer.ScopeWrapperIndices;
 import gecko.geckocircuits.newscope.*;
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckoscript.GeckoInvalidArgumentException;
 import gecko.i18n.resources.I18nKeys;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

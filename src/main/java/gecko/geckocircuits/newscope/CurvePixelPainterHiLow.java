@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 

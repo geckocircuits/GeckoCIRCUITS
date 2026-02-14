@@ -14,6 +14,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.*;
+import gecko.core.datacontainer.HiLoData;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;

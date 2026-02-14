@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.newscope.GraferV4.MausModus;
 import java.awt.AlphaComposite;

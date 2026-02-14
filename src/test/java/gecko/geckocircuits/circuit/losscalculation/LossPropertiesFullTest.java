@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.circuit.circuitcomponents.IGBT;
 import gecko.geckocircuits.circuit.circuitcomponents.MOSFET;

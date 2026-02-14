@@ -15,7 +15,7 @@ package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.TimeSeriesConstantDt;
 import gecko.geckocircuits.newscope.AbstractTimeSerie;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;

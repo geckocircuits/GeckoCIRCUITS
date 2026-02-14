@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
+import gecko.core.circuit.TokenMap;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;

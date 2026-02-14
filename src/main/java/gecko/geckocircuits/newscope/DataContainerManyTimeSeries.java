@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerValuesSettable;

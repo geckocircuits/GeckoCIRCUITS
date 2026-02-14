@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.circuit.SimulationsKern;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.ReglerOSZI;

@@ -14,6 +14,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.*;
+import gecko.core.datacontainer.HiLoData;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.ArrayList;
 import java.util.List;

@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.core.circuit.TokenMap;
 import java.util.Stack;

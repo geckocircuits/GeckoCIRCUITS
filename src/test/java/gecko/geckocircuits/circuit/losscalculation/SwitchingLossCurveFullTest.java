@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.TokenMap;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

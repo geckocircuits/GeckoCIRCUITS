@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import gecko.core.datacontainer.HiLoData;
+
 public final class NiceScale {
 
     private double _minPoint;

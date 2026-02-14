@@ -2,7 +2,7 @@ package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.AbstractScopeSignal;
 import gecko.geckocircuits.newscope.DefinedMeanSignals;
-import gecko.geckocircuits.newscope.HiLoData;
+import gecko.core.datacontainer.HiLoData;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

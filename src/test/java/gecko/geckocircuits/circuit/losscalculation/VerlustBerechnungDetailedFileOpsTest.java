@@ -178,7 +178,7 @@ public class VerlustBerechnungDetailedFileOpsTest {
 
         // Parse back the hash
         String[] lines = ascii.toString().split("\n");
-        gecko.geckocircuits.circuit.TokenMap tokenMap = new gecko.geckocircuits.circuit.TokenMap(lines);
+        gecko.core.circuit.TokenMap tokenMap = new gecko.core.circuit.TokenMap(lines);
         verlust.importASCII(tokenMap);
 
         // Set up mock to return the file
@@ -197,7 +197,7 @@ public class VerlustBerechnungDetailedFileOpsTest {
         ascii.append("\ndatnamGemesseneVerluste not_defined");
         ascii.append("\nlossFileHashValue 12345");
         String[] lines = ascii.toString().split("\n");
-        gecko.geckocircuits.circuit.TokenMap tokenMap = new gecko.geckocircuits.circuit.TokenMap(lines);
+        gecko.core.circuit.TokenMap tokenMap = new gecko.core.circuit.TokenMap(lines);
         verlust.importASCII(tokenMap);
 
         when(mockAccessor.getFile(12345L)).thenThrow(new FileNotFoundException("not found"));
