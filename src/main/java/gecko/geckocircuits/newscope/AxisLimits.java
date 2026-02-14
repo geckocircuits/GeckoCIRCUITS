@@ -68,7 +68,7 @@ final class AxisLimits {
     public void setAutoEnabled(final boolean value) {
 
         if (!value) {
-            if (_userScale == HiLoData.hiLoDataFabric(0, 0)) {
+            if (_userScale.equals(HiLoData.hiLoDataFabric(0, 0))) {
                 _valueScaleLocal = getLimits();
             } else {
                 _valueScaleLocal = _userScale;

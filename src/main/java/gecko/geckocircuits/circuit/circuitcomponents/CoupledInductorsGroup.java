@@ -13,7 +13,12 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.core.circuit.calculator.*;
+import gecko.core.circuit.calculator.AStampable;
+import gecko.core.circuit.calculator.BStampable;
+import gecko.core.circuit.calculator.DirectCurrentCalculatable;
+import gecko.core.circuit.calculator.HistoryUpdatable;
+import gecko.core.circuit.calculator.PostProcessable;
+import gecko.core.circuit.calculator.BVector;
 
 import gecko.geckocircuits.allg.SolverType;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

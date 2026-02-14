@@ -13,7 +13,11 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.core.circuit.calculator.*;
+import gecko.core.circuit.calculator.AStampable;
+import gecko.core.circuit.calculator.BStampable;
+import gecko.core.circuit.calculator.DirectCurrentCalculatable;
+import gecko.core.circuit.calculator.HistoryUpdatable;
+import gecko.core.circuit.calculator.BVector;
 
 import gecko.core.circuit.waveform.TimeFunction;
 import gecko.core.circuit.waveform.TimeFunctionConstant;
