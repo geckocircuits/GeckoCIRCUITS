@@ -157,7 +157,7 @@ public class DataTablePanelParameters extends JPanel {
 //            }
 //        }
 //        return returnValue;
-        return null;
+        return new double[0][];
     }
 
     public void insertDataLine(final String parameterName, final double parameterValue) {

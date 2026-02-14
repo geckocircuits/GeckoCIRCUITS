@@ -252,7 +252,7 @@ public class GraferV3 extends JPanel {
 
     private static int[][] deepCopy2D(int[][] src) {
         if (src == null) {
-            return null;
+            return new int[0][];
         }
         int[][] copy = new int[src.length][];
         for (int i = 0; i < src.length; i++) {

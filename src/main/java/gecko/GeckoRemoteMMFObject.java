@@ -320,7 +320,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -342,7 +342,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -364,7 +364,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -386,7 +386,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -408,7 +408,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -430,7 +430,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -452,7 +452,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -474,7 +474,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -496,7 +496,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -518,7 +518,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -540,7 +540,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -562,7 +562,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new String[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1100,7 +1100,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new double[0][];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1302,7 +1302,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new double[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1324,7 +1324,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new float[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1428,7 +1428,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new float[0][];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1450,7 +1450,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new double[0][];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1685,7 +1685,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new double[0][];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1707,7 +1707,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new float[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1749,7 +1749,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new double[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);
@@ -1771,7 +1771,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                 }
 
             } else {
-                return null;
+                return new double[0];
             }
         } catch (Throwable ex) {
             throw new RuntimeException(ERROR_STRING + ex.getMessage(), ex);

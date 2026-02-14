@@ -175,7 +175,7 @@ public final class ReluctanceInductor extends AbstractCircuitBlockInterface
                 return new AbstractCircuitBlockInterface[]{_secondarySource};
             default:
                 assert false;
-                return null;
+                return new AbstractCircuitBlockInterface[0];
         }
     }
 

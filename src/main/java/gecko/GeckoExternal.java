@@ -173,7 +173,7 @@ public class GeckoExternal {
 
     public static double[][] getGlobalDoubleMatrix() {
         if (_globalDoubleMatrix == null) {
-            return null;
+            return new double[0][];
         }
         double[][] result = new double[_globalDoubleMatrix.length][];
         for (int i = 0; i < _globalDoubleMatrix.length; i++) {
@@ -186,7 +186,7 @@ public class GeckoExternal {
 
     public static float[][] getGlobalFloatMatrix() {
         if (_globalFloatMatrix == null) {
-            return null;
+            return new float[0][];
         }
         float[][] result = new float[_globalFloatMatrix.length][];
         for (int i = 0; i < _globalFloatMatrix.length; i++) {

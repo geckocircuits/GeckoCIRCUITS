@@ -1001,7 +1001,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     public final double[] simulateUntilSteadyState(final boolean supressMessages) {
         if (!_steadyStateInitialized) {
             writerOutputErrorLn("Steady state detection is not initialized! Please call initSteadyStateDetection() with appropriate arguments first!");
-            return null;
+            return new double[0];
         }
 
         initSimulation(_steadyStateDt, _steadyStateSimTime);
@@ -1130,7 +1130,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     public final double[] simulateToSteadyState(final boolean supressMessages, final double targetCorrelation, final double targetMeanPctDiff) {
         if (!_steadyStateCrossCorrelationInitialized) {
             writerOutputErrorLn("Steady state detection is not initialized! Please call initSteadyStateDetection() with appropriate arguments first!");
-            return null;
+            return new double[0];
         }
 
         double time = 0;
@@ -1340,7 +1340,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
                 writerOutputErrorLn(e);
             }
 
-            return null;
+            return new double[0][];
         }
     }
 

@@ -138,7 +138,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         }
 
         if (outputs == null || outputs.length == 0) {
-            return null;
+            return new ArrayList<>();
         }
 
         ArrayList<String[]> outputList = new ArrayList<String[]>();

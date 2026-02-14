@@ -169,7 +169,7 @@ public class CompressedData {
                 e.printStackTrace();
             }
         }
-        return null;
+        return new byte[0];
     }
 
     public static void main(String[] args) {

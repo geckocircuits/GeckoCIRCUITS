@@ -1618,7 +1618,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             default:
                 assert false : type;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     public void updateRenamedLabel(final String originalLabel, String neuerLabel, final ConnectorType renamedLabelType) {

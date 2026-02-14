@@ -194,12 +194,12 @@ public final class ReportingListTransferHandler extends TransferHandler {
             } else if (hasSerialArrayListFlavor(transf.getTransferDataFlavors())) {
                 returnValue = (ArrayList) transf.getTransferData(_serArrayLstFlvr);
             } else {
-                return null;
+                return new ArrayList<>();
             }
         } catch (UnsupportedFlavorException ufe) {
-            return null;
+            return new ArrayList<>();
         } catch (IOException ioe) {
-            return null;
+            return new ArrayList<>();
         }
         return returnValue;
     }
