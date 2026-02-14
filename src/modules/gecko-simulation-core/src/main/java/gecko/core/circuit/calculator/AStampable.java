@@ -11,12 +11,12 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.circuitcomponents;
+package gecko.core.circuit.calculator;
 
 /**
  *
  * @author andy
  */
-interface AStampable {
+public interface AStampable {
     void stampMatrixA(final double[][] matrix, final double deltaT);
 }

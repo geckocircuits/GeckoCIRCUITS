@@ -14,11 +14,11 @@
 package gecko.geckocircuits.allg;
 
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.ControlSourceType;
 import gecko.core.circuit.TokenMap;
-import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+import gecko.core.circuit.SourceType;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.geckocircuits.control.SSAShape;
 import gecko.i18n.resources.I18nKeys;

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.circuit.calculator.*;
+
 
 
 public class ThyristorCalculator extends AbstractSwitchCalculator implements CurrentCalculatable {

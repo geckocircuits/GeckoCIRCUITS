@@ -17,7 +17,7 @@ import gecko.geckocircuits.allg.FormatJTextField;
 import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ComponentCoupable;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.control.DialogElementCONTROL;
 import java.awt.BorderLayout;
 import java.awt.Color;

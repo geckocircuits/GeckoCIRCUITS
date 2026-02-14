@@ -13,7 +13,16 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.circuit.TimeFunctionConstant;
+import gecko.core.circuit.calculator.AStampable;
+import gecko.core.circuit.calculator.BStampable;
+import gecko.core.circuit.calculator.DirectCurrentCalculatable;
+import gecko.core.circuit.calculator.HistoryUpdatable;
+import gecko.core.circuit.calculator.PostProcessable;
+import gecko.core.circuit.calculator.BVector;
+import gecko.core.circuit.waveform.TimeFunction;
+import gecko.core.circuit.waveform.TimeFunctionConstant;
+
+import gecko.core.circuit.waveform.TimeFunctionConstant;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 // TODO: Ath the moment, the machine equations are implemented somewhere else

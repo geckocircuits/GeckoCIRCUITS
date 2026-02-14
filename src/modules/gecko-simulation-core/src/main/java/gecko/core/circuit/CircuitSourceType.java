@@ -11,9 +11,7 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit;
-
-import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+package gecko.core.circuit;
 
 public enum CircuitSourceType {
 

@@ -24,7 +24,7 @@ import gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.geckocircuits.circuit.TerminalRelativePositionReluctance;
 import gecko.core.circuit.TokenMap;

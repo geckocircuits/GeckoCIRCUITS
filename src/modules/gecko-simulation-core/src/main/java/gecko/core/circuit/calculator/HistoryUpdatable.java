@@ -11,17 +11,8 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
+package gecko.core.circuit.calculator;
 
-package gecko.geckocircuits.circuit.circuitcomponents;
-
-/**
- * All Circuit components, where the current is needed in the
- * simulation should be DirectCurrrentCalculatable. This interface
- * adds a n new row/column into the solver system equations
- * @author andy
- */
-public interface DirectCurrentCalculatable {
-    void setZValue(int index);
-    int getZValue();
-    double getCurrent();
+public interface HistoryUpdatable {
+    void updateHistory(double[] p);
 }

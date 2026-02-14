@@ -11,8 +11,15 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.circuitcomponents;
+package gecko.core.circuit.waveform;
 
-public interface HistoryUpdatable {
-    void updateHistory(double[] p);
+public abstract class TimeFunction {
+
+    protected int _steps_saved;
+    public static boolean saveHistory = false;
+
+    public abstract double calculate(double t, double dt);
+
+    public abstract void stepBack();
+
 }

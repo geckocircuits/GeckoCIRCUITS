@@ -17,7 +17,7 @@ import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.geckocircuits.circuit.DirectVoltageMeasurable;

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.circuit.calculator.*;
+
 import gecko.geckocircuits.allg.SolverType;
 
 public class InductorCouplingCalculator extends InductorCalculator {

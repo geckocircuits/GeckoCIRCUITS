@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.circuit.calculator.*;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",

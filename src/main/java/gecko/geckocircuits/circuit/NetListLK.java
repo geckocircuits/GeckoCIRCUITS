@@ -20,7 +20,7 @@ import gecko.geckocircuits.circuit.circuitcomponents.AbstractCapacitor;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractInductor;
 import gecko.geckocircuits.circuit.circuitcomponents.InductorCoupable;
 import gecko.geckocircuits.circuit.circuitcomponents.MutualInductance;
-import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+import gecko.core.circuit.SourceType;
 import gecko.geckocircuits.control.AbstractPotentialMeasurement;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.*;

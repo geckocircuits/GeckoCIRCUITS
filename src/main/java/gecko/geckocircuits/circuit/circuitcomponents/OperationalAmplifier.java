@@ -21,7 +21,7 @@ import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ComponentDirection;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.core.circuit.TokenMap;

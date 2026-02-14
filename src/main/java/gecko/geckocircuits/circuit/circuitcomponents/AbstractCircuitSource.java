@@ -22,15 +22,15 @@ import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import gecko.geckocircuits.circuit.PotentialCoupable;
 import gecko.geckocircuits.circuit.PotentialCoupling;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 // Note: Static imports below ARE used in this file. IDE reports them as unused
 // because some code uses fully qualified names (CircuitSourceType.CONSTANT)
 // while other code uses the static import style (CONSTANT). Both styles are
 // used throughout the class.
-import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_DC;
-import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUERT;
-import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_SIN;
-import static gecko.geckocircuits.circuit.CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY;
+import static gecko.core.circuit.CircuitSourceType.QUELLE_DC;
+import static gecko.core.circuit.CircuitSourceType.QUELLE_SIGNALGESTEUERT;
+import static gecko.core.circuit.CircuitSourceType.QUELLE_SIN;
+import static gecko.core.circuit.CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.core.circuit.TokenMap;
 import gecko.i18n.resources.I18nKeys;

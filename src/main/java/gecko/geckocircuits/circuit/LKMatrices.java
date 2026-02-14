@@ -21,7 +21,7 @@ import gecko.geckocircuits.allg.TechFormat;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.circuit.circuitcomponents.DiodeCharacteristic;
-import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+import gecko.core.circuit.SourceType;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.NumberFormat;
 

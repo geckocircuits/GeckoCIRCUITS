@@ -17,7 +17,7 @@ import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import gecko.core.circuit.SourceType;
 
 // Leistungskreis-IGBT (Knickkennlinie, Modifikation des THYR)
 public final class IGBT extends AbstractVoltageDropSwitch implements HiddenSubCircuitable {

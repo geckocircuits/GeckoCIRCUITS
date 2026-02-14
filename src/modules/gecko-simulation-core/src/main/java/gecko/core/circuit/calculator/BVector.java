@@ -12,7 +12,7 @@
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package gecko.geckocircuits.circuit.circuitcomponents;
+package gecko.core.circuit.calculator;
 
 import java.util.ArrayList;
 import java.util.List;

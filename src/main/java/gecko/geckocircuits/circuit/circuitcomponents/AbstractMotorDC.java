@@ -15,7 +15,7 @@ package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTerminal;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ComponentDirection;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;

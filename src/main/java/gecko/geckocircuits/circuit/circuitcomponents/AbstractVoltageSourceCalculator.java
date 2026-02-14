@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.circuit.calculator.*;
+
 
 public abstract class AbstractVoltageSourceCalculator extends CircuitComponent<AbstractTwoPortLKreisBlock>
     implements AStampable, DirectCurrentCalculatable, HistoryUpdatable {

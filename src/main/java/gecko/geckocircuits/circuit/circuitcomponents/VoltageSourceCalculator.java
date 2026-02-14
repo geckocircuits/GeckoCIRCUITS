@@ -13,8 +13,10 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.circuit.TimeFunction;
-import gecko.geckocircuits.circuit.TimeFunctionConstant;
+import gecko.core.circuit.calculator.*;
+
+import gecko.core.circuit.waveform.TimeFunction;
+import gecko.core.circuit.waveform.TimeFunctionConstant;
 
 public class VoltageSourceCalculator extends AbstractVoltageSourceCalculator implements BStampable,
         DirectCurrentCalculatable, HistoryUpdatable {

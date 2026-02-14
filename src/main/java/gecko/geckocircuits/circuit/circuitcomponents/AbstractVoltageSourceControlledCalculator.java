@@ -1,5 +1,7 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.circuit.calculator.*;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Stores current control component reference for dependent source calculation")

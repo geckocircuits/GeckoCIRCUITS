@@ -20,7 +20,7 @@ import gecko.geckocircuits.circuit.circuitcomponents.AbstractVoltageSource;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCurrentSource;
 import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.ReluctanceInductor;
-import gecko.geckocircuits.circuit.circuitcomponents.SourceType;
+import gecko.core.circuit.SourceType;
 import gecko.geckocircuits.control.*;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.datacontainer.CompressorIntMatrix;

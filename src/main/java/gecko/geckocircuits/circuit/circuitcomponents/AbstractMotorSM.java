@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.geckocircuits.allg.UserParameter;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;

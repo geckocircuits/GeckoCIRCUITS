@@ -45,4 +45,16 @@ public enum SolverType {
         return SOLVER_BE;
     }
 
+    /**
+     * Convert this GUI SolverType to the core module equivalent.
+     * @return the corresponding core SolverType
+     */
+    public gecko.core.allg.SolverType toCore() {
+        return switch (this) {
+            case SOLVER_BE -> gecko.core.allg.SolverType.SOLVER_BE;
+            case SOLVER_TRZ -> gecko.core.allg.SolverType.SOLVER_TRZ;
+            case SOLVER_GS -> gecko.core.allg.SolverType.SOLVER_GS;
+        };
+    }
+
 }

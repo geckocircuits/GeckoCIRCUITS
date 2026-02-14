@@ -11,31 +11,8 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit;
+package gecko.core.circuit.calculator;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
-        justification = "Simple value holder for time function - direct access for performance")
-public class TimeFunctionConstant extends TimeFunction {
-
-    public double _value;
-
-    public TimeFunctionConstant(double value) {
-        _value = value;
-    }
-
-
-    public final void setValue(double value) {
-        _value = value;
-    }
-
-    @Override
-    public double calculate(double t, double dt) {
-        return _value;
-    }
-
-    @Override
-    public void stepBack() { /* no-op */ }
-
+public interface PostProcessable {
+    void doPostProcess(double dt, double time);
 }

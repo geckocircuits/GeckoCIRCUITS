@@ -24,7 +24,7 @@ import gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import gecko.geckocircuits.circuit.HiddenSubCircuitable;
 import gecko.geckocircuits.circuit.PostCalculatable;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.circuit.CircuitSourceType;
+import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.TerminalFixedPositionInvisible;
 import gecko.geckocircuits.circuit.TerminalTwoPortRelativeFixedDirection;
 import gecko.core.circuit.TokenMap;

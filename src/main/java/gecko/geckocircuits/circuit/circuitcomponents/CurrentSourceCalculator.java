@@ -13,8 +13,9 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.circuit.TimeFunction;
-import gecko.geckocircuits.circuit.TimeFunctionConstant;
+import gecko.core.circuit.waveform.TimeFunction;
+import gecko.core.circuit.waveform.TimeFunctionConstant;
+import gecko.core.circuit.calculator.*;
 
 
 public class CurrentSourceCalculator extends CircuitComponent<AbstractCurrentSource> implements AStampable, BStampable, HistoryUpdatable {
