@@ -119,8 +119,9 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Migrated GeckoFileTest (31 tests) from JUnit 4 to JUnit 5
 - Updated 29 files with new import paths
 - **TokenMap dual-version resolution:** Removed duplicate TokenMap from main project, unified on gecko.core.circuit.TokenMap (78 files updated)
+- **HiLoData dual-version resolution:** Removed duplicate HiLoData from newscope, unified on gecko.core.datacontainer.HiLoData (41 files updated)
 - Core module: 179 classes, 52 test files, 1,307 tests, 30%+ coverage maintained
-- **Known issue:** HiLoData class hierarchy incompatibility blocks main project compilation (requires separate migration)
+- All modules compile and test successfully: 7,137 tests passing (1,307 core + 5,752 main + 78 rest-api)
 
 ### Previous Sprint (2026-02-13): Phase 3 Signal Analysis Migration
 - Created gecko.core.signal package for signal analysis utilities
