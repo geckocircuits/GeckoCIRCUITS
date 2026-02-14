@@ -1,0 +1,200 @@
+package gecko.rest.controller;
+
+import gecko.rest.model.circuit.CircuitInfo;
+import gecko.rest.model.circuit.CircuitLoadRequest;
+import gecko.rest.model.circuit.CircuitLoadResponse;
+import gecko.rest.service.CircuitFileService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * REST controller for circuit file operations.
+ * Provides endpoints for loading, parsing, and querying .ipes circuit files.
+ *
+ * Uses GeckoFile and TokenMap from gecko-simulation-core.
+ */
+@RestController
+@RequestMapping("/api/v1/circuit")
+@Tag(name = "Circuit Files", description = "Circuit file loading and parsing endpoints")
+public class CircuitFileController {
+
+    private final CircuitFileService circuitFileService;
+
+    public CircuitFileController(CircuitFileService circuitFileService) {
+        this.circuitFileService = circuitFileService;
+    }
+
+    /**
+     * Load circuit from multipart file upload.
+     */
+    @PostMapping(value = "/load", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+        summary = "Load circuit from file upload",
+        description = "Upload a .ipes circuit file and parse its structure. " +
+                     "Returns circuit ID for subsequent queries."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Circuit loaded successfully",
+            content = @Content(schema = @Schema(implementation = CircuitLoadResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid file format or parsing error"
+        )
+    })
+    public ResponseEntity<CircuitLoadResponse> loadCircuitFromFile(
+            @Parameter(description = "Circuit file (.ipes)")
+            @RequestParam("file") MultipartFile file) {
+
+        CircuitLoadResponse response = circuitFileService.loadCircuit(file);
+
+        if ("failed".equals(response.status())) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Load circuit from base64 encoded content.
+     */
+    @PostMapping(value = "/load", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Load circuit from base64 content",
+        description = "Load a circuit from base64 encoded .ipes file content. " +
+                     "Useful for programmatic access without file upload."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Circuit loaded successfully",
+            content = @Content(schema = @Schema(implementation = CircuitLoadResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Invalid base64 encoding or parsing error"
+        )
+    })
+    public ResponseEntity<CircuitLoadResponse> loadCircuitFromBase64(
+            @Valid @RequestBody CircuitLoadRequest request) {
+
+        CircuitLoadResponse response = circuitFileService.loadCircuit(
+            request.content(),
+            request.filename()
+        );
+
+        if ("failed".equals(response.status())) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Get detailed circuit information.
+     */
+    @GetMapping("/{circuitId}/info")
+    @Operation(
+        summary = "Get circuit information",
+        description = "Retrieve detailed information about a loaded circuit including " +
+                     "components, connections, and simulation parameters."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Circuit info retrieved",
+            content = @Content(schema = @Schema(implementation = CircuitInfo.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Circuit not found"
+        )
+    })
+    public ResponseEntity<CircuitInfo> getCircuitInfo(
+            @Parameter(description = "Circuit ID from load response")
+            @PathVariable String circuitId) {
+
+        CircuitInfo info = circuitFileService.getCircuitInfo(circuitId);
+        if (info == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(info);
+    }
+
+    /**
+     * Get raw circuit file content.
+     */
+    @GetMapping("/{circuitId}/raw")
+    @Operation(
+        summary = "Get raw circuit content",
+        description = "Retrieve the raw (decompressed) .ipes file content for debugging."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Raw content retrieved",
+            content = @Content(mediaType = "text/plain")
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Circuit not found"
+        )
+    })
+    public ResponseEntity<String> getRawCircuit(
+            @Parameter(description = "Circuit ID")
+            @PathVariable String circuitId) {
+
+        String raw = circuitFileService.getRawCircuit(circuitId);
+        if (raw == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(raw);
+    }
+
+    /**
+     * Delete circuit from memory.
+     */
+    @DeleteMapping("/{circuitId}")
+    @Operation(
+        summary = "Delete circuit",
+        description = "Remove circuit from memory. Useful for cleanup after processing."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "204",
+            description = "Circuit deleted successfully"
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Circuit not found"
+        )
+    })
+    public ResponseEntity<Void> deleteCircuit(
+            @Parameter(description = "Circuit ID")
+            @PathVariable String circuitId) {
+
+        boolean deleted = circuitFileService.deleteCircuit(circuitId);
+        if (!deleted) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+}
