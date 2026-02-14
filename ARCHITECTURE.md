@@ -200,41 +200,52 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (179 classes extracted):
-  ├── circuit/              54 classes
+gecko-simulation-core (183 classes extracted):
+  ├── circuit/              68 classes
   │   ├── matrix/          15 classes (MNA stampers)
   │   ├── netlist/         4 classes (netlist building)
   │   ├── simulation/      5 classes (simulation engine)
   │   ├── terminal/        3 classes (ConnectionPath, ConnectionValidator, ITerminalPosition)
   │   ├── component/       3 classes (ParameterRegistry, ParameterSerializer, TerminalRegistry)
+  │   ├── losscalculation/ 14 classes (loss curves, interpolation, calculators) ✨ SPRINT 4B
+  │   │   ├── LossCurve, SwitchingLossCurve, LeitverlusteMesskurve (temp-dependent curves)
+  │   │   ├── DetailedLossLookupTable (bilinear interpolation)
+  │   │   ├── SwitchingLossCalculator, ConductionLossCalculator (loss computation)
+  │   │   ├── LossComponent, LossCalculationDetail, LossContainer (data models)
+  │   │   └── Interfaces: AbstractLossCalculator, LossFileAccessor, LossCalculatable
   │   └── circuitcomponents/ 22 component cores
   ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
   ├── datacontainer/       11 classes (signal storage, caching)
   ├── math/                7 classes (matrix ops, LU decomposition, FFT)
   ├── nativec/             7 classes (Native C/C++ integration via JNI)
-  ├── signal/              3 classes (CharacteristicsCalculator, FourierGUIless, Cispr16Fft) ✨ NEW
+  ├── signal/              3 classes (CharacteristicsCalculator, FourierGUIless, Cispr16Fft)
   ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization)
   ├── i18n/                1 class (SelectableLanguages - 43 supported languages)
   ├── api/                 Public interfaces
-  ├── allg/                8 classes ✨ UPDATED
+  ├── allg/                10 classes ✨ SPRINT 4B
   │   ├── GeckoFile (file handling for Java blocks, loss models, nonlinear characteristics)
+  │   ├── UserParameterCore, UserParameterCoreImpl (headless parameter abstraction)
   │   ├── ExternalStorageConverter (interface for GUI abstraction)
   │   ├── GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser
   ├── GeckoRuntimeException (top-level)
   └── Circuit file parsing: TokenMap (41 tests) - migrated to gecko.core.circuit
 
-Tests (52 test files, 1,307 tests):
+Tests (59 test files, 1,686 tests):
+  ├── circuit/losscalculation/ 10 test files (180+ tests) ✨ SPRINT 4B
+  │   ├── Loss curve tests (LossCurve, SwitchingLossCurve, LeitverlusteMesskurve)
+  │   ├── Interpolation tests (DetailedLossLookupTable)
+  │   ├── Calculator tests (Switching, Conduction, Resistor)
+  │   └── Interface tests (LossCalculatable, LossCalculationSplittable)
   ├── circuit/terminal/    3 test files (138 tests)
   ├── circuit/component/   3 test files (206 tests)
   ├── circuit/             2 test files (72 tests - TokenMap + ComponentIdentifiable)
-  ├── allg/                2 test files (36 tests - GeckoFile + LaunchBrowser) ✨ NEW
+  ├── allg/                4 test files (90+ tests - UserParameter, GeckoFile, LaunchBrowser, TechFormat) ✨ SPRINT 4B
   ├── circuit/matrix/      8 test files
   ├── control/calc.        15 test files
   ├── datacontainer/       18 test files
   ├── math/                7 test files
   ├── nativec/             5 test files (46 tests)
-  ├── signal/              3 test files (29 tests - CharacteristicsCalculator, FourierGUIless, Cispr16Fft) ✨ NEW
-  ├── allg/                3 test files (55 tests - OperatingMode, LaunchBrowser, TechFormat) ✨ NEW
+  ├── signal/              3 test files (29 tests)
   ├── i18n/                1 test file (17 tests - SelectableLanguages)
   └── core/                1 test file (8 tests - GeckoRuntimeException)
 ```

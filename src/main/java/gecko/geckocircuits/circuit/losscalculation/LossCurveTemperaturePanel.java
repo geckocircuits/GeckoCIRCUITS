@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+
+import gecko.core.circuit.losscalculation.LossCurve;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

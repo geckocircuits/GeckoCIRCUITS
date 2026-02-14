@@ -13,6 +13,10 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+
+import gecko.core.circuit.losscalculation.DetailedLossLookupTable;
+import gecko.core.circuit.losscalculation.LossCurve;
+import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.geckocircuits.allg.FormatJTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +49,7 @@ public class DetailedSwitchingLossesPanel extends DetailledLossPanel<SwitchingLo
             @Override
             public void actionPerformed(final ActionEvent event) {
                 for (SwitchingLossCurve curve : _lossCurves) {
-                    curve._uBlock.setUserValue(_jtfUb.getNumberFromField());
+                    curve._uBlock.setValueWithoutUndo(_jtfUb.getNumberFromField());
                 }
             }
         });

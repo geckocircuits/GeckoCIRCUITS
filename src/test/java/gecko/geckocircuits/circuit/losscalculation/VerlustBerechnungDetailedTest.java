@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.core.circuit.losscalculation.AbstractLossCalculator;

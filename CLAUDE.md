@@ -258,7 +258,8 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation
 - `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries
 - `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files (migrated to gecko.core.circuit)
-- `circuit` ComponentIdentifiable (interface) - Component identification for deserialization ✨ NEW
+- `circuit` ComponentIdentifiable (interface) - Component identification for deserialization
+- `circuit.losscalculation` (14 classes, 180+ tests) - Power electronics loss calculation (Sprint 4b) ✨ NEW
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
@@ -266,7 +267,7 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `signal` (3 classes, 29 tests) - Signal analysis utilities (CharacteristicsCalculator, FourierGUIless, Cispr16Fft)
 - `io` SerializationUtils - ASCII format serialization for .ipes files
 - `i18n` SelectableLanguages (43 languages) - Internationalization support
-- `allg` (8 classes, 36 tests) - GeckoFile, ExternalStorageConverter, SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants ✨ UPDATED
+- `allg` (10 classes, 36+ tests) - GeckoFile, ExternalStorageConverter, UserParameterCore, SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants ✨ UPDATED
 - `core` GeckoRuntimeException - Custom runtime exception
 
 ### GUI Decoupling Patterns
@@ -277,7 +278,14 @@ The `circuit.losscalculation` package uses a `LossFileAccessor` interface to dec
 - `MainWindowLossFileAccessor` - GUI adapter (delegates to `MainWindow._fileManager`)
 - Injectable constructor enables headless testing with mock implementations
 
-**GeckoFile Pattern (NEW):**
+**UserParameterCore Pattern (Sprint 4b Phase 2B):**
+The `allg` package uses `UserParameterCore` interface to abstract GUI-enabled parameter classes:
+- `UserParameterCore<T>` - Interface with 9 essential methods (getValue, setValueWithoutUndo, readFromTokenMap, etc.)
+- `UserParameterCoreImpl<T>` - Headless implementation with Builder pattern for core module
+- `UserParameterGUIAdapter<T>` - Adapter wrapping GUI `UserParameter` for backward compatibility
+- Enables loss curves and other data models to work in headless environments
+
+**GeckoFile Pattern:**
 The `allg` package uses `ExternalStorageConverter` interface to abstract GUI dialogs for external file storage:
 - `ExternalStorageConverter` - Interface for prompting user for external file path
 - `DialogExternalStorageConverter` - GUI adapter (delegates to `DialogMakeExternal`)
@@ -311,24 +319,20 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- Sprint 4b Phase 2B: UserParameter abstraction + curve class migration (PENDING)
+  - Created UserParameterCore interface for headless parameters
+  - Migrated LossCurve, SwitchingLossCurve, LeitverlusteMesskurve, DetailedLossLookupTable
+  - Fixed TokenMap 2D array serialization format
+  - 1,686 core tests + 5,373 main tests passing
+- `b2f277da` Sprint 4b Phase 1: Migrate GUI-free losscalculation classes to core module
+- `e26eda78` Update PRD.md: Remove HiLoData known issue, add resolution details
+- `0df8ba91` Resolve HiLoData dual-version compatibility issue
+- `fa0c3638` Update documentation after Sprint 4a GeckoFile migration
 - `769f1dc6` WIP: Resolve TokenMap dual-version issue (partial)
 - `86c2a65a` Sprint 4a: Migrate GeckoFile to gecko-simulation-core
 - `cfd7f579` Phase 3: Migrate signal analysis utilities to core module
 - `19e4bb5a` Phase 2: Native C integration for scientific computing
 - `99a2e661` Phase 1 utilities migration: enums + i18n support
-- `a96db893` Add SerializationUtils to gecko-simulation-core
-- `5ad047c1` Complete Phase 1 migration: Circuit file parsing utilities to gecko-simulation-core
-- `03a3301` Fix CI: run jacoco:report per-module instead of reactor-wide
-- `e5940e0` Update project docs and developer guide with static analysis config details
-- `ea309a7` Update project docs after static analysis cleanup sprint
-- `9ffedb0` Fix 183 Tier 3 PMD violations: empty blocks, unused code, stray semicolons
-- `b8b8f1f` Strip trailing whitespace from 974 Java source files
-- `50f62f7` Fix 565 PMD violations: UselessParentheses, UnnecessaryImport, UnnecessaryModifier
-- `84388dd` Fix 694 UnnecessaryFullyQualifiedName PMD violations across 111 files
-- `49da720` Add PMD and Checkstyle configuration files with third-party exclusions
-- `f4caee5` Update project docs after static analysis cleanup sprint
-- `d69f9f5` Fix 2,620 PMD violations via auto-fixes and ruleset tuning
-- `4233f74` Fix 127 PMD violations: empty blocks, empty catches, unused code, stray imports
 
 ## Key Interfaces for Headless Operation
 

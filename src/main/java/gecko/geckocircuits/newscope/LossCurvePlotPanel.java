@@ -14,8 +14,8 @@
 
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.circuit.losscalculation.LossCurve;
-import gecko.geckocircuits.circuit.losscalculation.SwitchingLossCurve;
+import gecko.core.circuit.losscalculation.LossCurve;
+import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import java.awt.Dimension;
 import java.util.ArrayList;

@@ -46,10 +46,11 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### 4.2 Simulation Core Module (In Progress)
 - **Location:** `src/modules/gecko-simulation-core/`
-- GUI-free simulation engine suitable for headless operation (170 source classes, 35 test files, 1,122 tests)
+- GUI-free simulation engine suitable for headless operation (183 source classes, 59 test files, 1,686 tests)
 - 30% JaCoCo coverage enforced via CI (exceeds threshold)
-- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `circuit.terminal`, `circuit.component`, `control.calculators`, `math`, `datacontainer`, `allg` (file paths)
+- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `circuit.terminal`, `circuit.component`, `circuit.losscalculation`, `control.calculators`, `math`, `datacontainer`, `allg` (file paths + parameters)
 - Circuit file parsing: TokenMap, CircuitFileConstants for .ipes file processing
+- Loss calculation: Temperature-dependent loss curves, bilinear interpolation, switching/conduction losses
 - Validated by `CorePackageValidationTest` (zero GUI imports)
 
 ### 4.3 REST API (Planned)
@@ -108,7 +109,33 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
-### Latest Sprint (2026-02-14): Sprint 4a - GeckoFile Migration
+### Latest Sprint (2026-02-14): Sprint 4b - Loss Calculation Migration
+
+**Phase 2B: UserParameter Abstraction + Curve Class Migration (COMPLETED)**
+- Created UserParameterCore abstraction for headless parameter management:
+  - UserParameterCore<T> interface (9 essential methods) in gecko.core.allg
+  - UserParameterCoreImpl<T> with Builder pattern for core module
+  - UserParameterGUIAdapter<T> for backward compatibility with main project
+- Migrated 4 loss curve classes (376 LOC) to gecko.core.circuit.losscalculation:
+  - LossCurve - Abstract base class for temperature-dependent loss curves
+  - SwitchingLossCurve - Switching loss measurement curves with blocking voltage
+  - LeitverlusteMesskurve - Conduction loss measurement curves
+  - DetailedLossLookupTable - Bilinear interpolation for loss lookup
+- Migrated 7 test files with 180+ test cases, converted JUnit 4 → JUnit 5
+- Fixed TokenMap 2D array serialization format ("[][]" identifier + dimensions)
+- Updated 12 main project files with new import paths
+- Core module: 183 classes, 59 test files, 1,686 tests, 30%+ coverage maintained
+- **Build Status:** Core SUCCESS (1,686 tests) + Main SUCCESS (5,373 tests) = 7,059 tests passing
+
+**Phase 1: GUI-Free Loss Calculator Migration (COMPLETED)**
+- Migrated 10 GUI-free loss calculation classes to gecko.core.circuit.losscalculation:
+  - Calculators: SwitchingLossCalculator, ConductionLossCalculator
+  - Interfaces: AbstractLossCalculator, AbstractLossCalculatorFabric, LossCalculatable, LossCalculationSplittable, LossFileAccessor
+  - Data models: LossComponent, LossCalculationDetail, LossContainer
+- Migrated 10 test files, converted JUnit 4 → JUnit 5
+- Core module: 179 classes, 52 test files, 1,524 tests
+
+### Previous Sprint (2026-02-14): Sprint 4a - GeckoFile Migration
 
 - Migrated GeckoFile (750 LOC) from main project to gecko.core.allg
 - Created interface injection pattern for GUI abstraction:

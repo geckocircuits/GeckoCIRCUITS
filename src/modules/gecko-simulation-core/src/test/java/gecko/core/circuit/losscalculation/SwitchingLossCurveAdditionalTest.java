@@ -11,17 +11,17 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Additional comprehensive tests for SwitchingLossCurve.
  * Focuses on curve data management and parameter access.
  */
-public class SwitchingLossCurveAdditionalTest {
+class SwitchingLossCurveAdditionalTest {
 
     private static final double DELTA = 1e-10;
     private static final double TEMPERATURE_25C = 25.0;
@@ -30,7 +30,7 @@ public class SwitchingLossCurveAdditionalTest {
 
     private SwitchingLossCurve curve;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         curve = new SwitchingLossCurve(TEMPERATURE_25C, 300.0);
     }

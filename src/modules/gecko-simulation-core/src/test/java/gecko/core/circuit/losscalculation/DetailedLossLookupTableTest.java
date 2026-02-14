@@ -11,10 +11,10 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS. If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
  * to determine energy losses. It handles both conduction (LeitverlusteMesskurve)
  * and switching losses (SwitchingLossCurve) with voltage normalization.
  */
-public class DetailedLossLookupTableTest {
+class DetailedLossLookupTableTest {
 
     private static final double DELTA = 1e-6;
 

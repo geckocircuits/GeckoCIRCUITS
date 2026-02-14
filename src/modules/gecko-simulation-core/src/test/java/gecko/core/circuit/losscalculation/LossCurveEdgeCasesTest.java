@@ -11,16 +11,16 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for LossCurve - edge cases and critical paths.
  * Focuses on null handling, boundary conditions, and array operations.
  */
-public class LossCurveEdgeCasesTest {
+class LossCurveEdgeCasesTest {
 
     private static final double DELTA = 1e-10;
 

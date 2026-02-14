@@ -111,4 +111,52 @@ public final class SerializationUtils {
             buffer.append(value);
         }
     }
+
+    /**
+     * Appends a named parameter to the buffer.
+     * Format: " identifier value"
+     *
+     * @param buffer the string buffer to append to
+     * @param identifier the parameter identifier
+     * @param value the parameter value
+     */
+    public static void appendAsString(StringBuffer buffer, String identifier, Object value) {
+        buffer.append(' ');
+        buffer.append(identifier);
+        buffer.append(' ');
+        buffer.append(value);
+    }
+
+    /**
+     * Appends a 2D double array to the buffer.
+     * Format: "[][] rows cols value1 value2 ..."
+     * This matches the format expected by TokenMap.readDataLine(String, double[][]).
+     * The identifier "[][]" is appended first to match the TokenMap convention.
+     *
+     * @param buffer the string buffer to append to
+     * @param values the 2D double array
+     */
+    public static void appendAsString(StringBuffer buffer, double[][] values) {
+        if (values == null || values.length == 0) {
+            buffer.append("[][] 0 0");
+            return;
+        }
+
+        // Write "[][]" identifier first (TokenMap convention)
+        buffer.append("[][]");
+
+        // Write dimensions
+        buffer.append(' ');
+        buffer.append(values.length);
+        buffer.append(' ');
+        buffer.append(values[0].length);
+
+        // Write values
+        for (double[] row : values) {
+            for (double value : row) {
+                buffer.append(' ');
+                buffer.append(value);
+            }
+        }
+    }
 }

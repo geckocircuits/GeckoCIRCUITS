@@ -11,16 +11,16 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS. If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for SwitchingLossCurve - measured switching loss curves at specific temperatures.
  * Switching loss curves store Eon/Eoff energy vs current at specific voltage and temperature.
  */
-public class SwitchingLossCurveTest {
+class SwitchingLossCurveTest {
 
     private static final double DELTA = 1e-6;
 
@@ -218,8 +218,8 @@ public class SwitchingLossCurveTest {
 
         // Verify Eon > Eoff for this typical IGBT (turn-on usually higher)
         for (int i = 1; i < retrieved[0].length; i++) {
-            assertTrue("Eon should be > Eoff at index " + i,
-                retrieved[1][i] >= retrieved[2][i]);
+            assertTrue(retrieved[1][i] >= retrieved[2][i],
+                "Eon should be > Eoff at index " + i);
         }
     }
 

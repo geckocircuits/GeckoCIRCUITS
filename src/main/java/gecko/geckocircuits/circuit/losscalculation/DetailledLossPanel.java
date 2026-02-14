@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+
+import gecko.core.circuit.losscalculation.LossCurve;
 import gecko.geckocircuits.allg.FormatJTextField;
 import gecko.geckocircuits.circuit.DataTablePanel;
 import gecko.geckocircuits.newscope.LossCurvePlotPanel;

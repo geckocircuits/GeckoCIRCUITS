@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
 import gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;
 import java.util.ArrayList;
 import java.util.List;

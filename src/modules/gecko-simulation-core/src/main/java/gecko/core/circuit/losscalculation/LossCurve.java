@@ -11,12 +11,12 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.core.allg.UserParameterCore;
+import gecko.core.allg.UserParameterCoreImpl;
 import gecko.core.circuit.TokenMap;
-import gecko.i18n.resources.I18nKeys;
+import gecko.core.io.SerializationUtils;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
@@ -25,25 +25,26 @@ public abstract class LossCurve {
 
     public double[][] data;
 
-    final UserParameter<Double> tj = UserParameter.Builder.
+    public final UserParameterCore<Double> tj = UserParameterCoreImpl.Builder.
             <Double>start("tj", 0.0).
-            longName(I18nKeys.TEMP_AT_WHICH).
+            longName("Temperature at which loss curve is valid").
             shortName("curveTemperature").
             unit("C").
             build();
 
 
-    final void importASCII(final TokenMap tokenMap) {
+    public final void importASCII(final TokenMap tokenMap) {
         data = tokenMap.readDataLine("data[][]", data);
 
         importIndividual(tokenMap);
         tj.readFromTokenMap(tokenMap);
     }
 
-    final void exportASCII(final StringBuffer ascii) {
+    public final void exportASCII(final StringBuffer ascii) {
 
         ascii.append("\n<" + getXMLTag() + ">");
-        ProjectData.appendAsString(ascii.append("\ndata"), data);
+        ascii.append("\ndata");
+        SerializationUtils.appendAsString(ascii, data);
         tj.writeXMLToFile(ascii);
         exportIndividual(ascii);
         ascii.append("\n<\\" + getXMLTag() + ">");

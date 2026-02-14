@@ -11,13 +11,13 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
 import java.util.List;
 
 public final class DetailedLossLookupTable {
 
-    static DetailedLossLookupTable fabric(final List<? extends LossCurve> messkurvePvSWITCH,
+    public static DetailedLossLookupTable fabric(final List<? extends LossCurve> messkurvePvSWITCH,
             final int dataIndex) {
         double[][] currentValues = new double[messkurvePvSWITCH.size()][];
         double[][] energyValues = new double[messkurvePvSWITCH.size()][];

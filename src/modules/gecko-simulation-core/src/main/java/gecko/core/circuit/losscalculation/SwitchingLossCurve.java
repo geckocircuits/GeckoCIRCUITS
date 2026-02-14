@@ -11,11 +11,11 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.core.allg.UserParameterCore;
+import gecko.core.allg.UserParameterCoreImpl;
 import gecko.core.circuit.TokenMap;
-import gecko.i18n.resources.I18nKeys;
 
 import java.io.Serializable;
 
@@ -24,9 +24,9 @@ public class SwitchingLossCurve extends LossCurve implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final double DEFAULT_BLOCKING_VOLTAGE = 300;
 
-    final transient UserParameter<Double> _uBlock = UserParameter.Builder.
+    public final transient UserParameterCore<Double> _uBlock = UserParameterCoreImpl.Builder.
             <Double>start("uBlock", DEFAULT_BLOCKING_VOLTAGE).
-            longName(I18nKeys.CURVE_MEASURED_AT_VOLTAGE).
+            longName("Curve measured at blocking voltage").
             shortName("uMeasure").
             unit("V").
             build();

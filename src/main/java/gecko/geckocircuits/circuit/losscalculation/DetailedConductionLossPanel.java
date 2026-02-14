@@ -13,6 +13,10 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+
+import gecko.core.circuit.losscalculation.DetailedLossLookupTable;
+import gecko.core.circuit.losscalculation.LossCurve;
+import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

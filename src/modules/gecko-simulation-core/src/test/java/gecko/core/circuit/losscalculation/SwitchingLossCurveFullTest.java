@@ -11,19 +11,19 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
 import gecko.core.circuit.TokenMap;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Comprehensive test suite for SwitchingLossCurve.
  * Tests constructor initialization, deep copy operations, data management,
  * XML serialization, and the 4-column to 3-column data repair logic.
  */
-public class SwitchingLossCurveFullTest {
+class SwitchingLossCurveFullTest {
 
     private static final double DELTA = 1e-9;
     private static final double TEMPERATURE_25C = 25.0;
@@ -33,7 +33,7 @@ public class SwitchingLossCurveFullTest {
 
     private SwitchingLossCurve curve;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         curve = new SwitchingLossCurve(TEMPERATURE_25C, VOLTAGE_300V);
     }
@@ -46,16 +46,16 @@ public class SwitchingLossCurveFullTest {
     public void testConstructor_SetsTjCorrectly() {
         SwitchingLossCurve testCurve = new SwitchingLossCurve(TEMPERATURE_125C, VOLTAGE_600V);
 
-        assertEquals("Junction temperature should be set correctly",
-                TEMPERATURE_125C, testCurve.tj.getValue(), DELTA);
+        assertEquals(TEMPERATURE_125C, testCurve.tj.getValue(), DELTA,
+                "Junction temperature should be set correctly");
     }
 
     @Test
     public void testConstructor_SetsUBlockCorrectly() {
         SwitchingLossCurve testCurve = new SwitchingLossCurve(TEMPERATURE_125C, VOLTAGE_600V);
 
-        assertEquals("Blocking voltage should be set correctly",
-                VOLTAGE_600V, testCurve._uBlock.getValue(), DELTA);
+        assertEquals(VOLTAGE_600V, testCurve._uBlock.getValue(), DELTA,
+                "Blocking voltage should be set correctly");
     }
 
     @Test
@@ -65,10 +65,10 @@ public class SwitchingLossCurveFullTest {
 
         SwitchingLossCurve testCurve = new SwitchingLossCurve(expectedTj, expectedUBlock);
 
-        assertEquals("Temperature should match constructor parameter",
-                expectedTj, testCurve.tj.getValue(), DELTA);
-        assertEquals("Voltage should match constructor parameter",
-                expectedUBlock, testCurve._uBlock.getValue(), DELTA);
+        assertEquals(expectedTj, testCurve.tj.getValue(), DELTA,
+                "Temperature should match constructor parameter");
+        assertEquals(expectedUBlock, testCurve._uBlock.getValue(), DELTA,
+                "Voltage should match constructor parameter");
     }
 
     @Test
@@ -84,8 +84,8 @@ public class SwitchingLossCurveFullTest {
         double negativeTemp = -40.0;
         SwitchingLossCurve testCurve = new SwitchingLossCurve(negativeTemp, VOLTAGE_300V);
 
-        assertEquals("Should accept negative temperature for cryogenic operation",
-                negativeTemp, testCurve.tj.getValue(), DELTA);
+        assertEquals(negativeTemp, testCurve.tj.getValue(), DELTA,
+                "Should accept negative temperature for cryogenic operation");
     }
 
     @Test
@@ -113,8 +113,8 @@ public class SwitchingLossCurveFullTest {
 
         SwitchingLossCurve copy = curve.copy();
 
-        assertNotNull("Copy should not be null", copy);
-        assertNotSame("Copy should be different instance", curve, copy);
+        assertNotNull(copy, "Copy should not be null");
+        assertNotSame(curve, copy, "Copy should be different instance");
     }
 
     @Test
@@ -126,8 +126,8 @@ public class SwitchingLossCurveFullTest {
 
         SwitchingLossCurve copy = curve.copy();
 
-        assertEquals("Copy should have same temperature",
-                originalTj, copy.tj.getValue(), DELTA);
+        assertEquals(originalTj, copy.tj.getValue(), DELTA,
+                "Copy should have same temperature");
     }
 
     @Test
@@ -139,8 +139,8 @@ public class SwitchingLossCurveFullTest {
 
         SwitchingLossCurve copy = curve.copy();
 
-        assertEquals("Copy should have same blocking voltage",
-                originalUBlock, copy._uBlock.getValue(), DELTA);
+        assertEquals(originalUBlock, copy._uBlock.getValue(), DELTA,
+                "Copy should have same blocking voltage");
     }
 
     @Test
@@ -158,8 +158,8 @@ public class SwitchingLossCurveFullTest {
         // Verify dimensions
         assertEquals(originalData.length, copyData.length);
         for (int i = 0; i < originalData.length; i++) {
-            assertArrayEquals("Row " + i + " should match",
-                    originalData[i], copyData[i], DELTA);
+            assertArrayEquals(originalData[i], copyData[i], DELTA,
+                    "Row " + i + " should match");
         }
     }
 
@@ -214,7 +214,7 @@ public class SwitchingLossCurveFullTest {
     public void testGetXMLTag_ReturnsCorrectTag() {
         String tag = curve.getXMLTag();
 
-        assertNotNull("XML tag should not be null", tag);
+        assertNotNull(tag, "XML tag should not be null");
         assertEquals("SchaltverlusteMesskurve", tag);
     }
 
@@ -223,8 +223,8 @@ public class SwitchingLossCurveFullTest {
         SwitchingLossCurve curve1 = new SwitchingLossCurve(25.0, 300.0);
         SwitchingLossCurve curve2 = new SwitchingLossCurve(125.0, 600.0);
 
-        assertEquals("All instances should return same XML tag",
-                curve1.getXMLTag(), curve2.getXMLTag());
+        assertEquals(curve1.getXMLTag(), curve2.getXMLTag(),
+                "All instances should return same XML tag");
     }
 
     // ====================================================
@@ -279,7 +279,7 @@ public class SwitchingLossCurveFullTest {
         double[][] first = curve.getCurveData();
         double[][] second = curve.getCurveData();
 
-        assertNotSame("Each call should return new instance", first, second);
+        assertNotSame(first, second, "Each call should return new instance");
     }
 
     @Test
@@ -294,12 +294,12 @@ public class SwitchingLossCurveFullTest {
         curve.setCurveData(igbtData);
         double[][] retrieved = curve.getCurveData();
 
-        assertEquals("Should have 3 rows", 3, retrieved.length);
-        assertEquals("Should have 6 columns", 6, retrieved[0].length);
+        assertEquals(3, retrieved.length, "Should have 3 rows");
+        assertEquals(6, retrieved[0].length, "Should have 6 columns");
 
         for (int i = 0; i < igbtData.length; i++) {
-            assertArrayEquals("Row " + i + " should match",
-                    igbtData[i], retrieved[i], DELTA);
+            assertArrayEquals(igbtData[i], retrieved[i], DELTA,
+                    "Row " + i + " should match");
         }
     }
 
@@ -352,7 +352,7 @@ public class SwitchingLossCurveFullTest {
 
         String name = testCurve.getName();
 
-        assertNotNull("Name should not be null", name);
+        assertNotNull(name, "Name should not be null");
         assertEquals("25°C", name);
     }
 
@@ -439,9 +439,9 @@ public class SwitchingLossCurveFullTest {
         curve.importIndividual(tokenMap);
 
         // After repair, should have only 3 rows
-        assertNotNull("Data should not be null after import", curve.data);
-        assertEquals("Should have 3 rows after repair", 3, curve.data.length);
-        assertEquals("First row should have 3 columns", 3, curve.data[0].length);
+        assertNotNull(curve.data, "Data should not be null after import");
+        assertEquals(3, curve.data.length, "Should have 3 rows after repair");
+        assertEquals(3, curve.data[0].length, "First row should have 3 columns");
 
         // Verify first 3 rows are preserved
         assertEquals(0.0, curve.data[0][0], DELTA);
@@ -479,8 +479,8 @@ public class SwitchingLossCurveFullTest {
         curve.importIndividual(tokenMap);
 
         // Should remain 3 rows
-        assertEquals("Should still have 3 rows", 3, curve.data.length);
-        assertEquals("First row should still have 3 columns", 3, curve.data[0].length);
+        assertEquals(3, curve.data.length, "Should still have 3 rows");
+        assertEquals(3, curve.data[0].length, "First row should still have 3 columns");
 
         // Data should be unchanged
         assertEquals(0.0, curve.data[0][0], DELTA);
@@ -501,8 +501,8 @@ public class SwitchingLossCurveFullTest {
 
         curve.importIndividual(tokenMap);
 
-        assertEquals("uBlock should be read from TokenMap",
-                550.0, curve._uBlock.getValue(), DELTA);
+        assertEquals(550.0, curve._uBlock.getValue(), DELTA,
+                "uBlock should be read from TokenMap");
     }
 
     @Test
@@ -524,8 +524,8 @@ public class SwitchingLossCurveFullTest {
 
         curve.importIndividual(tokenMap);
 
-        assertEquals("Should have 3 rows after repair", 3, curve.data.length);
-        assertEquals("Should have " + numPoints + " columns", numPoints, curve.data[0].length);
+        assertEquals(3, curve.data.length, "Should have 3 rows after repair");
+        assertEquals(numPoints, curve.data[0].length, "Should have " + numPoints + " columns");
 
         // Verify first 3 rows preserved correctly
         for (int col = 0; col < numPoints; col++) {
@@ -584,7 +584,7 @@ public class SwitchingLossCurveFullTest {
         double[][] data = {{0, 10}, {0, 1.0}, {0, 0.5}};
         newCurve.setCurveData(data);
 
-        assertNotNull("Data should not be null after setting", newCurve.data);
+        assertNotNull(newCurve.data, "Data should not be null after setting");
     }
 
     @Test
@@ -602,13 +602,13 @@ public class SwitchingLossCurveFullTest {
 
         String output = ascii.toString();
 
-        assertNotNull("Output should not be null", output);
-        assertTrue("Should contain opening tag",
-                output.contains("<SchaltverlusteMesskurve>"));
-        assertTrue("Should contain closing tag",
-                output.contains("<\\SchaltverlusteMesskurve>"));
-        assertTrue("Should contain data section",
-                output.contains("data"));
+        assertNotNull(output, "Output should not be null");
+        assertTrue(output.contains("<SchaltverlusteMesskurve>"),
+                "Should contain opening tag");
+        assertTrue(output.contains("<\\SchaltverlusteMesskurve>"),
+                "Should contain closing tag");
+        assertTrue(output.contains("data"),
+                "Should contain data section");
     }
 
     // ====================================================
@@ -637,8 +637,8 @@ public class SwitchingLossCurveFullTest {
 
         // Verify Eon > Eoff (typical for IGBTs due to tail current)
         for (int i = 1; i < retrieved[0].length; i++) {
-            assertTrue("Eon should be >= Eoff at current index " + i,
-                    retrieved[1][i] >= retrieved[2][i]);
+            assertTrue(retrieved[1][i] >= retrieved[2][i],
+                    "Eon should be >= Eoff at current index " + i);
         }
     }
 
@@ -662,8 +662,8 @@ public class SwitchingLossCurveFullTest {
         double[][] retrieved = mosfetCurve.getCurveData();
 
         // Verify losses are relatively low (typical for MOSFETs)
-        assertTrue("MOSFET Eon at 30A should be < 2mJ",
-                retrieved[1][3] < 2.0);
+        assertTrue(retrieved[1][3] < 2.0,
+                "MOSFET Eon at 30A should be < 2mJ");
     }
 
     @Test
@@ -672,8 +672,8 @@ public class SwitchingLossCurveFullTest {
         SwitchingLossCurve coldCurve = new SwitchingLossCurve(25.0, 600.0);
         SwitchingLossCurve hotCurve = new SwitchingLossCurve(150.0, 600.0);
 
-        assertNotEquals("Curves should have different temperatures",
-                coldCurve.getName(), hotCurve.getName());
+        assertNotEquals(coldCurve.getName(), hotCurve.getName(),
+                "Curves should have different temperatures");
 
         assertEquals("25°C", coldCurve.getName());
         assertEquals("150°C", hotCurve.getName());
