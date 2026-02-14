@@ -13,7 +13,8 @@
  */
 package gecko.geckocircuits.allg;
 
-import gecko.geckocircuits.allg.GeckoFile.StorageType;
+import gecko.core.allg.GeckoFile;
+import gecko.core.allg.GeckoFile.StorageType;
 import gecko.geckocircuits.circuit.DialogNonLinearity;
 import gecko.geckocircuits.circuit.GeckoFileable;
 import gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;

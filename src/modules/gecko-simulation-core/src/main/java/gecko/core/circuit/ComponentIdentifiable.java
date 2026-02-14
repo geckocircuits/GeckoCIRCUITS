@@ -11,20 +11,26 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit;
-
-import gecko.core.allg.GeckoFile;
-import java.util.List;
+package gecko.core.circuit;
 
 /**
+ * Interface for components that can be identified by string ID and numeric identifier.
+ * Used for backward compatibility when loading old .ipes file formats.
  *
- * @author andy
+ * @since Sprint 4a - GeckoFile Migration
  */
-public interface GeckoFileable {
-    void initExtraFiles();
-    void addFiles(final List<GeckoFile> newFilesToAdd);
-    //override these in java block and any other block which uses external files
-    List<GeckoFile> getFiles();
-    void removeLocalComponentFiles(final List<GeckoFile> filesToRemove);
+public interface ComponentIdentifiable {
+    /**
+     * Get the string-based identifier for this component (used in older file formats).
+     *
+     * @return the string ID
+     */
+    String getStringID();
 
+    /**
+     * Get the unique numeric identifier for this component.
+     *
+     * @return the unique object identifier
+     */
+    long getUniqueObjectIdentifier();
 }

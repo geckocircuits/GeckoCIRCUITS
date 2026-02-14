@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.GeckoFile.StorageType;
+import gecko.core.allg.GeckoFile.StorageType;
 import gecko.geckocircuits.allg.GeckoFileChooser;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.newscope.GeckoDialog;

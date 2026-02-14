@@ -11,12 +11,12 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.allg;
+package gecko.core.allg;
 
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class GeckoFileTest {
     private File modelFile;
     private static final String TEST_CONTENT = "test file content";
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         tempDir = Files.createTempDirectory("gecko_test_");
 
@@ -49,7 +49,7 @@ public class GeckoFileTest {
         modelFile.createNewFile();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws IOException {
         // Clean up temp files
         if (testFile != null && testFile.exists()) {
@@ -82,10 +82,12 @@ public class GeckoFileTest {
         assertEquals(GeckoFile.StorageType.EXTERNAL, geckoFile.getStorageType());
     }
 
-    @Test(expected = java.io.FileNotFoundException.class)
+    @Test
     public void testConstructor_ExternalStorage_FileNotFound() throws IOException {
         File nonExistentFile = new File(tempDir.toFile(), "nonexistent.txt");
-        new GeckoFile(nonExistentFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
+        assertThrows(java.io.FileNotFoundException.class, () -> {
+            new GeckoFile(nonExistentFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
+        });
     }
 
     @Test
@@ -147,7 +149,7 @@ public class GeckoFileTest {
     public void testGetName_WithPath() throws IOException {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         String name = geckoFile.getName();
-        assertFalse("Name should not contain path separators", name.contains(File.separator));
+        assertFalse(name.contains(File.separator), "Name should not contain path separators");
     }
 
     // ====================================================
@@ -170,8 +172,8 @@ public class GeckoFileTest {
         long hash2 = geckoFile2.getHashValue();
 
         // Both should return non-zero hash values
-        assertNotEquals("Hash should be non-zero", 0, hash1);
-        assertNotEquals("Hash should be non-zero", 0, hash2);
+        assertNotEquals(0, hash1, "Hash should be non-zero");
+        assertNotEquals(0, hash2, "Hash should be non-zero");
     }
 
     // ====================================================
@@ -243,7 +245,7 @@ public class GeckoFileTest {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         byte[] contents = geckoFile.getContentsByte();
         assertNotNull(contents);
-        assertTrue("Contents should be non-empty", contents.length > 0);
+        assertTrue(contents.length > 0, "Contents should be non-empty");
     }
 
     @Test
@@ -252,8 +254,8 @@ public class GeckoFileTest {
         byte[] contents1 = geckoFile.getContentsByteCopy();
         byte[] contents2 = geckoFile.getContentsByteCopy();
 
-        assertNotSame("Should return a copy, not the same array", contents1, contents2);
-        assertArrayEquals("Copies should have same content", contents1, contents2);
+        assertNotSame(contents1, contents2, "Should return a copy, not the same array");
+        assertArrayEquals(contents1, contents2, "Copies should have same content");
     }
 
     // ====================================================
@@ -264,14 +266,14 @@ public class GeckoFileTest {
     public void testGetModificationTimeStamp_External() throws IOException {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         long timestamp = geckoFile.getModificationTimeStamp();
-        assertTrue("Timestamp should be positive", timestamp > 0);
+        assertTrue(timestamp > 0, "Timestamp should be positive");
     }
 
     @Test
     public void testCheckModificationTimeStamp_External() throws IOException {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         long timestamp = geckoFile.checkModificationTimeStamp();
-        assertTrue("Timestamp should be positive", timestamp > 0);
+        assertTrue(timestamp > 0, "Timestamp should be positive");
     }
 
     @Test
@@ -279,7 +281,7 @@ public class GeckoFileTest {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.INTERNAL, modelFile.getAbsolutePath());
         long timestamp = geckoFile.checkModificationTimeStamp();
         // Internal storage returns a timestamp (may be -1 or actual timestamp depending on implementation)
-        assertTrue("Timestamp should be valid", timestamp != 0);
+        assertTrue(timestamp != 0, "Timestamp should be valid");
     }
 
     // ====================================================
@@ -299,7 +301,7 @@ public class GeckoFileTest {
         try {
             geckoFile.update(newFile);
             // Should not throw
-            assertTrue("File should be updated", geckoFile.getCurrentAbsolutePath().contains("newFile"));
+            assertTrue(geckoFile.getCurrentAbsolutePath().contains("newFile"), "File should be updated");
         } finally {
             newFile.delete();
         }
@@ -314,7 +316,7 @@ public class GeckoFileTest {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         String str = geckoFile.toString();
         assertNotNull(str);
-        assertTrue("Should contain EXTERNAL indicator", str.contains("EXTERNAL"));
+        assertTrue(str.contains("EXTERNAL"), "Should contain EXTERNAL indicator");
     }
 
     @Test
@@ -322,7 +324,7 @@ public class GeckoFileTest {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.INTERNAL, modelFile.getAbsolutePath());
         String str = geckoFile.toString();
         assertNotNull(str);
-        assertTrue("Should contain INTERNAL indicator", str.contains("INTERNAL"));
+        assertTrue(str.contains("INTERNAL"), "Should contain INTERNAL indicator");
     }
 
     // ====================================================
@@ -333,7 +335,7 @@ public class GeckoFileTest {
     public void testGetInputStream_External() throws IOException {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         java.io.InputStream stream = geckoFile.getInputStream();
-        assertNotNull("InputStream should not be null", stream);
+        assertNotNull(stream, "InputStream should not be null");
         stream.close();
     }
 
@@ -341,7 +343,7 @@ public class GeckoFileTest {
     public void testGetBufferedReader_External() throws IOException {
         GeckoFile geckoFile = new GeckoFile(testFile, GeckoFile.StorageType.EXTERNAL, modelFile.getAbsolutePath());
         java.io.BufferedReader reader = geckoFile.getBufferedReader();
-        assertNotNull("BufferedReader should not be null", reader);
+        assertNotNull(reader, "BufferedReader should not be null");
         reader.close();
     }
 
@@ -352,7 +354,7 @@ public class GeckoFileTest {
     @Test
     public void testStorageTypeEnum_HasValues() {
         GeckoFile.StorageType[] types = GeckoFile.StorageType.values();
-        assertTrue("Should have INTERNAL and EXTERNAL", types.length >= 2);
+        assertTrue(types.length >= 2, "Should have INTERNAL and EXTERNAL");
     }
 
     @Test

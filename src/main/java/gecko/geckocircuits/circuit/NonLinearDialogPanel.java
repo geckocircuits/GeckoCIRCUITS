@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GeckoFileChooser;
 import gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;

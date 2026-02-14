@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.circuit.GeckoFileable;
 import gecko.geckocircuits.circuit.TokenMap;

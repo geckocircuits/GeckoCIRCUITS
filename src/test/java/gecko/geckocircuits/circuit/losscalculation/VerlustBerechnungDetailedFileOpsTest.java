@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import org.junit.Before;

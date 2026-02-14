@@ -15,7 +15,7 @@ package gecko.geckocircuits.control.javablock;
 
 import gecko.GeckoRuntimeException;
 import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.circuit.TokenMap;
 import java.io.*;

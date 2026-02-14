@@ -11,20 +11,20 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit;
+package gecko.geckocircuits.allg;
 
+import gecko.core.allg.ExternalStorageConverter;
 import gecko.core.allg.GeckoFile;
-import java.util.List;
 
 /**
+ * GUI implementation of external storage conversion using DialogMakeExternal.
+ * Delegates to existing dialog for user interaction.
  *
- * @author andy
+ * @since Sprint 4a - GeckoFile Migration
  */
-public interface GeckoFileable {
-    void initExtraFiles();
-    void addFiles(final List<GeckoFile> newFilesToAdd);
-    //override these in java block and any other block which uses external files
-    List<GeckoFile> getFiles();
-    void removeLocalComponentFiles(final List<GeckoFile> filesToRemove);
-
+public class DialogExternalStorageConverter implements ExternalStorageConverter {
+    @Override
+    public String promptForExternalPath(GeckoFile geckoFile, byte[] originalContents) {
+        return DialogMakeExternal.dialogResultFabric(geckoFile, originalContents);
+    }
 }

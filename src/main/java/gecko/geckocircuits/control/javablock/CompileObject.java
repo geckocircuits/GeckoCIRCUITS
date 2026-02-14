@@ -15,7 +15,7 @@
 package gecko.geckocircuits.control.javablock;
 
 import gecko.GeckoRuntimeException;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GetJarPath;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import java.io.File;

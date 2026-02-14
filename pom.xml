@@ -33,6 +33,12 @@
   </properties>
 
   <dependencies>
+    <!-- GUI-free simulation core module -->
+    <dependency>
+      <groupId>gecko</groupId>
+      <artifactId>gecko-simulation-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
     <!-- SpotBugs annotations for suppressing warnings -->
     <dependency>
       <groupId>com.github.spotbugs</groupId>

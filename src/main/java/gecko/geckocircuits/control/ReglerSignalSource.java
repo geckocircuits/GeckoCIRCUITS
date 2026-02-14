@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.*;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ControlSourceType;

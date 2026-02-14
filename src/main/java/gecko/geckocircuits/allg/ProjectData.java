@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.allg;
 
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.GeckoSim;

@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control.javablock;
 
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GeckoFileManagerWindow;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.circuit.GeckoFileable;

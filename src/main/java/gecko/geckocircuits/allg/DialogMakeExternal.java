@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.allg;
 
+import gecko.core.allg.GeckoFile;
 import java.io.*;
 import java.util.Date;
 import java.util.logging.Level;

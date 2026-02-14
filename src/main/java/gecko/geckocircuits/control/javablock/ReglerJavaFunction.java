@@ -18,7 +18,7 @@ import gecko.GeckoSim;
 import gecko.SystemOutputRedirect;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.*;

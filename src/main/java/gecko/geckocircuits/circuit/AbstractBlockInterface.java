@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
+import gecko.core.circuit.ComponentIdentifiable;
 import gecko.geckocircuits.control.ControlTypeInfo;
 import gecko.geckocircuits.allg.AbstractComponentTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
@@ -47,7 +48,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @SuppressWarnings("rawtypes")
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Block interface exposes terminals and parameters for circuit connectivity and configuration")
     public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
-        implements ComponentTerminable {
+        implements ComponentTerminable, ComponentIdentifiable {
 
     public List<UserParameter<? extends Object>> registeredParameters = new ArrayList<UserParameter<? extends Object>>();
     private ComponentDirection orientationBeforeMove = ComponentDirection.NORTH_SOUTH;

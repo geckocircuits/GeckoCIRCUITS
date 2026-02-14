@@ -16,7 +16,7 @@ package gecko.geckoscript;
 import gecko.GeckoSim;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.*;
 import gecko.geckocircuits.control.DataSaver;

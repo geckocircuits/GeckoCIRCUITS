@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import java.io.FileNotFoundException;
 import java.util.List;
 

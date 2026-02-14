@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control.javablock;
 
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;

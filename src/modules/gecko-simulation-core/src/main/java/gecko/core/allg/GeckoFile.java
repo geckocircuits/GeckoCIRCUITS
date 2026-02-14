@@ -11,12 +11,13 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.allg;
+package gecko.core.allg;
 
-import gecko.geckocircuits.circuit.AbstractBlockInterface;
-import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
-import gecko.geckocircuits.circuit.TokenMap;
+import gecko.core.circuit.ComponentIdentifiable;
+import gecko.core.circuit.TokenMap;
+import gecko.core.io.SerializationUtils;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -70,6 +71,7 @@ public final class GeckoFile {
     private static final Random RANDOM = new Random();
     private AbstractStorageStrategy _storageStrategy;
     private long _lastDiskModification = -1;
+    private final ExternalStorageConverter _converter;
 
     public enum StorageType {
         // don't change the order, ordinal is used!
@@ -107,6 +109,20 @@ public final class GeckoFile {
      * @throws FileNotFoundException
      */
     public GeckoFile(File fileName, final String modelFileName, final byte[] contents) throws FileNotFoundException {
+        this(fileName, modelFileName, contents, null);
+    }
+
+    /**
+     * create an initial internal file with custom external storage converter
+     * @param fileName the file
+     * @param modelFileName the model file name
+     * @param contents the file contents
+     * @param converter the external storage converter (null uses default)
+     * @throws FileNotFoundException
+     */
+    public GeckoFile(File fileName, final String modelFileName, final byte[] contents,
+                     ExternalStorageConverter converter) throws FileNotFoundException {
+        this._converter = converter != null ? converter : new DefaultExternalStorageConverter();
         setStorageStrategy(StorageType.INTERNAL);
         _file = fileName;
         _separator = File.separator;
@@ -119,6 +135,20 @@ public final class GeckoFile {
 
     //same as above, but with File object passed instead of path
     public GeckoFile(final File file, final StorageType storageType, final String modelFileName) throws FileNotFoundException {
+        this(file, storageType, modelFileName, null);
+    }
+
+    /**
+     * Primary constructor with custom external storage converter
+     * @param file the file
+     * @param storageType the storage type (INTERNAL or EXTERNAL)
+     * @param modelFileName the model file name
+     * @param converter the external storage converter (null uses default)
+     * @throws FileNotFoundException
+     */
+    public GeckoFile(final File file, final StorageType storageType, final String modelFileName,
+                     ExternalStorageConverter converter) throws FileNotFoundException {
+        this._converter = converter != null ? converter : new DefaultExternalStorageConverter();
         setStorageStrategy(storageType);
         _file = file;
         _separator = File.separator;
@@ -158,7 +188,20 @@ public final class GeckoFile {
      * GeckoFile stuff running in the new Software release.
      * @throws FileNotFoundException
      */
-    public GeckoFile(final TokenMap tokenMap, final List<AbstractCircuitSheetComponent> allComponents) throws FileNotFoundException {
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents) throws FileNotFoundException {
+        this(tokenMap, allComponents, null);
+    }
+
+    /**
+     * constructor when GeckoFile object is reconstructed from ipes file with custom converter
+     *
+     * @param tokenMap the token map from .ipes file
+     * @param allComponents list of components for resolving old-style string IDs
+     * @param converter the external storage converter (null uses default)
+     * @throws FileNotFoundException
+     */
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, ExternalStorageConverter converter) throws FileNotFoundException {
+        this._converter = converter != null ? converter : new DefaultExternalStorageConverter();
         _separator = tokenMap.readDataLine("fileSep", File.separator);
         _hash = tokenMap.readDataLine("hashValue", -1);
 
@@ -174,9 +217,9 @@ public final class GeckoFile {
                 long identifier = Long.parseLong(name);
                 _usageList.add(identifier);
             } catch (NumberFormatException ex) { // this is due to a version change from 1.61 to 1.62
-                for (AbstractCircuitSheetComponent comp : allComponents) {
-                    if (comp instanceof AbstractBlockInterface) {
-                        AbstractBlockInterface block = (AbstractBlockInterface) comp;
+                for (Object comp : allComponents) {
+                    if (comp instanceof ComponentIdentifiable) {
+                        ComponentIdentifiable block = (ComponentIdentifiable) comp;
                         if (block.getStringID().equals(name)) {
                             _usageList.add(block.getUniqueObjectIdentifier());
                         }
@@ -404,12 +447,12 @@ public final class GeckoFile {
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<GeckoFile>");
         //----------------------------------------
-        ProjectData.appendAsString(ascii.append("\nhashValue"), _hash);
-        ProjectData.appendAsString(ascii.append("\nabsPath"), _absolutePath);
-        ProjectData.appendAsString(ascii.append("\nrelPath"), _relativePath);
-        ProjectData.appendAsString(ascii.append("\nfileSep"), _separator);
-        ProjectData.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        ProjectData.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
+        SerializationUtils.appendAsString(ascii.append("\nhashValue"), _hash);
+        SerializationUtils.appendAsString(ascii.append("\nabsPath"), _absolutePath);
+        SerializationUtils.appendAsString(ascii.append("\nrelPath"), _relativePath);
+        SerializationUtils.appendAsString(ascii.append("\nfileSep"), _separator);
+        SerializationUtils.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
+        SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
 
         ascii.append("\n<usageList>");
         for (Long userID : _usageList) {
@@ -420,7 +463,7 @@ public final class GeckoFile {
         ascii.append("\n<\\usageList>");
 
         if (_storageStrategy.getStorageType() == StorageType.INTERNAL) {
-            ProjectData.appendAsString(ascii.append("\nfileContents"), _fileContents);
+            SerializationUtils.appendAsString(ascii.append("\nfileContents"), _fileContents);
         }
 
         ascii.append("\n<\\GeckoFile>");
@@ -665,7 +708,7 @@ public final class GeckoFile {
         @Override
         void switchToNewType(final byte[] originalContents) throws FileNotFoundException {
 
-            final String result = DialogMakeExternal.dialogResultFabric(GeckoFile.this, originalContents);
+            final String result = _converter.promptForExternalPath(GeckoFile.this, originalContents);
             if (result == null || !new File(result).exists()) { // cancel pressed or external file is not existing!
                 setStorageType(StorageType.INTERNAL);
             }
@@ -679,6 +722,26 @@ public final class GeckoFile {
         @Override
         byte[] getContentsByteCopy() {
             return readFileIntoMemory();
+        }
+    }
+
+    /**
+     * Default implementation of ExternalStorageConverter that uses reflection to call
+     * DialogMakeExternal from the GUI layer. This allows GeckoFile to work in both
+     * GUI and headless environments.
+     */
+    private static class DefaultExternalStorageConverter implements ExternalStorageConverter {
+        @Override
+        public String promptForExternalPath(GeckoFile geckoFile, byte[] originalContents) {
+            // Use reflection to avoid hard dependency on GUI class
+            try {
+                Class<?> dialogClass = Class.forName("gecko.geckocircuits.allg.DialogMakeExternal");
+                Method factory = dialogClass.getMethod("dialogResultFabric", GeckoFile.class, byte[].class);
+                return (String) factory.invoke(null, geckoFile, originalContents);
+            } catch (Exception e) {
+                throw new UnsupportedOperationException(
+                    "GUI not available - provide ExternalStorageConverter implementation", e);
+            }
         }
     }
 //    // test routine, do not remove!

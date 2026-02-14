@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit.circuitcomponents;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoFile;
+import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.circuit.TokenMap;
