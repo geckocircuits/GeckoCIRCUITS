@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for resistor power loss calculation (P = I * V) - edge cases.

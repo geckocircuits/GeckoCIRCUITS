@@ -11,7 +11,7 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
 /**
  * This is a class to "package" losses being returned by loss-calculators - so we can keep switching and conduction losses separate for

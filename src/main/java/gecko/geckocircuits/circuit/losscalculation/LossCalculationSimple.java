@@ -15,6 +15,8 @@ package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSemiconductor;
 import gecko.geckocircuits.circuit.circuitcomponents.ForwardVoltageDropable;
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
+import gecko.core.circuit.losscalculation.AbstractLossCalculatorFabric;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores semiconductor reference for loss calculation")

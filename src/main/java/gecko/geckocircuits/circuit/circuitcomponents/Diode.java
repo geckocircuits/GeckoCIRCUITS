@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit.circuitcomponents;
 import gecko.geckocircuits.allg.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
-import gecko.geckocircuits.circuit.losscalculation.LossCalculationDetail;
+import gecko.core.circuit.losscalculation.LossCalculationDetail;
 import gecko.geckocircuits.circuit.losscalculation.LossProperties;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;

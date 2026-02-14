@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.geckocircuits.circuit.GeckoFileable;
-import gecko.geckocircuits.circuit.losscalculation.LossCalculatable;
+import gecko.core.circuit.losscalculation.LossCalculatable;
 
 public interface SemiconductorLossCalculatable extends GeckoFileable, LossCalculatable {
 

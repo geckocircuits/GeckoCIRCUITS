@@ -13,6 +13,9 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
+import gecko.core.circuit.losscalculation.LossCalculationDetail;
+import gecko.core.circuit.losscalculation.LossCalculationSplittable;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

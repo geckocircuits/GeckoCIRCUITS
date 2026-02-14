@@ -203,9 +203,14 @@ class CorePackageValidationTest {
     }
 
     @Test
-    @DisplayName("losscalculation package has expected file count (24 classes)")
+    @DisplayName("losscalculation package has expected file count (16 classes after Sprint 4b Phase 1)")
     void losscalculationPackageFileCount() throws IOException {
-        assertPackageFileCount("circuit/losscalculation", 22, 26);  // 24 ± 2
+        // 16 files as of Sprint 4b Phase 1 (10 GUI-free classes migrated to core)
+        // Migrated to core: AbstractLossCalculator, AbstractLossCalculatorFabric,
+        //   LossCalculatable, LossCalculationSplittable, LossFileAccessor,
+        //   SwitchingLossCalculator, ConductionLossCalculator, LossComponent,
+        //   LossCalculationDetail, LossContainer
+        assertPackageFileCount("circuit/losscalculation", 14, 18);  // 16 ± 2
     }
 
     @Test

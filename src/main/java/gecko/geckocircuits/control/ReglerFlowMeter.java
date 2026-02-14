@@ -20,7 +20,7 @@ import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.ThermPvChip;
-import gecko.geckocircuits.circuit.losscalculation.LossComponent;
+import gecko.core.circuit.losscalculation.LossComponent;
 import gecko.i18n.resources.I18nKeys;
 import java.util.Arrays;
 import java.util.List;

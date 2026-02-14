@@ -11,8 +11,16 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-public interface LossCalculatable {
-    AbstractLossCalculatorFabric getVerlustBerechnung();
+
+/**
+ * Whenever a loss calculation can be split into conduction and switching losses,
+ * the conduction loss class should implement this interface.
+ * @author andy
+ */
+
+public interface LossCalculationSplittable {
+    double getSwitchingLoss();
+    double getConductionLoss();
 }

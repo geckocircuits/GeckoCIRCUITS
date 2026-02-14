@@ -11,10 +11,10 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for ConductionLossCalculator.
@@ -243,14 +243,18 @@ public class ConductionLossCalculatorTest {
     // Validation Tests
     // ===========================================
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidation_NegativeResistance() {
-        ConductionLossCalculator.resistiveModel(-0.01);
+        assertThrows(IllegalArgumentException.class, () -> {
+            ConductionLossCalculator.resistiveModel(-0.01);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidation_NegativeThreshold() {
-        ConductionLossCalculator.thresholdResistiveModel(-0.7, 0.01);
+        assertThrows(IllegalArgumentException.class, () -> {
+            ConductionLossCalculator.thresholdResistiveModel(-0.7, 0.01);
+        });
     }
 
     @Test

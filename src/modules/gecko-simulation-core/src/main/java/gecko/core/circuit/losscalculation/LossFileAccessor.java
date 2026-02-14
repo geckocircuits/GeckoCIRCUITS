@@ -11,16 +11,16 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
+import gecko.core.allg.GeckoFile;
+import java.io.FileNotFoundException;
+import java.util.List;
 
-/**
- * Whenever a loss calculation can be split into conduction and switching losses,
- * the conduction loss class should implement this interface.
- * @author andy
- */
-
-public interface LossCalculationSplittable {
-    double getSwitchingLoss();
-    double getConductionLoss();
+public interface LossFileAccessor {
+    GeckoFile getFile(long hash) throws FileNotFoundException;
+    List<GeckoFile> getFilesByExtension(String extension);
+    void maintain(GeckoFile file);
+    void addFile(GeckoFile file);
+    String getOpenFileName();
 }

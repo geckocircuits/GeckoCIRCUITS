@@ -11,10 +11,10 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for LossCalculationDetail enum - edge cases and critical paths.
@@ -38,32 +38,36 @@ public class LossCalculationDetailEdgeCasesTest {
         assertEquals(LossCalculationDetail.DETAILED, result);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testGetFromDeprecatedFileVersion_InvalidZero() {
         // 0 is not a valid ordinal - should trigger assert
-        LossCalculationDetail result = LossCalculationDetail.getFromDeprecatedFileVersion(0);
-        assertEquals(LossCalculationDetail.DETAILED, result);
+        assertThrows(AssertionError.class, () -> {
+            LossCalculationDetail.getFromDeprecatedFileVersion(0);
+        });
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testGetFromDeprecatedFileVersion_InvalidNegative() {
         // Negative numbers are invalid - should trigger assert
-        LossCalculationDetail result = LossCalculationDetail.getFromDeprecatedFileVersion(-1);
-        assertEquals(LossCalculationDetail.DETAILED, result);
+        assertThrows(AssertionError.class, () -> {
+            LossCalculationDetail.getFromDeprecatedFileVersion(-1);
+        });
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testGetFromDeprecatedFileVersion_InvalidTooLarge() {
         // Number > 2 is invalid - should trigger assert
-        LossCalculationDetail result = LossCalculationDetail.getFromDeprecatedFileVersion(3);
-        assertEquals(LossCalculationDetail.DETAILED, result);
+        assertThrows(AssertionError.class, () -> {
+            LossCalculationDetail.getFromDeprecatedFileVersion(3);
+        });
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testGetFromDeprecatedFileVersion_InvalidHugeNumber() {
         // Very large number is invalid - should trigger assert
-        LossCalculationDetail result = LossCalculationDetail.getFromDeprecatedFileVersion(Integer.MAX_VALUE);
-        assertEquals(LossCalculationDetail.DETAILED, result);
+        assertThrows(AssertionError.class, () -> {
+            LossCalculationDetail.getFromDeprecatedFileVersion(Integer.MAX_VALUE);
+        });
     }
 
     // ====================================================

@@ -14,6 +14,7 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores resistor reference for loss calculation")

@@ -16,6 +16,8 @@ package gecko.geckocircuits.circuit.losscalculation;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.allg.GlobalFilePathes;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
+import gecko.core.circuit.losscalculation.LossFileAccessor;
+import gecko.core.circuit.losscalculation.LossCalculationDetail;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

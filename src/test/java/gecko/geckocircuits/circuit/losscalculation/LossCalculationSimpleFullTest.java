@@ -14,13 +14,14 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
 import gecko.geckocircuits.circuit.circuitcomponents.IGBT;
 import gecko.i18n.LangInit;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Comprehensive test suite for LossCalculationSimple and LossCalculatorSwitchSimple.
@@ -41,7 +42,7 @@ public class LossCalculationSimpleFullTest {
     private IGBT igbt;
     private LossCalculationSimple lossCalc;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         LangInit.initEnglish();
         igbt = new IGBT();
@@ -70,10 +71,12 @@ public class LossCalculationSimpleFullTest {
         assertTrue(calculator instanceof LossCalculationSimple.LossCalculatorSwitchSimple);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void testLossCalculatorFabric_FailsWhenUSwNormZero() {
-        lossCalc._uSWnorm = 0;
-        lossCalc.lossCalculatorFabric();
+        assertThrows(AssertionError.class, () -> {
+            lossCalc._uSWnorm = 0;
+            lossCalc.lossCalculatorFabric();
+        });
     }
 
     // ===========================================

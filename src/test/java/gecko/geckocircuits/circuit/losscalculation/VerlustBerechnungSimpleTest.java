@@ -14,6 +14,7 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.circuit.circuitcomponents.IGBT;
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
 import gecko.i18n.LangInit;
 import org.junit.Before;
 import org.junit.Test;

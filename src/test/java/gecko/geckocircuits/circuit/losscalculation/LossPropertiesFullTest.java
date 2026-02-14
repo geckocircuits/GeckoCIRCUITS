@@ -14,6 +14,9 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.core.circuit.TokenMap;
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
+import gecko.core.circuit.losscalculation.LossCalculationDetail;
+import gecko.core.circuit.losscalculation.LossCalculationSplittable;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.circuit.circuitcomponents.IGBT;
 import gecko.geckocircuits.circuit.circuitcomponents.MOSFET;

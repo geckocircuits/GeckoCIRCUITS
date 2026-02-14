@@ -11,10 +11,10 @@
  *  You should have received a copy of the GNU General Public License along with
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for SwitchingLossCalculator.
@@ -182,20 +182,24 @@ public class SwitchingLossCalculatorTest {
         assertEquals(1000.0, power, TOLERANCE);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInstantaneousPower_ZeroTimeStep() {
-        SwitchingLossCalculator calc = SwitchingLossCalculator.fromEnergies(
-            E_ON_REF, E_OFF_REF, I_REF, V_REF);
+        assertThrows(IllegalArgumentException.class, () -> {
+            SwitchingLossCalculator calc = SwitchingLossCalculator.fromEnergies(
+                E_ON_REF, E_OFF_REF, I_REF, V_REF);
 
-        calc.calculateInstantaneousPower(E_ON_REF, 0.0);
+            calc.calculateInstantaneousPower(E_ON_REF, 0.0);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInstantaneousPower_NegativeTimeStep() {
-        SwitchingLossCalculator calc = SwitchingLossCalculator.fromEnergies(
-            E_ON_REF, E_OFF_REF, I_REF, V_REF);
+        assertThrows(IllegalArgumentException.class, () -> {
+            SwitchingLossCalculator calc = SwitchingLossCalculator.fromEnergies(
+                E_ON_REF, E_OFF_REF, I_REF, V_REF);
 
-        calc.calculateInstantaneousPower(E_ON_REF, -1e-6);
+            calc.calculateInstantaneousPower(E_ON_REF, -1e-6);
+        });
     }
 
     // ===========================================
@@ -299,24 +303,32 @@ public class SwitchingLossCalculatorTest {
     // Validation Tests
     // ===========================================
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidation_NegativeTurnOnEnergy() {
-        SwitchingLossCalculator.fromEnergies(-1e-3, E_OFF_REF, I_REF, V_REF);
+        assertThrows(IllegalArgumentException.class, () -> {
+            SwitchingLossCalculator.fromEnergies(-1e-3, E_OFF_REF, I_REF, V_REF);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidation_NegativeTurnOffEnergy() {
-        SwitchingLossCalculator.fromEnergies(E_ON_REF, -1e-3, I_REF, V_REF);
+        assertThrows(IllegalArgumentException.class, () -> {
+            SwitchingLossCalculator.fromEnergies(E_ON_REF, -1e-3, I_REF, V_REF);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidation_ZeroReferenceCurrent() {
-        SwitchingLossCalculator.fromEnergies(E_ON_REF, E_OFF_REF, 0.0, V_REF);
+        assertThrows(IllegalArgumentException.class, () -> {
+            SwitchingLossCalculator.fromEnergies(E_ON_REF, E_OFF_REF, 0.0, V_REF);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValidation_NegativeReferenceVoltage() {
-        SwitchingLossCalculator.fromEnergies(E_ON_REF, E_OFF_REF, I_REF, -600.0);
+        assertThrows(IllegalArgumentException.class, () -> {
+            SwitchingLossCalculator.fromEnergies(E_ON_REF, E_OFF_REF, I_REF, -600.0);
+        });
     }
 
     @Test

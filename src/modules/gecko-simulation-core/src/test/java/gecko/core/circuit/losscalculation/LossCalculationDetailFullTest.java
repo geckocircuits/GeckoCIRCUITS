@@ -1,7 +1,7 @@
-package gecko.geckocircuits.circuit.losscalculation;
+package gecko.core.circuit.losscalculation;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Comprehensive test class for LossCalculationDetail enum to achieve 100% coverage.
@@ -81,14 +81,18 @@ public class LossCalculationDetailFullTest {
                      LossCalculationDetail.valueOf("DETAILED"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testValueOf_InvalidName_ThrowsException() {
-        LossCalculationDetail.valueOf("INVALID");
+        assertThrows(IllegalArgumentException.class, () -> {
+            LossCalculationDetail.valueOf("INVALID");
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testValueOf_Null_ThrowsException() {
-        LossCalculationDetail.valueOf(null);
+        assertThrows(NullPointerException.class, () -> {
+            LossCalculationDetail.valueOf(null);
+        });
     }
 
     @Test
@@ -147,7 +151,7 @@ public class LossCalculationDetailFullTest {
         int simpleOrdinal = LossCalculationDetail.SIMPLE.getOldGeckoCIRCUITSOrdinal();
         int detailedOrdinal = LossCalculationDetail.DETAILED.getOldGeckoCIRCUITSOrdinal();
 
-        assertNotEquals("Old ordinals must be unique", simpleOrdinal, detailedOrdinal);
+        assertNotEquals(simpleOrdinal, detailedOrdinal, "Old ordinals must be unique");
     }
 
     @Test

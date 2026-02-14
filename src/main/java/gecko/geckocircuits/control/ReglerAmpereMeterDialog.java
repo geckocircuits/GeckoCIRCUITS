@@ -15,7 +15,7 @@ package gecko.geckocircuits.control;
 
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ComponentCoupable;
-import gecko.geckocircuits.circuit.losscalculation.LossComponent;
+import gecko.core.circuit.losscalculation.LossComponent;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JComboBox;

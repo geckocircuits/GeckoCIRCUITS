@@ -14,6 +14,8 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
+import gecko.core.circuit.losscalculation.AbstractLossCalculator;
+import gecko.core.circuit.losscalculation.LossCalculationSplittable;
 
 abstract class AbstractLossCalculatorSwitch implements AbstractLossCalculator, LossCalculationSplittable {
 

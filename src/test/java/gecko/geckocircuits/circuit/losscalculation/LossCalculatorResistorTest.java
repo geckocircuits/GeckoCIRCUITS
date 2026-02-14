@@ -14,9 +14,9 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.geckocircuits.circuit.circuitcomponents.ResistorCircuit;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for LossCalculatorResistor - calculates power loss in resistors.
@@ -30,7 +30,7 @@ public class LossCalculatorResistorTest {
     private ResistorCircuit resistor;
     private LossCalculatorResistor calculator;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         resistor = new ResistorCircuit();
         calculator = new LossCalculatorResistor(resistor);
