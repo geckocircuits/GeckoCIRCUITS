@@ -228,11 +228,11 @@ mvn checkstyle:check
 mvn pmd:check
 ```
 
-### Static Analysis Status (2026-02-12)
+### Static Analysis Status (2026-02-14)
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules, 9 excluded rules, allowCommentedBlocks) | **823** | Code-style only, no bugs |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 9 excluded rules, allowCommentedBlocks) | **823** | Code-style only, no bugs. Down from 861 after fixing 38 ReturnEmptyCollectionRatherThanNull violations |
 | Checkstyle | `checkstyle.xml` (150-char lines) | **4,632** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
@@ -319,6 +319,13 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `f3ac9b01` Fix CI workflow jacoco:report POM specification
+  - Explicitly specify `-f pom.xml` for jacoco report after reactor build
+  - Prevents module confusion in GitHub Actions workflow
+- `2b3add3c` Fix 38 ReturnEmptyCollectionRatherThanNull PMD violations
+  - Replaced `return null;` with empty collections across 11 files
+  - Affected: GeckoRemoteMMFObject (22), GeckoExternal (2), AbstractGeckoCustom (3), ComponentPositioner (2), and 7 others
+  - PMD violations reduced from 861 to 823 (code-style only, no bug-prevention issues remaining)
 - `41fe6900` Sprint 5 Phase 1: Implement loss calculation REST endpoints
   - 3 endpoints: POST /api/v1/loss/{switching,conduction,detailed}
   - Uses gecko-simulation-core (DetailedLossLookupTable, curves)

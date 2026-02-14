@@ -253,13 +253,14 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Core module now contains 148 source classes, 31 test files, 737 tests
 - All reactor builds passing, coverage thresholds maintained
 
-### Previous Sprint (2026-02-12): Static Analysis Cleanup
+### Previous Sprint (2026-02-12 to 2026-02-14): Static Analysis Cleanup
 - Created `pmd-ruleset.xml` and `checkstyle.xml` config files, updated `pom.xml`
 - Fixed 1,445 auto-fixable PMD violations across 330+ files:
   - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
 - Fixed 183 Tier 3 PMD violations: EmptyCatchBlock (20), EmptyControlStatement (44), UnnecessarySemicolon (34), UnnecessaryReturn (33), UnusedLocalVariable (28), UnusedPrivateMethod (13), UnusedPrivateField (11)
+- Fixed 38 ReturnEmptyCollectionRatherThanNull violations across 11 files (GeckoRemoteMMFObject, GeckoExternal, AbstractGeckoCustom, ComponentPositioner, and 7 others)
 - Stripped trailing whitespace from 974 Java source files (13,359 lines)
-- SpotBugs: 0 bugs (maintained), PMD: 823 violations (down from 3,443), Checkstyle: 4,632
+- SpotBugs: 0 bugs (maintained), PMD: 823 violations (down from 3,443, no bug-prevention issues remaining), Checkstyle: 4,632
 
 ### Previous Sprint (2026-02-12): LossCalculation GUI Decoupling
 - Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
