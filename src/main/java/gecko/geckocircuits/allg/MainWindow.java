@@ -171,11 +171,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (InstantiationException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             // ignored: fall back to default look and feel
@@ -878,12 +874,14 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             //
             // Compressed data stream --> reduced and unreadable file -->
             // DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
-            GZIPOutputStream out1 = new GZIPOutputStream(new FileOutputStream(file));
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(out1, java.nio.charset.StandardCharsets.UTF_8));
-            //
-            out.write(datLK.exportASCII());
-            out.flush();
-            out.close();
+            try (FileOutputStream fileOut = new FileOutputStream(file);
+                 GZIPOutputStream out1 = new GZIPOutputStream(fileOut);
+                 OutputStreamWriter streamWriter = new OutputStreamWriter(out1, java.nio.charset.StandardCharsets.UTF_8);
+                 BufferedWriter out = new BufferedWriter(streamWriter)) {
+                //
+                out.write(datLK.exportASCII());
+                out.flush();
+            }
             checkWrittenFileSize(file);
             //------------
             //
@@ -1170,13 +1168,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             } else if (befehl.equals("Save View as Image")) {
                 try {
                     new SaveViewFrame(this, _se._visibleCircuitSheet).setVisible(true);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null,
-                            ex.getMessage(),
-                            "Error!",
-                            JOptionPane.ERROR_MESSAGE);
-                } catch (OutOfMemoryError ex) {
+                } catch (Exception | OutOfMemoryError ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null,
                             ex.getMessage(),
@@ -1805,9 +1797,9 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 final long totalFileSize = zipFile.length();
                 long writtenFileSize = 0;
 
-                try {
-                    final ZipFile zipSrc = new ZipFile(zipFile);
-                    final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(newFile));
+                try (ZipFile zipSrc = new ZipFile(zipFile);
+                     FileOutputStream fileOut = new FileOutputStream(newFile);
+                     ZipOutputStream zos = new ZipOutputStream(fileOut)) {
                     final Enumeration<? extends ZipEntry> srcEntries = zipSrc.entries();
 
                     int counter = 0;
@@ -1823,18 +1815,15 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                         ZipEntry newEntry = new ZipEntry(entry.getName());
                         zos.putNextEntry(newEntry);
 
-                        BufferedInputStream bis = new BufferedInputStream(zipSrc.getInputStream(entry), 10000);
-
-                        while (bis.available() > 0) {
-                            zos.write(bis.read());
+                        try (InputStream entryStream = zipSrc.getInputStream(entry);
+                             BufferedInputStream bis = new BufferedInputStream(entryStream, 10000)) {
+                            while (bis.available() > 0) {
+                                zos.write(bis.read());
+                            }
                         }
 
                         zos.closeEntry();
-                        bis.close();
                     }
-
-                    zos.close();
-                    zipSrc.close();
 
                     while (progress < 100) {
                         try {
@@ -2020,19 +2009,16 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         String[] lines = null;
         //----------
         // GZIP format (March 2009) - completely new! -->
-        try {
-            GZIPInputStream in1 = null;
-            in1 = new GZIPInputStream(new FileInputStream(dateiName));
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8));
+        try (FileInputStream fileIn = new FileInputStream(dateiName);
+             GZIPInputStream in1 = new GZIPInputStream(fileIn);
+             InputStreamReader streamReader = new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8);
+             BufferedReader in = new BufferedReader(streamReader)) {
             Vector<String> datVec = new Vector<>();
             String z = null;
 
             while ((z = in.readLine()) != null) {
                 datVec.addElement(z);
             }
-
-            in.close();
 
             lines = new String[datVec.size()];
             for (int i1 = 0; i1 < datVec.size(); i1++) {
@@ -2044,15 +2030,15 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             System.out.println("openFile() - GZIP >> " + e);
             e.printStackTrace();
             // new version 'gzipped' -->
-            try {
-                InflaterInputStream in1 = new InflaterInputStream(new FileInputStream(GlobalFilePathes.DATNAM));
-                BufferedReader in = new BufferedReader(new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8));
+            try (FileInputStream fileIn = new FileInputStream(GlobalFilePathes.DATNAM);
+                 InflaterInputStream in1 = new InflaterInputStream(fileIn);
+                 InputStreamReader streamReader = new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8);
+                 BufferedReader in = new BufferedReader(streamReader)) {
                 Vector<String> datVec = new Vector<>();
                 String z = null;
                 while ((z = in.readLine()) != null) {
                     datVec.addElement(z);
                 }
-                in.close();
                 lines = new String[datVec.size()];
                 for (int i1 = 0; i1 < datVec.size(); i1++) {
                     lines[i1] = datVec.elementAt(i1);

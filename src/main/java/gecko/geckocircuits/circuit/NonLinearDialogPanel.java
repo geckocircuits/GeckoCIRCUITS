@@ -192,7 +192,7 @@ public class NonLinearDialogPanel extends JPanel {
             public void actionPerformed(final ActionEvent ae) {
                 if (loadedFile != null) {
                     //here we don't need to do anything, since file is already set, but check anyway
-                    if (loadedFile != _nonlinearParent.getNonLinearFile()) {
+                    if (!loadedFile.equals(_nonlinearParent.getNonLinearFile())) {
                         ArrayList<GeckoFile> newFile = new ArrayList<GeckoFile>();
                         newFile.add(loadedFile);
                         _nonlinearParent.addFiles(newFile);
@@ -326,7 +326,7 @@ public class NonLinearDialogPanel extends JPanel {
 
     public void setCharacteristicLoadedFromFile(final GeckoFile file) {
         //check if file given is file set -> if not, there was an error
-        if (_nonlinearParent.getNonLinearFile() == file) {
+        if (java.util.Objects.equals(_nonlinearParent.getNonLinearFile(), file)) {
             double[][] nonLin = _nonlinearParent.getNonlinearCharacteristic();
             data = new double[2][];
             data[0] = nonLin[0];

@@ -1402,7 +1402,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         CircuitSheet parentSheet = _circuitSheet.findSubCircuit(elementName);
         newElement.setParentCircuitSheet(parentSheet);
         String truncatedElementName = elementName;
-        if (parentSheet != _circuitSheet) {
+        if (!parentSheet.equals(_circuitSheet)) {
             truncatedElementName = elementName.substring(elementName.lastIndexOf('#') + 1, elementName.length());
         }
         try {
@@ -1856,14 +1856,14 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         for (AbstractCircuitSheetComponent deselectTest
                 : datenSpeicher._allSheetComponents.toArray(new AbstractCircuitSheetComponent[0])) {
-            if (deselectTest.getParentCircuitSheet() != _visibleCircuitSheet) {
+            if (!java.util.Objects.equals(deselectTest.getParentCircuitSheet(), _visibleCircuitSheet)) {
                 _selectedComponents.remove(deselectTest);
             }
         }
 
         final List<AbstractCircuitSheetComponent> visibleComponents = new ArrayList<AbstractCircuitSheetComponent>();
         for (AbstractCircuitSheetComponent testInsert : datenSpeicher._allSheetComponents) {
-            if (testInsert.getParentCircuitSheet() == _visibleCircuitSheet) {
+            if (java.util.Objects.equals(testInsert.getParentCircuitSheet(), _visibleCircuitSheet)) {
                 visibleComponents.add(testInsert);
             }
         }

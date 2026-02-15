@@ -143,21 +143,19 @@ public final class DialogUpdate extends javax.swing.JFrame {
             urlConnection.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
             urlConnection.connect();
 
-            final BufferedReader bufIN = new BufferedReader(
-                    new InputStreamReader(
-                    urlConnection.getInputStream(), StandardCharsets.UTF_8));
-            final StringBuffer htmlText = new StringBuffer("<html>");
+            try (InputStream inputStream = urlConnection.getInputStream();
+                 InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                 BufferedReader bufIN = new BufferedReader(streamReader)) {
+                final StringBuffer htmlText = new StringBuffer("<html>");
 
-            for (String inputLine = bufIN.readLine(); inputLine != null; inputLine = bufIN.readLine()) {
-                htmlText.append(inputLine);
+                for (String inputLine = bufIN.readLine(); inputLine != null; inputLine = bufIN.readLine()) {
+                    htmlText.append(inputLine);
+                }
+                htmlText.append("</html>");
+                jLabelInfo.setText(htmlText.toString());
+                jLabelNewNumber.setText(findVersionString(htmlText.toString()));
             }
-            htmlText.append("</html>");
-            bufIN.close();
-            jLabelInfo.setText(htmlText.toString());
-            jLabelNewNumber.setText(findVersionString(htmlText.toString()));
 
-        } catch (SocketTimeoutException timeoutException) {
-            setErrorMessage();
         } catch (IOException | URISyntaxException exception) {
             setErrorMessage();
         }
@@ -372,22 +370,20 @@ public final class DialogUpdate extends javax.swing.JFrame {
             if (urlconnection != null) {
                 jButtonGetUpdateOS.setText("Downloading update...");
                 jButtonGetUpdateOS.setEnabled(false);
-                final InputStream inputStream = new BufferedInputStream(url.openStream());
+                try (InputStream urlStream = url.openStream();
+                     BufferedInputStream inputStream = new BufferedInputStream(urlStream);
+                     FileOutputStream fileOut = new FileOutputStream(fileChooser.getFileWithCheckedEnding());
+                     OutputStream out = fileOut) {
 
-                final OutputStream out = new FileOutputStream(fileChooser.getFileWithCheckedEnding());
+                    final byte[] buf = new byte[BUFFER_LENGTH];
 
+                    for (int len = inputStream.read(buf); len > 0; len = inputStream.read(buf)) {
+                        out.write(buf, 0, len);
+                    }
 
-                final byte[] buf = new byte[BUFFER_LENGTH];
-
-
-                for (int len = inputStream.read(buf); len > 0; len = inputStream.read(buf)) {
-                    out.write(buf, 0, len);
+                    jButtonGetUpdateOS.setEnabled(true);
+                    jButtonGetUpdateOS.setText("Download finished!");
                 }
-
-                out.close();
-                inputStream.close();
-                jButtonGetUpdateOS.setEnabled(true);
-                jButtonGetUpdateOS.setText("Download finished!");
             }
 
         } catch (IOException | URISyntaxException ex) {

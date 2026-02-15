@@ -32,6 +32,7 @@ public class NativeCClassLoader extends ClassLoader {
     }
 
     @Override
+    @SuppressWarnings("PMD.CloseResource") // resourceStream is wrapped by BufferedInputStream which is closed in try-with-resources
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         final byte[] classBytes;
         java.io.InputStream resourceStream = getSystemResourceAsStream(
@@ -41,16 +42,13 @@ public class NativeCClassLoader extends ClassLoader {
             throw new ClassNotFoundException("Could not find class: " + name);
         }
 
-        BufferedInputStream inBuff = new BufferedInputStream(resourceStream);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int i;
-        try {
+        try (BufferedInputStream inBuff = new BufferedInputStream(resourceStream);
+             ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            int i;
             while ((i = inBuff.read()) != -1) {
                 out.write(i);
             }
-            inBuff.close();
             classBytes = out.toByteArray();
-            out.close();
             return defineClass(name, classBytes, 0, classBytes.length);
         } catch (IOException ioe) {
             throw new ClassNotFoundException("Error reading class: " + name, ioe);

@@ -93,7 +93,7 @@ public final class NetListLK {
         for (int i1 = 0; i1 < elementANZAHLneu; i1++) {
             if (eLKneu[i1] instanceof InductorCoupable) {
                 for (int i2 = 0; i2 < alleGekoppeltenLc.length; i2++) {
-                    if (alleGekoppeltenLc[i2] == eLKneu[i1]) {
+                    if (alleGekoppeltenLc[i2].equals(eLKneu[i1])) {
                         int anzahlKoppelPartner = partnerLc[i2].length;
                         double[] temp_spgQnr = new double[anzahlKoppelPartner];
                         double[] temp_kWerte = new double[anzahlKoppelPartner];
@@ -218,7 +218,7 @@ public final class NetListLK {
                 ComponentCoupable compCoupable = (ComponentCoupable) eLKneu[i1];
                 ComponentCoupling coupling = compCoupable.getComponentCoupling();
                 for (int i2 = 0; i2 < elementANZAHLneu; i2++) {
-                    if (eLKneu[i2] == coupling._coupledElements[0]) {
+                    if (eLKneu[i2].equals(coupling._coupledElements[0])) {
                         nodePairDirVoltContSrc[i1][0] = knotenX[i2];
                         nodePairDirVoltContSrc[i1][1] = knotenY[i2];
                     }
@@ -536,7 +536,7 @@ public final class NetListLK {
         for (int i = 0; i < eLKneu.length; i++) {
             AbstractCircuitBlockInterface block = eLKneu[i];
 
-            if (block.getParentCircuitSheet() != parentCircuitSheet) {
+            if (!java.util.Objects.equals(block.getParentCircuitSheet(), parentCircuitSheet)) {
                 continue;
             }
 

@@ -109,7 +109,7 @@ public final class ComponentCoupling {
     }
 
     public void setNewCouplingElementUndoable(final int index, final AbstractBlockInterface element) {
-        if (element == _coupledElements[index]) {
+        if (java.util.Objects.equals(element, _coupledElements[index])) {
             return;
         }
 
@@ -125,7 +125,7 @@ public final class ComponentCoupling {
     }
 
     public void setNewCouplingElementInvisibleUndoable(final int index, final AbstractBlockInterface element) {
-        if (element == _coupledElements[index]) {
+        if (java.util.Objects.equals(element, _coupledElements[index])) {
             return;
         }
 
@@ -237,7 +237,7 @@ public final class ComponentCoupling {
                                     _internalString = internString;
                                     _internalStringIndex = index;
                                     _coupledIdentifiers[i] = elem.getUniqueObjectIdentifier();
-                                    if (_coupledElements[i] != null && _coupledElements[i] != elem) {
+                                    if (_coupledElements[i] != null && !_coupledElements[i].equals(elem)) {
                                         _coupledElements[i]._isReferencedBy.remove(this);
                                     }
                                     _coupledElements[i] = elem;

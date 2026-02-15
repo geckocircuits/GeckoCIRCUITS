@@ -293,16 +293,12 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
         if (_externalDataFile == null) {
             throw new GeckoRuntimeException("could not read data file in SIGNAL source block!");
         }
-        try {
-
-            final BufferedReader bufRead = _externalDataFile.getBufferedReader();//new BufferedReader(new FileReader(datnamXY));
+        try (BufferedReader bufRead = _externalDataFile.getBufferedReader()) { //new BufferedReader(new FileReader(datnamXY));
             final List<String> datVec = new ArrayList<String>();
 
             for (String line = bufRead.readLine(); line != null; line = bufRead.readLine()) {
                 datVec.add(line);
             }
-
-            bufRead.close();
             _xy = new double[2][datVec.size()];
 
             final StringTokenizer stk = new StringTokenizer(datVec.get(0), " ");

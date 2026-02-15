@@ -54,7 +54,7 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
 
     private void checkOutputsForNANorINFValues(double[][] ausgangssignal) {
         for (int i = 0; i < ausgangssignal.length; i++) {
-            if (ausgangssignal[i] != ausgangssignal[i]) {
+            if (Double.isNaN(ausgangssignal[i][0])) {
                 throw new ArithmeticException("Output value yOUT[" + i + "] is not a number: " + ausgangssignal[i]);
             }
         }
@@ -71,6 +71,7 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
     @Override
     @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
             justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
+    @SuppressWarnings("PMD.CloseResource") // ClassLoader must persist for dynamically loaded class lifecycle
     public void findAndLoadClass() {
         try {
             _classNameFileMap = _compileObject.getClassNameFileMap();

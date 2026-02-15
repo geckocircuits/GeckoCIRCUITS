@@ -123,7 +123,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
     @Override
     public final void checkComponentCompatibility(final Object testObject, final List<AbstractBlockInterface> insertList) {
 
-        if (testObject == this) {
+        if (testObject.equals(this)) {
             return;
         }
         if (testObject instanceof DirectVoltageMeasurable

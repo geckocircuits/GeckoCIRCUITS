@@ -270,7 +270,7 @@ public class ParameterSupport extends javax.swing.JFrame {
         for (List<AbstractBlockInterface> currentList : _allComponents) {
             _selectBlockTypeModel.addElement(currentList.get(0).getTypeInfo());
             for (AbstractBlockInterface elem : currentList) {
-                if (_listAvailableBlocks.getSelectedValue() == elem.getTypeEnum()) {
+                if (java.util.Objects.equals(_listAvailableBlocks.getSelectedValue(), elem.getTypeEnum())) {
                     _availableBlocksModel.addElement(elem);
                 }
             }

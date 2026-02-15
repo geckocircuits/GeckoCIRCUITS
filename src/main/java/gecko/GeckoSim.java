@@ -214,9 +214,11 @@ public class GeckoSim {
 
         // test if branded version is used:
         if (testIfBrandedVersion()) {
-            try {
-                InputStream is = GeckoSim.class.getResourceAsStream("/brand.ipes");
-                _win.openFile(new BufferedReader(new InputStreamReader(new GZIPInputStream(is), StandardCharsets.UTF_8)));
+            try (InputStream is = GeckoSim.class.getResourceAsStream("/brand.ipes");
+                 GZIPInputStream gzipStream = new GZIPInputStream(is);
+                 InputStreamReader reader = new InputStreamReader(gzipStream, StandardCharsets.UTF_8);
+                 BufferedReader bufferedReader = new BufferedReader(reader)) {
+                _win.openFile(bufferedReader);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -497,8 +499,6 @@ public class GeckoSim {
             }
             scriptEngineAvailable = (engine != null);
 
-        } catch (NoClassDefFoundError | SecurityException err) {
-            scriptEngineAvailable = false;
         } catch (Throwable ex) {
             scriptEngineAvailable = false;
         }

@@ -316,7 +316,7 @@ public final class GraferV4 extends JPanel {
                         _loadAndDraw = true;
                     }
 
-                    if (dataContainer.getContainerStatus() == ContainerStatus.PAUSED && dataContainer != _lastDrawPausedContainer) {
+                    if (dataContainer.getContainerStatus() == ContainerStatus.PAUSED && !dataContainer.equals(_lastDrawPausedContainer)) {
                         _lastDrawPausedContainer = dataContainer;
                         _loadAndDraw = true;
                         double startTime = dataContainer.getTimeValue(0, 0);

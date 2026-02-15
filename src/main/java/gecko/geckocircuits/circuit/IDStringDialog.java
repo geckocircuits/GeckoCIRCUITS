@@ -208,7 +208,7 @@ public final class IDStringDialog {
         if (_allIDStrings.containsKey(this.toString())) {
             List<AbstractBlockInterface> possibleComponents = _allIDStrings.get(this.toString());
             for (AbstractBlockInterface deleteSearch : possibleComponents.toArray(new AbstractBlockInterface[0])) {
-                if (_parent == deleteSearch) {
+                if (_parent.equals(deleteSearch)) {
                     possibleComponents.remove(_parent);
                 }
             }

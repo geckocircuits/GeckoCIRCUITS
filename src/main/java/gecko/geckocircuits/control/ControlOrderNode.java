@@ -68,7 +68,7 @@ final class ControlOrderNode {
         }
 
         for (ControlOrderNode element2 : allBlocks) {
-            if (element2 == this) {
+            if (element2.equals(this)) {
                 continue;
             }
 
@@ -92,7 +92,7 @@ final class ControlOrderNode {
         }
 
         for(ControlOrderNode element2 : allBlocks) {
-            if (element2 == this) {
+            if (element2.equals(this)) {
                 continue;
             }
 

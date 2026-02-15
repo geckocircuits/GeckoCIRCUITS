@@ -105,9 +105,7 @@ public final class CompileObject extends AbstractCompileObject {
                 _compileStatus = CompileStatus.COMPILE_ERROR;
                 _compilerWriter.append("Compile status: ERROR");
             }
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (IllegalArgumentException | SecurityException ex) {
             Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             // Close the file manager
@@ -243,6 +241,7 @@ public final class CompileObject extends AbstractCompileObject {
         return "tmpJav" + _generator.nextInt(Integer.MAX_VALUE);
     }
 
+    @SuppressWarnings("PMD.CloseResource") // StandardJavaFileManager is stored in holder and closed in finally block
     private CompilationTask createCompilationTask(final List<GeckoFile> additionalSourceFiles,
                                                    final StandardJavaFileManager[] fileManagerHolder) {
 

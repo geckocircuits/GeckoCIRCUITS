@@ -220,7 +220,7 @@ public final class SchematicTextInfo {
             if(_element instanceof Nonlinearable) {
                 UserParameter<Double> replacedParameter = ((Nonlinearable) _element).getNonlinearReplacedParameter();
                 AbstractNonLinearCircuitComponent component = (AbstractNonLinearCircuitComponent) _element;
-                if(par == replacedParameter && !par.getNameOpt().isEmpty() && component._isNonlinear.getValue()) {
+                if(par.equals(replacedParameter) && !par.getNameOpt().isEmpty() && component._isNonlinear.getValue()) {
                     continue; // don't print dollar parameters when nonlinear setting is used!
                 }
             }

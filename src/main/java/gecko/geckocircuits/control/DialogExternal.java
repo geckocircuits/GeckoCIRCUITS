@@ -60,7 +60,7 @@ public class DialogExternal extends javax.swing.JDialog {
 
         for (RegelBlock block : orderList) {
             model.addElement(block.getStringID());
-            if (block == _regelBlock) {
+            if (block.equals(_regelBlock)) {
                 jList1.setSelectedIndex(orderList.indexOf(_regelBlock));
             }
         }

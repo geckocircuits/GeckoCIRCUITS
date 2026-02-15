@@ -62,7 +62,7 @@ public class LastComponentButton extends JButton {
     }
 
     public void removeTempShowComponent(final AbstractBlockInterface tmpComponentToRemove) {
-        if (_tmpShowComponent == tmpComponentToRemove) {
+        if (_tmpShowComponent != null && _tmpShowComponent.equals(tmpComponentToRemove)) {
             _tmpShowComponent = null;
         }
         repaint();

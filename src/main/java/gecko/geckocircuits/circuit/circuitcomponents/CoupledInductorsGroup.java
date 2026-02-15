@@ -262,7 +262,7 @@ public final class CoupledInductorsGroup implements AStampable, CurrentCalculata
 
         for (int i = 0; i < _allInductors.size(); i++) {
             InductorCouplingCalculator ind = _allInductors.get(i);
-            if (ind == inductor) {
+            if (ind.equals(inductor)) {
                 double outValue = 0;
                 for (int j = 0; j < n; j++) {
                     outValue += _inverseInductanceMatrix[i][j] * oldAP2[j];

@@ -105,7 +105,7 @@ public class NativeCBlock {
 
     private void checkOutputsForNANorINFValues(double[][] signal) {
         for (int i = 0; i < signal.length; i++) {
-            if (signal[i] != signal[i]) {
+            if (Double.isNaN(signal[i][0])) {
                 throw new ArithmeticException("Output value yOUT[" + i + "] is not a number: " + signal[i]);
             }
         }

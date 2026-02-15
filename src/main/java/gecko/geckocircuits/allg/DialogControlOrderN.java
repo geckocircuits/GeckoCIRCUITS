@@ -330,7 +330,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
     //DropTarget
     @Override
     public final void dragEnter(final DropTargetDragEvent dtde) {
-        if (dtde.getSource() != _dropTarget){
+        if (!dtde.getSource().equals(_dropTarget)){
             dtde.rejectDrag();
             return;
         }
@@ -354,7 +354,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 
     @Override
     public final void drop(final DropTargetDropEvent dtde) {
-        if (dtde.getSource() != _dropTarget){
+        if (!dtde.getSource().equals(_dropTarget)){
             dtde.rejectDrop();
             return;
         }

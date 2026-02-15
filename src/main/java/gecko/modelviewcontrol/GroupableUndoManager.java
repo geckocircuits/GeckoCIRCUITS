@@ -72,7 +72,7 @@ public final class GroupableUndoManager extends UndoManager{
     public boolean addEdit(final UndoableEdit anEdit){
       if(anEdit instanceof GroupUndoStop){
         final GroupUndoStop stop = (GroupUndoStop)anEdit;
-        if(stop._matchingStart == this){
+        if(stop._matchingStart.equals(this)){
           stop.addGroupOfOperations(_mergedEdits);
           otherEditsAccepted = false; // "close" the merging functionality!
           return false;

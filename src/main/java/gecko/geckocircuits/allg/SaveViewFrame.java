@@ -666,8 +666,10 @@ public final class SaveViewFrame extends GeckoDialog {
             // UTF-8 encoding.
 
             if (selectedFileType == AvailableTypes.SVGZ) {
-                final OutputStream outStream = new BufferedOutputStream(new FileOutputStream(jTextFieldFileName.getText()));
-                createZippedSVGImage(outStream, svgGenerator);
+                try (FileOutputStream fileOut = new FileOutputStream(jTextFieldFileName.getText());
+                     BufferedOutputStream outStream = new BufferedOutputStream(fileOut)) {
+                    createZippedSVGImage(outStream, svgGenerator);
+                }
                 return;
             }
 
@@ -684,14 +686,15 @@ public final class SaveViewFrame extends GeckoDialog {
 
             // Create the transcoder output.
             final File transcoderOutputFile = new File(jTextFieldFileName.getText());
-            final OutputStream ostream = new BufferedOutputStream(new FileOutputStream(transcoderOutputFile));
-            final TranscoderOutput output = new TranscoderOutput(ostream);
-            final SVGAbstractTranscoder transcoder = getTranscoder();
-            transcoder.transcode(input, output);
+            try (FileOutputStream fileOut = new FileOutputStream(transcoderOutputFile);
+                 BufferedOutputStream ostream = new BufferedOutputStream(fileOut)) {
+                final TranscoderOutput output = new TranscoderOutput(ostream);
+                final SVGAbstractTranscoder transcoder = getTranscoder();
+                transcoder.transcode(input, output);
 
-            // Flush and close the stream.
-            ostream.flush();
-            ostream.close();
+                // Flush and close the stream.
+                ostream.flush();
+            }
         } catch (OutOfMemoryError err) {
             throw new GeckoRuntimeException("Java out-of-memory. Reducing the worksheet\n"
                     + "size may help to solve the problem.", err);
@@ -755,20 +758,23 @@ public final class SaveViewFrame extends GeckoDialog {
 
     private void createZippedSVGImage(final OutputStream outStream, final SVGGraphics2D svgGenerator)
             throws IOException {
-        final GZIPOutputStream finalsvgImage = new GZIPOutputStream(outStream);
-        final Writer out = new OutputStreamWriter(finalsvgImage, "UTF-8");
-        svgGenerator.stream(out, true);
-        out.flush();
-        out.close();
+        try (GZIPOutputStream finalsvgImage = new GZIPOutputStream(outStream);
+             OutputStreamWriter streamWriter = new OutputStreamWriter(finalsvgImage, "UTF-8");
+             Writer out = streamWriter) {
+            svgGenerator.stream(out, true);
+            out.flush();
+        }
     }
 
     private void streamSVGImageToTempFile(final File svgFile, final SVGGraphics2D svgGenerator)
             throws IOException {
-        final OutputStream svgOutputStream = new BufferedOutputStream(new FileOutputStream(svgFile));
-        final Writer out = new OutputStreamWriter(svgOutputStream, "UTF-8");
-        svgGenerator.stream(out, true);
-        out.flush();
-        out.close();
+        try (FileOutputStream fileOut = new FileOutputStream(svgFile);
+             BufferedOutputStream svgOutputStream = new BufferedOutputStream(fileOut);
+             OutputStreamWriter streamWriter = new OutputStreamWriter(svgOutputStream, "UTF-8");
+             Writer out = streamWriter) {
+            svgGenerator.stream(out, true);
+            out.flush();
+        }
     }
 
     private SVGAbstractTranscoder getTranscoder() {

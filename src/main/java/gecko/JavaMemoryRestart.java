@@ -79,14 +79,16 @@ final class JavaMemoryRestart {
 
             try {
                 final Process proc = procBuilder.start();
-                final InputStream inputStream = proc.getInputStream();
-                final InputStream errInputStream = proc.getErrorStream();
-                // check you have received an status code 200 to indicate ok
-                // get the encoding from the Content-TYpe header
-                final BufferedReader bufRead = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                final BufferedReader errBufRead = new BufferedReader(new InputStreamReader(errInputStream, StandardCharsets.UTF_8));
-                return searchForReadyString(bufRead, errBufRead);
-
+                try (InputStream inputStream = proc.getInputStream();
+                     InputStream errInputStream = proc.getErrorStream();
+                     InputStreamReader inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                     InputStreamReader errReader = new InputStreamReader(errInputStream, StandardCharsets.UTF_8);
+                     BufferedReader bufRead = new BufferedReader(inputReader);
+                     BufferedReader errBufRead = new BufferedReader(errReader)) {
+                    // check you have received an status code 200 to indicate ok
+                    // get the encoding from the Content-TYpe header
+                    return searchForReadyString(bufRead, errBufRead);
+                }
             } catch (IOException ex) {
                 Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
             }

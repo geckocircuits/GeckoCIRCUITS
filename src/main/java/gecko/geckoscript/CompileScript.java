@@ -177,9 +177,7 @@ public class CompileScript {
                 sw._compileStatus = CompileStatus.COMPILED_SUCCESSFULL;
             }
 
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (IllegalArgumentException | SecurityException ex) {
             Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -194,6 +192,7 @@ public class CompileScript {
 
     @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
             justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
+    @SuppressWarnings("PMD.CloseResource") // ClassLoader must persist for dynamically loaded class lifecycle
     public static void findAndLoadClass(ScriptWindow sw) {
         try {
             _classNameFileMap = _compileObject.getClassNameFileMap();
@@ -215,15 +214,9 @@ public class CompileScript {
                     }
             } catch (NoClassDefFoundError err) {
                 err.printStackTrace();
-            } catch (InstantiationException ex) {
+            } catch (InstantiationException | IllegalAccessException | SecurityException ex) {
                 Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException ex) {
-                Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InvocationTargetException ex) {
+            } catch (IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (ClassNotFoundException ex) {

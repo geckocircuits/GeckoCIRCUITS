@@ -331,11 +331,7 @@ public class GeckoJavaCompiler {
                 //------------------
             }
             } // end try-with-resources
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
-            Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IllegalArgumentException | SecurityException | ClassNotFoundException ex) {
             Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

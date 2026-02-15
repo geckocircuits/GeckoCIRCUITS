@@ -29,6 +29,7 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -279,12 +280,12 @@ implements Operationable, Nonlinearable {
     public static double[][] readNonLinearCharacteristicFromFile(GeckoFile file) throws NumberFormatException, IOException {
         double[] nonLinX, nonLinY;
         ArrayList<String> lines = new ArrayList<String>();
-        BufferedReader in = file.getBufferedReader();
-        String inLine;
-        while ((inLine = in.readLine()) != null) {
-            lines.add(inLine);
+        try (BufferedReader in = file.getBufferedReader()) {
+            String inLine;
+            while ((inLine = in.readLine()) != null) {
+                lines.add(inLine);
+            }
         }
-        in.close();
         int noOfLines = lines.size();
         if (noOfLines < 2) {
             throw new NumberFormatException("File contains less than 2 data points!");
@@ -492,12 +493,13 @@ implements Operationable, Nonlinearable {
     //writes a non-linear characteristic to file
     public static File writeNonLinearCharacteristicToFile(double[][] data, File nonLinFile) throws IOException {
 
-        BufferedWriter out = new BufferedWriter(new java.io.FileWriter(nonLinFile, StandardCharsets.UTF_8));
-        for (int i = 0; i < data[0].length; i++) {
-            out.write(data[0][i] + " " + data[1][i] + "\n");
+        try (FileWriter fileWriter = new java.io.FileWriter(nonLinFile, StandardCharsets.UTF_8);
+             BufferedWriter out = new BufferedWriter(fileWriter)) {
+            for (int i = 0; i < data[0].length; i++) {
+                out.write(data[0][i] + " " + data[1][i] + "\n");
+            }
+            out.flush();
         }
-        out.flush();
-        out.close();
         return nonLinFile;
     }
 

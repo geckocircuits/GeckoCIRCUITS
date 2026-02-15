@@ -161,7 +161,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
         if(1>0) { return true; }
         for (SubCircuitTerminable terminal1 : _myTerminals) {
             for (SubCircuitTerminable terminal2 : _myTerminals) {
-                if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
+                if (!terminal1.equals(terminal2) && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
                     return false;
                 }
             }
@@ -174,7 +174,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
         Set<SubCircuitTerminable> returnValue = new HashSet<SubCircuitTerminable>();
         for (SubCircuitTerminable terminal1 : _myTerminals) {
             for (SubCircuitTerminable terminal2 : _myTerminals) {
-                if (terminal1 != terminal2 && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
+                if (!terminal1.equals(terminal2) && TerminalToWrap.sameBlockPosition(terminal1, terminal2)) {
                     returnValue.add(terminal1);
                     returnValue.add(terminal2);
                 }
@@ -235,7 +235,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     @Override
     public void doDoubleClickAction(final Point clickedPoint) {
         final TerminalInterface clickedTerm = clickedTerminal(clickedPoint);
-        if (clickedTerm != null && clickedTerm.getCircuitSheet() == SchematicEditor2.Singleton._visibleCircuitSheet) {
+        if (clickedTerm != null && java.util.Objects.equals(clickedTerm.getCircuitSheet(), SchematicEditor2.Singleton._visibleCircuitSheet)) {
             final DialogLabelEingeben labelDialog = new DialogLabelEingeben(clickedTerm);
             labelDialog.setVisible(true);
             return;

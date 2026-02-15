@@ -104,7 +104,7 @@ public final class NetzlisteAllg {
 
         List<AbstractBlockInterface> filteredList = new ArrayList<AbstractBlockInterface>();
         for (AbstractBlockInterface ab : elementsList) {
-            if (ab.getParentCircuitSheet() == elementParent) {
+            if (java.util.Objects.equals(ab.getParentCircuitSheet(), elementParent)) {
                 filteredList.add(ab);
             }
         }
@@ -269,7 +269,7 @@ public final class NetzlisteAllg {
                     final PotentialArea pot2 = compare2Array[j];
                     for (SubCircuitTerminable term1 : pot1.getPotentialTerminals()) {
                         for (SubCircuitTerminable term2 : pot2.getPotentialTerminals()) {
-                            if (term1 == term2 && term1.getBlockTerminal().getCategory() == term2.getBlockTerminal().getCategory()) {
+                            if (term1.equals(term2) && term1.getBlockTerminal().getCategory() == term2.getBlockTerminal().getCategory()) {
                                 final PotentialArea merged = pot1.mergePotential(pot2, false);
                                 _potentialAreas.remove(pot1);
                                 _potentialAreas.remove(pot2);

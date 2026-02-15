@@ -189,9 +189,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
             } else {
                 return new ArrayList<>();
             }
-        } catch (UnsupportedFlavorException ufe) {
-            return new ArrayList<>();
-        } catch (IOException ioe) {
+        } catch (UnsupportedFlavorException | IOException ex) {
             return new ArrayList<>();
         }
         return returnValue;

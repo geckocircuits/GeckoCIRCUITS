@@ -138,7 +138,7 @@ public final class PotentialArea {
             final CircuitSheet circuitSheet) {
         final List<Point> returnValue = new ArrayList<Point>();
         for (AbstractBlockInterface elem : elements) {
-            if (elem.getParentCircuitSheet() == circuitSheet) {
+            if (java.util.Objects.equals(elem.getParentCircuitSheet(), circuitSheet)) {
                 for (TerminalInterface term : elem.getAllTerminals()) {
                     if (isTerminalOnPotential(term)) {
                         returnValue.add(term.getPosition());
@@ -167,7 +167,7 @@ public final class PotentialArea {
 
 
 
-        if (pot2._potentialCircuitSheet != _potentialCircuitSheet) {
+        if (!java.util.Objects.equals(pot2._potentialCircuitSheet, _potentialCircuitSheet)) {
             return false;
         }
 
@@ -246,7 +246,7 @@ public final class PotentialArea {
             _potentialLabel = label1;
         }
 
-        if (pot1._potentialCircuitSheet != pot2._potentialCircuitSheet) {
+        if (!java.util.Objects.equals(pot1._potentialCircuitSheet, pot2._potentialCircuitSheet)) {
             _potentialCircuitSheet = null;
         }
         // Note: If sheets are equal, _potentialCircuitSheet is already set to pot1._potentialCircuitSheet
@@ -280,7 +280,7 @@ public final class PotentialArea {
     public static boolean hasComponentConnection(final PotentialArea potArea1, final PotentialArea potArea2) {
         for (ElementNodes elNodes : potArea1._elementNodeTerminals) {
             for (ElementNodes elNodes2 : potArea2._elementNodeTerminals) {
-                if (elNodes._element == elNodes2._element) {
+                if (elNodes._element.equals(elNodes2._element)) {
                     AbstractBlockInterface element = elNodes._element;
 
                     if (element instanceof SubcircuitBlock) {
@@ -592,6 +592,6 @@ public final class PotentialArea {
         if (pot1._potentialCircuitSheet == null || pot2._potentialCircuitSheet == null) {
             return false;
         }
-        return label1.equals(label2) && pot1._potentialCircuitSheet == pot2._potentialCircuitSheet;
+        return label1.equals(label2) && java.util.Objects.equals(pot1._potentialCircuitSheet, pot2._potentialCircuitSheet);
     }
 }

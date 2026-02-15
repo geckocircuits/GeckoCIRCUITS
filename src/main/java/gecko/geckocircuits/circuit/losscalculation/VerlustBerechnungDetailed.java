@@ -32,6 +32,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
@@ -196,33 +197,31 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         List<String> datVec = new ArrayList<String>();
         //
         // GZIP-Format (March 2009) - ganz neu! -->
-        try {
-            GZIPInputStream in1 = new GZIPInputStream(newLossFile.getInputStream());
-            BufferedReader in = new BufferedReader(new InputStreamReader(in1, StandardCharsets.UTF_8));
+        try (InputStream inputStream = newLossFile.getInputStream();
+             GZIPInputStream in1 = new GZIPInputStream(inputStream);
+             InputStreamReader streamReader = new InputStreamReader(in1, StandardCharsets.UTF_8);
+             BufferedReader in = new BufferedReader(streamReader)) {
             String z = null;
             while ((z = in.readLine()) != null) {
                 datVec.add(z);
             }
-            in.close();
         } catch (Exception e0) {
             // neue gezipte Version -->
-            try {
-                InflaterInputStream in1 = new InflaterInputStream(newLossFile.getInputStream());
-                BufferedReader in = new BufferedReader(new InputStreamReader(in1, StandardCharsets.UTF_8));
+            try (InputStream inputStream = newLossFile.getInputStream();
+                 InflaterInputStream in1 = new InflaterInputStream(inputStream);
+                 InputStreamReader streamReader = new InputStreamReader(in1, StandardCharsets.UTF_8);
+                 BufferedReader in = new BufferedReader(streamReader)) {
                 String z = null;
                 while ((z = in.readLine()) != null) {
                     datVec.add(z);
                 }
-                in.close();
             } catch (Exception e) {
                 // Fehler, vielleicht ist es eine alte Version in reinem ASCII -->
-                try {
-                    BufferedReader in = newLossFile.getBufferedReader(); //new BufferedReader(new FileReader(fyomu));
+                try (BufferedReader in = newLossFile.getBufferedReader()) { //new BufferedReader(new FileReader(fyomu));
                     String z = null;
                     while ((z = in.readLine()) != null) {
                         datVec.add(z);
                     }
-                    in.close();
                 } catch (Exception e2) {
                     return false;
                 }
@@ -348,11 +347,13 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
             } else {
                 lossesFile = new File(fkaku);
             }
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(lossesFile), StandardCharsets.UTF_8));
-            //
-            out.write(ascii.toString());
-            out.flush();
-            out.close();
+            try (FileOutputStream fileOut = new FileOutputStream(lossesFile);
+                 OutputStreamWriter streamWriter = new OutputStreamWriter(fileOut, StandardCharsets.UTF_8);
+                 BufferedWriter out = new BufferedWriter(streamWriter)) {
+                //
+                out.write(ascii.toString());
+                out.flush();
+            }
             //blocks using this loss file can also see the changes
             newLossFile = new GeckoFile(lossesFile, storageType, _fileAccessor.getOpenFileName());
             newLossFile.setUser(_parent.getUniqueObjectIdentifier());
