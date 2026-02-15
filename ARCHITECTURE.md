@@ -338,7 +338,7 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 - CorePackageValidationTest: No GUI imports in core
 - MkDocs strict mode: No broken internal links
 - SpotBugs: 0 bugs (204 inline `@SuppressFBWarnings` annotations)
-- PMD: Custom ruleset `pmd-ruleset.xml` (quickstart rules, 9 excluded rules, allowCommentedBlocks, excludes `com/intel/mkl/`), 823 violations (code-style only, down from 861 after fixing 38 ReturnEmptyCollectionRatherThanNull)
+- PMD: Custom ruleset `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks, excludes `com/intel/mkl/`), 639 violations (code-style only, down 77% from original 3,443 after systematic cleanup: 114 violations fixed, 116 false positives excluded)
 - Checkstyle: Custom config `checkstyle.xml` (150-char lines, relaxed naming), 4,632 violations
 
 ## 8. Key Dependencies

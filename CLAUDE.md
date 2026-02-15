@@ -232,7 +232,7 @@ mvn pmd:check
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **707** | Code-style only, no bugs. UnnecessaryImport rule excluded (116 false positives - imports used in implements/extends clauses and wildcard imports) |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **639** | Code-style only. Down from 823: excluded 116 false positives, fixed 114 violations (59 style, 55 high-value) |
 | Checkstyle | `checkstyle.xml` (150-char lines) | **4,632** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
@@ -321,6 +321,18 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `a600bf1e` Fix 55 high-value PMD violations: resource leaks and exception handling
+  - CloseResource (17): Fixed resource leaks with try-with-resources pattern
+  - PreserveStackTrace (38): All exception chains now preserve stack traces
+  - Files: GeckoMemoryMappedFile, Matrix, TechFormat, GeckoRemote, and 22 others
+  - Impact: Prevents file descriptor leaks, improves debugging significantly
+- `8057c904` Fix 59 PMD violations and exclude 116 false positives
+  - UnnecessaryImport (116): Excluded false positives in pmd-ruleset.xml
+  - SimplifyBooleanReturns (29): All boolean return logic simplified
+  - ForLoopCanBeForeach (30): Modernized loops in 17 files (57 remaining)
+  - PMD violations: 823 → 694 (-15.7%)
+- `682318d3` Update project documentation after PMD violation fixes
+  - Updated CLAUDE.md, PRD.md, ARCHITECTURE.md with static analysis status
 - `f3ac9b01` Fix CI workflow jacoco:report POM specification
   - Explicitly specify `-f pom.xml` for jacoco report after reactor build
   - Prevents module confusion in GitHub Actions workflow

@@ -253,14 +253,20 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Core module now contains 148 source classes, 31 test files, 737 tests
 - All reactor builds passing, coverage thresholds maintained
 
-### Previous Sprint (2026-02-12 to 2026-02-14): Static Analysis Cleanup
+### Previous Sprint (2026-02-12 to 2026-02-15): Static Analysis Cleanup
 - Created `pmd-ruleset.xml` and `checkstyle.xml` config files, updated `pom.xml`
 - Fixed 1,445 auto-fixable PMD violations across 330+ files:
   - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
 - Fixed 183 Tier 3 PMD violations: EmptyCatchBlock (20), EmptyControlStatement (44), UnnecessarySemicolon (34), UnnecessaryReturn (33), UnusedLocalVariable (28), UnusedPrivateMethod (13), UnusedPrivateField (11)
 - Fixed 38 ReturnEmptyCollectionRatherThanNull violations across 11 files (GeckoRemoteMMFObject, GeckoExternal, AbstractGeckoCustom, ComponentPositioner, and 7 others)
+- Fixed 114 additional PMD violations (59 code-style, 55 high-value):
+  - UnnecessaryImport (116): Excluded in ruleset (false positives for implements/extends clauses)
+  - SimplifyBooleanReturns (29): Simplified boolean logic across 25 files
+  - ForLoopCanBeForeach (30): Modernized for-loops in 17 files
+  - CloseResource (17): Fixed resource leaks with try-with-resources pattern
+  - PreserveStackTrace (38): All exception chains now preserve stack traces
 - Stripped trailing whitespace from 974 Java source files (13,359 lines)
-- SpotBugs: 0 bugs (maintained), PMD: 823 violations (down from 3,443, no bug-prevention issues remaining), Checkstyle: 4,632
+- SpotBugs: 0 bugs (maintained), PMD: 639 violations (down from 3,443, -77.3%), Checkstyle: 4,632
 
 ### Previous Sprint (2026-02-12): LossCalculation GUI Decoupling
 - Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
@@ -308,7 +314,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - `CorePackageValidationTest`: Zero GUI imports in core module
 - `mkdocs build --strict`: Zero broken links in documentation
 - SpotBugs: 0 bugs enforced (204 inline `@SuppressFBWarnings` annotations)
-- PMD: Custom ruleset (`pmd-ruleset.xml`), 823 remaining violations (code-style, not bugs)
+- PMD: Custom ruleset (`pmd-ruleset.xml`), 639 remaining violations (code-style, down 77% from original 3,443)
 - Checkstyle: Project-tuned config (`checkstyle.xml`), 4,632 remaining violations
 
 ### Success Metrics
@@ -323,7 +329,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | Docs site pages | 82+ | 100+ |
 | Broken links | 0 | 0 |
 | SpotBugs bugs | 0 | 0 |
-| PMD violations | 823 | <500 |
+| PMD violations | 639 | <500 |
 | Checkstyle violations | 4,632 | <2,000 |
 | REST API endpoints | 8 | 10+ |
 
