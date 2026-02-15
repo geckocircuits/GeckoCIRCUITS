@@ -152,12 +152,16 @@ public class TechFormat implements Serializable {
                 if ((sc[i1] != '0') && (sc[i1] != '1') && (sc[i1] != '2') && (sc[i1] != '3') && (sc[i1] != '4') && (sc[i1] != '5') && (sc[i1] != '6') && (sc[i1] != '7') && (sc[i1] != '8') && (sc[i1] != '9')
                         && (sc[i1] != 'e') && (sc[i1] != 'E') && (sc[i1] != '+') && (sc[i1] != '-') && (sc[i1] != '.')
                         && (sc[i1] != 'p') && (sc[i1] != 'n') && (sc[i1] != 'u') && (sc[i1] != 'm') && (sc[i1] != 'k') && (sc[i1] != 'M')) {
-                    throw new NumberFormatException("Invalid number format in 'TechFormat'  --> invalid character");
+                    NumberFormatException nfe = new NumberFormatException("Invalid number format in 'TechFormat'  --> invalid character");
+                    nfe.initCause(e1);
+                    throw nfe;
                 }
                 if (((sc[i1] == '+') || (sc[i1] == '-')) && (i1 != 0)) {
                     // '+' and '-' are not at the beginning --> are they before the exponent? (would be OK) -->
                     if ((sc[i1 - 1] != 'e') && (sc[i1 - 1] != 'E')) {
-                        throw new NumberFormatException("Invalid number format in 'TechFormat'  --> '+' or '-' at invalid position");
+                        NumberFormatException nfe = new NumberFormatException("Invalid number format in 'TechFormat'  --> '+' or '-' at invalid position");
+                        nfe.initCause(e1);
+                        throw nfe;
                     }
                 }
                 if ((sc[i1] == 'e') || (sc[i1] == 'E') || (sc[i1] == 'p') || (sc[i1] == 'n') || (sc[i1] == 'u') || (sc[i1] == 'm') || (sc[i1] == 'k') || (sc[i1] == 'M')) {
@@ -168,13 +172,19 @@ public class TechFormat implements Serializable {
                 }
             }
             if ((sc[sc.length - 1] == 'e') || (sc[sc.length - 1] == 'E')) {
-                throw new NumberFormatException("Invalid number format in 'TechFormat'  --> no exponent defined");
+                NumberFormatException nfe = new NumberFormatException("Invalid number format in 'TechFormat'  --> no exponent defined");
+                nfe.initCause(e1);
+                throw nfe;
             }
             if (anzTechZeichen > 1) {
-                throw new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one special character");
+                NumberFormatException nfe = new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one special character");
+                nfe.initCause(e1);
+                throw nfe;
             }
             if (anzKomma > 1) {
-                throw new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one decimal point");
+                NumberFormatException nfe = new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one decimal point");
+                nfe.initCause(e1);
+                throw nfe;
             }
             //
             // Assumption: all incorrect inputs have been eliminated - no more exceptions possible from here
@@ -204,7 +214,9 @@ public class TechFormat implements Serializable {
             }
             //-----------------------
             // (4) we should not actually reach here -->
-            throw new NumberFormatException("Invalid number format in 'TechFormat'  --> unbekanntes Problem [9324ubf902]");
+            NumberFormatException nfe = new NumberFormatException("Invalid number format in 'TechFormat'  --> unbekanntes Problem [9324ubf902]");
+            nfe.initCause(e1);
+            throw nfe;
         }
     }
 

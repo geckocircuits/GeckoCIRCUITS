@@ -165,9 +165,8 @@ public class JPanelFourier extends javax.swing.JPanel {
         }
         final String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
         final File file = new File(fileName);
-        try {
-            final FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
-            final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             for (int i = 0; i < _dataContainer.getMaximumTimeIndex(0); i++) {
                 bufferedWriter.write("" + _dataContainer.getTimeValue(i, 0));
                 for(int j = 0; j < _dataContainer.getRowLength(); j++) {
@@ -176,7 +175,6 @@ public class JPanelFourier extends javax.swing.JPanel {
                 }
                 bufferedWriter.write("\n");
             }
-            bufferedWriter.close();
         } catch (Throwable ex) {
 
             JOptionPane.showMessageDialog(null,

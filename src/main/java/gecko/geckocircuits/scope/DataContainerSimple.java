@@ -112,7 +112,9 @@ public final class DataContainerSimple implements DataContainer {
             }
         } catch (ArrayIndexOutOfBoundsException ex) {
             ex.printStackTrace();
-            throw new ArrayIndexOutOfBoundsException("Array index " + _maximumIndex + " is too large for data storage!");
+            ArrayIndexOutOfBoundsException aioobe = new ArrayIndexOutOfBoundsException("Array index " + _maximumIndex + " is too large for data storage!");
+            aioobe.initCause(ex);
+            throw aioobe;
         }
     }
 }

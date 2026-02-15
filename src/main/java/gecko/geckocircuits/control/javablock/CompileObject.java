@@ -68,8 +68,9 @@ public final class CompileObject extends AbstractCompileObject {
         _sourceString = sourceString;
         _compilerOptions = setCompilerOptions();
 
+        final StandardJavaFileManager[] fileManagerHolder = new StandardJavaFileManager[1];
         try {
-            final CompilationTask task = createCompilationTask(additionalSourceFiles);
+            final CompilationTask task = createCompilationTask(additionalSourceFiles, fileManagerHolder);
 
             if (task.call()) {
                 _compileStatus = CompileStatus.COMPILED_SUCCESSFULL;
@@ -108,6 +109,15 @@ public final class CompileObject extends AbstractCompileObject {
             Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {
             Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            // Close the file manager
+            if (fileManagerHolder[0] != null) {
+                try {
+                    fileManagerHolder[0].close();
+                } catch (IOException ex) {
+                    Logger.getLogger(CompileObject.class.getName()).log(Level.SEVERE, "Failed to close file manager", ex);
+                }
+            }
         }
 
         _compilerWriter.close();
@@ -233,10 +243,12 @@ public final class CompileObject extends AbstractCompileObject {
         return "tmpJav" + _generator.nextInt(Integer.MAX_VALUE);
     }
 
-    private CompilationTask createCompilationTask(final List<GeckoFile> additionalSourceFiles) {
+    private CompilationTask createCompilationTask(final List<GeckoFile> additionalSourceFiles,
+                                                   final StandardJavaFileManager[] fileManagerHolder) {
 
         final JavaCompiler compiler = findCompiler();
         final StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(_diagnostics, null, null);
+        fileManagerHolder[0] = standardFileManager; // Store for closing later
         final JavaFileManager jfm = new GeckoForwardingFileManager(standardFileManager, _nameFileMap);
 
         final List<JavaFileObject> filesToCompile = new ArrayList<JavaFileObject>();

@@ -505,7 +505,7 @@ public class ReglerSignalSource extends RegelBlock implements ControlInputTwoTer
                     return true;
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ReglerSignalSource.class.getName()).log(Level.SEVERE, null, ex);
-                    throw new RuntimeException("File not found! " + ex);
+                    throw new RuntimeException("File not found! " + ex, ex);
                 }
             }
         });

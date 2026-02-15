@@ -160,7 +160,9 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
                 try {
                     return _calculator._outputSignal[i][0];
                 } catch (Exception ex) {
-                    throw new NullPointerException("Error getting output: " + getStringID() + " " + outputName);
+                    NullPointerException npe = new NullPointerException("Error getting output: " + getStringID() + " " + outputName);
+                    npe.initCause(ex);
+                    throw npe;
                 }
             }
         }
@@ -175,7 +177,9 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         try {
             return _calculator._outputSignal[0][0];
         } catch (Throwable exc) {
-            throw new IllegalAccessException(getStringID() + " has no output");
+            IllegalAccessException iae = new IllegalAccessException(getStringID() + " has no output");
+            iae.initCause(exc);
+            throw iae;
         }
 
     }
@@ -403,7 +407,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
                     + outputBlock.getStringID() + ", no. " + outputIndex + " " +
                     outputBlock.YOUT.get(outputIndex).getLabelObject().getLabelString()
                     +  "\nis already connected to another output signal.\n"
-                    + "This is an error in your GeckoCIRCUITS simulation model.\nAborting simulation.");
+                    + "This is an error in your GeckoCIRCUITS simulation model.\nAborting simulation.", ex);
         }
     }
 

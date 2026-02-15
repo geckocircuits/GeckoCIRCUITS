@@ -226,7 +226,7 @@ public final class ParameterSerializer {
             }
             return count;
         } catch (NumberFormatException e) {
-            throw new ParseException("Invalid " + context + ": " + token);
+            throw new ParseException("Invalid " + context + ": " + token, e);
         }
     }
 
@@ -239,7 +239,7 @@ public final class ParameterSerializer {
         try {
             return Double.parseDouble(token);
         } catch (NumberFormatException e) {
-            throw new ParseException("Invalid " + context + ": " + token);
+            throw new ParseException("Invalid " + context + ": " + token, e);
         }
     }
 

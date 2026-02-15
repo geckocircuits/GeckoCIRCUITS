@@ -251,7 +251,7 @@ public class DialogGlobalTerminal extends javax.swing.JDialog {
                     "Object name: " + newName + " is already in use in this circuit sheet!",
                     "Warning",
                     JOptionPane.WARNING_MESSAGE);
-            throw new RuntimeException("Name is already in use!");
+            throw new RuntimeException("Name is already in use!", ex);
         }
     }
 

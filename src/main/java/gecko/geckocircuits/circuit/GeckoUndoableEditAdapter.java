@@ -40,7 +40,9 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
         try {
             delegate.undo();
         } catch (IllegalStateException e) {
-            throw new CannotUndoException();
+            CannotUndoException cue = new CannotUndoException();
+            cue.initCause(e);
+            throw cue;
         }
     }
 
@@ -49,7 +51,9 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
         try {
             delegate.redo();
         } catch (IllegalStateException e) {
-            throw new CannotRedoException();
+            CannotRedoException cre = new CannotRedoException();
+            cre.initCause(e);
+            throw cre;
         }
     }
 

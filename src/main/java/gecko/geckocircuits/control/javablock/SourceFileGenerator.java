@@ -73,10 +73,11 @@ public final class SourceFileGenerator {
     private static void appendClassImportsAndHeader(final StringBuilder sourceStringBuilder,
             final String importsCode, final String className, final boolean isMatrix) throws IOException {
 
-        final BufferedReader reader = new BufferedReader(new StringReader(importsCode));
-        for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
-            sourceStringBuilder.append(strLine);
-            sourceStringBuilder.append("\n");
+        try (BufferedReader reader = new BufferedReader(new StringReader(importsCode))) {
+            for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
+                sourceStringBuilder.append(strLine);
+                sourceStringBuilder.append("\n");
+            }
         }
         sourceStringBuilder.append("\n");
         sourceStringBuilder.append("public class ");
@@ -93,12 +94,12 @@ public final class SourceFileGenerator {
             final String variablesCode, final int outTerminalNumber,
             final VariableBusWidth variableBusWidth) throws IOException {
         sourceStringBuilder.append("// variables: \n");
-        final BufferedReader reader = new BufferedReader(new StringReader(variablesCode));
-
-        for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
-            sourceStringBuilder.append("\t");
-            sourceStringBuilder.append(strLine);
-            sourceStringBuilder.append("\n");
+        try (BufferedReader reader = new BufferedReader(new StringReader(variablesCode))) {
+            for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
+                sourceStringBuilder.append("\t");
+                sourceStringBuilder.append(strLine);
+                sourceStringBuilder.append("\n");
+            }
         }
 
         if (variableBusWidth._useMatrix.getValue()) {
@@ -134,11 +135,12 @@ public final class SourceFileGenerator {
     private static void appendInitCode(final StringBuilder sourceStringBuilder, final String initCode) throws IOException {
         sourceStringBuilder.append("\n\t@Override\n");
         sourceStringBuilder.append("\tpublic void init() {\n");
-        final BufferedReader reader = new BufferedReader(new StringReader(initCode));
-        for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
-            sourceStringBuilder.append(DOUBLE_TAB);
-            sourceStringBuilder.append(strLine);
-            sourceStringBuilder.append("\n");
+        try (BufferedReader reader = new BufferedReader(new StringReader(initCode))) {
+            for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
+                sourceStringBuilder.append(DOUBLE_TAB);
+                sourceStringBuilder.append(strLine);
+                sourceStringBuilder.append("\n");
+            }
         }
         sourceStringBuilder.append("\t");
     }
@@ -157,12 +159,12 @@ public final class SourceFileGenerator {
 
         }
         sourceStringBuilder.append("// ****************** your code segment **********************\n");
-        final BufferedReader reader = new BufferedReader(new StringReader(sourceCode));
-
-        for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
-            sourceStringBuilder.append("\t\t");
-            sourceStringBuilder.append(strLine);
-            sourceStringBuilder.append("\n");
+        try (BufferedReader reader = new BufferedReader(new StringReader(sourceCode))) {
+            for (String strLine = reader.readLine(); strLine != null; strLine = reader.readLine()) {
+                sourceStringBuilder.append("\t\t");
+                sourceStringBuilder.append(strLine);
+                sourceStringBuilder.append("\n");
+            }
         }
 
         sourceStringBuilder.append("// ****************** end of code segment **********************\n");

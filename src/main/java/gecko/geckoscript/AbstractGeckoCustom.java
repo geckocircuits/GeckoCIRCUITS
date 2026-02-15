@@ -520,11 +520,14 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
                     _circuit.openFile(ipesFileName.getParent() + "/" + fileName);
                 } catch (FileNotFoundException ex1) {
                     writerOutputErrorLn("File not found: " + fileName);
+                    ex1.addSuppressed(ex);
                     throw ex1;
                 }
             } else {
                 writerOutputErrorLn("File not found: " + fileName);
-                throw new FileNotFoundException("File not found: " + fileName);
+                FileNotFoundException fnfe = new FileNotFoundException("File not found: " + fileName);
+                fnfe.initCause(ex);
+                throw fnfe;
             }
 
         }
@@ -541,11 +544,14 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
                     _circuit.openFile(ipesFileName.getParent() + "/" + fileName);
                 } catch (FileNotFoundException ex1) {
                     writerOutputErrorLn("File not found: " + fileName);
+                    ex1.addSuppressed(ex);
                     throw ex1;
                 }
             } else {
                 writerOutputErrorLn("File not found: " + fileName);
-                throw new FileNotFoundException("File not found: " + fileName);
+                FileNotFoundException fnfe = new FileNotFoundException("File not found: " + fileName);
+                fnfe.initCause(ex);
+                throw fnfe;
             }
         }
     }

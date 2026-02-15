@@ -416,7 +416,7 @@ public final class NetzlisteCONTROL {
                 }
             } catch (IllegalArgumentException ex) {
                 throw new IllegalArgumentException("Control block in " + _orderedControlBlocks[i].getStringID()
-                        + ":\n" + ex.getMessage());
+                        + ":\n" + ex.getMessage(), ex);
             }
 
         }

@@ -99,9 +99,10 @@ public class CompileScript {
             sw.addSourceLine("import gecko.geckoscript.AbstractGeckoCustom;");
             sw.addSourceLine("import gecko.geckoscript.SimulationAccess;");
             sw.addSourceLine("import javax.swing.JTextArea;");
-            BufferedReader reader = new BufferedReader(new StringReader(sw._importsTextArea.getText()));
-            while ((strLine = reader.readLine()) != null) {
-                sw.addSourceLine(strLine);
+            try (BufferedReader reader = new BufferedReader(new StringReader(sw._importsTextArea.getText()))) {
+                while ((strLine = reader.readLine()) != null) {
+                    sw.addSourceLine(strLine);
+                }
             }
             sw.addSourceLine("");
             sw.addSourceLine("/**");
@@ -110,14 +111,16 @@ public class CompileScript {
             sw.addSourceLine("");
             sw.addSourceLine("public class " + sw._className + " extends AbstractGeckoCustom { ");
             sw.addSourceLine("");
-            reader = new BufferedReader(new StringReader(sw._declarations));
-            while ((strLine = reader.readLine()) != null) {
-                sw.addSourceLine("\t\t" + strLine);
-            }
-            if (sw._advancedOption) {
-                reader = new BufferedReader(new StringReader(sw._advancedVariables));
+            try (BufferedReader reader = new BufferedReader(new StringReader(sw._declarations))) {
                 while ((strLine = reader.readLine()) != null) {
                     sw.addSourceLine("\t\t" + strLine);
+                }
+            }
+            if (sw._advancedOption) {
+                try (BufferedReader reader = new BufferedReader(new StringReader(sw._advancedVariables))) {
+                    while ((strLine = reader.readLine()) != null) {
+                        sw.addSourceLine("\t\t" + strLine);
+                    }
                 }
             }
             sw.addSourceLine("");
@@ -128,9 +131,10 @@ public class CompileScript {
             }
             sw.addSourceLine("\t\t     super(simaccess, outputArea);");
             if (sw._advancedOption) {
-                reader = new BufferedReader(new StringReader(sw._advancedConstructor));
-                while ((strLine = reader.readLine()) != null) {
-                    sw.addSourceLine("\t\t     " + strLine);
+                try (BufferedReader reader = new BufferedReader(new StringReader(sw._advancedConstructor))) {
+                    while ((strLine = reader.readLine()) != null) {
+                        sw.addSourceLine("\t\t     " + strLine);
+                    }
                 }
             }
             sw.addSourceLine("    }");
@@ -138,9 +142,10 @@ public class CompileScript {
             sw.addSourceLine("    public void runScript() {");
             sw.addSourceLine("    try {");
             sw.addSourceLine("// ****************** your code segment **********************");
-            reader = new BufferedReader(new StringReader(sw._codeTextArea.getText()));
-            while ((strLine = reader.readLine()) != null) {
-                sw.addSourceLine("\t\t" + strLine);
+            try (BufferedReader reader = new BufferedReader(new StringReader(sw._codeTextArea.getText()))) {
+                while ((strLine = reader.readLine()) != null) {
+                    sw.addSourceLine("\t\t" + strLine);
+                }
             }
             sw.addSourceLine("// ****************** end of code segment **********************");
             sw.addSourceLine("    } catch(Throwable ex) { writeOutputLn(\"An error occured during script execution:\");");

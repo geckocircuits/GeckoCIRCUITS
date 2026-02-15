@@ -233,7 +233,9 @@ public final class BigMatrix implements java.io.Serializable {
             }
          }
       } catch(ArrayIndexOutOfBoundsException e) {
-         throw new ArrayIndexOutOfBoundsException("Submatrix indices");
+         ArrayIndexOutOfBoundsException aioobe = new ArrayIndexOutOfBoundsException("Submatrix indices");
+         aioobe.initCause(e);
+         throw aioobe;
       }
       return X;
    }

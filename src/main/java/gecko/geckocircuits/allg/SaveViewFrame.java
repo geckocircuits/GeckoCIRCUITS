@@ -748,9 +748,9 @@ public final class SaveViewFrame extends GeckoDialog {
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, width, height);
         _viewPanel.paint(g2d);
-        final FileOutputStream fileOutStream = new FileOutputStream(new File(jTextFieldFileName.getText()));
-        ImageIO.write(img, AvailableTypes.GIF.toString(), new BufferedOutputStream(fileOutStream));
-        fileOutStream.close();
+        try (FileOutputStream fileOutStream = new FileOutputStream(new File(jTextFieldFileName.getText()))) {
+            ImageIO.write(img, AvailableTypes.GIF.toString(), new BufferedOutputStream(fileOutStream));
+        }
     }
 
     private void createZippedSVGImage(final OutputStream outStream, final SVGGraphics2D svgGenerator)

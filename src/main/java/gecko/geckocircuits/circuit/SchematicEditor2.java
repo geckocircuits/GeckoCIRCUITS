@@ -1811,14 +1811,14 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             final Clipboard clipBoard = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
             final Transferable transferable = clipBoard.getContents(null);
             final Object readObject = transferable.getTransferData(DataFlavor.stringFlavor);
-            final BufferedReader bufReader = new BufferedReader(new StringReader(readObject.toString()));
             final StringBuffer asciiReadFromClipBoard = new StringBuffer();
 
-            for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
-                asciiReadFromClipBoard.append(line);
-                asciiReadFromClipBoard.append('\n');
+            try (BufferedReader bufReader = new BufferedReader(new StringReader(readObject.toString()))) {
+                for (String line = bufReader.readLine(); line != null; line = bufReader.readLine()) {
+                    asciiReadFromClipBoard.append(line);
+                    asciiReadFromClipBoard.append('\n');
+                }
             }
-            bufReader.close();
 
             this.readSelectedElementsFromASCIIString(asciiReadFromClipBoard.toString().split("\n"));
         } catch (Exception e) {
@@ -2222,7 +2222,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             try {
                 block.checkNameOptParameter();
             } catch (Exception ex) {
-                throw new RuntimeException("Error in component " + block.getStringID() + ":\n" + ex.getMessage());
+                throw new RuntimeException("Error in component " + block.getStringID() + ":\n" + ex.getMessage(), ex);
             }
         }
     }

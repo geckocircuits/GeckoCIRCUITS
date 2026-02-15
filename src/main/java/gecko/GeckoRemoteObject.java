@@ -81,7 +81,12 @@ public class GeckoRemoteObject {
             try {
                 return _methodMap.get(method).invoke(this.object, args);
             } catch (Throwable ex) {
-                throw ex.getCause();
+                Throwable cause = ex.getCause();
+                if (cause != null) {
+                    cause.addSuppressed(ex);
+                    throw cause;
+                }
+                throw ex;
             }
 
         }

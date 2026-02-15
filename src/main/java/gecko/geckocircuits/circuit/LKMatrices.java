@@ -86,7 +86,7 @@ public class LKMatrices {
             ex.printStackTrace();
             throw new RuntimeException("The following error occured at the circuit initialization:\n"
                     + ex.getMessage()
-                    + "\nPlease check your circuit model for nonphysical conditions.");
+                    + "\nPlease check your circuit model for nonphysical conditions.", ex);
         }
     }
 

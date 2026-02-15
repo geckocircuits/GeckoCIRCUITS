@@ -64,8 +64,9 @@ public final class GeckoMemoryMappedFile {
      */
     public GeckoMemoryMappedFile(final String fileName, final long bufferSize) throws FileNotFoundException, IOException {
         _file = new File(fileName);
-        final FileChannel fileChannel = new RandomAccessFile(_file,"rw").getChannel();
-        _mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bufferSize);
+        try (FileChannel fileChannel = new RandomAccessFile(_file,"rw").getChannel()) {
+            _mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bufferSize);
+        }
 
         //default connection ID is -1 - disconnected
         //default state is disconnected
@@ -110,11 +111,13 @@ public final class GeckoMemoryMappedFile {
             throw new FileNotFoundException("The file for remote access: " + fileName + " does not exist. Please check if GeckoCIRCUITS is enabled for remote access.");
         }
         //create initial memory mapped byte buffer to read buffer size
-         final FileChannel fileChannel = new RandomAccessFile(file,"rw").getChannel();
-         final MappedByteBuffer init_mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 24);
-         final long bufferSize = init_mmb.getLong(BUFFER_SIZE_POS);
-         final MappedByteBuffer mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bufferSize);
-         return new GeckoMemoryMappedFile(file,mmb);
+        final MappedByteBuffer mmb;
+        try (FileChannel fileChannel = new RandomAccessFile(file,"rw").getChannel()) {
+            final MappedByteBuffer init_mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, 24);
+            final long bufferSize = init_mmb.getLong(BUFFER_SIZE_POS);
+            mmb = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, bufferSize);
+        }
+        return new GeckoMemoryMappedFile(file,mmb);
     }
 
     /**

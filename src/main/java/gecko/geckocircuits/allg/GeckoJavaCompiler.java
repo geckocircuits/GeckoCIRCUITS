@@ -158,9 +158,10 @@ public class GeckoJavaCompiler {
             _sourceString = "";
             //-------------
             String strLine;
-            BufferedReader reader = new BufferedReader(new StringReader(_javaImportCode));
-            while ((strLine = reader.readLine()) != null) {
-                appendSourcLine("\t\t" + strLine);
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaImportCode))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
             }
             //-------------
             appendSourcLine("/**");
@@ -170,24 +171,27 @@ public class GeckoJavaCompiler {
             appendSourcLine("\nprivate static MainWindow GECKO;\n");
             appendSourcLine("// static variables: ");
             //-------------
-            reader = new BufferedReader(new StringReader(_javaStaticVariables));
-            while ((strLine = reader.readLine()) != null) {
-                appendSourcLine("\t\t" + strLine);
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaStaticVariables))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
             }
             //appendSourcLine("private static double[] yOUT = new double[" + "tnY" + "];");
             appendSourcLine("static {");
-            reader = new BufferedReader(new StringReader(_javaStaticCode));
-            while ((strLine = reader.readLine()) != null) {
-                appendSourcLine("\t\t" + strLine);
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaStaticCode))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
             }
             appendSourcLine("}");
             appendSourcLine("    public static void _setGecko (MainWindow gecko) throws Exception { GECKO=gecko; }");
             appendSourcLine("    public static void run_script () throws Exception {");
             appendSourcLine("// Your code here:");
             appendSourcLine("// ****************** your code segment **********************");
-            reader = new BufferedReader(new StringReader(_javaSourceCode));
-            while ((strLine = reader.readLine()) != null) {
-                appendSourcLine("\t\t" + strLine);
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaSourceCode))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
             }
             //-------------
             appendSourcLine("// ****************** end of code segment **********************");
@@ -226,7 +230,7 @@ public class GeckoJavaCompiler {
             final Map<String, JavaFileObject> output = new HashMap<String, JavaFileObject>();
             DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 
-            JavaFileManager jfm =
+            try (JavaFileManager jfm =
                     new ForwardingJavaFileManager<StandardJavaFileManager>(
                     compiler.getStandardFileManager(diagnostics, null, null)) {
 
@@ -238,26 +242,25 @@ public class GeckoJavaCompiler {
                             return jfo;
                         }
                     };
+                 OutputStream outStream = new OutputStream() {
 
-            OutputStream outStream = new OutputStream() {
+                    @Override
+                    public void write(byte[] b) {
+                        // no-op
+                    }
 
-                @Override
-                public void write(byte[] b) {
-                    // no-op
-                }
+                    @Override
+                    public void write(byte[] b, int off, int len) {
+                        compilerMessage += new String(b, StandardCharsets.UTF_8).substring(off, len);
 
-                @Override
-                public void write(byte[] b, int off, int len) {
-                    compilerMessage += new String(b, StandardCharsets.UTF_8).substring(off, len);
+                    }
 
-                }
-
-                @Override
-                public void write(int b) {
-                    // no-op
-                }
-            };
-            PrintWriter compilerWriter = new PrintWriter(outStream, true, StandardCharsets.UTF_8);
+                    @Override
+                    public void write(int b) {
+                        // no-op
+                    }
+                 };
+                 PrintWriter compilerWriter = new PrintWriter(outStream, true, StandardCharsets.UTF_8)) {
 
             // Compile -->
 
@@ -327,6 +330,7 @@ public class GeckoJavaCompiler {
                 }
                 //------------------
             }
+            } // end try-with-resources
         } catch (IllegalArgumentException ex) {
             Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SecurityException ex) {

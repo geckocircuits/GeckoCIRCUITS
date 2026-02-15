@@ -126,7 +126,9 @@ public class FormatJTextField extends JTextField {
                 _numberOK = false;
                 this.setForeground(Color.red);
                 e2.printStackTrace();
-                throw new RuntimeException(e2.getMessage());
+                RuntimeException re = new RuntimeException(e2.getMessage(), e2);
+                re.addSuppressed(e);
+                throw re;
             }
         }
     }

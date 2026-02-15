@@ -243,9 +243,8 @@ public class CisprDataExport extends GeckoDialog {
 
     public static void saveData(final int dataIndex, final AbstractDataContainer dataContainer, final File file,
             final boolean useDBMu) {
-        try {
-            final FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
-            final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        try (FileWriter fileWriter = new FileWriter(file, StandardCharsets.UTF_8);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             for (int i = 0; i < dataContainer.getMaximumTimeIndex(0); i++) {
                 float value = dataContainer.getValue(dataIndex, i);
                 if (!useDBMu) {
@@ -255,7 +254,6 @@ public class CisprDataExport extends GeckoDialog {
                     bufferedWriter.write(dataContainer.getTimeValue(i, 0) + " " + value + "\n");
                 }
             }
-            bufferedWriter.close();
         } catch (Throwable ex) {
 
             JOptionPane.showMessageDialog(null,
