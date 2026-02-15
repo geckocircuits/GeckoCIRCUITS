@@ -1,0 +1,115 @@
+name: Release Desktop Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-packages:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [windows, linux, macos, wsl, examples]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Set version from tag or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+
+      - name: Build application
+        run: mvn -f pom-reactor.xml clean install -DskipTests --no-transfer-progress
+
+      - name: Build ${{ matrix.platform }} distribution package
+        run: mvn clean package -Pdist-${{ matrix.platform }} -DskipTests --no-transfer-progress
+
+      - name: Find distribution package
+        id: package
+        run: |
+          PACKAGE=$(ls target/GeckoCIRCUITS-*-${{ matrix.platform }}.zip 2>/dev/null || echo "")
+          if [ -z "$PACKAGE" ]; then
+            echo "Error: Distribution package not found for ${{ matrix.platform }}"
+            exit 1
+          fi
+          echo "PACKAGE=$PACKAGE" >> $GITHUB_OUTPUT
+          echo "PACKAGE_NAME=$(basename $PACKAGE)" >> $GITHUB_OUTPUT
+          echo "Found package: $PACKAGE"
+
+      - name: Upload ${{ matrix.platform }} package
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeckoCIRCUITS-${{ steps.version.outputs.VERSION }}-${{ matrix.platform }}
+          path: ${{ steps.package.outputs.PACKAGE }}
+          retention-days: 90
+
+  create-release:
+    needs: build-packages
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: packages
+
+      - name: Set version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: GeckoCIRCUITS v${{ steps.version.outputs.VERSION }}
+          body: |
+            ## GeckoCIRCUITS v${{ steps.version.outputs.VERSION }}
+
+            Desktop application packages for all platforms.
+
+            ### Downloads
+            - **Windows**: `GeckoCIRCUITS-*-windows.zip` - Includes run-gecko.bat launcher
+            - **Linux**: `GeckoCIRCUITS-*-linux.zip` - Includes run-gecko-linux.sh launcher
+            - **macOS**: `GeckoCIRCUITS-*-macos.zip` - Includes run-gecko-macos.sh launcher
+            - **WSL**: `GeckoCIRCUITS-*-wsl.zip` - Includes run-gecko-wsl.sh launcher with X11 support
+            - **Examples**: `GeckoCIRCUITS-*-examples.zip` - Circuit examples and tutorials
+
+            ### Installation
+            1. Download the package for your platform
+            2. Extract the zip file
+            3. Run the launcher script for your platform
+
+            ### Requirements
+            - Java 21 or later
+            - For WSL: X server (VcXsrv, Xming, or WSLg)
+
+            ### What's Changed
+            See commit history for details.
+          files: packages/**/*.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
