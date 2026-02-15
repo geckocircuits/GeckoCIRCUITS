@@ -314,6 +314,7 @@ Development journals are stored in `.claude/journals/` with detailed context:
 Keep these documents updated after each sprint/push:
 - **`PRD.md`** - Product requirements, sprint status, release history, success metrics
 - **`ARCHITECTURE.md`** - System architecture, module structure, GUI-free boundary, integration points
+- **`RELEASE_PLAN.md`** - Release strategy, version roadmap, candidate commits for tagging
 - **`CLAUDE.md`** (this file) - Build commands, development context, session continuity
 
 A PostToolUse hook in `.claude/settings.json` reminds to update these after `git commit` or `git push`.

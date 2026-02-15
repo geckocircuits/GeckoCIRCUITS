@@ -115,6 +115,8 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v1.0.0 | Production Release | URL fixes, polished packaging |
 | v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
 
+**Note:** For detailed release planning, version numbering strategy, and upcoming releases, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
+
 ### Latest Sprint (2026-02-14): Sprint 5 - REST API Implementation
 
 **Phase 1: Loss Calculation Endpoints (COMPLETED)**

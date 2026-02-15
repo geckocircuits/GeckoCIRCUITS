@@ -341,6 +341,20 @@ mkdocs gh-deploy --force                   # Deploy to GitHub Pages
 - PMD: Custom ruleset `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks, excludes `com/intel/mkl/`), **496 violations** ✅ **<500 TARGET ACHIEVED** (code-style only, down 86% from original 3,443 after systematic cleanup: 327 violations fixed, 6 categories eliminated to 0, 116 false positives excluded)
 - Checkstyle: Custom config `checkstyle.xml` (150-char lines, relaxed naming), 4,632 violations
 
+### 7.3 Release Automation
+GitHub Actions workflows automate the release process:
+- **`release.yml`** - Automated release triggered by version tags (v*), builds all 5 platforms in parallel, creates GitHub release
+- **`build-windows.yml`**, **`build-macos.yml`**, **`build-linux-wsl.yml`** - Manual dispatch workflows for testing individual platform builds
+
+**Distribution packages:**
+- Windows: `GeckoCIRCUITS-*-windows.zip` (run-gecko.bat)
+- Linux: `GeckoCIRCUITS-*-linux.zip` (run-gecko-linux.sh)
+- macOS: `GeckoCIRCUITS-*-macos.zip` (run-gecko-macos.sh)
+- WSL: `GeckoCIRCUITS-*-wsl.zip` (run-gecko-wsl.sh with X11 support)
+- Examples: `GeckoCIRCUITS-*-examples.zip` (circuit files + tutorials)
+
+For detailed release planning and version strategy, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
+
 ## 8. Key Dependencies
 
 | Dependency | Version | Purpose |
