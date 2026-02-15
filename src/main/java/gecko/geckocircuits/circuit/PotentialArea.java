@@ -502,9 +502,9 @@ public final class PotentialArea {
         if(_memoryOptimization.length != _potentialTerminals.size()) {
             return false;
         }
-        for (int i = 0; i < _memoryOptimization.length; i++) {
-            if(!_potentialTerminals.contains(_memoryOptimization[i])) {
-                assert false : _potentialTerminals.contains(_memoryOptimization[i]);
+        for (SubCircuitTerminable terminal : _memoryOptimization) {
+            if(!_potentialTerminals.contains(terminal)) {
+                assert false : _potentialTerminals.contains(terminal);
                 return false;
             }
         }
@@ -592,9 +592,6 @@ public final class PotentialArea {
         if (pot1._potentialCircuitSheet == null || pot2._potentialCircuitSheet == null) {
             return false;
         }
-        if (label1.equals(label2) && pot1._potentialCircuitSheet == pot2._potentialCircuitSheet) {
-            return true;
-        }
-        return false;
+        return label1.equals(label2) && pot1._potentialCircuitSheet == pot2._potentialCircuitSheet;
     }
 }

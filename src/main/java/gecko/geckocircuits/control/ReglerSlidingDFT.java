@@ -179,13 +179,8 @@ public final class ReglerSlidingDFT extends AbstractReglerVariableInputs {
                 return false;
             }
             final FrequencyData other = (FrequencyData) obj;
-            if (Double.doubleToLongBits(this._frequency.getValue()) != Double.doubleToLongBits(other._frequency.getValue())) {
-                return false;
-            }
-            if (this._outputData != other._outputData) {
-                return false;
-            }
-            return true;
+            return Double.doubleToLongBits(this._frequency.getValue()) == Double.doubleToLongBits(other._frequency.getValue()) &&
+                    this._outputData == other._outputData;
         }
 
         @Override

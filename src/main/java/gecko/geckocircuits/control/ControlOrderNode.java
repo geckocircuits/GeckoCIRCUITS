@@ -74,8 +74,8 @@ final class ControlOrderNode {
 
             for (AbstractTerminal term : element2.getElementControl().YOUT) {
                 final int nodeIndex = ((ControlTerminable) term).getNodeNumber();
-                for (int i4 = 0; i4 < nodeIndexIn.size(); i4++) {
-                    if (nodeIndex == nodeIndexIn.get(i4)) {
+                for (Integer inputIndex : nodeIndexIn) {
+                    if (nodeIndex == inputIndex) {
                         _directInputs.add(element2);
                     }
                 }
@@ -98,8 +98,8 @@ final class ControlOrderNode {
 
             for (AbstractTerminal term : element2.getElementControl().XIN) {
                 final int nodeIndex = ((ControlTerminable) term).getNodeNumber();
-                for (int i4 = 0; i4 < nodeIndexOut.size(); i4++) {
-                    if (nodeIndex == nodeIndexOut.get(i4)) {
+                for (Integer outputIndex : nodeIndexOut) {
+                    if (nodeIndex == outputIndex) {
                         _directOutputs.add(element2);
                     }
                 }

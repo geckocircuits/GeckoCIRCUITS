@@ -141,18 +141,10 @@ public class UndoRedoManager {
         if ((!undoRingspeicherErstmalsUeberschritten) && (undoAnzahl <= 1)) {
             return false;
         }
-        if (undoAnzahl > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return undoAnzahl > 0;
     }
 
     public boolean redoMoeglich() {
-        if (redoAnzahl > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return redoAnzahl > 0;
     }
 }

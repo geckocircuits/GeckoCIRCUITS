@@ -54,11 +54,7 @@ public final class CharacteristicsCalculator {
             if (rng1 != _startTime || rng2 != _endTime) {
                 return false;
             }
-            if(worksheet.getMaximumTimeIndex(0) != _maxTimeIndex) {
-                return false;
-            }
-
-            return true;
+            return worksheet.getMaximumTimeIndex(0) == _maxTimeIndex;
         }
     }
     private final double[] _avg;

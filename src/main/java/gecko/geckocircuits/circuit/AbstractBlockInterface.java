@@ -810,15 +810,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @Override
     public boolean testDoDoubleClickAction(final Point clickPoint) {
         int clickTester = elementAngeklickt(clickPoint);
-        if (clickTester > 0) {
-            return true;
-        }
-
-        if (clickedTerminal(clickPoint) != null) {
-            return true;
-        }
-
-        return false;
+        return clickTester > 0 || clickedTerminal(clickPoint) != null;
     }
 
     /**

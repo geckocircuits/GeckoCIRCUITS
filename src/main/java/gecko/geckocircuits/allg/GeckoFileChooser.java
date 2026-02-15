@@ -37,14 +37,7 @@ public final class GeckoFileChooser {
             FileFilter filter = new FileFilter() {
                 @Override
                 public boolean accept(final File file) {
-                    if (file.isDirectory()) {
-                        return true;
-                    }
-                    if (file.getName().endsWith(ending)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return file.isDirectory() || file.getName().endsWith(ending);
                 }
 
                 @Override

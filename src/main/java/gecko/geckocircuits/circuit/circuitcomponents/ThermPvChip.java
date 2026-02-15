@@ -258,20 +258,11 @@ public final class ThermPvChip extends AbstractCircuitBlockInterface implements 
 
     @Override
     public boolean equalsPossibleSubComponent(final Object toCompare) {
-        if(toCompare.equals(this)) {
-            return true;
-        }
-        if(toCompare.equals(_thFlow)) {
-            return true;
-        }
-        return false;
+        return toCompare.equals(this) || toCompare.equals(_thFlow);
     }
 
     public boolean isSplittableLossCalculation() {
-        if(_lossCalculator == null) {
-            return false;
-        }
-        return _lossCalculator instanceof LossCalculationSplittable;
+        return _lossCalculator != null && _lossCalculator instanceof LossCalculationSplittable;
     }
 
     public double getTotalLosses() {

@@ -98,14 +98,8 @@ final class SignalStateDrawer {
     }
 
     private static boolean detectTransitionLine(final DrawState myDrawState, final DrawState oldDrawState) {
-        if (oldDrawState == DrawState.OFF && myDrawState == DrawState.ON) {
-            return true;
-        }
-
-        if (oldDrawState == DrawState.ON && myDrawState == DrawState.OFF) {
-            return true;
-        }
-        return false;
+        return (oldDrawState == DrawState.OFF && myDrawState == DrawState.ON) ||
+                (oldDrawState == DrawState.ON && myDrawState == DrawState.OFF);
     }
 
     void paintComponent(final Graphics2D g2d, final AbstractCurve signalCurve) {

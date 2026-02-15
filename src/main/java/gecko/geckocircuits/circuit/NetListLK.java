@@ -281,9 +281,9 @@ public final class NetListLK {
         }
 
         List<AbstractBlockInterface> eLKneuList = new ArrayList<AbstractBlockInterface>();
-        for (int i = 0; i < eLKneu.length; i++) {
-            if (eLKneu[i] != null) {
-                eLKneuList.add(eLKneu[i]);
+        for (AbstractBlockInterface element : eLKneu) {
+            if (element != null) {
+                eLKneuList.add(element);
             }
         }
         NetzlisteAllg netList = NetzlisteAllg.fabricNetzlistComplete(connections, eLKneuList);

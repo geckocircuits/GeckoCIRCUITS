@@ -188,13 +188,8 @@ public class StateTransitionValidator {
             return context.getGateSignal() > GATE_THRESHOLD;
         }
 
-        if (current == SwitchState.ON && requested == SwitchState.OFF) {
-            // Turn-off: gate must be low AND current must be near zero
-            return context.getGateSignal() <= GATE_THRESHOLD &&
-                   Math.abs(context.getCurrent()) < CURRENT_ZERO_THRESHOLD;
-        }
-
-        return true;
+        return current != SwitchState.ON || requested != SwitchState.OFF || (context.getGateSignal() <= GATE_THRESHOLD &&
+                   Math.abs(context.getCurrent()) < CURRENT_ZERO_THRESHOLD);
     }
 
     private boolean validateThyristorTransition(SwitchState current, SwitchState requested,
@@ -206,14 +201,8 @@ public class StateTransitionValidator {
                    context.getVoltage() > forwardVoltage;
         }
 
-        if (current == SwitchState.ON && requested == SwitchState.OFF) {
-            // Turn-off: current must reverse (natural commutation)
-            // Also check recovery time has elapsed
-            return context.getCurrent() < CURRENT_ZERO_THRESHOLD &&
-                   context.getTimeSinceLastTransition() >= recoveryTime;
-        }
-
-        return true;
+        return current != SwitchState.ON || requested != SwitchState.OFF || (context.getCurrent() < CURRENT_ZERO_THRESHOLD &&
+                   context.getTimeSinceLastTransition() >= recoveryTime);
     }
 
     private boolean validateDiodeTransition(SwitchState current, SwitchState requested,
@@ -224,12 +213,7 @@ public class StateTransitionValidator {
             return context.getVoltage() > forwardVoltage;
         }
 
-        if (current == SwitchState.ON && requested == SwitchState.OFF) {
-            // Turn-off: current reverses
-            return context.getCurrent() < CURRENT_ZERO_THRESHOLD;
-        }
-
-        return true;
+        return current != SwitchState.ON || requested != SwitchState.OFF || context.getCurrent() < CURRENT_ZERO_THRESHOLD;
     }
 
     /**

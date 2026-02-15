@@ -50,7 +50,7 @@ public class KnotenLabel implements Serializable {
 
 
     public boolean istAngeklickt (int xPix, int yPix) {
-        if ((x1click<xPix)&&(xPix<x2click)&&(y1click<yPix)&&(yPix<y2click)) { return true; } else { return false; }
+        return (x1click<xPix)&&(xPix<x2click)&&(y1click<yPix)&&(yPix<y2click);
     }
 
 

@@ -61,12 +61,12 @@ public class PotentialCoupling {
     }
 
     void renameUpdate(final String oldLabel, final String newLabel) {
-        for (int i = 0; i < _stringIDIndices.length; i++) {
+        for (int index : _stringIDIndices) {
             String[] parameterString = _parent.getParameterString();
-            final String savedString = parameterString[_stringIDIndices[i]];
+            final String savedString = parameterString[index];
 
             if (!oldLabel.isEmpty() && savedString.equals(oldLabel)) {
-                setNewCouplingLabel(_stringIDIndices[i], newLabel);
+                setNewCouplingLabel(index, newLabel);
             }
         }
     }

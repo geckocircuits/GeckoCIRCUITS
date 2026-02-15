@@ -412,11 +412,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     }
 
     final boolean checkInputWithoutConnectionAndFillInput(final int inputIndex) {
-        if(_calculator != null) {
-            return _calculator.checkInputWithoutConnectionAndFill(inputIndex);
-        } else {
-            return true;
-        }
+        return _calculator == null || _calculator.checkInputWithoutConnectionAndFill(inputIndex);
     }
 
     public ControlType getType() {

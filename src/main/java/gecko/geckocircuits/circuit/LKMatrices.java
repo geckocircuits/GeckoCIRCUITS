@@ -1268,8 +1268,8 @@ public class LKMatrices {
         }
         System.out.println("t [us] = " + nf.format(t * 1e6) + "\t---------");
         this.schreibeMatrizenGleichung();
-        for (int i1 = 0; i1 < txt.length; i1++) {
-            System.out.println(txt[i1]);
+        for (String line : txt) {
+            System.out.println(line);
         }
     }
 

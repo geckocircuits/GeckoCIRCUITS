@@ -145,9 +145,9 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     }
 
     private void createButtonsForPanel(AbstractComponentTyp[] types, JPanel compCircuit) {
-        for (int i = 0; i < types.length; i++) {
-            AbstractBlockInterface block = _map.get(types[i]);
-            JButton testButton = new SchematicComponentSelection2.ComponentSelectionButton(types[i], block);
+        for (AbstractComponentTyp type : types) {
+            AbstractBlockInterface block = _map.get(type);
+            JButton testButton = new SchematicComponentSelection2.ComponentSelectionButton(type, block);
             compCircuit.add(testButton);
         }
     }

@@ -70,18 +70,12 @@ public class GeckoUndoableEditAdapter implements UndoableEdit {
 
     @Override
     public boolean addEdit(UndoableEdit anEdit) {
-        if (anEdit instanceof GeckoUndoableEditAdapter) {
-            return delegate.addEdit(((GeckoUndoableEditAdapter) anEdit).delegate);
-        }
-        return false;
+        return anEdit instanceof GeckoUndoableEditAdapter && delegate.addEdit(((GeckoUndoableEditAdapter) anEdit).delegate);
     }
 
     @Override
     public boolean replaceEdit(UndoableEdit anEdit) {
-        if (anEdit instanceof GeckoUndoableEditAdapter) {
-            return delegate.replaceEdit(((GeckoUndoableEditAdapter) anEdit).delegate);
-        }
-        return false;
+        return anEdit instanceof GeckoUndoableEditAdapter && delegate.replaceEdit(((GeckoUndoableEditAdapter) anEdit).delegate);
     }
 
     @Override

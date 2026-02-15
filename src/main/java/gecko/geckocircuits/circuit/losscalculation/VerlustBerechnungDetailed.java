@@ -117,14 +117,15 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
     // herausgegeben wird ein Kopie, damit man mit 'Cancel' im uebergeordneten Fenster die Aenderungen nicht zwingend uebernehmen muss -->
     public List<SwitchingLossCurve> getCopyOfSchaltverlusteMesskurvenArray() {
         List<SwitchingLossCurve> returnValue = new ArrayList<SwitchingLossCurve>();
-        for (int i1 = 0; i1 < _messkurvePvSWITCH.size(); i1++) {
-            SwitchingLossCurve curveCopy = new SwitchingLossCurve(_messkurvePvSWITCH.get(i1).tj.getValue(),
-                    _messkurvePvSWITCH.get(i1)._uBlock.getValue());
+        for (SwitchingLossCurve curve : _messkurvePvSWITCH) {
+            SwitchingLossCurve curveCopy = new SwitchingLossCurve(curve.tj.getValue(),
+                    curve._uBlock.getValue());
             returnValue.add(curveCopy);
-            double[][] dataCopy = new double[_messkurvePvSWITCH.get(i1).getCurveData().length][_messkurvePvSWITCH.get(i1).getCurveData()[0].length];
+            double[][] originalData = curve.getCurveData();
+            double[][] dataCopy = new double[originalData.length][originalData[0].length];
             for (int i2 = 0; i2 < dataCopy.length; i2++) {
                 for (int i3 = 0; i3 < dataCopy[0].length; i3++) {
-                    dataCopy[i2][i3] = _messkurvePvSWITCH.get(i1).getCurveData()[i2][i3];
+                    dataCopy[i2][i3] = originalData[i2][i3];
                 }
             }
             curveCopy.setCurveData(dataCopy);

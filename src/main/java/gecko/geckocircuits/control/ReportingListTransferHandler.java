@@ -151,13 +151,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
 
     @Override
     public boolean canImport(final JComponent comp, final DataFlavor[] flavors) {
-        if (hasLocalArrayListFlavor(flavors)) {
-            return true;
-        }
-        if (hasSerialArrayListFlavor(flavors)) {
-            return true;
-        }
-        return false;
+        return hasLocalArrayListFlavor(flavors) || hasSerialArrayListFlavor(flavors);
     }
 
     @Override
@@ -235,13 +229,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
 
         @Override
         public boolean isDataFlavorSupported(final DataFlavor flavor) {
-            if (_locArrayLstFlvr.equals(flavor)) {
-                return true;
-            }
-            if (_serArrayLstFlvr.equals(flavor)) {
-                return true;
-            }
-            return false;
+            return _locArrayLstFlvr.equals(flavor) || _serArrayLstFlvr.equals(flavor);
         }
     }
 }

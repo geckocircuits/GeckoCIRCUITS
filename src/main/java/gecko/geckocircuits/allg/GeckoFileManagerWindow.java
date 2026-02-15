@@ -550,8 +550,8 @@ public class GeckoFileManagerWindow extends JDialog {
 
     private void jButtonAddSelectedExistingFilesActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonAddSelectedExistingFilesActionPerformed
         Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
-        for (int i = 0; i < selectedFiles.length; i++) {
-            addGeckoFileToList((GeckoFile) selectedFiles[i]);
+        for (Object selectedFile : selectedFiles) {
+            addGeckoFileToList((GeckoFile) selectedFile);
         }
     }//GEN-LAST:event_jButtonAddSelectedExistingFilesActionPerformed
 
@@ -574,10 +574,7 @@ public class GeckoFileManagerWindow extends JDialog {
         FileFilter filter = new FileFilter() {
             @Override
             public boolean accept(final File f) {
-                if (f.isDirectory()) {
-                    return true;
-                }
-                return f.getName().endsWith(_fileExtension);
+                return f.isDirectory() || f.getName().endsWith(_fileExtension);
             }
 
             @Override
@@ -601,9 +598,8 @@ public class GeckoFileManagerWindow extends JDialog {
 
     private void jRadioButtonIsExternalNewActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsExternalNewActionPerformed
         Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
-        GeckoFile selectedFile;
-        for (int i = 0; i < selectedFiles.length; i++) {
-            selectedFile = (GeckoFile) selectedFiles[i];
+        for (Object file : selectedFiles) {
+            GeckoFile selectedFile = (GeckoFile) file;
             try {
                 selectedFile.setStorageType(StorageType.EXTERNAL);
             } catch (FileNotFoundException e) {
@@ -615,9 +611,8 @@ public class GeckoFileManagerWindow extends JDialog {
 
     private void jRadioButtonIsInternalNewActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsInternalNewActionPerformed
         Object[] selectedFiles = jListSelectedFilesToAdd.getSelectedValuesList().toArray(new Object[0]);
-        GeckoFile selectedFile;
-        for (int i = 0; i < selectedFiles.length; i++) {
-            selectedFile = (GeckoFile) selectedFiles[i];
+        for (Object file : selectedFiles) {
+            GeckoFile selectedFile = (GeckoFile) file;
             try {
                 selectedFile.setStorageType(StorageType.INTERNAL);
             } catch (FileNotFoundException e) {
@@ -630,9 +625,8 @@ public class GeckoFileManagerWindow extends JDialog {
 
     private void jRadioButtonIsExternalExistingActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsExternalExistingActionPerformed
         Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
-        GeckoFile selectedFile;
-        for (int i = 0; i < selectedFiles.length; i++) {
-            selectedFile = (GeckoFile) selectedFiles[i];
+        for (Object file : selectedFiles) {
+            GeckoFile selectedFile = (GeckoFile) file;
             try {
                 selectedFile.setStorageType(StorageType.EXTERNAL);
             } catch (FileNotFoundException e) {
@@ -644,9 +638,8 @@ public class GeckoFileManagerWindow extends JDialog {
 
     private void jRadioButtonIsInternalExistingActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jRadioButtonIsInternalExistingActionPerformed
         Object[] selectedFiles = jListAvailableFiles.getSelectedValuesList().toArray(new Object[0]);
-        GeckoFile selectedFile;
-        for (int i = 0; i < selectedFiles.length; i++) {
-            selectedFile = (GeckoFile) selectedFiles[i];
+        for (Object file : selectedFiles) {
+            GeckoFile selectedFile = (GeckoFile) file;
             try {
                 selectedFile.setStorageType(StorageType.INTERNAL);
             } catch (FileNotFoundException e) {

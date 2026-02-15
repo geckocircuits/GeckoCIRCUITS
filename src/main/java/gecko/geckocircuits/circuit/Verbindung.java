@@ -277,8 +277,8 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     @Override
     public final Verbindung copyFabric(final long shiftValue) {
         final Verbindung vNeu = new Verbindung(this._connectorType, this.getParentCircuitSheet());
-        for (int i1 = 0; i1 < _connectorPoints.size(); i1++) {
-            vNeu._connectorPoints.add(_connectorPoints.get(i1));
+        for (Point point : _connectorPoints) {
+            vNeu._connectorPoints.add(point);
         }
         vNeu._pointsBeforeMove.addAll(_connectorPoints);
         vNeu.getIdentifier().createNewIdentifier(getUniqueObjectIdentifier() + shiftValue);

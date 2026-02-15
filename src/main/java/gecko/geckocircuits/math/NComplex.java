@@ -194,11 +194,7 @@ public class NComplex {
         if(o instanceof NComplex) {
             NComplex compare = (NComplex) o;
             final float epsilon = 1e-6f;
-            if(Math.abs(compare.re - this.re) < epsilon && Math.abs(compare.im - this.im) < epsilon) {
-                return true;
-            } else {
-                return false;
-            }
+            return Math.abs(compare.re - this.re) < epsilon && Math.abs(compare.im - this.im) < epsilon;
         } else {
             return false;
         }

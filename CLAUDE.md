@@ -228,14 +228,16 @@ mvn checkstyle:check
 mvn pmd:check
 ```
 
-### Static Analysis Status (2026-02-14)
+### Static Analysis Status (2026-02-15)
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules, 9 excluded rules, allowCommentedBlocks) | **823** | Code-style only, no bugs. Down from 861 after fixing 38 ReturnEmptyCollectionRatherThanNull violations |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **707** | Code-style only, no bugs. UnnecessaryImport rule excluded (116 false positives - imports used in implements/extends clauses and wildcard imports) |
 | Checkstyle | `checkstyle.xml` (150-char lines) | **4,632** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
+
+**PMD Excluded Rules**: EmptyCatchBlock, LocalVariableNamingConventions, MethodNamingConventions, FormalParameterNamingConventions, SingularField, OneDeclarationPerLine, FinalParameterInAbstractMethod, GuardLogStatement, LiteralsFirstInComparisons, UnnecessaryImport (false positives)
 
 ## Current Development Focus
 

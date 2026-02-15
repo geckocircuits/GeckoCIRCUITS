@@ -94,11 +94,7 @@ public abstract class AbstractJavaBlock {
             removeList.remove(geckoFile.getName());
         }
 
-        if (!removeList.isEmpty()) { // a external file was removed... recompile required
-            return true;
-        }
-
-        return false;
+        return !removeList.isEmpty(); // a external file was removed... recompile required
     }
 
     void compileNewBlockSource(final JavaBlockSource newSourceCode) {

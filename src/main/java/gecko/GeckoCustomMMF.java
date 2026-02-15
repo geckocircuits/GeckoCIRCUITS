@@ -207,10 +207,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
      * @return true if there is a connection or connection attempt in progress
      */
     public boolean isConnected() {
-        if (_mmf == null) {
-          return false;
-        }
-        return !_mmf.isFree();
+        return _mmf != null && !_mmf.isFree();
     }
 
     /**

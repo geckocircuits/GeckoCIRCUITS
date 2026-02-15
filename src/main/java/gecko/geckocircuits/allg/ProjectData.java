@@ -481,8 +481,8 @@ public final class ProjectData implements Serializable {
         if (wert == null) {
             ascii.append("null");
         } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                ascii.append(wert[i1]);
+            for (byte value : wert) {
+                ascii.append(value);
                 ascii.append(' ');
             }
         }
@@ -493,8 +493,8 @@ public final class ProjectData implements Serializable {
         if (wert == null) {
             ascii.append("null");
         } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                ascii.append(wert[i1]);
+            for (int value : wert) {
+                ascii.append(value);
                 ascii.append(' ');
             }
         }
@@ -505,8 +505,8 @@ public final class ProjectData implements Serializable {
         if (wert == null) {
             ascii.append("null");
         } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                ascii.append(wert[i1]);
+            for (long value : wert) {
+                ascii.append(value);
                 ascii.append(' ');
             }
         }
@@ -517,8 +517,8 @@ public final class ProjectData implements Serializable {
         if (wert == null) {
             ascii.append("null");
         } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                ascii.append(wert[i1]);
+            for (Long value : wert) {
+                ascii.append(value);
                 ascii.append(' ');
             }
         }
@@ -561,8 +561,8 @@ public final class ProjectData implements Serializable {
         if (wert == null) {
             ascii.append("null");
         } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                ascii.append(wert[i1]);
+            for (double value : wert) {
+                ascii.append(value);
                 ascii.append(' ');
             }
         }
@@ -573,8 +573,8 @@ public final class ProjectData implements Serializable {
         if (wert == null) {
             ascii.append("null");
         } else {
-            for (int i1 = 0; i1 < wert.length; i1++) {
-                ascii.append(wert[i1]);
+            for (boolean value : wert) {
+                ascii.append(value);
                 ascii.append(' ');
             }
         }
@@ -587,8 +587,8 @@ public final class ProjectData implements Serializable {
                 ascii.append(" null");
             } else {
                 ascii.append(" ");
-                for (int i1 = 0; i1 < wert.length; i1++) {
-                    ascii.append(SEPARATOR_ASCII_STRINGARRAY + (wert[i1].trim().equals("") ? NIX : wert[i1]));
+                for (String value : wert) {
+                    ascii.append(SEPARATOR_ASCII_STRINGARRAY + (value.trim().equals("") ? NIX : value));
                 }
             }
         } catch (Exception ex) {
@@ -598,30 +598,30 @@ public final class ProjectData implements Serializable {
 
     public static void appendAsString(StringBuffer ascii, int[][] wert) {
         ascii.append("[][] " + wert.length + " " + wert[0].length);
-        for (int i1 = 0; i1 < wert.length; i1++) {
-            for (int i2 = 0; i2 < wert[0].length; i2++) {
+        for (int[] row : wert) {
+            for (int value : row) {
                 ascii.append(' ');
-                ascii.append(wert[i1][i2]);
+                ascii.append(value);
             }
         }
     }
 
     public static void appendAsString(StringBuffer ascii, double[][] wert) {
         ascii.append("[][] " + wert.length + " " + wert[0].length);
-        for (int i1 = 0; i1 < wert.length; i1++) {
-            for (int i2 = 0; i2 < wert[0].length; i2++) {
+        for (double[] row : wert) {
+            for (double value : row) {
                 ascii.append(' ');
-                ascii.append(wert[i1][i2]);
+                ascii.append(value);
             }
         }
     }
 
     public static void appendAsString(StringBuffer ascii, boolean[][] wert) {
         ascii.append("[][] " + wert.length + " " + wert[0].length);
-        for (int i1 = 0; i1 < wert.length; i1++) {
-            for (int i2 = 0; i2 < wert[0].length; i2++) {
+        for (boolean[] row : wert) {
+            for (boolean value : row) {
                 ascii.append(' ');
-                ascii.append(wert[i1][i2]);
+                ascii.append(value);
             }
         }
     }

@@ -48,11 +48,7 @@ public class DataTablePanelParameters extends JPanel {
 
             @Override
             public boolean isCellEditable(int row, int column) {
-                if(column == 2) {
-                    return false;
-                } else {
-                    return super.isCellEditable(row, column);
-                }
+                return column != 2 && super.isCellEditable(row, column);
             }
 
         };

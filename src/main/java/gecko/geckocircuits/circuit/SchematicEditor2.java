@@ -1922,10 +1922,10 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         do {
             endIndex++;
             nameConflict = false;
-            for (int i1 = 0; i1 < vecCopiedLabelsCONTROL.size(); i1++) {
-                final String newLabel = vecCopiedLabelsCONTROL.get(i1) + "." + endIndex;
-                for (int i2 = 0; i2 < allOrigLabelsCONTROL.size(); i2++) {
-                    if (allOrigLabelsCONTROL.get(i2).equals(newLabel)) {
+            for (String copiedLabel : vecCopiedLabelsCONTROL) {
+                final String newLabel = copiedLabel + "." + endIndex;
+                for (String origLabel : allOrigLabelsCONTROL) {
+                    if (origLabel.equals(newLabel)) {
                         nameConflict = true;
                     }
                 }

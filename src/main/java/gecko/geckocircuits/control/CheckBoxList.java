@@ -151,9 +151,9 @@ public class CheckBoxList extends JList<String>
             */
             checkbox.setSelected (isSelected);
             Component[] comps = getComponents();
-            for (int i=0; i<comps.length; i++) {
-                comps[i].setForeground (listForeground);
-                comps[i].setBackground (listBackground);
+            for (Component comp : comps) {
+                comp.setForeground (listForeground);
+                comp.setBackground (listBackground);
             }
             return this;
         }

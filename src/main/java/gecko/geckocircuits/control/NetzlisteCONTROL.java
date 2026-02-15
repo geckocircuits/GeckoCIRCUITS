@@ -352,8 +352,8 @@ public final class NetzlisteCONTROL {
 //            }
 //            System.exit(3);
 //        }
-        for (int i = 0; i < _sortedControlBlocksNew.length; i++) {
-            _sortedControlBlocksNew[i].berechneYOUT(deltaT);
+        for (AbstractControlCalculatable block : _sortedControlBlocksNew) {
+            block.berechneYOUT(deltaT);
         }
 
 //        for(AbstractControlCalculatable calc : _sortedControlBlocksNew) {
@@ -519,8 +519,8 @@ public final class NetzlisteCONTROL {
      * simulation is paused
      */
     public void tearDownOnPause() {
-        for (int i = 0; i < _sortedControlBlocksNew.length; i++) {
-            _sortedControlBlocksNew[i].tearDownOnPause();
+        for (AbstractControlCalculatable block : _sortedControlBlocksNew) {
+            block.tearDownOnPause();
         }
     }
 }

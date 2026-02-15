@@ -319,11 +319,7 @@ public class CircuitSheet extends JPanel {
         }
 
 
-        if (newCompString.equals(newSearchString)) {
-            return true;
-        }
-
-        return false;
+        return newCompString.equals(newSearchString);
     }
 
     public static void clearFind() {
@@ -468,14 +464,10 @@ public class CircuitSheet extends JPanel {
         int x2 = ausenabmessungen[2];
         int y2 = ausenabmessungen[3];
 
-        if (((x1MR <= x1) && (x1 <= x2MR) && (x1MR <= x2) && (x2 <= x2MR) && (y1MR <= y1) && (y1 <= y2MR) && (y1MR <= y2) && (y2 <= y2MR))
+        return ((x1MR <= x1) && (x1 <= x2MR) && (x1MR <= x2) && (x2 <= x2MR) && (y1MR <= y1) && (y1 <= y2MR) && (y1MR <= y2) && (y2 <= y2MR))
                 || ((x1MR >= x1) && (x1 >= x2MR) && (x1MR >= x2) && (x2 >= x2MR) && (y1MR <= y1) && (y1 <= y2MR) && (y1MR <= y2) && (y2 <= y2MR))
                 || ((x1MR <= x1) && (x1 <= x2MR) && (x1MR <= x2) && (x2 <= x2MR) && (y1MR >= y1) && (y1 >= y2MR) && (y1MR >= y2) && (y2 >= y2MR))
-                || ((x1MR >= x1) && (x1 >= x2MR) && (x1MR >= x2) && (x2 >= x2MR) && (y1MR >= y1) && (y1 >= y2MR) && (y1MR >= y2) && (y2 >= y2MR))) {
-            return true;
-        } else {
-            return false;
-        }
+                || ((x1MR >= x1) && (x1 >= x2MR) && (x1MR >= x2) && (x2 >= x2MR) && (y1MR >= y1) && (y1 >= y2MR) && (y1MR >= y2) && (y2 >= y2MR));
     }
 
     /**

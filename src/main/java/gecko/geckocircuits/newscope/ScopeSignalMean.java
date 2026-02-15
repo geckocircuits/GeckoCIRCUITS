@@ -37,10 +37,7 @@ public final class ScopeSignalMean extends AbstractScopeSignal {
             return false;
         }
         final ScopeSignalMean other = (ScopeSignalMean) obj;
-        if (this._connectedScopeSignal.getSignalIndex() != other.getConnectedScopeInputIndex()) {
-            return false;
-        }
-        return true;
+        return this._connectedScopeSignal.getSignalIndex() == other.getConnectedScopeInputIndex();
     }
 
     @Override

@@ -222,11 +222,11 @@ public class SimulationsKern implements ISimulationEngine {
 
     private void setControlledSourcesFromControlValue() {
         // Ansteuerung der signalgesteuerten LK-Quellen mittels Signal vom Regelkreis:
-        for (int i1 = 0; i1 < zuordnung_QuelleLK_signalCONTROL.length; i1++) {
-            int reglerIndex = zuordnung_QuelleLK_signalCONTROL[i1][1];
-            int outputIndex = zuordnung_QuelleLK_signalCONTROL[i1][2];
+        for (int[] mapping : zuordnung_QuelleLK_signalCONTROL) {
+            int reglerIndex = mapping[1];
+            int outputIndex = mapping[2];
 
-            AbstractCircuitBlockInterface e = nl.elements[zuordnung_QuelleLK_signalCONTROL[i1][0]];
+            AbstractCircuitBlockInterface e = nl.elements[mapping[0]];
             double[] par = e.parameter;
             double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
 
@@ -238,10 +238,10 @@ public class SimulationsKern implements ISimulationEngine {
 
     private void setThermalControlledSourcesFromControlValues() {
         // Ansteuerung der signalgesteuerten THERM-Quellen mittels Signal vom Regelkreis:
-        for (int i1 = 0; i1 < zuordnung_QuelleTHERM_signalCONTROL.length; i1++) {
-            int reglerIndex = zuordnung_QuelleTHERM_signalCONTROL[i1][1];
-            int outputIndex = zuordnung_QuelleTHERM_signalCONTROL[i1][2];
-            AbstractCircuitBlockInterface e = thermNL.elements[zuordnung_QuelleTHERM_signalCONTROL[i1][0]];
+        for (int[] mapping : zuordnung_QuelleTHERM_signalCONTROL) {
+            int reglerIndex = mapping[1];
+            int outputIndex = mapping[2];
+            AbstractCircuitBlockInterface e = thermNL.elements[mapping[0]];
             double[] par = e.parameter;
             double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
             if (blockOutput != null) {  // weil beim ersten Zeitschritt yout noch nicht definiert wurde
@@ -280,10 +280,10 @@ public class SimulationsKern implements ISimulationEngine {
         setControlledSourcesFromControlValue();
         //------------------
         // Ansteuerung der externen Maschinienwerte (zB. Last-Drehmoment) mittels Signal vom Regelkreis:
-        for (int i1 = 0; i1 < zuordnung_MaschineLK_LoadParameterInCONTROL.length; i1++) {
-            AbstractCircuitBlockInterface e = nl.elements[zuordnung_MaschineLK_LoadParameterInCONTROL[i1][0]];
-            int reglerIndex = zuordnung_MaschineLK_LoadParameterInCONTROL[i1][1];
-            int outputIndex = zuordnung_MaschineLK_LoadParameterInCONTROL[i1][2];
+        for (int[] mapping : zuordnung_MaschineLK_LoadParameterInCONTROL) {
+            AbstractCircuitBlockInterface e = nl.elements[mapping[0]];
+            int reglerIndex = mapping[1];
+            int outputIndex = mapping[2];
             double[] par = e.parameter;
             double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
             par[((AbstractMotor) e).getIndexForLoadTorque()] = blockOutput[outputIndex][0];  // bei signalgesteuerten Quellen ist parameter[1] das Signal
@@ -310,10 +310,10 @@ public class SimulationsKern implements ISimulationEngine {
 
         //------------------
         // den in VIEWMOT gewaehlten internen Maschinenparameter an den CONTROL-Ausgang von C_VIEWMOT legen:
-        for (int i1 = 0; i1 < zeiger_VIEWMOT_MaschineLK.length; i1++) {
-            AbstractCircuitBlockInterface lkBlock = nl.elements[zeiger_VIEWMOT_MaschineLK[i1][1]];
-            double interneMaschienenGroesse = lkBlock.parameter[zeiger_VIEWMOT_MaschineLK[i1][2]];
-            sortedCalculators[zeiger_VIEWMOT_MaschineLK[i1][0]]._outputSignal[0][0] = interneMaschienenGroesse;
+        for (int[] mapping : zeiger_VIEWMOT_MaschineLK) {
+            AbstractCircuitBlockInterface lkBlock = nl.elements[mapping[1]];
+            double interneMaschienenGroesse = lkBlock.parameter[mapping[2]];
+            sortedCalculators[mapping[0]]._outputSignal[0][0] = interneMaschienenGroesse;
         }
     }
 
@@ -321,9 +321,9 @@ public class SimulationsKern implements ISimulationEngine {
 
         boolean mindestensEineAktiveSchalthandlung = false;
 
-        for (int i1 = 0; i1 < zuordnung_SchalterLK_SWITCH.length; i1++) {
-            double schaltSignal = sortedCalculators[zuordnung_SchalterLK_SWITCH[i1][0]]._inputSignal[0][0];
-            AbstractCircuitBlockInterface e = nl.elements[zuordnung_SchalterLK_SWITCH[i1][1]];
+        for (int[] mapping : zuordnung_SchalterLK_SWITCH) {
+            double schaltSignal = sortedCalculators[mapping[0]]._inputSignal[0][0];
+            AbstractCircuitBlockInterface e = nl.elements[mapping[1]];
             final double[] par = e.parameter;
             switch (e.getCircuitTyp()) {
                 case LK_S:
@@ -552,15 +552,15 @@ public class SimulationsKern implements ISimulationEngine {
 
     public void setScopeMenuesStartStop() {
         // ganz am Anfang sofort einmal auffrischen:
-        for (int i1 = 0; i1 < c.length; i1++) {
-            if (c[i1] instanceof ReglerOSZI) {
-                ReglerOSZI oszi = (ReglerOSZI) c[i1];
+        for (RegelBlock block : c) {
+            if (block instanceof ReglerOSZI) {
+                ReglerOSZI oszi = (ReglerOSZI) block;
                 if (oszi._scopeFrame != null) {
                     oszi._scopeFrame.setScopeMenueEnabled(true);
                 }
             }
-            if (c[i1] instanceof ReglerCISPR16) {
-                ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(false);
+            if (block instanceof ReglerCISPR16) {
+                ((ReglerCISPR16) block).setTestReceiverCISPR16MenueEnabled(false);
             }
         }
     }
@@ -815,15 +815,15 @@ public class SimulationsKern implements ISimulationEngine {
             // ignored: interruption acceptable
         }  // damit es nicht zu einer 'RacingCondition' mit einer eventuell noch laufenden Aktualisierung aus takteAuffrischungScope() kommt
         //---------------------------
-        for (int i1 = 0; i1 < c.length; i1++) {
-            if (c[i1] instanceof ReglerOSZI) {
-                ScopeFrame sf = ((ReglerOSZI) c[i1])._scopeFrame;
+        for (RegelBlock block : c) {
+            if (block instanceof ReglerOSZI) {
+                ScopeFrame sf = ((ReglerOSZI) block)._scopeFrame;
                 if (sf != null) {
                     sf.setScopeMenueEnabled(false);
                 }
             }
-            if (c[i1] instanceof ReglerCISPR16) {
-                ((ReglerCISPR16) c[i1]).setTestReceiverCISPR16MenueEnabled(true);
+            if (block instanceof ReglerCISPR16) {
+                ((ReglerCISPR16) block).setTestReceiverCISPR16MenueEnabled(true);
             }
         }
     }

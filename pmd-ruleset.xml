@@ -29,6 +29,9 @@
 
         <!-- Yoda conditions — not the project's style -->
         <exclude name="LiteralsFirstInComparisons"/>
+
+        <!-- False positives: flags imports used in implements/extends clauses and wildcard imports -->
+        <exclude name="UnnecessaryImport"/>
     </rule>
 
     <rule ref="category/java/errorprone.xml/EmptyCatchBlock">

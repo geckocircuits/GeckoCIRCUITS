@@ -31,11 +31,11 @@ public final class CapacitanceCharacteristic {
         x_val_V = new ArrayList<Double>();
         isLogYScale = logscaleY;
         assert nonliny.length == nonlinx.length;
-        for (int i = 0; i < nonliny.length; i++) {
-            y_val_C.add(nonliny[i]);
+        for (double value : nonliny) {
+            y_val_C.add(value);
         }
-        for (int i = 0; i < nonlinx.length; i++) {
-            x_val_V.add(nonlinx[i]);
+        for (double value : nonlinx) {
+            x_val_V.add(value);
         }
     }
 

@@ -83,15 +83,7 @@ public final class Axis {
     }
 
     boolean hasIdenticalSettings(final Axis otherAxis) {
-        if (_axisType != otherAxis._axisType) {
-            return false;
-        }
-
-        if (!_axisMinMax.getLimits().equals(otherAxis._axisMinMax.getLimits())) {
-            return false;
-        }
-
-        return true;
+        return _axisType == otherAxis._axisType && _axisMinMax.getLimits().equals(otherAxis._axisMinMax.getLimits());
     }
 
     void copyAxisSettings(final Axis copyFrom) {

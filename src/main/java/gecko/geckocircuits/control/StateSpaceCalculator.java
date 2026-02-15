@@ -272,15 +272,8 @@ public final class StateSpaceCalculator {
         if (!Arrays.equals(this._leadingPolynom, other._leadingPolynom)) {
             return false;
         }
-        if (!Arrays.equals(this._transferNum, other._transferNum)) {
-            return false;
-        }
-        if (!Arrays.equals(this._denomPolynom, other._denomPolynom)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this._deltaT) != Double.doubleToLongBits(other._deltaT)) {
-            return false;
-        }
-        return true;
+        return Arrays.equals(this._transferNum, other._transferNum) &&
+                Arrays.equals(this._denomPolynom, other._denomPolynom) &&
+                Double.doubleToLongBits(this._deltaT) == Double.doubleToLongBits(other._deltaT);
     }
 }

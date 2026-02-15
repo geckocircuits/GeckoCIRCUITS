@@ -34,7 +34,7 @@ public final class ScopeWrapperIndices {
     public ScopeWrapperIndices(final List<Integer> globalIndices, final DataContainerGlobal globalDataContainer) {
         _originalGlobalIndices = Collections.unmodifiableList(globalIndices);
         _globalDataContainer = globalDataContainer;
-        for (int index = 0; index < globalIndices.size(); index++) {
+        for (Integer ignored : globalIndices) {
             _indexedDataContainers.add(globalDataContainer);
         }
     }
@@ -52,7 +52,7 @@ public final class ScopeWrapperIndices {
         _globalIndices.clear();
         _globalIndices.addAll(_originalGlobalIndices);
         _indexedDataContainers.clear();
-        for (int index = 0; index < _globalIndices.size(); index++) {
+        for (Integer ignored : _globalIndices) {
             _indexedDataContainers.add(_globalDataContainer);
         }
     }

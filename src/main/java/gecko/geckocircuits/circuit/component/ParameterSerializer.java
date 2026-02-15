@@ -323,10 +323,7 @@ public final class ParameterSerializer {
 
         @Override
         public boolean hasMore() {
-            if (currentTokenizer != null && currentTokenizer.hasMoreTokens()) {
-                return true;
-            }
-            return lineIndex < lines.size();
+            return (currentTokenizer != null && currentTokenizer.hasMoreTokens()) || lineIndex < lines.size();
         }
     }
 

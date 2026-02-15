@@ -320,8 +320,8 @@ public class TechFormat implements Serializable {
             0.000123456, 0.00123456, 0.0123456, 0.123456, 1.23456, 12.3456, 123.456, 1234.56,
             12345.6, 123456, 1234560, 12345600, 123456000, 1234560000, 300, 7.1, 7.11, 7.12, 0.071
         };
-        for (int i1 = 0; i1 < data.length; i1++) {
-            System.out.println(this.formatT(data[i1], FORMAT_AUTO) + "\t\t" + data[i1]);
+        for (double value : data) {
+            System.out.println(this.formatT(value, FORMAT_AUTO) + "\t\t" + value);
         }
         //----------------------------
     }
