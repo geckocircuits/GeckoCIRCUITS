@@ -21,7 +21,9 @@ jobs:
           cache: maven
 
       - name: Build
-        run: mvn clean package assembly:single -DskipTests --no-transfer-progress
+        run: |
+          mvn -f pom-reactor.xml clean package -DskipTests --no-transfer-progress
+          mvn assembly:single -DskipTests --no-transfer-progress
 
       - name: Install test dependencies
         run: |
