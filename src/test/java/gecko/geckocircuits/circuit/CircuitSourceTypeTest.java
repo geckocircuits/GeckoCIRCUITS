@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
+import gecko.core.circuit.CircuitSourceType;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
