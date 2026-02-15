@@ -362,10 +362,10 @@ public final class DataJunkCompressable implements DataJunk {
     }
 
     private void calculateDifferenceDeCompression(final int[][] returnValue) {
-        for (int i = 0; i < returnValue.length; i++) {
+        for (int[] row : returnValue) {
             for (int k = 0; k < MORDER_DIFF; k++) {
-                for (int j = MORDER_DIFF; j < returnValue[0].length; j++) {
-                    returnValue[i][j] = returnValue[i][j] + returnValue[i][j - 1];
+                for (int j = MORDER_DIFF; j < row.length; j++) {
+                    row[j] = row[j] + row[j - 1];
                 }
             }
         }

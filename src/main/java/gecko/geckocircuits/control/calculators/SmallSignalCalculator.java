@@ -312,9 +312,9 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
         boolean[] set = new boolean[noValues]; //values must default to false
         int totalItems = 0;
 
-        for (int i = 0; i < arr.length; ++i) {
-            if (set[arr[i]] == false) {
-                set[arr[i]] = true;
+        for (int value : arr) {
+            if (set[value] == false) {
+                set[value] = true;
                 totalItems++;
             }
         }

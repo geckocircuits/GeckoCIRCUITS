@@ -466,12 +466,12 @@ public final class ReglerJavaFunction extends RegelBlock implements VariableTerm
         this.XIN.clear();
         this.YOUT.clear();
 
-        for (int i = 0; i < other.XIN.size(); i++) {
-            this.XIN.add(other.XIN.get(i).createCopy(this));
+        for (AbstractTerminal input : other.XIN) {
+            this.XIN.add(input.createCopy(this));
         }
 
-        for (int i = 0; i < other.YOUT.size(); i++) {
-            this.YOUT.add(other.YOUT.get(i).createCopy(this));
+        for (AbstractTerminal output : other.YOUT) {
+            this.YOUT.add(output.createCopy(this));
         }
 
         this._variableBusWidth.busMap.putAll(other._variableBusWidth.busMap);

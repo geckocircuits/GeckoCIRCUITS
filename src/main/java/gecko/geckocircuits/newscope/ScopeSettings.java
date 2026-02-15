@@ -95,9 +95,9 @@ public class ScopeSettings implements Serializable {
         crvSymbShow = new boolean[ANZ_DIAGRAM_MAX][50];
         crvSymbColor = new int[ANZ_DIAGRAM_MAX][50];
 
-        for (int i = 0; i < crvLineColor.length; i++) {
-            for (int j = 0; j < crvLineColor[0].length; j++) {
-                crvLineColor[i][j] = GeckoColor.getNextColor().code();
+        for (int[] colorRow : crvLineColor) {
+            for (int j = 0; j < colorRow.length; j++) {
+                colorRow[j] = GeckoColor.getNextColor().code();
             }
         }
 
@@ -461,9 +461,9 @@ public class ScopeSettings implements Serializable {
         // Achtung: in alten Versionen sind diese beiden Parameter nicht gesetzt, daher hier default-Initialisierung:
         if (crvTransparency == null) {
             crvTransparency = new double[crvLineColor.length][crvLineColor[0].length];
-            for (int i = 0; i < crvTransparency.length; i++) {
-                for (int j = 0; j < crvTransparency[0].length; j++) {
-                    crvTransparency[i][j] = 1.0;
+            for (double[] transparencyRow : crvTransparency) {
+                for (int j = 0; j < transparencyRow.length; j++) {
+                    transparencyRow[j] = 1.0;
                 }
             }
         }

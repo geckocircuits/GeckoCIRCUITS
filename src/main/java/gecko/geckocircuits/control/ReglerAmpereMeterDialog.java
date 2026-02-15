@@ -40,8 +40,8 @@ class ReglerAmpereMeterDialog extends DialogElementCONTROL<AbstractCurrentMeasur
                 psw2.setLayout(new BorderLayout());
                 _comboLossType = new JComboBox<>() ;
                 final LossComponent[] components = LossComponent.values();
-                for (int i = 0; i < components.length; i++) {
-                    _comboLossType.addItem(components[i]);
+                for (LossComponent component : components) {
+                    _comboLossType.addItem(component);
                 }
                 _comboLossType.setSelectedItem(((ReglerFlowMeter)element).getLossComponentBeingMeasured());
                 final JLabel lossLabel = new JLabel("Loss component to measure:");

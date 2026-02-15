@@ -172,8 +172,8 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
     }
 
     void setSelectedDiagram(final AbstractDiagram diagram) {
-        for (int i = 0; i < jlGRF.length; i++) {
-            jlGRF[i].setBackground(_origBackColor);
+        for (JButton button : jlGRF) {
+            button.setBackground(_origBackColor);
         }
         _selectedDiagram = diagram;
         jlGRF[_manager.getDiagrams().indexOf(diagram)].setBackground(Color.WHITE);

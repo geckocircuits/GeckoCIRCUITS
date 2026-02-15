@@ -65,8 +65,8 @@ final class CurvePainterSignal extends AbstractCurvePainter{
   @Override
   public void paintComponent(final Graphics2D g2d){
     synchronized(this){
-      for(int i = 0; i < _allDrawables.size(); i++){
-        _allDrawables.get(i).paintComponent(g2d, _curve);
+      for(SignalStateDrawer drawable : _allDrawables){
+        drawable.paintComponent(g2d, _curve);
       }
     }
 

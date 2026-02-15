@@ -114,26 +114,26 @@ public final class ReglerTransferFunction extends AbstractReglerSingleInputSingl
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         ascii.append("\nnominatorPoles ");
-        for (int i = 0; i < _poles.length; i++) {
-            ascii.append(_poles[i]);
+        for (double pole : _poles) {
+            ascii.append(pole);
             ascii.append(' ');
         }
 
         ascii.append("\ndenominatorZeros ");
-        for (int i = 0; i < _zeros.length; i++) {
-            ascii.append(_zeros[i]);
+        for (double zero : _zeros) {
+            ascii.append(zero);
             ascii.append(' ');
         }
 
         ascii.append("\nnominatorPolynom ");
-        for (int i = 0; i < _numeratorPolynom.length; i++) {
-            ascii.append(_numeratorPolynom[i]);
+        for (double coefficient : _numeratorPolynom) {
+            ascii.append(coefficient);
             ascii.append(' ');
         }
 
         ascii.append("\ndenominatorPolynom ");
-        for (int i = 0; i < _denomPolynom.length; i++) {
-            ascii.append(_denomPolynom[i]);
+        for (double coefficient : _denomPolynom) {
+            ascii.append(coefficient);
             ascii.append(' ');
         }
 

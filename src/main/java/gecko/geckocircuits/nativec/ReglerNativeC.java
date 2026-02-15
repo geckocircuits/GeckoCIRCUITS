@@ -437,8 +437,8 @@ public final class ReglerNativeC extends RegelBlock implements VariableTerminalN
     public DefaultListModel<String> convertString2List (final String list) {
         DefaultListModel<String> result = new DefaultListModel<>();
         String[] elements = list.split(Pattern.quote(PATH_SPLITTER));
-        for (int i=0; i<elements.length; i++) {
-            result.addElement(elements[i]);
+        for (String element : elements) {
+            result.addElement(element);
         }
         return result;
     }

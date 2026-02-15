@@ -84,10 +84,10 @@ public class CompressorIntMatrix {
         int bytesDecompressed = 0;
 
         byte[] result = new byte[bytesToDecompress];
-        for (int i = 0; i < byteContainer.size(); i++) {
+        for (byte[] byteBlock : byteContainer) {
             try {
                 int length = Math.min(BYTE_BLOCK_SIZE, bytesToDecompress);
-                decompresser.setInput(byteContainer.get(i), 0, length);
+                decompresser.setInput(byteBlock, 0, length);
                 int localDecompressed = decompresser.inflate(result, bytesDecompressed, bytesToDecompress);
                 bytesToDecompress -= localDecompressed;
                 bytesDecompressed += localDecompressed;

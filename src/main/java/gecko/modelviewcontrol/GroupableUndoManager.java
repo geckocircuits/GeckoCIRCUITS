@@ -124,8 +124,8 @@ public final class GroupableUndoManager extends UndoManager{
     @Override
     public void undo() throws CannotUndoException{
 
-      for(int i = 0; i < _editList.size(); i++){
-        _editList.get(i).undo();
+      for(UndoableEdit edit : _editList){
+        edit.undo();
       }
     }
 

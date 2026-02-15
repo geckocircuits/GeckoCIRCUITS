@@ -130,12 +130,12 @@ public class ExternalSignal extends AbstractScopeSignal{
       this._signalValues = values.clone();
       double min = Double.POSITIVE_INFINITY;
       double max = Double.NEGATIVE_INFINITY;
-      for(int i = 0; i < values.length; i++){
-        if(values[i] < min){
-          min = values[i];
+      for(double value : values){
+        if(value < min){
+          min = value;
         }
-        if(values[i] > max){
-          max = values[i];
+        if(value > max){
+          max = value;
         }
       }
       this._min = min;

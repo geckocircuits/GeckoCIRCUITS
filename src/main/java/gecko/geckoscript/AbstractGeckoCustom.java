@@ -883,10 +883,10 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         try {
             AbstractBlockInterface elem;
 
-            for (int i = 0; i < stateVariables.length; i++) {
-                elem = IDStringDialog.getComponentByName(stateVariables[i]);
+            for (String stateVariable : stateVariables) {
+                elem = IDStringDialog.getComponentByName(stateVariable);
                 if (!((elem instanceof ReglerVOLT) || (elem instanceof ReglerAmperemeter) || (elem instanceof ReglerTEMP))) {
-                    writerOutputErrorLn("Supplied element " + stateVariables[i] + " is not a measuring element. Steady state monitoring not initialized!");
+                    writerOutputErrorLn("Supplied element " + stateVariable + " is not a measuring element. Steady state monitoring not initialized!");
                     return;
                 }
             }
@@ -954,8 +954,8 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
             double errorTot = 0;
             double avgError;
 
-            for (int i = 0; i < diff.length; i++) {
-                errorTot += diff[i];
+            for (double diffValue : diff) {
+                errorTot += diffValue;
             }
 
             avgError = errorTot / diff.length;
@@ -968,8 +968,8 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         } else if (option == 2) {
             steadystate = true;
 
-            for (int i = 0; i < diff.length; i++) {
-                if (diff[i] > allowed_error) {
+            for (double diffValue : diff) {
+                if (diffValue > allowed_error) {
                     steadystate = false;
                     break;
                 }
@@ -979,10 +979,10 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
             int noOfPointsBelowTwiceError = 0;
             int noOfPointsAboveTwiceError = 0;
 
-            for (int i = 0; i < diff.length; i++) {
-                if (diff[i] <= allowed_error) {
+            for (double diffValue : diff) {
+                if (diffValue <= allowed_error) {
                     noOfPointsBelowError++;
-                } else if (diff[i] <= (2.0 * allowed_error)) {
+                } else if (diffValue <= (2.0 * allowed_error)) {
                     noOfPointsBelowTwiceError++;
                 } else {
                     noOfPointsAboveTwiceError++;
@@ -1038,8 +1038,8 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         while (!steadyStateReached && (time < _steadyStateSimTime)) {
             simulateStep();
             time += _steadyStateDt;
-            for (int i = 0; i < _periods.length; i++) {
-                if (Math.abs(time - potentialCycleStartTime - _periods[i]) <= (2.1 * _steadyStateDt)/*
+            for (double periodValue : _periods) {
+                if (Math.abs(time - potentialCycleStartTime - periodValue) <= (2.1 * _steadyStateDt)/*
                          * (dt/1000)
                          */) {
                     /*
@@ -1098,16 +1098,16 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         try {
             final AbstractDataContainer data = NetzlisteCONTROL.globalData;
 
-            for (int i = 0; i < stateVariables.length; i++) {
+            for (String stateVariable : stateVariables) {
                 int foundIndex = -1; // search for the signal with the right name.
                 for (int j = 0; j < data.getRowLength(); j++) {
-                    if (data.getSignalName(j).equals(stateVariables[i])) {
+                    if (data.getSignalName(j).equals(stateVariable)) {
                         foundIndex = j;
                     }
                 }
 
                 if (foundIndex < 0) {
-                    writerOutputErrorLn("Could not find signal: " + stateVariables[i]);
+                    writerOutputErrorLn("Could not find signal: " + stateVariable);
                     return;
                 }
             }
@@ -1313,8 +1313,8 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
         final double[] meanPctDiffs = correlationResults.get(1);
         final double[] rmsPctDiffs = correlationResults.get(2);
 
-        for (int i = 0; i < correlations.length; i++) {
-            if (correlations[i] < targetCorrelation) {
+        for (double correlation : correlations) {
+            if (correlation < targetCorrelation) {
                 return false;
             }
         }

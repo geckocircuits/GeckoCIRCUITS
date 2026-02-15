@@ -1062,8 +1062,8 @@ public class GraferV3 extends JPanel {
             int indexAchseY = gridNormalX_zugeordneteYAchse[i1];
             if ((indexAchseX != -1) && (indexAchseY != -1)) {
                 // Minor-Grids -->
-                for (int i3 = 0; i3 < showGridNormalXminor.length; i3++) {
-                    if ((showGridNormalXminor[i3][0] == indexAchseX) && (showGridNormalXminor[i3][1] == indexAchseY) && (tickXminor[indexAchseX] != null)) {
+                for (int[] gridConfig : showGridNormalXminor) {
+                    if ((gridConfig[0] == indexAchseX) && (gridConfig[1] == indexAchseY) && (tickXminor[indexAchseX] != null)) {
                         for (int i2 = 0; i2 < tickXminor[indexAchseX].length; i2++) {
                             if (linStilGridNormalXminor[i1] == INVISIBLE) {
                                 continue;
@@ -1094,8 +1094,8 @@ public class GraferV3 extends JPanel {
                     }
                 }
                 // Major-Ticks -->
-                for (int i3 = 0; i3 < showGridNormalXmajor.length; i3++) {
-                    if ((showGridNormalXmajor[i3][0] == indexAchseX) && (showGridNormalXmajor[i3][1] == indexAchseY) && (tickX[indexAchseX] != null)) {
+                for (int[] gridConfig : showGridNormalXmajor) {
+                    if ((gridConfig[0] == indexAchseX) && (gridConfig[1] == indexAchseY) && (tickX[indexAchseX] != null)) {
                         for (int i2 = 0; i2 < tickX[indexAchseX].length; i2++) {
                             if (linStilGridNormalX[i1] == INVISIBLE) {
                                 continue;
@@ -1143,8 +1143,8 @@ public class GraferV3 extends JPanel {
             int indexAchseY = gridNormalY_zugeordneteYAchse[i1];
             if ((indexAchseX != -1) && (indexAchseY != -1)) {
                 // Minor-Grids -->
-                for (int i3 = 0; i3 < showGridNormalYminor.length; i3++) {
-                    if ((showGridNormalYminor[i3][0] == indexAchseX) && (showGridNormalYminor[i3][1] == indexAchseY) && (tickYminor[indexAchseY] != null)) {
+                for (int[] gridConfig : showGridNormalYminor) {
+                    if ((gridConfig[0] == indexAchseX) && (gridConfig[1] == indexAchseY) && (tickYminor[indexAchseY] != null)) {
                         for (int i2 = 0; i2 < tickYminor[indexAchseY].length; i2++) {
                             if (linStilGridNormalYminor[i1] == INVISIBLE) {
                                 continue;
@@ -1175,8 +1175,8 @@ public class GraferV3 extends JPanel {
                     }
                 }
                 // Major-Ticks -->
-                for (int i3 = 0; i3 < showGridNormalYmajor.length; i3++) {
-                    if ((showGridNormalYmajor[i3][0] == indexAchseX) && (showGridNormalYmajor[i3][1] == indexAchseY) && (tickY[indexAchseY] != null)) {
+                for (int[] gridConfig : showGridNormalYmajor) {
+                    if ((gridConfig[0] == indexAchseX) && (gridConfig[1] == indexAchseY) && (tickY[indexAchseY] != null)) {
                         for (int i2 = 0; i2 < tickY[indexAchseY].length; i2++) {
                             if (linStilGridNormalY[i1] == INVISIBLE) {
                                 continue;

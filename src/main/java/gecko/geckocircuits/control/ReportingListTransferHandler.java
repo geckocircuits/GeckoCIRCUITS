@@ -91,8 +91,8 @@ public final class ReportingListTransferHandler extends TransferHandler {
 
         _addCount = alist.size();
 
-        for (int i = 0; i < alist.size(); i++) {
-            listModel.add(index++, alist.get(i));
+        for (Object item : alist) {
+            listModel.add(index++, item);
         }
         return true;
     }
@@ -128,8 +128,8 @@ public final class ReportingListTransferHandler extends TransferHandler {
             return false;
         }
 
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(_locArrayLstFlvr)) {
+        for (DataFlavor flavor : flavors) {
+            if (flavor.equals(_locArrayLstFlvr)) {
                 return true;
             }
         }
@@ -141,8 +141,8 @@ public final class ReportingListTransferHandler extends TransferHandler {
             return false;
         }
 
-        for (int i = 0; i < flavors.length; i++) {
-            if (flavors[i].equals(_serArrayLstFlvr)) {
+        for (DataFlavor flavor : flavors) {
+            if (flavor.equals(_serArrayLstFlvr)) {
                 return true;
             }
         }
@@ -166,8 +166,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
             }
 
             final List<Object> alist = new ArrayList<Object>(values.length);
-            for (int i = 0; i < values.length; i++) {
-                final Object obj = values[i];
+            for (Object obj : values) {
                 alist.add(obj);
             }
             return new ReportingListTransferable(alist);

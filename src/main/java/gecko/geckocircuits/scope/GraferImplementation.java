@@ -492,8 +492,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //==================================
         // es gibt einen y-Tick bei '0' und einen bei '1'; und zwar fuer jeden SIGNAL-Verlauf innerhalb des entsprechenden Graphen
         int z = 0;
-        for (int i3 = 0; i3 < indexDerKurveInDerMatrix.length; i3++) {
-            final int grf = indexDerKurveInDerMatrix[i3] / 1000;
+        for (int curveIndex : indexDerKurveInDerMatrix) {
+            final int grf = curveIndex / 1000;
             if (grf == i1 / 2) {
                 z++;
             }
@@ -568,8 +568,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             boolean noX = true;
             while (noX) {
                 boolean lokNoX = true;
-                for (int i1 = 0; i1 < toBeOrdered.length; i1++) {
-                    if (toBeOrdered[i1] == zahl) {
+                for (int value : toBeOrdered) {
+                    if (value == zahl) {
                         lokNoX = false;
                         noX = false;
                     }
@@ -1831,8 +1831,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                     ySchieberWert[i2][0] = worksheetDaten.getValue(i2 + 1, index);
                 }
             } else {
-                for (int i2 = 0; i2 < ySchieberWert.length; i2++) {
-                    ySchieberWert[i2][0] = 0;
+                for (double[] sliderValue : ySchieberWert) {
+                    sliderValue[0] = 0;
                 }
             }
         } else {
@@ -1912,24 +1912,24 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         double sfX_ = -1, sfY_ = -1;
         int xAchseTyp_ = -1, yAchseTyp_ = -1;
         int indexYAchse = -1;
-        for (int i1 = 0; i1 < indexZurKurveGehoerigeXachse.length; i1++) {
-            if ((_xAchseX[indexZurKurveGehoerigeXachse[i1]] >= xGrfMIN[indexAngeklickterGraph])
-                    && (_xAchseX[indexZurKurveGehoerigeXachse[i1]] <= xGrfMAX[indexAngeklickterGraph])) {
-                achseXmin_ = achseXmin[indexZurKurveGehoerigeXachse[i1]];
-                xAchseX_ = _xAchseX[indexZurKurveGehoerigeXachse[i1]];
-                sfX_ = sfX[indexZurKurveGehoerigeXachse[i1]];
-                xAchseTyp_ = xAchseTyp[indexZurKurveGehoerigeXachse[i1]];
+        for (int xAxisIndex : indexZurKurveGehoerigeXachse) {
+            if ((_xAchseX[xAxisIndex] >= xGrfMIN[indexAngeklickterGraph])
+                    && (_xAchseX[xAxisIndex] <= xGrfMAX[indexAngeklickterGraph])) {
+                achseXmin_ = achseXmin[xAxisIndex];
+                xAchseX_ = _xAchseX[xAxisIndex];
+                sfX_ = sfX[xAxisIndex];
+                xAchseTyp_ = xAchseTyp[xAxisIndex];
                 break;
             }
         }
-        for (int i1 = 0; i1 < indexZurKurveGehoerigeYachse.length; i1++) {
-            if ((_yAchseY[indexZurKurveGehoerigeYachse[i1]] >= yGrfMIN[indexAngeklickterGraph])
-                    && (_yAchseY[indexZurKurveGehoerigeYachse[i1]] <= yGrfMAX[indexAngeklickterGraph])) {
-                achseYmin_ = achseYmin[indexZurKurveGehoerigeYachse[i1]];
-                yAchseY_ = _yAchseY[indexZurKurveGehoerigeYachse[i1]];
-                sfY_ = sfY[indexZurKurveGehoerigeYachse[i1]];
-                yAchseTyp_ = yAchseTyp[indexZurKurveGehoerigeYachse[i1]];
-                indexYAchse = indexZurKurveGehoerigeYachse[i1];
+        for (int yAxisIndex : indexZurKurveGehoerigeYachse) {
+            if ((_yAchseY[yAxisIndex] >= yGrfMIN[indexAngeklickterGraph])
+                    && (_yAchseY[yAxisIndex] <= yGrfMAX[indexAngeklickterGraph])) {
+                achseYmin_ = achseYmin[yAxisIndex];
+                yAchseY_ = _yAchseY[yAxisIndex];
+                sfY_ = sfY[yAxisIndex];
+                yAchseTyp_ = yAchseTyp[yAxisIndex];
+                indexYAchse = yAxisIndex;
                 break;
             }
         }

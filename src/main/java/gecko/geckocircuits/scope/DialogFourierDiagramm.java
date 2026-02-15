@@ -253,8 +253,8 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
         toolBar = new JToolBar("Mouse Options");
         toolBar.setOrientation(JToolBar.VERTICAL);
         toolBar.setFloatable(false);
-        for (int i1 = 0; i1 < mouseButtons.length; i1++) {
-            toolBar.add(mouseButtons[i1]);
+        for (JButton mouseButton : mouseButtons) {
+            toolBar.add(mouseButton);
         }
         //--------------------
     }
@@ -297,10 +297,10 @@ public class DialogFourierDiagramm extends JDialog implements ComponentListener 
                     mouseButtons[4].setIcon(iconOFF[4]);
                 }
 
-                for (int i = 0; i < diagrams.length; i++) {
-                    if (diagrams[i] != null) {
-                        diagrams[i].setzeAchsenTyp(new int[]{GraferV3.ACHSE_LIN}, new int[]{yAxisType});
-                        diagrams[i].repaint();
+                for (FourierDiagramm diagram : diagrams) {
+                    if (diagram != null) {
+                        diagram.setzeAchsenTyp(new int[]{GraferV3.ACHSE_LIN}, new int[]{yAxisType});
+                        diagram.repaint();
                     }
 
 

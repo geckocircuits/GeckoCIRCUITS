@@ -83,8 +83,8 @@ public final class PowerAnalysisPanel extends JPanel {
             powerAnalLabels[6][i] = new JLabel("   S = ");
             powerAnalLabels[7][i] = new JLabel("   cos(p1) = ");
 
-            for (int j = 0; j < powerAnalLabels.length; j++) {
-                final JLabel tmp = powerAnalLabels[j][i];
+            for (JLabel[] labelRow : powerAnalLabels) {
+                final JLabel tmp = labelRow[i];
                 tmp.setFont(GlobalFonts.LAB_FONT_DIALOG_1);
                 tmp.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
 
@@ -161,10 +161,10 @@ public final class PowerAnalysisPanel extends JPanel {
 
     private void setPQTextFields() {
         _pqTextFields = new FormatJTextField[3][6];
-        for (int i = 0; i < _pqTextFields.length; i++) {
-            for (int j = 0; j < _pqTextFields[0].length; j++) {
+        for (FormatJTextField[] textFieldRow : _pqTextFields) {
+            for (int j = 0; j < textFieldRow.length; j++) {
                 final FormatJTextField textField = new FormatJTextField();
-                _pqTextFields[i][j] = textField;
+                textFieldRow[j] = textField;
                 textField.setColumns(10);
                 textField.setEditable(false);
                 textField.setFont(new java.awt.Font("Arial", 0, 11));
@@ -235,9 +235,9 @@ public final class PowerAnalysisPanel extends JPanel {
                 final PowerCalculator ergP = PowerCalculator.calculatorFabric(worksheet, this);
                 if (!this._selCurrentInd.isEmpty()) {  // dh. keine Leistungsberechnung durchzufuehren weil deaktiviert
 
-                    for (int i = 0; i < _pqTextFields.length; i++) {
-                        for (int j = 0; j < _pqTextFields[0].length; j++) {
-                            _pqTextFields[i][j].setText("    -");
+                    for (FormatJTextField[] textFieldRow : _pqTextFields) {
+                        for (FormatJTextField textField : textFieldRow) {
+                            textField.setText("    -");
                         }
                     }
 

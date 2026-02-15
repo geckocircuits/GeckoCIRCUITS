@@ -191,13 +191,13 @@ public final class MyFFT {
 
     protected static void printReIm(double[] re, double[] im) {
         System.out.print("Re: [");
-        for (int i = 0; i < re.length; i++) {
-            System.out.print(((int) (re[i] * 1000) / 1000.0) + " ");
+        for (double value : re) {
+            System.out.print(((int) (value * 1000) / 1000.0) + " ");
         }
 
         System.out.print("]\nIm: [");
-        for (int i = 0; i < im.length; i++) {
-            System.out.print(((int) (im[i] * 1000) / 1000.0) + " ");
+        for (double value : im) {
+            System.out.print(((int) (value * 1000) / 1000.0) + " ");
         }
 
         System.out.println("]");

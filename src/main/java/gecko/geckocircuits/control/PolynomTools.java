@@ -237,9 +237,8 @@ public final class PolynomTools {
     private static Map<NComplex, Integer> getPowersMap(final List<NComplex> polynomList) {
 
         final Map<NComplex, Integer> nomPowers = new HashMap<NComplex, Integer>();
-        for (int i = 0; i < polynomList.size(); i++) {
+        for (NComplex value : polynomList) {
             int oldPower = 0;
-            final NComplex value = polynomList.get(i);
             if (nomPowers.containsKey(value)) {
                 oldPower = nomPowers.get(value);
             }

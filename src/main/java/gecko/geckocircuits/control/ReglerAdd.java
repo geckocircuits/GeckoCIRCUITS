@@ -49,8 +49,8 @@ public final class ReglerAdd extends AbstractReglerVariableInputs {
                 @Override
                 public void berechneYOUT(final double deltaT) {
                     _outputSignal[0][0] = 0;
-                    for (int i1 = 0; i1 < _inputSignal.length; i1++) {
-                        _outputSignal[0][0] += _inputSignal[i1][0];
+                    for (double[] inputChannel : _inputSignal) {
+                        _outputSignal[0][0] += inputChannel[0];
                     }
                 }
             };

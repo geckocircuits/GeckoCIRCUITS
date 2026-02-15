@@ -396,8 +396,7 @@ public abstract class AbstractDiagram extends JPanel {
             calculateAutoScaleYBothYAxis(container);
         }
 
-        for (int i = 0; i < this._curves.size(); i++) {
-            AbstractCurve curve = this._curves.get(i);
+        for (AbstractCurve curve : this._curves) {
             if (curve.getAxisConnection() != AxisConnection.ZUORDNUNG_NIX) {
                 forceLoad = (this._grafer._manager.getAllScopeSignals().get(curve.getValueDataIndex()) instanceof ExternalSignal);
                 try {

@@ -169,8 +169,7 @@ public final class NetzlisteCONTROL {
         _outPortsStringWithoutConnection.clear();
         _outPortsWithoutConnection.clear();
 
-        for (int ii = 0; ii < elementsControl.size(); ii++) {
-            RegelBlock reg = elementsControl.get(ii);
+        for (RegelBlock reg : elementsControl) {
             for (int i = 0; i < reg.YOUT.size(); i++) {
                 boolean connectionDone = false;
                 for (RegelBlock reg2 : elementsControl) {
@@ -183,7 +182,7 @@ public final class NetzlisteCONTROL {
                 }
 
                 if (!connectionDone) {
-                    AbstractTerminal term = elementsControl.get(ii).YOUT.get(i);
+                    AbstractTerminal term = reg.YOUT.get(i);
                     String labelString = term.getLabelObject().getLabelString();
                     if (labelString.isEmpty()) {
                         labelString = "empty";

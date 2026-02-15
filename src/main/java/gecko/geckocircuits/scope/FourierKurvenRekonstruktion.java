@@ -405,24 +405,24 @@ public class FourierKurvenRekonstruktion extends GraferV3 implements MouseListen
         double sfX_ = -1, sfY_ = -1;
         int xAchseTyp_ = -1, yAchseTyp_ = -1;
         int indexDiagrammYachse = -1;
-        for (int i1 = 0; i1 < indexZurKurveGehoerigeXachse.length; i1++) {
-            if ((_xAchseX[indexZurKurveGehoerigeXachse[i1]] >= xGrfMIN[indexAngeklickterGraph])
-                    && (_xAchseX[indexZurKurveGehoerigeXachse[i1]] <= xGrfMAX[indexAngeklickterGraph])) {
-                achseXmin_ = achseXmin[indexZurKurveGehoerigeXachse[i1]];
-                xAchseX_ = _xAchseX[indexZurKurveGehoerigeXachse[i1]];
-                sfX_ = sfX[indexZurKurveGehoerigeXachse[i1]];
-                xAchseTyp_ = xAchseTyp[indexZurKurveGehoerigeXachse[i1]];
+        for (int xAxisIndex : indexZurKurveGehoerigeXachse) {
+            if ((_xAchseX[xAxisIndex] >= xGrfMIN[indexAngeklickterGraph])
+                    && (_xAchseX[xAxisIndex] <= xGrfMAX[indexAngeklickterGraph])) {
+                achseXmin_ = achseXmin[xAxisIndex];
+                xAchseX_ = _xAchseX[xAxisIndex];
+                sfX_ = sfX[xAxisIndex];
+                xAchseTyp_ = xAchseTyp[xAxisIndex];
                 break;
             }
         }
-        for (int i1 = 0; i1 < indexZurKurveGehoerigeYachse.length; i1++) {
-            if ((_yAchseY[indexZurKurveGehoerigeYachse[i1]] >= yGrfMIN[indexAngeklickterGraph])
-                    && (_yAchseY[indexZurKurveGehoerigeYachse[i1]] <= yGrfMAX[indexAngeklickterGraph])) {
-                achseYmin_ = achseYmin[indexZurKurveGehoerigeYachse[i1]];
-                yAchseY_ = _yAchseY[indexZurKurveGehoerigeYachse[i1]];
-                sfY_ = sfY[indexZurKurveGehoerigeYachse[i1]];
-                yAchseTyp_ = yAchseTyp[indexZurKurveGehoerigeYachse[i1]];
-                indexDiagrammYachse = indexZurKurveGehoerigeYachse[i1];
+        for (int yAxisIndex : indexZurKurveGehoerigeYachse) {
+            if ((_yAchseY[yAxisIndex] >= yGrfMIN[indexAngeklickterGraph])
+                    && (_yAchseY[yAxisIndex] <= yGrfMAX[indexAngeklickterGraph])) {
+                achseYmin_ = achseYmin[yAxisIndex];
+                yAchseY_ = _yAchseY[yAxisIndex];
+                sfY_ = sfY[yAxisIndex];
+                yAchseTyp_ = yAchseTyp[yAxisIndex];
+                indexDiagrammYachse = yAxisIndex;
                 break;
             }
         }

@@ -49,8 +49,7 @@ public class DialogDefineAvg extends javax.swing.JDialog {
         jPanelBoxes.add(new JLabel("Averaging time"));
 
 
-        for (int i = 0; i < origScopeSignals.size(); i++) {
-            final AbstractScopeSignal origSignal = origScopeSignals.get(i);
+        for (AbstractScopeSignal origSignal : origScopeSignals) {
 
             final FormatJTextField textField = new FormatJTextField();
             textField.setNumberToField(1e-5);
