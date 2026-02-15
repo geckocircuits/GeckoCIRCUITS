@@ -105,17 +105,35 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### Release History
 
-| Version | Milestone | Key Deliverables |
-|---------|-----------|-----------------|
-| v0.1.0 | CI/CD Foundation | GitHub Actions pipeline, launcher scripts, distribution packaging |
-| v0.2.0 | Documentation Site | MkDocs site with tutorials, examples structure |
-| v0.3.0 | Scripting Content | GeckoSCRIPT, MATLAB, Python, Java Blocks tutorials |
-| v0.4.0 | Test Coverage | JaCoCo enforcement (60%+ for core), 125 new tests |
-| v0.5.0 | Developer Onboarding | Developer guide, contributor docs, example docs |
-| v1.0.0 | Production Release | URL fixes, polished packaging |
-| v1.1.0 | Multi-Module Build | Reactor build, zero-crossing detection, REST API test fixes |
+**Upstream Lineage:**
+| Version | Source | Description |
+|---------|--------|-------------|
+| v2.02 | geckocircuits/GeckoCIRCUITS | Last upstream release (not in this fork) |
 
-**Note:** For detailed release planning, version numbering strategy, and upcoming releases, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
+**This Fork (v2.x series):**
+| Version | Date | Milestone | Key Deliverables |
+|---------|------|-----------|-----------------|
+| v2.03-spotbugs-clean | Jan 31, 2026 | Code Quality | All 1,096 SpotBugs violations fixed to zero |
+| v2.04-repo-reorg | Feb 1, 2026 | Infrastructure | Repository reorganization with JDK 21 workflow fix |
+| v2.10.0 | Feb 14, 2026 | Java 21 Migration (GROUND ZERO) | Upgrade to Java 21, fix deprecated APIs, PR #1 merge |
+| v2.11.0 | Feb 14, 2026 | Core Module Foundation | gecko-simulation-core module, math/datacontainer/signal packages |
+| v2.12.0 | Feb 14, 2026 | Static Analysis Sprint | PMD/Checkstyle config, 2,620 violations fixed (-76%) |
+| v2.13.0 | Feb 14, 2026 | Terminal/Component Migration | Circuit parsing in core, TokenMap migration |
+| v2.14.0 | Feb 14, 2026 | GeckoFile Migration (Sprint 4a) | Complete circuit file I/O headlessly |
+| v2.15.0 | Feb 14, 2026 | Loss Calculation (Sprint 4b) | UserParameter abstraction, loss curves in core |
+| v2.16.0 | Feb 14, 2026 | REST API Launch (Sprint 5) 🚀 | First public REST API (8 endpoints, Docker) |
+| v2.17.0 | Feb 14, 2026 | Release Automation (CURRENT) 🎉 | GitHub Actions workflows (5 platforms) |
+
+**Future Roadmap:**
+| Version | Target | Description |
+|---------|--------|-------------|
+| v2.18.0 - v2.2x | Q2-Q3 2026 | Incremental REST API features (simulation control, WebSocket, analysis) |
+| v3.0.0 | Q3 2026 | 🚀 **MARKETING WOW** - Complete REST API Platform (30+ endpoints, auth, production infra) |
+| v3.1.0 | Q4 2026 | Web UI Launch (React + TypeScript circuit editor) |
+| v3.2.0 | Q1 2027 | Cloud Deployment (Kubernetes, multi-tenant SaaS) |
+| v4.0.0 | Q2 2027 | Machine Learning Integration (AI-assisted design) |
+
+**Note:** For detailed release planning, version numbering strategy, and full changelog, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
 
 ### Latest Sprint (2026-02-14): Sprint 5 - REST API Implementation
 
