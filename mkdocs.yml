@@ -207,6 +207,19 @@ nav:
   - Articles:
     - articles/index.md
 
+  - Releases:
+    - releases/index.md
+    - v2.17.0 (Current): releases/2170.md
+    - v2.16.0 - REST API: releases/2160.md
+    - v2.15.0 - Loss Calc: releases/2150.md
+    - v2.14.0 - GeckoFile: releases/2140.md
+    - v2.13.0 - Terminal: releases/2130.md
+    - v2.12.0 - Analysis: releases/2120.md
+    - v2.11.0 - Core Module: releases/2110.md
+    - v2.10.0 - Ground Zero: releases/2100.md
+
+  - Roadmap: roadmap.md
+
   - API Reference:
     - api/index.md
     - Core Module:
