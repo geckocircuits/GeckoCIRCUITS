@@ -22,7 +22,7 @@ jobs:
 
       - name: Build
         run: |
-          mvn -f pom-reactor.xml clean package -DskipTests --no-transfer-progress
+          mvn -f pom-reactor.xml clean install -DskipTests --no-transfer-progress
           mvn assembly:single -DskipTests --no-transfer-progress
 
       - name: Install test dependencies
