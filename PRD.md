@@ -259,15 +259,19 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
   - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
 - Fixed 183 Tier 3 PMD violations: EmptyCatchBlock (20), EmptyControlStatement (44), UnnecessarySemicolon (34), UnnecessaryReturn (33), UnusedLocalVariable (28), UnusedPrivateMethod (13), UnusedPrivateField (11)
 - Fixed 38 ReturnEmptyCollectionRatherThanNull violations across 11 files (GeckoRemoteMMFObject, GeckoExternal, AbstractGeckoCustom, ComponentPositioner, and 7 others)
-- Fixed 240 additional PMD violations (153 code-style, 55 high-value, 32 other):
-  - UnnecessaryImport (116): Excluded in ruleset (false positives for implements/extends clauses)
-  - SimplifyBooleanReturns (29): Simplified boolean logic across 25 files
-  - ForLoopCanBeForeach (94): 100% complete - modernized all traditional for-loops across 6 batches (43 files)
-  - CloseResource (17): Fixed resource leaks with try-with-resources pattern
-  - PreserveStackTrace (38): All exception chains now preserve stack traces
+- **Achieved <500 PMD violations target: 823 → 496 (-40% in one sprint, -86% from original 3,443)**
+- Fixed 327 PMD violations total (145 code-style, 88 high-value, 94 modernization):
+  - **6 violation categories eliminated to 0:**
+    - ForLoopCanBeForeach (94): Modernized all traditional for-loops across 6 batches (43 files)
+    - PreserveStackTrace (38): All exception chains now preserve stack traces
+    - SimplifyBooleanReturns (29): Simplified boolean logic
+    - CompareObjectsWithEquals (31): Changed == to .equals() for object comparisons
+    - CloseResource (52): All resource leaks fixed with try-with-resources (30 fixed, 5 documented false positives, 17 earlier)
+    - IdenticalCatchBranches (22): Merged to multi-catch statements
+  - UnnecessaryImport (116): Excluded in ruleset (false positives)
 - Stripped trailing whitespace from 974 Java source files (13,359 lines)
 - Fixed GitHub Actions CI: reactor build + proper dependency resolution (all modules now build successfully)
-- SpotBugs: 0 bugs (maintained), PMD: 583 violations (down from 3,443, -83%), Checkstyle: 4,632
+- **SpotBugs: 0 bugs (maintained), PMD: 496 violations ✅ <500 TARGET ACHIEVED, Checkstyle: 4,632**
 
 ### Previous Sprint (2026-02-12): LossCalculation GUI Decoupling
 - Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
@@ -315,7 +319,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - `CorePackageValidationTest`: Zero GUI imports in core module
 - `mkdocs build --strict`: Zero broken links in documentation
 - SpotBugs: 0 bugs enforced (204 inline `@SuppressFBWarnings` annotations)
-- PMD: Custom ruleset (`pmd-ruleset.xml`), 583 remaining violations (code-style, down 83% from original 3,443)
+- PMD: Custom ruleset (`pmd-ruleset.xml`), **496 remaining violations** ✅ **<500 TARGET ACHIEVED** (down 86% from original 3,443)
 - Checkstyle: Project-tuned config (`checkstyle.xml`), 4,632 remaining violations
 
 ### Success Metrics
@@ -330,7 +334,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | Docs site pages | 82+ | 100+ |
 | Broken links | 0 | 0 |
 | SpotBugs bugs | 0 | 0 |
-| PMD violations | 583 | <500 |
+| PMD violations | **496** ✅ | <500 |
 | Checkstyle violations | 4,632 | <2,000 |
 | REST API endpoints | 8 | 10+ |
 

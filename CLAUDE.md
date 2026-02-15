@@ -232,7 +232,7 @@ mvn pmd:check
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **583** | Code-style only. Down 71% from 823: excluded 116 false positives, fixed 240 violations (94 ForLoopCanBeForeach, 59 style, 55 high-value, 32 other) |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **496** ✅ | **<500 TARGET ACHIEVED!** Down 86% from original 3,443 (823 after initial cleanup). 327 violations fixed today: 94 ForLoopCanBeForeach, 88 high-value (CloseResource, PreserveStackTrace, CompareObjectsWithEquals), 145 code-style |
 | Checkstyle | `checkstyle.xml` (150-char lines) | **4,632** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
@@ -321,6 +321,11 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `1e4eaa0a` **Achieve <500 PMD violations target: 823 → 496 (-40%)**
+  - CompareObjectsWithEquals (31): Use .equals() for object comparisons
+  - CloseResource (35): All resource leaks fixed with try-with-resources
+  - IdenticalCatchBranches (22): Merged to multi-catch statements
+  - **6 violation categories eliminated to 0: ForLoopCanBeForeach, PreserveStackTrace, SimplifyBooleanReturns, CompareObjectsWithEquals, CloseResource, IdenticalCatchBranches**
 - `26679691` Complete ForLoopCanBeForeach cleanup: all 94 violations fixed
   - Batch 3-6: control (16), datacontainer/nativec (3), newscope (13), scope/geckoscript (25)
   - Modernized all traditional for-loops to enhanced for-each syntax
