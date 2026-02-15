@@ -232,7 +232,7 @@ mvn pmd:check
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **639** | Code-style only. Down from 823: excluded 116 false positives, fixed 114 violations (59 style, 55 high-value) |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **583** | Code-style only. Down 71% from 823: excluded 116 false positives, fixed 240 violations (94 ForLoopCanBeForeach, 59 style, 55 high-value, 32 other) |
 | Checkstyle | `checkstyle.xml` (150-char lines) | **4,632** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
@@ -321,6 +321,15 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 ## Recent Git Activity
 
 Recent commits:
+- `26679691` Complete ForLoopCanBeForeach cleanup: all 94 violations fixed
+  - Batch 3-6: control (16), datacontainer/nativec (3), newscope (13), scope/geckoscript (25)
+  - Modernized all traditional for-loops to enhanced for-each syntax
+  - 29 files modified, 100% ForLoopCanBeForeach violations eliminated
+  - PMD violations: 677 → 583 (-29%)
+- `538d025f, 1e42c450, c3668e7c` Fix GitHub Actions CI workflow
+  - Use reactor build with install to populate .m2 repository
+  - Add missing imports for CircuitSourceType and SourceType tests
+  - CI now passing: all modules build and test successfully
 - `a600bf1e` Fix 55 high-value PMD violations: resource leaks and exception handling
   - CloseResource (17): Fixed resource leaks with try-with-resources pattern
   - PreserveStackTrace (38): All exception chains now preserve stack traces
