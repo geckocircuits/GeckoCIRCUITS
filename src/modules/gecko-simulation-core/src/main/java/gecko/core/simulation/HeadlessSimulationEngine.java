@@ -66,6 +66,7 @@ public class HeadlessSimulationEngine {
     private volatile double currentTime = 0;
     private volatile double endTime = 0;
     private volatile int currentStep = 0;
+    private volatile long simulationStartTime = 0;
 
     // Event listener
     private SimulationProgressListener progressListener;
@@ -94,6 +95,7 @@ public class HeadlessSimulationEngine {
 
         cancelRequested.set(false);
         long startTime = System.currentTimeMillis();
+        simulationStartTime = startTime;
 
         try {
             return executeSimulation(config, startTime);
@@ -247,6 +249,81 @@ public class HeadlessSimulationEngine {
      */
     public void setProgressListener(SimulationProgressListener listener) {
         this.progressListener = listener;
+    }
+
+    /**
+     * Pauses the running simulation.
+     * The simulation will pause at the next time step.
+     * Has no effect if the simulation is not running.
+     *
+     * @return true if pause was requested, false if simulation is not running
+     */
+    public boolean pause() {
+        return state.compareAndSet(EngineState.RUNNING, EngineState.PAUSED);
+    }
+
+    /**
+     * Resumes a paused simulation.
+     * Has no effect if the simulation is not paused.
+     *
+     * @return true if resume was successful, false if simulation was not paused
+     */
+    public boolean resume() {
+        return state.compareAndSet(EngineState.PAUSED, EngineState.RUNNING);
+    }
+
+    /**
+     * Checks if the simulation is currently paused.
+     *
+     * @return true if paused, false otherwise
+     */
+    public boolean isPaused() {
+        return state.get() == EngineState.PAUSED;
+    }
+
+    /**
+     * Gets detailed progress information including time, steps, and ETA.
+     * Useful for real-time monitoring and progress bars.
+     *
+     * @return detailed progress information, or null if no simulation is running
+     */
+    public SimulationProgress getDetailedProgress() {
+        EngineState currentState = state.get();
+        if (currentState == EngineState.IDLE) {
+            return null;
+        }
+
+        double overallProgress = getProgress();
+
+        // For now, pre-calculation progress is 0 (will be implemented with real solver)
+        double preCalcProgress = 0.0;
+        double mainSimProgress = overallProgress;
+
+        // Estimate remaining time based on current progress
+        Long estimatedRemainingMs = null;
+        if (overallProgress > 0.01) { // Only estimate after 1% to avoid division by zero
+            long elapsedMs = System.currentTimeMillis() - simulationStartTime;
+            long totalEstimatedMs = (long) (elapsedMs / overallProgress);
+            estimatedRemainingMs = totalEstimatedMs - elapsedMs;
+        }
+
+        // Calculate expected total steps
+        int totalSteps = (int) Math.ceil(endTime / (currentTime / Math.max(1, currentStep)));
+        if (totalSteps <= 0) {
+            totalSteps = currentStep + 1000; // Fallback estimate
+        }
+
+        return new SimulationProgress(
+            overallProgress,
+            preCalcProgress,
+            mainSimProgress,
+            currentStep,
+            totalSteps,
+            currentTime,
+            endTime,
+            estimatedRemainingMs,
+            currentState
+        );
     }
 
     /**
