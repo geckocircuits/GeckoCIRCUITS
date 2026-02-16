@@ -53,16 +53,24 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Loss calculation: Temperature-dependent loss curves, bilinear interpolation, switching/conduction losses
 - Validated by `CorePackageValidationTest` (zero GUI imports)
 
-### 4.3 REST API (In Progress - Sprint 5)
+### 4.3 REST API (In Progress - Sprint 5 Complete)
 - **Location:** `src/modules/gecko-rest-api/`
 - Spring Boot 3.2.1 with OpenAPI/Swagger documentation
-- **Live Endpoints (Phase 1):**
-  - POST /api/v1/loss/switching - Switching loss calculation (voltage/energy scaling)
-  - POST /api/v1/loss/conduction - Conduction loss calculation (resistance model)
-  - POST /api/v1/loss/detailed - Detailed loss with temperature-dependent curve interpolation
-- Planned endpoints: circuit file loading, signal analysis (RMS, THD, FFT), simulation CRUD
-- Uses gecko-simulation-core (DetailedLossLookupTable, SwitchingLossCurve, LeitverlusteMesskurve)
-- 94 tests passing (16 new loss calculation tests)
+- **Live Endpoints (9 total):**
+  - **Loss Calculation (3):**
+    - POST /api/v1/loss/switching - Switching loss calculation (voltage/energy scaling)
+    - POST /api/v1/loss/conduction - Conduction loss calculation (resistance model)
+    - POST /api/v1/loss/detailed - Detailed loss with temperature-dependent curve interpolation
+  - **Circuit File Operations (6):**
+    - POST /api/v1/circuits/parse - Upload and parse .ipes files
+    - GET /api/v1/circuits/{id}/info - Circuit metadata
+    - GET /api/v1/circuits/{id}/components - List components
+    - GET /api/v1/circuits/{id}/validate - Validate structure
+    - DELETE /api/v1/circuits/{id} - Delete circuit
+    - GET /api/v1/circuits - List all circuits
+- Planned endpoints: signal analysis (RMS, THD, FFT), simulation control (CRUD, progress streaming)
+- Uses gecko-simulation-core (DetailedLossLookupTable, SwitchingLossCurve, CircuitFileParser, CircuitModel)
+- 133 tests passing (39 circuit file + 94 existing)
 - Docker packaging available (multi-stage Alpine JRE 21 build, ~180MB image)
 
 ### 4.4 Documentation Site (Live)
@@ -135,7 +143,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 **Note:** For detailed release planning, version numbering strategy, and full changelog, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
 
-### Latest Sprint (2026-02-14): Sprint 5 - REST API Implementation
+### Latest Sprint (2026-02-17): Sprint 5 - REST API Implementation
 
 **Phase 1: Loss Calculation Endpoints (COMPLETED)**
 - Implemented 3 REST API endpoints for semiconductor loss calculations:
@@ -155,9 +163,25 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Swagger UI available at http://localhost:8080/swagger-ui.html
 - **Architecture Validation:** Proves gecko-simulation-core works headless for REST API ✅
 
-**Phase 2: Circuit File Operations (PLANNED)**
-- POST /api/v1/circuit/load - Parse .ipes files with TokenMap
-- GET /api/v1/circuit/info - Circuit metadata extraction
+**Phase 2A: Circuit File Operations (COMPLETED - 2026-02-17)**
+- Implemented 6 REST API endpoints for circuit file management at `/api/v1/circuits`:
+  - POST /api/v1/circuits/parse - Upload and parse .ipes files (multipart file upload or JSON base64)
+  - GET /api/v1/circuits/{id}/info - Retrieve detailed circuit metadata
+  - GET /api/v1/circuits/{id}/components - List all circuit components
+  - GET /api/v1/circuits/{id}/validate - Validate circuit structure
+  - DELETE /api/v1/circuits/{id} - Remove circuit from memory
+  - GET /api/v1/circuits - List all loaded circuits
+- Created 10 files (~1,099 insertions):
+  - 7 model classes (DTOs): Enhanced CircuitInfo (with nested SimulationParameters, ComponentCounts, DisplaySettings, Metadata), Enhanced ComponentInfo, CircuitListResponse, ComponentListResponse, ValidationResponse, CircuitLoadRequest, CircuitLoadResponse
+  - 2 controller/service updates: CircuitFileController (6 endpoints), CircuitFileService (uses CircuitFileParser/CircuitModel)
+  - 3 test files: 39 tests passing (17 service + 13 controller + 9 E2E)
+- Uses gecko-simulation-core classes:
+  - CircuitFileParser - GUI-free .ipes file parser (handles gzip compression)
+  - CircuitModel - Structured circuit representation (simulation params, metadata, display settings)
+  - TokenMap - Low-level circuit file parsing
+- REST API module: 133 tests passing (39 new circuit file tests)
+- **Known Limitation:** Component parsing not yet implemented in CircuitFileParser (extracts metadata/simulation params only, component lists empty until future enhancement)
+- **Commit:** 89b24ce5
 
 ### Previous Sprint (2026-02-14): Sprint 4b - Loss Calculation Migration
 

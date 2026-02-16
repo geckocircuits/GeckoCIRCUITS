@@ -290,31 +290,40 @@ These files are NOT overwritten by `sync-docs.py` (path convention mismatch):
 - `GeckoCustomMMF` enables high-performance data exchange
 - Used for Simulink co-simulation with minimal latency
 
-### 6.3 REST API (In Progress - Sprint 5)
-**Live Endpoints (Phase 1 - Loss Calculation):**
+### 6.3 REST API (Live - 9 Endpoints)
+**Loss Calculation Endpoints (Phase 1 - 3 endpoints):**
 ```
 POST   /api/v1/loss/switching           Switching loss (voltage/energy scaling)
 POST   /api/v1/loss/conduction          Conduction loss (resistance model)
 POST   /api/v1/loss/detailed            Detailed loss (temperature interpolation)
 ```
 
-**Planned Endpoints (Phase 2-3):**
+**Circuit File Operations (Phase 2A - 6 endpoints):**
 ```
-POST   /api/v1/circuit/load             Load and parse .ipes circuit files
-GET    /api/v1/circuit/info             Circuit metadata extraction
+POST   /api/v1/circuits/parse           Upload and parse .ipes files (multipart/JSON)
+GET    /api/v1/circuits/{id}/info       Circuit metadata (simulation params, counts)
+GET    /api/v1/circuits/{id}/components List all components
+GET    /api/v1/circuits/{id}/validate   Validate circuit structure
+DELETE /api/v1/circuits/{id}            Remove circuit from memory
+GET    /api/v1/circuits                 List all loaded circuits
+```
+
+**Planned Endpoints (v2.18.0+):**
+```
 POST   /api/v1/signal/fft               Fast Fourier Transform
 POST   /api/v1/signal/cispr16           EMI analysis
 POST   /api/v1/signal/characteristics   RMS, THD, min/max calculation
 POST   /api/v1/simulations              Start simulation (existing)
 GET    /api/v1/simulations/{id}         Get status/results (existing)
+GET    /api/v1/simulations/{id}/stream  SSE progress streaming (planned)
 GET    /api/health                       Health check (existing)
 ```
 
 **Implementation Details:**
-- Uses gecko-simulation-core classes (DetailedLossLookupTable, SwitchingLossCurve, LeitverlusteMesskurve)
+- Uses gecko-simulation-core classes (DetailedLossLookupTable, SwitchingLossCurve, CircuitFileParser, CircuitModel)
 - OpenAPI/Swagger documentation at http://localhost:8080/swagger-ui.html
 - Jakarta Bean Validation for request parameters
-- 94 tests passing (16 new loss calculation tests)
+- 133 tests passing (39 circuit file + 94 existing)
 
 **Docker Support:**
 - Multi-stage Dockerfile using Alpine JRE 21 (~180MB image)
@@ -372,7 +381,7 @@ For detailed release planning and version strategy, see [RELEASE_PLAN.md](RELEAS
 ### Near-Term
 - ✅ Complete core module migration (math, datacontainer, matrix, losscalculation, signal)
 - ✅ Implement REST API Phase 1 (loss calculation endpoints)
-- 🔄 REST API Phase 2: Circuit file operations (TokenMap, GeckoFile integration)
+- ✅ REST API Phase 2A: Circuit file operations (6 endpoints, CircuitFileParser integration)
 - 🔄 REST API Phase 3: Signal analysis endpoints (FFT, CISPR16, characteristics)
 - Apply `UserParameterCore` pattern to other GUI-coupled computation classes
 - Maven enforcer already prevents GUI leakage into API module ✅

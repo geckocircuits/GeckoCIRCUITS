@@ -18,6 +18,8 @@ This document outlines the release strategy for GeckoCIRCUITS based on semantic 
 ## Current Status
 
 - **Latest Release**: v2.17.0 (commit 6db364f1, Feb 14, 2026)
+- **Latest Development**: Sprint 5 Phase 2A completed (commit 89b24ce5, Feb 17, 2026)
+- **Next Release**: v2.18.0 (planned Q2 2026 - Real solver integration + simulation control API)
 - **Ground Zero**: v2.10.0 (Java 21 migration, commit fd484fe1)
 - **Total Releases**: 8 versions (v2.10.0 → v2.17.0)
 
@@ -225,11 +227,36 @@ This document outlines the release strategy for GeckoCIRCUITS based on semantic 
 
 Incremental REST API feature additions:
 
-**v2.18.0 - Circuit Simulation Control**
-- POST /api/v1/simulations - Create simulation
-- POST /api/v1/simulations/{id}/start - Start simulation
-- GET /api/v1/simulations/{id}/status - Get status
-- GET /api/v1/simulations/{id}/results - Get results
+**Prerequisites (Completed):**
+- ✅ Sprint 5 Phase 1: Loss calculation endpoints (3 endpoints, commit 41fe6900)
+- ✅ Sprint 5 Phase 2A: Circuit file operations (6 endpoints, commit 89b24ce5)
+
+**v2.18.0 - Real Solver Integration & Simulation Control**
+**Target:** Q2 2026 (6-8 weeks development)
+**Focus:** Extract SimulationsKern logic to gecko-simulation-core, enable headless circuit simulation
+
+**Phase 1: Architecture Preparation (Week 1)**
+- Create core simulation package structure (solver/, netlist/, coupling/)
+- Update HeadlessSimulationEngine interface (pause, resume, detailed progress)
+- Test infrastructure (RLC circuits, validation suite, benchmarks)
+
+**Phase 2-5: Solver Migration (Weeks 2-7)**
+- Phase 2: Matrix solver migration (LKMatrices → MatrixSolver)
+- Phase 3: Netlist building (NetListLK, NetzlisteCONTROL)
+- Phase 4: Domain coupling (LK-CONTROL-THERM interactions)
+- Phase 5: Real solver integration (replace placeholder in HeadlessSimulationEngine)
+
+**Phase 6: API Enhancements (Week 8)**
+- Solver type selection (backward-euler, trapezoidal, gear-shichman)
+- SSE streaming for real-time progress updates
+- Enhanced progress metrics with ETA
+- Parameter override application
+
+**New Simulation Endpoints:**
+- PATCH /api/v1/simulations/{id}/pause - Pause simulation
+- PATCH /api/v1/simulations/{id}/resume - Resume simulation
+- POST /api/v1/simulations/{id}/step - Single time step
+- GET /api/v1/simulations/{id}/stream - SSE progress stream
 
 **v2.19.0 - Real-time Data Streaming**
 - WebSocket endpoint: ws://api/v1/simulations/{id}/stream
