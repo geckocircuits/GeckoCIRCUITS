@@ -39,6 +39,6 @@ AC to DC power conversion circuits for power supplies and motor drives.
 
 ## Related Tutorials
 
-- [301 - Diode Rectifier](../tutorials/3xx_acdc_rectifiers/301_diode_rectifier/)
-- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/)
-- [303 - Vienna Rectifier](../tutorials/3xx_acdc_rectifiers/303_vienna_rectifier/)
+- [301 - Diode Rectifier](../tutorials/3xx_acdc_rectifiers/301_diode_rectifier/index.md)
+- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/index.md)
+- [303 - Vienna Rectifier](../tutorials/3xx_acdc_rectifiers/303_vienna_rectifier/index.md)

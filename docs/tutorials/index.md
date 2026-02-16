@@ -8,13 +8,13 @@ Comprehensive tutorials for learning power electronics simulation with GeckoCIRC
 
 ## Quick Start
 
-**New to GeckoCIRCUITS?** Start with the [Getting Started series](../getting-started/).
+**New to GeckoCIRCUITS?** Start with the [Getting Started series](../getting-started/index.md).
 
 ## Tutorial Series Overview
 
 | Series | Topic | Tutorials | Difficulty |
 |--------|-------|-----------|------------|
-| **[1xx](../getting-started/)** | Getting Started | 7 tutorials | Beginner-Intermediate |
+| **[1xx](../getting-started/index.md)** | Getting Started | 7 tutorials | Beginner-Intermediate |
 | **[2xx](dcdc/)** | DC-DC Converters | 4 tutorials | Intermediate |
 | **[3xx](acdc/)** | AC-DC Rectifiers | 3 tutorials | Intermediate |
 | **[4xx](dcac/)** | DC-AC Inverters | 3 tutorials | Intermediate-Advanced |
@@ -164,8 +164,8 @@ For batch simulations and external tool integration:
 
 ## Related Resources
 
-- [**Examples**](../examples/) - Complete application examples
-- [**Articles**](../articles/) - Technical papers and notes
+- [**Examples**](../examples/index.md) - Complete application examples
+- [**Articles**](../articles/index.md) - Technical papers and notes
 
 ---
 *GeckoCIRCUITS Tutorials v1.0*

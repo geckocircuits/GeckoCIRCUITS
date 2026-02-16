@@ -46,6 +46,6 @@ Mechanical modeling enables:
 
 ## Related Topics
 
-- [Flyback Converter](../examples/basic_topologies/flyback_converter/) - Uses coupled inductor
-- [Forward Converter](../examples/basic_topologies/forward_converter/) - Transformer reset
-- [Motor Drives](../examples/motor_drives/) - Electromechanical systems
+- [Flyback Converter](/wip/#flyback_converter/index.md) - Uses coupled inductor
+- [Forward Converter](/wip/#forward_converter/index.md) - Transformer reset
+- [Motor Drives](/wip/#index.md) - Electromechanical systems

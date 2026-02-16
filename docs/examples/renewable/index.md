@@ -53,5 +53,5 @@ Wind → Turbine → PMSG → [Active Rectifier] → DC Bus → [Inverter] → G
 
 ## Related Tutorials
 
-- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/)
-- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/)
+- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/index.md)
+- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/index.md)

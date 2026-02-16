@@ -73,6 +73,6 @@ Complete power supply designs for various applications.
 
 ## Related Tutorials
 
-- [Flyback Converter](../basic_topologies/flyback_converter/)
-- [Forward Converter](../basic_topologies/forward_converter/)
-- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/)
+- [Flyback Converter](../basic/flyback_converter/index.md)
+- [Forward Converter](../basic/forward_converter/index.md)
+- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/index.md)

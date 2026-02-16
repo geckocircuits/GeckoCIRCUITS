@@ -22,7 +22,7 @@ After completing this tutorial, you will be able to:
 
 ## Prerequisites
 
-- Complete [Tutorial 402: Three-Phase Inverter](../402_three_phase_inverter/)
+- Complete [Tutorial 402: Three-Phase Inverter](../402_three_phase_inverter/index.md)
 - Understanding of PWM modulation techniques
 - Familiarity with power semiconductor devices (IGBTs, diodes)
 
@@ -213,9 +213,9 @@ Where f(d) is a function of the switching state (0 for P/N states, ±1 for O sta
 
 ## Related Examples
 
-- [Two-Level Three-Phase Inverter](../402_three_phase_inverter/) - Compare with simpler topology
-- [Thermal Analysis](../../5xx_thermal_simulation/502_junction_temperature/) - Add loss models
-- [Matrix Converters](../../8xx_advanced_topics/801_matrix_converters/) - Alternative AC-AC topology
+- [Two-Level Three-Phase Inverter](../402_three_phase_inverter/index.md) - Compare with simpler topology
+- [Thermal Analysis](../../5xx_thermal_simulation/502_junction_temperature/index.md) - Add loss models
+- [Matrix Converters](../../8xx_advanced_topics/801_matrix_converters/index.md) - Alternative AC-AC topology
 
 ## References
 

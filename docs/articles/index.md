@@ -31,5 +31,5 @@ Technical articles and newsletters from the GeckoCIRCUITS power electronics news
 
 ## Related Resources
 
-- [Tutorials](../tutorials/) - Step-by-step learning guides
-- [Examples](../examples/) - Complete circuit examples
+- [Tutorials](../tutorials/index.md) - Step-by-step learning guides
+- [Examples](../examples/index.md) - Complete circuit examples

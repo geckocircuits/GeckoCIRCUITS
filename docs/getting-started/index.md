@@ -57,10 +57,10 @@ By completing this series, you will be able to:
 ## Next Steps
 
 After completing the Getting Started series:
-- **DC-DC Converters:** [2xx Series](../2xx_dcdc_converters/) - Buck, Boost, Buck-Boost
-- **Rectifiers:** [3xx Series](../3xx_acdc_rectifiers/) - Diode bridges, PFC
-- **Magnetics:** [9xx Series](../9xx_magnetics_mechanical/) - Transformer, inductor modeling
-- **Examples:** [Basic Topologies](../examples/basic_topologies/) - Reference designs
+- **DC-DC Converters:** [2xx Series](../2xx_dcdc_converters/index.md) - Buck, Boost, Buck-Boost
+- **Rectifiers:** [3xx Series](../3xx_acdc_rectifiers/index.md) - Diode bridges, PFC
+- **Magnetics:** [9xx Series](../9xx_magnetics_mechanical/index.md) - Transformer, inductor modeling
+- **Examples:** [Basic Topologies](../examples/basic_topologies/index.md) - Reference designs
 
 ## Quick Reference
 

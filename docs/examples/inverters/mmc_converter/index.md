@@ -232,9 +232,9 @@ MV Grid ─[Rectifier MMC]─ DC Link ─[Inverter MMC]─ Motor
 
 ## Related Examples
 
-- [NPC Inverter](../multilevel_npc/) - 3-level comparison
-- [Three-Phase VSI](../three_phase_vsi/) - 2-level baseline
-- [Motor Drives](../../motor_drives/) - Drive applications
+- [NPC Inverter](../multilevel_npc/index.md) - 3-level comparison
+- [Three-Phase VSI](../three_phase_vsi/index.md) - 2-level baseline
+- [Motor Drives](../../motor_drives/index.md) - Drive applications
 
 ## References
 

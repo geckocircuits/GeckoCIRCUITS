@@ -58,9 +58,9 @@ DC to AC power conversion and PWM control.
 
 - Complete 2xx DC-DC Converters (basics of switching)
 - Understanding of three-phase systems
-- PWM fundamentals ([103 - PWM Basics](../1xx_getting_started/103_pwm_basics/))
+- PWM fundamentals ([103 - PWM Basics](../1xx_getting_started/103_pwm_basics/index.md))
 
 ## Related Examples
 
-- [Inverters](../examples/inverters/)
-- [Motor Drives](../examples/motor_drives/)
+- [Inverters](../examples/inverters/index.md)
+- [Motor Drives](../examples/motor_drives/index.md)

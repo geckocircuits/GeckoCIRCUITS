@@ -73,7 +73,7 @@ DC Charger ─────┘   │ 400-800V│     │ │Inverter │ │
 
 ## Related Tutorials
 
-- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/)
-- [Flyback Converter](../basic_topologies/flyback_converter/)
-- [LLC Resonant](../power_supplies/llc_resonant/)
-- [Motor Drives](../motor_drives/)
+- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/index.md)
+- [Flyback Converter](../basic/flyback_converter/index.md)
+- [LLC Resonant](../power-supplies/llc_resonant/index.md)
+- [Motor Drives](../motor-drives/index.md)

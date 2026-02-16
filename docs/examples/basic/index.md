@@ -47,6 +47,6 @@ Fundamental DC-DC converter circuits demonstrating essential power conversion pr
 
 ## Related Tutorials
 
-- [201 - Buck Converter](../tutorials/2xx_dcdc_converters/201_buck_converter/)
-- [202 - Boost Converter](../tutorials/2xx_dcdc_converters/202_boost_converter/)
-- [203 - Buck-Boost Topologies](../tutorials/2xx_dcdc_converters/203_buck_boost/)
+- [201 - Buck Converter](../tutorials/2xx_dcdc_converters/201_buck_converter/index.md)
+- [202 - Boost Converter](../tutorials/2xx_dcdc_converters/202_boost_converter/index.md)
+- [203 - Buck-Boost Topologies](../tutorials/2xx_dcdc_converters/203_buck_boost/index.md)

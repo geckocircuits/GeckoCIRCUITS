@@ -26,7 +26,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 104: Running Simulations](../104_running_simulations/)
+- Complete [Tutorial 104: Running Simulations](../104_running_simulations/index.md)
 - Understanding of frequency response concepts
 - Basic control theory knowledge
 
@@ -241,9 +241,9 @@ grid on;
 
 ## Related Tutorials
 
-- [104 - Running Simulations](../104_running_simulations/) - Basic simulation setup
-- [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/) - Test circuit
-- [702 - MATLAB Integration](../../7xx_scripting_automation/702_matlab_integration/) - Data export/analysis
+- [104 - Running Simulations](../104_running_simulations/index.md) - Basic simulation setup
+- [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/index.md) - Test circuit
+- [702 - MATLAB Integration](../../7xx_scripting_automation/702_matlab_integration/index.md) - Data export/analysis
 
 ## References
 

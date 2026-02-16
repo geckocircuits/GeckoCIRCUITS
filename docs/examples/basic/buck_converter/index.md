@@ -57,5 +57,5 @@ The buck converter is the fundamental step-down DC-DC topology. This example dem
 
 ## Related
 
-- [Tutorial 201: Buck Converter](../../tutorials/2xx_dcdc_converters/201_buck_converter/)
-- [Boost Converter](../boost_converter/)
+- [Tutorial 201: Buck Converter](../../tutorials/2xx_dcdc_converters/201_buck_converter/index.md)
+- [Boost Converter](../boost_converter/index.md)

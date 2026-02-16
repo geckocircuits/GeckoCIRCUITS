@@ -25,8 +25,8 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 101: First Simulation](../101_first_simulation/)
-- Complete [Tutorial 102: Basic Circuits](../102_basic_circuits/)
+- Complete [Tutorial 101: First Simulation](../101_first_simulation/index.md)
+- Complete [Tutorial 102: Basic Circuits](../102_basic_circuits/index.md)
 - Basic understanding of switching converters (helpful)
 
 ## Materials
@@ -302,8 +302,8 @@ In this tutorial, you learned:
 ## Next Steps
 
 Continue your learning with:
-- **Tutorial:** [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/) - Apply PWM to real converter
-- **Example:** [Basic Topologies](../examples/basic_topologies/) - Complete converter examples
+- **Tutorial:** [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/index.md) - Apply PWM to real converter
+- **Example:** [Basic Topologies](../examples/basic_topologies/index.md) - Complete converter examples
 
 ---
 *Tutorial Version: 1.0*

@@ -25,7 +25,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 201: Buck Converter](../201_buck_converter/)
+- Complete [Tutorial 201: Buck Converter](../201_buck_converter/index.md)
 - Understanding of inductor energy storage
 - Basic feedback control concepts (helpful)
 
@@ -344,9 +344,9 @@ This affects:
 
 ## Related Tutorials
 
-- [201 - Buck Converter](../201_buck_converter/) - Step-down topology
-- [203 - Buck-Boost](../203_buck_boost/) - Inverting topologies
-- [302 - PFC Basics](../../3xx_acdc_rectifiers/302_pfc_basics/) - Boost PFC application
+- [201 - Buck Converter](../201_buck_converter/index.md) - Step-down topology
+- [203 - Buck-Boost](../203_buck_boost/index.md) - Inverting topologies
+- [302 - PFC Basics](../../3xx_acdc_rectifiers/302_pfc_basics/index.md) - Boost PFC application
 
 ## References
 

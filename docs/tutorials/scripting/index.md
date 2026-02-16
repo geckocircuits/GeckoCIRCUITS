@@ -125,5 +125,5 @@ for D in D_values:
 
 ## Related Tutorials
 
-- [104 - Running Simulations](../1xx_getting_started/104_running_simulations/) - Batch mode basics
-- [105 - Analysis Tools](../1xx_getting_started/105_analysis_tools/) - Automated analysis
+- [104 - Running Simulations](/wip/#104_running_simulations/index.md) - Batch mode basics
+- [105 - Analysis Tools](/wip/#105_analysis_tools/index.md) - Automated analysis

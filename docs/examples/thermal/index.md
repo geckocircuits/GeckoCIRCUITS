@@ -56,6 +56,6 @@ Psw = (Eon + Eoff) × fs
 
 ## Related Tutorials
 
-- [501 - Loss Calculation](../tutorials/5xx_thermal_simulation/501_loss_calculation/)
-- [502 - Junction Temperature](../tutorials/5xx_thermal_simulation/502_junction_temperature/)
-- [503 - Heatsink Design](../tutorials/5xx_thermal_simulation/503_heatsink_design/)
+- [501 - Loss Calculation](../tutorials/5xx_thermal_simulation/501_loss_calculation/index.md)
+- [502 - Junction Temperature](../tutorials/5xx_thermal_simulation/502_junction_temperature/index.md)
+- [503 - Heatsink Design](../tutorials/5xx_thermal_simulation/503_heatsink_design/index.md)

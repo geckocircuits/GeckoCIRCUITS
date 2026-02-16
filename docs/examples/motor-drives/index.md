@@ -45,5 +45,5 @@ Speed Ref → [PI] → Id/Iq Ref → [PI×2] → Vd/Vq → [Inverse Park] → Va
 
 ## Related Tutorials
 
-- [802 - Motor Drives PMSM](../tutorials/8xx_advanced_topics/802_motor_drives_pmsm/)
-- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/)
+- [802 - Motor Drives PMSM](../tutorials/8xx_advanced_topics/802_motor_drives_pmsm/index.md)
+- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/index.md)

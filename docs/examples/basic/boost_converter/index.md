@@ -63,5 +63,5 @@ At D=0.5: IL = Iout / 0.5 = 2 × Iout
 
 ## Related
 
-- [Tutorial 202: Boost Converter](../../tutorials/2xx_dcdc_converters/202_boost_converter/)
-- [Buck Converter](../buck_converter/)
+- [Tutorial 202: Boost Converter](../../tutorials/2xx_dcdc_converters/202_boost_converter/index.md)
+- [Buck Converter](../buck_converter/index.md)

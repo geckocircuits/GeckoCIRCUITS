@@ -26,7 +26,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 101: First Simulation](../101_first_simulation/)
+- Complete [Tutorial 101: First Simulation](../101_first_simulation/index.md)
 - Basic understanding of electrical circuits (R, L, C components)
 
 ## Materials
@@ -265,8 +265,8 @@ In this tutorial, you learned:
 ## Next Steps
 
 Continue your learning with:
-- **Next Tutorial:** [103 - PWM Basics](../103_pwm_basics/) - Learn pulse-width modulation
-- **Example:** [Buck Converter](../examples/basic_topologies/buck_converter/) - Apply your skills
+- **Next Tutorial:** [103 - PWM Basics](../103_pwm_basics/index.md) - Learn pulse-width modulation
+- **Example:** [Buck Converter](../examples/basic_topologies/buck_converter/index.md) - Apply your skills
 
 ## Additional Resources
 

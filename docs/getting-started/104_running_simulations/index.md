@@ -26,7 +26,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 101-103](../101_first_simulation/)
+- Complete [Tutorial 101-103](../101_first_simulation/index.md)
 - Basic understanding of differential equations (helpful but not required)
 
 ## Simulation Settings Overview
@@ -346,9 +346,9 @@ In this tutorial, you learned:
 ## Next Steps
 
 You've completed the Getting Started series! Continue with:
-- **DC-DC Converters:** [2xx Series](../../2xx_dcdc_converters/)
-- **Rectifiers:** [3xx Series](../../3xx_acdc_rectifiers/)
-- **Examples:** [Basic Topologies](../examples/basic_topologies/)
+- **DC-DC Converters:** [2xx Series](../../2xx_dcdc_converters/index.md)
+- **Rectifiers:** [3xx Series](../../3xx_acdc_rectifiers/index.md)
+- **Examples:** [Basic Topologies](../examples/basic_topologies/index.md)
 
 ---
 *Tutorial Version: 1.0*

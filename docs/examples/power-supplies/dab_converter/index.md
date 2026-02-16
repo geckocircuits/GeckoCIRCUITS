@@ -221,9 +221,9 @@ Idc2_meas ─────►│                                 │
 
 ## Related Examples
 
-- [LLC Resonant](../llc_resonant/) - Unidirectional alternative
-- [Full Bridge](../../basic_topologies/full_bridge/) - Single active bridge
-- [Onboard Charger](../../automotive/onboard_charger/) - Application
+- [LLC Resonant](../llc_resonant/index.md) - Unidirectional alternative
+- [Full Bridge](../../basic_topologies/full_bridge/index.md) - Single active bridge
+- [Onboard Charger](../../automotive/onboard_charger/index.md) - Application
 
 ## References
 

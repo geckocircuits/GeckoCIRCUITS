@@ -103,7 +103,7 @@ N = Vdc / (2 × V_SM)
 
 ## Related Tutorials
 
-- [401 - Single-Phase Inverter](../tutorials/4xx_dcac_inverters/401_single_phase_inverter/)
-- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/)
-- [403 - NPC Inverter](../tutorials/4xx_dcac_inverters/403_npc_inverter/)
-- [Motor Drives](../motor_drives/)
+- [401 - Single-Phase Inverter](../tutorials/4xx_dcac_inverters/401_single_phase_inverter/index.md)
+- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/index.md)
+- [403 - NPC Inverter](../tutorials/4xx_dcac_inverters/403_npc_inverter/index.md)
+- [Motor Drives](../motor-drives/index.md)

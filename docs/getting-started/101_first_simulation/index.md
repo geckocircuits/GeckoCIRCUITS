@@ -191,8 +191,8 @@ In this tutorial, you learned:
 ## Next Steps
 
 Continue your learning with:
-- **Next Tutorial:** [102 - Basic Circuits](../102_basic_circuits/) - Build circuits from scratch
-- **Reference:** [GeckoCIRCUITS User Manual](../../docs/)
+- **Next Tutorial:** [102 - Basic Circuits](../102_basic_circuits/index.md) - Build circuits from scratch
+- **Reference:** [GeckoCIRCUITS User Manual](../../docs/index.md)
 
 ## Additional Resources
 

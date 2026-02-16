@@ -85,8 +85,8 @@ java -Xmx3G -Dpolyglot.js.nashorn-compat=true \
 
 ## Related Resources
 
-- [**Tutorials**](../tutorials/) - Step-by-step learning guides
-- [**Articles**](../articles/) - Technical papers and application notes
+- [**Tutorials**](../tutorials/index.md) - Step-by-step learning guides
+- [**Articles**](../articles/index.md) - Technical papers and application notes
 
 ## Contributing
 

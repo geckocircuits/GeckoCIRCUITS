@@ -26,7 +26,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/)
+- Complete [201 - Buck Converter](..//wip/#201_buck_converter/index.md)
 - Understanding of magnetic circuit fundamentals (reluctance, permeance, MMF)
 - Familiarity with transformer operation
 
@@ -240,9 +240,9 @@ Pcore = (1/T) × ∫ ki |dB/dt|^α × (ΔB)^(β-α) dt
 
 ## Related Tutorials
 
-- [902 - Transformer Design](../902_transformer_design/) - Detailed transformer modeling
-- [903 - Inductor Saturation](../903_inductor_saturation/) - Saturation effects
-- [Flyback Converter](../examples/basic_topologies/flyback_converter/) - Application example
+- [902 - Transformer Design](../902_transformer_design/index.md) - Detailed transformer modeling
+- [903 - Inductor Saturation](../903_inductor_saturation/index.md) - Saturation effects
+- [Flyback Converter](/wip/#flyback_converter/index.md) - Application example
 
 ## References
 

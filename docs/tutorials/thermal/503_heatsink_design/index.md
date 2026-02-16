@@ -22,8 +22,8 @@ After completing this tutorial, you will be able to:
 
 ## Prerequisites
 
-- Complete [Tutorial 501: Loss Calculation](../501_loss_calculation/)
-- Complete [Tutorial 502: Junction Temperature](../502_junction_temperature/)
+- Complete [Tutorial 501: Loss Calculation](/wip/#index.md)
+- Complete [Tutorial 502: Junction Temperature](/wip/#index.md)
 - Understanding of conduction and switching losses
 - Basic heat transfer concepts (thermal resistance, capacitance)
 
@@ -298,9 +298,9 @@ For a load step (0 to 100%):
 
 ## Related Examples
 
-- [Loss Calculation](../501_loss_calculation/) - Determine power losses
-- [Junction Temperature](../502_junction_temperature/) - Basic thermal modeling
-- [Three-Phase VSR Thermal](https://github.com/geckocircuits/geckocircuits/blob/main/resources/../502_junction_temperature/ThreePhase-VSR_10kW_thermal.ipes) - Complete example
+- [Loss Calculation](/wip/#index.md) - Determine power losses
+- [Junction Temperature](/wip/#index.md) - Basic thermal modeling
+- [Three-Phase VSR Thermal](https://github.com/geckocircuits/geckocircuits/blob/main/resources//wip/#ThreePhase-VSR_10kW_thermal.ipes) - Complete example
 
 ## References
 

@@ -26,7 +26,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 102: Basic Circuits](../102_basic_circuits/)
+- Complete [Tutorial 102: Basic Circuits](../102_basic_circuits/index.md)
 - Familiarity with GeckoCIRCUITS interface
 
 ## Component Library Concepts
@@ -265,8 +265,8 @@ Before adding to library:
 
 ## Related Tutorials
 
-- [102 - Basic Circuits](../102_basic_circuits/) - Building circuits
-- [704 - Java Blocks](../../7xx_scripting_automation/704_java_blocks/) - Custom code components
+- [102 - Basic Circuits](../102_basic_circuits/index.md) - Building circuits
+- [704 - Java Blocks](../../7xx_scripting_automation/704_java_blocks/index.md) - Custom code components
 
 ## Circuit Files
 
