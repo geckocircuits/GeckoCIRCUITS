@@ -1,8 +1,6 @@
 package gecko.rest.controller;
 
-import gecko.rest.model.circuit.CircuitInfo;
-import gecko.rest.model.circuit.CircuitLoadRequest;
-import gecko.rest.model.circuit.CircuitLoadResponse;
+import gecko.rest.model.circuit.*;
 import gecko.rest.service.CircuitFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,10 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
  * REST controller for circuit file operations.
  * Provides endpoints for loading, parsing, and querying .ipes circuit files.
  *
- * Uses GeckoFile and TokenMap from gecko-simulation-core.
+ * Uses CircuitFileParser and CircuitModel from gecko-simulation-core.
  */
 @RestController
-@RequestMapping("/api/v1/circuit")
+@RequestMapping("/api/v1/circuits")
 @Tag(name = "Circuit Files", description = "Circuit file loading and parsing endpoints")
 public class CircuitFileController {
 
@@ -38,7 +36,7 @@ public class CircuitFileController {
     /**
      * Load circuit from multipart file upload.
      */
-    @PostMapping(value = "/load", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/parse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
         summary = "Load circuit from file upload",
         description = "Upload a .ipes circuit file and parse its structure. " +
@@ -46,7 +44,7 @@ public class CircuitFileController {
     )
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "200",
+            responseCode = "201",
             description = "Circuit loaded successfully",
             content = @Content(schema = @Schema(implementation = CircuitLoadResponse.class))
         ),
@@ -65,13 +63,13 @@ public class CircuitFileController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /**
      * Load circuit from base64 encoded content.
      */
-    @PostMapping(value = "/load", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/parse", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Load circuit from base64 content",
         description = "Load a circuit from base64 encoded .ipes file content. " +
@@ -79,7 +77,7 @@ public class CircuitFileController {
     )
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "200",
+            responseCode = "201",
             description = "Circuit loaded successfully",
             content = @Content(schema = @Schema(implementation = CircuitLoadResponse.class))
         ),
@@ -100,7 +98,7 @@ public class CircuitFileController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /**
@@ -133,6 +131,68 @@ public class CircuitFileController {
         }
 
         return ResponseEntity.ok(info);
+    }
+
+    /**
+     * Get component list for a circuit.
+     */
+    @GetMapping("/{circuitId}/components")
+    @Operation(
+        summary = "Get circuit components",
+        description = "Retrieve all components in the circuit with their parameters."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Component list retrieved",
+            content = @Content(schema = @Schema(implementation = ComponentListResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Circuit not found"
+        )
+    })
+    public ResponseEntity<ComponentListResponse> getComponents(
+            @Parameter(description = "Circuit ID")
+            @PathVariable String circuitId) {
+
+        ComponentListResponse response = circuitFileService.getComponents(circuitId);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Validate circuit structure.
+     */
+    @GetMapping("/{circuitId}/validate")
+    @Operation(
+        summary = "Validate circuit",
+        description = "Check circuit structure for errors and warnings."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Validation completed",
+            content = @Content(schema = @Schema(implementation = ValidationResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Circuit not found"
+        )
+    })
+    public ResponseEntity<ValidationResponse> validateCircuit(
+            @Parameter(description = "Circuit ID")
+            @PathVariable String circuitId) {
+
+        ValidationResponse response = circuitFileService.validateCircuit(circuitId);
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -196,5 +256,25 @@ public class CircuitFileController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * List all loaded circuits.
+     */
+    @GetMapping
+    @Operation(
+        summary = "List all circuits",
+        description = "Get a list of all circuits currently loaded in memory."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Circuit list retrieved",
+            content = @Content(schema = @Schema(implementation = CircuitListResponse.class))
+        )
+    })
+    public ResponseEntity<CircuitListResponse> getAllCircuits() {
+        CircuitListResponse response = circuitFileService.getAllCircuits();
+        return ResponseEntity.ok(response);
     }
 }

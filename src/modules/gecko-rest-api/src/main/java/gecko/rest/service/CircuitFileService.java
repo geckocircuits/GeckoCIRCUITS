@@ -1,23 +1,26 @@
 package gecko.rest.service;
 
-import gecko.core.allg.GeckoFile;
-import gecko.core.circuit.TokenMap;
+import gecko.core.io.CircuitFileParser;
+import gecko.core.io.CircuitModel;
 import gecko.rest.model.circuit.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.zip.GZIPInputStream;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service for loading and parsing .ipes circuit files.
- * Uses GeckoFile and TokenMap from gecko-simulation-core.
+ * Uses CircuitFileParser and CircuitModel from gecko-simulation-core.
  */
 @Service
 public class CircuitFileService {
+
+    private final CircuitFileParser parser = new CircuitFileParser();
 
     // In-memory storage of parsed circuits (circuit ID -> parsed data)
     private final Map<String, ParsedCircuit> circuits = new ConcurrentHashMap<>();
@@ -61,14 +64,113 @@ public class CircuitFileService {
             return null;
         }
 
+        CircuitModel model = parsed.model;
+
+        // Build simulation parameters
+        CircuitInfo.SimulationParameters simParams = new CircuitInfo.SimulationParameters(
+            model.getSimulationDuration(),
+            model.getTimeStep(),
+            solverTypeToString(model.getSolverType()),
+            model.getPreSimulationTime(),
+            model.getPreSimulationTimeStep()
+        );
+
+        // Build component counts
+        CircuitInfo.ComponentCounts counts = new CircuitInfo.ComponentCounts(
+            model.getCircuitComponents().size(),
+            model.getControlComponents().size(),
+            model.getThermalComponents().size(),
+            model.getConnections().size()
+        );
+
+        // Build display settings
+        CircuitInfo.DisplaySettings displaySettings = new CircuitInfo.DisplaySettings(
+            model.getWindowWidth() > 0 ? model.getWindowWidth() : null,
+            model.getWindowHeight() > 0 ? model.getWindowHeight() : null,
+            model.getFontSize()
+        );
+
+        // Build metadata
+        CircuitInfo.Metadata metadata = new CircuitInfo.Metadata(
+            model.getCreationDate(),
+            model.getUniqueFileId()
+        );
+
         return new CircuitInfo(
             circuitId,
             parsed.filename,
-            parsed.version,
-            parsed.components,
-            parsed.connections,
-            parsed.simulationParameters
+            model.getFileVersion(),
+            simParams,
+            counts,
+            displaySettings,
+            metadata
         );
+    }
+
+    /**
+     * Get component list for a circuit.
+     */
+    public ComponentListResponse getComponents(String circuitId) {
+        ParsedCircuit parsed = circuits.get(circuitId);
+        if (parsed == null) {
+            return null;
+        }
+
+        CircuitModel model = parsed.model;
+        List<ComponentInfo> components = new ArrayList<>();
+
+        // Add circuit components
+        for (CircuitModel.ComponentData comp : model.getCircuitComponents()) {
+            components.add(componentDataToInfo(comp, "circuit"));
+        }
+
+        // Add control components
+        for (CircuitModel.ComponentData comp : model.getControlComponents()) {
+            components.add(componentDataToInfo(comp, "control"));
+        }
+
+        // Add thermal components
+        for (CircuitModel.ComponentData comp : model.getThermalComponents()) {
+            components.add(componentDataToInfo(comp, "thermal"));
+        }
+
+        return new ComponentListResponse(circuitId, components);
+    }
+
+    /**
+     * Validate a circuit.
+     */
+    public ValidationResponse validateCircuit(String circuitId) {
+        ParsedCircuit parsed = circuits.get(circuitId);
+        if (parsed == null) {
+            return null;
+        }
+
+        CircuitModel model = parsed.model;
+        List<String> warnings = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+
+        // Check simulation parameters
+        if (!model.hasValidSimulationParameters()) {
+            errors.add("Invalid simulation parameters: time step must be positive and less than duration");
+        }
+
+        // Note: Component parsing not yet implemented in CircuitFileParser
+        // Component count will be 0 for now - this is expected
+        if (model.getTotalComponentCount() == 0) {
+            warnings.add("Component extraction not yet implemented (circuit file parsed for metadata only)");
+        }
+
+        // Check for disconnected components (future enhancement)
+        // For now, skip this check since components aren't parsed yet
+
+        if (errors.isEmpty()) {
+            return warnings.isEmpty()
+                ? ValidationResponse.success()
+                : ValidationResponse.successWithWarnings(warnings);
+        } else {
+            return ValidationResponse.failure(warnings, errors);
+        }
     }
 
     /**
@@ -79,7 +181,7 @@ public class CircuitFileService {
         if (parsed == null) {
             return null;
         }
-        return parsed.rawContent;
+        return parsed.model.toString(); // CircuitModel doesn't store raw content, return string representation
     }
 
     /**
@@ -90,146 +192,86 @@ public class CircuitFileService {
     }
 
     /**
-     * Get all circuit IDs.
+     * Get all loaded circuits.
      */
-    public List<String> getAllCircuitIds() {
-        return new ArrayList<>(circuits.keySet());
+    public CircuitListResponse getAllCircuits() {
+        List<CircuitListResponse.CircuitSummary> summaries = circuits.entrySet().stream()
+            .map(entry -> {
+                String id = entry.getKey();
+                ParsedCircuit parsed = entry.getValue();
+                return new CircuitListResponse.CircuitSummary(
+                    id,
+                    parsed.filename,
+                    parsed.model.getTotalComponentCount(),
+                    parsed.loadedAt.toString()
+                );
+            })
+            .collect(Collectors.toList());
+
+        return new CircuitListResponse(summaries, summaries.size());
     }
 
     // ========== Private Helper Methods ==========
 
     private CircuitLoadResponse loadCircuitFromBytes(byte[] content, String filename) {
         try {
-            // Decompress .ipes file (gzip compressed)
-            String[] lines = decompressIpesFile(content);
-
-            // Parse with TokenMap
-            TokenMap tokenMap = new TokenMap(lines);
-
-            // Extract circuit info
-            ParsedCircuit parsed = parseCircuit(tokenMap, filename, String.join("\n", lines));
+            // Parse using CircuitFileParser
+            CircuitModel model;
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(content)) {
+                model = parser.parse(bais, filename);
+            }
 
             // Generate unique circuit ID
             String circuitId = UUID.randomUUID().toString();
 
+            // Create parsed circuit with timestamp
+            ParsedCircuit parsed = new ParsedCircuit(
+                filename,
+                model,
+                Instant.now()
+            );
+
             // Store in memory
             circuits.put(circuitId, parsed);
 
-            return CircuitLoadResponse.success(circuitId, filename, parsed.components.size());
+            return CircuitLoadResponse.success(circuitId, filename, model.getTotalComponentCount());
 
-        } catch (IOException e) {
-            return CircuitLoadResponse.failure(filename,
-                    "Failed to decompress file: " + e.getMessage());
-        } catch (Exception e) {
+        } catch (CircuitFileParser.CircuitParseException e) {
             return CircuitLoadResponse.failure(filename,
                     "Failed to parse circuit: " + e.getMessage());
-        }
-    }
-
-    private String[] decompressIpesFile(byte[] content) throws IOException {
-        List<String> lines = new ArrayList<>();
-
-        try (GZIPInputStream gzipStream = new GZIPInputStream(new ByteArrayInputStream(content));
-             BufferedReader reader = new BufferedReader(new InputStreamReader(gzipStream, StandardCharsets.UTF_8))) {
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-
-        return lines.toArray(new String[0]);
-    }
-
-    private ParsedCircuit parseCircuit(TokenMap tokenMap, String filename, String rawContent) {
-        // Extract version
-        String version = "1.0"; // Default
-        if (tokenMap.containsToken("version")) {
-            version = tokenMap.readDataLine("version", version);
-        }
-
-        // Extract components
-        List<ComponentInfo> components = new ArrayList<>();
-        int componentIndex = 0;
-
-        // Iterate through all component blocks
-        // Note: TokenMap.getBlockTokenMap() removes the block after reading, so we need to read all at once
-        while (true) {
-            TokenMap componentBlock = tokenMap.getBlockTokenMap("<Element>");
-            if (componentBlock == null) {
-                break;
-            }
-
-            ComponentInfo component = parseComponent(componentBlock, componentIndex++);
-            if (component != null) {
-                components.add(component);
-            }
-        }
-
-        // Extract connections (simplified - actual connection parsing is complex)
-        List<ConnectionInfo> connections = new ArrayList<>();
-
-        // Extract simulation parameters
-        CircuitInfo.SimulationParameters simParams = parseSimulationParameters(tokenMap);
-
-        return new ParsedCircuit(filename, version, components, connections, simParams, rawContent);
-    }
-
-    private ComponentInfo parseComponent(TokenMap componentBlock, int index) {
-        try {
-            // Extract component type (simplified)
-            String type = "UNKNOWN";
-            if (componentBlock.containsToken("componentType")) {
-                type = componentBlock.readDataLine("componentType", type);
-            }
-
-            // Extract ID/label (simplified)
-            String id = "C" + index;
-            String label = id;
-
-            // Extract position (simplified)
-            int xPos = componentBlock.readDataLine("xPos", 0);
-            int yPos = componentBlock.readDataLine("yPos", 0);
-
-            return new ComponentInfo(type, id, label, xPos, yPos);
-
+        } catch (IOException e) {
+            return CircuitLoadResponse.failure(filename,
+                    "Failed to read file: " + e.getMessage());
         } catch (Exception e) {
-            // Skip malformed components
-            return null;
+            return CircuitLoadResponse.failure(filename,
+                    "Unexpected error: " + e.getMessage());
         }
     }
 
-    private CircuitInfo.SimulationParameters parseSimulationParameters(TokenMap tokenMap) {
-        try {
-            Double endTime = null;
-            Double timeStep = null;
-            String solverType = null;
+    private ComponentInfo componentDataToInfo(CircuitModel.ComponentData comp, String domain) {
+        return new ComponentInfo(
+            comp.getType(),
+            comp.getName(),
+            domain,
+            comp.getPosition(),
+            comp.getOrientation(),
+            comp.getParameters()
+        );
+    }
 
-            if (tokenMap.containsToken("t_end")) {
-                endTime = tokenMap.readDataLine("t_end", 0.0);
-            }
-            if (tokenMap.containsToken("dt")) {
-                timeStep = tokenMap.readDataLine("dt", 0.0);
-            }
-            if (tokenMap.containsToken("solver")) {
-                solverType = tokenMap.readDataLine("solver", "SOLVER_BE");
-            }
-
-            return new CircuitInfo.SimulationParameters(endTime, timeStep, solverType);
-
-        } catch (Exception e) {
-            return null;
-        }
+    private String solverTypeToString(gecko.core.allg.SolverType solverType) {
+        return switch (solverType) {
+            case SOLVER_BE -> "backward-euler";
+            case SOLVER_TRZ -> "trapezoidal";
+            case SOLVER_GS -> "gear-shichman";
+        };
     }
 
     // ========== Internal Data Structure ==========
 
     private record ParsedCircuit(
         String filename,
-        String version,
-        List<ComponentInfo> components,
-        List<ConnectionInfo> connections,
-        CircuitInfo.SimulationParameters simulationParameters,
-        String rawContent
+        CircuitModel model,
+        Instant loadedAt
     ) {}
 }
