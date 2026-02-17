@@ -22,6 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import gecko.rest.model.BatchSimulationRequest;
+import gecko.rest.model.BatchSimulationResponse;
+
 
 /**
  * Service layer for simulation operations.
@@ -503,4 +506,78 @@ public class SimulationService {
     private static boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }
+
+    /**
+     * Submit a batch of simulations. Returns a BatchSimulationResponse with all simulation IDs.
+     *
+     * @param batchRequest Batch simulation request with parameter variations
+     * @return BatchSimulationResponse with batchId and list of simulation IDs
+     */
+    public BatchSimulationResponse submitBatch(BatchSimulationRequest batchRequest) {
+        List<java.util.Map<String, Double>> parameterSets = expandParameterSets(batchRequest);
+        List<String> simulationIds = new ArrayList<>();
+
+        BatchSimulationRequest.SimulationSettings settings = batchRequest.getSimulationSettings();
+        double simTime = settings != null && settings.getSimulationTime() != null ? settings.getSimulationTime() : 0.02;
+        double timeStep = settings != null && settings.getTimeStep() != null ? settings.getTimeStep() : 1e-6;
+        String solverType = settings != null ? settings.getSolverType() : null;
+
+        for (java.util.Map<String, Double> params : parameterSets) {
+            SimulationRequest req = new SimulationRequest(batchRequest.getCircuitFile(), simTime, timeStep);
+            req.setParameters(params);
+            if (solverType != null) {
+                req.setSolverType(solverType);
+            }
+            SimulationResponse resp = submitSimulation(req);
+            simulationIds.add(resp.getSimulationId());
+        }
+
+        String batchId = UUID.randomUUID().toString();
+        return new BatchSimulationResponse(batchId, simulationIds,
+                batchRequest.getMaxConcurrent() != null ? batchRequest.getMaxConcurrent() : 4);
+    }
+
+    private List<java.util.Map<String, Double>> expandParameterSets(BatchSimulationRequest req) {
+        // Explicit list takes priority
+        if (req.getParameterSets() != null && !req.getParameterSets().isEmpty()) {
+            return req.getParameterSets();
+        }
+        // Linear sweep
+        if (req.getLinearSweep() != null) {
+            BatchSimulationRequest.LinearSweep sweep = req.getLinearSweep();
+            List<java.util.Map<String, Double>> sets = new ArrayList<>();
+            int n = sweep.getPoints();
+            for (int i = 0; i < n; i++) {
+                double val = sweep.getStartValue() + i * (sweep.getEndValue() - sweep.getStartValue()) / (n - 1);
+                java.util.Map<String, Double> params = new java.util.HashMap<>();
+                if (sweep.getFixedParameters() != null) {
+                    params.putAll(sweep.getFixedParameters());
+                }
+                params.put(sweep.getParameterPath(), val);
+                sets.add(params);
+            }
+            return sets;
+        }
+        // Log sweep
+        if (req.getLogSweep() != null) {
+            BatchSimulationRequest.LogSweep sweep = req.getLogSweep();
+            List<java.util.Map<String, Double>> sets = new ArrayList<>();
+            int n = sweep.getPoints();
+            double logStart = Math.log10(sweep.getStartValue());
+            double logEnd = Math.log10(sweep.getEndValue());
+            for (int i = 0; i < n; i++) {
+                double logVal = logStart + i * (logEnd - logStart) / (n - 1);
+                double val = Math.pow(10, logVal);
+                java.util.Map<String, Double> params = new java.util.HashMap<>();
+                if (sweep.getFixedParameters() != null) {
+                    params.putAll(sweep.getFixedParameters());
+                }
+                params.put(sweep.getParameterPath(), val);
+                sets.add(params);
+            }
+            return sets;
+        }
+        return java.util.Collections.emptyList();
+    }
+
 }

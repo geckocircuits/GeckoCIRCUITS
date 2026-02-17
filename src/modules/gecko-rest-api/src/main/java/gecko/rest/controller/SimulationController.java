@@ -22,6 +22,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import gecko.rest.model.BatchSimulationRequest;
+import gecko.rest.model.BatchSimulationResponse;
+
 
 /**
  * REST endpoints for circuit simulation.
@@ -358,4 +361,22 @@ public class SimulationController {
         }
         return headerValue;
     }
+
+    /**
+     * Submit a batch of simulations with parameter variations.
+     *
+     * @param batchRequest Batch request with explicit parameter sets or sweep configuration
+     * @return Batch response with batchId and list of submitted simulation IDs
+     */
+    @PostMapping("/batch")
+    @Operation(summary = "Submit a batch of simulations",
+            description = "Submit multiple simulations with parameter variations (explicit sets, linear sweep, or log sweep)")
+    @ApiResponse(responseCode = "201", description = "Batch submitted successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    public ResponseEntity<BatchSimulationResponse> submitBatch(
+            @Valid @RequestBody BatchSimulationRequest batchRequest) {
+        BatchSimulationResponse response = simulationService.submitBatch(batchRequest);
+        return ResponseEntity.status(201).body(response);
+    }
+
 }
