@@ -24,6 +24,7 @@ import gecko.core.simulation.solver.InitialConditionSolver;
 import gecko.core.circuit.netlist.CircuitNetlist;
 import gecko.core.circuit.netlist.NetlistBuilder;
 import gecko.core.simulation.ControlNetlist;
+import gecko.core.simulation.DomainCoupler;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -85,6 +86,9 @@ public class HeadlessSimulationEngine {
     // Circuit and control netlists
     private CircuitNetlist circuitNetlist;
     private ControlNetlist controlNetlist;
+
+    // Domain coupling orchestrator
+    private DomainCoupler domainCoupler;
 
     /**
      * Creates a new HeadlessSimulationEngine.
@@ -154,6 +158,9 @@ public class HeadlessSimulationEngine {
         circuitNetlist = NetlistBuilder.buildFromCircuitModel(circuitModel);
         controlNetlist = ControlNetlist.createEmpty();
 
+        // Initialize domain coupler for orchestrating LK, CONTROL, THERM domains
+        domainCoupler = new DomainCoupler();
+
         // Re-initialize matrix solver with real netlist dimensions
         if (circuitNetlist.getElementCount() > 0) {
             matrixSolver.initializeMatrices(
@@ -186,32 +193,42 @@ public class HeadlessSimulationEngine {
                         .build();
             }
 
-            // MatrixSolver is initialized and ready for real circuit simulation.
-            // When a proper INetList is available from circuit parsing (Phase 3),
-            // call: matrixSolver.buildMatrixA(netlist, dt, currentTime, false);
-            //       matrixSolver.buildVectorB(netlist, dt, currentTime, false);
-            //       matrixSolver.solve();
-            //       componentCurrentCalculator.calculateComponentCurrents(...);
-            //       matrixSolver.updateNodePotentials(dt, currentTime);
+            // Phase 4: Execute domain coupling (LK → CONTROL → LK)
+            // Orchestrates data transfer between circuit, control, and thermal domains
+            domainCoupler.coupleDomainsForTimeStep(circuitNetlist, controlNetlist, dt, currentTime);
 
-            // Execute control blocks (empty for now, populated in Phase 4)
-            if (controlNetlist.hasCalculators()) {
-                controlNetlist.executeTimeStep(dt, currentTime);
-            }
+            // Real MNA solver: build and solve circuit matrices
+            if (circuitNetlist != null && circuitNetlist.getElementCount() > 0) {
+                // 1. Build system matrix A (component stamps)
+                matrixSolver.buildMatrixA(circuitNetlist, dt, currentTime, false);
 
-            // Placeholder waveforms (replaced in Phase 3 with real solver):
-            if (matrixSolver != null && matrixSolver.getP() != null) {
-                // Use solver state if available
-                values[0] = (float) currentTime; // Will be replaced with real node voltage
-            } else {
-                values[0] = (float) (5.0 * Math.sin(2 * Math.PI * 1000 * currentTime));
-            }
-            values[1] = (float) (0.5 * Math.sin(2 * Math.PI * 1000 * currentTime + 0.5));
-            values[2] = (float) Math.abs(values[0] * values[1]);
+                // 2. Build right-hand side vector b (sources, history terms)
+                matrixSolver.buildVectorB(circuitNetlist, dt, currentTime, false);
 
-            // Store results in netlist for data extraction
-            if (circuitNetlist != null) {
+                // 3. Solve Ax=b for node voltages
+                matrixSolver.solve();
+
+                // 4. Calculate component currents from solved node voltages
+                componentCurrentCalculator.calculateComponentCurrents(
+                    matrixSolver, circuitNetlist, 0.0, dt, currentTime, true
+                );
+
+                // 5. Shift history for next time step
+                matrixSolver.updateNodePotentials(dt, currentTime);
+
+                // 6. Store results back into netlist
                 circuitNetlist.storeResults(matrixSolver.getP(), matrixSolver.getIALT());
+
+                // 7. Extract signal values for data logging
+                double[] nodeVoltages = matrixSolver.getP();
+                for (int sigIdx = 0; sigIdx < values.length && sigIdx < nodeVoltages.length; sigIdx++) {
+                    values[sigIdx] = (float) nodeVoltages[sigIdx];
+                }
+            } else {
+                // Fallback: no circuit loaded, use zero output
+                for (int sigIdx = 0; sigIdx < values.length; sigIdx++) {
+                    values[sigIdx] = 0.0f;
+                }
             }
 
             // Store data (respecting logging interval)
