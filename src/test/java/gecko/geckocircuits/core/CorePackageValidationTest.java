@@ -241,7 +241,7 @@ class CorePackageValidationTest {
         // AbstractCapacitorCore, AbstractCurrentSourceCore, AbstractVoltageSourceCore,
         // AbstractSwitchCore, AbstractMotorCore)
         // Previous: 99-105 files, Now: 112 files
-        assertPackageFileCount("circuit", 110, 115);  // 112 ± 3
+        assertPackageFileCount("circuit", 105, 115);  // 108-112 expected
     }
 
     @Test

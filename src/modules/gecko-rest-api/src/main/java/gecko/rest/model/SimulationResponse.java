@@ -17,12 +17,26 @@ public class SimulationResponse {
         PENDING, RUNNING, COMPLETED, FAILED
     }
 
+    /**
+     * Detailed breakdown of simulation progress.
+     */
+    public record ProgressDetails(
+        double preCalcProgress,
+        double mainSimProgress,
+        double currentTime,
+        double endTime,
+        int currentStep,
+        int totalSteps,
+        Long estimatedRemainingMs
+    ) {}
+
     private String simulationId;
     private volatile SimulationStatus status;
     private volatile Instant startTime;
     private volatile Instant endTime;
     private final Map<String, double[]> results;
     private volatile String errorMessage;
+    private volatile ProgressDetails progressDetails;
 
     // Constructors
     public SimulationResponse() {
@@ -88,6 +102,14 @@ public class SimulationResponse {
         this.errorMessage = errorMessage;
     }
 
+    public ProgressDetails getProgressDetails() {
+        return progressDetails;
+    }
+
+    public void setProgressDetails(ProgressDetails progressDetails) {
+        this.progressDetails = progressDetails;
+    }
+
     public void addResult(String signalName, double[] signalData) {
         if (signalName == null) {
             return;
@@ -119,6 +141,7 @@ public class SimulationResponse {
                 ", endTime=" + endTime +
                 ", resultsCount=" + (results != null ? results.size() : 0) +
                 ", errorMessage='" + errorMessage + '\'' +
+                ", progressDetails=" + progressDetails +
                 '}';
     }
 

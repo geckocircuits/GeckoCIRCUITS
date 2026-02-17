@@ -3,6 +3,7 @@ package gecko.rest.service;
 import gecko.core.allg.SolverType;
 import gecko.core.simulation.HeadlessSimulationEngine;
 import gecko.core.simulation.SimulationConfig;
+import gecko.core.simulation.SimulationProgress;
 import gecko.core.simulation.SimulationResult;
 import gecko.rest.model.SimulationRequest;
 import gecko.rest.model.SimulationResponse;
@@ -119,12 +120,32 @@ public class SimulationService {
 
     /**
      * Get simulation by ID.
+     * If simulation is running, includes detailed progress information.
      *
      * @param simulationId Simulation identifier
      * @return Simulation response or null if not found
      */
     public SimulationResponse getSimulation(String simulationId) {
-        return simulationStore.get(simulationId);
+        SimulationResponse response = simulationStore.get(simulationId);
+        if (response != null && response.getStatus() == SimulationResponse.SimulationStatus.RUNNING) {
+            // Populate progress details if simulation is running
+            HeadlessSimulationEngine engine = runningEngines.get(simulationId);
+            if (engine != null) {
+                SimulationProgress detailed = engine.getDetailedProgress();
+                if (detailed != null) {
+                    response.setProgressDetails(new SimulationResponse.ProgressDetails(
+                        detailed.getPreCalcProgress(),
+                        detailed.getMainSimProgress(),
+                        detailed.getCurrentTime(),
+                        detailed.getEndTime(),
+                        detailed.getCurrentStep(),
+                        detailed.getTotalSteps(),
+                        detailed.getEstimatedRemainingMs()
+                    ));
+                }
+            }
+        }
+        return response;
     }
 
     /**
@@ -273,13 +294,32 @@ public class SimulationService {
                 .circuitFile(request.getCircuitFile())
                 .stepWidth(request.getTimeStep())
                 .simulationDuration(request.getSimulationTime())
-                .solverType(SolverType.SOLVER_BE); // Default to Backward Euler
+                .solverType(parseSolverType(request.getSolverType()));
 
         if (request.getParameters() != null) {
             builder.withParameters(request.getParameters());
         }
 
         return builder.build();
+    }
+
+    /**
+     * Parse solver type string to SolverType enum.
+     * Supports: "backward-euler", "be", "trapezoidal", "trz", "gear-shichman", "gear", "gs"
+     * Defaults to SOLVER_BE if string is null or unrecognized.
+     *
+     * @param solverTypeStr solver type string (case-insensitive)
+     * @return parsed SolverType
+     */
+    SolverType parseSolverType(String solverTypeStr) {
+        if (solverTypeStr == null) {
+            return SolverType.SOLVER_BE;
+        }
+        return switch (solverTypeStr.toLowerCase().trim()) {
+            case "trapezoidal", "trz" -> SolverType.SOLVER_TRZ;
+            case "gear-shichman", "gear", "gs" -> SolverType.SOLVER_GS;
+            default -> SolverType.SOLVER_BE;
+        };
     }
 
     boolean markRunning(SimulationResponse response) {

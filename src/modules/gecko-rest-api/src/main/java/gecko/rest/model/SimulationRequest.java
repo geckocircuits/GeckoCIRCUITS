@@ -24,6 +24,8 @@ public class SimulationRequest {
 
     private Map<String, Double> parameters;
 
+    private String solverType;  // Optional, defaults to backward-euler
+
     // Constructors
     public SimulationRequest() {
     }
@@ -67,12 +69,21 @@ public class SimulationRequest {
         this.parameters = parameters;
     }
 
+    public String getSolverType() {
+        return solverType;
+    }
+
+    public void setSolverType(String solverType) {
+        this.solverType = solverType;
+    }
+
     @Override
     public String toString() {
         return "SimulationRequest{" +
                 "circuitFile='" + circuitFile + '\'' +
                 ", simulationTime=" + simulationTime +
                 ", timeStep=" + timeStep +
+                ", solverType='" + solverType + '\'' +
                 ", parameters=" + parameters +
                 '}';
     }

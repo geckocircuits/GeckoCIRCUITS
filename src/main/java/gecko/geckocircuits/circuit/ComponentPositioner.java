@@ -194,7 +194,7 @@ public class ComponentPositioner {
      */
     public int[] calculateBoundingBox(Collection<? extends PositionProvider> positions) {
         if (positions == null || positions.isEmpty()) {
-            return new int[0];
+            return null;
         }
 
         int minX = Integer.MAX_VALUE;
@@ -217,7 +217,7 @@ public class ComponentPositioner {
         }
 
         if (!hasValidPoints) {
-            return new int[0];
+            return null;
         }
 
         return new int[]{minX, minY, maxX, maxY};
