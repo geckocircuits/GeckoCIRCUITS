@@ -17,9 +17,9 @@ This document outlines the release strategy for GeckoCIRCUITS based on semantic 
 
 ## Current Status
 
-- **Latest Release**: v2.18.0 (commit 2742d869, Feb 17, 2026)
+- **Latest Release**: v2.19.0 (commit dad24679, Feb 17, 2026)
 - **Previous Release**: v2.17.0 (commit 6db364f1, Feb 14, 2026)
-- **Next Release**: v2.19.0 (planned Q2 2026 - WebSocket streaming + advanced analysis endpoints)
+- **Next Release**: v2.20.0 (planned - WebSocket streaming + circuit management)
 - **Ground Zero**: v2.10.0 (Java 21 migration, commit fd484fe1)
 - **Total Releases**: 8 versions (v2.10.0 → v2.17.0)
 

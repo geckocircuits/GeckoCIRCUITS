@@ -205,6 +205,116 @@ Response fields:
 GET /api/v1/simulations/{simulationId}/export
 ```
 
+### Signal Analysis Endpoints
+
+Post-processing analysis of simulation or raw signal data.
+
+**Signal Characteristics**
+
+Returns 9 key metrics for any waveform.
+
+```bash
+POST /api/v1/analysis/characteristics
+Content-Type: application/json
+```
+
+Request (with raw data):
+```json
+{
+  "data": [0.0, 0.707, 1.0, 0.707, 0.0, -0.707, -1.0, -0.707],
+  "sampleRate": 8000.0
+}
+```
+
+Or reference simulation results:
+```json
+{
+  "simulationId": "uuid",
+  "signalName": "V_out",
+  "startTime": 0.01,
+  "endTime": 0.02
+}
+```
+
+Response:
+```json
+{
+  "average": 0.0,
+  "rms": 0.707,
+  "thd": 2.5,
+  "min": -1.0,
+  "max": 1.0,
+  "peakToPeak": 2.0,
+  "ripple": 0.01,
+  "klirr": 0.025,
+  "shapeFactor": 1.11,
+  "sampleCount": 20000
+}
+```
+
+**Fourier Harmonic Analysis**
+
+Decompose signal into harmonic components with amplitude and phase.
+
+```bash
+POST /api/v1/analysis/fourier?harmonics=10
+Content-Type: application/json
+```
+
+Request (raw data):
+```json
+{
+  "data": [0.0, 0.707, 1.0, 0.707, 0.0, -0.707, -1.0, -0.707],
+  "sampleRate": 50000.0,
+  "baseFrequency": 50.0
+}
+```
+
+Response:
+```json
+{
+  "baseFrequency": 50.0,
+  "harmonics": 10,
+  "dcComponent": 0.01,
+  "fundamentalAmplitude": 1.0,
+  "fundamentalPhaseDegrees": 0.0,
+  "cnAmplitudes": [0.01, 1.0, 0.05, 0.02, 0.015, 0.008, 0.005, 0.003, 0.002, 0.001],
+  "jnPhases": [0.0, 0.0, 0.1, -0.05, 0.2, -0.1, 0.15, -0.08, 0.12, -0.06]
+}
+```
+
+**RMS (Root Mean Square)**
+
+Quick RMS calculation for any signal.
+
+```bash
+POST /api/v1/analysis/rms
+Content-Type: application/json
+```
+
+Request:
+```json
+{
+  "data": [0.0, 0.707, 1.0, 0.707, 0.0, -0.707, -1.0, -0.707]
+}
+```
+
+Response:
+```
+0.7071067811865476
+```
+
+**Analysis Endpoint Table**
+
+| Endpoint | Method | Purpose | Returns |
+|----------|--------|---------|---------|
+| `/api/v1/analysis/characteristics` | POST | 9 waveform metrics (RMS, THD, ripple, etc.) | CharacteristicsResult |
+| `/api/v1/analysis/fourier` | POST | Harmonic decomposition with amplitude & phase | FourierResult |
+| `/api/v1/analysis/rms` | POST | RMS calculation | number |
+
+Live in: **v2.19.0+**
+
+
 ## Usage Examples
 
 ### Python Client
