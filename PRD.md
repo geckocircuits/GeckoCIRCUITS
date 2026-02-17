@@ -1,8 +1,8 @@
 # GeckoCIRCUITS Product Requirements Document
 
 **Version:** 1.1.0
-**Last Updated:** 2026-02-14
-**Status:** Active Development
+**Last Updated:** 2026-02-17
+**Status:** v2.18.0 Release - Headless Simulation Engine
 
 ---
 
@@ -46,7 +46,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### 4.2 Simulation Core Module (In Progress)
 - **Location:** `src/modules/gecko-simulation-core/`
-- GUI-free simulation engine suitable for headless operation (183 source classes, 59 test files, 1,686 tests)
+- GUI-free simulation engine suitable for headless operation (192 source classes, 74 test files, 1,809 tests)
 - 30% JaCoCo coverage enforced via CI (exceeds threshold)
 - Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `circuit.terminal`, `circuit.component`, `circuit.losscalculation`, `control.calculators`, `math`, `datacontainer`, `allg` (file paths + parameters)
 - Circuit file parsing: TokenMap, CircuitFileConstants for .ipes file processing
@@ -130,7 +130,8 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v2.14.0 | Feb 14, 2026 | GeckoFile Migration (Sprint 4a) | Complete circuit file I/O headlessly |
 | v2.15.0 | Feb 14, 2026 | Loss Calculation (Sprint 4b) | UserParameter abstraction, loss curves in core |
 | v2.16.0 | Feb 14, 2026 | REST API Launch (Sprint 5) 🚀 | First public REST API (8 endpoints, Docker) |
-| v2.17.0 | Feb 14, 2026 | Release Automation (CURRENT) 🎉 | GitHub Actions workflows (5 platforms) |
+| v2.17.0 | Feb 14, 2026 | Release Automation | GitHub Actions workflows (5 platforms) |
+| v2.18.0 | Feb 17, 2026 | Headless Simulation Engine (CURRENT) 🎉 | Real solver integration, domain coupling, simulation control API |
 
 **Future Roadmap:**
 | Version | Target | Description |
@@ -143,7 +144,25 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 **Note:** For detailed release planning, version numbering strategy, and full changelog, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
 
-### Latest Sprint (2026-02-17): Sprint 5 - REST API Implementation
+### Latest Sprint (2026-02-17): Sprint 6 - Headless Simulation Engine (v2.18.0)
+
+**Phase 1-6: Real Solver Integration (COMPLETED)**
+- **SimulationProgress** class: overallProgress, preCalcProgress, mainSimProgress, currentStep, totalSteps, currentTime, endTime, estimatedRemainingMs, state
+- **HeadlessSimulationEngine** enhancements: pause(), resume(), isPaused(), getDetailedProgress() methods
+- **MatrixSolver** (gecko.core.simulation.solver): MNA matrix A/b, LU decomposition, history shifting for BE/TRZ/GS solver types
+- **ComponentCurrentCalculator**: Post-solve current calculation for R/L/C/switches/voltage-current sources
+- **InitialConditionSolver**: Capacitor voltage and inductor current initialization for all 3 solver types
+- **CircuitNetlist**: Complete topology implementation with INetList interface for parameter management
+- **NetlistBuilder**: Factory pattern with buildFromCircuitModel() and buildEmpty() methods
+- **ControlNetlist**: Headless control calculator execution in sorted order
+- **DomainCoupler**: Electrical-Control-Thermal data exchange per time step
+- **Real solver integration**: MNA matrix stamping → vector building → LU solving → current calculation → node potential updates each time step
+- **SimulationRequest/Response**: Solver type field ("backward-euler", "trapezoidal", "gear-shichman"), detailed progress tracking
+- Created 9 production classes, 15 test files (~2,000 LOC)
+- Core module tests: 1,711 → 1,809 (+98), REST API: 133, Main: 5,373 (all passing)
+- **Commits:** c13ea573 (phase 1), 5f51ddb0 (tests), 9549fe80 (phases 2-3), 91cd6dd3 (phase 5), 2742d869 (phases 4+6)
+
+**Previous Sprint (2026-02-17): Sprint 5 - REST API Implementation
 
 **Phase 1: Loss Calculation Endpoints (COMPLETED)**
 - Implemented 3 REST API endpoints for semiconductor loss calculations:

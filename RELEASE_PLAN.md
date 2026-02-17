@@ -17,9 +17,9 @@ This document outlines the release strategy for GeckoCIRCUITS based on semantic 
 
 ## Current Status
 
-- **Latest Release**: v2.17.0 (commit 6db364f1, Feb 14, 2026)
-- **Latest Development**: Sprint 5 Phase 2A completed (commit 89b24ce5, Feb 17, 2026)
-- **Next Release**: v2.18.0 (planned Q2 2026 - Real solver integration + simulation control API)
+- **Latest Release**: v2.18.0 (commit 2742d869, Feb 17, 2026)
+- **Previous Release**: v2.17.0 (commit 6db364f1, Feb 14, 2026)
+- **Next Release**: v2.19.0 (planned Q2 2026 - WebSocket streaming + advanced analysis endpoints)
 - **Ground Zero**: v2.10.0 (Java 21 migration, commit fd484fe1)
 - **Total Releases**: 8 versions (v2.10.0 → v2.17.0)
 
@@ -221,57 +221,97 @@ This document outlines the release strategy for GeckoCIRCUITS based on semantic 
 
 ---
 
+### v2.18.0 - Headless Simulation Engine ✨ NEW
+**Release Date**: Feb 17, 2026
+**Commit**: `2742d869`
+
+**Major Features:**
+- **Real Solver Integration** - Extract SimulationsKern logic to gecko-simulation-core for headless simulation
+- **Phase 1: Architecture Preparation**
+  - SimulationProgress class (9 fields: overallProgress, preCalcProgress, mainSimProgress, currentStep, totalSteps, currentTime, endTime, estimatedRemainingMs, state)
+  - HeadlessSimulationEngine enhancements (pause, resume, isPaused, getDetailedProgress methods)
+  - Test infrastructure for RLC circuits and validation
+- **Phase 2: Matrix Solver Migration**
+  - MatrixSolver class (MNA matrix A, vector b, LU decomposition via gecko.core.math.Matrix, history shifting for BE/TRZ/GS)
+  - ~70 tests covering solver types and edge cases
+- **Phase 3: Netlist Building**
+  - CircuitNetlist class (implements INetList, topology management, parameters, magnetic couplings, result storage)
+  - NetlistBuilder factory (buildFromCircuitModel, buildEmpty)
+  - ControlNetlist (headless control calculator executor in sorted order)
+  - ~90 tests validating netlist structure
+- **Phase 4: Domain Coupling**
+  - DomainCoupler class (Electrical ↔ Control ↔ Thermal data exchange per time step)
+  - Integration with HeadlessSimulationEngine
+  - 8 tests validating coupling correctness
+- **Phase 5: Real Solver Integration**
+  - ComponentCurrentCalculator (post-solve current calculation for R/L/C/switches/sources)
+  - InitialConditionSolver (capacitor voltage/inductor current init for all 3 solver types)
+  - HeadlessSimulationEngine: buildMatrixA → buildVectorB → solve → calculateComponentCurrents → updateNodePotentials each step
+  - ~100 tests for solver accuracy
+- **Phase 6: API Enhancements**
+  - SimulationRequest: solverType field ("backward-euler", "trapezoidal", "gear-shichman")
+  - SimulationResponse: ProgressDetails record (7 fields: overall, preSim, mainSim, step, time, endTime, eta)
+  - SimulationService: parseSolverType() helper, detailed progress wired
+  - REST API endpoints enhanced with real solver backend
+
+**Key Metrics:**
+- Core classes: 183 → 192 (+9 new production classes)
+- Core test files: 59 → 74 (+15 new test files)
+- Core tests: 1,711 → 1,809 (+98 tests)
+- REST API: 133 tests (unchanged, uses new solver backend)
+- Main: 5,373 tests (unchanged)
+- **Total: 7,315 tests passing**
+- New LOC: ~2,000 (solver, netlist, coupling, progress tracking)
+
+**Commits:**
+- c13ea573 - Phase 1: Architecture preparation (SimulationProgress, HeadlessSimulationEngine)
+- 5f51ddb0 - Phase 1 test infrastructure (RLC validation suite)
+- 9549fe80 - Phases 2-3: Matrix solver + netlist building migration
+- 91cd6dd3 - Phase 5: Real solver integration (replace placeholder)
+- 2742d869 - Phases 4+6: Domain coupling + API enhancements
+
+**Significance**: 🚀 **Real simulation engine now in core module - headless capability complete**
+
+---
+
 ## Future Releases Roadmap
 
-### v2.18.0 - v2.2x Series (Q2-Q3 2026)
+### v2.19.0 - v2.2x Series (Q2-Q3 2026)
 
 Incremental REST API feature additions:
 
-**Prerequisites (Completed):**
-- ✅ Sprint 5 Phase 1: Loss calculation endpoints (3 endpoints, commit 41fe6900)
-- ✅ Sprint 5 Phase 2A: Circuit file operations (6 endpoints, commit 89b24ce5)
+**v2.19.0 - WebSocket Streaming & Advanced Analysis**
+**Target:** Q2-Q3 2026
 
-**v2.18.0 - Real Solver Integration & Simulation Control**
-**Target:** Q2 2026 (6-8 weeks development)
-**Focus:** Extract SimulationsKern logic to gecko-simulation-core, enable headless circuit simulation
-
-**Phase 1: Architecture Preparation (Week 1)**
-- Create core simulation package structure (solver/, netlist/, coupling/)
-- Update HeadlessSimulationEngine interface (pause, resume, detailed progress)
-- Test infrastructure (RLC circuits, validation suite, benchmarks)
-
-**Phase 2-5: Solver Migration (Weeks 2-7)**
-- Phase 2: Matrix solver migration (LKMatrices → MatrixSolver)
-- Phase 3: Netlist building (NetListLK, NetzlisteCONTROL)
-- Phase 4: Domain coupling (LK-CONTROL-THERM interactions)
-- Phase 5: Real solver integration (replace placeholder in HeadlessSimulationEngine)
-
-**Phase 6: API Enhancements (Week 8)**
-- Solver type selection (backward-euler, trapezoidal, gear-shichman)
-- SSE streaming for real-time progress updates
-- Enhanced progress metrics with ETA
-- Parameter override application
-
-**New Simulation Endpoints:**
-- PATCH /api/v1/simulations/{id}/pause - Pause simulation
-- PATCH /api/v1/simulations/{id}/resume - Resume simulation
-- POST /api/v1/simulations/{id}/step - Single time step
-- GET /api/v1/simulations/{id}/stream - SSE progress stream
-
-**v2.19.0 - Real-time Data Streaming**
+**Phase 1: Real-time Data Streaming**
 - WebSocket endpoint: ws://api/v1/simulations/{id}/stream
-- Real-time oscilloscope data
-- Live parameter monitoring
+- Real-time oscilloscope data (voltage, current waveforms)
+- Live parameter monitoring (temperature, efficiency)
+- Sub-100ms latency streaming
 
-**v2.20.0 - Advanced Analysis Endpoints**
-- POST /api/v1/analysis/fft - FFT spectrum
+**Phase 2: Advanced Analysis Endpoints**
+- POST /api/v1/analysis/fft - FFT spectrum analysis
 - POST /api/v1/analysis/thd - Total Harmonic Distortion
-- POST /api/v1/analysis/rms - RMS calculations
+- POST /api/v1/analysis/rms - RMS value calculation
+- Uses gecko.core.signal package (CharacteristicsCalculator, Cispr16Fft)
 
-**v2.21.0 - Batch Operations**
-- POST /api/v1/batch/parameter-sweep
-- POST /api/v1/batch/optimization
-- Job progress tracking
+**Phase 3: Simulation Control Endpoints**
+- PATCH /api/v1/simulations/{id}/pause - Pause running simulation
+- PATCH /api/v1/simulations/{id}/resume - Resume paused simulation
+- POST /api/v1/simulations/{id}/step - Execute single time step
+- GET /api/v1/simulations/{id}/stream - SSE progress stream (alternative to WebSocket)
+
+**v2.20.0 - Batch Operations**
+- POST /api/v1/batch/parameter-sweep - Parameter sweep automation
+- POST /api/v1/batch/optimization - Optimization runs
+- GET /api/v1/batch/{id}/progress - Batch job progress
+- GET /api/v1/batch/{id}/results - Batch results
+
+**v2.21.0 - Enhanced Circuit Management**
+- PUT /api/v1/circuits/{id} - Update circuit parameters
+- POST /api/v1/circuits/{id}/clone - Clone circuit with variations
+- GET /api/v1/circuits - List with pagination and search
+- Circuit versioning and history
 
 ---
 
@@ -664,6 +704,6 @@ For questions about releases:
 
 ---
 
-**Document Version**: 2.0
-**Last Updated**: 2026-02-14
+**Document Version**: 2.1
+**Last Updated**: 2026-02-17
 **Maintainer**: tinix84

@@ -152,8 +152,8 @@ Output packages in `target/`:
 
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
 - **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI (5,373 tests)
-- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (183 classes, 1,686 tests, 30%+ coverage enforced)
-- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (94 tests, 3 loss calculation endpoints live, Docker packaging available)
+- **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (192 classes, 1,809 tests, 30%+ coverage enforced)
+- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (133 tests, 9 endpoints live, Docker packaging available)
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
@@ -228,11 +228,11 @@ mvn checkstyle:check
 mvn pmd:check
 ```
 
-### Static Analysis Status (2026-02-15)
+### Static Analysis Status (2026-02-17)
 | Tool | Config | Violations | Notes |
 |------|--------|-----------|-------|
 | SpotBugs | Default + 204 `@SuppressFBWarnings` | **0 bugs** | Clean |
-| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **496** ✅ | **<500 TARGET ACHIEVED!** Down 86% from original 3,443 (823 after initial cleanup). 327 violations fixed today: 94 ForLoopCanBeForeach, 88 high-value (CloseResource, PreserveStackTrace, CompareObjectsWithEquals), 145 code-style |
+| PMD | `pmd-ruleset.xml` (quickstart rules, 10 excluded rules, allowCommentedBlocks) | **496** ✅ | **<500 TARGET ACHIEVED!** Down 86% from original 3,443. Maintained across v2.18.0 |
 | Checkstyle | `checkstyle.xml` (150-char lines) | **4,632** | Down from 56,673 with default Sun config |
 
 Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
@@ -248,20 +248,21 @@ The project maintains the desktop application while adding modern web accessibil
 - **Shared Core** ✅ - `gecko-simulation-core` module extracted (183 classes, 1,686 tests)
 
 ### Active Initiatives
-1. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (30%+ minimum)
-2. **GUI-Free Core Extraction** - Decoupling computation classes from GUI singletons for `gecko-simulation-core`. Math, datacontainer, losscalculation, and signal packages migrated.
-3. **REST API Implementation** - Sprint 5 Phase 1 complete: 3 loss calculation endpoints live (switching, conduction, detailed interpolation)
+1. **Real Solver Integration (Sprint 6)** - ✅ COMPLETE: Extracted SimulationsKern logic to core module (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler) with 360+ tests
+2. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (30%+ minimum, 1,809 tests in core)
+3. **REST API Expansion** - 9 live endpoints (3 loss + 6 circuit file), preparing for v2.19 (WebSocket, advanced analysis)
 
 ### GUI-Free Validated Packages
 These packages are confirmed GUI-free and safe for headless/API use:
 - `circuit.matrix` (15 classes) - MNA matrix stampers
-- `circuit.netlist` (4 classes) - Netlist building
-- `circuit.simulation` (5 classes) - Simulation engine
+- `circuit.netlist` (6 classes) - Netlist building (CircuitNetlist, NetlistBuilder) ✨ SPRINT 6
+- `circuit.simulation` (13 classes) - Simulation engine + solver + progress tracking ✨ SPRINT 6
+- `circuit.simulation.solver` - Real solver integration (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler) ✨ SPRINT 6 NEW
 - `circuit.terminal` (3 classes, 138 tests) - Connection path routing and validation
 - `circuit.component` (3 classes, 206 tests) - Parameter and terminal registries
 - `circuit` TokenMap (41 tests) - Circuit file parsing for .ipes files (migrated to gecko.core.circuit)
 - `circuit` ComponentIdentifiable (interface) - Component identification for deserialization
-- `circuit.losscalculation` (14 classes, 180+ tests) - Power electronics loss calculation (Sprint 4b) ✨ NEW
+- `circuit.losscalculation` (14 classes, 180+ tests) - Power electronics loss calculation (Sprint 4b)
 - `control.calculators` (71 classes) - All control block calculators
 - `datacontainer` (11 classes) - Signal data storage with optimized caching
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
@@ -269,7 +270,7 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `signal` (3 classes, 29 tests) - Signal analysis utilities (CharacteristicsCalculator, FourierGUIless, Cispr16Fft)
 - `io` SerializationUtils - ASCII format serialization for .ipes files
 - `i18n` SelectableLanguages (43 languages) - Internationalization support
-- `allg` (10 classes, 36+ tests) - GeckoFile, ExternalStorageConverter, UserParameterCore, SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants ✨ UPDATED
+- `allg` (10 classes, 90+ tests) - GeckoFile, ExternalStorageConverter, UserParameterCore, SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants (Sprint 4b)
 - `core` GeckoRuntimeException - Custom runtime exception
 
 ### GUI Decoupling Patterns
@@ -321,7 +322,23 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 
 ## Recent Git Activity
 
-Recent commits:
+Recent commits (v2.18.0 Sprint 6 - Headless Simulation Engine):
+- `2742d869` **v2.18.0: Real solver integration complete (Phase 6)**
+  - Domain coupling (Electrical ↔ Control ↔ Thermal)
+  - API enhancements (SimulationRequest/Response with solver type, progress details)
+  - All 7,315 tests passing (1,809 core + 5,373 main + 133 API)
+  - Commits: c13ea573, 5f51ddb0, 9549fe80, 91cd6dd3, 2742d869
+- `91cd6dd3` Real solver integration - Replace HeadlessSimulationEngine placeholder
+  - buildMatrixA → buildVectorB → solve → calculateComponentCurrents → updateNodePotentials
+  - ~100 integration tests validating solver accuracy
+- `9549fe80` Phases 2-3: Matrix solver + netlist building migration to core
+  - MatrixSolver: MNA stamping, LU decomposition, BE/TRZ/GS history
+  - CircuitNetlist: topology, parameters, magnetic couplings
+  - NetlistBuilder: factory pattern
+  - ControlNetlist: headless control execution
+  - ~90 tests for netlist validation
+- `5f51ddb0` Phase 1 test infrastructure: RLC circuits, validation suite, benchmarks
+- `c13ea573` Phase 1: Architecture preparation (SimulationProgress, HeadlessSimulationEngine enhancements)
 - `1e4eaa0a` **Achieve <500 PMD violations target: 823 → 496 (-40%)**
   - CompareObjectsWithEquals (31): Use .equals() for object comparisons
   - CloseResource (35): All resource leaks fixed with try-with-resources

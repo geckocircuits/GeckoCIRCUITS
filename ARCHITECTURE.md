@@ -1,8 +1,8 @@
 # Architecture Document
 
 **Project:** GeckoCIRCUITS
-**Last Updated:** 2026-02-14
-**Status:** Dual-track architecture (Desktop + API)
+**Last Updated:** 2026-02-17
+**Status:** Dual-track architecture (Desktop + API) - v2.18.0 Complete
 
 ---
 
@@ -130,22 +130,23 @@ Defined in `OperatingMode` enum, selected at startup:
 
 ## 4. GUI-Free Boundary
 
-### 4.1 Validated Packages (179 classes in core module)
+### 4.1 Validated Packages (192 classes in core module)
 
 Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 
 | Package | Classes | Tests | Status |
 |---------|---------|-------|--------|
 | `circuit.matrix` | 15 | 183 | API-ready |
-| `circuit.netlist` | 4 | 89 | API-ready |
-| `circuit.simulation` | 5 | 91 | API-ready |
-| `circuit.terminal` | 3 | 138 | API-ready ✨ NEW |
-| `circuit.component` | 3 | 206 | API-ready ✨ NEW |
+| `circuit.netlist` | 6 | 89+ | API-ready ✨ UPDATED (CircuitNetlist, NetlistBuilder) |
+| `circuit.simulation` | 13 | 360+ | API-ready ✨ UPDATED (solver, DomainCoupler, SimulationProgress) |
+| `circuit.simulation.solver` | - | 360+ | NEW ✨ Real solver integration |
+| `circuit.terminal` | 3 | 138 | API-ready |
+| `circuit.component` | 3 | 206 | API-ready |
 | `control.calculators` | 71 | ~320 | API-ready (2 GUI exceptions) |
 | `math` | 7 | 97 | API-ready |
 | `datacontainer` | 11 | ~180 | API-ready |
-| `circuit.losscalculation` | 20 | - | Deferred (needs HiLoData migration) |
-| `allg` | 8 | 36 | API-ready (GeckoFile + interfaces) ✨ NEW |
+| `circuit.losscalculation` | 20 | 180+ | API-ready (Sprint 4b) |
+| `allg` | 10 | 90+ | API-ready (GeckoFile + interfaces) |
 | `circuit` (main) | 54 | - | Partial (41 GUI classes) |
 
 ### 4.2 GUI Decoupling Pattern
@@ -200,11 +201,13 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (183 classes extracted):
-  ├── circuit/              68 classes
+gecko-simulation-core (192 classes extracted):
+  ├── circuit/              77 classes
   │   ├── matrix/          15 classes (MNA stampers)
-  │   ├── netlist/         4 classes (netlist building)
-  │   ├── simulation/      5 classes (simulation engine)
+  │   ├── netlist/         6 classes (netlist building, CircuitNetlist, NetlistBuilder) ✨ SPRINT 6
+  │   ├── simulation/      13 classes (simulation engine + solver, HeadlessSimulationEngine enhancements) ✨ SPRINT 6
+  │   │   ├── solver/      (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler)
+  │   │   └── (SimulationProgress, SimulationRequest, SimulationResponse)
   │   ├── terminal/        3 classes (ConnectionPath, ConnectionValidator, ITerminalPosition)
   │   ├── component/       3 classes (ParameterRegistry, ParameterSerializer, TerminalRegistry)
   │   ├── losscalculation/ 14 classes (loss curves, interpolation, calculators) ✨ SPRINT 4B
@@ -213,7 +216,7 @@ gecko-simulation-core (183 classes extracted):
   │   │   ├── SwitchingLossCalculator, ConductionLossCalculator (loss computation)
   │   │   ├── LossComponent, LossCalculationDetail, LossContainer (data models)
   │   │   └── Interfaces: AbstractLossCalculator, LossFileAccessor, LossCalculatable
-  │   └── circuitcomponents/ 22 component cores
+  │   └── circuitcomponents/ 23 component cores
   ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
   ├── datacontainer/       11 classes (signal storage, caching)
   ├── math/                7 classes (matrix ops, LU decomposition, FFT)
@@ -230,7 +233,15 @@ gecko-simulation-core (183 classes extracted):
   ├── GeckoRuntimeException (top-level)
   └── Circuit file parsing: TokenMap (41 tests) - migrated to gecko.core.circuit
 
-Tests (59 test files, 1,686 tests):
+Tests (74 test files, 1,809 tests):
+  ├── circuit/simulation/solver/ 25 test files (360+ tests) ✨ SPRINT 6 NEW
+  │   ├── MatrixSolver tests (MNA matrix stamping, LU decomposition, history shifting)
+  │   ├── ComponentCurrentCalculator tests (R/L/C/switch/source current calculation)
+  │   ├── InitialConditionSolver tests (capacitor voltage/inductor current init)
+  │   ├── DomainCoupler tests (electrical-control-thermal coupling)
+  │   ├── CircuitNetlist & NetlistBuilder tests (topology, parameter management)
+  │   ├── SimulationProgress tests (progress tracking, ETA calculation)
+  │   └── Integration tests (RLC circuits, real solver validation)
   ├── circuit/losscalculation/ 10 test files (180+ tests) ✨ SPRINT 4B
   │   ├── Loss curve tests (LossCurve, SwitchingLossCurve, LeitverlusteMesskurve)
   │   ├── Interpolation tests (DetailedLossLookupTable)
