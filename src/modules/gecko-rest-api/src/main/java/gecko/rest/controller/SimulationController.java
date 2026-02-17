@@ -12,8 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -177,6 +179,34 @@ public class SimulationController {
         result.put("progress", simulationService.getSimulationProgress(simulationId));
         result.put("isRunning", simulationService.isRunning(simulationId));
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Stream simulation progress via Server-Sent Events (SSE).
+     * Opens a persistent connection that streams progress updates in real-time.
+     *
+     * @param simulationId ID of the simulation
+     * @param timeoutMs SSE connection timeout in milliseconds (default: 300000 = 5 minutes)
+     * @return SSE emitter for streaming progress events
+     */
+    @GetMapping(value = "/{simulationId}/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation(summary = "Stream simulation progress",
+               description = "Real-time Server-Sent Events stream. Events: 'progress', 'status', 'complete', 'error'")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "SSE stream established"),
+            @ApiResponse(responseCode = "404", description = "Simulation not found")
+    })
+    public ResponseEntity<SseEmitter> streamProgress(
+            @Parameter(description = "Simulation ID", example = "123e4567-e89b-12d3-a456-426614174000")
+            @PathVariable String simulationId,
+            @Parameter(description = "SSE connection timeout in milliseconds")
+            @RequestParam(defaultValue = "300000") long timeoutMs) {
+
+        SseEmitter emitter = simulationService.registerProgressStream(simulationId, timeoutMs);
+        if (emitter == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(emitter);
     }
 
     /**
