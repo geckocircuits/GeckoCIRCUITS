@@ -18,6 +18,7 @@ import gecko.core.datacontainer.ContainerStatus;
 import gecko.core.datacontainer.DataContainerGlobal;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitModel;
+import gecko.core.io.ParameterOverrideApplicator;
 import gecko.core.simulation.solver.MatrixSolver;
 import gecko.core.simulation.solver.ComponentCurrentCalculator;
 import gecko.core.simulation.solver.InitialConditionSolver;
@@ -155,6 +156,11 @@ public class HeadlessSimulationEngine {
         initialConditionSolver = new InitialConditionSolver(settings.getSolverType());
 
         // Build netlists from circuit model
+        // Apply parameter overrides before building the netlist
+        if (circuitModel != null && !config.getParameterOverrides().isEmpty()) {
+            ParameterOverrideApplicator.applyOverrides(circuitModel, config.getParameterOverrides());
+        }
+
         circuitNetlist = NetlistBuilder.buildFromCircuitModel(circuitModel);
         controlNetlist = ControlNetlist.createEmpty();
 
