@@ -18,6 +18,12 @@ import gecko.core.datacontainer.ContainerStatus;
 import gecko.core.datacontainer.DataContainerGlobal;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitModel;
+import gecko.core.simulation.solver.MatrixSolver;
+import gecko.core.simulation.solver.ComponentCurrentCalculator;
+import gecko.core.simulation.solver.InitialConditionSolver;
+import gecko.core.circuit.netlist.CircuitNetlist;
+import gecko.core.circuit.netlist.NetlistBuilder;
+import gecko.core.simulation.ControlNetlist;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -70,6 +76,15 @@ public class HeadlessSimulationEngine {
 
     // Event listener
     private SimulationProgressListener progressListener;
+
+    // Solver components
+    private MatrixSolver matrixSolver;
+    private ComponentCurrentCalculator componentCurrentCalculator;
+    private InitialConditionSolver initialConditionSolver;
+
+    // Circuit and control netlists
+    private CircuitNetlist circuitNetlist;
+    private ControlNetlist controlNetlist;
 
     /**
      * Creates a new HeadlessSimulationEngine.
@@ -130,6 +145,30 @@ public class HeadlessSimulationEngine {
         dataContainer.init(signalNames.length, expectedSteps + 1, signalNames, "time [s]");
         dataContainer.setContainerStatus(ContainerStatus.RUNNING);
 
+        // Initialize matrix solver
+        matrixSolver = new MatrixSolver(settings.getSolverType());
+        componentCurrentCalculator = new ComponentCurrentCalculator();
+        initialConditionSolver = new InitialConditionSolver(settings.getSolverType());
+
+        // Build netlists from circuit model
+        circuitNetlist = NetlistBuilder.buildFromCircuitModel(circuitModel);
+        controlNetlist = ControlNetlist.createEmpty();
+
+        // Re-initialize matrix solver with real netlist dimensions
+        if (circuitNetlist.getElementCount() > 0) {
+            matrixSolver.initializeMatrices(
+                circuitNetlist.getNodeMax(),
+                circuitNetlist.getVoltageSourceMax(),
+                circuitNetlist.getElementCount()
+            );
+        } else {
+            // Fallback for empty circuit: use signal-based dimensions
+            int nodeCount = signalNames.length;
+            int voltageSourceCount = 0;
+            int elementCount = signalNames.length;
+            matrixSolver.initializeMatrices(nodeCount, voltageSourceCount, elementCount);
+        }
+
         // Main simulation loop
         // Note: This is a placeholder implementation. In production, this would
         // integrate with the actual SimulationsKern or circuit solver.
@@ -147,11 +186,33 @@ public class HeadlessSimulationEngine {
                         .build();
             }
 
-            // Placeholder: Generate test waveforms
-            // In production, this would call the actual solver
-            values[0] = (float) (5.0 * Math.sin(2 * Math.PI * 1000 * currentTime)); // V_out
-            values[1] = (float) (0.5 * Math.sin(2 * Math.PI * 1000 * currentTime + 0.5)); // I_in
-            values[2] = (float) Math.abs(values[0] * values[1]); // P_loss
+            // MatrixSolver is initialized and ready for real circuit simulation.
+            // When a proper INetList is available from circuit parsing (Phase 3),
+            // call: matrixSolver.buildMatrixA(netlist, dt, currentTime, false);
+            //       matrixSolver.buildVectorB(netlist, dt, currentTime, false);
+            //       matrixSolver.solve();
+            //       componentCurrentCalculator.calculateComponentCurrents(...);
+            //       matrixSolver.updateNodePotentials(dt, currentTime);
+
+            // Execute control blocks (empty for now, populated in Phase 4)
+            if (controlNetlist.hasCalculators()) {
+                controlNetlist.executeTimeStep(dt, currentTime);
+            }
+
+            // Placeholder waveforms (replaced in Phase 3 with real solver):
+            if (matrixSolver != null && matrixSolver.getP() != null) {
+                // Use solver state if available
+                values[0] = (float) currentTime; // Will be replaced with real node voltage
+            } else {
+                values[0] = (float) (5.0 * Math.sin(2 * Math.PI * 1000 * currentTime));
+            }
+            values[1] = (float) (0.5 * Math.sin(2 * Math.PI * 1000 * currentTime + 0.5));
+            values[2] = (float) Math.abs(values[0] * values[1]);
+
+            // Store results in netlist for data extraction
+            if (circuitNetlist != null) {
+                circuitNetlist.storeResults(matrixSolver.getP(), matrixSolver.getIALT());
+            }
 
             // Store data (respecting logging interval)
             if (config.isDataLoggingEnabled() &&
