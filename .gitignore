@@ -58,6 +58,7 @@ site/
 .DS_Store
 Thumbs.db
 .directory
+*:Zone.Identifier
 
 # Validation outputs
 validation_report.json
