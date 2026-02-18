@@ -16,6 +16,11 @@ package gecko.core.circuit.netlist;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.io.CircuitModel;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Factory class for building CircuitNetlist from various sources.
  *
@@ -27,7 +32,8 @@ import gecko.core.io.CircuitModel;
  * models into executable netlist representations. Current implementation provides:
  * <ul>
  *   <li>Empty netlist creation for testing matrix solvers</li>
- *   <li>Netlist construction from CircuitModel with dimension estimation</li>
+ *   <li>Netlist construction from CircuitModel with topology extraction via label matching</li>
+ *   <li>Graceful fallback to dimension estimation when labels are unavailable</li>
  * </ul>
  *
  * @author Phase 3 - Circuit Extraction Refactoring
@@ -110,30 +116,154 @@ public class NetlistBuilder {
      * suitable for simulation. The CircuitModel contains component lists and connection
      * information extracted from .ipes circuit files.</p>
      *
-     * <p>Current implementation:
+     * <p>Implementation:
      * <ul>
-     *   <li>Estimates node and voltage source counts from component counts</li>
-     *   <li>Creates empty netlist with appropriate dimensions</li>
-     *   <li>Returns null safely if model is null</li>
+     *   <li>Collects all components from circuit, control, and thermal lists</li>
+     *   <li>Attempts topology extraction via label matching if labels are present</li>
+     *   <li>Falls back to dimension estimation if labels are unavailable</li>
+     *   <li>Assigns voltage source numbers to voltage sources and coupable inductors</li>
+     *   <li>Extracts component parameters from parsed model</li>
+     *   <li>Initializes netlist with proper node and voltage source counts</li>
      * </ul>
      *
-     * <p>Full topology extraction (node assignments, connection resolution) will be
-     * implemented when component parsing is complete in the CircuitFileParser.</p>
-     *
      * @param model circuit model from CircuitFileParser, may be null
-     * @return configured CircuitNetlist, or empty netlist if model is null
+     * @return configured CircuitNetlist with extracted or estimated topology, or empty netlist if model is null
      *
-     * @see CircuitModel#getTotalComponentCount()
      * @see CircuitModel#getCircuitComponents()
-     * @see CircuitModel#getConnections()
+     * @see CircuitModel#getControlComponents()
+     * @see CircuitModel#getThermalComponents()
+     * @see CircuitModel#getTotalComponentCount()
      */
     public static CircuitNetlist buildFromCircuitModel(CircuitModel model) {
         if (model == null) {
             return buildEmpty(0, 0, 0);
         }
 
-        // Get component counts from model
-        int totalComponents = model.getTotalComponentCount();
+        // Collect all components from all lists
+        List<CircuitModel.ComponentData> allComponents = new ArrayList<>();
+        allComponents.addAll(model.getCircuitComponents());
+        allComponents.addAll(model.getControlComponents());
+        allComponents.addAll(model.getThermalComponents());
+
+        if (allComponents.isEmpty()) {
+            return buildEmpty(0, 0, 0);
+        }
+
+        // Check if any component has terminal labels (indicates parsed from file)
+        boolean hasLabels = allComponents.stream()
+                .anyMatch(comp -> comp.getTerminalXLabels().length > 0 || comp.getTerminalYLabels().length > 0);
+
+        if (hasLabels) {
+            // Use label-based topology extraction
+            return buildFromComponentsWithLabels(allComponents);
+        } else {
+            // Fall back to dimension estimation for backward compatibility
+            return buildWithEstimatedDimensions(allComponents);
+        }
+    }
+
+    /**
+     * Build netlist from components that have terminal labels (from .ipes file parsing).
+     *
+     * <p>Extracts topology through label matching:
+     * <ul>
+     *   <li>Builds a label-to-node mapping</li>
+     *   <li>Resolves component connectivity through label matching</li>
+     *   <li>Assigns voltage source numbers</li>
+     * </ul>
+     */
+    private static CircuitNetlist buildFromComponentsWithLabels(List<CircuitModel.ComponentData> components) {
+        // Step 1: Build node label → index map
+        // Ground reference: label "0" or "" → node 0
+        Map<String, Integer> labelToNode = new LinkedHashMap<>();
+        labelToNode.put("0", 0);
+        labelToNode.put("", 0);  // Empty label also maps to ground
+        int nextNode = 1;
+
+        for (CircuitModel.ComponentData comp : components) {
+            for (String label : comp.getTerminalXLabels()) {
+                if (!labelToNode.containsKey(label)) {
+                    labelToNode.put(label, nextNode++);
+                }
+            }
+            for (String label : comp.getTerminalYLabels()) {
+                if (!labelToNode.containsKey(label)) {
+                    labelToNode.put(label, nextNode++);
+                }
+            }
+        }
+
+        int nodeCount = nextNode;
+        int elementCount = components.size();
+
+        // Step 2: Assign voltage source numbers
+        int voltageSourceCount = 0;
+        int[] voltageSourceNumbers = new int[elementCount];
+        CircuitTypCore[] types = new CircuitTypCore[elementCount];
+
+        for (int i = 0; i < elementCount; i++) {
+            CircuitModel.ComponentData comp = components.get(i);
+            CircuitTypCore typ;
+            try {
+                typ = CircuitTypCore.fromTypeNumber(comp.getType());
+            } catch (IllegalArgumentException e) {
+                // Unknown type - default to resistor
+                typ = CircuitTypCore.LK_R;
+            }
+            types[i] = typ;
+
+            if (typ == CircuitTypCore.LK_U || typ == CircuitTypCore.LK_LKOP2) {
+                voltageSourceNumbers[i] = ++voltageSourceCount;
+            } else {
+                voltageSourceNumbers[i] = -1;
+            }
+        }
+
+        // Step 3: Build node arrays and parameter arrays
+        int[] nodeX = new int[elementCount];
+        int[] nodeY = new int[elementCount];
+        double[][] params = new double[elementCount][10]; // up to 10 params per component
+
+        for (int i = 0; i < elementCount; i++) {
+            CircuitModel.ComponentData comp = components.get(i);
+
+            // Assign X terminal (positive/start)
+            String[] xLabels = comp.getTerminalXLabels();
+            nodeX[i] = xLabels.length > 0 ? labelToNode.getOrDefault(xLabels[0], 0) : 0;
+
+            // Assign Y terminal (negative/end)
+            String[] yLabels = comp.getTerminalYLabels();
+            nodeY[i] = yLabels.length > 0 ? labelToNode.getOrDefault(yLabels[0], 0) : 0;
+
+            // Extract numeric parameters
+            for (int p = 0; p < 10; p++) {
+                Object val = comp.getParameters().get("param" + p);
+                params[i][p] = (val instanceof Number) ? ((Number) val).doubleValue() : 0.0;
+            }
+            // Ensure primary value is set (safety)
+            if (params[i][0] == 0.0) {
+                Object primary = comp.getParameters().get(resolveParameterKey(comp.getType()));
+                if (primary instanceof Number) {
+                    params[i][0] = ((Number) primary).doubleValue();
+                }
+            }
+        }
+
+        // Step 4: Initialize and return netlist
+        CircuitNetlist netlist = new CircuitNetlist();
+        netlist.initNetlist(types, nodeX, nodeY, voltageSourceNumbers, params,
+                nodeCount - 1, voltageSourceCount, elementCount);
+        return netlist;
+    }
+
+    /**
+     * Build netlist with estimated dimensions (backward compatible mode).
+     *
+     * <p>Used when components don't have terminal labels (created programmatically).
+     * Estimates node and voltage source counts based on component count.</p>
+     */
+    private static CircuitNetlist buildWithEstimatedDimensions(List<CircuitModel.ComponentData> components) {
+        int totalComponents = components.size();
 
         // Dimension estimation:
         // - Nodes: assume ~1 node per 2 components (conservative estimate)
@@ -147,5 +277,19 @@ public class NetlistBuilder {
             estimatedVoltageSourceCount,
             totalComponents
         );
+    }
+
+    /**
+     * Returns the semantic parameter key for the primary value of a component type.
+     */
+    private static String resolveParameterKey(int type) {
+        return switch (type) {
+            case 1 -> "resistance";
+            case 2 -> "inductance";
+            case 3 -> "capacitance";
+            case 4 -> "amplitude";
+            case 5 -> "amplitude";
+            default -> "value";
+        };
     }
 }

@@ -14,6 +14,7 @@
 package gecko.core.io;
 
 import gecko.core.allg.SolverType;
+import gecko.core.circuit.TokenMap;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -161,6 +162,9 @@ public class CircuitFileParser {
 
         // Parse signal names
         parseSignalNames(model, lines, tokenMap);
+
+        // Parse circuit components from special blocks
+        parseCircuitComponents(lines, model);
 
         // Validate pre-simulation time step
         if (model.getPreSimulationTimeStep() <= 0) {
@@ -337,6 +341,153 @@ public class CircuitFileParser {
             List<String> signals = readStringArray(lines, tokenMap, "dataContainerSignals[]");
             model.setDataContainerSignals(signals.toArray(new String[0]));
         }
+    }
+
+    /**
+     * Parses all <ElementLK> component blocks from the circuit file.
+     * Each block contains: typ (component type), parameter[] (values),
+     * idStringDialog (name), x, y, labelAnfangsKnoten[], labelEndKnoten[].
+     *
+     * @param lines the raw circuit file lines
+     * @param model the circuit model to populate with components
+     */
+    private void parseCircuitComponents(String[] lines, CircuitModel model) {
+        TokenMap tokenMap = new TokenMap(lines, true);
+
+        TokenMap elementBlock;
+        while ((elementBlock = tokenMap.getSpecialBlockTokenMap("e")) != null) {
+            try {
+                int type = elementBlock.readDataLine("typ", -1);
+                if (type < 0) {
+                    continue;  // skip invalid
+                }
+
+                String name = elementBlock.readDataLine("idStringDialog", "");
+                int x = elementBlock.readDataLine("x", 0);
+                int y = elementBlock.readDataLine("y", 0);
+                int orientation = elementBlock.readDataLine("orientierung", 0);
+
+                // Read parameter array (component values: R, L, C, etc.)
+                // Real .ipes files use space-separated values; test/legacy data may use slash format
+                List<Double> paramsList = readComponentParameters(elementBlock);
+                double[] params = paramsList.stream()
+                        .mapToDouble(v -> v != null ? v : Double.NaN)
+                        .toArray();
+
+                // Read terminal node labels for connectivity
+                String[] xLabels = elementBlock.readDataLine("labelAnfangsKnoten[]", new String[0]);
+                String[] yLabels = elementBlock.readDataLine("labelEndKnoten[]", new String[0]);
+
+                // Build ComponentData
+                CircuitModel.ComponentData comp = new CircuitModel.ComponentData(type, name, x, y, orientation);
+
+                // Store numeric parameters by index
+                for (int i = 0; i < params.length; i++) {
+                    comp.setParameter("param" + i, params[i]);
+                }
+
+                // Also store primary value with a semantic key based on type
+                if (params.length > 0) {
+                    comp.setParameter(resolveParameterKey(type), params[0]);
+                }
+
+                comp.setTerminalXLabels(filterNix(xLabels));
+                comp.setTerminalYLabels(filterNix(yLabels));
+
+                model.addCircuitComponent(comp);
+            } catch (Exception e) {
+                // Skip malformed blocks silently - log if needed
+            }
+        }
+    }
+
+    /**
+     * Reads a double array from a TokenMap, handling "/" separator format used in .ipes files.
+     */
+    private List<Double> readDoubleArrayFromTokenMap(TokenMap tokenMap, String identifier) {
+        List<Double> result = new ArrayList<>();
+        try {
+            String line = tokenMap.getLineString(identifier, "");
+            if (line == null || line.isEmpty()) {
+                return result;
+            }
+
+            // Format: "identifier /value1/value2/value3"
+            int arrayStart = line.indexOf("[] ");
+            if (arrayStart < 0) {
+                return result;
+            }
+
+            String arrayPart = line.substring(arrayStart + 3).trim();
+            if (arrayPart.equals("null")) {
+                return result;
+            }
+
+            // Split by "/" separator
+            String[] parts = arrayPart.split(SEPARATOR_ASCII_STRINGARRAY, -1);
+            for (String part : parts) {
+                String trimmed = part.trim();
+                if (trimmed.isEmpty()) {
+                    result.add(Double.NaN);
+                } else {
+                    try {
+                        result.add(Double.parseDouble(trimmed));
+                    } catch (NumberFormatException e) {
+                        result.add(Double.NaN);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Return empty list if error
+        }
+        return result;
+    }
+
+    /**
+     * Reads the parameter[] array from a component block, handling both formats:
+     * - Space-separated (real .ipes files): {@code parameter[] 0.0024 0.0 0.6886}
+     * - Slash-prefixed (legacy/test format): {@code parameter[] /100.0}
+     */
+    private List<Double> readComponentParameters(TokenMap elementBlock) {
+        // Try space-separated first (real .ipes format via StringTokenizer)
+        List<Double> result = elementBlock.readDataLineDoubleArray("parameter[]");
+        if (result != null && !result.isEmpty()) {
+            return result;
+        }
+        // Fall back to slash-separated format (test/legacy synthetic data)
+        return readDoubleArrayFromTokenMap(elementBlock, "parameter[]");
+    }
+
+    /**
+     * Returns the semantic parameter key for the primary value of a component type.
+     */
+    private static String resolveParameterKey(int type) {
+        return switch (type) {
+            case 1 -> "resistance";     // LK_R
+            case 2 -> "inductance";     // LK_L
+            case 3 -> "capacitance";    // LK_C
+            case 4 -> "amplitude";      // LK_U voltage source
+            case 5 -> "amplitude";      // LK_I current source
+            case 6 -> "forwardVoltage"; // LK_D diode
+            case 7 -> "resistance";     // LK_S ideal switch (on-resistance)
+            default -> "value";
+        };
+    }
+
+    /**
+     * Filters out "NIX_NIX_NIX" placeholder labels, returning real label names only.
+     */
+    private static String[] filterNix(String[] labels) {
+        if (labels == null) {
+            return new String[0];
+        }
+        List<String> filtered = new ArrayList<>();
+        for (String label : labels) {
+            if (label != null && !label.equals("NIX_NIX_NIX") && !label.isBlank()) {
+                filtered.add(label.trim());
+            }
+        }
+        return filtered.toArray(new String[0]);
     }
 
     // ==================== Utility methods ====================

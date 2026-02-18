@@ -318,6 +318,8 @@ public class CircuitModel {
         private final Map<String, Object> parameters;
         private final int[] position; // x, y coordinates
         private final int orientation;
+        private String[] terminalXLabels = new String[0];  // labelAnfangsKnoten[]
+        private String[] terminalYLabels = new String[0];  // labelEndKnoten[]
 
         public ComponentData(int type, String name) {
             this.type = type;
@@ -357,6 +359,22 @@ public class CircuitModel {
 
         public int getOrientation() {
             return orientation;
+        }
+
+        public String[] getTerminalXLabels() {
+            return terminalXLabels;
+        }
+
+        public void setTerminalXLabels(String[] terminalXLabels) {
+            this.terminalXLabels = terminalXLabels != null ? terminalXLabels : new String[0];
+        }
+
+        public String[] getTerminalYLabels() {
+            return terminalYLabels;
+        }
+
+        public void setTerminalYLabels(String[] terminalYLabels) {
+            this.terminalYLabels = terminalYLabels != null ? terminalYLabels : new String[0];
         }
 
         @Override

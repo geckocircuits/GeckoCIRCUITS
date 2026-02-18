@@ -381,4 +381,130 @@ class CircuitFileParserTest {
         assertFalse(resolver.hasLabel("A"));
         assertFalse(resolver.hasLabelAtIndex(3));
     }
+
+    @Test
+    void parse_circuitComponents_parsesElementLKBlocks() throws Exception {
+        String content = """
+            tDURATION 0.02
+            dt 1e-6
+            e
+            <ElementLK>
+            typ 1
+            idStringDialog R1
+            x 10
+            y 20
+            orientierung 0
+            parameter[] /100.0
+            labelAnfangsKnoten[] /N1
+            labelEndKnoten[] /0
+            <\\ElementLK>
+            e
+            <ElementLK>
+            typ 2
+            idStringDialog L1
+            x 30
+            y 40
+            orientierung 90
+            parameter[] /0.001
+            labelAnfangsKnoten[] /N1
+            labelEndKnoten[] /N2
+            <\\ElementLK>
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        // Should have parsed 2 components
+        assertEquals(2, model.getCircuitComponents().size(), "Should have 2 circuit components");
+
+        // Check first component (resistor)
+        CircuitModel.ComponentData comp1 = model.getCircuitComponents().get(0);
+        assertEquals(1, comp1.getType(), "First component should be resistor type 1");
+        assertEquals("R1", comp1.getName(), "First component name should be R1");
+        assertEquals(10, comp1.getPosition()[0], "X position should be 10");
+        assertEquals(20, comp1.getPosition()[1], "Y position should be 20");
+        assertEquals(0, comp1.getOrientation(), "Orientation should be 0");
+        // Check that at least the primary parameter was stored
+        assertTrue(comp1.getParameters().containsKey("resistance") || comp1.getParameters().containsKey("param0"),
+                "Should have stored resistance parameter");
+        assertEquals("N1", comp1.getTerminalXLabels()[0], "X label should be N1");
+        assertEquals("0", comp1.getTerminalYLabels()[0], "Y label should be 0");
+
+        // Check second component (inductor)
+        CircuitModel.ComponentData comp2 = model.getCircuitComponents().get(1);
+        assertEquals(2, comp2.getType(), "Second component should be inductor type 2");
+        assertEquals("L1", comp2.getName(), "Second component name should be L1");
+        assertEquals(30, comp2.getPosition()[0], "X position should be 30");
+        assertEquals(40, comp2.getPosition()[1], "Y position should be 40");
+        assertEquals(90, comp2.getOrientation(), "Orientation should be 90");
+        assertTrue(comp2.getParameters().containsKey("inductance") || comp2.getParameters().containsKey("param0"),
+                "Should have stored inductance parameter");
+        assertEquals("N1", comp2.getTerminalXLabels()[0], "X label should be N1");
+        assertEquals("N2", comp2.getTerminalYLabels()[0], "Y label should be N2");
+    }
+
+    @Test
+    void parse_circuitComponents_filtersNixLabels() throws Exception {
+        String content = """
+            tDURATION 0.02
+            dt 1e-6
+            e
+            <ElementLK>
+            typ 1
+            idStringDialog R1
+            x 0
+            y 0
+            orientierung 0
+            parameter[] /50.0
+            labelAnfangsKnoten[] /NIX_NIX_NIX
+            labelEndKnoten[] /NIX_NIX_NIX
+            <\\ElementLK>
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertEquals(1, model.getCircuitComponents().size());
+        CircuitModel.ComponentData comp = model.getCircuitComponents().get(0);
+        // NIX labels should be filtered out
+        assertEquals(0, comp.getTerminalXLabels().length, "NIX labels should be filtered");
+        assertEquals(0, comp.getTerminalYLabels().length, "NIX labels should be filtered");
+    }
+
+    @Test
+    void parse_circuitComponents_emptyComponentsList() throws Exception {
+        String content = """
+            tDURATION 0.02
+            dt 1e-6
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertEquals(0, model.getCircuitComponents().size(), "Should have no components when none are present");
+    }
+
+    @Test
+    void parse_circuitComponents_multipleParameters() throws Exception {
+        String content = """
+            tDURATION 0.02
+            dt 1e-6
+            e
+            <ElementLK>
+            typ 23
+            idStringDialog TRANS1
+            x 50
+            y 60
+            orientierung 180
+            parameter[] /1.0/2.0/3.0/4.0/5.0
+            labelAnfangsKnoten[] /IN
+            labelEndKnoten[] /OUT
+            <\\ElementLK>
+            """;
+
+        CircuitModel model = parser.parse(new BufferedReader(new StringReader(content)), "test.ipes");
+
+        assertEquals(1, model.getCircuitComponents().size());
+        CircuitModel.ComponentData comp = model.getCircuitComponents().get(0);
+        
+        // Should have stored all parameters by index
+        assertTrue(comp.getParameters().size() >= 5, "Should have stored at least 5 parameters");
+    }
 }
