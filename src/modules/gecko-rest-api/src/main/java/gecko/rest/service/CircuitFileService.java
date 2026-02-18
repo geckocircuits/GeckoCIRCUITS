@@ -2,9 +2,12 @@ package gecko.rest.service;
 
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitModel;
+import gecko.core.io.ParameterOverrideApplicator;
 import gecko.rest.model.circuit.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.time.Instant;
@@ -211,6 +214,97 @@ public class CircuitFileService {
         return new CircuitListResponse(summaries, summaries.size());
     }
 
+    /**
+     * Clone an existing circuit with optional parameter overrides.
+     * Creates a new independent copy that can be modified without affecting the original.
+     *
+     * @param circuitId the source circuit ID
+     * @param overrides optional parameter overrides (dot-notation ComponentName.parameterKey)
+     * @return response containing new circuit ID and metadata
+     * @throws ResponseStatusException 404 if circuit not found
+     */
+    public CircuitLoadResponse cloneCircuit(String circuitId, Map<String, Double> overrides) {
+        ParsedCircuit sourceParsed = circuits.get(circuitId);
+        if (sourceParsed == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Circuit not found: " + circuitId
+            );
+        }
+
+        try {
+            // Create a new model by copying key properties from the original
+            CircuitModel originalModel = sourceParsed.model;
+            CircuitModel newModel = copyCircuitModel(originalModel);
+
+            // Apply parameter overrides if provided
+            if (overrides != null && !overrides.isEmpty()) {
+                ParameterOverrideApplicator.applyOverrides(newModel, overrides);
+            }
+
+            // Generate unique circuit ID
+            String newCircuitId = UUID.randomUUID().toString();
+
+            // Create parsed circuit with timestamp
+            ParsedCircuit newParsed = new ParsedCircuit(
+                sourceParsed.filename,
+                newModel,
+                Instant.now()
+            );
+
+            // Store in memory
+            circuits.put(newCircuitId, newParsed);
+
+            return CircuitLoadResponse.success(newCircuitId, sourceParsed.filename, newModel.getTotalComponentCount());
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Failed to clone circuit: " + e.getMessage(),
+                e
+            );
+        }
+    }
+
+    /**
+     * Update simulation parameters of a loaded circuit.
+     * Only provided parameters are updated; null values are ignored.
+     *
+     * @param circuitId the circuit ID to update
+     * @param update parameter update request
+     * @return updated circuit info
+     * @throws ResponseStatusException 404 if circuit not found
+     */
+    public CircuitInfo updateCircuitParameters(String circuitId, CircuitParameterUpdate update) {
+        ParsedCircuit parsed = circuits.get(circuitId);
+        if (parsed == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Circuit not found: " + circuitId
+            );
+        }
+
+        CircuitModel model = parsed.model;
+
+        // Update simulation duration if provided
+        if (update.getSimulationDuration() != null) {
+            model.setSimulationDuration(update.getSimulationDuration());
+        }
+
+        // Update time step if provided
+        if (update.getTimeStep() != null) {
+            model.setTimeStep(update.getTimeStep());
+        }
+
+        // Update solver type if provided
+        if (update.getSolverType() != null) {
+            gecko.core.allg.SolverType solverType = stringSolverType(update.getSolverType());
+            model.setSolverType(solverType);
+        }
+
+        return getCircuitInfo(circuitId);
+    }
+
     // ========== Private Helper Methods ==========
 
     private CircuitLoadResponse loadCircuitFromBytes(byte[] content, String filename) {
@@ -248,6 +342,97 @@ public class CircuitFileService {
         }
     }
 
+    /**
+     * Creates a deep copy of a CircuitModel by copying all essential fields.
+     * Component lists are copied element-by-element.
+     */
+    private CircuitModel copyCircuitModel(CircuitModel source) {
+        CircuitModel copy = new CircuitModel();
+
+        // Copy simulation parameters
+        copy.setSimulationDuration(source.getSimulationDuration());
+        copy.setTimeStep(source.getTimeStep());
+        copy.setPreSimulationTime(source.getPreSimulationTime());
+        copy.setPreSimulationTimeStep(source.getPreSimulationTimeStep());
+        copy.setPauseTime(source.getPauseTime());
+        copy.setSolverType(source.getSolverType());
+
+        // Copy file metadata
+        copy.setFilePath(source.getFilePath());
+        copy.setFileVersion(source.getFileVersion());
+        copy.setUniqueFileId(source.getUniqueFileId());
+        copy.setCreationDate(source.getCreationDate());
+
+        // Copy display settings
+        copy.setDisplayPixels(source.getDisplayPixels());
+        copy.setFontSize(source.getFontSize());
+        copy.setFontType(source.getFontType());
+        copy.setWindowWidth(source.getWindowWidth());
+        copy.setWindowHeight(source.getWindowHeight());
+
+        // Deep copy component lists (copy each component)
+        for (CircuitModel.ComponentData comp : source.getCircuitComponents()) {
+            copy.getCircuitComponents().add(copyComponentData(comp));
+        }
+        for (CircuitModel.ComponentData comp : source.getControlComponents()) {
+            copy.getControlComponents().add(copyComponentData(comp));
+        }
+        for (CircuitModel.ComponentData comp : source.getThermalComponents()) {
+            copy.getThermalComponents().add(copyComponentData(comp));
+        }
+
+        // Deep copy connections
+        for (CircuitModel.ConnectionData conn : source.getConnections()) {
+            copy.getConnections().add(copyConnectionData(conn));
+        }
+
+        // Copy optimizer parameters
+        copy.getOptimizerParameters().putAll(source.getOptimizerParameters());
+
+        // Copy data container signals
+        if (source.getDataContainerSignals() != null) {
+            copy.setDataContainerSignals(source.getDataContainerSignals().clone());
+        }
+
+        // Copy scripting code
+        copy.setScripterCode(source.getScripterCode());
+        copy.setScripterImports(source.getScripterImports());
+        copy.setScripterDeclarations(source.getScripterDeclarations());
+
+        return copy;
+    }
+
+    /**
+     * Creates a copy of ComponentData with independent parameter map.
+     */
+    private CircuitModel.ComponentData copyComponentData(CircuitModel.ComponentData source) {
+        CircuitModel.ComponentData copy = new CircuitModel.ComponentData(
+            source.getType(),
+            source.getName(),
+            source.getPosition()[0],
+            source.getPosition()[1],
+            source.getOrientation()
+        );
+
+        // Deep copy parameters
+        if (source.getParameters() != null) {
+            source.getParameters().forEach((key, value) -> copy.setParameter(key, value));
+        }
+
+        return copy;
+    }
+
+    /**
+     * Creates a copy of ConnectionData.
+     */
+    private CircuitModel.ConnectionData copyConnectionData(CircuitModel.ConnectionData source) {
+        int[][] pointsCopy = new int[source.getPoints().length][];
+        for (int i = 0; i < source.getPoints().length; i++) {
+            pointsCopy[i] = source.getPoints()[i].clone();
+        }
+        return new CircuitModel.ConnectionData(source.getType(), pointsCopy);
+    }
+
     private ComponentInfo componentDataToInfo(CircuitModel.ComponentData comp, String domain) {
         return new ComponentInfo(
             comp.getType(),
@@ -264,6 +449,18 @@ public class CircuitFileService {
             case SOLVER_BE -> "backward-euler";
             case SOLVER_TRZ -> "trapezoidal";
             case SOLVER_GS -> "gear-shichman";
+        };
+    }
+
+    private gecko.core.allg.SolverType stringSolverType(String solverType) {
+        if (solverType == null) {
+            return gecko.core.allg.SolverType.SOLVER_BE;
+        }
+
+        return switch (solverType.toLowerCase()) {
+            case "trapezoidal", "trz" -> gecko.core.allg.SolverType.SOLVER_TRZ;
+            case "gear-shichman", "gs" -> gecko.core.allg.SolverType.SOLVER_GS;
+            default -> gecko.core.allg.SolverType.SOLVER_BE;
         };
     }
 

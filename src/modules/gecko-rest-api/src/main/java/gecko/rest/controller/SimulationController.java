@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import gecko.rest.model.BatchSimulationRequest;
 import gecko.rest.model.BatchSimulationResponse;
+import gecko.rest.model.BatchJobStatus;
 
 
 /**
@@ -377,6 +378,45 @@ public class SimulationController {
             @Valid @RequestBody BatchSimulationRequest batchRequest) {
         BatchSimulationResponse response = simulationService.submitBatch(batchRequest);
         return ResponseEntity.status(201).body(response);
+    }
+
+    /**
+     * Get batch job status.
+     * Returns status summary for all simulations in a batch.
+     *
+     * @param batchId Batch identifier
+     * @return Batch status with progress information
+     */
+    @GetMapping("/batch/{batchId}")
+    @Operation(summary = "Get batch job status",
+            description = "Returns status summary for all simulations in a batch")
+    @ApiResponse(responseCode = "200", description = "Batch status retrieved")
+    @ApiResponse(responseCode = "404", description = "Batch not found")
+    public ResponseEntity<BatchJobStatus> getBatchStatus(@PathVariable String batchId) {
+        BatchJobStatus status = simulationService.getBatchStatus(batchId);
+        if (status == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(status);
+    }
+
+    /**
+     * Cancel all simulations in a batch.
+     *
+     * @param batchId Batch identifier
+     * @return No content response
+     */
+    @DeleteMapping("/batch/{batchId}")
+    @Operation(summary = "Cancel all simulations in a batch")
+    @ApiResponse(responseCode = "204", description = "Batch cancelled")
+    @ApiResponse(responseCode = "404", description = "Batch not found")
+    public ResponseEntity<Void> cancelBatch(@PathVariable String batchId) {
+        BatchSimulationResponse batch = simulationService.getBatch(batchId);
+        if (batch == null) {
+            return ResponseEntity.notFound().build();
+        }
+        simulationService.cancelBatch(batchId);
+        return ResponseEntity.noContent().build();
     }
 
 }

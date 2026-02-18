@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import gecko.rest.model.BatchSimulationRequest;
 import gecko.rest.model.BatchSimulationResponse;
+import gecko.rest.model.BatchJobStatus;
 
 
 /**
@@ -42,6 +43,7 @@ public class SimulationService {
     private final Map<String, SimulationResponse> simulationStore = new ConcurrentHashMap<>();
     private final Map<String, HeadlessSimulationEngine> runningEngines = new ConcurrentHashMap<>();
     private final Map<String, List<SseEmitter>> progressEmitters = new ConcurrentHashMap<>();
+    private final Map<String, BatchSimulationResponse> batchStore = new ConcurrentHashMap<>();
     private final ExecutorService executorService = Executors.newFixedThreadPool(
             Math.max(2, Runtime.getRuntime().availableProcessors() - 1)
     );
@@ -365,6 +367,7 @@ public class SimulationService {
         runningEngines.clear();
         simulationStore.clear();
         progressEmitters.clear();
+        batchStore.clear();
     }
 
     /**
@@ -533,8 +536,100 @@ public class SimulationService {
         }
 
         String batchId = UUID.randomUUID().toString();
-        return new BatchSimulationResponse(batchId, simulationIds,
+        BatchSimulationResponse batchResponse = new BatchSimulationResponse(batchId, simulationIds,
                 batchRequest.getMaxConcurrent() != null ? batchRequest.getMaxConcurrent() : 4);
+        
+        // Store batch for later retrieval
+        batchStore.put(batchId, batchResponse);
+        logger.info("Submitted batch {} with {} simulations", batchId, simulationIds.size());
+        
+        return batchResponse;
+    }
+
+    /**
+     * Get batch status by batch ID.
+     * Returns null if batch not found.
+     *
+     * @param batchId Batch identifier
+     * @return BatchJobStatus with aggregated status for all simulations in batch, or null if not found
+     */
+    public BatchJobStatus getBatchStatus(String batchId) {
+        BatchSimulationResponse batch = batchStore.get(batchId);
+        if (batch == null) {
+            return null;
+        }
+
+        BatchJobStatus status = new BatchJobStatus();
+        status.setBatchId(batchId);
+        status.setTotal(batch.getTotalSimulations());
+        status.setSubmittedAt(batch.getSubmittedAt());
+
+        int completed = 0;
+        int failed = 0;
+        int running = 0;
+        int pending = 0;
+        List<String> failedIds = new ArrayList<>();
+        Map<String, String> simStatuses = new ConcurrentHashMap<>();
+
+        for (String simId : batch.getSimulationIds()) {
+            SimulationResponse sim = getSimulation(simId);
+            if (sim != null) {
+                SimulationResponse.SimulationStatus simStatus = sim.getStatus();
+                simStatuses.put(simId, simStatus.toString());
+
+                switch (simStatus) {
+                    case COMPLETED -> completed++;
+                    case FAILED -> {
+                        failed++;
+                        failedIds.add(simId);
+                    }
+                    case RUNNING -> running++;
+                    case PENDING -> pending++;
+                }
+            }
+        }
+
+        status.setCompleted(completed);
+        status.setFailed(failed);
+        status.setRunning(running);
+        status.setPending(pending);
+        status.setOverallProgress((completed + failed) * 100.0 / status.getTotal());
+        status.setDone((completed + failed) == status.getTotal());
+        status.setSimulationStatuses(simStatuses);
+        status.setFailedIds(failedIds.isEmpty() ? null : failedIds);
+
+        return status;
+    }
+
+    /**
+     * Get batch by ID.
+     * Returns null if batch not found.
+     *
+     * @param batchId Batch identifier
+     * @return BatchSimulationResponse or null if not found
+     */
+    public BatchSimulationResponse getBatch(String batchId) {
+        return batchStore.get(batchId);
+    }
+
+    /**
+     * Cancel all simulations in a batch.
+     * Returns null if batch not found.
+     *
+     * @param batchId Batch identifier
+     * @return true if batch was found and cancellation was requested
+     */
+    public boolean cancelBatch(String batchId) {
+        BatchSimulationResponse batch = batchStore.get(batchId);
+        if (batch == null) {
+            return false;
+        }
+
+        for (String simId : batch.getSimulationIds()) {
+            cancelSimulation(simId);
+        }
+        logger.info("Cancelled all {} simulations in batch {}", batch.getSimulationIds().size(), batchId);
+        return true;
     }
 
     private List<java.util.Map<String, Double>> expandParameterSets(BatchSimulationRequest req) {

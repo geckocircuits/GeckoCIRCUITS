@@ -277,4 +277,71 @@ public class CircuitFileController {
         CircuitListResponse response = circuitFileService.getAllCircuits();
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * Clone an existing circuit with optional parameter overrides.
+     */
+    @PostMapping("/{circuitId}/clone")
+    @Operation(
+        summary = "Clone a circuit",
+        description = "Creates a copy of the circuit with optional parameter overrides. " +
+                     "Overrides use dot-notation format (ComponentName.parameterKey)."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Circuit cloned successfully",
+            content = @Content(schema = @Schema(implementation = CircuitLoadResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Source circuit not found"
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Failed to clone circuit"
+        )
+    })
+    public ResponseEntity<CircuitLoadResponse> cloneCircuit(
+            @Parameter(description = "Source circuit ID")
+            @PathVariable String circuitId,
+            @RequestBody(required = false) CircuitCloneRequest request) {
+
+        java.util.Map<String, Double> overrides = request != null ? request.getOverrides() : null;
+        CircuitLoadResponse response = circuitFileService.cloneCircuit(circuitId, overrides);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Update circuit simulation parameters.
+     */
+    @PutMapping("/{circuitId}/parameters")
+    @Operation(
+        summary = "Update circuit parameters",
+        description = "Updates simulation parameters of a loaded circuit in-memory. " +
+                     "Only provided fields are updated; null values are ignored."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Parameters updated",
+            content = @Content(schema = @Schema(implementation = CircuitInfo.class))
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Circuit not found"
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Failed to update parameters"
+        )
+    })
+    public ResponseEntity<CircuitInfo> updateCircuitParameters(
+            @Parameter(description = "Circuit ID")
+            @PathVariable String circuitId,
+            @Valid @RequestBody CircuitParameterUpdate update) {
+
+        CircuitInfo info = circuitFileService.updateCircuitParameters(circuitId, update);
+        return ResponseEntity.ok(info);
+    }
 }
