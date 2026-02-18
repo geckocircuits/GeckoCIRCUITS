@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Uses MockMvc with a mocked SimulationService.
  */
 @WebMvcTest(SimulationController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, gecko.rest.config.TestSecurityConfig.class})
 class BatchSimulationControllerTest {
 
     @Autowired

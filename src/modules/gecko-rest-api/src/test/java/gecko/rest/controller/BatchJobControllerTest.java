@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Tests getBatchStatus and cancelBatch endpoints.
  */
 @WebMvcTest(SimulationController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, gecko.rest.config.TestSecurityConfig.class})
 class BatchJobControllerTest {
 
     @Autowired

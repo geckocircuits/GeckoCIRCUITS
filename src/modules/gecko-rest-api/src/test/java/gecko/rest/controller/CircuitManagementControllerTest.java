@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit tests for circuit management endpoints (clone and parameter update).
  */
 @WebMvcTest(CircuitFileController.class)
+@Import(gecko.rest.config.TestSecurityConfig.class)
 class CircuitManagementControllerTest {
 
     @Autowired
