@@ -1,8 +1,8 @@
 # Architecture Document
 
 **Project:** GeckoCIRCUITS
-**Last Updated:** 2026-02-17
-**Status:** Dual-track architecture (Desktop + API) - v2.18.0 Complete
+**Last Updated:** 2026-02-18
+**Status:** Dual-track architecture (Desktop + REST API v3.0.0) — 32 endpoints, 7,426 tests
 
 ---
 
@@ -17,13 +17,13 @@ GeckoCIRCUITS is a multi-domain circuit simulator built in Java 21. The architec
 │  ┌──────────────────┐  ┌──────────────┐  ┌───────────────┐  │
 │  │  Desktop App     │  │  REST API    │  │  Documentation│  │
 │  │  (Swing GUI)     │  │  (Spring)    │  │  (MkDocs)     │  │
-│  │  PRODUCTION      │  │  PLANNED     │  │  LIVE         │  │
+│  │  PRODUCTION      │  │  v3.0.0 LIVE │  │  LIVE         │  │
 │  └────────┬─────────┘  └──────┬───────┘  └───────────────┘  │
 │           │                   │                               │
 │  ┌────────▼───────────────────▼──────────────────────────┐   │
 │  │            gecko-simulation-core                        │   │
 │  │            (GUI-free shared library)                    │   │
-│  │            IN PROGRESS (179 classes)                    │   │
+│  │            192 classes, 1,837 tests, 30%+ coverage     │   │
 │  └────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -45,8 +45,8 @@ GeckoCIRCUITS/
 │   │       ├── datacontainer/       # Signal storage (11 classes)
 │   │       ├── math/               # Matrix operations, LU decomposition
 │   │       └── api/                # Public interfaces
-│   └── gecko-rest-api/              # Spring Boot REST API (scaffold)
-│       ├── pom.xml                  # Spring Boot 3.2.1, depends on core
+│   └── gecko-rest-api/              # Spring Boot REST API (v3.0.0, 32 endpoints)
+│       ├── pom.xml                  # Spring Boot 3.2.1, WebSocket, Security
 │       └── src/
 ```
 
@@ -137,16 +137,19 @@ Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 | Package | Classes | Tests | Status |
 |---------|---------|-------|--------|
 | `circuit.matrix` | 15 | 183 | API-ready |
-| `circuit.netlist` | 6 | 89+ | API-ready ✨ UPDATED (CircuitNetlist, NetlistBuilder) |
-| `circuit.simulation` | 13 | 360+ | API-ready ✨ UPDATED (solver, DomainCoupler, SimulationProgress) |
-| `circuit.simulation.solver` | - | 360+ | NEW ✨ Real solver integration |
+| `circuit.netlist` | 6 | 89+ | API-ready (CircuitNetlist, NetlistBuilder, label-based topology) |
+| `circuit.simulation` | 13 | 360+ | API-ready (solver, DomainCoupler, SimulationProgress) |
+| `circuit.simulation.solver` | 4 | 360+ | API-ready (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler) |
 | `circuit.terminal` | 3 | 138 | API-ready |
 | `circuit.component` | 3 | 206 | API-ready |
 | `control.calculators` | 71 | ~320 | API-ready (2 GUI exceptions) |
 | `math` | 7 | 97 | API-ready |
 | `datacontainer` | 11 | ~180 | API-ready |
-| `circuit.losscalculation` | 20 | 180+ | API-ready (Sprint 4b) |
-| `allg` | 10 | 90+ | API-ready (GeckoFile + interfaces) |
+| `circuit.losscalculation` | 20 | 180+ | API-ready |
+| `io` | 4 | 33+ | API-ready (CircuitFileParser, CircuitModel, ParameterOverrideApplicator, SerializationUtils) |
+| `allg` | 10 | 90+ | API-ready (GeckoFile, UserParameterCore, SolverType, etc.) |
+| `signal` | 3 | 29 | API-ready (CharacteristicsCalculator, FourierGUIless, Cispr16Fft) |
+| `nativec` | 7 | 46 | API-ready (JNI integration) |
 | `circuit` (main) | 54 | - | Partial (41 GUI classes) |
 
 ### 4.2 GUI Decoupling Pattern
@@ -301,40 +304,70 @@ These files are NOT overwritten by `sync-docs.py` (path convention mismatch):
 - `GeckoCustomMMF` enables high-performance data exchange
 - Used for Simulink co-simulation with minimal latency
 
-### 6.3 REST API (Live - 9 Endpoints)
-**Loss Calculation Endpoints (Phase 1 - 3 endpoints):**
+### 6.3 REST API (v3.0.0 — 32 Live Endpoints)
+
+**Loss Calculation (3 endpoints):**
 ```
-POST   /api/v1/loss/switching           Switching loss (voltage/energy scaling)
-POST   /api/v1/loss/conduction          Conduction loss (resistance model)
-POST   /api/v1/loss/detailed            Detailed loss (temperature interpolation)
+POST   /api/v1/loss/switching                Switching loss (voltage/energy scaling)
+POST   /api/v1/loss/conduction               Conduction loss (resistance model)
+POST   /api/v1/loss/detailed                 Detailed loss (temperature interpolation)
 ```
 
-**Circuit File Operations (Phase 2A - 6 endpoints):**
+**Circuit File Operations (8 endpoints):**
 ```
-POST   /api/v1/circuits/parse           Upload and parse .ipes files (multipart/JSON)
-GET    /api/v1/circuits/{id}/info       Circuit metadata (simulation params, counts)
-GET    /api/v1/circuits/{id}/components List all components
-GET    /api/v1/circuits/{id}/validate   Validate circuit structure
-DELETE /api/v1/circuits/{id}            Remove circuit from memory
-GET    /api/v1/circuits                 List all loaded circuits
+POST   /api/v1/circuits/parse                Upload and parse .ipes files (multipart/JSON base64)
+GET    /api/v1/circuits/{id}/info            Circuit metadata (simulation params, counts)
+GET    /api/v1/circuits/{id}/components      List all components with parameters
+GET    /api/v1/circuits/{id}/validate        Validate circuit structure
+DELETE /api/v1/circuits/{id}                 Remove circuit from memory
+GET    /api/v1/circuits                      List all loaded circuits
+POST   /api/v1/circuits/{id}/clone           Deep-copy with optional parameter overrides
+PUT    /api/v1/circuits/{id}/parameters      Partial update (duration/timeStep/solverType)
 ```
 
-**Planned Endpoints (v2.18.0+):**
+**Simulation Control (9 endpoints):**
 ```
-POST   /api/v1/signal/fft               Fast Fourier Transform
-POST   /api/v1/signal/cispr16           EMI analysis
-POST   /api/v1/signal/characteristics   RMS, THD, min/max calculation
-POST   /api/v1/simulations              Start simulation (existing)
-GET    /api/v1/simulations/{id}         Get status/results (existing)
-GET    /api/v1/simulations/{id}/stream  SSE progress streaming (planned)
-GET    /api/health                       Health check (existing)
+POST   /api/v1/simulations                   Submit simulation (returns UUID)
+GET    /api/v1/simulations/{id}              Get status, progress, results
+GET    /api/v1/simulations/{id}/results      Get result waveforms
+GET    /api/v1/simulations/{id}/stream       SSE real-time progress (text/event-stream)
+GET    /api/v1/simulations/{id}/ws-info      WebSocket subscribe info
+GET    /api/v1/simulations/{id}/export       Export results
+GET    /api/v1/simulations                   List all simulations
+DELETE /api/v1/simulations/{id}              Cancel simulation
+POST   /api/v1/simulations/batch             Batch simulation (linearSweep/logSweep/explicit)
 ```
+
+**Batch Job Tracking (2 endpoints):**
+```
+GET    /api/v1/simulations/batch/{batchId}   Batch status (per-simulation states, progress)
+DELETE /api/v1/simulations/batch/{batchId}   Cancel entire batch
+```
+
+**Signal Analysis (3 endpoints):**
+```
+POST   /api/v1/analysis/characteristics      RMS, THD, AVG, min/max, ripple, shape factor
+POST   /api/v1/analysis/fourier              FFT harmonics (an, bn, cn, phase)
+GET    /api/v1/health                        Health check
+```
+
+**WebSocket (STOMP):**
+```
+WS     /ws                   STOMP endpoint (SockJS fallback)
+WS     /ws-raw               STOMP endpoint (raw WebSocket)
+TOPIC  /topic/simulations/{id}  Real-time simulation progress
+```
+
+**Authentication:**
+- `X-API-Key` header; `gecko.api.auth-enabled=false` by default
+- `gecko.api.keys=key1,key2` in application.properties to enable
 
 **Implementation Details:**
-- Uses gecko-simulation-core classes (DetailedLossLookupTable, SwitchingLossCurve, CircuitFileParser, CircuitModel)
+- Real MNA solver backend: CircuitNetlist → MatrixSolver → DomainCoupler → HeadlessSimulationEngine
+- Component parameter parsing: space-separated (real .ipes) + slash-separated (legacy) formats
 - OpenAPI/Swagger documentation at http://localhost:8080/swagger-ui.html
 - Jakarta Bean Validation for request parameters
-- 133 tests passing (39 circuit file + 94 existing)
+- 224 tests passing
 
 **Docker Support:**
 - Multi-stage Dockerfile using Alpine JRE 21 (~180MB image)

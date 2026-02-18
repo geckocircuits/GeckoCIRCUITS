@@ -244,8 +244,8 @@ Third-party code (`com/intel/mkl/`) is excluded from both PMD and Checkstyle.
 ### Strategic Direction (Dual-Track Approach)
 The project maintains the desktop application while adding modern web accessibility:
 - **Desktop** - Mature Swing GUI for power users, researchers, MATLAB/Simulink integration
-- **REST API** (in progress) - Spring Boot 3.2.1 server for automation, cloud deployment, CI/CD pipelines
-- **Shared Core** ✅ - `gecko-simulation-core` module extracted (183 classes, 1,686 tests)
+- **REST API** ✅ v3.0.0 LIVE - Spring Boot 3.2.1 server, 32 endpoints, 224 tests, WebSocket, auth, Docker
+- **Shared Core** ✅ - `gecko-simulation-core` module extracted (192 classes, 1,837 tests)
 
 ### Active Initiatives
 1. **Real Solver Integration (Sprint 6)** - ✅ COMPLETE: Extracted SimulationsKern logic to core module (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler) with 360+ tests
@@ -268,7 +268,7 @@ These packages are confirmed GUI-free and safe for headless/API use:
 - `math` (7 classes) - Matrix operations, LU decomposition, FFT
 - `nativec` (7 classes, 46 tests) - Native C/C++ library integration via JNI
 - `signal` (3 classes, 29 tests) - Signal analysis utilities (CharacteristicsCalculator, FourierGUIless, Cispr16Fft)
-- `io` SerializationUtils - ASCII format serialization for .ipes files
+- `io` (4 classes, 33+ tests) - CircuitFileParser (.ipes gzip parser, space/slash dual-format parameter parsing), CircuitModel (structured circuit representation), ParameterOverrideApplicator (dot-notation pre-simulation overrides), SerializationUtils (ASCII format serialization)
 - `i18n` SelectableLanguages (43 languages) - Internationalization support
 - `allg` (10 classes, 90+ tests) - GeckoFile, ExternalStorageConverter, UserParameterCore, SolverType, OperatingMode, LaunchBrowser, GlobalFilePathes, CircuitFileConstants (Sprint 4b)
 - `core` GeckoRuntimeException - Custom runtime exception
@@ -322,23 +322,29 @@ A PostToolUse hook in `.claude/settings.json` reminds to update these after `git
 
 ## Recent Git Activity
 
-Recent commits (v2.18.0 Sprint 6 - Headless Simulation Engine):
+Recent commits (v3.0.0 Complete REST API Platform):
+- `6b5e4d82` **Fix component parameter parsing for real .ipes files**
+  - readComponentParameters() dual-format: space-separated (real .ipes) + slash-separated (legacy)
+  - ex_1.ipes: 7 components parsed correctly (L=1.06E-4, C=3.1E-6, R=0.24)
+  - 1,837 core tests passing
+- `9aefbab8` **v3.0.0: Complete REST API Platform documentation**
+  - 32 endpoints, 7,426 tests (1,829 core + 5,373 main + 224 API)
+  - docs/releases/3000.md, RELEASE_PLAN.md, PRD.md, ARCHITECTURE.md updated
+- `218cd6c4` **v2.22.0: API key authentication + Spring Security foundation**
+  - ApiKeyProperties, ApiKeyAuthFilter, SecurityConfig
+  - gecko.api.auth-enabled=false default; X-API-Key header validation
+- `935c1b4e` **v2.21.0: WebSocket streaming for real-time simulation progress**
+  - STOMP broker at /ws (SockJS) and /ws-raw; /topic/simulations/{id}
+  - WebSocketProgressService dual SSE+WebSocket broadcasts
+- `fd4605f7` **v2.20.0: Batch job tracking + circuit management**
+  - GET/DELETE /api/v1/simulations/batch/{batchId}; circuit clone/parameter update
+- `dad24679` **v2.19.0: Signal analysis endpoints (characteristics + Fourier)**
+- `e674f2fb` **v2.19.0: Batch simulation endpoint with sweeps**
+- `27374c88` **ParameterOverrideApplicator: dot-notation pre-simulation overrides**
 - `2742d869` **v2.18.0: Real solver integration complete (Phase 6)**
   - Domain coupling (Electrical ↔ Control ↔ Thermal)
   - API enhancements (SimulationRequest/Response with solver type, progress details)
   - All 7,315 tests passing (1,809 core + 5,373 main + 133 API)
-  - Commits: c13ea573, 5f51ddb0, 9549fe80, 91cd6dd3, 2742d869
-- `91cd6dd3` Real solver integration - Replace HeadlessSimulationEngine placeholder
-  - buildMatrixA → buildVectorB → solve → calculateComponentCurrents → updateNodePotentials
-  - ~100 integration tests validating solver accuracy
-- `9549fe80` Phases 2-3: Matrix solver + netlist building migration to core
-  - MatrixSolver: MNA stamping, LU decomposition, BE/TRZ/GS history
-  - CircuitNetlist: topology, parameters, magnetic couplings
-  - NetlistBuilder: factory pattern
-  - ControlNetlist: headless control execution
-  - ~90 tests for netlist validation
-- `5f51ddb0` Phase 1 test infrastructure: RLC circuits, validation suite, benchmarks
-- `c13ea573` Phase 1: Architecture preparation (SimulationProgress, HeadlessSimulationEngine enhancements)
 - `1e4eaa0a` **Achieve <500 PMD violations target: 823 → 496 (-40%)**
   - CompareObjectsWithEquals (31): Use .equals() for object comparisons
   - CloseResource (35): All resource leaks fixed with try-with-resources

@@ -97,6 +97,23 @@ mvn clean package assembly:single -DskipTests
         brew install maven
         ```
 
+### Method 3: Docker (REST API only) {#docker}
+
+The REST API server can be run as a Docker container (no GUI required):
+
+```bash
+# Quick start with docker-compose
+docker-compose up -d
+
+# Or pull and run manually
+docker run -p 8080:8080 gecko-rest-api:latest
+
+# Verify it's running
+curl http://localhost:8080/api/v1/health
+```
+
+See the [REST API documentation](../api/rest-api.md) for full endpoint reference.
+
 ## Running GeckoCIRCUITS
 
 ### Using Launcher Scripts
