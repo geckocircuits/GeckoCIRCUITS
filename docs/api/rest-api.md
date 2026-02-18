@@ -47,6 +47,145 @@ OpenAPI specification:
 GET /v3/api-docs
 ```
 
+## Authentication
+
+!!! info "Optional in v2.22.0+"
+    API key authentication is **disabled by default** for backward compatibility. Enable it in production deployments for security.
+
+### Configuration
+
+API key authentication is controlled via `application.properties`:
+
+```properties
+# Enable/disable authentication (default: false)
+gecko.api.auth-enabled=true
+
+# Comma-separated list of valid API keys
+gecko.api.keys=my-key-1,my-key-2,my-key-3
+```
+
+Or via environment variables:
+
+```bash
+export GECKO_API_AUTH_ENABLED=true
+export GECKO_API_KEYS=my-key-1,my-key-2,my-key-3
+```
+
+### Usage
+
+When authentication is enabled, all protected endpoints require the `X-API-Key` header:
+
+#### curl
+
+```bash
+# With API key
+curl -H "X-API-Key: my-secret-key" \
+  http://localhost:8080/api/v1/simulations
+
+# Without API key (only works when auth-enabled=false)
+curl http://localhost:8080/api/v1/simulations
+```
+
+#### Python
+
+```python
+import requests
+
+session = requests.Session()
+session.headers.update({"X-API-Key": "my-secret-key"})
+
+# All requests include the API key automatically
+response = session.post(
+    "http://localhost:8080/api/v1/simulations",
+    json={"circuitFile": "path/to/circuit.ipes"}
+)
+
+if response.status_code == 401:
+    print("Invalid API key")
+else:
+    print(response.json())
+```
+
+#### JavaScript/Node.js
+
+```javascript
+const axios = require('axios');
+
+const client = axios.create({
+  baseURL: 'http://localhost:8080',
+  headers: {
+    'X-API-Key': 'my-secret-key'
+  }
+});
+
+client.post('/api/v1/simulations', {
+  circuitFile: 'path/to/circuit.ipes'
+})
+.then(response => console.log(response.data))
+.catch(error => {
+  if (error.response.status === 401) {
+    console.error('Unauthorized: Invalid API key');
+  }
+});
+```
+
+### Error Response
+
+Invalid or missing API key returns **401 Unauthorized**:
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Valid X-API-Key header required"
+}
+```
+
+### Public Endpoints
+
+The following endpoints do not require API authentication:
+
+| Path | Description |
+|------|-------------|
+| `/api/v1/health` | Health check |
+| `/actuator/health` | Actuator health |
+| `/swagger-ui/**` | Swagger UI |
+| `/v3/api-docs/**` | OpenAPI specification |
+| `/ws/**` | WebSocket endpoint |
+| `/ws-raw/**` | Raw WebSocket endpoint |
+
+### Security Best Practices
+
+1. **Always use HTTPS** in production:
+   ```bash
+   # Good: HTTPS protects the API key in transit
+   curl -H "X-API-Key: my-key" https://your-domain.com/api/v1/simulations
+
+   # Bad: HTTP exposes the key in plain text
+   curl -H "X-API-Key: my-key" http://your-domain.com/api/v1/simulations
+   ```
+
+2. **Rotate keys regularly** - Update keys quarterly or when team changes:
+   ```properties
+   gecko.api.keys=new-key-1,old-key-1,emergency-key
+   ```
+
+3. **Use environment variables** - Never hardcode keys:
+   ```bash
+   export GECKO_API_KEYS=${SECRETS_MANAGER_GET_API_KEYS}
+   java -jar gecko-rest-api.jar
+   ```
+
+4. **Different keys per environment**:
+   ```bash
+   # Development
+   GECKO_API_KEYS=dev-key-123
+
+   # Production
+   GECKO_API_KEYS=prod-key-456,backup-prod-key-789
+   ```
+
+For more details, see [v2.22.0 Release Notes](../releases/2220.md#security-considerations).
+
 ## Live Endpoints
 
 ### Loss Calculation Endpoints

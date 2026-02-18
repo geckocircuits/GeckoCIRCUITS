@@ -17,11 +17,11 @@ This document outlines the release strategy for GeckoCIRCUITS based on semantic 
 
 ## Current Status
 
-- **Latest Release**: v2.21.0 (commit 935c1b4e, Feb 18, 2026)
-- **Previous Release**: v2.20.0 (commit df0e4bb0, Feb 18, 2026)
-- **Next Release**: v2.22.0 (planned - API key authentication + rate limiting)
+- **Latest Release**: v2.22.0 (commit 218cd6c4, Feb 18, 2026)
+- **Previous Release**: v2.21.0 (commit 935c1b4e, Feb 18, 2026)
+- **Next Release**: v3.0.0 (planned - Complete REST API Platform, JWT auth, rate limiting, breaking changes)
 - **Ground Zero**: v2.10.0 (Java 21 migration, commit fd484fe1)
-- **Total Releases**: 8 versions (v2.10.0 → v2.17.0)
+- **Total Releases**: 9 versions (v2.10.0 → v2.22.0)
 
 ---
 
