@@ -128,6 +128,74 @@ GET /api/v1/circuits
 DELETE /api/v1/circuits/{circuitId}
 ```
 
+**Clone Circuit**
+
+Create a deep copy of a loaded circuit with optional parameter overrides.
+
+```bash
+POST /api/v1/circuits/{circuitId}/clone
+Content-Type: application/json
+```
+
+Request (with parameter overrides):
+```json
+{
+  "overrides": {
+    "R_load.resistance": 12.0,
+    "C_dc.capacitance": 4.7e-6,
+    "L1.inductance": 100e-6
+  }
+}
+```
+
+Response (201 Created):
+```json
+{
+  "circuitId": "circuit-uuid-new",
+  "name": "circuit_clone",
+  "componentCount": 24,
+  "parameters": {
+    "simulationDuration": 0.02,
+    "timeStep": 1e-6,
+    "solverType": "trapezoidal"
+  }
+}
+```
+
+**Update Circuit Parameters**
+
+Modify simulation parameters (duration, time step, solver) for a loaded circuit.
+
+```bash
+PUT /api/v1/circuits/{circuitId}/parameters
+Content-Type: application/json
+```
+
+Request (all fields optional):
+```json
+{
+  "simulationDuration": 0.05,
+  "timeStep": 5e-7,
+  "solverType": "gear-shichman"
+}
+```
+
+Response (200 OK):
+```json
+{
+  "circuitId": "circuit-uuid-001",
+  "name": "circuit",
+  "parameters": {
+    "simulationDuration": 0.05,
+    "timeStep": 5e-7,
+    "solverType": "gear-shichman"
+  }
+}
+```
+
+Live in: **v2.20.0+**
+
+
 ### Simulation Endpoints
 
 **Submit Simulation** (Async)
@@ -204,6 +272,57 @@ Response fields:
 ```bash
 GET /api/v1/simulations/{simulationId}/export
 ```
+
+
+**Batch Job Tracking**
+
+Get aggregated status for all simulations in a batch submitted via v2.19.0+ batch endpoint.
+
+```bash
+GET /api/v1/simulations/batch/{batchId}
+```
+
+Response:
+```json
+{
+  "batchId": "batch-uuid-12345",
+  "totalSimulations": 20,
+  "completed": 18,
+  "failed": 1,
+  "running": 1,
+  "pending": 0,
+  "overallProgress": 90,
+  "done": false,
+  "submittedAt": "2026-02-18T10:30:00Z",
+  "simulations": {
+    "sim-uuid-001": {
+      "status": "completed",
+      "progress": 100,
+      "parameterSet": {"R1.resistance": 10.0}
+    },
+    "sim-uuid-002": {
+      "status": "failed",
+      "progress": 45,
+      "parameterSet": {"R1.resistance": 50.0},
+      "errorMessage": "Convergence failure at t=0.015s"
+    }
+  },
+  "failedIds": ["sim-uuid-002"]
+}
+```
+
+**Cancel Batch**
+
+Cancels all running and pending simulations in a batch.
+
+```bash
+DELETE /api/v1/simulations/batch/{batchId}
+```
+
+Returns: `204 No Content` on success
+
+Live in: **v2.20.0+**
+
 
 ### Signal Analysis Endpoints
 

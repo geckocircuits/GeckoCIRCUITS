@@ -209,7 +209,8 @@ nav:
 
   - Releases:
     - releases/index.md
-    - v2.19.0 (Current): releases/2190.md
+    - v2.20.0 (Current): releases/2200.md
+    - v2.19.0: releases/2190.md
     - v2.18.0: releases/2180.md
     - v2.17.0 - Distributions: releases/2170.md
     - v2.16.0 - REST API: releases/2160.md
