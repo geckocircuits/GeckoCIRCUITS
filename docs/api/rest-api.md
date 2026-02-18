@@ -324,6 +324,161 @@ Returns: `204 No Content` on success
 Live in: **v2.20.0+**
 
 
+### WebSocket Streaming
+
+Real-time progress updates via WebSocket with STOMP message framing. Provides bidirectional communication capability for interactive monitoring and future client-to-server commands.
+
+**WebSocket Endpoints**
+
+- `/ws` - SockJS-compatible WebSocket endpoint (for browsers)
+- `/ws-raw` - Raw WebSocket endpoint (for non-browser clients)
+
+Both endpoints support STOMP protocol for message framing.
+
+**Discover WebSocket Connection Details**
+
+```bash
+GET /api/v1/simulations/{simulationId}/ws-info
+```
+
+Response:
+```json
+{
+  "simulationId": "9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f",
+  "stompEndpoint": "/ws",
+  "rawWebSocketEndpoint": "/ws-raw",
+  "subscribeDestination": "/topic/simulations/9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f",
+  "protocol": "STOMP/1.2",
+  "supportsBidirectional": true,
+  "baseUrl": "http://localhost:8080"
+}
+```
+
+**JavaScript Browser Client (SockJS)**
+
+```javascript
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/stomp.min.js"></script>
+
+<script>
+const socket = new SockJS('http://localhost:8080/ws');
+const client = Stomp.over(socket);
+
+client.connect({}, (frame) => {
+  console.log('Connected:', frame);
+  
+  // Subscribe to simulation progress updates
+  client.subscribe('/topic/simulations/9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f', (message) => {
+    const progress = JSON.parse(message.body);
+    console.log(`Progress: ${progress.progress}%`);
+    console.log(`Status: ${progress.status}`);
+    console.log(`Time: ${progress.currentTime}s / ${progress.endTime}s`);
+    
+    if (progress.status === 'COMPLETED') {
+      client.disconnect();
+    }
+  });
+});
+
+// Graceful disconnect
+window.addEventListener('beforeunload', () => {
+  if (client && client.connected) {
+    client.disconnect();
+  }
+});
+</script>
+```
+
+**Python Client (stomp.py)**
+
+```python
+import stomp
+import json
+import time
+
+class ProgressListener(stomp.ConnectionListener):
+    def on_message(self, frame):
+        progress = json.loads(frame.body)
+        print(f"Progress: {progress['progress']}% | Status: {progress['status']}")
+        print(f"Time: {progress['currentTime']}s / {progress['endTime']}s")
+
+# Connect via raw WebSocket
+conn = stomp.Connection([('localhost', 8080)], wait_on_receipt=True)
+conn.set_listener('progress', ProgressListener())
+conn.connect()
+
+# Subscribe to simulation progress
+conn.subscribe('/topic/simulations/9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f', id=1, ack='auto')
+
+# Keep listening
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    conn.disconnect()
+```
+
+**Raw WebSocket (wscat tool)**
+
+```bash
+# Install wscat
+npm install -g wscat
+
+# Connect to raw WebSocket endpoint
+wscat -c ws://localhost:8080/ws-raw
+
+# Send STOMP CONNECT frame
+CONNECT
+accept-version:1.0,1.1,1.2
+
+^@
+
+# Subscribe to topic
+SUBSCRIBE
+id:sub-0
+destination:/topic/simulations/9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f
+
+^@
+
+# Receive messages...
+```
+
+**Progress Message Format**
+
+Both SSE (`/api/v1/simulations/{id}/stream`) and WebSocket (`/topic/simulations/{id}`) use the same JSON message structure:
+
+```json
+{
+  "simulationId": "9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f",
+  "progress": 45.0,
+  "currentTime": 0.009,
+  "endTime": 0.02,
+  "step": 9000,
+  "totalSteps": 20000,
+  "status": "RUNNING",
+  "timestamp": "2026-02-18T10:30:00Z",
+  "errorMessage": null
+}
+```
+
+**Comparison: SSE vs WebSocket**
+
+| Feature | SSE | WebSocket |
+|---------|-----|-----------|
+| Endpoint | `/api/v1/simulations/{id}/stream` | `/topic/simulations/{id}` |
+| Protocol | HTTP/1.1 (text/event-stream) | TCP (STOMP/1.2) |
+| Direction | Server → Client only | Bidirectional (client → server coming in future versions) |
+| Browser Support | Native EventSource API | Requires SockJS or ws library |
+| Auto-Reconnect | Yes (EventSource) | No (application manages) |
+| Latency | ~100ms (HTTP) | ~10-50ms (TCP) |
+| Overhead | Higher (HTTP headers) | Lower (raw TCP frames) |
+| Best For | Simple dashboards | Interactive monitoring, multi-client scenarios |
+
+Both endpoints receive updates simultaneously from the same `broadcastProgress()` call, ensuring synchronized progress messages.
+
+Live in: **v2.21.0+**
+
+
 ### Signal Analysis Endpoints
 
 Post-processing analysis of simulation or raw signal data.
