@@ -153,7 +153,7 @@ Output packages in `target/`:
 ### Multi-Module Structure (Reactor: `pom-reactor.xml`)
 - **Main project** (`/`, `pom.xml`) - Full desktop application with Swing GUI (5,373 tests)
 - **gecko-simulation-core** (`src/modules/gecko-simulation-core/`) - GUI-free simulation engine (192 classes, 1,809 tests, 30%+ coverage enforced)
-- **gecko-rest-api** (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (133 tests, 9 endpoints live, Docker packaging available)
+- **gecko-rest-api (`src/modules/gecko-rest-api/`) - Spring Boot 3.2.1 REST API with OpenAPI/Swagger (224 tests, 32 endpoints live, Docker packaging available, production-ready)
 
 ### External Integration
 - `GeckoRemoteInterface` - RMI interface for remote method calls
@@ -250,7 +250,7 @@ The project maintains the desktop application while adding modern web accessibil
 ### Active Initiatives
 1. **Real Solver Integration (Sprint 6)** - ✅ COMPLETE: Extracted SimulationsKern logic to core module (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler) with 360+ tests
 2. **Test Coverage Improvement** - JaCoCo coverage thresholds enforced for core packages (30%+ minimum, 1,809 tests in core)
-3. **REST API Expansion** - 9 live endpoints (3 loss + 6 circuit file), preparing for v2.19 (WebSocket, advanced analysis)
+3. **REST API v3.0.0 Complete** — 32 endpoints, 224 tests, security, WebSocket, batch, analysis
 
 ### GUI-Free Validated Packages
 These packages are confirmed GUI-free and safe for headless/API use:

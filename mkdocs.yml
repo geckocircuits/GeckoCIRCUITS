@@ -210,7 +210,8 @@ nav:
   - Releases:
     - releases/index.md
     - v2.21.0: releases/2210.md
-    - v2.22.0 (Current): releases/2220.md
+    - v3.0.0 (Latest): releases/3000.md
+    - v2.22.0: releases/2220.md
     - v2.20.0: releases/2200.md
     - v2.19.0: releases/2190.md
     - v2.18.0: releases/2180.md
