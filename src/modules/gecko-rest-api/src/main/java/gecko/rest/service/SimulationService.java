@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 import gecko.rest.model.BatchSimulationRequest;
 import gecko.rest.model.BatchSimulationResponse;
 import gecko.rest.model.BatchJobStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -47,6 +48,10 @@ public class SimulationService {
     private final ExecutorService executorService = Executors.newFixedThreadPool(
             Math.max(2, Runtime.getRuntime().availableProcessors() - 1)
     );
+
+    // Optional: injected when the WebSocket infrastructure is available (i.e. not in @WebMvcTest slice)
+    @Autowired(required = false)
+    private WebSocketProgressService webSocketProgressService;
 
     /**
      * Register an SSE emitter to receive progress events for a simulation.
@@ -103,43 +108,55 @@ public class SimulationService {
      * Broadcast a progress update to all registered SSE emitters for a simulation.
      */
     public void broadcastProgress(String simulationId, double progress, double currentTime, double endTime) {
+        // SSE broadcast
         List<SseEmitter> emitters = progressEmitters.get(simulationId);
-        if (emitters == null || emitters.isEmpty()) {
-            return;
-        }
-
-        String data = String.format(
-            "{\"progress\":%.3f,\"currentTime\":%.6f,\"endTime\":%.6f,\"simulationId\":\"%s\"}",
-            progress, currentTime, endTime, simulationId
-        );
-
-        List<SseEmitter> dead = new ArrayList<>();
-        for (SseEmitter emitter : emitters) {
-            try {
-                emitter.send(SseEmitter.event().name("progress").data(data));
-            } catch (Exception e) {
-                dead.add(emitter);
+        if (emitters != null && !emitters.isEmpty()) {
+            String data = String.format(
+                "{\"progress\":%.3f,\"currentTime\":%.6f,\"endTime\":%.6f,\"simulationId\":\"%s\"}",
+                progress, currentTime, endTime, simulationId
+            );
+            List<SseEmitter> dead = new ArrayList<>();
+            for (SseEmitter emitter : emitters) {
+                try {
+                    emitter.send(SseEmitter.event().name("progress").data(data));
+                } catch (Exception e) {
+                    dead.add(emitter);
+                }
             }
+            dead.forEach(e -> removeEmitter(simulationId, e));
         }
-        dead.forEach(e -> removeEmitter(simulationId, e));
+
+        // WebSocket broadcast (optional — only when WebSocket infra is available)
+        if (webSocketProgressService != null) {
+            SimulationResponse resp = simulationStore.get(simulationId);
+            int step = resp != null && resp.getProgressDetails() != null ? resp.getProgressDetails().currentStep() : 0;
+            int total = resp != null && resp.getProgressDetails() != null ? resp.getProgressDetails().totalSteps() : 0;
+            webSocketProgressService.broadcastProgress(simulationId, progress, currentTime, endTime, step, total, "RUNNING");
+        }
     }
 
     /**
-     * Complete all SSE emitters when a simulation finishes.
+     * Complete all SSE emitters and broadcast WebSocket completion when a simulation finishes.
      */
     public void completeProgressStreams(String simulationId, boolean success) {
         List<SseEmitter> emitters = progressEmitters.remove(simulationId);
-        if (emitters == null) {
-            return;
-        }
-        String event = success ? "complete" : "error";
-        for (SseEmitter emitter : emitters) {
-            try {
-                emitter.send(SseEmitter.event().name(event).data("{\"simulationId\":\"" + simulationId + "\"}"));
-                emitter.complete();
-            } catch (Exception ignored) {
-                // Client already gone
+        if (emitters != null) {
+            String event = success ? "complete" : "error";
+            for (SseEmitter emitter : emitters) {
+                try {
+                    emitter.send(SseEmitter.event().name(event).data("{\"simulationId\":\"" + simulationId + "\"}"));
+                    emitter.complete();
+                } catch (Exception ignored) {
+                    // Client already gone
+                }
             }
+        }
+
+        // WebSocket completion broadcast
+        if (webSocketProgressService != null) {
+            SimulationResponse resp = simulationStore.get(simulationId);
+            String error = resp != null ? resp.getErrorMessage() : null;
+            webSocketProgressService.broadcastCompletion(simulationId, success, error);
         }
     }
 
