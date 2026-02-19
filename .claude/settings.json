@@ -1,26 +1,35 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mvn *)",
-      "Bash(find *)",
-      "Bash(tree *)",
       "Bash(chmod *)",
-      "Bash(python3 *)",
+      "Bash(export *)",
+      "Bash(export PATH=~/apache-maven-3.9.5/bin:$PATH)",
+      "Bash(find *)",
+      "Bash(find:*)",
+      "Bash(git:*)",
+      "Bash(grep *)",
       "Bash(java *)",
+      "Bash(java:*)",
+      "Bash(javac:*)",
+      "Bash(ls:*)",
+      "Bash(mkdocs:*)",
+      "Bash(mvn *)",
+      "Bash(mvn:*)",
+      "Bash(python3 *)",
+      "Bash(sed *)",
       "Bash(snap *)",
       "Bash(tar *)",
-      "Bash(~/apache-maven-3.9.5/bin/mvn --version)",
-      "Bash(export PATH=~/apache-maven-3.9.5/bin:$PATH)",
-      "Bash(export *)",
-      "Bash(xargs cat *)",
+      "Bash(tree *)",
+      "Bash(tree:*)",
       "Bash(wc *)",
-      "Bash(grep *)",
-      "Bash(sed *)",
+      "Bash(wc:*)",
+      "Bash(xargs cat *)",
+      "Bash(~/apache-maven-3.9.5/bin/mvn --version)",
       "Edit",
-      "Write",
-      "Read",
       "Glob",
-      "Grep"
+      "Grep",
+      "Read",
+      "Write"
     ]
   },
   "hooks": {
@@ -30,7 +39,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-push-update-docs.sh",
+            "command": "/home/tinix/claude_wsl/agents_pool/hooks/post-commit-remind.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "/home/tinix/claude_wsl/agents_pool/hooks/post-tool-regen-docs.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "/home/tinix/claude_wsl/agents_pool/hooks/post-tool-build-mkdocs.sh",
             "timeout": 10
           }
         ]
