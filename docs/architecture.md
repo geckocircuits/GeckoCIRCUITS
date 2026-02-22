@@ -1,8 +1,8 @@
 # Architecture Document
 
 **Project:** GeckoCIRCUITS
-**Last Updated:** 2026-02-18
-**Status:** Dual-track architecture (Desktop + REST API v3.0.0) — 32 endpoints, 7,426 tests
+**Last Updated:** 2026-02-22
+**Status:** Dual-track architecture (Desktop + REST API v3.0.0) — 32 endpoints, 7,434 tests
 
 ---
 
@@ -23,7 +23,7 @@ GeckoCIRCUITS is a multi-domain circuit simulator built in Java 21. The architec
 │  ┌────────▼───────────────────▼──────────────────────────┐   │
 │  │            gecko-simulation-core                        │   │
 │  │            (GUI-free shared library)                    │   │
-│  │            192 classes, 1,837 tests, 30%+ coverage     │   │
+│  │            216 classes, 1,837 tests, 30%+ coverage     │   │
 │  └────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -50,7 +50,7 @@ GeckoCIRCUITS/
 │       └── src/
 ```
 
-### 2.2 Main Application (854 files)
+### 2.2 Main Application (832 files)
 
 ```
 src/main/java/gecko/
@@ -130,27 +130,33 @@ Defined in `OperatingMode` enum, selected at startup:
 
 ## 4. GUI-Free Boundary
 
-### 4.1 Validated Packages (192 classes in core module)
+### 4.1 Validated Packages (216 classes in core module)
 
 Enforced by `CorePackageValidationTest` - build fails if GUI imports detected:
 
 | Package | Classes | Tests | Status |
 |---------|---------|-------|--------|
-| `circuit.matrix` | 15 | 183 | API-ready |
+| `circuit` (top-level) | 15 | 72+ | API-ready (TokenMap, ComponentIdentifiable, etc.) |
+| `circuit.matrix` | 14 | 183 | API-ready |
 | `circuit.netlist` | 6 | 89+ | API-ready (CircuitNetlist, NetlistBuilder, label-based topology) |
-| `circuit.simulation` | 13 | 360+ | API-ready (solver, DomainCoupler, SimulationProgress) |
-| `circuit.simulation.solver` | 4 | 360+ | API-ready (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler) |
+| `circuit.calculator` | 8 | — | API-ready |
+| `circuit.waveform` | 2 | — | API-ready |
 | `circuit.terminal` | 3 | 138 | API-ready |
 | `circuit.component` | 3 | 206 | API-ready |
-| `control.calculators` | 71 | ~320 | API-ready (2 GUI exceptions) |
-| `math` | 7 | 97 | API-ready |
-| `datacontainer` | 11 | ~180 | API-ready |
-| `circuit.losscalculation` | 20 | 180+ | API-ready |
+| `circuit.losscalculation` | 14 | 180+ | API-ready |
+| `circuit.circuitcomponents` | 1 | — | API-ready |
+| `simulation` | 8 | 360+ | API-ready (HeadlessSimulationEngine, DomainCoupler, SimulationProgress) |
+| `simulation.solver` | 3 | 360+ | API-ready (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver) |
+| `control` | 6 | — | API-ready |
+| `control.calculators` | 72 | ~320 | API-ready (2 GUI exceptions) |
+| `datacontainer` | 23 | ~180 | API-ready |
+| `math` | 8 | 97 | API-ready |
 | `io` | 4 | 33+ | API-ready (CircuitFileParser, CircuitModel, ParameterOverrideApplicator, SerializationUtils) |
 | `allg` | 10 | 90+ | API-ready (GeckoFile, UserParameterCore, SolverType, etc.) |
 | `signal` | 3 | 29 | API-ready (CharacteristicsCalculator, FourierGUIless, Cispr16Fft) |
 | `nativec` | 7 | 46 | API-ready (JNI integration) |
-| `circuit` (main) | 54 | - | Partial (41 GUI classes) |
+| `i18n` | 1 | 17 | API-ready (SelectableLanguages) |
+| `api` | 1 | — | Public interfaces |
 
 ### 4.2 GUI Decoupling Pattern
 
@@ -204,63 +210,50 @@ java.applet.*
 ### 4.4 Extraction Status
 
 ```
-gecko-simulation-core (192 classes extracted):
-  ├── circuit/              77 classes
-  │   ├── matrix/          15 classes (MNA stampers)
-  │   ├── netlist/         6 classes (netlist building, CircuitNetlist, NetlistBuilder) ✨ SPRINT 6
-  │   ├── simulation/      13 classes (simulation engine + solver, HeadlessSimulationEngine enhancements) ✨ SPRINT 6
-  │   │   ├── solver/      (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver, DomainCoupler)
-  │   │   └── (SimulationProgress, SimulationRequest, SimulationResponse)
+gecko-simulation-core (216 classes extracted):
+  ├── circuit/              49 classes
+  │   ├── (top-level)      15 classes (TokenMap, ComponentIdentifiable, ConnectorType, etc.)
+  │   ├── matrix/          14 classes (MNA stampers)
+  │   ├── netlist/         6 classes (CircuitNetlist, NetlistBuilder, label-based topology)
+  │   ├── calculator/      8 classes
+  │   ├── waveform/        2 classes
   │   ├── terminal/        3 classes (ConnectionPath, ConnectionValidator, ITerminalPosition)
   │   ├── component/       3 classes (ParameterRegistry, ParameterSerializer, TerminalRegistry)
-  │   ├── losscalculation/ 14 classes (loss curves, interpolation, calculators) ✨ SPRINT 4B
-  │   │   ├── LossCurve, SwitchingLossCurve, LeitverlusteMesskurve (temp-dependent curves)
-  │   │   ├── DetailedLossLookupTable (bilinear interpolation)
-  │   │   ├── SwitchingLossCalculator, ConductionLossCalculator (loss computation)
-  │   │   ├── LossComponent, LossCalculationDetail, LossContainer (data models)
-  │   │   └── Interfaces: AbstractLossCalculator, LossFileAccessor, LossCalculatable
-  │   └── circuitcomponents/ 23 component cores
-  ├── control/calculators/ 71 calculators (PI, PID, gain, limit, integrators, etc.)
-  ├── datacontainer/       11 classes (signal storage, caching)
-  ├── math/                7 classes (matrix ops, LU decomposition, FFT)
+  │   ├── losscalculation/ 14 classes (loss curves, interpolation, calculators)
+  │   └── circuitcomponents/ 1 class
+  ├── simulation/          11 classes
+  │   ├── (top-level)      8 classes (HeadlessSimulationEngine, DomainCoupler, SimulationProgress, etc.)
+  │   └── solver/          3 classes (MatrixSolver, ComponentCurrentCalculator, InitialConditionSolver)
+  ├── control/             78 classes
+  │   ├── (top-level)      6 classes
+  │   └── calculators/     72 calculators (PI, PID, gain, limit, integrators, etc.)
+  ├── datacontainer/       23 classes (signal storage, caching)
+  ├── math/                8 classes (matrix ops, LU decomposition, FFT)
   ├── nativec/             7 classes (Native C/C++ integration via JNI)
   ├── signal/              3 classes (CharacteristicsCalculator, FourierGUIless, Cispr16Fft)
-  ├── io/                  1 class (SerializationUtils - .ipes file ASCII serialization)
+  ├── io/                  4 classes (CircuitFileParser, CircuitModel, ParameterOverrideApplicator, SerializationUtils)
   ├── i18n/                1 class (SelectableLanguages - 43 supported languages)
-  ├── api/                 Public interfaces
-  ├── allg/                10 classes ✨ SPRINT 4B
-  │   ├── GeckoFile (file handling for Java blocks, loss models, nonlinear characteristics)
-  │   ├── UserParameterCore, UserParameterCoreImpl (headless parameter abstraction)
-  │   ├── ExternalStorageConverter (interface for GUI abstraction)
-  │   ├── GlobalFilePathes, CircuitFileConstants, SolverType, OperatingMode, LaunchBrowser
-  ├── GeckoRuntimeException (top-level)
-  └── Circuit file parsing: TokenMap (41 tests) - migrated to gecko.core.circuit
+  ├── api/                 1 class (public interfaces)
+  ├── allg/                10 classes (GeckoFile, UserParameterCore, SolverType, OperatingMode, etc.)
+  └── (top-level)          4 classes (GeckoRuntimeException, GeckoInvalidArgumentException, GeckoHeadless, package-info)
 
-Tests (74 test files, 1,809 tests):
-  ├── circuit/simulation/solver/ 25 test files (360+ tests) ✨ SPRINT 6 NEW
-  │   ├── MatrixSolver tests (MNA matrix stamping, LU decomposition, history shifting)
-  │   ├── ComponentCurrentCalculator tests (R/L/C/switch/source current calculation)
-  │   ├── InitialConditionSolver tests (capacitor voltage/inductor current init)
-  │   ├── DomainCoupler tests (electrical-control-thermal coupling)
-  │   ├── CircuitNetlist & NetlistBuilder tests (topology, parameter management)
-  │   ├── SimulationProgress tests (progress tracking, ETA calculation)
-  │   └── Integration tests (RLC circuits, real solver validation)
-  ├── circuit/losscalculation/ 10 test files (180+ tests) ✨ SPRINT 4B
-  │   ├── Loss curve tests (LossCurve, SwitchingLossCurve, LeitverlusteMesskurve)
-  │   ├── Interpolation tests (DetailedLossLookupTable)
-  │   ├── Calculator tests (Switching, Conduction, Resistor)
-  │   └── Interface tests (LossCalculatable, LossCalculationSplittable)
+Tests (80 test files, 1,837 tests):
+  ├── simulation/          6 test files (360+ tests)
+  ├── simulation/solver/   3 test files
+  ├── circuit/losscalculation/ 17 test files (180+ tests)
+  ├── circuit/netlist/     3 test files
   ├── circuit/terminal/    3 test files (138 tests)
   ├── circuit/component/   3 test files (206 tests)
-  ├── circuit/             2 test files (72 tests - TokenMap + ComponentIdentifiable)
-  ├── allg/                4 test files (90+ tests - UserParameter, GeckoFile, LaunchBrowser, TechFormat) ✨ SPRINT 4B
-  ├── circuit/matrix/      8 test files
-  ├── control/calc.        15 test files
+  ├── circuit/             1 test file (TokenMap)
   ├── datacontainer/       18 test files
   ├── math/                7 test files
   ├── nativec/             5 test files (46 tests)
+  ├── allg/                4 test files (90+ tests)
+  ├── io/                  3 test files (33+ tests)
   ├── signal/              3 test files (29 tests)
-  ├── i18n/                1 test file (17 tests - SelectableLanguages)
+  ├── control/calculators/ 1 test file
+  ├── i18n/                1 test file (17 tests)
+  ├── benchmark/           1 test file
   └── core/                1 test file (8 tests - GeckoRuntimeException)
 ```
 
@@ -313,42 +306,48 @@ POST   /api/v1/loss/conduction               Conduction loss (resistance model)
 POST   /api/v1/loss/detailed                 Detailed loss (temperature interpolation)
 ```
 
-**Circuit File Operations (8 endpoints):**
+**Circuit File Operations (9 endpoints):**
 ```
 POST   /api/v1/circuits/parse                Upload and parse .ipes files (multipart/JSON base64)
+GET    /api/v1/circuits                      List all loaded circuits
 GET    /api/v1/circuits/{id}/info            Circuit metadata (simulation params, counts)
 GET    /api/v1/circuits/{id}/components      List all components with parameters
 GET    /api/v1/circuits/{id}/validate        Validate circuit structure
-DELETE /api/v1/circuits/{id}                 Remove circuit from memory
-GET    /api/v1/circuits                      List all loaded circuits
+GET    /api/v1/circuits/{id}/raw             Get raw (decompressed) circuit content
 POST   /api/v1/circuits/{id}/clone           Deep-copy with optional parameter overrides
 PUT    /api/v1/circuits/{id}/parameters      Partial update (duration/timeStep/solverType)
+DELETE /api/v1/circuits/{id}                 Remove circuit from memory
 ```
 
-**Simulation Control (9 endpoints):**
+**Simulation Control (13 endpoints, incl. WebSocket):**
 ```
-POST   /api/v1/simulations                   Submit simulation (returns UUID)
-GET    /api/v1/simulations/{id}              Get status, progress, results
-GET    /api/v1/simulations/{id}/results      Get result waveforms
-GET    /api/v1/simulations/{id}/stream       SSE real-time progress (text/event-stream)
-GET    /api/v1/simulations/{id}/ws-info      WebSocket subscribe info
-GET    /api/v1/simulations/{id}/export       Export results
-GET    /api/v1/simulations                   List all simulations
-DELETE /api/v1/simulations/{id}              Cancel simulation
-POST   /api/v1/simulations/batch             Batch simulation (linearSweep/logSweep/explicit)
-```
-
-**Batch Job Tracking (2 endpoints):**
-```
-GET    /api/v1/simulations/batch/{batchId}   Batch status (per-simulation states, progress)
-DELETE /api/v1/simulations/batch/{batchId}   Cancel entire batch
+POST   /api/v1/simulations                              Submit simulation (returns UUID)
+GET    /api/v1/simulations                              List all simulations (optional status filter)
+GET    /api/v1/simulations/{id}                         Get status, progress, results
+GET    /api/v1/simulations/{id}/results                 Get all result waveforms
+GET    /api/v1/simulations/{id}/results/{signalName}    Get specific signal data
+GET    /api/v1/simulations/{id}/progress                Get progress percentage
+GET    /api/v1/simulations/{id}/stream                  SSE real-time progress (text/event-stream)
+GET    /api/v1/simulations/{id}/ws-info                 WebSocket subscribe info
+POST   /api/v1/simulations/{id}/export                  Export results as CSV
+DELETE /api/v1/simulations/{id}                         Cancel simulation
+POST   /api/v1/simulations/batch                        Batch simulation (linearSweep/logSweep/explicit)
+GET    /api/v1/simulations/batch/{batchId}              Batch status (per-simulation states, progress)
+DELETE /api/v1/simulations/batch/{batchId}              Cancel entire batch
 ```
 
 **Signal Analysis (3 endpoints):**
 ```
 POST   /api/v1/analysis/characteristics      RMS, THD, AVG, min/max, ripple, shape factor
 POST   /api/v1/analysis/fourier              FFT harmonics (an, bn, cn, phase)
-GET    /api/v1/health                        Health check
+POST   /api/v1/analysis/rms                  Quick RMS value computation
+```
+
+**Health/Info (3 endpoints):**
+```
+GET    /api/health                           Health check (status + version)
+GET    /api/info                             API information (metadata)
+GET    /api/docs                             Documentation links (Swagger UI)
 ```
 
 **WebSocket (STOMP):**
@@ -406,7 +405,7 @@ GitHub Actions workflows automate the release process:
 - WSL: `GeckoCIRCUITS-*-wsl.zip` (run-gecko-wsl.sh with X11 support)
 - Examples: `GeckoCIRCUITS-*-examples.zip` (circuit files + tutorials)
 
-For detailed release planning and version strategy, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
+For detailed release planning, version strategy, and issue tracking, see [Roadmap](roadmap.md).
 
 ## 8. Key Dependencies
 
@@ -422,13 +421,17 @@ For detailed release planning and version strategy, see [RELEASE_PLAN.md](RELEAS
 
 ## 9. Architecture Roadmap
 
-### Near-Term
+### Near-Term (v3.1.0)
 - ✅ Complete core module migration (math, datacontainer, matrix, losscalculation, signal)
-- ✅ Implement REST API Phase 1 (loss calculation endpoints)
-- ✅ REST API Phase 2A: Circuit file operations (6 endpoints, CircuitFileParser integration)
-- 🔄 REST API Phase 3: Signal analysis endpoints (FFT, CISPR16, characteristics)
+- ✅ Implement REST API (32 endpoints: loss calc, circuits, simulation, batch, analysis, WebSocket)
+- ✅ REST API Signal analysis endpoints (FFT, CISPR16, characteristics)
+- ✅ API key authentication (Spring Security)
+- ✅ Maven enforcer prevents GUI leakage into API module
+- 🔄 Rate limiting and request throttling
+- 🔄 JWT token authentication
+- 🔄 Pagination for list endpoints
+- 🔄 WebSocket authentication
 - Apply `UserParameterCore` pattern to other GUI-coupled computation classes
-- Maven enforcer already prevents GUI leakage into API module ✅
 
 ### Mid-Term
 - Desktop `--rest-server` mode (GUI + API simultaneously)

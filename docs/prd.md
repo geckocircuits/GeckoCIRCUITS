@@ -1,8 +1,8 @@
 # GeckoCIRCUITS Product Requirements Document
 
-**Version:** 2.0.0
-**Last Updated:** 2026-02-18
-**Status:** v3.0.0 — Complete REST API Platform (32 endpoints, 7,426 tests)
+**Version:** 3.0.0
+**Last Updated:** 2026-02-22
+**Status:** v3.0.0 — Complete REST API Platform (32 endpoints, 7,434 tests)
 
 ---
 
@@ -44,12 +44,12 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - 64+ control blocks (PI/PID, integrators, differentiators, limiters)
 - Supports `.ipes` circuit files (gzip-compressed XML)
 
-### 4.2 Simulation Core Module (In Progress)
+### 4.2 Simulation Core Module (Production)
 - **Location:** `src/modules/gecko-simulation-core/`
-- GUI-free simulation engine suitable for headless operation (192 source classes, 74 test files, 1,809 tests)
+- GUI-free simulation engine suitable for headless operation (216 source classes, 80 test files, 1,837 tests)
 - 30% JaCoCo coverage enforced via CI (exceeds threshold)
-- Key packages: `circuit.matrix`, `circuit.netlist`, `circuit.simulation`, `circuit.terminal`, `circuit.component`, `circuit.losscalculation`, `control.calculators`, `math`, `datacontainer`, `allg` (file paths + parameters)
-- Circuit file parsing: TokenMap, CircuitFileConstants for .ipes file processing
+- Key packages: `circuit.matrix`, `circuit.netlist`, `simulation`, `circuit.terminal`, `circuit.component`, `circuit.losscalculation`, `control.calculators`, `math`, `datacontainer`, `allg`, `io`, `signal`, `nativec`
+- Circuit file parsing: TokenMap, CircuitFileParser, CircuitModel for .ipes file processing
 - Loss calculation: Temperature-dependent loss curves, bilinear interpolation, switching/conduction losses
 - Validated by `CorePackageValidationTest` (zero GUI imports)
 
@@ -58,11 +58,10 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Spring Boot 3.2.1 with OpenAPI/Swagger documentation, Spring Security API key auth
 - **Live Endpoints (32 total):**
   - **Loss Calculation (3):** switching, conduction, detailed (bilinear interpolation)
-  - **Circuit File Operations (8):** parse, info, components, validate, delete, list, clone, update parameters
-  - **Simulation Control (9):** submit, status, results, list, cancel, export, batch submit, stream (SSE), WebSocket info
-  - **Batch Job Tracking (2):** GET/DELETE `/api/v1/simulations/batch/{batchId}`
-  - **Signal Analysis (3):** characteristics (RMS/THD/AVG), Fourier/FFT, (harmonics)
-  - **Health/Infrastructure (3):** `/api/v1/health`, `/actuator/health`, Swagger UI
+  - **Circuit File Operations (9):** parse, info, components, validate, raw, delete, list, clone, update parameters
+  - **Simulation Control (13):** submit, status, results, results/{signal}, progress, stream (SSE), ws-info, export, list, cancel, batch submit, batch status, batch cancel
+  - **Signal Analysis (3):** characteristics (RMS/THD/AVG), Fourier/FFT, quick RMS
+  - **Health/Info (3):** `/api/health`, `/api/info`, `/api/docs`
   - **WebSocket (STOMP/SockJS):** `/ws` (SockJS), `/ws-raw`; subscribe to `/topic/simulations/{id}`
 - **Authentication:** Optional API key (`X-API-Key` header); `gecko.api.auth-enabled=false` by default
 - **Real Solver Backend:** HeadlessSimulationEngine uses full MNA solver (MatrixSolver, CircuitNetlist, DomainCoupler)
@@ -134,23 +133,26 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | v2.20.0 | Feb 18, 2026 | Batch Job Tracking + Circuit Mgmt | Batch status/cancel, circuit clone/parameter update |
 | v2.21.0 | Feb 18, 2026 | WebSocket Streaming | STOMP/SockJS real-time simulation progress |
 | v2.22.0 | Feb 18, 2026 | API Key Authentication | Spring Security, X-API-Key header, optional auth |
-| **v3.0.0** | **Feb 18, 2026** | **Complete REST API Platform** | **32 endpoints, 7,426 tests, production-ready** |
+| **v3.0.0** | **Feb 18, 2026** | **Complete REST API Platform** | **32 endpoints, 7,434 tests, production-ready** |
 
-**Roadmap:**
-| Version | Target | Description |
-|---------|--------|-------------|
-| v3.1.0 | Q2 2026 | Rate limiting, JWT tokens, pagination, WebSocket auth, enhanced circuit parsing |
-| v3.2.0 | Q3 2026 | Web UI Launch (React + TypeScript circuit editor) |
-| v4.0.0 | Q1 2027 | Cloud Deployment (Kubernetes, multi-tenant SaaS) |
-| v5.0.0 | Q3 2027 | Machine Learning Integration (AI-assisted design) |
+**Roadmap (GitHub Issues):**
 
-**Note:** For detailed release planning, version numbering strategy, and full changelog, see [RELEASE_PLAN.md](RELEASE_PLAN.md).
+| Version | Target | Epic | Features |
+|---------|--------|------|----------|
+| v3.1.0 | Q2 2026 | [#17](https://github.com/geckocircuits/GeckoCIRCUITS/issues/17) | Rate limiting [#24], JWT [#25], pagination [#26], WebSocket auth [#27], parsing [#28], RBAC [#29], SDKs [#30] |
+| v3.2.0 | Q3 2026 | [#18](https://github.com/geckocircuits/GeckoCIRCUITS/issues/18) | React app [#31], circuit editor [#32], oscilloscope [#33], PWA [#34] |
+| v4.0.0 | Q1 2027 | [#19](https://github.com/geckocircuits/GeckoCIRCUITS/issues/19) | Kubernetes [#35], multi-tenant [#36], Redis/Postgres [#37], observability [#38] |
+| v5.0.0 | Q3 2027 | [#20](https://github.com/geckocircuits/GeckoCIRCUITS/issues/20) | RL optimization [#39], surrogate models [#40], component selection [#41] |
+
+**Long-term vision:** Educational platform [#21], industry partnerships [#22], research collaboration [#23]
+
+**Note:** For detailed roadmap, release process, and issue tracking, see [docs/roadmap.md](roadmap.md).
 
 ### Latest Sprint (2026-02-18): v3.0.0 — Complete REST API Platform
 
 **MILESTONE: All v3.0.0 targets ACHIEVED (Feb 18, 2026)**
 - 32 production-ready REST API endpoints (target was 30+)
-- 7,426 total tests (5,373 main + 1,837 core + 224 API)
+- 7,434 total tests (5,373 main + 1,837 core + 224 API)
 - Spring Security API key authentication
 - WebSocket/STOMP real-time streaming
 - Batch simulation with linearSweep/logSweep
@@ -190,172 +192,35 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Real MNA solver replaces HeadlessSimulationEngine placeholder
 - Core module: 1,711 → 1,809 tests; REST API simulation endpoints wired to real solver
 
-### Previous Sprint (2026-02-14): Sprint 4b - Loss Calculation Migration
+### Previous Sprints (Summary)
 
-**Phase 2B: UserParameter Abstraction + Curve Class Migration (COMPLETED)**
-- Created UserParameterCore abstraction for headless parameter management:
-  - UserParameterCore<T> interface (9 essential methods) in gecko.core.allg
-  - UserParameterCoreImpl<T> with Builder pattern for core module
-  - UserParameterGUIAdapter<T> for backward compatibility with main project
-- Migrated 4 loss curve classes (376 LOC) to gecko.core.circuit.losscalculation:
-  - LossCurve - Abstract base class for temperature-dependent loss curves
-  - SwitchingLossCurve - Switching loss measurement curves with blocking voltage
-  - LeitverlusteMesskurve - Conduction loss measurement curves
-  - DetailedLossLookupTable - Bilinear interpolation for loss lookup
-- Migrated 7 test files with 180+ test cases, converted JUnit 4 → JUnit 5
-- Fixed TokenMap 2D array serialization format ("[][]" identifier + dimensions)
-- Updated 12 main project files with new import paths
-- Core module: 183 classes, 59 test files, 1,686 tests, 30%+ coverage maintained
-- **Build Status:** Core SUCCESS (1,686 tests) + Main SUCCESS (5,373 tests) = 7,059 tests passing
+| Sprint | Date | Key Deliverable |
+|--------|------|-----------------|
+| Sprint 4b: Loss Calculation | Feb 14 | UserParameterCore abstraction, 4 loss curve classes migrated, bilinear interpolation |
+| Sprint 4a: GeckoFile Migration | Feb 14 | GeckoFile (750 LOC) to core, interface injection pattern, TokenMap/HiLoData unification |
+| Signal Analysis Migration | Feb 13 | gecko.core.signal package (CharacteristicsCalculator, FourierGUIless, Cispr16Fft) |
+| Native C Integration | Feb 13 | 7 JNI integration classes to gecko.core.nativec |
+| Utilities Migration | Feb 13 | OperatingMode, LaunchBrowser, GeckoRuntimeException, SelectableLanguages |
+| Serialization & File Parsing | Feb 13 | SerializationUtils, TokenMap, CircuitFileConstants, GlobalFilePathes |
+| Terminal + Component Migration | Feb 13 | circuit.terminal (3 classes), circuit.component (3 classes) |
+| Docker Packaging | Feb 13 | Multi-stage Dockerfile, docker-compose.yml, Alpine JRE 21 (~180MB) |
+| Core Module Foundation | Feb 12 | math + datacontainer migration (148 classes, 737 tests) |
+| Static Analysis Cleanup | Feb 12-15 | PMD 3,443 → 496 (-86%), SpotBugs 0, 6 categories eliminated |
+| LossCalculation GUI Decoupling | Feb 12 | LossFileAccessor interface, coverage 51% → 61% |
+| Package Rename | Feb 12 | ch.technokrat.* → gecko.* (1,391 files) |
+| Documentation Overhaul | Feb 11 | 95+ broken links fixed, 10 newsletter articles, GitHub Pages deployment |
 
-**Phase 1: GUI-Free Loss Calculator Migration (COMPLETED)**
-- Migrated 10 GUI-free loss calculation classes to gecko.core.circuit.losscalculation:
-  - Calculators: SwitchingLossCalculator, ConductionLossCalculator
-  - Interfaces: AbstractLossCalculator, AbstractLossCalculatorFabric, LossCalculatable, LossCalculationSplittable, LossFileAccessor
-  - Data models: LossComponent, LossCalculationDetail, LossContainer
-- Migrated 10 test files, converted JUnit 4 → JUnit 5
-- Core module: 179 classes, 52 test files, 1,524 tests
+### In Progress (v3.1.0 Roadmap)
+- Rate limiting and request throttling
+- JWT token authentication (complement to API key auth)
+- Pagination for list endpoints
+- WebSocket authentication
+- Enhanced circuit parsing (additional component types)
 
-### Previous Sprint (2026-02-14): Sprint 4a - GeckoFile Migration
-
-- Migrated GeckoFile (750 LOC) from main project to gecko.core.allg
-- Created interface injection pattern for GUI abstraction:
-  - ExternalStorageConverter interface (gecko.core.allg) - abstracts GUI dialog for external storage
-  - DialogExternalStorageConverter (main) - GUI adapter delegating to DialogMakeExternal
-  - ComponentIdentifiable interface (gecko.core.circuit) - abstracts component identification for deserialization
-- Refactored GeckoFile with constructor injection and reflection fallback for backward compatibility
-- Migrated GeckoFileTest (31 tests) from JUnit 4 to JUnit 5
-- Updated 29 files with new import paths
-- **TokenMap dual-version resolution:** Removed duplicate TokenMap from main project, unified on gecko.core.circuit.TokenMap (78 files updated)
-- **HiLoData dual-version resolution:** Removed duplicate HiLoData from newscope, unified on gecko.core.datacontainer.HiLoData (41 files updated)
-- Core module: 179 classes, 52 test files, 1,307 tests, 30%+ coverage maintained
-- All modules compile and test successfully: 7,137 tests passing (1,307 core + 5,752 main + 78 rest-api)
-
-### Previous Sprint (2026-02-13): Phase 3 Signal Analysis Migration
-- Created gecko.core.signal package for signal analysis utilities
-- Migrated 4 classes to support REST API signal analysis endpoints:
-  - GeckoInvalidArgumentException (gecko.core) - Exception for invalid arguments
-  - CharacteristicsCalculator (gecko.core.signal) - RMS, THD, AVG, MIN/MAX, ripple, distortion factor
-  - FourierGUIless (gecko.core.signal) - GUI-less Fourier analysis for GeckoSCRIPT
-  - Cispr16Fft (gecko.core.signal) - FFT computation with Blackman filtering
-- Added 4 comprehensive test files with 66 tests (1,276 total):
-  - TechFormatTest (gecko.core.allg) - 41 tests for engineering notation parsing
-  - CharacteristicsCalculatorTest - 11 tests for signal characteristics
-  - FourierGUIlessTest - 6 tests for Fourier analysis
-  - Cispr16FftTest - 12 tests for FFT algorithms
-- Core module: 176 classes, 50 test files, 1,276 tests, 30%+ coverage maintained
-
-### Previous Sprint (2026-02-13): Phase 2 Native C Integration
-- Migrated 7 Native C/C++ integration classes to gecko-simulation-core:
-  - CompileStatus enum (compilation status tracking)
-  - InterfaceNativeCWrapper (JNI interface for native functions)
-  - CompiledClassContainer (compiled class storage with TokenMap support)
-  - NativeCClassLoader (garbage-collectable classloader for native wrappers)
-  - NativeCLibraryFile (library file management with timestamp tracking)
-  - NativeCWrapper (JNI native method declarations)
-  - NativeCBlock (lifecycle management for native library integration)
-- Created gecko.core.nativec package for scientific computing
-- Added 46 comprehensive tests (1,207 total, was 1,161)
-- Core module: 183 classes, 1,207 tests, 30%+ coverage maintained
-
-### Previous Sprint (2026-02-13): Phase 1 Utilities Migration (Enums + i18n)
-- Migrated 4 foundational utility classes to gecko-simulation-core:
-  - OperatingMode enum (6 modes: STANDALONE, SIMULINK, EXTERNAL, REMOTE, MMF, HEADLESS)
-  - LaunchBrowser utility (cross-platform browser launching)
-  - GeckoRuntimeException (custom runtime exception with OutOfMemoryError support)
-  - SelectableLanguages enum (43 supported languages with ISO 639-1 codes)
-- Created gecko.core.i18n package for internationalization support
-- Added 39 comprehensive tests (1,161 total, was 1,122)
-- Core module: 177 classes, 1,161 tests, 30%+ coverage maintained
-
-### Previous Sprint (2026-02-13): Serialization Utilities & expressionscripting Assessment
-- Created SerializationUtils in gecko.core.io (7 utility methods for .ipes file serialization)
-- Extracted from ProjectData.appendAsString() - enables future GeckoFile migration without full ProjectData abstraction
-- Assessed expressionscripting package (5 classes): 4/5 files completely commented out, package deprecated, not worth migrating
-- Core module: 171 classes, 1,122 tests, 30%+ coverage maintained
-
-### Previous Sprint (2026-02-13): Phase 1 Migration - Circuit File Parsing
-- Migrated TokenMap to gecko-simulation-core (689 lines, 41 tests) - Key class for parsing .ipes circuit files
-- Created CircuitFileConstants for circuit file parsing constants (NIX, SEPARATOR)
-- Migrated GlobalFilePathes (47 lines) - Static file path variables
-- Assessment: GeckoFile and GeckoFileable deferred (dependencies on ProjectData static refs, DialogMakeExternal GUI)
-- Core module: 170 classes, 1,122 tests, 30%+ coverage maintained
-
-### Previous Sprint (2026-02-13): Tier 1 Package Migration (terminal + component)
-- Migrated `circuit.terminal` package to gecko-simulation-core (3 source classes, 3 test files, 138 tests)
-  - Created minimal GUI-free `ConnectorType` enum in core
-  - ConnectionPath, ConnectionValidator, ITerminalPosition (path routing and validation logic)
-- Migrated `circuit.component` package to gecko-simulation-core (3 source classes, 3 test files, 206 tests)
-  - ParameterRegistry, ParameterSerializer, TerminalRegistry (component data management)
-- Assessed `circuit.losscalculation` migration complexity: deferred due to dependencies on ProjectData, TokenMap, GeckoFile (not yet in core)
-- Core module: 168 classes (from 148), 1,081 tests (from 737), 30%+ coverage maintained
-
-### Previous Sprint (2026-02-13): Docker Packaging for REST API
-- Created multi-stage Dockerfile for gecko-rest-api module (Alpine JRE 21, ~180MB final image)
-- Added docker-compose.yml for local development and testing
-- Created Docker build and run scripts (`build-docker.sh`, `run-docker.sh`)
-- Updated REST API README with comprehensive Docker documentation (including Docker Desktop deployment guide)
-- Dockerfile optimized with layer caching, non-root user, and health checks
-
-### Previous Sprint (2026-02-12): Core Module Migration (math + datacontainer)
-- Migrated 7 math test files to gecko-simulation-core module (test coverage preserved)
-- Migrated 11 datacontainer source classes to gecko-simulation-core module
-- Migrated 18 datacontainer test files to gecko-simulation-core module
-- Core module now contains 148 source classes, 31 test files, 737 tests
-- All reactor builds passing, coverage thresholds maintained
-
-### Previous Sprint (2026-02-12 to 2026-02-15): Static Analysis Cleanup
-- Created `pmd-ruleset.xml` and `checkstyle.xml` config files, updated `pom.xml`
-- Fixed 1,445 auto-fixable PMD violations across 330+ files:
-  - UnnecessaryFullyQualifiedName (694), UselessParentheses (354), UnnecessaryImport (111), UnnecessaryModifier (104)
-- Fixed 183 Tier 3 PMD violations: EmptyCatchBlock (20), EmptyControlStatement (44), UnnecessarySemicolon (34), UnnecessaryReturn (33), UnusedLocalVariable (28), UnusedPrivateMethod (13), UnusedPrivateField (11)
-- Fixed 38 ReturnEmptyCollectionRatherThanNull violations across 11 files (GeckoRemoteMMFObject, GeckoExternal, AbstractGeckoCustom, ComponentPositioner, and 7 others)
-- **Achieved <500 PMD violations target: 823 → 496 (-40% in one sprint, -86% from original 3,443)**
-- Fixed 327 PMD violations total (145 code-style, 88 high-value, 94 modernization):
-  - **6 violation categories eliminated to 0:**
-    - ForLoopCanBeForeach (94): Modernized all traditional for-loops across 6 batches (43 files)
-    - PreserveStackTrace (38): All exception chains now preserve stack traces
-    - SimplifyBooleanReturns (29): Simplified boolean logic
-    - CompareObjectsWithEquals (31): Changed == to .equals() for object comparisons
-    - CloseResource (52): All resource leaks fixed with try-with-resources (30 fixed, 5 documented false positives, 17 earlier)
-    - IdenticalCatchBranches (22): Merged to multi-catch statements
-  - UnnecessaryImport (116): Excluded in ruleset (false positives)
-- Stripped trailing whitespace from 974 Java source files (13,359 lines)
-- Fixed GitHub Actions CI: reactor build + proper dependency resolution (all modules now build successfully)
-- **SpotBugs: 0 bugs (maintained), PMD: 496 violations ✅ <500 TARGET ACHIEVED, Checkstyle: 4,632**
-
-### Previous Sprint (2026-02-12): LossCalculation GUI Decoupling
-- Introduced `LossFileAccessor` interface to decouple `VerlustBerechnungDetailed` from `MainWindow`
-- Replaced 11 static `MainWindow` references with injectable accessor pattern
-- Added 22 new tests for previously-untestable file I/O methods (mock-based)
-- `losscalculation` package coverage: 51% -> 61% (exceeds 60% threshold)
-- `VerlustBerechnungDetailed` coverage: 92% instruction, 87% branch
-- Added 8 new test files for losscalculation package (including existing untracked tests)
-
-### Previous Sprint (2026-02-12): Package Rename
-- Removed `ch.technokrat` from all packages: `ch.technokrat.*` -> `gecko.*`
-- Updated 1,391 files (1,288 Java, 21 config/scripts/docs, 5 .ipes, 2 JNI native)
-- Rebuilt JNI native libraries with new symbol names
-- All modules compile and pass tests (reactor build verified)
-
-### Previous Sprint (2026-02-11): Documentation Overhaul
-- Fixed 95+ broken internal links across docs site
-- Integrated 10 newsletter articles from `resources/articles/`
-- Added EMI/EMC and Advanced Topics tutorial sections
-- Created Javadoc extraction script (`scripts/generate-api-docs.py`)
-- Generated Core Module API reference (4 pages)
-- Deployed site to GitHub Pages (gh-pages branch)
-
-### In Progress
-- Core module extraction: 148 classes extracted, math and datacontainer migration complete
-- GUI decoupling: `LossFileAccessor` pattern established, replicable for other packages
-- Test coverage growth: 5,783 tests (main project), targeting further coverage gains
-- Documentation site maintenance
-
-### Planned (Next Sprints)
-1. REST API MVP (health endpoint, simulation CRUD, signal analysis)
-2. Additional core package migrations (identify remaining GUI-free candidates)
-3. Coverage targets: losscalculation 65%, additional core packages 70%+
+### Planned (Future)
+1. **v3.2.0 (Q3 2026):** Web UI Launch — React + TypeScript circuit editor
+2. **v4.0.0 (Q1 2027):** Cloud Deployment — Kubernetes, multi-tenant SaaS
+3. **v5.0.0 (Q3 2027):** Machine Learning Integration — AI-assisted circuit design
 
 ## 7. Quality Assurance
 
@@ -375,19 +240,21 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 ### Success Metrics
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Total tests (main) | 5,783 | 6,000+ |
-| Core module classes | 168 | 200+ |
-| Core module tests | 1,081 | 1,200+ |
+| Metric | Current | Target (v3.1.0) |
+|--------|---------|-----------------|
+| Total tests | **7,434** (5,373 + 1,837 + 224) | 7,500+ |
+| Core module classes | **216** ✅ | 230+ |
+| Core module test files | **80** | 85+ |
+| Core module tests | **1,837** ✅ | 2,000+ |
 | Core module coverage | 30%+ | 40%+ |
-| losscalculation coverage | 61% | 65%+ |
+| Main app files | 832 | — |
+| REST API endpoints | **32** ✅ | 35+ |
+| REST API tests | **224** | 250+ |
 | Docs site pages | 82+ | 100+ |
 | Broken links | 0 | 0 |
 | SpotBugs bugs | 0 | 0 |
-| PMD violations | **496** ✅ | <500 |
+| PMD violations | **496** ✅ | <400 |
 | Checkstyle violations | 4,632 | <2,000 |
-| REST API endpoints | 8 | 10+ |
 
 ## 8. Content Inventory
 

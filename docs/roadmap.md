@@ -1,14 +1,19 @@
-# GeckoCIRCUITS Roadmap
+# GeckoCIRCUITS Roadmap & Release Plan
 
-Strategic roadmap for GeckoCIRCUITS development, showing completed milestones and future plans.
+Strategic roadmap for GeckoCIRCUITS development — completed milestones, future plans, and release process.
+
+**Last Updated:** 2026-02-22
 
 ---
 
-## Current Status (February 2026)
+## Current Status
 
-- **Latest Release:** v2.17.0 - Release Automation
-- **Ground Zero:** v2.10.0 - Java 21 Migration
-- **Completed Milestones:** 8 releases (v2.10.0 → v2.17.0)
+- **Latest Release:** v3.0.0 — Complete REST API Platform (Feb 18, 2026)
+- **Ground Zero:** v2.10.0 — Java 21 Migration (Feb 14, 2026)
+- **Total Releases:** 13 versions (v2.10.0 → v3.0.0)
+- **Tests:** 7,434 total (5,373 main + 1,837 core + 224 API)
+- **Core Module:** 216 classes, 80 test files
+- **REST API:** 32 endpoints, Spring Boot 3.2.1, Docker-ready
 
 ---
 
@@ -18,7 +23,7 @@ Strategic roadmap for GeckoCIRCUITS development, showing completed milestones an
 gantt
     title GeckoCIRCUITS Development Timeline
     dateFormat YYYY-MM-DD
-    section v2.x Series
+    section v2.x Foundation
     Java 21 Migration (v2.10.0)       :done, 2026-02-14, 1d
     Core Module Foundation (v2.11.0)  :done, 2026-02-14, 1d
     Static Analysis (v2.12.0)         :done, 2026-02-14, 1d
@@ -26,196 +31,202 @@ gantt
     GeckoFile (v2.14.0)               :done, 2026-02-14, 1d
     Loss Calculation (v2.15.0)        :done, 2026-02-14, 1d
     REST API Launch (v2.16.0)         :done, 2026-02-14, 1d
-    Release Automation (v2.17.0)      :done, 2026-02-14, 1d
+    Release Automation (v2.17.0)      :done, 2026-02-15, 1d
 
-    section Future (v3.0.0)
-    Simulation Control Endpoints      :active, 2026-03-01, 45d
-    WebSocket Streaming              :       2026-04-15, 30d
-    Authentication & Security        :       2026-05-15, 30d
-    Advanced Analysis Endpoints      :       2026-06-15, 30d
-    Production Infrastructure        :       2026-07-15, 45d
-    v3.0.0 MARKETING WOW            :crit,   2026-09-01, 1d
+    section v2.18 — v3.0 Sprint
+    Headless Simulation (v2.18.0)     :done, 2026-02-17, 1d
+    SSE + Batch + Analysis (v2.19.0)  :done, 2026-02-18, 1d
+    Batch + Circuit Mgmt (v2.20.0)    :done, 2026-02-18, 1d
+    WebSocket Streaming (v2.21.0)     :done, 2026-02-18, 1d
+    API Key Auth (v2.22.0)            :done, 2026-02-18, 1d
+    v3.0.0 RELEASED                   :crit, done, 2026-02-18, 1d
 
-    section Beyond
-    Web UI Launch (v3.1.0)          :       2026-10-01, 90d
-    Cloud Deployment (v3.2.0)       :       2027-01-01, 90d
-    ML Integration (v4.0.0)         :       2027-04-01, 90d
+    section Future
+    API Hardening (v3.1.0)            :active, 2026-03-01, 120d
+    Web UI Launch (v3.2.0)            :       2026-07-01, 90d
+    Cloud Deployment (v4.0.0)         :       2027-01-01, 90d
+    ML Integration (v5.0.0)           :       2027-04-01, 180d
 ```
 
 ---
 
-## Completed Milestones (v2.10.0 → v2.17.0)
+## Completed Releases
 
-### [v2.10.0](releases/2100.md) - Java 21 Migration (GROUND ZERO)
+### v3.0.0 — Complete REST API Platform (Feb 18, 2026)
 
-**Released:** 2025-08-24
+**MILESTONE: 32 endpoints, 7,434 tests, production-ready**
 
-### [v2.11.0](releases/2110.md) - Core Module Foundation
+- 32 REST API endpoints (loss calc, circuits, simulation, batch, analysis, WebSocket)
+- Spring Security API key authentication
+- WebSocket/STOMP real-time streaming
+- Batch simulation (linearSweep/logSweep/explicit)
+- Signal analysis (characteristics, Fourier/FFT)
+- Real MNA solver backend in headless engine
+- See [v3.0.0 release notes](releases/3000.md)
 
-**Released:** 2026-02-12
+### v2.18.0 — v2.22.0 Sprint (Feb 17-18, 2026)
 
-### [v2.12.0](releases/2120.md) - Static Analysis and Code Quality Sprint
+| Version | Milestone | Key Deliverables |
+|---------|-----------|-----------------|
+| v2.22.0 | API Key Auth | Spring Security, X-API-Key header, 20 security tests |
+| v2.21.0 | WebSocket | STOMP/SockJS real-time simulation progress |
+| v2.20.0 | Batch + Circuit Mgmt | Batch status/cancel, circuit clone/parameter update |
+| v2.19.0 | SSE + Batch + Analysis | SSE streaming, batch simulations, signal analysis |
+| v2.18.0 | Headless Engine | Real MNA solver, domain coupling, simulation control |
 
-**Released:** 2026-02-12
+### v2.10.0 — v2.17.0 Foundation (Feb 12-15, 2026)
 
-### [v2.13.0](releases/2130.md) - Terminal and Component Package Migration
+| Version | Milestone | Release Notes |
+|---------|-----------|---------------|
+| [v2.17.0](releases/2170.md) | Release Automation | GitHub Actions, 5 platform builds |
+| [v2.16.0](releases/2160.md) | REST API Launch | First 8 endpoints, Docker packaging |
+| [v2.15.0](releases/2150.md) | Loss Calculation | UserParameter abstraction, loss curves |
+| [v2.14.0](releases/2140.md) | GeckoFile Migration | Circuit file I/O headlessly |
+| [v2.13.0](releases/2130.md) | Terminal/Component | Circuit parsing, TokenMap migration |
+| [v2.12.0](releases/2120.md) | Static Analysis | PMD 3,443 → 496 (-86%), SpotBugs 0 |
+| [v2.11.0](releases/2110.md) | Core Module | gecko-simulation-core, math/datacontainer |
+| [v2.10.0](releases/2100.md) | Java 21 (GROUND ZERO) | Java 21 upgrade, deprecated API fixes |
 
-**Released:** 2026-02-13
+### Pre-Fork
 
-### [v2.14.0](releases/2140.md) - GeckoFile Migration (Sprint 4a)
-
-**Released:** 2026-02-14
-
-### [v2.15.0](releases/2150.md) - Loss Calculation Migration (Sprint 4b)
-
-**Released:** 2026-02-14
-
-### [v2.16.0](releases/2160.md) - REST API Launch (Sprint 5)
-
-**Released:** 2026-02-14
-
-### [v2.17.0](releases/2170.md) - Release Automation and Desktop Packaging
-
-**Released:** 2026-02-15
+| Version | Source | Description |
+|---------|--------|-------------|
+| v2.04-repo-reorg | tinix84 fork | Repository reorganization, JDK 21 workflow |
+| v2.03-spotbugs-clean | tinix84 fork | All 1,096 SpotBugs violations fixed |
+| v2.02 | geckocircuits/GeckoCIRCUITS | Last upstream release |
 
 ---
 
 ## Future Releases
 
-### v3.0.0 - Complete REST API Platform 🚀 (Q3 2026)
+### v3.1.0 — API Hardening & Security (Q2 2026)
 
-**Target Date:** August-September 2026
+**Epic:** [#17](https://github.com/geckocircuits/GeckoCIRCUITS/issues/17) | **Milestone:** [v3.1.0](https://github.com/geckocircuits/GeckoCIRCUITS/milestone/1)
 
-**Significance:** MARKETING WOW - First production-ready REST API with breaking changes
-
-#### Major Features
-
-**1. Complete REST API Endpoints (30+ total)**
-
-- Simulation control (create, start, pause, stop, results)
-- Real-time data streaming (WebSocket support)
-- Advanced analysis (FFT, THD, RMS, power quality, Bode plots)
-- Batch operations (parameter sweeps, optimization)
-- Circuit management (CRUD operations with pagination)
-
-**2. Security & Authentication**
-
-- JWT-based authentication
-- API key management
-- Rate limiting (100 req/min per user, configurable)
-- Role-based access control (RBAC)
-- OAuth2 integration (Google, GitHub, Microsoft)
-- Audit logging
-
-**3. Production Infrastructure**
-
-- Horizontal scaling support
-- Redis caching layer
-- PostgreSQL database for metadata
-- Prometheus metrics export
-- ELK stack logging integration
-- Health check endpoints
-- Graceful shutdown
-
-**4. Documentation & Developer Experience**
-
-- Interactive API documentation (Swagger UI)
-- Postman collection with examples
-- Client SDK generation (Java, Python, JavaScript)
-- Migration guide from v2.x API
-- Video demonstrations
-
-#### Timeline (6-7 months)
-
-- Sprint 6: Simulation control endpoints (6 weeks)
-- Sprint 7: WebSocket streaming (4 weeks)
-- Sprint 8: Authentication & security (4 weeks)
-- Sprint 9: Advanced analysis endpoints (4 weeks)
-- Sprint 10: Production infrastructure (6 weeks)
-- Sprint 11: Documentation & testing (3 weeks)
+| Issue | Feature | Status |
+|-------|---------|--------|
+| [#24](https://github.com/geckocircuits/GeckoCIRCUITS/issues/24) | Rate limiting and request throttling | Planned |
+| [#25](https://github.com/geckocircuits/GeckoCIRCUITS/issues/25) | JWT token authentication | Planned |
+| [#26](https://github.com/geckocircuits/GeckoCIRCUITS/issues/26) | Pagination for list endpoints | Planned |
+| [#27](https://github.com/geckocircuits/GeckoCIRCUITS/issues/27) | WebSocket authentication | Planned |
+| [#28](https://github.com/geckocircuits/GeckoCIRCUITS/issues/28) | Enhanced circuit parsing | Planned |
+| [#29](https://github.com/geckocircuits/GeckoCIRCUITS/issues/29) | RBAC (Role-Based Access Control) | Planned |
+| [#30](https://github.com/geckocircuits/GeckoCIRCUITS/issues/30) | Client SDKs (Python, Java, JS) | Planned |
 
 ---
 
-### v3.1.0 - Web UI Launch (Q4 2026)
+### v3.2.0 — Web UI Launch (Q3 2026)
 
-**Significance:** Browser-based circuit editor and simulator
+**Epic:** [#18](https://github.com/geckocircuits/GeckoCIRCUITS/issues/18) | **Milestone:** [v3.2.0](https://github.com/geckocircuits/GeckoCIRCUITS/milestone/2)
 
-- React 18 + TypeScript web application
-- Circuit editor with drag-and-drop components
-- Real-time oscilloscope visualization (D3.js)
-- Parameter editing and tuning
-- Circuit library browser
-- Tutorial integration
-- Responsive design (desktop, tablet)
-- PWA support for offline use
+| Issue | Feature | Status |
+|-------|---------|--------|
+| [#31](https://github.com/geckocircuits/GeckoCIRCUITS/issues/31) | React + TypeScript application scaffold | Planned |
+| [#32](https://github.com/geckocircuits/GeckoCIRCUITS/issues/32) | Circuit editor with drag-and-drop | Planned |
+| [#33](https://github.com/geckocircuits/GeckoCIRCUITS/issues/33) | Real-time oscilloscope visualization | Planned |
+| [#34](https://github.com/geckocircuits/GeckoCIRCUITS/issues/34) | PWA support for offline use | Planned |
 
----
-
-### v3.2.0 - Cloud Deployment (Q1 2027)
-
-**Significance:** Multi-tenant SaaS platform
-
-- AWS/Azure/GCP deployment scripts
-- Kubernetes orchestration (Helm charts)
-- Auto-scaling based on load
-- Multi-tenant isolation
-- User workspace management
-- Circuit sharing and collaboration
-- Marketplace for circuit libraries
-- Usage analytics and billing integration
+**Technologies:** React 18, TypeScript, MUI, D3.js/WebGL, WebSocket/STOMP, Redux/Zustand
 
 ---
 
-### v4.0.0 - Machine Learning Integration (Q2 2027)
+### v4.0.0 — Cloud Deployment (Q1 2027)
 
-**Significance:** AI-assisted circuit design and optimization
+**Epic:** [#19](https://github.com/geckocircuits/GeckoCIRCUITS/issues/19) | **Milestone:** [v4.0.0](https://github.com/geckocircuits/GeckoCIRCUITS/milestone/3)
 
-- Circuit optimization using reinforcement learning
-- Automated component selection based on specifications
-- Anomaly detection in simulation results
-- Predictive maintenance modeling
-- Training data generation from simulation runs
-- Pre-trained models for common topologies
-- Neural network surrogate models for fast approximations
+| Issue | Feature | Status |
+|-------|---------|--------|
+| [#35](https://github.com/geckocircuits/GeckoCIRCUITS/issues/35) | Kubernetes orchestration (Helm charts) | Planned |
+| [#36](https://github.com/geckocircuits/GeckoCIRCUITS/issues/36) | Multi-tenant isolation + workspaces | Planned |
+| [#37](https://github.com/geckocircuits/GeckoCIRCUITS/issues/37) | Redis caching + PostgreSQL metadata | Planned |
+| [#38](https://github.com/geckocircuits/GeckoCIRCUITS/issues/38) | Prometheus metrics + Grafana dashboards | Planned |
+
+**Infrastructure:** Kubernetes (EKS/AKS/GKE), Terraform/Pulumi, ArgoCD, Grafana + Prometheus
 
 ---
 
-## Release Frequency
+### v5.0.0 — Machine Learning Integration (Q3 2027)
 
-Predictable release cadence:
+**Epic:** [#20](https://github.com/geckocircuits/GeckoCIRCUITS/issues/20) | **Milestone:** [v5.0.0](https://github.com/geckocircuits/GeckoCIRCUITS/milestone/4)
 
-- **Major releases (X.0.0):** Annually - Breaking changes, major features, marketing events
-- **Minor releases (X.Y.0):** Quarterly - New features, enhancements, backward-compatible
-- **Patch releases (X.Y.Z):** As needed - Bug fixes, security updates, hotfixes
+| Issue | Feature | Status |
+|-------|---------|--------|
+| [#39](https://github.com/geckocircuits/GeckoCIRCUITS/issues/39) | RL-based circuit optimization | Planned |
+| [#40](https://github.com/geckocircuits/GeckoCIRCUITS/issues/40) | Neural network surrogate models | Planned |
+| [#41](https://github.com/geckocircuits/GeckoCIRCUITS/issues/41) | Automated component selection | Planned |
+
+**Technologies:** TensorFlow/PyTorch, Python microservice, GPU (CUDA), MLflow, TorchServe
 
 ---
 
 ## Long-Term Vision (2027-2028)
 
-### Educational Platform Expansion
+### Educational Platform Expansion — [#21](https://github.com/geckocircuits/GeckoCIRCUITS/issues/21)
 
-- Interactive tutorials with embedded simulator
-- Certification programs (Power Electronics Fundamentals)
-- Virtual laboratory for universities
-- Competition platform for students (circuit design challenges)
-- Integration with LMS (Moodle, Canvas, Blackboard)
-- SCORM-compliant content packages
+| Issue | Feature |
+|-------|---------|
+| [#42](https://github.com/geckocircuits/GeckoCIRCUITS/issues/42) | Interactive tutorials with embedded simulator |
+| [#43](https://github.com/geckocircuits/GeckoCIRCUITS/issues/43) | Virtual laboratory for universities |
+| [#44](https://github.com/geckocircuits/GeckoCIRCUITS/issues/44) | LMS integration (Moodle, Canvas, Blackboard) |
 
-### Industry Partnerships
+Also planned: certification programs, student competition platform, SCORM content packages.
 
-- Semiconductor vendor integrations (Infineon, Wolfspeed, ON Semi, STMicro)
-- Component library partnerships
-- Enterprise licensing model (per-seat, per-server, site license)
-- Professional support tiers (email, phone, dedicated engineer)
-- Training and consulting services
+### Industry Partnerships — [#22](https://github.com/geckocircuits/GeckoCIRCUITS/issues/22)
 
-### Research Collaboration
+| Issue | Feature |
+|-------|---------|
+| [#45](https://github.com/geckocircuits/GeckoCIRCUITS/issues/45) | Semiconductor vendor component library integrations |
 
-- Academic paper citation tracking
-- Research dataset sharing (simulation results, validation data)
-- Reproducible research workflows (Docker + circuit files)
-- Integration with research tools (Jupyter, MATLAB Online, Mathematica)
-- Grant-funded development partnerships
+Also planned: enterprise licensing, professional support tiers, training & consulting.
+
+### Research Collaboration — [#23](https://github.com/geckocircuits/GeckoCIRCUITS/issues/23)
+
+| Issue | Feature |
+|-------|---------|
+| [#46](https://github.com/geckocircuits/GeckoCIRCUITS/issues/46) | Reproducible research workflows (Docker + circuit files) |
+
+Also planned: citation tracking, dataset sharing, Jupyter/MATLAB integration, grant partnerships.
+
+---
+
+## Release Process
+
+### Version Numbering (Semantic Versioning 2.0.0)
+
+- **MAJOR (X.0.0):** Incompatible API changes, major architectural shifts
+- **MINOR (X.Y.0):** New features, backward-compatible
+- **PATCH (X.Y.Z):** Bug fixes, security updates
+
+### Release Frequency
+
+- **Major releases (X.0.0):** Annually
+- **Minor releases (X.Y.0):** Quarterly
+- **Patch releases (X.Y.Z):** As needed
+
+### Release Checklist
+
+**Pre-Release:**
+
+- [ ] All tests passing: `mvn -f pom-reactor.xml test`
+- [ ] Documentation updated: `docs/prd.md`, `docs/architecture.md`, `CLAUDE.md`
+- [ ] Version numbers updated in pom.xml files
+- [ ] SpotBugs: 0 bugs (`mvn spotbugs:check`)
+- [ ] JaCoCo coverage: ≥30% for core (`mvn verify`)
+- [ ] Breaking changes documented (if MAJOR release)
+
+**Release:**
+
+- [ ] Create annotated tag: `git tag -a vX.Y.Z -m "vX.Y.Z: Description"`
+- [ ] Push tag: `git push origin vX.Y.Z`
+- [ ] Monitor GitHub Actions build (5-10 minutes)
+- [ ] Verify all 5 platform packages uploaded
+
+**Post-Release:**
+
+- [ ] Update docs site: `mkdocs gh-deploy --force`
+- [ ] Close milestone in issue tracker
+- [ ] Update Docker Hub images (if API changed)
+- [ ] Announce release
 
 ---
 
@@ -229,14 +240,13 @@ Want to contribute to the roadmap? We welcome:
 - Example circuits and tutorials
 - Code contributions
 
-See our [Contributing Guide](https://github.com/tinix84/GeckoCIRCUITS/blob/main/CONTRIBUTING.md) for details.
+See our [Contributing Guide](https://github.com/geckocircuits/GeckoCIRCUITS/blob/main/CONTRIBUTING.md) for details.
 
 ---
 
 ## Feedback
 
-Your feedback shapes the roadmap! Share your thoughts:
+Your feedback shapes the roadmap!
 
-- [GitHub Discussions](https://github.com/tinix84/GeckoCIRCUITS/discussions)
-- [Feature Requests](https://github.com/tinix84/GeckoCIRCUITS/issues/new?template=feature_request.md)
-- [Email](mailto:maintainer@geckocircuits.org) (if public)
+- [GitHub Issues](https://github.com/geckocircuits/GeckoCIRCUITS/issues)
+- [Feature Requests](https://github.com/geckocircuits/GeckoCIRCUITS/issues/new?template=feature_request.md)
