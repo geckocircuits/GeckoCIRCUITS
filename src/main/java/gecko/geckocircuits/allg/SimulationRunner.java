@@ -215,11 +215,16 @@ public final class SimulationRunner {
 					error.initCause(err);
 					throw error;
 				} finally {
-					if (MainWindow._solverSettings.inPreCalculationMode) {
+					if (!MainWindow._solverSettings.inPreCalculationMode) {
 						endRun();
 					} else {
 						MainWindow._solverSettings.inPreCalculationMode = false;
-						_mainwindow.continueCalculation(false);
+						try {
+							_mainwindow.continueCalculation(false);
+						} catch (Throwable error) {
+							error.printStackTrace();
+							throw new RuntimeException(error);
+						}
 					}
 				}
 			} catch (Throwable error) {
