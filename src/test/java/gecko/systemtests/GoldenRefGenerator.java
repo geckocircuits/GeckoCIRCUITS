@@ -168,7 +168,7 @@ public final class GoldenRefGenerator {
             pw.println("# Generated from current build");
             pw.println("# Steady-state window: " + startTime + " to " + endTime + "s");
             pw.println("# tEnd=" + tEnd + " dt=" + dt);
-            pw.println("scope_name,port,avg,rms,min,max,ripple,thd,shape,klirr");
+            pw.println("scope_name,port,avg,rms,thd,min,max,ripple,klirr,shape,peak_peak");
 
             for (String scope : scopes) {
                 // Try ports 0..7 (most scopes have 1-4 ports)

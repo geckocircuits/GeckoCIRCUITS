@@ -50,9 +50,9 @@ public final class GoldenReferenceHelper {
             this.characteristics = characteristics;
         }
 
-        /** Characteristic names matching the CSV column order. */
+        /** Characteristic names matching the getSignalCharacteristics() array order. */
         public static final String[] CHARACTERISTIC_NAMES = {
-            "avg", "rms", "min", "max", "ripple", "thd", "shape", "klirr"
+            "avg", "rms", "thd", "min", "max", "ripple", "klirr", "shape", "peak_peak"
         };
     }
 
@@ -137,6 +137,15 @@ public final class GoldenReferenceHelper {
      */
     public static boolean withinTolerance(double expected, double actual,
                                           double relativeTolerance, double absoluteFloor) {
+        // Both NaN is considered a match (e.g., THD of a DC signal)
+        if (Double.isNaN(expected) && Double.isNaN(actual)) {
+            return true;
+        }
+        // One NaN and one non-NaN is a mismatch
+        if (Double.isNaN(expected) || Double.isNaN(actual)) {
+            return false;
+        }
+
         double absDiff = Math.abs(expected - actual);
 
         // For near-zero expected values, use absolute floor
