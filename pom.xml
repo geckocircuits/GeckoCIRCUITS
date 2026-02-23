@@ -178,6 +178,8 @@
                <!-- Integration tests requiring GUI + circuit files not in repo -->
                <exclude>**/systemtests/ModelResultsTest.java</exclude>
              </excludes>
+             <!-- Exclude regression tests from default run (require Xvfb + golden refs) -->
+             <excludedGroups>regression</excludedGroups>
            </configuration>
          </plugin>
          <!-- JaCoCo for test coverage tracking -->
@@ -353,6 +355,23 @@
 
   <!-- Distribution profiles -->
   <profiles>
+    <!-- Regression test profile: runs ONLY regression-tagged tests -->
+    <!-- Usage: mvn test -Pregression -->
+    <profile>
+      <id>regression</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <groups>regression</groups>
+              <excludedGroups combine.self="override"/>
+              <excludes combine.self="override"/>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>dist-windows</id>
       <build>

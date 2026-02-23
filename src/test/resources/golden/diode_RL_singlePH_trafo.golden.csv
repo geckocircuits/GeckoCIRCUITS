@@ -1,0 +1,14 @@
+# Golden reference for diode_RL_singlePH_trafo.ipes
+# Generated from v2.02 (commit b34b9b9d)
+# WARNING: Placeholder values - regenerate with scripts/generate-golden-refs.sh
+# Steady-state window: 0.048 to 0.06s
+# tEnd=0.06 dt=1e-06
+scope_name,port,avg,rms,min,max,ripple,thd,shape,klirr
+SCOPE.2,0,0,0,0,0,0,0,0,0
+SCOPE.2,1,0,0,0,0,0,0,0,0
+SCOPE.2,2,0,0,0,0,0,0,0,0
+SCOPE.2,3,0,0,0,0,0,0,0,0
+SCOPE.2,4,0,0,0,0,0,0,0,0
+SCOPE.2,5,0,0,0,0,0,0,0,0
+SCOPE.2,6,0,0,0,0,0,0,0,0
+SCOPE.2,7,0,0,0,0,0,0,0,0

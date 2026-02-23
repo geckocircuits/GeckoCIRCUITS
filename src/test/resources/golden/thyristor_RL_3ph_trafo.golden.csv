@@ -1,0 +1,25 @@
+# Golden reference for thyristor_RL_3ph_trafo.ipes
+# Generated from v2.02 (commit b34b9b9d)
+# WARNING: Placeholder values - regenerate with scripts/generate-golden-refs.sh
+# Steady-state window: 0.048 to 0.06s
+# tEnd=0.06 dt=1e-06
+scope_name,port,avg,rms,min,max,ripple,thd,shape,klirr
+SCOPE.3,0,0,0,0,0,0,0,0,0
+SCOPE.3,1,0,0,0,0,0,0,0,0
+SCOPE.3,2,0,0,0,0,0,0,0,0
+SCOPE.3,3,0,0,0,0,0,0,0,0
+SCOPE.3,4,0,0,0,0,0,0,0,0
+SCOPE.3,5,0,0,0,0,0,0,0,0
+SCOPE.3,6,0,0,0,0,0,0,0,0
+SCOPE.3,7,0,0,0,0,0,0,0,0
+SCOPE.3,8,0,0,0,0,0,0,0,0
+SCOPE.3,9,0,0,0,0,0,0,0,0
+SCOPE.3,10,0,0,0,0,0,0,0,0
+SCOPE.3,11,0,0,0,0,0,0,0,0
+SCOPE.3,12,0,0,0,0,0,0,0,0
+SCOPE.3,13,0,0,0,0,0,0,0,0
+SCOPE.3,14,0,0,0,0,0,0,0,0
+SCOPE.3,15,0,0,0,0,0,0,0,0
+SCOPE.3,16,0,0,0,0,0,0,0,0
+SCOPE.3,17,0,0,0,0,0,0,0,0
+SCOPE.3,18,0,0,0,0,0,0,0,0
