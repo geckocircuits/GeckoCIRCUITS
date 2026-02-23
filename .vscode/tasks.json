@@ -1,0 +1,105 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build GeckoCIRCUITS (Skip Tests)",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "clean",
+                "package",
+                "assembly:single",
+                "-DskipTests"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Build GeckoCIRCUITS with Maven (skip tests - default)"
+        },
+        {
+            "label": "Build GeckoCIRCUITS (With Tests)",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "clean",
+                "package",
+                "assembly:single"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Build GeckoCIRCUITS with Maven (with tests - may fail)"
+        },
+        {
+            "label": "Clean Build Directory",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "clean"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Clean the target directory"
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "mvn test",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "clear": false
+            },
+            "problemMatcher": ["$junit"],
+            "detail": "Run Maven tests with Java 21"
+        },
+        {
+            "label": "Maven: Update Dependencies",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "dependency:resolve"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "detail": "Download and update all Maven dependencies"
+        }
+    ]
+}

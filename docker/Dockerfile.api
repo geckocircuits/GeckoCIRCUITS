@@ -1,0 +1,79 @@
+# GeckoCIRCUITS REST API - Multi-stage Docker build
+# Builds a lightweight container for running the simulation REST API
+
+# =============================================================================
+# Stage 1: Build the gecko-simulation-core module
+# =============================================================================
+FROM eclipse-temurin:21-jdk-alpine AS core-builder
+
+WORKDIR /build
+
+# Install Maven
+RUN apk add --no-cache maven
+
+# Copy core module files
+COPY gecko-simulation-core/pom.xml gecko-simulation-core/
+COPY gecko-simulation-core/src gecko-simulation-core/src/
+
+# Build and install core module to local repo
+WORKDIR /build/gecko-simulation-core
+RUN mvn clean install -DskipTests -q
+
+# =============================================================================
+# Stage 2: Build the REST API module
+# =============================================================================
+FROM eclipse-temurin:21-jdk-alpine AS api-builder
+
+WORKDIR /build
+
+# Install Maven
+RUN apk add --no-cache maven
+
+# Copy maven local repo with core module from previous stage
+COPY --from=core-builder /root/.m2/repository /root/.m2/repository
+
+# Copy REST API module files
+COPY gecko-rest-api/pom.xml gecko-rest-api/
+COPY gecko-rest-api/src gecko-rest-api/src/
+
+# Build REST API (uses core from local repo)
+WORKDIR /build/gecko-rest-api
+RUN mvn clean package -DskipTests -q
+
+# =============================================================================
+# Stage 3: Runtime image (minimal JRE)
+# =============================================================================
+FROM eclipse-temurin:21-jre-alpine AS runtime
+
+# Create non-root user for security
+RUN addgroup -g 1000 gecko && \
+    adduser -u 1000 -G gecko -s /bin/sh -D gecko
+
+WORKDIR /app
+
+# Copy the built JAR from api-builder stage
+COPY --from=api-builder /build/gecko-rest-api/target/*.jar app.jar
+
+# Create directory for circuit files and set ownership
+RUN mkdir -p /app/circuits /app/data && \
+    chown -R gecko:gecko /app
+
+# Switch to non-root user
+USER gecko
+
+# JVM configuration for container environment
+ENV JAVA_OPTS="-Xmx2G \
+    -XX:+UseContainerSupport \
+    -XX:MaxRAMPercentage=75.0 \
+    -Djava.awt.headless=true \
+    -Djava.security.egd=file:/dev/./urandom"
+
+# Expose REST API port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+
+# Run the application
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

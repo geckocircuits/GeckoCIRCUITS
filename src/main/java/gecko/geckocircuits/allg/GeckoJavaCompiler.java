@@ -1,0 +1,425 @@
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
+ *
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *  PURPOSE.  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package gecko.geckocircuits.allg;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.tools.*;
+import javax.tools.JavaFileObject.Kind;
+import javax.tools.JavaCompiler.CompilationTask;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Compiler stores MainWindow reference for optimization code execution")
+public class GeckoJavaCompiler {
+
+    // fields contain source code, that is also saved in the JAVA-object .ipes stuff
+    private String _javaSourceCode = "";
+    private String _javaImportCode = "";
+    private String _javaStaticCode = "";
+    private String _javaStaticVariables = "";
+    private String compilerMessage = "";
+    // directory where class file will be located.
+    private String _workingDirectory;
+    private Method _run_script;
+    private Method _setGecko;
+    //----------------------
+    private int lineCounter = 0;
+    private String _sourceString = "";
+    // needed for counting the java block objects;
+    private static final AtomicInteger _objectCounter = new AtomicInteger(0);
+    private String _className;
+    //
+
+    public enum COMPILESTATUS {
+
+        NOT_COMPILED, COMPILED_SUCCESSFULL, COMPILE_ERROR
+    }
+    private COMPILESTATUS _compileStatus = COMPILESTATUS.NOT_COMPILED;
+    //-------------------------------------------------------------------
+    private MainWindow gecko;
+
+
+    public void setGecko(MainWindow gecko) {
+        this.gecko = gecko;
+    }
+
+    public boolean startCalculation() {
+        try {
+            //------------
+            if (_compileStatus == COMPILESTATUS.NOT_COMPILED) {
+                doCompilation();
+            } else if (_compileStatus == COMPILESTATUS.COMPILE_ERROR) {
+                return false;
+            }
+
+            // Check for null methods before invocation (replaces catching NullPointerException)
+            if (_setGecko == null || _run_script == null) {
+                System.out.println("Error: Could not invoke external Java method!");
+                _compileStatus = COMPILESTATUS.COMPILE_ERROR;
+                return false;
+            }
+
+//            ausgangssignal = (double[]) _externYOUT.invoke(null, new Object[]{xIN, t});
+            _setGecko.invoke(null, new Object[]{gecko});
+            _run_script.invoke(null);
+            //------------
+        } catch (InvocationTargetException ex) {
+            //showMsg("Exception in main: " + ex.getTargetException());
+            ex.getTargetException().printStackTrace();  // Exception in the main method that we just tried to run
+            return false;
+        } catch (IllegalAccessException ex) {
+            System.err.println(ex.toString());
+            return false;
+        } catch (IOException ex) {
+            System.err.println("IO error during compilation: " + ex.toString());
+            _compileStatus = COMPILESTATUS.COMPILE_ERROR;
+            return false;
+        }
+        return true;
+    }
+
+    public COMPILESTATUS getCompileStatus() {
+        return _compileStatus;
+    }
+
+    public String getSourceCode() {
+        return _javaSourceCode;
+    }
+
+    public String getImportCode() {
+        return _javaImportCode;
+    }
+
+    public String getStaticInitCode() {
+        return _javaStaticCode;
+    }
+
+    public String getCompilerMessage() {
+        return compilerMessage;
+    }
+
+    public String getStaticVariables() {
+        return _javaStaticVariables;
+    }
+
+    public void setStaticVariables(String staticVarCode) {
+        _javaStaticVariables = staticVarCode;
+    }
+
+    public void setSourceCode(String javaSourceCode) {
+        _javaSourceCode = javaSourceCode;
+        _compileStatus = COMPILESTATUS.NOT_COMPILED;
+    }
+
+    public void setImportCode(final String importCode) {
+        _javaImportCode = importCode;
+        _compileStatus = COMPILESTATUS.NOT_COMPILED;
+    }
+
+    public void setStaticInitCode(final String staticCode) {
+        _javaStaticCode = staticCode;
+        _compileStatus = COMPILESTATUS.NOT_COMPILED;
+    }
+
+    private void createSourceCode(final String className) {
+        try {
+            lineCounter = 0;
+            _sourceString = "";
+            //-------------
+            String strLine;
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaImportCode))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
+            }
+            //-------------
+            appendSourcLine("/**");
+            appendSourcLine(" * Source created on " + new Date());
+            appendSourcLine(" */");
+            appendSourcLine("public class " + className + " { ");
+            appendSourcLine("\nprivate static MainWindow GECKO;\n");
+            appendSourcLine("// static variables: ");
+            //-------------
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaStaticVariables))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
+            }
+            //appendSourcLine("private static double[] yOUT = new double[" + "tnY" + "];");
+            appendSourcLine("static {");
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaStaticCode))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
+            }
+            appendSourcLine("}");
+            appendSourcLine("    public static void _setGecko (MainWindow gecko) throws Exception { GECKO=gecko; }");
+            appendSourcLine("    public static void run_script () throws Exception {");
+            appendSourcLine("// Your code here:");
+            appendSourcLine("// ****************** your code segment **********************");
+            try (BufferedReader reader = new BufferedReader(new StringReader(_javaSourceCode))) {
+                while ((strLine = reader.readLine()) != null) {
+                    appendSourcLine("\t\t" + strLine);
+                }
+            }
+            //-------------
+            appendSourcLine("// ****************** end of code segment **********************");
+            appendSourcLine("    }");
+            appendSourcLine("}");
+        } catch (IOException ex) {
+            Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void appendSourcLine(String newLine) {
+        //_sourceString += newLine;
+        lineCounter++;
+        compilerMessage += lineCounter + " " + newLine + "\n";
+        _sourceString += newLine + "\n";
+    }
+
+    /**
+     * Compiles and runs the short code segment.
+     *
+     * @throws IOException if there was an error creating the source file.
+     */
+    public void doCompilation() throws IOException {
+        try {
+            compilerMessage = "starting compilation....\n";
+            compilerMessage += "";
+
+            _className = "tmpJav" + _objectCounter.getAndIncrement();
+            String classFileName = _className + ".java";
+
+            createSourceCode(_className);
+
+            compilerMessage += "------------------------------- Compiler output ------------------------------------\n";
+
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            final Map<String, JavaFileObject> output = new HashMap<String, JavaFileObject>();
+            DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+
+            try (JavaFileManager jfm =
+                    new ForwardingJavaFileManager<StandardJavaFileManager>(
+                    compiler.getStandardFileManager(diagnostics, null, null)) {
+
+                        @Override
+                        public JavaFileObject getJavaFileForOutput(Location location, String name, Kind kind, FileObject sibling)
+                                throws IOException {
+                            JavaFileObject jfo = new RAMJavaFileObject(name, kind);
+                            output.put(name, jfo);
+                            return jfo;
+                        }
+                    };
+                 OutputStream outStream = new OutputStream() {
+
+                    @Override
+                    public void write(byte[] b) {
+                        // no-op
+                    }
+
+                    @Override
+                    public void write(byte[] b, int off, int len) {
+                        compilerMessage += new String(b, StandardCharsets.UTF_8).substring(off, len);
+
+                    }
+
+                    @Override
+                    public void write(int b) {
+                        // no-op
+                    }
+                 };
+                 PrintWriter compilerWriter = new PrintWriter(outStream, true, StandardCharsets.UTF_8)) {
+
+            // Compile -->
+
+
+            _workingDirectory = new File(GlobalFilePathes.PFAD_JAR_HOME).getParent();
+            if (_workingDirectory == null) {
+                _workingDirectory = System.getProperty("user.dir");
+            }
+
+            Vector<String> opt = new Vector<String>();
+
+            opt.add("-classpath");
+            String cp0 = System.getProperty("user.dir");
+            String cp1 = _workingDirectory;
+            String cp2 = cp0 + "/build/classes";
+            String cp3 = GlobalFilePathes.PFAD_JAR_HOME + "GeckoCIRCUITS.jar";
+            opt.add(cp0 + ";" + cp1 + ";" + cp2 + ";" + cp3 + ";");
+            //System.out.println("options --> \n"+cp0+"\n"+cp1+"\n"+cp2+"\n"+cp3+"\n----");
+
+            CompilationTask task = compiler.getTask(
+                    compilerWriter, jfm, diagnostics, opt, null,
+                    Arrays.asList(generateJavaSourceCode(_sourceString, classFileName)));
+
+            if (!task.call()) {
+                //------------------
+                for (Diagnostic<?> dm : diagnostics.getDiagnostics()) {
+                    compilerWriter.println(dm);
+                }
+                _compileStatus = COMPILESTATUS.COMPILE_ERROR;
+                compilerMessage += "Compile status: ERROR";
+                //------------------
+            } else {
+                //------------------
+                _compileStatus = COMPILESTATUS.COMPILED_SUCCESSFULL;
+                compilerMessage += "\n \tCOMPILATION FINISHED SUCESSFULLY!";
+                // Try to access the class and run its main method
+
+                ClassLoader cl = createDynamicClassLoader(output);
+
+                Class<?> c = Class.forName(_className, false, cl);
+                Class<?> clazz = c;// Class.forName(_className, true, urlCl);
+
+                Class<?>[] partypes = new Class<?>[0];
+                try {
+                    //---------
+                    _run_script = clazz.getMethod("run_script", partypes);
+                    //---------
+                } catch (NoSuchMethodException ex) {
+                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println("could not set extern Java code method (_run_script)!");
+                    _compileStatus = COMPILESTATUS.COMPILE_ERROR;
+                } catch (SecurityException ex) {
+                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                Class<?>[] partypes2 = new Class<?>[1];
+                partypes2[0] = gecko.getClass();
+                try {
+                    //---------
+                    _setGecko = clazz.getMethod("_setGecko", partypes2);
+                    //---------
+                } catch (NoSuchMethodException ex) {
+                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                    System.err.println("could not set extern Java code method (_setGecko)!");
+                    _compileStatus = COMPILESTATUS.COMPILE_ERROR;
+                } catch (SecurityException ex) {
+                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                //------------------
+            }
+            } // end try-with-resources
+        } catch (IllegalArgumentException | SecurityException | ClassNotFoundException ex) {
+            Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    static JavaFileObject generateJavaSourceCode(final String sourceText, final String className) {
+
+        return new SimpleJavaFileObject(toURI(className), JavaFileObject.Kind.SOURCE) {
+
+            @Override
+            public CharSequence getCharContent(boolean ignoreEncodingErrors)
+                    throws IOException, IllegalStateException,
+                    UnsupportedOperationException {
+                return sourceText;
+            }
+        };
+    }
+
+    //==============================================================
+    class RAMJavaFileObject extends SimpleJavaFileObject {
+        //
+
+        RAMJavaFileObject(String name, Kind kind) {
+            super(toURI(name), kind);
+        }
+        ByteArrayOutputStream baos;
+
+        @Override
+        public CharSequence getCharContent(boolean ignoreEncodingErrors)
+                throws IOException, IllegalStateException,
+                UnsupportedOperationException {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public InputStream openInputStream() throws IOException,
+                IllegalStateException, UnsupportedOperationException {
+            return new ByteArrayInputStream(baos.toByteArray());
+        }
+
+        @Override
+        public OutputStream openOutputStream() throws IOException,
+                IllegalStateException, UnsupportedOperationException {
+            return baos = new ByteArrayOutputStream();
+        }
+    }
+    //==============================================================
+
+    private static URI toURI(String name) {
+        try {
+            return new URI(name);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Creates a dynamic ClassLoader for loading compiled classes.
+     * The ClassLoader creation outside doPrivileged is intentional for scripting functionality.
+     */
+    @SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
+            justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
+    private static ClassLoader createDynamicClassLoader(final Map<String, JavaFileObject> output) {
+        return new ClassLoader() {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                JavaFileObject jfo = output.get(name);
+                if (jfo != null) {
+                    byte[] bytes = ((RAMJavaFileObject) jfo).baos.toByteArray();
+                    return defineClass(name, bytes, 0, bytes.length);
+                }
+                return super.findClass(name);
+            }
+        };
+    }
+
+    public void test() {
+        this.setSourceCode("double cc=5;\nSystem.out.println(\"javaSourceCode --> \"+cc+\"   xx=\"+GeckoSim.xx);\n");
+        this.setImportCode("import gecko.GeckoSim;\nimport gecko.geckocircuits.allg.MainWindow;\n");
+        this.setStaticInitCode("//staticCode");
+        //-------
+        try {
+            this.doCompilation();
+        } catch (Exception e) {
+            System.out.println("Error in GeckoJavaCompiler.test(): " + e);
+        }
+        System.out.println("_compilerMessage= \n" + compilerMessage + "\n\n===========\n");
+        //System.out.println("_sourceString= \n"+_sourceString+"\n\n===========\n");
+        boolean calcOK = this.startCalculation();
+        System.out.println("Fertig. calcOK=" + calcOK);
+    }
+}

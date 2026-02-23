@@ -1,0 +1,23 @@
+name: Sync to upstream main_gecko2026
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create cross-fork PR
+        env:
+          GH_TOKEN: ${{ secrets.UPSTREAM_PAT }}
+        run: |
+          gh pr create \
+            -R geckocircuits/GeckoCIRCUITS \
+            --base main_gecko2026 \
+            --head tinix84:main \
+            --title "Sync from tinix84/main: ${GITHUB_REF_NAME}" \
+            --body "Automated sync from tinix84/GeckoCIRCUITS main branch."

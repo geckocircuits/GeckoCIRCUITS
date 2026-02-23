@@ -1,0 +1,66 @@
+# GeckoCIRCUITS Docker Build Ignore File
+
+# Build output directories
+**/target/
+**/build/
+**/out/
+
+# IDE files
+**/.idea/
+**/.vscode/
+**/*.iml
+**/.project
+**/.classpath
+**/.settings/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (not needed in container)
+**/*.md
+**/docs/
+**/doc/
+
+# Test files (not needed in production container)
+**/src/test/
+**/*Test.java
+**/*Tests.java
+**/test-classes/
+
+# Other GeckoCIRCUITS directories not needed for REST API
+otherGeckoCIRCUITS/
+GeckoCIRCUITS/
+
+# Local development files
+*.log
+*.tmp
+*.bak
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven wrapper (we install maven in container)
+.mvn/
+mvnw
+mvnw.cmd
+
+# Gradle (if any)
+.gradle/
+gradlew
+gradlew.bat
+
+# Circuit files (mounted separately)
+circuits/
+*.ipes
+
+# Journals and session data
+.claude/
+
+# Docker files within docker directory
+docker/Dockerfile.*
+docker/docker-compose*.yml
+docker/.dockerignore

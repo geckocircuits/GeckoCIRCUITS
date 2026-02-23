@@ -1,63 +1,129 @@
-# GeckoCircuits
+# GeckoCIRCUITS
 
-This is the source code package of the software GeckoCIRCUITS. GeckoCIRCUITS is a fast circuit simulator which is optimized for applications in power electronics.
+**Open-source circuit simulator for power electronics** with multi-domain simulation: electrical, thermal, and EMI -- all in one tool.
 
+Originally developed at ETH Zurich's Power Electronic Systems Laboratory by Andreas Muesing, Andrija Stupar, and Uwe Drofenik.
 
-## What is GeckoCIRCUITS?
-See the [FAQ](FAQ.md) section
+## Key Features
 
-## What is this repo?
+- **Multi-domain simulation** -- electrical + thermal + EMI in a single environment
+- **Fast simulation engine** -- optimized for power electronics (MNA-based solvers: Backward Euler, Trapezoidal, Gear-Shichman)
+- **Visual circuit editor** -- drag-and-drop schematic capture with built-in oscilloscope
+- **64+ control blocks** -- PI/PID, integrators, limiters, lookup tables, state machines, and more
+- **Thermal analysis** -- junction temperature, loss calculation, heatsink design
+- **EMI filter design** -- common-mode/differential-mode filter analysis
+- **MATLAB/Simulink integration** -- remote control via RMI or memory-mapped files
+- **Scriptable** -- built-in JavaScript (GraalVM) and Java block scripting
+- **Cross-platform** -- runs on Windows, Linux, and macOS
 
-This is the "official" new GeckoCIRCUITS Github repository, created and maintained by one of the original software authors.
-GeckoCIRCUITS was hosted on Sourceforge before [GeckoCircuits](https://sourceforge.net/projects/geckocircuits/).
-My friends at [Technokrat](https://github.com/technokrat/gecko) did do some improvements (e.g. support of HiDPI Monitors) to the software, this changes are included in this repo, thanks for this contribution!
+## Quick Start
 
-## Prerequisites
+### Prerequisites
 
-To build, you need maven 3 installed and a more recent JDK. Everything from JDK9 to JDK13 should work.
+- **Java 21** or later ([Adoptium Temurin](https://adoptium.net/) recommended)
 
-## Building
+### Download and Run
 
-Then run
+1. Download `gecko-1.0-jar-with-dependencies.jar` from the [Releases](https://github.com/tinix84/GeckoCIRCUITS/releases) page
+2. Run:
+   ```bash
+   java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar gecko-1.0-jar-with-dependencies.jar
+   ```
+3. Open an example circuit from `File > Open` (see [Examples](#examples) below)
+4. Click the **Simulate** button (or press F5)
+
+### Platform Launcher Scripts
+
+Convenience scripts are provided in `scripts/`:
+
+| Platform | Command |
+|----------|---------|
+| Windows | `scripts\run-gecko.bat` |
+| Linux | `./scripts/run-gecko-linux.sh` |
+| macOS | `./scripts/run-gecko-macos.sh` |
+| WSL | `./scripts/run-gecko-wsl.sh` |
+
+Add `--hidpi` for high-DPI / Retina displays.
+
+## Examples
+
+The `resources/` directory contains ready-to-simulate circuits:
+
+| Example | Description | Location |
+|---------|-------------|----------|
+| Buck Converter | Basic DC-DC step-down | `resources/tutorials/2xx_dcdc_converters/201_buck_converter/` |
+| Boost Converter | DC-DC step-up | `resources/tutorials/2xx_dcdc_converters/202_boost_converter/` |
+| Three-Phase Inverter | DC-AC conversion | `resources/tutorials/4xx_dcac_inverters/402_three_phase_inverter/` |
+| Thermal Simulation | Junction temperature analysis | `resources/tutorials/5xx_thermal_simulation/502_junction_temperature/` |
+| PFC Boost | Power factor correction | `resources/tutorials/3xx_acdc_rectifiers/302_pfc_basics/` |
+| Vienna Rectifier | Three-phase AC-DC | `resources/tutorials/3xx_acdc_rectifiers/303_vienna_rectifier/` |
+| EMI Filters | CM/DM filter design | `resources/tutorials/6xx_emi_emc/602_cm_dm_filters/` |
+
+## Build from Source
+
+```bash
+# Clone
+git clone https://github.com/tinix84/GeckoCIRCUITS.git
+cd GeckoCIRCUITS
+
+# Build (produces target/gecko-1.0-jar-with-dependencies.jar)
+mvn clean package assembly:single -DskipTests
+
+# Run
+java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar
+
+# Run tests
+mvn test
+```
+
+Requires: Java 21 JDK + Maven 3.6+
+
+## Architecture
 
 ```
-mvn package
-mvn package assembly:single
+GeckoCIRCUITS
+├── Simulation Engine (MNA matrix, LU decomposition, 3 solver types)
+├── Circuit Components (R, L, C, diodes, MOSFETs, IGBTs, transformers, ...)
+├── Control Blocks (64+ calculators: PI, PID, integrator, gain, limiter, ...)
+├── Thermal Domain (loss models, thermal networks, heatsink simulation)
+├── EMI Domain (CISPR filters, CM/DM analysis)
+├── Visualization (oscilloscope, FFT, THD, RMS analysis)
+└── Integration (RMI for MATLAB, memory-mapped files, JavaScript scripting)
 ```
 
-This should build the `target/gecko-1.0-jar-with-dependencies.jar`.
-It should have a proper class path set and includes all the dependency libs.
+## Documentation
 
-## Running
+Full documentation is available at **[tinix84.github.io/GeckoCIRCUITS](https://tinix84.github.io/GeckoCIRCUITS/)**:
 
-Run it with
+- [Getting Started Guide](https://tinix84.github.io/GeckoCIRCUITS/getting-started/)
+- [Tutorials](https://tinix84.github.io/GeckoCIRCUITS/tutorials/) (DC-DC, AC-DC, DC-AC, thermal, scripting)
+- [Examples Library](https://tinix84.github.io/GeckoCIRCUITS/examples/) (125+ circuit files)
+- [API Reference](https://tinix84.github.io/GeckoCIRCUITS/api/) (GeckoSCRIPT, RMI, REST)
+- [Developer Guide](https://tinix84.github.io/GeckoCIRCUITS/resources/developer-guide/)
 
-```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -jar target/gecko-1.0-jar-with-dependencies.jar```
+## Contributing
 
-To run on HiDPI screens, use
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
-```java -Xmx3G -Dpolyglot.js.nashorn-compat=true -Dsun.java2d.uiScale=2 -jar gecko-1.0-jar-with-dependencies.jar```
+```bash
+# Run tests before submitting
+mvn test
 
-## Tests
+# Check code quality
+mvn spotbugs:check
+```
 
-As you might have recognized during the build, 11 tests were skipped. Those were excluded as the codebase is hard to read and the tests only seem to fail because of some expectations how the environment should luck which is not given outside Netbeans.
+## License
 
-Feel free to fix those tests.
+This project is dual-licensed:
 
-If you would like to simply run the program, and without the intention to change, inspect
-the sourcecode or to compile the program from scratch, you should probably download
-the binary package, available at www.gecko-simulations.com instead of this sourcecode
-package.
+- **Open Source**: [GNU General Public License v3.0](LICENSE) -- free for academic, research, and open-source use
+- **Commercial**: Contact for commercial licensing terms
 
-This software is published under the GNU General Public License Version 3 (GPLv3), originally written by Andreas Müsing, Andrija Stupar and Uwe Drofenik.
+Copyright (c) ETH Zurich, Power Electronic Systems Laboratory. Originally developed by Andreas Muesing, Andrija Stupar, and Uwe Drofenik.
 
-You are free to use any IDE for compiling the sources. However we recommend you to use the Netbeans IDE, since the project with all settings an necessary files is already done in Netbeans.
+## Links
 
-
-You can redistribute it and/or modify it under the terms of the GNU General Public License version 3 as published by the Free Software Foundation. For the terms of this license, see licenses/gpl_v3.txt or http://www.gnu.org/licenses/ .
-
-For a commercial usage/redistribution, please contact Gecko-Research GmbH to obtain a commercial license.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/ .
+- [Documentation](https://tinix84.github.io/GeckoCIRCUITS/)
+- [Original SourceForge project](https://sourceforge.net/projects/geckocircuits/)
+- [Technokrat contributions](https://github.com/technokrat/gecko) (HiDPI support)

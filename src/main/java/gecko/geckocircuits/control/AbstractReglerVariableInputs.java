@@ -1,0 +1,59 @@
+package gecko.geckocircuits.control;
+
+import gecko.geckocircuits.allg.UserParameter;
+import gecko.i18n.resources.I18nKeys;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+/**
+ * For some components, it makes sense to have a variable input number, e.g. adding, logic-or, multiplication...
+ * @author andreas
+ */
+public abstract class AbstractReglerVariableInputs extends RegelBlock implements VariableTerminalNumber {
+
+    private final static int DEFAULT_NUMBER_INPUTS = 1;
+
+    public final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
+            <Integer>start("anzXIN", DEFAULT_NUMBER_INPUTS).
+            longName(I18nKeys.NO_INPUT_TERMINALS).
+            shortName("numberInputTerminals").
+            arrayIndex(this, -1).
+            build();
+
+    public AbstractReglerVariableInputs(final int defaultInputs) {
+        super(defaultInputs, 1);
+        _inputTerminalNumber.setValueWithoutUndo(defaultInputs);
+        _inputTerminalNumber.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setInputTerminalNumber(_inputTerminalNumber.getValue());
+            }
+        });
+    }
+
+    @Override
+    @SuppressFBWarnings(value = "UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR",
+            justification = "Null check protects against uninitialized field access from superclass constructor")
+    public final void setInputTerminalNumber(final int number) {
+        super.setInputTerminalNumber(number);
+        // Null check required because this method may be called from superclass constructor
+        // before _inputTerminalNumber field is initialized (UR_UNINIT_READ_CALLED_FROM_SUPER_CONSTRUCTOR)
+        if (_inputTerminalNumber != null) {
+            _inputTerminalNumber.setValueWithoutUndo(number);
+        }
+    }
+
+    @Override
+    public final void setOutputTerminalNumber(final int number) {
+        setOutputTerminalNumber(number, 1);
+    }
+
+    @Override
+    protected Window openDialogWindow() {
+        return new DialogReglerVariableInputs(this);
+    }
+
+
+}

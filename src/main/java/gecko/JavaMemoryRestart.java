@@ -1,0 +1,191 @@
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations AG
+ *
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *  PURPOSE.  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package gecko;
+
+import gecko.geckocircuits.allg.GetJarPath;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.AccessControlException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@SuppressWarnings("removal")  // AccessControlException is deprecated but required for legacy applet security
+final class JavaMemoryRestart {
+
+    private static final int MINIMUM_MEM_MB = 128;
+    private static final int MEGA_BYTE = 1098300;
+    // sometimes, the get-runtime max-memory is smaller than the actual memory!
+    private static final double MEM_FACTOR = 0.7;
+    private static final int TIMEOUT = 100;
+    private static final int TIMEOUT_REPEATS = 100;
+
+    private JavaMemoryRestart() {
+        // private constructor, since this is a pure utility class!
+    }
+
+    public static boolean isMemoryRestartRequired(final int userMemorySize) {
+        final int memorySize = setLowerMemoryBound(userMemorySize);
+        System.out.println("Requested memory size: " + memorySize + "MB.");
+        final long jvmMemory = Runtime.getRuntime().maxMemory();
+        System.out.println("Available JVM memory: " + jvmMemory / MEGA_BYTE + " MB.");
+        return jvmMemory < MEM_FACTOR * memorySize * MEGA_BYTE;
+    }
+
+    /**
+     * trys to restart the program with same command line options, but with more
+     * memory. Function will only return true, when the following is fulfilled:
+     * - initial memory size was smaller that default JVM Memory size - the
+     * invoked process returned a "Starting"-String in its output -
+     *
+     * @param memorySize value in MB for the new memory
+     * @return true if restart was successful
+     */
+    public static boolean startNewGeckoCIRCUITSJVM(final int memorySize, final String[] args, final String javaCommand) {
+        final String jarPath = GetJarPath.getJarPath();
+        String pathToJarFile = jarPath + "GeckoCIRCUITS.jar";
+
+        // when run as applet, don't restart
+        try {
+            if (!new File(pathToJarFile).exists() && jarPath.endsWith("classes/")) {
+                pathToJarFile = jarPath.substring(0, jarPath.length() - 15) + "/dist/GeckoCIRCUITS.jar";
+            }
+        } catch (AccessControlException ex) {
+            System.err.println("Could not re-start GeckoCIRCUITS.jar with increased memory size,"
+                    + "\nsince it was probably started as applet.");
+            return false;
+        }
+
+        if (new File(pathToJarFile).exists()) {
+            System.out.println("Starting GeckoCIRCUITS JVM with " + memorySize + " MB memory");
+
+            final List<String> commands = createJVMCallCommands(javaCommand, memorySize, pathToJarFile, args);
+
+
+            final ProcessBuilder procBuilder = new ProcessBuilder(commands);
+
+            try {
+                final Process proc = procBuilder.start();
+                try (InputStream inputStream = proc.getInputStream();
+                     InputStream errInputStream = proc.getErrorStream();
+                     InputStreamReader inputReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+                     InputStreamReader errReader = new InputStreamReader(errInputStream, StandardCharsets.UTF_8);
+                     BufferedReader bufRead = new BufferedReader(inputReader);
+                     BufferedReader errBufRead = new BufferedReader(errReader)) {
+                    // check you have received an status code 200 to indicate ok
+                    // get the encoding from the Content-TYpe header
+                    return searchForReadyString(bufRead, errBufRead);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
+    }
+
+    private static boolean searchForReadyString(final BufferedReader stdBufRead, final BufferedReader errBufRead) {
+
+        class SearchRunnable implements Runnable {
+
+            public boolean readyStringFound = false;
+            public volatile boolean shouldStop = false;
+
+            @Override
+            public void run() {
+                try {
+                    String line;
+                    while (!shouldStop && (line = stdBufRead.readLine()) != null) {
+                        if (line.startsWith("GeckoCIRCUITS is ready")) {
+                            readyStringFound = true;
+                            return;
+                        }
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        SearchRunnable searchRunnable = new SearchRunnable();
+
+        class ErrorPrintRunnable implements Runnable {
+            public volatile boolean shouldStop = false;
+            @Override
+            public void run() {
+                try {
+                    String line;
+                    while (!shouldStop && (line = errBufRead.readLine()) != null) {
+                        System.err.println(line);
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        ErrorPrintRunnable errorPrintRunnable = new ErrorPrintRunnable();
+
+        final Thread searchThread = new Thread(searchRunnable);
+        searchThread.start();
+
+        final Thread errPrintThread = new Thread(errorPrintRunnable);
+        errPrintThread.start();
+
+        try {
+            for (int i = 0; i < TIMEOUT_REPEATS && !searchRunnable.readyStringFound; i++) {
+                Thread.sleep(TIMEOUT);
+            }
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (!searchRunnable.readyStringFound) {
+            System.err.println("Timeout, probably GeckoCIRCUITS was not started properly.");
+            errorPrintRunnable.shouldStop = true;
+            errPrintThread.interrupt();
+            searchRunnable.shouldStop = true;
+            searchThread.interrupt();
+        }
+        errorPrintRunnable.shouldStop = true;
+        errPrintThread.interrupt();
+        return searchRunnable.readyStringFound;
+    }
+
+    /**
+     * the memory should not be lower than a given threshold
+     *
+     * @param originalMemorySize in MB
+     * @return corrected value in MB, that is larger than MINIMUM_MEM_MB
+     */
+    private static int setLowerMemoryBound(final int originalMemorySize) {
+        if (originalMemorySize < MINIMUM_MEM_MB) {
+            return MINIMUM_MEM_MB;
+        } else {
+            return originalMemorySize;
+        }
+    }
+
+    private static List<String> createJVMCallCommands(final String javaCommand, final int memorySize,
+            final String pathToJarFile, final String[] args) {
+        final List<String> commands = new ArrayList<String>();
+        commands.add(javaCommand);
+        commands.add("-Xmx" + memorySize + "m");
+	// GraalVM need this flag to be in compatibilty mode with Nashorn. Syntaxpane used Nashorn
+	commands.add("-Dpolyglot.js.nashorn-compat=true");
+        commands.add("-jar");
+        commands.add(pathToJarFile);
+        commands.addAll(Arrays.asList(args));
+        return commands;
+    }
+}

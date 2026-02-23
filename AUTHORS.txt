@@ -3,7 +3,7 @@ AUTHORS AND DEVELOPERS
 
 MAIN DEVELOPERS
 
-Dr. Andreas Müsing <andreas.muesing@gecko-simulations.com>
+Dr. Andreas MÃ¼sing <andreas.muesing@gecko-simulations.com>
 Dr. Andrija Stupar 
 
 CONTRIBUTORS
@@ -12,6 +12,7 @@ Daniel Zimmermann
 Tibor Kereztvalvi
 Josef Ziegler
 Nicholas Eyring
+Martin Rieser - with big help from OpenCode CLI (used GLM-4.7 LLM model from Z.AI)
 
 
 FORMER DEVELOPER AND PROJECT FOUNDER

@@ -1,7 +1,5 @@
 package com.intel.mkl;
 
-import java.io.File;
-import java.nio.FloatBuffer;
 
 /**
  * Wrappers to CBLAS functions from Intel MKL. The CBLAS
