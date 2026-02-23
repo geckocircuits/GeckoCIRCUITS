@@ -15,6 +15,7 @@ package gecko.geckocircuits.allg;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.NetListContainer;
@@ -142,7 +143,7 @@ public final class SimulationRunner {
 				return;
 			}
 
-			_mainwindow.setMenuDuringSimulation(false, true);
+			SwingUtilities.invokeLater(() -> _mainwindow.setMenuDuringSimulation(false, true));
 			NetzlisteCONTROL.globalData.setContainerStatus(ContainerStatus.PAUSED);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -246,7 +247,7 @@ public final class SimulationRunner {
 			simKern.tearDownOnPause();
 			_mainwindow.jtfStatus.setzeStatusRechenzeit(q2 - q1);
 			waitForDataSavers();
-			_mainwindow.setMenuDuringSimulation(false, true);
+			SwingUtilities.invokeLater(() -> _mainwindow.setMenuDuringSimulation(false, true));
 		}
 	}
 

@@ -58,14 +58,9 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
     protected abstract void calculateStartSignal(final double dtx,
             final double txEnd, final double phaseX);
 
-    @SuppressFBWarnings(value = "FL_FLOATS_AS_LOOP_COUNTERS",
-            justification = "Phase normalization uses double for precision; bounded loop prevents infinite iteration")
     protected final double calculatePhaseX() {
-        double phaseX = _phase;
-        while (phaseX > 2 * Math.PI) {
-            phaseX -= 2 * Math.PI;
-        }
-        while (phaseX < 0) {
+        double phaseX = _phase % (2 * Math.PI);
+        if (phaseX < 0) {
             phaseX += 2 * Math.PI;
         }
         return phaseX;
