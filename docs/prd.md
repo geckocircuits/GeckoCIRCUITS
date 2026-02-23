@@ -139,12 +139,12 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 | Version | Target | Epic | Features |
 |---------|--------|------|----------|
-| v3.1.0 | Q2 2026 | [#17](https://github.com/geckocircuits/GeckoCIRCUITS/issues/17) | Rate limiting [#24], JWT [#25], pagination [#26], WebSocket auth [#27], parsing [#28], RBAC [#29], SDKs [#30] |
-| v3.2.0 | Q3 2026 | [#18](https://github.com/geckocircuits/GeckoCIRCUITS/issues/18) | React app [#31], circuit editor [#32], oscilloscope [#33], PWA [#34] |
-| v4.0.0 | Q1 2027 | [#19](https://github.com/geckocircuits/GeckoCIRCUITS/issues/19) | Kubernetes [#35], multi-tenant [#36], Redis/Postgres [#37], observability [#38] |
-| v5.0.0 | Q3 2027 | [#20](https://github.com/geckocircuits/GeckoCIRCUITS/issues/20) | RL optimization [#39], surrogate models [#40], component selection [#41] |
+| v3.1.0 | Q2 2026 | [#6](https://github.com/tinix84/GeckoCIRCUITS/issues/6) | Rate limiting [#13], JWT [#14], pagination [#15], WebSocket auth [#16], parsing [#17], RBAC [#18], SDKs [#19] |
+| v3.2.0 | Q3 2026 | [#7](https://github.com/tinix84/GeckoCIRCUITS/issues/7) | React app [#20], circuit editor [#21], oscilloscope [#22], PWA [#23] |
+| v4.0.0 | Q1 2027 | [#8](https://github.com/tinix84/GeckoCIRCUITS/issues/8) | Kubernetes [#24], multi-tenant [#25], Redis/Postgres [#26], observability [#27] |
+| v5.0.0 | Q3 2027 | [#9](https://github.com/tinix84/GeckoCIRCUITS/issues/9) | RL optimization [#28], surrogate models [#29], component selection [#30] |
 
-**Long-term vision:** Educational platform [#21], industry partnerships [#22], research collaboration [#23]
+**Long-term vision:** Educational platform [#10], industry partnerships [#11], research collaboration [#12]
 
 **Note:** For detailed roadmap, release process, and issue tracking, see [docs/roadmap.md](roadmap.md).
 
