@@ -2,14 +2,62 @@
 
 **Stack**: Java 21 (Maven, Spring Boot)
 
+## Branch & Repository Strategy
+
+### Repositories
+
+| Repo | Purpose |
+|------|---------|
+| [geckocircuits/GeckoCIRCUITS](https://github.com/geckocircuits/GeckoCIRCUITS) | **Upstream** — original repository, community contributions via PR |
+| [tinix84/GeckoCIRCUITS](https://github.com/tinix84/GeckoCIRCUITS) | **Fork** — primary development, releases, and experimentation |
+
+### Branches
+
+| Branch | Description | Release target | CI gates |
+|--------|-------------|----------------|----------|
+| [upstream main](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main) | Original repository main branch. Maintained by original developers, contributions via PR only. Must preserve simulation result stability from v2.02. No bugs allowed — this is the reference-quality codebase. | v2.02 (stable baseline) | Compile + tests + topology validation |
+| [main_gecko2026](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main_gecko2026) | Mirror of `tinix84/main` on upstream. Experimental branch where other developers can contribute and merge. Uses refactored `gecko` package (not `ch.technokrat.gecko`). Must maintain v2.02 simulation result stability. **Will never be merged to upstream main.** Requires proper package management and CI/CD pipeline. | Up to v3.0.0 per RELEASE_PLAN.md | Compile + all modules + regression tests (21 topologies) + static analysis |
+| [tinix84/main](https://github.com/tinix84/GeckoCIRCUITS/tree/main) | Fork main branch. All releases and stable code. Contains releases up to v3.0.0 per RELEASE_PLAN.md. Code here has passed regression testing and topology validation. | Up to v3.0.0 | Compile + all modules + regression tests |
+| [tinix84/dev](https://github.com/tinix84/GeckoCIRCUITS/tree/dev) | Fork development branch. All active development, fixes, and new features. Merged into `tinix84/main` only after passing the full regression test framework including 21 topology validation tests with golden CSV comparison. | N/A (development) | Compile + unit tests + regression tests |
+
+### Merge Flow
+
+```
+tinix84/dev  ──PR──>  tinix84/main  ──sync──>  main_gecko2026
+                                                     ↑
+                                          community PRs
+```
+
+- `tinix84/dev` → `tinix84/main`: via PR, gated by regression tests (21 topologies, 1% tolerance vs v2.02 golden refs)
+- `tinix84/main` → `main_gecko2026`: periodic sync to keep upstream experimental branch current
+- Community → `main_gecko2026`: via PR with CI gates
+- Community → `upstream main`: via PR, must not break v2.02 compatibility
+
+### Package History
+
+| Codebase | Java package | Notes |
+|----------|-------------|-------|
+| upstream main (v2.02 era) | `ch.technokrat.gecko` | Original package structure |
+| tinix84/dev, tinix84/main, main_gecko2026 | `gecko` | Refactored package (post-v2.02) |
+
 ## Build & Test
 ```bash
 mvn clean package assembly:single        # Build main JAR with dependencies
-mvn test                                 # Run tests (main project only)
+mvn test                                 # Run tests (main project only, excludes regression)
+mvn test -Pregression                    # Run ONLY regression tests (21 topologies, needs Xvfb)
 mvn -f pom-reactor.xml test              # Run ALL modules (main + simulation-core + rest-api)
 mvn -f pom-reactor.xml test -pl src/modules/gecko-simulation-core  # Single sub-module
 mvn -f pom-reactor.xml test -pl src/modules/gecko-rest-api
 ```
+
+## Regression Test Framework
+- 21 `.ipes` education circuits in `src/test/resources/ipes/education/`
+- Golden reference CSVs in `src/test/resources/golden/` (generated from v2.02)
+- `RegressionTest.java`: JUnit 5 `@ParameterizedTest`, `@Tag("regression")`, 2-min timeout per circuit
+- `GoldenReferenceHelper.java`: CSV read/write + 1% relative tolerance comparison
+- `GoldenRefGenerator.java`: tool to regenerate golden CSVs from any build
+- `scripts/generate-golden-refs.sh`: shell script to regenerate from v2.02 baseline
+- Regenerate golden refs: run on a machine with desktop (v2.02 GUI doesn't start under WSL2/Xvfb)
 
 ## Key Documents
 - [PRD](docs/prd.md) — requirements, sprint status, release history
@@ -28,13 +76,14 @@ python -m src.cli run sw-arch .  # Run architecture analysis
 
 ## Task Protocol
 1. Run tests: `mvn test` (main), `mvn -f pom-reactor.xml test` (all modules)
-2. Update docs on push: `mkdocs build` / `mkdocs gh-deploy --force`
+2. Run regression tests before merging to main: `mvn test -Pregression`
+3. Update docs on push: `mkdocs build` / `mkdocs gh-deploy --force`
 
 ## Important Notes
 - Multi-module: main (pom.xml) + simulation-core + rest-api (pom-reactor.xml)
 - .form files: edit with NetBeans GUI Designer only
 - .ipes files: gzip-compressed circuit files
-- Tests: 7,434 total (5,373 main + 1,837 core + 224 API)
+- Tests: 7,434 total (5,373 main + 1,837 core + 224 API) + 21 regression
 - Core module: 216 source classes, 80 test files
 - Static analysis: SpotBugs 0 bugs, PMD <500 violations (496 current)
 - Docs site: https://tinix84.github.io/GeckoCIRCUITS/
