@@ -13,32 +13,46 @@
 
 ### Branches
 
-| Branch | Description | Release target | CI gates |
-|--------|-------------|----------------|----------|
-| [upstream main](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main) | Original repository main branch. Maintained by original developers, contributions via PR only. Must preserve simulation result stability from v2.02. No bugs allowed — this is the reference-quality codebase. | v2.02 (stable baseline) | Compile + tests + topology validation |
-| [main_gecko2026](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main_gecko2026) | Mirror of `tinix84/main` on upstream. Experimental branch where other developers can contribute and merge. Uses refactored `gecko` package (not `ch.technokrat.gecko`). Must maintain v2.02 simulation result stability. **Will never be merged to upstream main.** Requires proper package management and CI/CD pipeline. | Up to v3.0.0 per RELEASE_PLAN.md | Compile + all modules + regression tests (21 topologies) + static analysis |
-| [tinix84/main](https://github.com/tinix84/GeckoCIRCUITS/tree/main) | Fork main branch. All releases and stable code. Contains releases up to v3.0.0 per RELEASE_PLAN.md. Code here has passed regression testing and topology validation. | Up to v3.0.0 | Compile + all modules + regression tests |
-| [tinix84/dev](https://github.com/tinix84/GeckoCIRCUITS/tree/dev) | Fork development branch. All active development, fixes, and new features. Merged into `tinix84/main` only after passing the full regression test framework including 21 topology validation tests with golden CSV comparison. | N/A (development) | Compile + unit tests + regression tests |
+| Branch | Package | Description | CI gates |
+|--------|---------|-------------|----------|
+| [geckocircuits/main](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main) | `ch.technokrat.gecko` | Upstream stable v2.02 baseline. Reference-quality codebase. Contributions via PR only. | Compile + 162 unit tests + 21 regression |
+| [geckocircuits/dev](https://github.com/geckocircuits/GeckoCIRCUITS/tree/dev) | `ch.technokrat.gecko` | Upstream hotfix/maintenance branch. PRs to main only after CI passes. | Compile + unit tests |
+| [geckocircuits/main_gecko2026](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main_gecko2026) | `gecko` | Mirror of `tinix84/main`. Experimental branch for community contributions. **Never merged to upstream main.** | Compile + all modules + 21 regression tests + static analysis |
+| [tinix84/main](https://github.com/tinix84/GeckoCIRCUITS/tree/main) | `gecko` | Fork stable branch. All releases up to v3.0.0. Code has passed regression testing. | Compile + all modules + 21 regression tests |
+| [tinix84/dev](https://github.com/tinix84/GeckoCIRCUITS/tree/dev) | `gecko` | Fork development branch. Active development, fixes, features. | Compile + 5,373 unit tests + 21 regression tests |
 
 ### Merge Flow
 
 ```
-tinix84/dev  ──PR──>  tinix84/main  ──sync──>  main_gecko2026
-                                                     ↑
-                                          community PRs
+tinix84/dev ──PR──> tinix84/main ──sync (v* tag)──> geckocircuits/main_gecko2026
+                                                           ↑
+                                                community PRs
+
+geckocircuits/dev ──PR──> geckocircuits/main
+        ↑
+   hotfix PRs (e.g., #49)
 ```
 
-- `tinix84/dev` → `tinix84/main`: via PR, gated by regression tests (21 topologies, 1% tolerance vs v2.02 golden refs)
-- `tinix84/main` → `main_gecko2026`: periodic sync to keep upstream experimental branch current
+- `tinix84/dev` → `tinix84/main`: via PR #36, gated by 21 regression tests (1% tolerance vs v2.02 golden refs)
+- `tinix84/main` → `main_gecko2026`: automated via `.github/workflows/sync-to-upstream.yml` on `v*` tags (requires `UPSTREAM_PAT` secret)
+- `geckocircuits/dev` → `geckocircuits/main`: via PR #50 (hotfixes + regression framework ported to `ch.technokrat.gecko`)
 - Community → `main_gecko2026`: via PR with CI gates
-- Community → `upstream main`: via PR, must not break v2.02 compatibility
+- Community → `geckocircuits/main`: via PR, must not break v2.02 compatibility
 
 ### Package History
 
-| Codebase | Java package | Notes |
-|----------|-------------|-------|
-| upstream main (v2.02 era) | `ch.technokrat.gecko` | Original package structure |
-| tinix84/dev, tinix84/main, main_gecko2026 | `gecko` | Refactored package (post-v2.02) |
+| Codebase | Java package | Java version | Notes |
+|----------|-------------|--------------|-------|
+| geckocircuits/main, geckocircuits/dev | `ch.technokrat.gecko` | Java 8 | Original package structure, v2.02 era |
+| tinix84/dev, tinix84/main, main_gecko2026 | `gecko` | Java 21 | Refactored package (post-v2.02) |
+
+### PR Status
+
+| PR | Repo | Status | Description |
+|----|------|--------|-------------|
+| [#36](https://github.com/tinix84/GeckoCIRCUITS/pull/36) | tinix84 | Open | dev → main: regression framework + bug #48/#49 fixes |
+| [#49](https://github.com/geckocircuits/GeckoCIRCUITS/pull/49) | geckocircuits | Merged → dev | Swing thread safety + daemon thread + phase normalization |
+| [#50](https://github.com/geckocircuits/GeckoCIRCUITS/pull/50) | geckocircuits | Open | dev → main: PR #49 + regression framework (ch.technokrat.gecko) |
 
 ## Build & Test
 ```bash
