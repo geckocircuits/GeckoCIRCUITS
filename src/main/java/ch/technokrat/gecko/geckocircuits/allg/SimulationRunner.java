@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 
 public final class SimulationRunner {
@@ -142,7 +143,7 @@ public final class SimulationRunner {
                 return;
             }
 
-            _fenster.setMenuDuringSimulation(false, true);
+            SwingUtilities.invokeLater(() -> _fenster.setMenuDuringSimulation(false, true));
             NetzlisteCONTROL.globalData.setContainerStatus(ContainerStatus.PAUSED);
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,7 +274,7 @@ public final class SimulationRunner {
             simKern.tearDownOnPause();
             _fenster.jtfStatus.setzeStatusRechenzeit(q2 - q1);
             waitForDataSavers();
-            _fenster.setMenuDuringSimulation(false, true);
+            SwingUtilities.invokeLater(() -> _fenster.setMenuDuringSimulation(false, true));
         }
     }
 

@@ -56,6 +56,7 @@ public final class GraferV4 extends JPanel {
         _scopeSettings = scopeSettings;
         this.setLayout(_layout);
         refreshComponentPane();
+        updateThread.setDaemon(true);
         updateThread.setPriority(Thread.MIN_PRIORITY);
         updateThread.start();
         //this.add(_plotPanel);        
