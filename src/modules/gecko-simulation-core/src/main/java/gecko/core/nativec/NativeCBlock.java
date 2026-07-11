@@ -102,7 +102,7 @@ public class NativeCBlock {
             _customCClassLoader = null;
             _xINVector = null;
             _xOUTVector = null;
-            // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
+            System.gc();
         } catch (Exception e) {
             e.printStackTrace();
         }
