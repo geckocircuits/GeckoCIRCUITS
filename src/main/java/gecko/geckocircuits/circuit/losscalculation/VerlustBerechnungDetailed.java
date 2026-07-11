@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 
 import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
@@ -191,6 +193,7 @@ public final class VerlustBerechnungDetailed implements GeckoFileable, AbstractL
         lossFile = null;
     }
 
+    @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION", justification = "Fallback chain relies on catching any Exception during parsing different file formats")
     public boolean leseDetailVerlusteVonDatei(final GeckoFile newLossFile) {
         //------------------
         // Datei einlesen -->

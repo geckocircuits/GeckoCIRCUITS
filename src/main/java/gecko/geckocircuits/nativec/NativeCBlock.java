@@ -21,8 +21,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author DIEHL Controls Ricardo Richter
  */
-@SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
-        justification = "ClassLoader creation is intentional for native C code integration")
+@SuppressFBWarnings(value = {"DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED", "DM_GC"},
+        justification = "ClassLoader creation and explicit System.gc() call are intentional to load and unload native C code")
 public class NativeCBlock {
     NativeCClassLoader _customCClassLoader;
     Class _nativeCWrapperClass;

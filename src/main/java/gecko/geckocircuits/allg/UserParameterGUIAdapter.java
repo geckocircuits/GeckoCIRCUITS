@@ -15,6 +15,7 @@ package gecko.geckocircuits.allg;
 
 import gecko.core.allg.UserParameterCore;
 import gecko.core.circuit.TokenMap;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Adapter that wraps the main project's GUI-enabled UserParameter class
@@ -33,6 +34,8 @@ import gecko.core.circuit.TokenMap;
  * lossCurve.setTemperatureParameter(coreParam);
  * </pre>
  */
+@SuppressFBWarnings(value = {"EI_EXPOSE_REP", "EI_EXPOSE_REP2"},
+        justification = "Intentional adapter wrapper pattern where delegation is the primary purpose")
 public final class UserParameterGUIAdapter<T> implements UserParameterCore<T> {
 
     private final UserParameter<T> _delegate;

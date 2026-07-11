@@ -34,7 +34,7 @@ public final class ReglerMUL extends AbstractReglerVariableInputs {
         return new I18nKeys[]{I18nKeys.MULTIPLICATION_OF_INPUT};
     }
 
-    private class TwoParameterMultiplication extends AbstractControlCalculatable {
+    private static class TwoParameterMultiplication extends AbstractControlCalculatable {
 
         public TwoParameterMultiplication() {
             super(2, 1);

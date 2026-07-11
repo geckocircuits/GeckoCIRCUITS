@@ -139,7 +139,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
 
     }
 
-    private final class LossCalculatorAdditionalDiode implements AbstractLossCalculator, LossCalculationSplittable {
+    private static final class LossCalculatorAdditionalDiode implements AbstractLossCalculator, LossCalculationSplittable {
 
         private final Diode _diode;
         private final AbstractLossCalculator _original;

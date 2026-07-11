@@ -377,7 +377,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 
     }
 
-    class ControlOrderTransferable implements Transferable {
+    static class ControlOrderTransferable implements Transferable {
         Object _object;
         public ControlOrderTransferable (final Object obj) {
             _object = obj;

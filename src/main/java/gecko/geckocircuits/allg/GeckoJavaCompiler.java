@@ -350,7 +350,7 @@ public class GeckoJavaCompiler {
     }
 
     //==============================================================
-    class RAMJavaFileObject extends SimpleJavaFileObject {
+    static class RAMJavaFileObject extends SimpleJavaFileObject {
         //
 
         RAMJavaFileObject(String name, Kind kind) {
