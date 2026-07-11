@@ -8,7 +8,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Create cross-fork PR
@@ -21,3 +21,4 @@ jobs:
             --head tinix84:main \
             --title "Sync from tinix84/main: ${GITHUB_REF_NAME}" \
             --body "Automated sync from tinix84/GeckoCIRCUITS main branch."
+

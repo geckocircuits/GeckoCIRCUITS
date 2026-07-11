@@ -308,7 +308,7 @@ public final class NetzlisteCONTROL {
         }
     }
 
-    public class IndexConnection { // to avoid the Integer-Object usage
+    public static class IndexConnection { // to avoid the Integer-Object usage
 
         public final int _elementIndex;
         public final int _inBlockIndex_outputIndex;

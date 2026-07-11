@@ -140,9 +140,11 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         jPanelButtonOkCancel.add(jButtonOk);
         jPanelButtonOkCancel.add(jButtonCancel);
     }
+
     public final ActionListener okActionListener = new ActionListener() {
 
         @Override
+        @SuppressFBWarnings(value = "DE_MIGHT_IGNORE", justification = "Aborting action on duplicate component name is the intended flow")
         public void actionPerformed(final ActionEvent actionEvent) {
             try {
                 setNewElementName();

@@ -2005,6 +2005,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
     }
 
+    @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION", justification = "Fallback chain relies on catching exceptions to try different format parser")
     private static String[] getLinesArrayFromIpesFile(String dateiName) {
         String[] lines = null;
         //----------

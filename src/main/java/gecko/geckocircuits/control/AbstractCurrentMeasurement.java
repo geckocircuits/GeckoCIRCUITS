@@ -28,7 +28,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         super(0, 1);
     }
 
-    private class CurrentCalculation extends AbstractControlCalculatable {
+    private static class CurrentCalculation extends AbstractControlCalculatable {
         private final AbstractCircuitBlockInterface _coupled;
 
         public CurrentCalculation(final AbstractCircuitBlockInterface coupled) {
@@ -43,7 +43,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         }
     }
 
-    private class MOSFETCurrentCalculation extends AbstractControlCalculatable {
+    private static class MOSFETCurrentCalculation extends AbstractControlCalculatable {
         private final MOSFET _mosefet;
         private final Diode _antiParallelDiode;
 
@@ -61,7 +61,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         }
     }
 
-    private class ThermPvChipFlowCalculation extends AbstractControlCalculatable {
+    private static class ThermPvChipFlowCalculation extends AbstractControlCalculatable {
         private final ThermPvChip _lossSource;
         private final ReglerFlowMeter _flowMeasurement;
 

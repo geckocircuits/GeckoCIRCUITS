@@ -316,7 +316,7 @@ public final class NetzlisteAllg {
         return returnValue;
     }
 
-    private class GraphEdge {
+    private static class GraphEdge {
 
         private final PotentialArea _pot1;
         private final PotentialArea _pot2;

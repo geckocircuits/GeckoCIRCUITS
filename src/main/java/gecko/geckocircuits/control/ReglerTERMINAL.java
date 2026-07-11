@@ -149,7 +149,7 @@ public final class ReglerTERMINAL extends RegelBlock implements SubCircuitTermin
     public I18nKeys[] getOutputDescription() {
         return new I18nKeys[0];
     }
-    class ReglerTerminalCalculator extends AbstractControlCalculatable {
+    static class ReglerTerminalCalculator extends AbstractControlCalculatable {
 
         public ReglerTerminalCalculator() {
             super(1, 1);
