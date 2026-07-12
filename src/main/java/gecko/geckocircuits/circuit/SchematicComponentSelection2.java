@@ -14,9 +14,9 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
-import gecko.geckocircuits.allg.AbstractComponentTyp;
-import gecko.geckocircuits.allg.LastComponentButton;
-import gecko.geckocircuits.allg.SuggestionField;
+import gecko.geckocircuits.general.AbstractComponentType;
+import gecko.geckocircuits.general.LastComponentButton;
+import gecko.geckocircuits.general.SuggestionField;
 import gecko.geckocircuits.control.ControlTyp;
 import static gecko.geckocircuits.control.ControlTyp.*;
 import gecko.i18n.LangInit;
@@ -53,10 +53,10 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     private static final int MIN_GRID_SIZE = 12;
     private static final int LOWER_BOUND_OFFSET = -4;
     private final List<AbstractBlockInterface> _showBlocks;
-    private final List<AbstractComponentTyp> _showBlocksType = new ArrayList<AbstractComponentTyp>();
-    private final Map<AbstractComponentTyp, AbstractBlockInterface> _map = new HashMap<AbstractComponentTyp, AbstractBlockInterface>();
+    private final List<AbstractComponentType> _showBlocksType = new ArrayList<AbstractComponentType>();
+    private final Map<AbstractComponentType, AbstractBlockInterface> _map = new HashMap<AbstractComponentType, AbstractBlockInterface>();
     private AbstractBlockInterface _paintBlock = null;
-    public AbstractComponentTyp _typElement = null;
+    public AbstractComponentType _typElement = null;
     private SchematicEditor2 se;
     private CircuitTyp[] _typLK = new CircuitTyp[]{
         CircuitTyp.LK_U, CircuitTyp.LK_I, CircuitTyp.LK_R, CircuitTyp.LK_C, CircuitTyp.LK_L,
@@ -69,8 +69,8 @@ public class SchematicComponentSelection2 extends JTabbedPane {
          * Typ.LK_MOTOR_IMB,
          */ CircuitTyp.LK_LISN,};
 
-    private AbstractComponentTyp[] _typSubcircuit = new AbstractComponentTyp[]{
-        SpecialTyp.SUBCIRCUIT, CircuitTyp.LK_TERMINAL, CircuitTyp.TH_TERMINAL,
+    private AbstractComponentType[] _typSubcircuit = new AbstractComponentType[]{
+        SpecialType.SUBCIRCUIT, CircuitTyp.LK_TERMINAL, CircuitTyp.TH_TERMINAL,
         C_TERMINAL, CircuitTyp.REL_TERMINAL, CircuitTyp.LK_GLOBAL_TERMINAL,
         CircuitTyp.TH_GLOBAL_TERMINAL, C_GLOBAL_TERMINAL,
         CircuitTyp.REL_GLOBAL_TERMINAL, C_MUX, C_DEMUX};
@@ -99,13 +99,13 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     };
 
 
-    private AbstractComponentTyp[] _typSpecial = new AbstractComponentTyp[]{
+    private AbstractComponentType[] _typSpecial = new AbstractComponentType[]{
         C_JAVA_FUNCTION, C_NATIVE_C_FUNCTION, C_SMALL_SIG, C_ABCDQ, C_DQABC,
         C_TIME, C_SPARSEMATRIX, C_PMSM_CONTROL,
         C_PMSM_MODULATOR, C_THYR_CTRL,
-        /*ControlTyp.C_DEBUG,*/ SpecialTyp.TEXTFIELD
+        /*ControlTyp.C_DEBUG,*/ SpecialType.TEXTFIELD
     };
-    private AbstractComponentTyp[] _typTherm = new AbstractComponentTyp[]{
+    private AbstractComponentType[] _typTherm = new AbstractComponentType[]{
         CircuitTyp.TH_TEMP, CircuitTyp.TH_FLOW, CircuitTyp.TH_PvCHIP,
         CircuitTyp.TH_RTH, CircuitTyp.TH_CTH,
         CircuitTyp.TH_AMBIENT
@@ -123,7 +123,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
 
         List<AbstractBlockInterface> showAllBlocks = new ArrayList<AbstractBlockInterface>();
 
-        for (AbstractComponentTyp typ : AbstractTypeInfo._allRegisteredComponentEnums) {
+        for (AbstractComponentType typ : AbstractTypeInfo._allRegisteredComponentEnums) {
             AbstractBlockInterface newComponent = typ.getTypeInfo().fabric();
             if (newComponent != null) {
                 newComponent.setDummyIDStringDialog();
@@ -144,15 +144,15 @@ public class SchematicComponentSelection2 extends JTabbedPane {
         this.initPanels();
     }
 
-    private void createButtonsForPanel(AbstractComponentTyp[] types, JPanel compCircuit) {
-        for (AbstractComponentTyp type : types) {
+    private void createButtonsForPanel(AbstractComponentType[] types, JPanel compCircuit) {
+        for (AbstractComponentType type : types) {
             AbstractBlockInterface block = _map.get(type);
             JButton testButton = new SchematicComponentSelection2.ComponentSelectionButton(type, block);
             compCircuit.add(testButton);
         }
     }
 
-    private JPanel createJPanelForTypes(final AbstractComponentTyp[] types, final String tabTitle) {
+    private JPanel createJPanelForTypes(final AbstractComponentType[] types, final String tabTitle) {
         final JPanel returnValue = new JPanel();
         final GridLayout gridLayout = new GridLayout(Math.max(types.length, MIN_GRID_SIZE), 1);
         gridLayout.setVgap(-1);
@@ -206,9 +206,9 @@ public class SchematicComponentSelection2 extends JTabbedPane {
 
     class ComponentSelectionButton extends JButton {
 
-        private final AbstractComponentTyp _typ;
+        private final AbstractComponentType _typ;
 
-        public ComponentSelectionButton(final AbstractComponentTyp typ, final AbstractBlockInterface exampleBlock) {
+        public ComponentSelectionButton(final AbstractComponentType typ, final AbstractBlockInterface exampleBlock) {
             super(LangInit.getTranslatedString(exampleBlock.getTypeDescription()));
             addMouseListener(new PopupListener(exampleBlock.getTypeDescription()));
             _typ = typ;
@@ -270,10 +270,10 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     private class MouseDraggedOutsideListener implements MouseMotionListener, FocusListener {
 
         long _lastDraggedMillis;
-        private AbstractComponentTyp _typ;
+        private AbstractComponentType _typ;
         private LastComponentButton _button;
 
-        public MouseDraggedOutsideListener(final AbstractComponentTyp typ) {
+        public MouseDraggedOutsideListener(final AbstractComponentType typ) {
             _typ = typ;
         }
 

@@ -18,7 +18,7 @@ package gecko.geckocircuits.newscope;
  *
  * @author andy
  */
-public final class TimeSeriesArray extends AbstractTimeSerie {
+public final class TimeSeriesArray extends AbstractTimeSeries {
     private double[] _timeSeries;
     private int _maximumIndex = -1;
 

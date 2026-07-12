@@ -112,7 +112,6 @@ public final class DiodeCalculator extends CircuitComponent<Diode> implements AS
 
 //            diodeSwitchError = true;
 //        }
-//
 //        if ((((p[matrixIndices[0]] - p[matrixIndices[1]]) > (Diode.stoerGroesse * _uForward)) && (_rD_t > _rOn))) {  // (uD > uf) und Diode "OFF"
 //            _rD_t = _rOn;
 

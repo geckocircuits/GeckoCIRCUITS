@@ -42,7 +42,7 @@ import java.util.Map;
 
 public class GeckoGraphics2D extends Graphics2D {
         public final Graphics2D origGraphics;
-        private ColorSettable colorStrategy = new ColorStragegyDisabledComponent();
+        private ColorSettable colorStrategy = new ColorStrategyDisabledComponent();
 
         public GeckoGraphics2D(final Graphics2D g2d) {
             super();

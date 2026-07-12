@@ -19,8 +19,8 @@ package gecko.geckocircuits.scope;
  */
 @Deprecated
 public interface Scopable {
-    void aktualisiereMausModus(int mausmodus);
-    DataContainer getZVDatenImRAM();
+    void updateMouseMode(int mouseMode);
+    DataContainer getZVDataInRAM();
     void ladeWorkSheet();
     //public ScopeSettings getScopeSettings();
 

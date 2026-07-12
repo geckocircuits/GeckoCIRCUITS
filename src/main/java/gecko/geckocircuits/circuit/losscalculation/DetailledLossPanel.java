@@ -15,7 +15,7 @@ package gecko.geckocircuits.circuit.losscalculation;
 
 
 import gecko.core.circuit.losscalculation.LossCurve;
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.circuit.DataTablePanel;
 import gecko.geckocircuits.newscope.LossCurvePlotPanel;
 import gecko.i18n.GuiFabric;
@@ -100,7 +100,7 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
         _listenerActive = true;
     }
 
-    final void baueGUI() {
+    final void buildGUI() {
 
         _jPanelCurvesSelection = new JPanel();
         _jPanelCurvesSelection.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edit Curves", TitledBorder.LEFT, TitledBorder.TOP));
@@ -123,7 +123,7 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
             public void actionPerformed(final ActionEvent actionEvent) {
                 _testCurve = null;
                 if (_lossCurves.size() == 1) {
-                    return;  // maximal eine Kurve muss immer da sein!
+                    return;  // a maximum of one curve must always be there!
                 }
                 deleteSelectedCurve();
             }
@@ -135,7 +135,7 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
         _leftPanelTempAndBlocking.add(jbDel);
         _jPanelCurvesSelection.add(_leftPanelTempAndBlocking, BorderLayout.SOUTH);
 
-        // die Messkurven-Liste wird in einer eigenen Methode erzeugt, weil sie aktualisiert werden kann -->
+        //jpSWed.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.LEFT, TitledBorder.TOP, TxtI.ti_Font_border));
         _temperatureButtons = createRadioButtonsPanel();
         _jPanelCurvesSelection.add(_temperatureButtons, BorderLayout.NORTH);
 

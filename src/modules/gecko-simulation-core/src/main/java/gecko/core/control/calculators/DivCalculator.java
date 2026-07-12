@@ -22,7 +22,7 @@ public final class DivCalculator extends AbstractTwoInputsOneOutputCalculator {
     private static final double LARGE_NUMBER = 1e40;
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double result = _inputSignal[0][0] / _inputSignal[1][0];  // normale Division
         _outputSignal[0][0] = result;
         if(Double.isNaN(result)) { // here, we assume 0/0 = 0, since possibly no input is selected to this block!

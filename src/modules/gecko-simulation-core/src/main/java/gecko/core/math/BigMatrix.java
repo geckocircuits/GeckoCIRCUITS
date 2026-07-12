@@ -273,7 +273,6 @@ public class BigMatrix implements java.io.Serializable {
    @param B    another matrix
    @return     A + B
    */
-//
 //   public Matrix plus (BigMatrix B) {
 //      checkMatrixDimensions(B);
 //      Matrix X = new Matrix(m,n);
@@ -290,7 +289,6 @@ public class BigMatrix implements java.io.Serializable {
    @param B    another matrix
    @return     A + B
    */
-//
 //   public Matrix plusEquals (Matrix B) {
 //      checkMatrixDimensions(B);
 //      for (int i = 0; i < m; i++) {
@@ -444,12 +442,10 @@ public class BigMatrix implements java.io.Serializable {
 //      }
 //      return X;
 //   }
-//
 //   /** Multiply a matrix by a scalar in place, A = s*A
 //   @param s    scalar
 //   @return     replace A by s*A
 //   */
-//
 //   public Matrix timesEquals (double s) {
 //      for (int i = 0; i < m; i++) {
 //         for (int j = 0; j < n; j++) {
@@ -458,13 +454,11 @@ public class BigMatrix implements java.io.Serializable {
 //      }
 //      return this;
 //   }
-//
 //   /** Linear algebraic matrix multiplication, A * B
 //   @param B    another matrix
 //   @return     Matrix product, A * B
 //   @exception  IllegalArgumentException Matrix inner dimensions must agree.
 //   */
-//
 //   public Matrix times (Matrix B) {
 //      if (B.m != n) {
 //         throw new IllegalArgumentException("Matrix inner dimensions must agree.");
@@ -514,12 +508,10 @@ public class BigMatrix implements java.io.Serializable {
 //   public CholeskyDecomposition chol () {
 //      return new CholeskyDecomposition(this);
 //   }
-//
 //   /** Singular Value Decomposition
 //   @return     SingularValueDecomposition
 //   @see SingularValueDecomposition
 //   */
-//
 //   public SingularValueDecomposition svd () {
 //      return new SingularValueDecomposition(this);
 //   }

@@ -42,26 +42,26 @@ public class LimitCalculatorExternalTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         // test a signal within the limits:
         limitExternal._inputSignal[0][0] = 10;
         limitExternal._inputSignal[1][0] = -20; // minimum
         limitExternal._inputSignal[2][0] = 20; // maximum
-        limitExternal.berechneYOUT(1e-9);
+        limitExternal.calculateYOUT(1e-9);
         assertEquals(10, limitExternal._outputSignal[0][0], 1e-9);
 
         // test a signal at lower limit:
         limitExternal._inputSignal[0][0] = -20;
         limitExternal._inputSignal[1][0] = -15; // minimum
         limitExternal._inputSignal[2][0] = 20; // maximum
-        limitExternal.berechneYOUT(1e-9);
+        limitExternal.calculateYOUT(1e-9);
         assertEquals(-15, limitExternal._outputSignal[0][0], 1e-9);
 
         // test a signal at upper limit:
         limitExternal._inputSignal[0][0] = 40;
         limitExternal._inputSignal[1][0] = -15; // minimum
         limitExternal._inputSignal[2][0] = 25; // maximum
-        limitExternal.berechneYOUT(1e-9);
+        limitExternal.calculateYOUT(1e-9);
         assertEquals(25, limitExternal._outputSignal[0][0], 1e-9);
 
 

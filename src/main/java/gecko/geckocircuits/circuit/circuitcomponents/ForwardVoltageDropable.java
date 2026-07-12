@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 
 public interface ForwardVoltageDropable {
         UserParameter<Double> getForwardVoltageDropParameter();

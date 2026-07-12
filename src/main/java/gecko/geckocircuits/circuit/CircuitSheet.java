@@ -13,9 +13,9 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.SchematicEditor2.MouseMoveMode;
 import gecko.geckocircuits.control.Point;
 import gecko.geckocircuits.control.RegelBlock;
@@ -189,7 +189,7 @@ public class CircuitSheet extends JPanel {
             }
 
 
-            // Symbol Zeichenstift beim Zeichnen der Verbindungen:
+            // Pen symbol when drawing the connections:
             if (_se.wirePenVisible) {
                 g2d.setColor(Color.lightGray);
                 g2d.fillPolygon(_se.xStift, _se.yStift, 4);
@@ -202,7 +202,7 @@ public class CircuitSheet extends JPanel {
                 g2d.drawPolygon(_se.xStift, _se.yStift, 4);
             }
             //---------------------------
-            // Markierungsrechteck fuer Drag & Drop:
+            // Marking rectangle for drag & drop:
             if (_se._mouseMoveMode == MouseMoveMode.SELECT_WINDOW) {
                 g2d.setColor(Color.orange);
                 if (_se.x1markRe < _se.x2markRe) {
@@ -254,7 +254,7 @@ public class CircuitSheet extends JPanel {
         // zur Aktualisierung eventuell neu angeschlossener Labels:
         switch(connectorType) {
             case CONTROL:
-                NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), allElements.getClassFromContainer(RegelBlock.class));
+                NetlistGeneral.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), allElements.getClassFromContainer(RegelBlock.class));
                 break;
             case THERMAL:
                 NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.THERMAL), getLocalComponents(ConnectorType.THERMAL));
@@ -290,8 +290,8 @@ public class CircuitSheet extends JPanel {
                             _findNodesInternal.add(sheetPos);
                             if (elem instanceof AbstractBlockInterface) {
                                 foundStrings.add("Label of: " + ((AbstractBlockInterface) elem).getStringID() + " x=" + sheetPos.x + " y=" + sheetPos.y);
-                            } else if (elem instanceof Verbindung) {
-                                foundStrings.add("Connection label: " + ((Verbindung) elem).getLabel());
+                            } else if (elem instanceof Connection) {
+                                foundStrings.add("Connection label: " + ((Connection) elem).getLabel());
                             }
 
                         }
@@ -356,7 +356,7 @@ public class CircuitSheet extends JPanel {
                 for (Point pt : potArea.getAllElementKnotenXY(elements, this)) {
                     _showNodesInternal.add(pt);
                 }
-                for (Verbindung verb : potArea.getAllConnections()) {
+                for (Connection verb : potArea.getAllConnections()) {
                     for (TerminalInterface term : verb.getAllTerminals()) {
                         _showNodesInternal.add(term.getPosition());
                     }
@@ -368,8 +368,8 @@ public class CircuitSheet extends JPanel {
         return false;
     }
 
-    public void maus_connectorTest(final Point clickPoint) {
-        // damit man nicht (wie unten) beim 'return' vorzeitig aussteigt und eine Verbindung versehentlich
+    public void mouseConnectorTest(final Point clickPoint) {
+        // damit man nicht (wie unten) beim 'return' vorzeitig aussteigt und eine Connection versehentlich
         // im Bearbeitungs-Modus laesst, die folgende kleine Schleife:
         _showNodesInternal.clear();
 
@@ -393,7 +393,7 @@ public class CircuitSheet extends JPanel {
         }
 
         // (1) LK-Check -->
-        PotentialArea[] pot = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.LK_AND_RELUCTANCE), localElementsLK).getPotentiale();
+        PotentialArea[] pot = NetlistGeneral.fabricNetzlistComplete(getConnection(ConnectorType.LK_AND_RELUCTANCE), localElementsLK).getPotentiale();
 
         if (selectPotentialNodesToShow(pot, clickPoint, localElementsLK)) {
             return;
@@ -401,13 +401,13 @@ public class CircuitSheet extends JPanel {
 
         // (2) CONTROL-Check -->
 
-        PotentialArea[] pot2 = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), localElementsCONTROL).getPotentiale();
+        PotentialArea[] pot2 = NetlistGeneral.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), localElementsCONTROL).getPotentiale();
         if (selectPotentialNodesToShow(pot2, clickPoint, localElementsCONTROL)) {
             return;
         }
 
         // (3) THERM-Check -->
-        PotentialArea[] pot3 = NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.THERMAL),
+        PotentialArea[] pot3 = NetlistGeneral.fabricNetzlistComplete(getConnection(ConnectorType.THERMAL),
                 localElementsTHERM).getPotentiale();
         if (selectPotentialNodesToShow(pot3, clickPoint, localElementsTHERM)) {
             return;
@@ -416,26 +416,26 @@ public class CircuitSheet extends JPanel {
         _showNodesInternal.clear();
     }
 
-    public Set<Verbindung> getConnection(final ConnectorType connectorType) {
+    public Set<Connection> getConnection(final ConnectorType connectorType) {
         Collection<AbstractCircuitSheetComponent> allElements = getLocalSheetComponents();
-        Set<Verbindung> allConnectors = new LinkedHashSet<Verbindung>();
+        Set<Connection> allConnectors = new LinkedHashSet<Connection>();
         for (AbstractCircuitSheetComponent comp : allElements) {
-            if (comp instanceof Verbindung) {
-                allConnectors.add((Verbindung) comp);
+            if (comp instanceof Connection) {
+                allConnectors.add((Connection) comp);
             }
         }
 
         if (connectorType == ConnectorType.LK_AND_RELUCTANCE) {
-            Set<Verbindung> returnValue = new LinkedHashSet<Verbindung>();
+            Set<Connection> returnValue = new LinkedHashSet<Connection>();
             returnValue.addAll(getConnection(ConnectorType.LK));
             returnValue.addAll(getConnection(ConnectorType.RELUCTANCE));
             return Collections.unmodifiableSet(returnValue);
         }
 
-        Set<Verbindung> returnValue = new LinkedHashSet<Verbindung>();
+        Set<Connection> returnValue = new LinkedHashSet<Connection>();
         for (AbstractCircuitSheetComponent verbCand : allConnectors) {
-            if (verbCand instanceof Verbindung) {
-                Verbindung verb = (Verbindung) verbCand;
+            if (verbCand instanceof Connection) {
+                Connection verb = (Connection) verbCand;
                 if (verb.getSimulationDomain() == connectorType) {
                     returnValue.add(verb);
                 }

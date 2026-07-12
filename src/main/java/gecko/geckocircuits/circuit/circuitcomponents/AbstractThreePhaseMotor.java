@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.core.circuit.CircuitSourceType;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Graphics2D;
@@ -69,14 +69,14 @@ abstract class AbstractThreePhaseMotor extends AbstractMotor {
 
     @Override
     void setSubCircuit() {
-        // Statorstromquelle fuer isa(t) -->
+        // Stator current source for isa(t) -->
         _controlledAnchorSourceA = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         _controlledAnchorSourceA.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_SIGNALGESTEUERT);
 
         _controlledAnchorSourceA.setInputTerminal(0, XIN.get(0));
         _controlledAnchorSourceA.setOutputTerminal(0, XIN.get(1));
 
-        // Statorstromquelle fuer isc(t) -->
+        // Stator current source for isa(t) -->
         _controlledAnchorSourceC = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         _controlledAnchorSourceC.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_SIGNALGESTEUERT);
         _controlledAnchorSourceC.setInputTerminal(0, XIN.get(2));

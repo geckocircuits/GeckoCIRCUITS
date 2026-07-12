@@ -33,7 +33,7 @@ public final class PICalculator extends AbstractControlCalculatable implements I
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         y11 = y1alt + 0.5 * _a1 * deltaT * (_inputSignal[0][0] + xalt);
         _outputSignal[0][0] = y11 + _r0 * _inputSignal[0][0];
         xalt = _inputSignal[0][0];

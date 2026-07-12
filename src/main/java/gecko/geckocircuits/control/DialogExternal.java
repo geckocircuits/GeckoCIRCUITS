@@ -227,12 +227,12 @@ public class DialogExternal extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped
 
     private void jSpinnerPortNumberStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerPortNumberStateChanged
-        if (_regelBlock instanceof ReglerToEXTERNAL) {
-            ((ReglerToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlToEXTERNAL) {
+            ((ControlToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if (_regelBlock instanceof ReglerFromEXTERNAL) {
-            ((ReglerFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlFromEXTERNAL) {
+            ((ControlFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
     }//GEN-LAST:event_jSpinnerPortNumberStateChanged

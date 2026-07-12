@@ -16,14 +16,14 @@ package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.core.circuit.losscalculation.DetailedLossLookupTable;
 import gecko.core.circuit.losscalculation.LossCurve;
-import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.ConductionLossMeasurementCurve;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-class DetailedConductionLossPanel extends DetailledLossPanel<LeitverlusteMesskurve> {
+class DetailedConductionLossPanel extends DetailledLossPanel<ConductionLossMeasurementCurve> {
 
     public double uMaxCOND, iMaxCOND;  // maximale Bereichsgrenze aller 'messkurvePvCOND[]' bzw 'messkurvePvSWITCH[]' --> korekte Darstellung im Grafer
     public double[] tjGrenzenCOND, b0COND, b1COND, c0COND, c1COND, d0COND, d1COND;  // Koeffizienten der Naeherungspoloynome (siehe Publikation IPEC'05) --> Econd(i,tj)
@@ -49,7 +49,7 @@ class DetailedConductionLossPanel extends DetailledLossPanel<LeitverlusteMesskur
 
     @Override
     LossCurve createNewCurve(final double curveTemperatureParameter) {
-        return new LeitverlusteMesskurve(curveTemperatureParameter);
+        return new ConductionLossMeasurementCurve(curveTemperatureParameter);
     }
 
     @Override
@@ -65,7 +65,7 @@ class DetailedConductionLossPanel extends DetailledLossPanel<LeitverlusteMesskur
 
     @Override
     LossCurve calculateNewTestCurve(double temperature, double measuredVoltage) {
-        final LossCurve returnValue = new LeitverlusteMesskurve(temperature);
+        final LossCurve returnValue = new ConductionLossMeasurementCurve(temperature);
         double currentStepper = 0;
         final double currentStepwidth = calculateMaximumCurrentInAllCurves() / DIVISIONS_TEST_CURVE;
 

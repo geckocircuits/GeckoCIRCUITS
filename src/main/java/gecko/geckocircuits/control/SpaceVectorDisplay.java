@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.swing.ImageIcon;
 import java.net.URL;
@@ -60,7 +60,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
     SpaceVector sv1;
     SpaceVector sv2;
     SpaceVector sv3;
-    private ReglerSpaceVector reglerSpaceVector;
+    private ControlSpaceVector controlSpaceVector;
 
 
     private class SpaceVector {
@@ -178,8 +178,8 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         }
         initComponents();
 
-        if(regelBlock instanceof ReglerSpaceVector) {
-            reglerSpaceVector = (ReglerSpaceVector) regelBlock;
+        if(regelBlock instanceof ControlSpaceVector) {
+            controlSpaceVector = (ControlSpaceVector) regelBlock;
         }
 
         doubleBufferImage = gfxConf.createCompatibleImage(getWidth(), getHeight());
@@ -470,10 +470,8 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 //     * @param args the command line arguments
 //     */
 //    public static void main(String args[]) {
-//
 //        SpaceVectorDisplay svd = new SpaceVectorDisplay();
 //        svd.setVisible(true);
-//
 //        for (int i = 0; i < 4000; i++) {
 //            try {
 //                double time = i / 10000.0;
@@ -486,7 +484,6 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 //                Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 //        }
-//
 //        System.exit(-1);
 //    }
 

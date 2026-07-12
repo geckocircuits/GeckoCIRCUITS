@@ -47,8 +47,8 @@ public class AxisDesignSettingsTest {
 
     @Test
     public void testDefaultAxisCaption_IsEmpty() {
-        assertNotNull("Default axis caption should not be null", settings.getAchseBeschriftung());
-        assertEquals("Default axis caption should be empty", "", settings.getAchseBeschriftung());
+        assertNotNull("Default axis caption should not be null", settings.getAxisLabel());
+        assertEquals("Default axis caption should be empty", "", settings.getAxisLabel());
     }
 
     @Test
@@ -134,60 +134,60 @@ public class AxisDesignSettingsTest {
 
     @Test
     public void testSetAchseBeschriftung_SimpleName() {
-        settings.setAchseBeschriftung("Voltage");
-        assertEquals("Axis caption should be 'Voltage'", "Voltage", settings.getAchseBeschriftung());
+        settings.setAxisLabel("Voltage");
+        assertEquals("Axis caption should be 'Voltage'", "Voltage", settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_EmptyString() {
-        settings.setAchseBeschriftung("Test");
-        settings.setAchseBeschriftung("");
-        assertEquals("Axis caption should be empty", "", settings.getAchseBeschriftung());
+        settings.setAxisLabel("Test");
+        settings.setAxisLabel("");
+        assertEquals("Axis caption should be empty", "", settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_WithUnit() {
-        settings.setAchseBeschriftung("Voltage [V]");
-        assertEquals("Axis caption should include unit", "Voltage [V]", settings.getAchseBeschriftung());
+        settings.setAxisLabel("Voltage [V]");
+        assertEquals("Axis caption should include unit", "Voltage [V]", settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_LongName() {
         String longName = "This is a very long axis name with many characters";
-        settings.setAchseBeschriftung(longName);
-        assertEquals("Axis caption should handle long strings", longName, settings.getAchseBeschriftung());
+        settings.setAxisLabel(longName);
+        assertEquals("Axis caption should handle long strings", longName, settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_SpecialCharacters() {
         String specialName = "Axis_1-Test@#$%";
-        settings.setAchseBeschriftung(specialName);
-        assertEquals("Axis caption should handle special characters", specialName, settings.getAchseBeschriftung());
+        settings.setAxisLabel(specialName);
+        assertEquals("Axis caption should handle special characters", specialName, settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_WithGreekLetters() {
         String greekName = "Phase [°]";
-        settings.setAchseBeschriftung(greekName);
-        assertEquals("Axis caption should handle special symbols", greekName, settings.getAchseBeschriftung());
+        settings.setAxisLabel(greekName);
+        assertEquals("Axis caption should handle special symbols", greekName, settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_Numeric() {
-        settings.setAchseBeschriftung("1.5");
-        assertEquals("Axis caption should accept numeric values", "1.5", settings.getAchseBeschriftung());
+        settings.setAxisLabel("1.5");
+        assertEquals("Axis caption should accept numeric values", "1.5", settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_MultipleUpdates() {
-        settings.setAchseBeschriftung("First");
-        assertEquals("First update", "First", settings.getAchseBeschriftung());
+        settings.setAxisLabel("First");
+        assertEquals("First update", "First", settings.getAxisLabel());
 
-        settings.setAchseBeschriftung("Second");
-        assertEquals("Second update", "Second", settings.getAchseBeschriftung());
+        settings.setAxisLabel("Second");
+        assertEquals("Second update", "Second", settings.getAxisLabel());
 
-        settings.setAchseBeschriftung("Third");
-        assertEquals("Third update", "Third", settings.getAchseBeschriftung());
+        settings.setAxisLabel("Third");
+        assertEquals("Third update", "Third", settings.getAxisLabel());
     }
 
     // ====================================================
@@ -258,19 +258,19 @@ public class AxisDesignSettingsTest {
     public void testMultipleStateChanges_AllIndependent() {
         settings.setColor(GeckoColor.RED);
         settings.setStroke(GeckoLineStyle.DOTTED_PLAIN);
-        settings.setAchseBeschriftung("Current [A]");
+        settings.setAxisLabel("Current [A]");
 
         assertEquals("Color should be RED", GeckoColor.RED, settings.getColor());
         assertEquals("Stroke should be DASHED_PLAIN",
             GeckoLineStyle.DOTTED_PLAIN, settings.getStroke());
-        assertEquals("Caption should be 'Current [A]'", "Current [A]", settings.getAchseBeschriftung());
+        assertEquals("Caption should be 'Current [A]'", "Current [A]", settings.getAxisLabel());
 
         // Change one property and verify others unchanged
         settings.setColor(GeckoColor.BLUE);
         assertEquals("Color should update to BLUE", GeckoColor.BLUE, settings.getColor());
         assertEquals("Stroke should remain DASHED_PLAIN",
             GeckoLineStyle.DOTTED_PLAIN, settings.getStroke());
-        assertEquals("Caption should remain", "Current [A]", settings.getAchseBeschriftung());
+        assertEquals("Caption should remain", "Current [A]", settings.getAxisLabel());
     }
 
     @Test
@@ -278,15 +278,15 @@ public class AxisDesignSettingsTest {
         AxisDesignSettings settings2 = new AxisDesignSettings();
 
         settings.setColor(GeckoColor.RED);
-        settings.setAchseBeschriftung("Voltage");
+        settings.setAxisLabel("Voltage");
 
         settings2.setColor(GeckoColor.BLUE);
-        settings2.setAchseBeschriftung("Current");
+        settings2.setAxisLabel("Current");
 
         assertEquals("First instance color", GeckoColor.RED, settings.getColor());
-        assertEquals("First instance caption", "Voltage", settings.getAchseBeschriftung());
+        assertEquals("First instance caption", "Voltage", settings.getAxisLabel());
         assertEquals("Second instance color", GeckoColor.BLUE, settings2.getColor());
-        assertEquals("Second instance caption", "Current", settings2.getAchseBeschriftung());
+        assertEquals("Second instance caption", "Current", settings2.getAxisLabel());
     }
 
     // ====================================================
@@ -313,22 +313,22 @@ public class AxisDesignSettingsTest {
     public void testScenario_ConfigureVoltageAxis() {
         settings.setColor(GeckoColor.RED);
         settings.setStroke(GeckoLineStyle.SOLID_PLAIN);
-        settings.setAchseBeschriftung("Voltage [V]");
+        settings.setAxisLabel("Voltage [V]");
 
         assertEquals("Color configured", GeckoColor.RED, settings.getColor());
         assertEquals("Style configured", GeckoLineStyle.SOLID_PLAIN, settings.getStroke());
-        assertEquals("Caption configured", "Voltage [V]", settings.getAchseBeschriftung());
+        assertEquals("Caption configured", "Voltage [V]", settings.getAxisLabel());
     }
 
     @Test
     public void testScenario_ConfigureCurrentAxis() {
         settings.setColor(GeckoColor.BLUE);
         settings.setStroke(GeckoLineStyle.DOTTED_PLAIN);
-        settings.setAchseBeschriftung("Current [A]");
+        settings.setAxisLabel("Current [A]");
 
         assertEquals("Color configured", GeckoColor.BLUE, settings.getColor());
         assertEquals("Style configured", GeckoLineStyle.DOTTED_PLAIN, settings.getStroke());
-        assertEquals("Caption configured", "Current [A]", settings.getAchseBeschriftung());
+        assertEquals("Caption configured", "Current [A]", settings.getAxisLabel());
     }
 
     @Test
@@ -336,14 +336,14 @@ public class AxisDesignSettingsTest {
         // Modify settings
         settings.setColor(GeckoColor.RED);
         settings.setStroke(GeckoLineStyle.DOTTED_PLAIN);
-        settings.setAchseBeschriftung("Custom");
+        settings.setAxisLabel("Custom");
 
         // Create new instance (effectively reset)
         AxisDesignSettings defaults = new AxisDesignSettings();
 
         assertEquals("Reset color", GeckoColor.BLACK, defaults.getColor());
         assertEquals("Reset stroke", GeckoLineStyle.SOLID_PLAIN, defaults.getStroke());
-        assertEquals("Reset caption", "", defaults.getAchseBeschriftung());
+        assertEquals("Reset caption", "", defaults.getAxisLabel());
     }
 
     // ====================================================
@@ -357,21 +357,21 @@ public class AxisDesignSettingsTest {
             sb.append("A");
         }
         String veryLongName = sb.toString();
-        settings.setAchseBeschriftung(veryLongName);
-        assertEquals("Should handle very long strings", veryLongName, settings.getAchseBeschriftung());
+        settings.setAxisLabel(veryLongName);
+        assertEquals("Should handle very long strings", veryLongName, settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_SingleCharacter() {
-        settings.setAchseBeschriftung("X");
-        assertEquals("Should handle single character", "X", settings.getAchseBeschriftung());
+        settings.setAxisLabel("X");
+        assertEquals("Should handle single character", "X", settings.getAxisLabel());
     }
 
     @Test
     public void testSetAchseBeschriftung_WithWhitespace() {
         String withWhitespace = "  Axis With Spaces  ";
-        settings.setAchseBeschriftung(withWhitespace);
-        assertEquals("Should preserve whitespace", withWhitespace, settings.getAchseBeschriftung());
+        settings.setAxisLabel(withWhitespace);
+        assertEquals("Should preserve whitespace", withWhitespace, settings.getAxisLabel());
     }
 
     // ====================================================
@@ -382,10 +382,10 @@ public class AxisDesignSettingsTest {
     public void testGetSetConsistency_AllProperties() {
         settings.setColor(GeckoColor.MAGENTA);
         settings.setStroke(GeckoLineStyle.SOLID_THIN);
-        settings.setAchseBeschriftung("Test Axis");
+        settings.setAxisLabel("Test Axis");
 
         assertEquals("Color consistency", GeckoColor.MAGENTA, settings.getColor());
         assertEquals("Stroke consistency", GeckoLineStyle.SOLID_THIN, settings.getStroke());
-        assertEquals("Caption consistency", "Test Axis", settings.getAchseBeschriftung());
+        assertEquals("Caption consistency", "Test Axis", settings.getAxisLabel());
     }
 }

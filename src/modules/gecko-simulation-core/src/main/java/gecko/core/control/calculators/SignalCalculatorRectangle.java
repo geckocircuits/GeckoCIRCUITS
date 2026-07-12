@@ -18,12 +18,12 @@ public final class SignalCalculatorRectangle extends AbstractSignalCalculatorPer
     private static final double FOUR = 4;
 
     public SignalCalculatorRectangle(final int noInputs, final double amplitudeAC,
-            final double frequency, final double phase, final double anteilDC, final double duty) {
-        super(noInputs, amplitudeAC, frequency, phase, anteilDC, duty);
+            final double frequency, final double phase, final double dcOffset, final double duty) {
+        super(noInputs, amplitudeAC, frequency, phase, dcOffset, duty);
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         //double dphi= Math.PI*(0.5-tastverhaeltnis);  // Korrekturwinkel, damit Rechteck-Signal immer im Ursprung beginnt
         //double fdr= 1/Math.PI*Math.asin(Math.sin(2*Math.PI*frequenz*t -phase +dphi)) +0.5;  // [0...1]
         _dyUP = FOUR * _frequency * deltaT;
@@ -41,9 +41,9 @@ public final class SignalCalculatorRectangle extends AbstractSignalCalculatorPer
             _aufsteigend = true;
         }
         if (_triangle > 1 - 2 * _dutyRatio) {
-            _outputSignal[0][0] = _amplitudeAC + _anteilDC;
+            _outputSignal[0][0] = _amplitudeAC + _dcOffset;
         } else {
-            _outputSignal[0][0] = _anteilDC;
+            _outputSignal[0][0] = _dcOffset;
         }
     }
 

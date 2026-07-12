@@ -24,7 +24,7 @@ public final class PDCalculator extends AbstractControlCalculatable {
     }    
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         // vereinfachte Formel ohne yalt --> wird numerisch viel robuster
         _outputSignal[0][0] = _gain / deltaT * (_inputSignal[0][0] - _oldValue);  
         _oldValue = _inputSignal[0][0];

@@ -45,7 +45,7 @@ public class SmallSignalCalculatorTest {
         );
 
         assertNotNull("Calculator should be created", calc);
-        assertNotNull("Signal calculator should be created for rectangle", calc._signalTypeCalculator);
+        assertNotNull("Signal calculator should be created for rectangle", calc.AbstractControlCalculatable);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class SmallSignalCalculatorTest {
         );
 
         assertNotNull("Calculator should be created", calc);
-        assertNotNull("Signal calculator should be created for triangle", calc._signalTypeCalculator);
+        assertNotNull("Signal calculator should be created for triangle", calc.AbstractControlCalculatable);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class SmallSignalCalculatorTest {
         // Set input (measured signal)
         calc._inputSignal[0][0] = 5.0;
 
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         // Output should be the small signal (not NaN/Infinite)
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
@@ -152,7 +152,7 @@ public class SmallSignalCalculatorTest {
         calc._inputSignal[0][0] = 5.0;  // measured signal
         calc._inputSignal[1][0] = 2.0;  // signal to add
 
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         // Output should include the added signal
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
@@ -174,7 +174,7 @@ public class SmallSignalCalculatorTest {
         calc.initializeAtSimulationStart(DELTA_T);
         calc._inputSignal[0][0] = 5.0;
 
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
     }
@@ -195,7 +195,7 @@ public class SmallSignalCalculatorTest {
         calc.initializeAtSimulationStart(DELTA_T);
         calc._inputSignal[0][0] = 5.0;
 
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
     }
@@ -217,7 +217,7 @@ public class SmallSignalCalculatorTest {
         calc._inputSignal[0][0] = 5.0;  // measured signal
         calc._inputSignal[2][0] = 0.1;  // external small signal
 
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
     }
@@ -241,11 +241,11 @@ public class SmallSignalCalculatorTest {
                 1.0, 100.0, 1000.0, SSAShape.RECTANGLE, 2, 1, false);
 
         // Initialize signal calculator input/output
-        for (int i = 0; i < calc._signalTypeCalculator._inputSignal.length; i++) {
-            calc._signalTypeCalculator._inputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._inputSignal.length; i++) {
+            calc.AbstractControlCalculatable._inputSignal[i] = new double[]{0};
         }
-        for (int i = 0; i < calc._signalTypeCalculator._outputSignal.length; i++) {
-            calc._signalTypeCalculator._outputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._outputSignal.length; i++) {
+            calc.AbstractControlCalculatable._outputSignal[i] = new double[]{0};
         }
 
         calc.initializeAtSimulationStart(DELTA_T);
@@ -261,11 +261,11 @@ public class SmallSignalCalculatorTest {
                 1.0, 100.0, 1000.0, SSAShape.TRIANGLE, 2, 1, false);
 
         // Initialize signal calculator input/output
-        for (int i = 0; i < calc._signalTypeCalculator._inputSignal.length; i++) {
-            calc._signalTypeCalculator._inputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._inputSignal.length; i++) {
+            calc.AbstractControlCalculatable._inputSignal[i] = new double[]{0};
         }
-        for (int i = 0; i < calc._signalTypeCalculator._outputSignal.length; i++) {
-            calc._signalTypeCalculator._outputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._outputSignal.length; i++) {
+            calc.AbstractControlCalculatable._outputSignal[i] = new double[]{0};
         }
 
         calc.initializeAtSimulationStart(DELTA_T);
@@ -311,7 +311,7 @@ public class SmallSignalCalculatorTest {
         // Run multiple steps
         for (int step = 0; step < 100; step++) {
             calc._inputSignal[0][0] = Math.sin(0.01 * step);
-            calc.berechneYOUT(DELTA_T);
+            calc.calculateYOUT(DELTA_T);
 
             assertFalse("Output should be valid at step " + step,
                        Double.isNaN(calc._outputSignal[0][0]));
@@ -339,7 +339,7 @@ public class SmallSignalCalculatorTest {
         // Run a few steps
         for (int i = 0; i < 5; i++) {
             calc._inputSignal[0][0] = i * 0.1;
-            calc.berechneYOUT(DELTA_T);
+            calc.calculateYOUT(DELTA_T);
         }
 
         // Circular index should have advanced
@@ -362,17 +362,17 @@ public class SmallSignalCalculatorTest {
         calc.initializeAtSimulationStart(DELTA_T);
 
         // Run with one dt
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
         int samples1 = calc._numberSamples;
 
         // Run with same dt
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
         int samples2 = calc._numberSamples;
 
         assertEquals("Sample count should increment with same dt", samples1 + 1, samples2);
 
         // Run with different dt
-        calc.berechneYOUT(DELTA_T * 2);
+        calc.calculateYOUT(DELTA_T * 2);
         int samples3 = calc._numberSamples;
 
         assertEquals("Sample count should reset with different dt", 1, samples3);
@@ -388,7 +388,7 @@ public class SmallSignalCalculatorTest {
 
         assertEquals("Time should be set correctly", testTime, calc._time, TOLERANCE);
         assertEquals("Signal calculator time should be set", testTime,
-                    calc._signalTypeCalculator._time, TOLERANCE);
+                    calc.AbstractControlCalculatable._time, TOLERANCE);
     }
 
     @Test
@@ -407,7 +407,7 @@ public class SmallSignalCalculatorTest {
         }
 
         calc.initializeAtSimulationStart(0.001); // 1ms time step
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
 
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
     }
@@ -428,7 +428,7 @@ public class SmallSignalCalculatorTest {
         }
 
         calc.initializeAtSimulationStart(1e-6); // 1us time step
-        calc.berechneYOUT(1e-6);
+        calc.calculateYOUT(1e-6);
 
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
     }
@@ -446,7 +446,7 @@ public class SmallSignalCalculatorTest {
         }
 
         calc.initializeAtSimulationStart(DELTA_T);
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         // Output should be small but valid
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
@@ -467,7 +467,7 @@ public class SmallSignalCalculatorTest {
         }
 
         calc.initializeAtSimulationStart(DELTA_T);
-        calc.berechneYOUT(DELTA_T);
+        calc.calculateYOUT(DELTA_T);
 
         assertFalse("Output should be valid", Double.isNaN(calc._outputSignal[0][0]));
         assertFalse("Output should not be infinite", Double.isInfinite(calc._outputSignal[0][0]));
@@ -517,9 +517,9 @@ public class SmallSignalCalculatorTest {
 
         calc.initializeAtSimulationStart(1.0); // Forces very small FFT buffer (_N=2)
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(1.0);
+        calc.calculateYOUT(1.0);
         calc._inputSignal[0][0] = 1.0;
-        calc.berechneYOUT(1.0);
+        calc.calculateYOUT(1.0);
 
         calc.tearDownOnPause();
 

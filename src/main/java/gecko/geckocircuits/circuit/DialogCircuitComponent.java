@@ -13,10 +13,10 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -133,16 +133,18 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         jButtonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                schliesseFenster();
+                closeWindow();
             }
         });
         jPanelButtonOkCancel = new JPanel();
         jPanelButtonOkCancel.add(jButtonOk);
         jPanelButtonOkCancel.add(jButtonCancel);
     }
+
     public final ActionListener okActionListener = new ActionListener() {
 
         @Override
+        @SuppressFBWarnings(value = "DE_MIGHT_IGNORE", justification = "Aborting action on duplicate component name is the intended flow")
         public void actionPerformed(final ActionEvent actionEvent) {
             try {
                 setNewElementName();
@@ -164,7 +166,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
                 processRegisteredParameters();
                 processInputIndividual();
                 element.setParameter(element.getParameter());
-                schliesseFenster();
+                closeWindow();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -188,7 +190,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
     public void setVisible(boolean b) {
         this.setTitle(" " + element.getTypeDescription().getTranslation());
         this.setBackground(Color.lightGray);
-        this.baueGUI();
+        this.buildGUI();
         this.pack();
         this.setResizable(true);
         getRootPane().setDefaultButton(jButtonOk);
@@ -196,23 +198,23 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         super.setVisible(b);
     }
 
-    private boolean schliesseFensterCalled = false;
+    private boolean closeWindowCalled = false;
 
     @Override
-    public void schliesseFenster() {
+    public void closeWindow() {
         // this function was called several times when closing a window.
         // the boolean flag is only a work-around, do this in a cleaner way
         // in the future!
-        if (schliesseFensterCalled) {
+        if (closeWindowCalled) {
             return;
         }
-        schliesseFensterCalled = true;
+        closeWindowCalled = true;
         _se.setDirtyFlag();
         this.dispose();
         _se._visibleCircuitSheet.requestFocus();
     }
 
-    public abstract void baueGUI();
+    public abstract void buildGUI();
 
     public final void setNewElementName() throws NameAlreadyExistsException {
         _originalName = element.getStringID();
@@ -272,7 +274,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
 
     @Override
     public void windowClosing(WindowEvent we) {
-        this.schliesseFenster();
+        this.closeWindow();
     }
 
     @Override

@@ -27,7 +27,7 @@ import gecko.core.circuit.netlist.CircuitNetlist;
  *   <li>THERM → LK  : temperature-dependent resistances</li>
  * </ul>
  *
- * <p>Extracted from gecko.geckocircuits.circuit.SimulationsKern coupling arrays.
+ * <p>Extracted from gecko.geckocircuits.circuit.SimulationKernel coupling arrays.
  *
  * @author Extracted for Phase 4 domain coupling
  * @since v2.18.0 Phase 4 - Domain coupling architecture

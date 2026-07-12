@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 
 /**
  * Enumeration of connector types with associated display properties.

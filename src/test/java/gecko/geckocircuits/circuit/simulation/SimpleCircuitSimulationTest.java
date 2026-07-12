@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.simulation;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.terminal.ConnectionPath;
 import gecko.geckocircuits.circuit.terminal.ConnectionValidator;

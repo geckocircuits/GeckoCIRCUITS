@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author GeckoCIRCUITS Team
  * @see SchematicEditor2
- * @see Verbindung
+ * @see Connection
  */
 public class WirePathCalculator {
 
@@ -205,7 +205,7 @@ public class WirePathCalculator {
      *
      * Returns the sequence of points that form the wire path, excluding the
      * start point but including intermediate points. The end point is NOT included
-     * (caller typically sets it separately via setzeEndKnoten).
+     * (caller typically sets it separately via setEndNode).
      *
      * @param xStart X coordinate of start point
      * @param yStart Y coordinate of start point

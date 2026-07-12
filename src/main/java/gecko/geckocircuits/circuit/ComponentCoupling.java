@@ -14,10 +14,10 @@
 package gecko.geckocircuits.circuit;
 import gecko.core.circuit.TokenMap;
 
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.control.Operationable;
-import gecko.geckocircuits.control.ReglerGate;
+import gecko.geckocircuits.control.ControlGate;
 import gecko.i18n.resources.I18nKeys;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -324,8 +324,8 @@ public final class ComponentCoupling {
 
     private void removeWithSingleReference(final AbstractBlockInterface partner, final int index) {
         for(ComponentCoupling otherCoup : partner._isReferencedBy.toArray(new ComponentCoupling[0])) {
-            if(otherCoup._parentElement instanceof ReglerGate
-                    && _parentElement instanceof ReglerGate) {
+            if(otherCoup._parentElement instanceof ControlGate
+                    && _parentElement instanceof ControlGate) {
                 otherCoup.setNewCouplingElementUndoable(index, null);
             }
         }

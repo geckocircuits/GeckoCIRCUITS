@@ -13,7 +13,7 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.OperatingMode;
+import gecko.geckocircuits.general.OperatingMode;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

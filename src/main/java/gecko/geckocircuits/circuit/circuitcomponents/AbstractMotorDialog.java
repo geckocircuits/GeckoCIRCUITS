@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.UserParameter;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -54,7 +54,7 @@ abstract class AbstractMotorDialog<T extends AbstractMotor> extends DialogElemen
     }
 
     @Override
-    protected final void baueGUIIndividual() {
+    protected final void buildGUIIndividual() {
         JTabbedPane tabber = this.createMotorGUI();
         con.add(tabber, BorderLayout.CENTER);
     }

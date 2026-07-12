@@ -364,7 +364,7 @@ class ControlNetlistTest {
         }
 
         @Override
-        public void berechneYOUT(double deltaT) {
+        public void calculateYOUT(double deltaT) {
             callCount++;
             lastDt = deltaT;
         }

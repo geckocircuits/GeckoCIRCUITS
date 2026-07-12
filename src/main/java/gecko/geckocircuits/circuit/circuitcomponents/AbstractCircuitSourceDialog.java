@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ComponentCoupable;
 import gecko.core.circuit.CircuitSourceType;
@@ -55,7 +55,7 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
     }
 
     @Override
-    void baueGUIIndividual() {
+    void buildGUIIndividual() {
 
         String labelText1 = "";
 
@@ -96,7 +96,6 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         //puAC.setLayout(new GridLayout(1, 1));
         puAC.setLayout(new BorderLayout());
         puAC.add(puAC2, BorderLayout.NORTH);
-        //
         //---------------------------------------
         JPanel puDC2 = new JPanel();
         puDC2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "DC Constant", TitledBorder.LEFT, TitledBorder.TOP));
@@ -116,7 +115,6 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         _tabberU.addTab("DC", puDC);
         puDC.setLayout(new BorderLayout());
         puDC.add(puDC2, BorderLayout.NORTH);
-        //
         //---------------------------------------
         JPanel puSGN2 = new JPanel();
         puSGN2.setBorder(new TitledBorder("Signal-Controlled"));
@@ -128,7 +126,6 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         _tabberU.addTab("Sign", puSGN);
         puSGN.setLayout(new BorderLayout());
         puSGN.add(puSGN2, BorderLayout.NORTH);
-        //
         //------------
         JPanel puSGNdir = new JPanel();
         puSGNdir.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),

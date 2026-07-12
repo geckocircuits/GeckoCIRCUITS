@@ -27,14 +27,14 @@ public class GainCalculatorTest extends AbstractSimpleMathFunctionTest {
 
     @Override
     @Test
-    public void testBerechneYOUTResult0() {
+    public void testCalculateYOUTResult0() {
         double val = getValue(0);
         assertWithTol(0, 0);
     }
 
     @Override
     @Test
-    public void testBerechneYOUTValue() {
+    public void testCalculateYOUTValue() {
         double val = getValue(10);
         assertWithTol(10 * DEFAULT_GAIN, val);
     }

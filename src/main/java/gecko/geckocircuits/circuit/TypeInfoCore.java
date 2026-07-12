@@ -14,7 +14,7 @@
 
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.AbstractComponentTyp;
+import gecko.geckocircuits.general.AbstractComponentType;
 
 /**
  * Core type information interface - NO GUI/I18n dependencies.
@@ -25,7 +25,7 @@ public abstract class TypeInfoCore {
 
     public final String _fixedIDString;
     public final Class<? extends AbstractBlockInterface> _typeClass;
-    public AbstractComponentTyp _parentType;
+    public AbstractComponentType _parentType;
 
     /**
      * Constructor for type information

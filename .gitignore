@@ -31,6 +31,7 @@ release/
 
 # Claude Code workspace files
 .claude/
+.agents/
 
 # IDE files
 .classpath

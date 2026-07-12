@@ -54,7 +54,7 @@
         <Component class="javax.swing.JToggleButton" name="jToggleButtonOff">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/iconOFF_off.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/iconOFF_off.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Disable cursors and zoom modus"/>
             <Property name="focusPainted" type="boolean" value="false"/>
@@ -66,7 +66,7 @@
         <Component class="javax.swing.JToggleButton" name="jToggleButtonZoom">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/iconOFF_zoomFenster.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/iconOFF_zoomWindow.png"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Activate zoom modus. Drag the mouse to zoom. Pressing Ctrl&lt;br&gt;&#xa;or Shift during draggin enables zooming into a single axis direction.&lt;br&gt;&#xa;As alternative, you can use the mouse wheel for zooming. Alt-Drag&lt;br&gt;&#xa;enables the pan modus.&#xa;&lt;/html&gt;"/>
@@ -81,7 +81,7 @@
         <Component class="javax.swing.JToggleButton" name="jToggleButtonSlider">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/iconON_getXYschieber.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/iconON_getXYslider.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Activate sliders (cursors). You can use the mouse wheel for fine-&lt;br&gt;&#xa;adjustment of the cursors. The second (green) cursor moves by dragging&lt;br&gt;&#xa;the right mouse button. The green cursor shows DIFFERENCES values w.r.t&lt;br&gt;&#xa;the first (red) cursor values.&lt;/html&gt;"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -104,7 +104,7 @@
         <Component class="javax.swing.JButton" name="jButtonNextMax">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/icon_nextMax.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/icon_nextMax.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Move active cursor to next (ctrl-previous) maximum"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -118,7 +118,7 @@
         <Component class="javax.swing.JButton" name="jButtonNextMin">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/icon_nextMin.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/icon_nextMin.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Move active cursor to next (ctrl-previous) maximum"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -132,7 +132,7 @@
         <Component class="javax.swing.JButton" name="jButtonNextZero">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/icon_nextZero.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/icon_nextZero.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Move active cursor to next (ctrl-previous) zero crossing"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -146,7 +146,7 @@
         <Component class="javax.swing.JButton" name="jButtonNextEqual">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/icon_nextEqual.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/icon_nextEqual.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Move inactive cursor to next (ctrl-previous)&lt;br&gt;  value equal to the active cursor value&lt;/html&gt;"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -160,7 +160,7 @@
         <Component class="javax.swing.JButton" name="jButtonShowAll">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/iconOFF_zoomFit2.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/iconOFF_zoomFit2.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Auto-zoom to data in memory"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -174,7 +174,7 @@
         <Component class="javax.swing.JButton" name="jButtonZoomBack">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/iconUnZoom.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/iconUnZoom.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Undo last zoom operation"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -188,7 +188,7 @@
         <Component class="javax.swing.JToggleButton" name="jToggleButtonCtrl">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/ctrlForward.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/ctrlForward.png"/>
             </Property>
             <Property name="focusable" type="boolean" value="false"/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
@@ -204,7 +204,7 @@
         <Component class="javax.swing.JToggleButton" name="jToggleButtonZoomShift">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/zoomY.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/zoomY.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;Lock zoom to Y-axis. Alternatively, press&lt;br&gt; SHIFT button when dragging the zoom window&lt;/html&gt;"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -218,7 +218,7 @@
         <Component class="javax.swing.JButton" name="jButtonSaveZoom">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/iconON_zoomFit2.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/iconON_zoomFit2.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Save currently selected zoom settings"/>
             <Property name="focusable" type="boolean" value="false"/>
@@ -232,7 +232,7 @@
         <Component class="javax.swing.JButton" name="jButtonLoadZoom">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/loadZoom.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/loadZoom.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Load zoom settings that were saved last time"/>
             <Property name="enabled" type="boolean" value="false"/>
@@ -247,7 +247,7 @@
         <Component class="javax.swing.JToggleButton" name="jToggleButtonAuto">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/gecko/geckocircuits/allg/autoScale.png"/>
+              <Image iconType="3" name="/gecko/geckocircuits/general/autoScale.png"/>
             </Property>
             <Property name="selected" type="boolean" value="true"/>
             <Property name="focusable" type="boolean" value="false"/>

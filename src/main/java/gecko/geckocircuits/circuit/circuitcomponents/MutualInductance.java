@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
@@ -67,7 +67,7 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
-        // Verbindungslinien zu den verkoppelten Induktivitaeten:
+        // Connection lines to the coupled inductances:
         if (_showLines.getValue()) {
             Color origColor = graphics.getColor();
             graphics.setColor(Color.green);

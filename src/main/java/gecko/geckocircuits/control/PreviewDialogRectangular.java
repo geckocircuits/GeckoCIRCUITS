@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.GlobalFonts;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -35,7 +35,7 @@ public class PreviewDialogRectangular extends PreviewDialog {
         final int[] kordY = new int[]{y2, y1, y1 + p1, y1 + p1, y1, y0, y0, y0, y0 - p2, y0 + p2, y0};
         final int[] triX = new int[b], triY = new int[triX.length];
         final int offset = 20, ac = 55, phase = 60, q2 = ac / 2 - 7;
-        final double duty = 0.2, anteilDC = offset;
+        final double duty = 0.2, dcOffset = offset;
         //------------------
         double tx = 0, tEnd = b, dt = 1, dreieck = 0;
         double phaseX = phase * Math.PI / 180.0, amplitudeAC = ac, frequenz = 1.0 / b, tastverhaeltnis = duty;
@@ -79,9 +79,9 @@ public class PreviewDialogRectangular extends PreviewDialog {
             }
             triX[i1] = x0 + i1;
             if (dreieck > 1 - 2 * tastverhaeltnis) {
-                triY[i1] = y0 - (int) (amplitudeAC + anteilDC);
+                triY[i1] = y0 - (int) (amplitudeAC + dcOffset);
             } else {
-                triY[i1] = y0 - (int) anteilDC;
+                triY[i1] = y0 - (int) dcOffset;
             }
             try {
                 if (triY[i1] != triY[i1 - 1]) {

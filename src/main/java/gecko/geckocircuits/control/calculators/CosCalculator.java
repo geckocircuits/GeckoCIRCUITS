@@ -19,7 +19,7 @@ package gecko.geckocircuits.control.calculators;
  */
 public final class CosCalculator extends AbstractSingleInputSingleOutputCalculator {
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.cos(_inputSignal[0][0]);
     }
 }

@@ -216,7 +216,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMin(true);
 
         // Large axis length should show both
-        settings.blendeEventuellGridLinienAus(1000);
+        settings.possiblyHideGridLines(1000);
 
         assertTrue("Major grid should be shown for large axis", settings.isShowGridNormalMajor());
         assertTrue("Minor grid should be shown for large axis", settings.isShowGridNormalMinor());
@@ -229,7 +229,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMin(true);
 
         // Small axis length should hide both
-        settings.blendeEventuellGridLinienAus(50);
+        settings.possiblyHideGridLines(50);
 
         assertFalse("Major grid should be hidden for small axis", settings.isShowGridNormalMajor());
         assertFalse("Minor grid should be hidden for small axis", settings.isShowGridNormalMinor());
@@ -242,7 +242,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMin(true);
 
         // Medium axis should show major only
-        settings.blendeEventuellGridLinienAus(300);
+        settings.possiblyHideGridLines(300);
 
         assertTrue("Major grid should be shown for medium axis", settings.isShowGridNormalMajor());
         assertFalse("Minor grid should be hidden for medium axis", settings.isShowGridNormalMinor());
@@ -255,7 +255,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMin(false);
 
         // Manual mode: use user settings regardless of axis size
-        settings.blendeEventuellGridLinienAus(50);
+        settings.possiblyHideGridLines(50);
 
         assertTrue("Major grid should follow user setting", settings.isShowGridNormalMajor());
         assertFalse("Minor grid should follow user setting", settings.isShowGridNormalMinor());
@@ -268,7 +268,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMin(true);
 
         // Manual mode with large axis
-        settings.blendeEventuellGridLinienAus(1000);
+        settings.possiblyHideGridLines(1000);
 
         assertFalse("Major grid should follow user setting", settings.isShowGridNormalMajor());
         assertTrue("Minor grid should follow user setting", settings.isShowGridNormalMinor());
@@ -387,7 +387,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMaj(true);
         settings.setUserShowGridMin(true);
 
-        settings.blendeEventuellGridLinienAus(0);
+        settings.possiblyHideGridLines(0);
 
         assertFalse("Major grid should be hidden for zero axis", settings.isShowGridNormalMajor());
         assertFalse("Minor grid should be hidden for zero axis", settings.isShowGridNormalMinor());
@@ -399,7 +399,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMaj(true);
         settings.setUserShowGridMin(true);
 
-        settings.blendeEventuellGridLinienAus(10000);
+        settings.possiblyHideGridLines(10000);
 
         assertTrue("Major grid should be shown for very large axis", settings.isShowGridNormalMajor());
         assertTrue("Minor grid should be shown for very large axis", settings.isShowGridNormalMinor());
@@ -412,7 +412,7 @@ public class AxisGridSettingsTest {
         settings.setUserShowGridMin(true);
 
         // Negative axis length should hide grids
-        settings.blendeEventuellGridLinienAus(-100);
+        settings.possiblyHideGridLines(-100);
 
         assertFalse("Major grid should be hidden for negative axis", settings.isShowGridNormalMajor());
         assertFalse("Minor grid should be hidden for negative axis", settings.isShowGridNormalMinor());

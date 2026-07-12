@@ -14,7 +14,7 @@
 package gecko.geckocircuits.api;
 
 import gecko.geckocircuits.datacontainer.ContainerStatus;
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 
 /**
@@ -150,7 +150,7 @@ public interface IScopeData {
      * @param row The signal/row index
      * @return The time series for that row
      */
-    AbstractTimeSerie getTimeSeries(int row);
+    AbstractTimeSeries getTimeSeries(int row);
 
     /**
      * Gets the underlying raw data array.

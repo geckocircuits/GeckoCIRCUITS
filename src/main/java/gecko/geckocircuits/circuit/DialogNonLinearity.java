@@ -15,7 +15,7 @@ package gecko.geckocircuits.circuit;
 
 import gecko.GeckoSim;
 import gecko.core.allg.GeckoFile;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
 import gecko.geckocircuits.newscope.GeckoDialog;
 

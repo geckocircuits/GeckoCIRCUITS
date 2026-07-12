@@ -439,7 +439,7 @@ public interface GeckoRemoteInterface extends Remote {
     @Declaration("double[] simulateToSteadyState(boolean supressMessages, double targetCorrelation, double targetMeanPctDiff)")
     double[] simulateToSteadyState(final boolean supressMessages, final double targetCorrelation, final double targetMeanPctDiff) throws RemoteException;
 
-    ////////// here, we place the deprecated methods. Don't document them, they are deprecated!
+    // here, we place the deprecated methods. Don't document them, they are deprecated!
     // in case you declare a new deprecated interface method, please REMOVE its documentation!
 
     //@Documentation(I18nKeys.SET_LOSS_FILE_DOC)

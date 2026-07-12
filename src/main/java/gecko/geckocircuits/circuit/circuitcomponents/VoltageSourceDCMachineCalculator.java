@@ -33,7 +33,7 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
 
     private double phi;
     private double emk;
-    private double omegaALT;
+    private double omegaOld;
     private double Fr;
     private double omega;
     private double momentElektr;
@@ -75,18 +75,18 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
 
     @Override
     public void doPostProcess(double dt, double time) {
-        // aus dem internen Subcircuit -->
+        // from the internal subcircuit -->
         double ia = - _la.getCurrent();  // Ankerstrom
         double ie = _le.getCurrent();  // Erregerstrom
 
         // Motor-Gleichungen durchrechnen -->
         phi = _le.getInductance() / _Ne * ie;  // Erregerfluss
         momentElektr = _cM * phi * ia;  // elektrisches Moment
-        omega = (_J / dt * omegaALT + momentElektr - momentLast) / (_J / dt + Fr);
+        omega = (_J / dt * omegaOld + momentElektr - momentLast) / (_J / dt + Fr);
 
         emk = _cM * phi * omega;  // innere Spannung der Maschine
         _timeFunction.setValue(emk);  // DC-Wert der internen WSpg.Quelle
-        //if (t==0) System.out.println(t+"   "+dt+"   "+ia+"   "+ie+"   "+momentLast+"   "+phi+"   "+momentElektr+"   "+omega+"   "+drehzahl+"   "+emk+"   omegaALT="+omegaALT+"   J="+J+"   Fr="+Fr);
-        omegaALT = omega;
+        //if (t==0) System.out.println(t+"   "+dt+"   "+ia+"   "+ie+"   "+momentLast+"   "+phi+"   "+momentElektr+"   "+omega+"   "+drehzahl+"   "+emk+"   omegaOld="+omegaOld+"   J="+J+"   Fr="+Fr);
+        omegaOld = omega;
     }
 }

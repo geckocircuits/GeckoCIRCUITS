@@ -1,7 +1,7 @@
 package gecko.rest.service;
 
 import gecko.core.circuit.losscalculation.DetailedLossLookupTable;
-import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.ConductionLossMeasurementCurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.rest.model.loss.ConductionLossRequest;
 import gecko.rest.model.loss.DetailedLossRequest;
@@ -98,10 +98,10 @@ public class LossCalculationService {
             switchingCurves.add(curve);
         }
 
-        // Create LeitverlusteMesskurve instances from request data
-        List<LeitverlusteMesskurve> conductionCurves = new ArrayList<>();
+        // Create ConductionLossMeasurementCurve instances from request data
+        List<ConductionLossMeasurementCurve> conductionCurves = new ArrayList<>();
         for (LossCurveData curveData : request.conductionCurves()) {
-            LeitverlusteMesskurve curve = new LeitverlusteMesskurve(
+            ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(
                 curveData.temperature()
             );
             curve.setCurveData(curveData.data());

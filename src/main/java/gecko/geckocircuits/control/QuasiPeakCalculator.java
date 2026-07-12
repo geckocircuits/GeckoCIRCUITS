@@ -199,7 +199,6 @@ public final class QuasiPeakCalculator {
 //                }
 //            }
 //
-//
         // make the window with edges that do not fall immediately. Go from zero to 1
         // within 1/2 intervalspan
         for (int j = -intervalSpan; j < -intervalSpan / 2; j++) {

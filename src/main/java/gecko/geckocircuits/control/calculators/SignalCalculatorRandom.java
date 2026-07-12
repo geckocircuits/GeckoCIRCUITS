@@ -14,14 +14,14 @@
 package gecko.geckocircuits.control.calculators;
 
 public final class SignalCalculatorRandom extends AbstractSignalCalculator {
-    private double _randomVal = 0;  // Startwert fuer Random Walk
+    private double _randomVal = 0;  // Starting value for random walk
 
     public SignalCalculatorRandom() {
         super(0);
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _randomVal += 1 - 2 * Math.random();  // [-1 .. +1]
         _outputSignal[0][0] = _randomVal;
     }

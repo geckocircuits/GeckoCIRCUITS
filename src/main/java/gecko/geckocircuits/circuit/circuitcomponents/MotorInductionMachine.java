@@ -52,9 +52,9 @@ public final class MotorInductionMachine extends AbstractMotorIM {
     @Override
     void setSubCircuit() {
         super.setSubCircuit();
-        // Eingangsstromquelle fuer iax(t) -->
+        // Input current source for iax(t) -->
         _controlledSource3 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
-        // Eingangsstromquelle fuer icx(t) -->
+        // Input current source for iax(t) -->
         _controlledSource4 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         // hochohmiger Widerstand zur Anbindung des Rotorkreises -->
         _resistor = (AbstractResistor) fabricHiddenSub(CircuitTyp.LK_R, this);
@@ -141,7 +141,7 @@ public final class MotorInductionMachine extends AbstractMotorIM {
         double urd = 2.0 / 3.0 * (urab * Math.cos(_thetaElectric) - urbc * Math.cos(_thetaElectric - 2 * Math.PI / 3));
         double urq = 2.0 / 3.0 * (urab * Math.sin(_thetaElectric) - urbc * Math.sin(_thetaElectric - 2 * Math.PI / 3));
 
-        // Bloecke fuer magnetische Fluss-Berechnungen:
+        // Block 'vrdq':
         double psimd = _magnetizingInductance * (isd + ird);
         double psimq = _magnetizingInductance * (isq + irq);
         psisd = Lls * isd + psimd;

@@ -59,7 +59,7 @@ public final class ThyristorControlCalculator extends AbstractControlCalculatabl
 
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double epsilon = 1e-10;
         if (_synchOld <= 0 && _inputSignal[1][0] >= 0 && Math.abs(_synchOld - _inputSignal[1][0]) > epsilon) {
             _synchTime = _time;

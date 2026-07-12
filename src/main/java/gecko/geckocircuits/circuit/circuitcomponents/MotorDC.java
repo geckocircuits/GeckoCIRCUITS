@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
@@ -155,7 +155,7 @@ public final class MotorDC extends AbstractMotorDC {
     void calculateEMK() {
         double excitationCurrent = _Le.parameter[2];
         _flux = _fieldInductance / _fieldWindings * excitationCurrent;  // Erregerfluss
-        _emk = _machineConstant * _flux * _omegaElectric;  // innere Spannung der Maschine
+        _emk = _machineConstant * _flux * _omegaElectric;  // internal tension of the machine
     }
 
     @Override

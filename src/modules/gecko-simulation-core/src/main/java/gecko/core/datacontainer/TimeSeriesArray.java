@@ -19,7 +19,7 @@ package gecko.core.datacontainer;
  *
  * GUI-free version for use in headless simulation core.
  */
-public final class TimeSeriesArray extends AbstractTimeSerie {
+public final class TimeSeriesArray extends AbstractTimeSeries {
 
     private double[] _timeSeries;
     private int _maximumIndex = -1;

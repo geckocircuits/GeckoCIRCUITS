@@ -68,7 +68,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
 
     public void updateTextFields() {
         formatJTextFieldTickSpace.setNumberToField(_axis._tickSpacing);
-        formatJTextFieldNumTicks.setNumberToField(_axis._axisTickSettings.getAnzTicksMinor());
+        formatJTextFieldNumTicks.setNumberToField(_axis._axisTickSettings.getNumTicksMinor());
 
         formatJTextFieldTickLenghtMaj.setNumberToField(_axis._axisTickSettings.getTickLengthMaj());
         formatJTextFieldTickLengthMin.setNumberToField(_axis._axisTickSettings.getTickLengthMin());
@@ -96,16 +96,16 @@ public class JPanelGridSettings extends javax.swing.JPanel {
         jLabelTickSpace = new javax.swing.JLabel();
         jLabelTickLengthMaj = new javax.swing.JLabel();
         jCheckBoxShowLabelMaj = new javax.swing.JCheckBox();
-        formatJTextFieldTickSpace = new gecko.geckocircuits.allg.FormatJTextField();
-        formatJTextFieldTickLenghtMaj = new gecko.geckocircuits.allg.FormatJTextField();
+        formatJTextFieldTickSpace = new gecko.geckocircuits.general.FormatJTextField();
+        formatJTextFieldTickLenghtMaj = new gecko.geckocircuits.general.FormatJTextField();
         jPanelMin = new javax.swing.JPanel();
         jCheckBoxShowGridLineMin = new javax.swing.JCheckBox();
         jPanelLineMinGrid = new JPanelLineProperties();
         jLabelNumTicks = new javax.swing.JLabel();
         jLabelTickLengthMin = new javax.swing.JLabel();
         jCheckBoxShowLabelMin = new javax.swing.JCheckBox();
-        formatJTextFieldNumTicks = new gecko.geckocircuits.allg.FormatJTextField();
-        formatJTextFieldTickLengthMin = new gecko.geckocircuits.allg.FormatJTextField();
+        formatJTextFieldNumTicks = new gecko.geckocircuits.general.FormatJTextField();
+        formatJTextFieldTickLengthMin = new gecko.geckocircuits.general.FormatJTextField();
         jCheckBoxAutoGridLine = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Define Ticks", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 12))); // NOI18N
@@ -400,7 +400,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
 
     private void formatJTextFieldNumTicksKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formatJTextFieldNumTicksKeyReleased
         if (_initDone) {
-            _axis._axisTickSettings.setAnzTicksMinor((int) formatJTextFieldNumTicks.getNumberFromField());
+            _axis._axisTickSettings.setNumTicksMinor((int) formatJTextFieldNumTicks.getNumberFromField());
             repaintComponent();
         }
     }//GEN-LAST:event_formatJTextFieldNumTicksKeyReleased
@@ -422,10 +422,10 @@ public class JPanelGridSettings extends javax.swing.JPanel {
     }//GEN-LAST:event_formatJTextFieldTickLenghtMajKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private gecko.geckocircuits.allg.FormatJTextField formatJTextFieldNumTicks;
-    private gecko.geckocircuits.allg.FormatJTextField formatJTextFieldTickLenghtMaj;
-    private gecko.geckocircuits.allg.FormatJTextField formatJTextFieldTickLengthMin;
-    private gecko.geckocircuits.allg.FormatJTextField formatJTextFieldTickSpace;
+    private gecko.geckocircuits.general.FormatJTextField formatJTextFieldNumTicks;
+    private gecko.geckocircuits.general.FormatJTextField formatJTextFieldTickLenghtMaj;
+    private gecko.geckocircuits.general.FormatJTextField formatJTextFieldTickLengthMin;
+    private gecko.geckocircuits.general.FormatJTextField formatJTextFieldTickSpace;
     private javax.swing.JCheckBox jCheckBoxAutoGridLine;
     private javax.swing.JCheckBox jCheckBoxAutoSpacing;
     private javax.swing.JCheckBox jCheckBoxShowGridLineMaj;

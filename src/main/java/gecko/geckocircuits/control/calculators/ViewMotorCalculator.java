@@ -21,7 +21,7 @@ public final class ViewMotorCalculator extends AbstractControlCalculatable imple
         }
 
         @Override
-        public void berechneYOUT(double dt) {
+        public void calculateYOUT(double dt) {
             assert false : "Not calculatable!";
         }
 }

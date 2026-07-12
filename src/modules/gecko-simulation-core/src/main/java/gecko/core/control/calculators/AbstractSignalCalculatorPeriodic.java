@@ -20,21 +20,21 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
     protected double _amplitudeAC;
     protected double _frequency;
     protected double _dutyRatio;
-    protected double _anteilDC;
+    protected double _dcOffset;
     protected double _phase;
     protected double _triangle = 0;
     protected boolean _aufsteigend;
     protected double _dyUP = 0, _dyDOWN = 0;
 
     public AbstractSignalCalculatorPeriodic(final int noInputs, final double amplitudeAC,
-            final double frequency, final double phase, final double anteilDC, final double duty) {
+            final double frequency, final double phase, final double dcOffset, final double duty) {
         super(noInputs);
         _frequency = frequency;
         _amplitudeAC = amplitudeAC;
         if (amplitudeAC < 0) {
             throw new IllegalArgumentException("Amplitude value of signal source has to be positive!");
         }
-        _anteilDC = anteilDC;
+        _dcOffset = dcOffset;
         _dutyRatio = duty;
         _phase = phase;
 
@@ -77,8 +77,8 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
         this._frequency = frequency;
     }
 
-    final void setAnteilDC(final double anteilDC) {
-        _anteilDC = anteilDC;
+    final void setDcOffset(final double dcOffset) {
+        _dcOffset = dcOffset;
     }
 
     final void setPhase(final double phase) {

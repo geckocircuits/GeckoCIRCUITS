@@ -58,7 +58,7 @@ public class NetListLKTest {
         // NetListLK provides two factory methods:
         // - fabricIncludingSubcircuits: expands all subcircuits into flat netlist
         // - fabricExcludingSubcircuits: keeps subcircuits as single elements
-        // Both require NetzlisteAllg which needs full circuit topology
+        // Both require NetlistGeneral which needs full circuit topology
         assertTrue("Factory methods documented", true);
     }
 

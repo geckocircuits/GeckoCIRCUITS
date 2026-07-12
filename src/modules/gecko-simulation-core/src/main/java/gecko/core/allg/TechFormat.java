@@ -175,7 +175,6 @@ public class TechFormat implements Serializable {
             if (anzKomma > 1) {
                 throw new NumberFormatException("Invalid number format in 'TechFormat'  --> more than one decimal point");
             }
-            //
             // Assumption: all incorrect inputs have been eliminated - no more exceptions possible from here
             //-----------------------
             // (3) Characters are OK, we parse according to the technical inputs defined in abk[] e.g. -->

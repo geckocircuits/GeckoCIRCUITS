@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 
 /**
@@ -26,17 +26,17 @@ final class AxisTickSettings {
     private boolean _showLabelsMin = false;
     private int _tickLengthMaj = DEF_LENGTH_MAJ;
     private int _tickLengthMin = DEF_LENGTH_MIN;
-    private int _anzTicksMinor = 2;  // Zahl der Minor-Ticks zwischen zwei regulaeren Ticks
+    private int _numTicksMinor = 2;  // Zahl der Minor-Ticks zwischen zwei regulaeren Ticks
 
     private static final int DEF_LENGTH_MAJ = 8;
     private static final int DEF_LENGTH_MIN = 5;
 
-    public void setAnzTicksMinor(final int value) {
-        _anzTicksMinor = value;
+    public void setNumTicksMinor(final int value) {
+        _numTicksMinor = value;
     }
 
-    public int getAnzTicksMinor() {
-        return _anzTicksMinor;
+    public int getNumTicksMinor() {
+        return _numTicksMinor;
     }
 
 
@@ -81,7 +81,7 @@ final class AxisTickSettings {
     }
 
     void exportIndividualCONTROL(final StringBuffer ascii) {
-        ProjectData.appendAsString(ascii.append("\nnoMinorTicks"), _anzTicksMinor);
+        ProjectData.appendAsString(ascii.append("\nnoMinorTicks"), _numTicksMinor);
         ProjectData.appendAsString(ascii.append("\nisShowLabelsMaj"), _showLabelsMaj);
         ProjectData.appendAsString(ascii.append("\nisShowLabelsMin"), _showLabelsMin);
         ProjectData.appendAsString(ascii.append("\ntickLengthMaj"), _tickLengthMaj);
@@ -89,7 +89,7 @@ final class AxisTickSettings {
     }
 
     void importASCII(final TokenMap axisMap) {
-        _anzTicksMinor = axisMap.readDataLine("noMinorTicks", _anzTicksMinor);
+        _numTicksMinor = axisMap.readDataLine("noMinorTicks", _numTicksMinor);
         _showLabelsMaj = axisMap.readDataLine("isShowLabelsMaj", _showLabelsMaj);
         _showLabelsMin = axisMap.readDataLine("isShowLabelsMin", _showLabelsMin);
         _tickLengthMaj = axisMap.readDataLine("tickLengthMaj", _tickLengthMaj);

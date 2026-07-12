@@ -14,7 +14,7 @@
 package gecko.geckocircuits.control;
 import gecko.core.circuit.TokenMap;
 
-import gecko.geckocircuits.allg.*;
+import gecko.geckocircuits.general.*;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.i18n.LangInit;
@@ -255,7 +255,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     }
 
     @Override
-    public final void rotiereSymbol() {
+    public final void rotateSymbol() {
         // control components cannot be rotated at the moment!
     }
 

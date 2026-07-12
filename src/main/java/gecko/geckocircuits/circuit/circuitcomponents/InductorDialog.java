@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.MainWindow;
+import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.circuit.DialogNonLinearity;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -35,7 +35,7 @@ class InductorDialog extends DialogElementLK<AbstractInductor> {
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
         jcbLossL = new JCheckBox("Calculate Losses");
         JPanel pIN = createParameterPanel(element._inductance, element._initialCurrent);
 
