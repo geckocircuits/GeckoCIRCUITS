@@ -25,8 +25,11 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores grafer reference for signal-graph connection configuration")
 public final class DialogConnectSignalsGraphs extends GeckoDialog {
+
+    private static final long serialVersionUID = 1L;
 
     private final GraferV4 _grafer;
     private final Container _container;

@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Grafer must share data container and manager references for scope visualization")
 public final class GraferV4 extends JPanel {
 
@@ -485,10 +486,10 @@ public final class GraferV4 extends JPanel {
 
         final Graphics2D g2d = (Graphics2D) graphics;
         if (_antialiasing) {
-            ((Graphics2D) g2d).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
         } else {
-            ((Graphics2D) g2d).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_OFF);
         }
     }

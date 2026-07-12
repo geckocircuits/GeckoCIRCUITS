@@ -42,9 +42,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author Tibor Keresztfalvi
  */
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
         justification = "Scope frame must share grafer reference for scope display; public scope field for external access")
 public final class ScopeFrame extends javax.swing.JFrame{
+
+    private static final long serialVersionUID = 1L;
   private GraferV4 _grafer;
   private ControlOSZI _regelBlockOSZI;
   /**

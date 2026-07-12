@@ -27,9 +27,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Legacy scope settings with direct field access for GUI compatibility")
 public class ScopeSettings implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public static final int ANZ_DIAGRAM_MAX = 12;
     private int anzDiagram;  // Number of charts

@@ -36,8 +36,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
+@SuppressWarnings({"unchecked", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer class reference for power calculations")
 public final class PowerAnalysisPanel extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     private final JComboBox<String>[] _comboU = new JComboBox[3];
     private final JComboBox<String>[] _comboI = new JComboBox[3];

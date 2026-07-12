@@ -165,7 +165,7 @@ public final class SuggestionField extends JTextField {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (this.selected == SuggestionField.this._list.getSelectedIndex()) {
-                    SuggestionField.this.setText((String) SuggestionField.this._list.getSelectedValue());
+                    SuggestionField.this.setText(SuggestionField.this._list.getSelectedValue());
                     SuggestionField.this._lastChosenExistingVariable = SuggestionField.this._list.getSelectedValue().toString();
                     SuggestionField.this.fireActionEvent();
                     SuggestionField.this._dialog.setVisible(false);
@@ -223,7 +223,7 @@ public final class SuggestionField extends JTextField {
                         return;
                     }
                     if (e.getKeyCode() == 10 && SuggestionField.this._list.getSelectedIndex() != -1 && !SuggestionField.this._suggestions.isEmpty()) {
-                        SuggestionField.this.setText((String) SuggestionField.this._list.getSelectedValue());
+                        SuggestionField.this.setText(SuggestionField.this._list.getSelectedValue());
                         SuggestionField.this._lastChosenExistingVariable = SuggestionField.this._list.getSelectedValue().toString();
                         SuggestionField.this.fireActionEvent();
                         SuggestionField.this._dialog.setVisible(false);
@@ -363,11 +363,11 @@ public final class SuggestionField extends JTextField {
                     }
 
                     if (SuggestionField.this._caseSensitive) {
-                        if (!SuggestionField.this._suggestMatcher.matches((String) it.next(), word)) {
+                        if (!SuggestionField.this._suggestMatcher.matches(it.next(), word)) {
                             it.remove();
                         }
                     } else if (!SuggestionField.this._suggestMatcher.matches(
-                            ((String) it.next()).toLowerCase(), word.toLowerCase())) {
+                            it.next().toLowerCase(), word.toLowerCase())) {
                         it.remove();
                     }
                 }

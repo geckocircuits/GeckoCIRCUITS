@@ -30,6 +30,7 @@ import javax.swing.undo.UndoableEdit;
 import gecko.modelviewcontrol.AbstractUndoGenericModel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings("this-escape")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Connection exposes label and coordinates for circuit rendering and netlist generation")
 public class Connection extends AbstractCircuitSheetComponent implements ComponentTerminable, Labable {
 

@@ -22,8 +22,11 @@ import javax.swing.JTextField;
 import java.text.NumberFormat;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Text field stores line settable reference for display formatting")
 public class FormatJTextField extends JTextField {
+
+    private static final long serialVersionUID = 1L;
 
     public static final double IS_VARIABLE = -1e95;  // GeckoOPTIMIZER
     private boolean _numberOK;

@@ -25,7 +25,10 @@ import javax.swing.JPanel;
  *
  * @author andy
  */
+@SuppressWarnings("serial")
 public final class XSliderValueDrawer extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     private static final TechFormat TECH_FORMAT = new TechFormat();
     private static final int NUM_DIGITS = 6;

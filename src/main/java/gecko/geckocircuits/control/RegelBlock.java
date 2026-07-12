@@ -31,9 +31,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Public calculator field for simulation access to control block calculators")
 public abstract class RegelBlock extends AbstractBlockInterface implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public final static double[] EMPTY_OUTPUT = new double[]{};
     // Abmessungen der einzelnen Elemente:
@@ -329,7 +332,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
     public int getBlockHeight() {
         int maxTerminals = Math.max(XIN.size(), YOUT.size());
-        return (int) (dpix * maxTerminals);
+        return dpix * maxTerminals;
     }
 
     public int getBlockWidth() {
@@ -371,7 +374,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
 
         int startx = (int) (dpix * (posX - 1 / 2.0)) - width / 2;
         int starty = (int) (dpix * (posY - 1 / 2.0));
-        startx += getXShift() * dpix;
+        startx += (int) (getXShift() * dpix);
         starty += getYShift() * dpix;
 
         graphics.fillRect(startx, starty, width, height);

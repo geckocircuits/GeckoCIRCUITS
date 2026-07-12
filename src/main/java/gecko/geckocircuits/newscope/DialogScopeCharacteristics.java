@@ -29,8 +29,11 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores worksheet and slider values for scope characteristics calculations")
 public class DialogScopeCharacteristics extends GeckoDialog {
+
+    private static final long serialVersionUID = 1L;
 
     private GridBagConstraints _gridBagConst = new GridBagConstraints();
     private final TechFormat _cf = new TechFormat();

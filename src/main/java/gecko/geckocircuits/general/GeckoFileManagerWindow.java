@@ -34,9 +34,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author anstupar
  */
+@SuppressWarnings({"this-escape", "serial", "unchecked"})
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
         justification = "Dialog intentionally stores references to external GUI components for interaction; dialog is not serialized")
 public class GeckoFileManagerWindow extends JDialog {
+
+    private static final long serialVersionUID = 1L;
 
     private transient LossCalculationDetailed _losses = null;
     private final String _fileExtension;
@@ -559,7 +562,7 @@ public class GeckoFileManagerWindow extends JDialog {
         GeckoFile file;
         int selectedIndex = jListSelectedFilesToAdd.getMaxSelectionIndex();
         while (selectedIndex != -1) {
-            file = (GeckoFile) _selectedFilesList.getElementAt(selectedIndex);
+            file = _selectedFilesList.getElementAt(selectedIndex);
             removeGeckoFileFromList(file);
             _selectedFilesList.remove(selectedIndex);
             selectedIndex = jListSelectedFilesToAdd.getMaxSelectionIndex();

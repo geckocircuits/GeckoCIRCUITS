@@ -79,8 +79,8 @@ public class TerminalConnection implements TerminalInterface {
     @Override
     public void paintComponent(final Graphics graphics) {
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        graphics.fillOval((int) (dpix * getPosition().x) - AbstractTerminal.POINT_DIAMETER / 2,
-                (int) (dpix * getPosition().y) - AbstractTerminal.POINT_DIAMETER / 2,
+        graphics.fillOval(dpix * getPosition().x - AbstractTerminal.POINT_DIAMETER / 2,
+                dpix * getPosition().y - AbstractTerminal.POINT_DIAMETER / 2,
                 AbstractTerminal.POINT_DIAMETER, AbstractTerminal.POINT_DIAMETER);
     }
 

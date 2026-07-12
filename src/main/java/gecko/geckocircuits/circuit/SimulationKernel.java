@@ -379,7 +379,7 @@ public class SimulationKernel implements ISimulationEngine {
 
     @Override
     public void runSimulation() {
-        while ((t <= tEND) && (_simulationStatus != _simulationStatus.PAUSED)) {
+        while ((t <= tEND) && (_simulationStatus != SimulationStatus.PAUSED)) {
             simulateOneTimeStep();
             t += dt;
         }
@@ -523,7 +523,7 @@ public class SimulationKernel implements ISimulationEngine {
 
             // thermischer Kreis:
             lkmTHERM = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
-            lkmTHERM.initMatrizen((NetListLK) thermNL, getAnfangsbedVomDialogfenster, false, MainWindow._solverSettings.SOLVER_TYPE.getValue());
+            lkmTHERM.initMatrizen(thermNL, getAnfangsbedVomDialogfenster, false, MainWindow._solverSettings.SOLVER_TYPE.getValue());
             lkmTHERM.schreibeMatrix_A(dt, tAktuell, false);
         }
         //=============================

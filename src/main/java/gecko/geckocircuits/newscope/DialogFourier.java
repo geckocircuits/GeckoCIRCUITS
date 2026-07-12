@@ -39,9 +39,12 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "DE_MIGHT_IGNORE"},
         justification = "Public field for FFT sample count; stores worksheet reference for Fourier analysis; icon loading is optional")
 public class DialogFourier extends JDialog {
+
+    private static final long serialVersionUID = 1L;
 
     //-------------
     private AbstractDataContainer worksheet;
@@ -158,7 +161,7 @@ public class DialogFourier extends JDialog {
         pSEL.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Select Curve(s)", TitledBorder.LEFT, TitledBorder.TOP));
         //
         jcbZV = new JCheckBox[worksheet.getRowLength()];
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         for (int i1 = 1; i1 < worksheet.getRowLength() + 1; i1++) {
             gbc.gridx = 0;
             gbc.gridy = i1 - 1;
@@ -354,7 +357,7 @@ public class DialogFourier extends JDialog {
                     while (worksheet.getTimeValue(j, 0) < startTime + i * timeSpan / NN) {
                         j++;
                     }
-                    data[i] = (float) worksheet.getValue(i2 - 1, j);
+                    data[i] = worksheet.getValue(i2 - 1, j);
                 }
 
                 Cispr16Fft.realft(data, 1);

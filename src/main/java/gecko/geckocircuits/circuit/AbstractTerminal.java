@@ -103,38 +103,38 @@ public abstract class AbstractTerminal implements TerminalInterface {
         int[] yFl = new int[3];
 
         if (_parentElement.getSheetPosition().y < y) {
-            xFl[0] = (int) (dpix * x);
+            xFl[0] = dpix * x;
             xFl[1] = xFl[0] - _pFb;
             xFl[2] = xFl[0] + _pFb;
-            yFl[0] = (int) (dpix * y);
+            yFl[0] = dpix * y;
             yFl[1] = yFl[0] - _pFa;
             yFl[2] = yFl[1];
         }
 
         if (_parentElement.getSheetPosition().y > y) {
-            xFl[0] = (int) (dpix * x);
+            xFl[0] = dpix * x;
             xFl[1] = xFl[0] - _pFb;
             xFl[2] = xFl[0] + _pFb;
-            yFl[0] = (int) (dpix * y);
+            yFl[0] = dpix * y;
             yFl[1] = yFl[0] + _pFa;
             yFl[2] = yFl[1];
         }
 
         if (_parentElement.getSheetPosition().x < x) {
-            xFl[0] = (int) (dpix * x);
+            xFl[0] = dpix * x;
             xFl[1] = xFl[0] - _pFa;
             xFl[2] = xFl[1];
-            yFl[0] = (int) (dpix * y);
+            yFl[0] = dpix * y;
             yFl[1] = yFl[0] - _pFb;
             yFl[2] = yFl[0] + _pFb;
           }
 
 
         if(_parentElement.getSheetPosition().x > x) {
-            xFl[0] = (int) (dpix * x);
+            xFl[0] = dpix * x;
             xFl[1] = xFl[0] + _pFa;
             xFl[2] = xFl[1];
-            yFl[0] = (int) (dpix * y);
+            yFl[0] = dpix * y;
             yFl[1] = yFl[0] - _pFb;
             yFl[2] = yFl[0] + _pFb;
         }

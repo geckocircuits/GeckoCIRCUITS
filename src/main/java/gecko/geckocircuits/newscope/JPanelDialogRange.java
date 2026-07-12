@@ -30,7 +30,10 @@ import javax.swing.border.TitledBorder;
  *
  * @author andy
  */
+@SuppressWarnings("serial")
 public final class JPanelDialogRange extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     private final JRadioButton jRadButScopeRange, jRadButtDefRange, jrb3;
     private final FormatJTextField _rngSc1, _rngSc2, _rngDf1, _rngDf2, _rngSl1, _rngSl2;  // Angaben Zeitbereiche

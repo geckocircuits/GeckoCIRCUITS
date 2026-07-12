@@ -90,7 +90,7 @@ public final class DataLoader{
     }
     final double maxTimeValue = _curvePaintable.getRamData().getTimeValue(maximumDataContainerIndex, _curvePaintable._curve.getValueDataIndex());
     final int maxDataPixel = (int)xAxis.getPixelFromValue(maxTimeValue);
-    final int maxAxisPixel = (int)xAxis._axisOriginPixel.x + xAxis.getAxisLengthPixel();
+    final int maxAxisPixel = xAxis._axisOriginPixel.x + xAxis.getAxisLengthPixel();
 
     final AbstractTimeSeries timeSerie = _curvePaintable.getRamData().getTimeSeries(_curvePaintable._curve.getValueDataIndex());
     final int maxAxisIndex = timeSerie.findTimeIndex(xAxis.getValueFromPixel(maxAxisPixel));

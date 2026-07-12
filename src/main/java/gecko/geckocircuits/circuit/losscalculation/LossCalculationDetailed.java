@@ -236,7 +236,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         //
         String[] ascii = new String[datVec.size()];
         for (int i1 = 0; i1 < datVec.size(); i1++) {
-            ascii[i1] = (String) datVec.get(i1);
+            ascii[i1] = datVec.get(i1);
         }
 
         final TokenMap tokenMap = new TokenMap(ascii);

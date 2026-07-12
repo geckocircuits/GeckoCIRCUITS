@@ -114,7 +114,7 @@ public final class PotentialArea {
             returnValue._potentialTerminals.add((SubCircuitTerminable) element);
         }
         if (element instanceof GlobalTerminable) {
-            returnValue._globalTerminals.add((AbstractBlockInterface) element);
+            returnValue._globalTerminals.add(element);
         }
 
         returnValue._highesPriority = terminal.getLabelObject().getLabelPriority();

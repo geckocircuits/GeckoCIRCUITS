@@ -34,8 +34,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Diagram component intentionally shares mutable UI components with other scope classes")
 public abstract class AbstractDiagram extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     public final DiagramSettings _diagramSettings;
     protected Axis _xAxis = new Axis(Axis.Direction.X, false, this);
@@ -162,6 +165,8 @@ public abstract class AbstractDiagram extends JPanel {
 
 
     private class LabelPanel extends JPanel {
+
+        private static final long serialVersionUID = 1L;
 
         LabelPanel() {
             super();

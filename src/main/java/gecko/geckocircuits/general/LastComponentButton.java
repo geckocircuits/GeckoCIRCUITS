@@ -25,8 +25,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import javax.swing.JButton;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Button intentionally shares block references for component selection UI")
 public class LastComponentButton extends JButton {
+
+    private static final long serialVersionUID = 1L;
 
     private AbstractBlockInterface _showComponent;
     private AbstractBlockInterface _tmpShowComponent;

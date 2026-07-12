@@ -218,7 +218,7 @@ public final class Axis {
                 double tickValue = lowerValue;
                 for(int i = 0; i < noTicks; i++) {
                     tickValue += distance;
-                    Tick newTick = new Tick(tickValue, (int) _axisTickSettings.getTickLengthMin(), false);
+                    Tick newTick = new Tick(tickValue, _axisTickSettings.getTickLengthMin(), false);
                     newTick.drawTick(g2d, TECH_FORMAT.formatT(newTick._wert, "#.#E0"),
                                 true);
                 }

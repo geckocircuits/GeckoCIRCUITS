@@ -19,8 +19,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andreas
  */
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores MainWindow reference for simulation control")
 public final class MemoryWarning extends javax.swing.JDialog {
+
+    private static final long serialVersionUID = 1L;
     private final MainWindow _fenster;
 
     /**

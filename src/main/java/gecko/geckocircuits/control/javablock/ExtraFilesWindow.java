@@ -32,8 +32,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author anstupar
  */
+@SuppressWarnings({"unchecked", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores GeckoFileable reference for file management operations")
 public final class ExtraFilesWindow extends javax.swing.JDialog {
+
+    private static final long serialVersionUID = 1L;
 
     private final GeckoFileable _geckoFileable;
     private GeckoFileManagerWindow _fileManagerWindow;
@@ -229,7 +232,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
         GeckoFile file;
         final List<GeckoFile> filesToRemove = new ArrayList<GeckoFile>();
         while (selectedIndex != -1) {
-            file = (GeckoFile) _extraFiles.getElementAt(selectedIndex);
+            file = _extraFiles.getElementAt(selectedIndex);
             filesToRemove.add(file);
             _extraFiles.remove(selectedIndex);
             selectedIndex = jListExtraSourceFiles.getMaxSelectionIndex();

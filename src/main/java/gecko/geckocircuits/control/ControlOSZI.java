@@ -317,7 +317,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
         graphics.setColor(Color.red);
 
 
-        final int[] triXCoords = new int[]{(int) (dpix * x), (int) (dpix * x + DIAMETER), (int) (dpix * x) - DIAMETER};
+        final int[] triXCoords = new int[]{dpix * x, dpix * x + DIAMETER, dpix * x - DIAMETER};
         final int yp0 = (int) (dpix * (y - WIDTH - HEIGHT) - DELTA), yp1 = (int) (dpix * (y - WIDTH) - DELTA);
         final int ym1 = (int) (dpix * (y - WIDTH + _inputTerminalNumber.getValue()) + DELTA),
                 ym0 = (int) (dpix * (y - WIDTH + _inputTerminalNumber.getValue() + HEIGHT) + DELTA);

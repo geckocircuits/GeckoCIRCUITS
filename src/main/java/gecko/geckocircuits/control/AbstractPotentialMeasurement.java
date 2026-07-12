@@ -27,8 +27,11 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Measurement block must share coupling references for circuit connectivity")
 public abstract class AbstractPotentialMeasurement extends RegelBlock implements gecko.geckocircuits.circuit.PotentialCoupable, gecko.geckocircuits.circuit.ComponentCoupable {
+
+    private static final long serialVersionUID = 1L;
 
     final PotentialCoupling _potentialLabelCoupling;
     final ComponentCoupling _componentCoupling = new ComponentCoupling(1, this, new int[]{2});

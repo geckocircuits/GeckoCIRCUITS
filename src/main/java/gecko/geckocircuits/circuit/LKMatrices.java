@@ -616,14 +616,14 @@ public class LKMatrices {
                 case LK_R:
                 case TH_RTH:
                     if (netzliste.parameter[i1][0] < FAST_NULL_R) {
-                        netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y]) / this.FAST_NULL_R;
+                        netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y]) / FAST_NULL_R;
                     } else {
                         netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y]) / netzliste.parameter[i1][0];
                     }
                     break;
                 case TH_AMBIENT:
                     if (netzliste.parameter[i1][0] < FAST_NULL_R) {
-                        netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y]) / this.FAST_NULL_R;
+                        netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y]) / FAST_NULL_R;
                     } else {
                         netzliste.eLKneu[i1]._currentInAmps = (p[x] - p[y]) / netzliste.parameter[i1][0];
                     }

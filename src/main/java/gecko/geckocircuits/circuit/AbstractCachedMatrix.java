@@ -49,7 +49,7 @@ abstract class AbstractCachedMatrix {
             for (int i = 0; i < _originalMatrix.length; i++) {
                 newHashCode += java.util.Arrays.hashCode(_originalMatrix[i]) * 829 * (i + 7);
             }
-            _hashCode = (int) (int) (newHashCode ^ (newHashCode >>> INT_LENGTH));
+            _hashCode = (int) (newHashCode ^ (newHashCode >>> INT_LENGTH));
         }
         return _hashCode;
     }

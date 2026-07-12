@@ -19,8 +19,11 @@ import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Panel stores data container reference for table display")
 public class DataContainerTable extends javax.swing.JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     String[] columnName = new String[]{"time", "val1", "val2"};
     private AbstractDataContainer _dataContainer;

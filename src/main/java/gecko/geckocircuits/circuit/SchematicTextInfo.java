@@ -89,14 +89,14 @@ public final class SchematicTextInfo {
         final int xStart = _element.getSheetPosition().x;
         final int yStart = _element.getSheetPosition().y;
 
-        final int xStop = (int) (_xTxtKlickMin + (_xTxtKlickMax - _xTxtKlickMin) / 3);
+        final int xStop = _xTxtKlickMin + (_xTxtKlickMax - _xTxtKlickMin) / 3;
         final int yStop = _yTxtKlickMin + (_yTxtKlickMax - _yTxtKlickMin) / 3;
 
 
         if (showLine && !_printParameter.isEmpty()) {
             graphics.setColor(GlobalColors.farbeTextLinie);
             if (xStop != 0 && yStop != 0) {
-                graphics.drawLine((int) (dpix * xStart), (int) (dpix * yStart), xStop, yStop);
+                graphics.drawLine(dpix * xStart, dpix * yStart, xStop, yStop);
             }
         }
 
@@ -234,6 +234,7 @@ public final class SchematicTextInfo {
                         if(((ControlInputTwoTerminalStateable) _element).isExternalSet()) {
                             break;
                         }
+                        // fall through
                     case SHOW_WHEN_DISPLAYPARAMETERS:
                         if (properties.showParameter) {
                             addUserParameter(par);

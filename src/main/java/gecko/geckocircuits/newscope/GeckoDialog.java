@@ -33,8 +33,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores parent reference for positioning and modal behavior")
 public class GeckoDialog extends JDialog {
+
+    private static final long serialVersionUID = 1L;
 
 
     private final Component _parent;

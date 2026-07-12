@@ -21,7 +21,10 @@ import java.io.Serializable;
  * is serialized and written to a memory-mapped file.
  * @author andrija s.
  */
+@SuppressWarnings("serial")
 public class GeckoRemotePipeObject implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     //internal enum which defines which type of action this objects represents - a method call, a return variable, successful void return, or an error message
     public enum GeckoRemotePipeObjectType { METHOD_CALL, METHOD_RETURN_VALUE, METHOD_VOID_RETURN, ERROR_MESSAGE }

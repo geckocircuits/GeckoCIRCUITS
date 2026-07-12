@@ -47,8 +47,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EmptyBorder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Selection panel stores button reference for component selection updates")
 public class SchematicComponentSelection2 extends JTabbedPane {
+
+    private static final long serialVersionUID = 1L;
 
     private static final int MIN_GRID_SIZE = 12;
     private static final int LOWER_BOUND_OFFSET = -4;
@@ -205,6 +208,8 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     }
 
     class ComponentSelectionButton extends JButton {
+
+        private static final long serialVersionUID = 1L;
 
         private final AbstractComponentType _typ;
 

@@ -30,7 +30,10 @@ import javax.swing.border.TitledBorder;
  *
  * @author andy
  */
+@SuppressWarnings("serial")
 public final class PanelCharacteristicsResult extends JPanel {
+
+    private static final long serialVersionUID = 1L;
     private final JPanel _pERGx = new JPanel();
 
     private final FormatJTextField[] _ftfAVG;  // Text fields for AVG values

@@ -20,6 +20,7 @@ import java.awt.geom.Point2D;
  * Provides basic functions to facilitate access to external signals.
  * @author JF
  */
+@SuppressWarnings("this-escape")
 public class ExternalSignal extends AbstractScopeSignal{
   private String _signalName = ""; // The name of the external signal.
   private double[] _signalTimes = {}; // The array holding the time values for the external signal.
@@ -175,7 +176,7 @@ public class ExternalSignal extends AbstractScopeSignal{
         start = startTime;
         stop = stopTime;
       }
-      step = ((double)(this.getTime(this.size() - 1) - this.getTime(0))) / this.size();
+      step = (this.getTime(this.size() - 1) - this.getTime(0)) / this.size();
       firstIndex = (int)((start - this.getTime(0)) / step);
       if(firstIndex < 0){
         firstIndex = 0;
