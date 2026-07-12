@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.datacontainer.DataContainerIntegralCalculatable;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

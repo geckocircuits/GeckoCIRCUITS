@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.matrix;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 import gecko.geckocircuits.circuit.NetListLK;
 import gecko.core.circuit.SourceType;
 import gecko.geckocircuits.math.Matrix;

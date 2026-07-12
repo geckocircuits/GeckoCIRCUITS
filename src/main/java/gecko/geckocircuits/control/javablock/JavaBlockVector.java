@@ -22,13 +22,13 @@ public class JavaBlockVector extends AbstractJavaBlock {
     private ControlCalculatable _compiledInstance;
     private double[] _xINVector;
 
-    JavaBlockVector(final ReglerJavaFunction regler) {
-        super(regler);
+    JavaBlockVector(final ControlJavaFunction control) {
+        super(control);
     }
 
     @Override
     AbstractJavaBlock createOtherBlockTypeCopy() {
-        final AbstractJavaBlock returnValue = new JavaBlockMatrix(_reglerJavaBlock);
+        final AbstractJavaBlock returnValue = new JavaBlockMatrix(_controlJavaBlock);
         createNewJavaSourceCopy(returnValue);
         returnValue._additionalSourceFiles.addAll(this._additionalSourceFiles);
         return returnValue;
@@ -110,20 +110,20 @@ public class JavaBlockVector extends AbstractJavaBlock {
                 System.out.println("Instance created successfully: " + _compiledInstance.getClass().getName());
             } catch (NoClassDefFoundError err) {
                 System.err.println("ERROR: NoClassDefFoundError while loading Java block: " + err.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
+                Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, "NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
             } catch (InstantiationException ex) {
                 System.err.println("ERROR: InstantiationException while creating Java block instance: " + ex.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
+                Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (IllegalAccessException ex) {
                 System.err.println("ERROR: IllegalAccessException while creating Java block instance: " + ex.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
+                Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (SecurityException ex) {
                 System.err.println("ERROR: SecurityException while creating Java block instance: " + ex.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "SecurityException while creating Java block instance: " + ex.getMessage(), ex);
+                Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, "SecurityException while creating Java block instance: " + ex.getMessage(), ex);
             }
         } catch (ClassNotFoundException ex) {
             System.err.println("ERROR: ClassNotFoundException while loading Java block class: " + ex.getMessage());
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
+            Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
         }
     }
 

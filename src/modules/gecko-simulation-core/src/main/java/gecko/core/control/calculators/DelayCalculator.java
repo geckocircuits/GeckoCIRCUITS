@@ -102,7 +102,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         if (_bufferEmpty) {
             // Buffer is still being filled
             if (deltaT > _delayTime) {

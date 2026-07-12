@@ -22,7 +22,7 @@ package gecko.core.datacontainer;
  *
  * GUI-free version for use in headless simulation core.
  */
-public final class TimeSeriesConstantDt extends AbstractTimeSerie {
+public final class TimeSeriesConstantDt extends AbstractTimeSeries {
 
     private int _maxDefinedIndex = Integer.MIN_VALUE;
     private double _dt = DEFAULT_DT;

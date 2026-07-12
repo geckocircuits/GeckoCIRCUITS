@@ -24,14 +24,14 @@ public class CosCalculatorTest extends AbstractSimpleMathFunctionTest {
     }
 
     @Test
-    public void testBerechneYOUTResult0() {
+    public void testCalculateYOUTResult0() {
         double val = getValue(0);
         assertWithTol(1, val);
     }
 
     @Override
     @Test
-    public void testBerechneYOUTValue() {
+    public void testCalculateYOUTValue() {
         double val = getValue(-Math.PI/6);
         assertWithTol(Math.sqrt(3)/2, val);
     }

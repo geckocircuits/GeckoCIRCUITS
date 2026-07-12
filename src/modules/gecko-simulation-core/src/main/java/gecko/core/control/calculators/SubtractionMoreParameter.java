@@ -20,7 +20,7 @@ public final class SubtractionMoreParameter extends AbstractControlCalculatable 
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = _inputSignal[0][0];
         for (int i = 1; i < _inputSignal.length; i++) {
             _outputSignal[0][0] -= _inputSignal[i][0];

@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.TechFormat;
 import javax.swing.table.DefaultTableCellRenderer;
 
 class MyTableCellRenderer extends DefaultTableCellRenderer {

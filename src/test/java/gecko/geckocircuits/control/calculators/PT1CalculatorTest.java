@@ -30,10 +30,10 @@ public class PT1CalculatorTest {
 
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _calculator._inputSignal[0][0] = 1;
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
-            _calculator.berechneYOUT(DELTA_T);
+            _calculator.calculateYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
             final double expected = 1 - (Math.exp(-time - DELTA_T/2)); // f(x) = 1 - exp(-x)
 
@@ -51,7 +51,7 @@ public class PT1CalculatorTest {
         _calculator.setTimeConstant(timeConstant);
 
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
-            _calculator.berechneYOUT(DELTA_T);
+            _calculator.calculateYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
             final double expected = 1 - (Math.exp(-time/timeConstant - DELTA_T/2)); // f(x) = 1 - exp(-x / c)
             if(time > END_TIME / 2) { // the first value is nonsense!
@@ -66,7 +66,7 @@ public class PT1CalculatorTest {
         _calculator.setGain(newGain);
         _calculator._inputSignal[0][0] = 1;
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
-            _calculator.berechneYOUT(DELTA_T);
+            _calculator.calculateYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
             final double expected = newGain * (1 - (Math.exp(-time - DELTA_T/2))); // f(x) = 1 - exp(-x)
 

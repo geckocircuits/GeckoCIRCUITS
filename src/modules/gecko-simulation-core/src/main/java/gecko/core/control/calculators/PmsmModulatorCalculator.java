@@ -28,7 +28,7 @@ public final class PmsmModulatorCalculator extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double valpha = _inputSignal[0][0];
         final double vbeta = _inputSignal[1][0];
         final double triangle = _inputSignal[2][0];

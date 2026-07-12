@@ -14,7 +14,7 @@
 package gecko.geckocircuits.control;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -35,7 +35,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
 
 
     @Override
-    public void baueGUI() {
+    public void buildGUI() {
         this.setLocationRelativeTo(GeckoSim._win);
         con = this.getContentPane();
         con.setLayout(new BorderLayout());
@@ -49,7 +49,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Parameter", TitledBorder.LEFT, TitledBorder.TOP));
 
-        baueGuiIndividual();
+        buildIndividualGUI();
         con.add(jpM, BorderLayout.CENTER);
         con.add(jPanelButtonOkCancel, BorderLayout.SOUTH);
     }
@@ -129,13 +129,13 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
         }
     };
 
-    abstract void baueGuiIndividual();
+    abstract void buildIndividualGUI();
 
     @Override
     public void processInputIndividual() {
         processInputs();
         processRegisteredParameters();
-        schliesseFenster();
+        closeWindow();
     }
 
     protected void processInputs() {

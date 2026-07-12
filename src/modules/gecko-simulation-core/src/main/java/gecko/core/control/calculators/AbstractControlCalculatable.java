@@ -35,7 +35,7 @@ public abstract class AbstractControlCalculatable {
         _outputSignal = createOutputSignal(noOutputs);
     }
 
-    public abstract void berechneYOUT(final double deltaT);
+    public abstract void calculateYOUT(final double deltaT);
 
     public void setInputSignal(final int inputIndex, final AbstractControlCalculatable output, 
             final int outputIndex) throws Exception {

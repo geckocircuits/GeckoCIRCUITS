@@ -23,9 +23,9 @@ final class ThermAmbientDialog extends DialogElementLK<ThermAmbient> {
     }
 
     @Override
-    public void baueGUIIndividual() {
+    public void buildGUIIndividual() {
         JPanel jpM = createParameterPanel(element._ambientTemp);
-        tf.get(0).setEditable(false);  // vorerst kann diese Temperatur nicht gesetzt werden
+        tf.get(0).setEditable(false);  // this temperature cannot be set for now
         con.add(jpM, BorderLayout.CENTER);
     }
 }

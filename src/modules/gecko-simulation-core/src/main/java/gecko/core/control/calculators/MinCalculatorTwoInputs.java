@@ -17,7 +17,7 @@ package gecko.core.control.calculators;
 public final class MinCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator {
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.min(_inputSignal[0][0], _inputSignal[1][0]);
     }
 }

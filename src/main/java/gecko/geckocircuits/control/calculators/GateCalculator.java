@@ -22,7 +22,7 @@ public final class GateCalculator extends AbstractControlCalculatable implements
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         assert false;
     }
 }

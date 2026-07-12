@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.TechFormat;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -25,7 +25,10 @@ import javax.swing.JPanel;
  *
  * @author andy
  */
+@SuppressWarnings("serial")
 public final class XSliderValueDrawer extends JPanel {
+
+    private static final long serialVersionUID = 1L;
 
     private static final TechFormat TECH_FORMAT = new TechFormat();
     private static final int NUM_DIGITS = 6;

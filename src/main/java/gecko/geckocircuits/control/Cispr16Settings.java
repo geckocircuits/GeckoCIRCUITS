@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.i18n.resources.I18nKeys;
 
@@ -37,13 +37,13 @@ public final class Cispr16Settings {
 
     public final UserParameter<Boolean> _automaticQPSelection;
 
-    public Cispr16Settings(final ReglerCISPR16 regler) {
+    public Cispr16Settings(final ControlCISPR16 control) {
          _showName = UserParameter.Builder.
             <Boolean>start("showName", true).
             longName(I18nKeys.DISPLAY_COMPONENT_NAME_IN_CIRCUIT_SHEET).
             shortName("showName").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _peak = UserParameter.Builder.
@@ -51,7 +51,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.CONSIDER_PEAK_CALCULATION).
             shortName("calcPeak").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _qpeak = UserParameter.Builder.
@@ -59,7 +59,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.CONSIDER_QUASI_PEAK_CALCULATION).
             shortName("quasiPeak").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _filterThreshold = UserParameter.Builder.
@@ -67,7 +67,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.FILTER_THRESHOLD).
             shortName("filterThreshold").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _average = UserParameter.Builder.
@@ -75,7 +75,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.CONSIDER_AVERAGE_CALCULATION).
             shortName("average").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _useBlackman = UserParameter.Builder.
@@ -83,7 +83,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.USE_BLACKMAN_WINDOW).
             shortName("useBlackman").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _showRMSValues = UserParameter.Builder.
@@ -91,7 +91,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.SHOW_OUTPUTS_AS_RMS_VALUES).
             shortName("showRMS").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _maxFreq = UserParameter.Builder.
@@ -100,7 +100,7 @@ public final class Cispr16Settings {
             shortName("maximumFrequency").
             unit("Hz").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _minFreq = UserParameter.Builder.
@@ -109,7 +109,7 @@ public final class Cispr16Settings {
             shortName("minimumFrequency").
             unit("Hz").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _automaticQPSelection = UserParameter.Builder.
@@ -117,7 +117,7 @@ public final class Cispr16Settings {
             longName(I18nKeys.AUTO_QP_SELECTION).
             shortName("autoQPSelection").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
 
          _qpInteval = UserParameter.Builder.
@@ -126,7 +126,7 @@ public final class Cispr16Settings {
             shortName("QPinterval").
             unit("Hz").
             showInTextInfo(TextInfoType.SHOW_NEVER).
-            arrayIndex(regler, -1).
+            arrayIndex(control, -1).
             build();
     }
 

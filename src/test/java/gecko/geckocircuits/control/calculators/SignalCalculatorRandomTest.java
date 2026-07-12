@@ -34,11 +34,11 @@ public class SignalCalculatorRandomTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
 
         double oldValue = -1;
         for(int i = 0; i < 200; i++) {
-            _randomCalculator.berechneYOUT(1);
+            _randomCalculator.calculateYOUT(1);
             double value = _randomCalculator._outputSignal[0][0];
             // very basic test: the output should never stay constant...
             assertTrue(value != oldValue);

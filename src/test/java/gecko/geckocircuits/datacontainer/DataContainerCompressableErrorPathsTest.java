@@ -14,7 +14,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.newscope.TimeSeriesConstantDt;
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import org.junit.Before;
 import org.junit.Test;
@@ -245,7 +245,7 @@ public class DataContainerCompressableErrorPathsTest {
             1, timeSeries, signalNames, "Time"
         );
 
-        AbstractTimeSerie retrieved = container.getTimeSeries(0);
+        AbstractTimeSeries retrieved = container.getTimeSeries(0);
         assertSame(timeSeries, retrieved);
     }
 

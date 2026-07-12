@@ -49,13 +49,13 @@ public abstract class AbstractSimpleMathFunctionTest {
      * test the input with a zer-value
      */
     @Test
-    abstract public void testBerechneYOUTResult0();
+    abstract public void testCalculateYOUTResult0();
 
     /*
      * use some other characteristic input value (e.g. Pi)
      */
     @Test
-    abstract public void testBerechneYOUTValue();
+    abstract public void testCalculateYOUTValue();
 
     /*
      * test things like a negative number in Ln-Functions...
@@ -65,7 +65,7 @@ public abstract class AbstractSimpleMathFunctionTest {
 
     public double getValue(final double testValue) {
         _controlCalculatable._inputSignal[0][0] = testValue;
-        _controlCalculatable.berechneYOUT(TEST_DT);
+        _controlCalculatable.calculateYOUT(TEST_DT);
         return _controlCalculatable._outputSignal[0][0];
     }
 

@@ -14,7 +14,7 @@
 
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.TimeSeriesConstantDt;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -134,7 +134,7 @@ public class DataContainerFourier extends AbstractDataContainer implements DataC
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSeries;
     }
 

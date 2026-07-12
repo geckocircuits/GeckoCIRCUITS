@@ -20,7 +20,7 @@ import gecko.core.circuit.calculator.HistoryUpdatable;
 import gecko.core.circuit.calculator.PostProcessable;
 import gecko.core.circuit.calculator.BVector;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 
 @SuppressWarnings("rawtypes")
 public class InductorCalculator extends CircuitComponent implements BStampable,

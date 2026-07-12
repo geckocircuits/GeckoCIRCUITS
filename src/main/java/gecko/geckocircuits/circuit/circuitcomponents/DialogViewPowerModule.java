@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
@@ -51,14 +51,14 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         this.setTitle(" " + ((ThermMODUL) elementTH).getDateiname());
         JTabbedPane tabber = new JTabbedPane();
         tabber.addTab("RthCth-Network Model", c);
-        tabber.addTab("3D Structure", this.baueGUI());
+        tabber.addTab("3D Structure", this.buildGUI());
         //
         JButton jbOK = GuiFabric.getJButton(I18nKeys.OK);
         jbOK.setActionCommand("OK");
         jbOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                schliesseFenster();
+                closeWindow();
             }
         });
         JPanel jpOK = new JPanel();
@@ -74,7 +74,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         //------------------------
     }
 
-    private JPanel baueGUI() {
+    private JPanel buildGUI() {
         //------------------------
         // Grafische Beschreibung des PowerModule -->
         //
@@ -129,7 +129,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
 
     @Override
     public void windowClosing(WindowEvent we) {
-        this.schliesseFenster();
+        this.closeWindow();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
     }
     //------------------------------------------------
 
-    private void schliesseFenster() {
+    private void closeWindow() {
         //mutterFenster.gibFocusZurueck();
         this.dispose();
     }

@@ -15,7 +15,7 @@ package gecko.geckocircuits.circuit.simulation;
 
 /**
  * Represents the state of a power semiconductor switch.
- * Extracted from SimulationsKern to centralize switch state management.
+ * Extracted from SimulationKernel to centralize switch state management.
  *
  * <p>This enum models the finite state machine for power switches:
  * <ul>

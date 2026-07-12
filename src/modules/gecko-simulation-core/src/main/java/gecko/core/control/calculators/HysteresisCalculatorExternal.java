@@ -20,7 +20,7 @@ public final class HysteresisCalculatorExternal extends AbstractControlCalculata
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double hValue = _inputSignal[1][0];
         if (_inputSignal[0][0] > +hValue) {
             _outputSignal[0][0] = 1;

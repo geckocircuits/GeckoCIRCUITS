@@ -156,7 +156,7 @@ public final class UZiDisplay extends GeckoDialog {
     /**
      * Creates new form SpaceVectorDisplay
      */
-    public UZiDisplay(final ReglerU_ZI regelBlock) {
+    public UZiDisplay(final ControlU_ZI regelBlock) {
         super(GeckoSim._win, false);
 
         initComponents();

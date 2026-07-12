@@ -24,16 +24,16 @@ import static org.mockito.Mockito.when;
 public class DataSaverRegressionTest {
 
     private AbstractDataContainer _data;
-    private ReglerSaveData _settings;
+    private ControlSaveData _settings;
     private Path _tempDir;
     private Path _exportFile;
 
     @Before
     public void setUp() throws IOException {
         _data = mock(AbstractDataContainer.class);
-        _settings = new ReglerSaveData();
-        _settings._saveModus = ReglerSaveData.SaveModus.MANUAL;
-        _settings._outputType = ReglerSaveData.OutputType.TEXT;
+        _settings = new ControlSaveData();
+        _settings._saveModus = ControlSaveData.SaveModus.MANUAL;
+        _settings._outputType = ControlSaveData.OutputType.TEXT;
         _settings._printHeader.setValueWithoutUndo(false);
         _settings._transposeData.setValueWithoutUndo(false);
         _settings._skipDataPoints.setValueWithoutUndo(1);
@@ -127,7 +127,7 @@ public class DataSaverRegressionTest {
 
     @SuppressWarnings("unchecked")
     private void appendSelectedName(String signalName) throws Exception {
-        Field namesField = ReglerSaveData.class.getDeclaredField("_selectedSignalNames");
+        Field namesField = ControlSaveData.class.getDeclaredField("_selectedSignalNames");
         namesField.setAccessible(true);
         List<String> names = (List<String>) namesField.get(_settings);
         names.add(signalName);

@@ -13,7 +13,7 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.GetJarPath;
+import gecko.geckocircuits.general.GetJarPath;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.AccessControlException;

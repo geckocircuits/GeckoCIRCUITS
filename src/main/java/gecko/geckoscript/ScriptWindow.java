@@ -18,7 +18,7 @@ import gecko.Declaration;
 import gecko.Documentation;
 import gecko.GeckoRemoteInterface;
 import gecko.MethodCategory;
-import gecko.geckocircuits.allg.StartupWindow;
+import gecko.geckocircuits.general.StartupWindow;
 import gecko.geckocircuits.control.javablock.CodeWindowModern;
 import gecko.geckocircuits.control.javablock.CompileStatus;
 import gecko.geckocircuits.control.javablock.ExtraFilesWindow;

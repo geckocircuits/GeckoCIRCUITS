@@ -58,7 +58,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[11][0] = 0.2; // psi_PM
         }
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Most outputs should be valid (some may be NaN if inputs are insufficient)
         assertFalse("Output 0 should be finite",
@@ -83,7 +83,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[11][0] = 0.2;
         }
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Output should not be infinite
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -100,7 +100,7 @@ public class PmsmControlCalculatorExtendedTest {
         calculator._inputSignal[1][0] = -0.5;
         calculator._inputSignal[2][0] = -0.5;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // All outputs should be finite
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -128,7 +128,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[9][0] = 0.1;       // T_i
             calculator._inputSignal[10][0] = 5.0;      // i_limit
 
-            calculator.berechneYOUT(0.0001);
+            calculator.calculateYOUT(0.0001);
 
             double output = calculator._outputSignal[0][0];
             if (Math.abs(output - lastOutput) < 0.01) {
@@ -157,7 +157,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[9][0] = 0.1;     // T_i
             calculator._inputSignal[10][0] = 5.0;    // i_limit
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
         }
 
         // Output should be bounded (not infinite)
@@ -182,12 +182,12 @@ public class PmsmControlCalculatorExtendedTest {
         calculator._inputSignal[9][0] = 0.1;   // T_i
         calculator._inputSignal[10][0] = 5.0;  // i_limit
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Now reverse
         calculator._inputSignal[2][0] = -100.0; // Reverse speed
         calculator._inputSignal[4][0] = -100.0; // Reverse n_ref
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should handle reversal",
@@ -210,7 +210,7 @@ public class PmsmControlCalculatorExtendedTest {
         calculator._inputSignal[9][0] = 0.1;
         calculator._inputSignal[10][0] = 20.0;
 
-        calculator.berechneYOUT(1e-6); // Small time step
+        calculator.calculateYOUT(1e-6); // Small time step
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid at high speed",
@@ -233,7 +233,7 @@ public class PmsmControlCalculatorExtendedTest {
         calculator._inputSignal[9][0] = 0.1;
         calculator._inputSignal[10][0] = 5.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should handle zero speed gracefully
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -260,7 +260,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[10][0] = 5.0;
             calculator._inputSignal[11][0] = 0.2;
 
-            calculator.berechneYOUT(0.0001);
+            calculator.calculateYOUT(0.0001);
 
             for (int i = 0; i < calculator._outputSignal.length; i++) {
                 assertFalse("Output " + i + " at step " + step + " should be valid",
@@ -292,7 +292,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[10][0] = 5.0;
             calculator._inputSignal[11][0] = 0.2;
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             // Outputs should remain finite and reasonable
             for (int i = 0; i < Math.min(2, calculator._outputSignal.length); i++) {
@@ -322,7 +322,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[10][0] = 5.0;
             calculator._inputSignal[11][0] = 0.2;
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             for (int i = 0; i < calculator._outputSignal.length; i++) {
                 assertFalse("Output should be valid for rotation " + rotation,
@@ -348,7 +348,7 @@ public class PmsmControlCalculatorExtendedTest {
             calculator._inputSignal[10][0] = 15.0;
             calculator._inputSignal[11][0] = 0.1;
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             for (int i = 0; i < calculator._outputSignal.length; i++) {
                 assertFalse("Output should be stable with fast dynamics",

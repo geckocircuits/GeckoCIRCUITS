@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal;
 import gecko.geckocircuits.control.Point;
-import gecko.geckocircuits.control.ReglerTERMINAL;
+import gecko.geckocircuits.control.ControlTERMINAL;
 import gecko.geckocircuits.control.SubCircuitSheet;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -75,7 +75,7 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
             return lkTerminal.getSimulationDomain();
         }
 
-        if (_lkTerminal instanceof ReglerTERMINAL) {
+        if (_lkTerminal instanceof ControlTERMINAL) {
             return ConnectorType.CONTROL;
         }
         assert false;
@@ -109,7 +109,7 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
         graphics.setColor(_lkTerminal.getForeGroundColor());
 
         if (!_label.getLabelString().isEmpty()) {
-            graphics.drawString(_label.getLabelString(), (int) (dpix * getPosition().x) + DX_IN, (int) (dpix * getPosition().y) + DY_TEXT);
+            graphics.drawString(_label.getLabelString(), dpix * getPosition().x + DX_IN, dpix * getPosition().y + DY_TEXT);
         }
 
         String terminalName = _lkTerminal.getStringID();
@@ -122,16 +122,16 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
 
         switch (_lkTerminal.getTerminalLocation()) {
             case LEFT:
-                graphics.drawString(_lkTerminal.getStringID(), (int) (dpix * getPosition().x) + dpix / 2 + 2,
-                        (int) (dpix * getPosition().y) + stringHeight / 2 - 1);
+                graphics.drawString(_lkTerminal.getStringID(), dpix * getPosition().x + dpix / 2 + 2,
+                        dpix * getPosition().y + stringHeight / 2 - 1);
                 break;
             case RIGHT:
-                graphics.drawString(_lkTerminal.getStringID(), (int) (dpix * getPosition().x) - dpix / 2 - 2 - stringWidth,
-                        (int) (dpix * getPosition().y) + stringHeight / 2 - 1);
+                graphics.drawString(_lkTerminal.getStringID(), dpix * getPosition().x - dpix / 2 - 2 - stringWidth,
+                        dpix * getPosition().y + stringHeight / 2 - 1);
                 break;
             case BOTTOM:
-                newTrans.translate(oldTrans.getTranslateX() + (int) (dpix * getPosition().x),
-                        oldTrans.getTranslateY() + (int) (dpix * getPosition().y));
+                newTrans.translate(oldTrans.getTranslateX() + dpix * getPosition().x,
+                        oldTrans.getTranslateY() + dpix * getPosition().y);
                 newTrans.rotate(-Math.PI / 2);
                 graphics.setTransform(newTrans);
                 graphics.drawString(_lkTerminal.getStringID(), dpix / 2, stringHeight / 2 - 1);
@@ -139,8 +139,8 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
                 break;
             case UP:
 
-                newTrans.translate(oldTrans.getTranslateX() + (int) (dpix * getPosition().x),
-                        oldTrans.getTranslateY() + (int) (dpix * getPosition().y));
+                newTrans.translate(oldTrans.getTranslateX() + dpix * getPosition().x,
+                        oldTrans.getTranslateY() + dpix * getPosition().y);
                 newTrans.rotate(-Math.PI / 2);
                 graphics.setTransform(newTrans);
                 graphics.drawString(_lkTerminal.getStringID(), -stringWidth - dpix / 2 - 2, stringHeight / 2 - 1);

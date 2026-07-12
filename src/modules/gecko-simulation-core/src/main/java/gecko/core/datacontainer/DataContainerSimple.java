@@ -20,7 +20,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     private static final int MEGA_BYTE = 1048000;
     private static final int DOUBLE_BYTES = 8;
     private static final int FLOAT_BYTES = 8;
-    private AbstractTimeSerie _timeSerieArray;
+    private AbstractTimeSeries _timeSerieArray;
     private String[] _signalNames;
     private int _maximumIndex = -1;
     private final HiLoData[] _abMinMaxValues;
@@ -181,7 +181,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
         return true;
     }
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerieArray;
     }
     @Override

@@ -29,7 +29,7 @@ public final class ConstantCalculator extends AbstractControlCalculatable implem
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) { // this is notCalculatable!
+    public void calculateYOUT(final double deltaT) { // this is notCalculatable!
         assert false;
     }
 }

@@ -319,7 +319,7 @@ public class SwitchStateTest {
 
     @Test
     public void testLegacyParameterArrayCompatibility() {
-        // Simulate legacy par[8] usage from SimulationsKern
+        // Simulate legacy par[8] usage from SimulationKernel
         double par8 = 1.0; // Gate ON
         assertEquals(SwitchState.ON, SwitchState.fromGateStatus(par8));
 

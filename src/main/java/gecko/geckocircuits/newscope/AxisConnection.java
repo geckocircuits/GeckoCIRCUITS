@@ -14,8 +14,8 @@
 package gecko.geckocircuits.newscope;
 
 public enum AxisConnection{
-  ZUORDNUNG_X(51, "X"),
-  ZUORDNUNG_Y(52, "Y"),
+  ASSIGNMENT_X(51, "X"),
+  ASSIGNMENT_Y(52, "Y"),
   ZUORDNUNG_Y2(53, "Y2"),
   ZUORDNUNG_SIGNAL(54, "sg"),
   ZUORDNUNG_NIX(55, "-");
@@ -62,8 +62,8 @@ public enum AxisConnection{
 
     switch(this){
       case ZUORDNUNG_NIX:
-        return ZUORDNUNG_Y;
-      case ZUORDNUNG_Y:
+        return ASSIGNMENT_Y;
+      case ASSIGNMENT_Y:
         return ZUORDNUNG_Y2;
       case ZUORDNUNG_Y2:
         return ZUORDNUNG_NIX;

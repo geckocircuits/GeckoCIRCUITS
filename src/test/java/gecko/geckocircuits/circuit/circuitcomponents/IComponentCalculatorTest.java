@@ -207,7 +207,7 @@ public class IComponentCalculatorTest {
         // Verify all required methods exist
         assertNotNull(clazz.getMethod("initialize"));
         assertNotNull(clazz.getMethod("getSolverType"));
-        assertNotNull(clazz.getMethod("setSolverType", gecko.geckocircuits.allg.SolverType.class));
+        assertNotNull(clazz.getMethod("setSolverType", gecko.geckocircuits.general.SolverType.class));
         assertNotNull(clazz.getMethod("getComponentValue"));
         assertNotNull(clazz.getMethod("setComponentValue", double.class));
         assertNotNull(clazz.getMethod("getInitialCondition"));

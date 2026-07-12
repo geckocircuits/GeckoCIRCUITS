@@ -36,7 +36,7 @@ public class PmsmControlCalculatorTest {
     public void testZeroInputs() {
         // Zero inputs - calculator may produce NaN or valid zero initially
         // (complex controller initialization may not support zero-input startup)
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Just verify it doesn't crash - NaN is acceptable during initialization
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -66,7 +66,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 5.0;  // i_limit
         calculator._inputSignal[11][0] = 0.2;  // filter constant
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Outputs should be calculated (may contain NaN during initialization)
         assertTrue("Should complete calculation without exception", true);
@@ -77,7 +77,7 @@ public class PmsmControlCalculatorTest {
         // Test saturation of current references
         calculator._inputSignal[0][0] = 100.0;  // Speed ref
         calculator._inputSignal[1][0] = 0.0;    // Speed actual
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Current outputs should be within reasonable limits
         for (int i = 0; i < Math.min(2, calculator._outputSignal.length); i++) {
@@ -105,7 +105,7 @@ public class PmsmControlCalculatorTest {
             calculator._inputSignal[10][0] = 5.0;                         // i_limit
             calculator._inputSignal[11][0] = 0.2;                         // filter
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             // Just verify it completes without exception
             assertTrue("Should complete step " + step, true);
@@ -128,7 +128,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 20.0;  // i_limit
         calculator._inputSignal[11][0] = 0.2;   // filter
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should not produce NaN despite high speed
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -153,7 +153,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 5.0;  // i_limit
         calculator._inputSignal[11][0] = 0.2;  // filter
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Should handle negative speed", Double.isNaN(calculator._outputSignal[i][0]));
@@ -176,7 +176,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 5.0;
         calculator._inputSignal[11][0] = 0.2;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertTrue("Should complete with small time constants", true);
     }
@@ -197,7 +197,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 5.0;
         calculator._inputSignal[11][0] = 0.2;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertTrue("Should complete with large time constants", true);
     }
@@ -218,7 +218,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 100.0; // High current limit
         calculator._inputSignal[11][0] = 0.2;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertTrue("Should handle high currents", true);
     }
@@ -239,7 +239,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 0.5;   // Very low current limit
         calculator._inputSignal[11][0] = 0.2;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertTrue("Should handle low current limits", true);
     }
@@ -260,7 +260,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 5.0;
         calculator._inputSignal[11][0] = 0.2;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Should handle zero error condition",
@@ -284,7 +284,7 @@ public class PmsmControlCalculatorTest {
         calculator._inputSignal[10][0] = 10.0;
         calculator._inputSignal[11][0] = 0.2;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertTrue("Should handle large speed errors", true);
     }
@@ -308,7 +308,7 @@ public class PmsmControlCalculatorTest {
             calculator._inputSignal[10][0] = 5.0;
             calculator._inputSignal[11][0] = filter;
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             assertTrue("Should complete with filter constant " + filter, true);
         }

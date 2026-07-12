@@ -12,13 +12,11 @@
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
 //package gecko.geckocircuits.newscope;
-//
 //import gecko.geckocircuits.datacontainer.DataContainerExternalWrapper;
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.util.Stack;
-//
-///**
+//**
 // * Contains the currently defined external signals within the current data
 // * container.
 // */
@@ -27,7 +25,6 @@
 //  private DataContainerExternalWrapper _externalWrapper;
 //  private GraferV4 _grafer;
 //  private final Stack<ScopeSignalRegular> _origScopeSignals;
-//
 //  /**
 //   * Constructor saving the signals contained in the current scope before adding
 //   * any external signals.
@@ -36,11 +33,9 @@
 //  public DefinedExternalSignals(final Stack<ScopeSignalRegular> origScopeSignals){
 //    this._origScopeSignals = origScopeSignals;
 //  }
-//
 //  public void setGrafer(final GraferV4 grafer){
 //    this._grafer = grafer;
 //  }
-//
 //  /**
 //   * Returns the signal at index.
 //   * @param index The index of the external signal to return.
@@ -49,15 +44,12 @@
 //  public ExternalSignal get(final int index){
 //    return this._scopeExternalSignals.get(index);
 //  }
-//
 //  public int size(){
 //    return this._scopeExternalSignals.size();
 //  }
-//
 //  public Stack<ScopeSignalRegular> getOrigScopeSignals(){
 //    return _origScopeSignals;
 //  }
-//
 //  /**
 //   * Register all external signals in the external wrapper.
 //   * @param externalWrapper The wrapper for which the external signals should be
@@ -67,7 +59,6 @@
 //    externalWrapper.defineExternalSignals(this._scopeExternalSignals);
 //    this._externalWrapper = externalWrapper;
 //  }
-//
 //  /**
 //   * Add an external signal to the list of defined external signals.
 //   * @param index The signal to add.
@@ -81,7 +72,6 @@
 //      this.registerIndices(this._externalWrapper);
 //    }
 //  }
-//
 //  /**
 //   * Remove an external signal from the list of defined external signals.
 //   * @param toDelete A reference to the external signal to delete.

@@ -26,7 +26,7 @@ public class NothingToDoCalculator extends AbstractControlCalculatable implement
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         // nothing todo, as the class name says!
     }
 

@@ -26,7 +26,7 @@ public final class ABCDQCalculator extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double aVal = _inputSignal[0][0];
         final double bVal = _inputSignal[1][0];
         final double cVal = _inputSignal[2][0];

@@ -184,7 +184,7 @@ public class HeadlessSimulationEngine {
 
         // Main simulation loop
         // Note: This is a placeholder implementation. In production, this would
-        // integrate with the actual SimulationsKern or circuit solver.
+        // integrate with the actual SimulationKernel or circuit solver.
         float[] values = new float[signalNames.length];
 
         while (currentTime <= duration) {

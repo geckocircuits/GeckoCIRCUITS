@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ComponentDirection;
@@ -166,7 +166,7 @@ abstract class AbstractMotorDC extends AbstractMotor {
 
     @Override
     void updateSourceParameters() {
-        _uEMK.parameter[1] = _emk;  // DC-Wert der internen WSpg.Quelle
+        _uEMK.parameter[1] = _emk;  // DC value of the internal voltage source
     }
 
     @Override

@@ -40,7 +40,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;  // Triangle carrier
         calculator._inputSignal[3][0] = 10.0; // Vdc
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // All three phase outputs should be around 0.5 (50% duty)
         for (int i = 0; i < 3; i++) {
@@ -58,7 +58,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;  // Triangle
         calculator._inputSignal[3][0] = vdc;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // All duty cycles should be clamped to [0, 1]
         for (int i = 0; i < 3; i++) {
@@ -75,7 +75,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;  // Triangle at 50%
         calculator._inputSignal[3][0] = 10.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should produce balanced output with phase differences
         for (int i = 0; i < 3; i++) {
@@ -93,7 +93,7 @@ public class PmsmModulatorCalculatorTest {
 
         for (double trianglePos = 0.0; trianglePos <= 1.0; trianglePos += 0.2) {
             calculator._inputSignal[2][0] = trianglePos;
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             // Verify outputs remain valid
             for (int i = 0; i < 3; i++) {
@@ -111,7 +111,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;  // Triangle
         calculator._inputSignal[3][0] = 10.0; // Vdc
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < 3; i++) {
             assertTrue("Duty cycle should be valid in sector 0",
@@ -128,7 +128,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.3;  // Triangle
         calculator._inputSignal[3][0] = 10.0; // Vdc
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < 3; i++) {
             assertTrue("Duty cycle should be bounded",
@@ -145,7 +145,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;
         calculator._inputSignal[3][0] = vdc;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Outputs should still be valid (clipped to DC voltage limit)
         for (int i = 0; i < 3; i++) {
@@ -162,7 +162,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;
         calculator._inputSignal[3][0] = 10.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Three-phase outputs should be 120 degrees apart
         for (int i = 0; i < 3; i++) {
@@ -179,7 +179,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;
         calculator._inputSignal[3][0] = 10.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Phase outputs should still be valid
         for (int i = 0; i < 3; i++) {
@@ -198,7 +198,7 @@ public class PmsmModulatorCalculatorTest {
         double[] trianglePositions = {0.0, 0.01, 0.99, 1.0};
         for (double pos : trianglePositions) {
             calculator._inputSignal[2][0] = pos;
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             for (int i = 0; i < 3; i++) {
                 assertTrue("Extreme PWM position " + pos + " should be valid",
@@ -215,7 +215,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;
         calculator._inputSignal[3][0] = 0.5;  // Very low Vdc
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < 3; i++) {
             assertTrue("Low Vdc should still produce valid output",
@@ -231,7 +231,7 @@ public class PmsmModulatorCalculatorTest {
         calculator._inputSignal[2][0] = 0.5;
         calculator._inputSignal[3][0] = 600.0; // High voltage (industrial)
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         for (int i = 0; i < 3; i++) {
             assertTrue("High Vdc should produce valid output",

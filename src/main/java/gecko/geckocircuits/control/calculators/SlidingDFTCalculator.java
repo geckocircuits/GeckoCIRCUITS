@@ -14,8 +14,8 @@
 package gecko.geckocircuits.control.calculators;
 
 import gecko.geckocircuits.control.IsDtChangeSensitive;
-import gecko.geckocircuits.control.ReglerSlidingDFT;
-import gecko.geckocircuits.control.ReglerSlidingDFT.FrequencyData;
+import gecko.geckocircuits.control.ControlSlidingDFT;
+import gecko.geckocircuits.control.ControlSlidingDFT.FrequencyData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +36,14 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
     private double[] _freqsImag;
     private final List<FrequencyData> _data;
 
-    public SlidingDFTCalculator(final int noOutputs, final double avgSpan, final List<ReglerSlidingDFT.FrequencyData> freqData) {
+    public SlidingDFTCalculator(final int noOutputs, final double avgSpan, final List<ControlSlidingDFT.FrequencyData> freqData) {
         super(1, noOutputs);
         _averageSpanSecs = avgSpan;
-        _data = new ArrayList<ReglerSlidingDFT.FrequencyData>(freqData);
+        _data = new ArrayList<ControlSlidingDFT.FrequencyData>(freqData);
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
 
         _oldestDataReal = _timeData[_idx];
         _timeData[_idx] = _inputSignal[0][0];

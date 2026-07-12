@@ -20,7 +20,7 @@ public final class OrCalculatorMultipleInputs extends AbstractControlCalculatabl
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = 0;
         for (double[] inputChannel : _inputSignal) {
             if (inputChannel[0] > SIGNAL_THRESHOLD) {

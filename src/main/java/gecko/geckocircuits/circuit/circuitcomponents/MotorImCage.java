@@ -27,7 +27,7 @@ public final class MotorImCage extends AbstractMotorIM {
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(MotorImCage.class, "IM-CAGE", I18nKeys.IM_CAGE, I18nKeys.SQUIRREL_CAGE_INDUCTION_MACHINE);
 
     private int drMpix = 3;
-    // Mechanische und Elektrische Kenngroessen der Maschine -->
+    // Squirrel-Cage Induction Machine (Kurzschlusslaeufer)
     //
     private double Lls = 1e-3;
     private double Rr = 1.0, Llr = 1.8e-3;
@@ -83,7 +83,7 @@ public final class MotorImCage extends AbstractMotorIM {
         double urd = 0;  // weil Kurzschlusslaeufer
         double urq = 0;  // weil Kurzschlusslaeufer
 
-        // Bloecke fuer magnetische Fluss-Berechnungen:
+        // Block 'usab,usbc -> udq':
         double psimd = _magnetizingInductance * (isd + ird);
         double psimq = _magnetizingInductance * (isq + irq);
         psisd = Lls * isd + psimd;

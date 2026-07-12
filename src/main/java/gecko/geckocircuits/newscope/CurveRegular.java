@@ -36,7 +36,7 @@ class CurveRegular extends AbstractCurve {
         super(curve, diagram);
 
         if (curve.getAxisConnection() != AxisConnection.ZUORDNUNG_NIX) {
-            setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            setAxisConnection(AxisConnection.ASSIGNMENT_Y);
         }
 
         _curvePainter = new CurvePainterRegular(this);
@@ -45,7 +45,7 @@ class CurveRegular extends AbstractCurve {
 
     @Override
     public void drawCurve(final Graphics2D g2d, final SliderContainer slider) {
-        if (getAxisConnection() != AxisConnection.ZUORDNUNG_Y && getAxisConnection() != AxisConnection.ZUORDNUNG_Y2) {
+        if (getAxisConnection() != AxisConnection.ASSIGNMENT_Y && getAxisConnection() != AxisConnection.ZUORDNUNG_Y2) {
             return;
         }
 

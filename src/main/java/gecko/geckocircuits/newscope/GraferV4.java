@@ -14,9 +14,9 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.core.datacontainer.HiLoData;
-import gecko.geckocircuits.circuit.SimulationsKern;
+import gecko.geckocircuits.circuit.SimulationKernel;
 import gecko.core.circuit.TokenMap;
-import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.control.ControlOSZI;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import java.awt.*;
@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Grafer must share data container and manager references for scope visualization")
 public final class GraferV4 extends JPanel {
 
@@ -76,14 +77,14 @@ public final class GraferV4 extends JPanel {
 
     public void createInitialDiagram() {
         if (_manager.getNumberDiagrams() == 0) {
-            _manager.updateCurveNumber(ReglerOSZI.DEF_TERM_NUMBER);
+            _manager.updateCurveNumber(ControlOSZI.DEF_TERM_NUMBER);
             final AbstractDiagram diag = new DiagramCurve(this);
             diag._diagramSettings.setNameDiagram("GRF " + _manager.getNumberDiagrams());
 
             _manager.addDiagram(diag);
 
             for (AbstractCurve curve : diag.getCurves()) {
-                curve.setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+                curve.setAxisConnection(AxisConnection.ASSIGNMENT_Y);
             }
         }
     }
@@ -156,7 +157,7 @@ public final class GraferV4 extends JPanel {
         if(_manager.getDiagram(0) instanceof DiagramSignal) {
             _manager.getDiagram(0).getCurve(terminalNumber - 1).setAxisConnection(AxisConnection.ZUORDNUNG_SIGNAL);
         } else {
-            _manager.getDiagram(0).getCurve(terminalNumber - 1).setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            _manager.getDiagram(0).getCurve(terminalNumber - 1).setAxisConnection(AxisConnection.ASSIGNMENT_Y);
         }
 
     }
@@ -222,7 +223,7 @@ public final class GraferV4 extends JPanel {
             AbstractCurve curve = diag.getCurve(i);
             curve.setSymbolEnabled(true);
             curve.setSymbol(GeckoSymbol.RECT_FILLED);
-            curve.setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            curve.setAxisConnection(AxisConnection.ASSIGNMENT_Y);
             curve.setColor(color);
             color = GeckoColor.getNextColor(color);
         }
@@ -262,7 +263,7 @@ public final class GraferV4 extends JPanel {
         for (int i = 0; i < numberCurves; i++) {
             AbstractCurve curve = diag.getCurve(i);
             curve.setSymbol(GeckoSymbol.RECT_FILLED);
-            curve.setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            curve.setAxisConnection(AxisConnection.ASSIGNMENT_Y);
             curve.setColor(color);
             color = GeckoColor.getNextColor(color);
         }
@@ -328,7 +329,7 @@ public final class GraferV4 extends JPanel {
                         NiceScale xNiceScale = new NiceScale(HiLoData.hiLoDataFabric((float) startTime, (float) endTime), true);
                         HiLoData niceLimits = xNiceScale.getNiceLimits();
 
-                        if (Math.abs(SimulationsKern.getStaticTEND() - endTime) / Math.abs(SimulationsKern.getStaticTEND() + endTime) > 0.01) {
+                        if (Math.abs(SimulationKernel.getStaticTEND() - endTime) / Math.abs(SimulationKernel.getStaticTEND() + endTime) > 0.01) {
                             setSimulationTimeBoundaries(startTime, niceLimits._yHi);
                         } else {
                             setSimulationTimeBoundaries(startTime, endTime);
@@ -485,10 +486,10 @@ public final class GraferV4 extends JPanel {
 
         final Graphics2D g2d = (Graphics2D) graphics;
         if (_antialiasing) {
-            ((Graphics2D) g2d).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
         } else {
-            ((Graphics2D) g2d).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_OFF);
         }
     }
@@ -513,7 +514,7 @@ public final class GraferV4 extends JPanel {
     }
 
     private void definiereAchsenbegrenzungenNumerischeSimulation(final HiLoData startStopTimes) {
-        for (AbstractDiagram diag : _manager.getDiagrams()) {   // geht durch die Zeilen
+        for (AbstractDiagram diag : _manager.getDiagrams()) {   // goes through the lines
             final Axis xAxis = diag._xAxis;
             xAxis._axisMinMax.setGlobalAutoScaleValues(startStopTimes);
         }
@@ -536,14 +537,14 @@ public final class GraferV4 extends JPanel {
         }
     }
 
-    public void setMausModus(final MausModus mausModus) {
-        this._mausModus = mausModus;  // in den neuen Zustand gehen
+    public void setMouseMode(final MausModus mouseMode) {
+        this._mausModus = mouseMode;  // go to the new state
         //--------------------------
         for (AbstractDiagram diag : _manager.getDiagrams()) {
-            diag._zoomWindow.setMausModus(mausModus);
+            diag._zoomWindow.setMouseMode(mouseMode);
         }
 
-        switch (mausModus) {
+        switch (mouseMode) {
             case NONE:
                 _sliderContainer.setSliderActivity(false);  // aktives Ausschalten des Schiebers
                 this.remove(_xSliderDrawer);
@@ -559,7 +560,7 @@ public final class GraferV4 extends JPanel {
                 addSliderXDrawer();
                 if (!_sliderContainer.isSliderActive()) {
                     _sliderContainer.setSliderActivity(true);
-                    // x-Schieber wird an den Anfang gesetzt: gleich fuer alle Diagramme, in GraferV3 definiert
+                    // x slider is placed at the beginning: same for all diagrams, defined in GraferV3
                     this.setAxisPositions();
                     this.repaint();
                 }

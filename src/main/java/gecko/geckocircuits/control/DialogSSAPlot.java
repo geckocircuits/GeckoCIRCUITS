@@ -14,7 +14,7 @@
 package gecko.geckocircuits.control;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.DataTablePanel;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;

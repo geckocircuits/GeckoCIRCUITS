@@ -65,7 +65,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         if (_speicherLeer) {  // Speicher initial auffuellen
             if (deltaT > _delayTime) { // minimal delay, just feed the input signal to the output!
                 _outputSignal[0][0] = _inputSignal[0][0];
@@ -83,7 +83,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
             _outputSignal[0][0] = _youtVerzoegert[_zeigerYOUT];
             _youtVerzoegert[_zeigerYOUT] = _inputSignal[0][0];  // laufendes Nachfuellen des Speichers
             _zeigerYOUT++;
-            _zeigerYOUT %= _youtVerzoegert.length; // Zeiger laeuft 'im Kreis', damit wird verhindert, dass die
+            _zeigerYOUT %= _youtVerzoegert.length; // Pointer runs 'in circles', this prevents the
             // Daten im Speicher bei jedem Zeitschritt geshiftet werden muessen
         }
     }

@@ -40,10 +40,10 @@ public final class SignalCalculatorSinusTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             AbstractSignalCalculator.setTime(time);
-            _signalCalc.berechneYOUT(DELTA_T);
+            _signalCalc.calculateYOUT(DELTA_T);
             final double result = _signalCalc._outputSignal[0][0];
             final double expectedResult = AMPL * Math.sin(2 * Math.PI * time * FREQUENCY - PHASE) + DC_OFFSET;
             assertEquals(expectedResult, result, TOLERANCE);

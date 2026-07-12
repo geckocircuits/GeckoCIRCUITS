@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
@@ -32,7 +32,7 @@ import gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.i18n.resources.I18nKeys;
 
-// Leistungskreis Idealer Schalter (hoch- oder niederohmiger Widerstand, daher bidirektional)
+// Power circuit Ideal switch (high or low resistance, therefore bidirectional)
 // BJT is NOT an AbstractSwitch, since it does not connect to a "control gate"!
 public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCircuitable {
 

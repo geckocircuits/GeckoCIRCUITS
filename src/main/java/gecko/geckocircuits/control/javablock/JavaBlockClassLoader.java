@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control.javablock;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;

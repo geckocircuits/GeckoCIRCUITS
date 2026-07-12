@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.core.datacontainer.HiLoData;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.newscope.GraferV4.MausModus;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -157,8 +157,8 @@ final class ZoomWindow {
         _clickedDiagram = parentComponent;
     }
 
-    void setMausModus(final MausModus mausModus) {
-        if (mausModus == MausModus.ZOOM_WINDOW) {
+    void setMouseMode(final MausModus mouseMode) {
+        if (mouseMode == MausModus.ZOOM_WINDOW) {
             _zoomModusEnabled = true;
         } else {
             _zoomModusEnabled = false;
@@ -228,7 +228,7 @@ final class ZoomWindow {
 
     private void setDiagramRange(final GraferV4 grafer) {
 
-        // neue x-Bereichsgrenze fuer alle Diagramme
+        // if user just clicked, without draggin a "real" window, just exit
         final Axis zoomedXAxis = _clickedDiagram._xAxis;
 
         // if user just clicked, without draggin a "real" window, just exit

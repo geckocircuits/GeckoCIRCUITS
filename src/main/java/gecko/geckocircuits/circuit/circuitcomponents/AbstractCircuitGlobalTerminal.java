@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.AbstractComponentTyp;
+import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.circuit.DialogGlobalTerminal;
 import gecko.geckocircuits.circuit.GlobalTerminable;
 import gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
@@ -31,9 +31,9 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractCircuitGlobalTerminal extends AbstractCircuitBlockInterface implements GlobalTerminable {
-    private static final Map<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS_INTERNAL =
+    private static final Map<AbstractComponentType, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS_INTERNAL =
             new HashMap<>();
-    public static final Map<AbstractComponentTyp, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS =
+    public static final Map<AbstractComponentType, HashSet<AbstractCircuitGlobalTerminal>> ALL_GLOBALS =
             Collections.unmodifiableMap(ALL_GLOBALS_INTERNAL);
 
     /**

@@ -43,7 +43,7 @@ public class SimpleGraferPanel extends javax.swing.JPanel {
 
         _grafer.setOpaque(true);
         _grafer.setBackground(Color.WHITE);
-        _grafer.setMausModus(GraferV4.MausModus.NONE);
+        _grafer.setMouseMode(GraferV4.MausModus.NONE);
     }
 
 

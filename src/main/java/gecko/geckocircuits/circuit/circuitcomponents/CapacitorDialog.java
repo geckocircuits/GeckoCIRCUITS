@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.circuit.DialogNonLinearity;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -30,7 +30,7 @@ class CapacitorDialog extends DialogElementLK<AbstractCapacitor> {
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
         final JPanel pIN = createParameterPanel(element._capacitance, element._initialValue);
 
         final JButton jbNonLinC = GuiFabric.getJButton(I18nKeys.DEFINE_CHARACTERISTIC);

@@ -16,7 +16,7 @@ package gecko.core.control.calculators;
 public final class LnCalculator extends AbstractSingleInputSingleOutputCalculator {
     
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         assert _inputSignal[0][0] > 0: "Error: input signal must be > 0!";
         _outputSignal[0][0] = Math.log(_inputSignal[0][0]);
     }

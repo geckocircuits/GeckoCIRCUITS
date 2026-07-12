@@ -17,7 +17,7 @@ import gecko.geckocircuits.control.calculators.InitializableAtSimulationStart;
 import gecko.SystemOutputRedirect;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.datacontainer.DataContainerGlobal;
-import gecko.geckocircuits.circuit.NetzlisteAllg;
+import gecko.geckocircuits.circuit.NetlistGeneral;
 import gecko.geckocircuits.circuit.PotentialArea;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import java.util.*;
@@ -69,13 +69,13 @@ public final class NetzlisteCONTROL {
         return returnValue;
     }
 
-    public static NetzlisteCONTROL fabricUpdateGui(final NetzlisteAllg nlC) {
+    public static NetzlisteCONTROL fabricUpdateGui(final NetlistGeneral nlC) {
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.connectPotentialLabels(nlC);
         return returnValue;
     }
 
-    public static NetzlisteCONTROL fabricRunSimulation(final NetzlisteAllg nlC) {
+    public static NetzlisteCONTROL fabricRunSimulation(final NetlistGeneral nlC) {
         SystemOutputRedirect.reset();
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
         returnValue.connectPotentialLabels(nlC);
@@ -87,7 +87,7 @@ public final class NetzlisteCONTROL {
         return returnValue;
     }
 
-    public static List<RegelBlock> getOptimizedList(final NetzlisteAllg nlA) {
+    public static List<RegelBlock> getOptimizedList(final NetlistGeneral nlA) {
         final NetzlisteCONTROL nlC = new NetzlisteCONTROL();
         nlC.connectPotentialLabels(nlA);
         nlC.optimiereAbarbeitungsListe();
@@ -112,12 +112,12 @@ public final class NetzlisteCONTROL {
         return labelListeReglerKnoten;
     }
 
-    private void connectPotentialLabels(final NetzlisteAllg nlA) {
+    private void connectPotentialLabels(final NetlistGeneral nlA) {
 
         potLab = nlA.getPotentiale();
 
         for (AbstractBlockInterface elem : nlA.getElemente()) {
-            if (elem != null && elem.isCircuitEnabled() != Enabled.DISABLED && !(elem instanceof ReglerTERMINAL)) {
+            if (elem != null && elem.isCircuitEnabled() != Enabled.DISABLED && !(elem instanceof ControlTERMINAL)) {
                 elementsControl.add((RegelBlock) elem);
             }
         }
@@ -253,39 +253,39 @@ public final class NetzlisteCONTROL {
      * blocks.
      */
     private void removeMuxAndDemux() {
-        Map<Integer, ArrayList<ReglerDemux>> demuxes = new LinkedHashMap<Integer, ArrayList<ReglerDemux>>();
-        Map<Integer, ReglerMUX> muxes = new LinkedHashMap<Integer, ReglerMUX>();
+        Map<Integer, ArrayList<ControlDemux>> demuxes = new LinkedHashMap<Integer, ArrayList<ControlDemux>>();
+        Map<Integer, ControlMUX> muxes = new LinkedHashMap<Integer, ControlMUX>();
         for (RegelBlock block : elementsControl.toArray(new RegelBlock[0])) {
-            if (block instanceof ReglerMUX) {
+            if (block instanceof ControlMUX) {
                 if (block.XIN.size() > 1) {
                     int nodeIndex = ((TerminalControl) block.YOUT.get(0)).getNodeNumber();
                     assert !muxes.containsKey(nodeIndex);
-                    muxes.put(nodeIndex, (ReglerMUX) block);
+                    muxes.put(nodeIndex, (ControlMUX) block);
                 }
             }
 
-            if (block instanceof ReglerDemux) {
+            if (block instanceof ControlDemux) {
                 if (block.YOUT.size() > 1) {
                     int nodeIndex = ((TerminalControl) block.XIN.get(0)).getNodeNumber();
-                    ArrayList<ReglerDemux> insertList = null;
+                    ArrayList<ControlDemux> insertList = null;
                     if (demuxes.containsKey(nodeIndex)) {
                         insertList = demuxes.get(nodeIndex);
                     } else {
-                        insertList = new ArrayList<ReglerDemux>();
+                        insertList = new ArrayList<ControlDemux>();
                         demuxes.put(nodeIndex, insertList);
                     }
-                    insertList.add((ReglerDemux) block);
+                    insertList.add((ControlDemux) block);
                 }
             }
         }
         Random randomIndex = new Random();
 
-        for (Entry<Integer, ReglerMUX> muxEntry : muxes.entrySet()) {
-            ReglerMUX mux = muxEntry.getValue();
+        for (Entry<Integer, ControlMUX> muxEntry : muxes.entrySet()) {
+            ControlMUX mux = muxEntry.getValue();
 
             if (demuxes.containsKey(muxEntry.getKey())) {
                 //elementsControl.remove(mux);
-                for (ReglerDemux demux : demuxes.get(muxEntry.getKey())) {
+                for (ControlDemux demux : demuxes.get(muxEntry.getKey())) {
                     //elementsControl.remove(demux);
                     //System.out.print(" " + demux.getStringID() + " ");
                     assert demux.YOUT.size() == mux.XIN.size();
@@ -308,7 +308,7 @@ public final class NetzlisteCONTROL {
         }
     }
 
-    public class IndexConnection { // to avoid the Integer-Object usage
+    public static class IndexConnection { // to avoid the Integer-Object usage
 
         public final int _elementIndex;
         public final int _inBlockIndex_outputIndex;
@@ -320,22 +320,22 @@ public final class NetzlisteCONTROL {
         }
     }
 
-    public void berechneZeitschritt(final double deltaT, final double time) {
+    public void calculateTimeStep(final double deltaT, final double time) {
         AbstractControlCalculatable.setTime(time);
 
-////        if (!initDone) {
-////            initDone = true;
-////                try {
-////                    bufReader = new BufferedReader(new FileReader(compareFile));
-////
-////                } catch (IOException ex) {
-////                    Logger.getLogger(NetzlisteCONTROL.class.getName()).log(Level.SEVERE, null, ex);
-////                }
-////        }
-////        try {
-////            String readLine = bufReader.readLine();
-////            String timeCompare = "    simulation time: " + time;
-////            assert readLine.equals(timeCompare) : readLine + " xxx " + timeCompare;
+//        if (!initDone) {
+//            initDone = true;
+//                try {
+//                    bufReader = new BufferedReader(new FileReader(compareFile));
+//
+//                } catch (IOException ex) {
+//                    Logger.getLogger(NetzlisteCONTROL.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//        }
+//        try {
+//            String readLine = bufReader.readLine();
+//            String timeCompare = "    simulation time: " + time;
+//            assert readLine.equals(timeCompare) : readLine + " xxx " + timeCompare;
 //        counter++;
 //        if (counter == 2) {
 //            for(AbstractControlCalculatable calc : _sortedControlBlocksNew) {
@@ -352,7 +352,7 @@ public final class NetzlisteCONTROL {
 //            System.exit(3);
 //        }
         for (AbstractControlCalculatable block : _sortedControlBlocksNew) {
-            block.berechneYOUT(deltaT);
+            block.calculateYOUT(deltaT);
         }
 
 //        for(AbstractControlCalculatable calc : _sortedControlBlocksNew) {
@@ -366,7 +366,6 @@ public final class NetzlisteCONTROL {
 //                            }
 //                        }
 //                    }
-//
 //                }
 //            }
 //        }
@@ -375,7 +374,7 @@ public final class NetzlisteCONTROL {
 
     static int counter = 0;
 
-    // Wird erst in 'SimulationsKern' aufgerufen, und zwar dort, wo die Simulation wirklich gestartet wird
+    // Wird erst in 'SimulationKernel' aufgerufen, und zwar dort, wo die Simulation wirklich gestartet wird
     // ... damit wird vermieden, dass beim Aufbau der Regelung im SchematicEntry jedesmal, wenn ein Element oder ein Parameter
     // geaendert wird, und die NetzlisteCONTROL neu gebaut wird, auch die (bei grossen Regelstrukturen) sehr zeitintensive
     // Berechnung der Bauelement-Optimierung durchgefuehrt wird und das SchematicEntry entsprechend traege auf den User reagiert
@@ -432,9 +431,9 @@ public final class NetzlisteCONTROL {
 
         int maxNumOfInput = 0;
         for (int i = 0; i < _orderedControlBlocks.length; i++) {
-            final RegelBlock regler = _orderedControlBlocks[i];
-            if (regler instanceof ReglerOSZI) {
-                Collection<AbstractTerminal> inputs = regler.XIN;
+            final RegelBlock control = _orderedControlBlocks[i];
+            if (control instanceof ControlOSZI) {
+                Collection<AbstractTerminal> inputs = control.XIN;
                 inputCoords.add(new ArrayList<AbstractTerminal>(inputs));
                 scopeIndices.add(i);
                 maxNumOfInput = Math.max(maxNumOfInput, inputs.size());
@@ -463,7 +462,7 @@ public final class NetzlisteCONTROL {
                 }
             }
             // TIBOR System.out.println(Arrays.toString(dataIndex));
-            ((ReglerOSZI) _orderedControlBlocks[scopeIndices.get(scopeInd)]).setDataContainerIndices(dataIndex);
+            ((ControlOSZI) _orderedControlBlocks[scopeIndices.get(scopeInd)]).setDataContainerIndices(dataIndex);
         }
 
         String[] dataNames = new String[potIndex.size()];
@@ -477,11 +476,11 @@ public final class NetzlisteCONTROL {
         }
 
         globalData.clear();
-        ((DataContainerGlobal) globalData).init(potIndex.size(), dataNames, "t");
+        globalData.init(potIndex.size(), dataNames, "t");
 
         for (RegelBlock reg : elementsControl) {
-            if (reg != null && reg instanceof ReglerCISPR16) {
-                ((ReglerCISPR16) reg).loescheZVDatenImRAM();
+            if (reg != null && reg instanceof ControlCISPR16) {
+                ((ControlCISPR16) reg).loescheZVDatenImRAM();
             }
         }
     }

@@ -36,23 +36,23 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
     private final DefaultListModel<ComplexPrinter> _nomModel = new DefaultListModel<ComplexPrinter>();
     private final DefaultListModel<ComplexPrinter> _deNomModel = new DefaultListModel<ComplexPrinter>();
-    private final ReglerTransferFunction _reglerTF;
+    private final ControlTransferFunction _controlTF;
     private boolean _inPolynomialMode = false;
     private final RegelBlock _elementControl;
     private final boolean _initDone;
 
-    public DialogTransferFunction(final ReglerTransferFunction reglerTF, final RegelBlock element) {
+    public DialogTransferFunction(final ControlTransferFunction controlTF, final RegelBlock element) {
         super();
         initComponents();
         this.setLocationRelativeTo(GeckoSim._win);
-        jTextFieldName.setText(reglerTF.getStringID());
-        _reglerTF = reglerTF;
+        jTextFieldName.setText(controlTF.getStringID());
+        _controlTF = controlTF;
         _elementControl = element;
 
-        jRadButtPoly.setSelected(_reglerTF._inPolynomMode.getValue());
-        _inPolynomialMode = !_reglerTF._inPolynomMode.getValue(); //enforce a toggle at init
+        jRadButtPoly.setSelected(_controlTF._inPolynomMode.getValue());
+        _inPolynomialMode = !_controlTF._inPolynomMode.getValue(); //enforce a toggle at init
         toggleMode();
-        _inPolynomialMode = _reglerTF._inPolynomMode.getValue();
+        _inPolynomialMode = _controlTF._inPolynomMode.getValue();
 
         if(element._isEnabled.getValue() == Enabled.ENABLED) {
             jCheckBoxEnabled.setSelected(true);
@@ -60,7 +60,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             jCheckBoxEnabled.setSelected(false);
         }
 
-        jCheckBoxInitial.setSelected(reglerTF._useInitialState.getValue());
+        jCheckBoxInitial.setSelected(controlTF._useInitialState.getValue());
 
 
         jListNom.setModel(_nomModel);
@@ -68,7 +68,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
         addListeners();
 
-        jTextFieldConst.setNumberToField(_reglerTF._constantFactor.getValue());
+        jTextFieldConst.setNumberToField(_controlTF._constantFactor.getValue());
 
 
         updateTransferView();
@@ -81,13 +81,13 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         _deNomModel.clear();
         _nomModel.clear();
 
-        for (int i = 0; i < _reglerTF.getDenominatorSize(); i++) {
-            final double real = _reglerTF.getDenominatorCoefficients(i);
+        for (int i = 0; i < _controlTF.getDenominatorSize(); i++) {
+            final double real = _controlTF.getDenominatorCoefficients(i);
             _deNomModel.addElement(new ComplexPrinter(new NComplex((float) real, 0f)));
         }
 
-        for (int i = 0; i < _reglerTF.getNumeratorSize(); i++) {
-            final double real = _reglerTF.getNumeratorCoefficient(i);
+        for (int i = 0; i < _controlTF.getNumeratorSize(); i++) {
+            final double real = _controlTF.getNumeratorCoefficient(i);
             _nomModel.addElement(new ComplexPrinter(new NComplex((float) real, 0f)));
         }
     }
@@ -96,17 +96,17 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         _deNomModel.clear();
         _nomModel.clear();
 
-        for (int i = 0; i < _reglerTF.getPoles().length; i += 2) {
-            final double real = _reglerTF.getPoles()[i];
-            final double imag = _reglerTF.getPoles()[i + 1];
+        for (int i = 0; i < _controlTF.getPoles().length; i += 2) {
+            final double real = _controlTF.getPoles()[i];
+            final double imag = _controlTF.getPoles()[i + 1];
             if (real != 0 || imag != 0) {
                 _deNomModel.addElement(new ComplexPrinter(new NComplex((float) real, (float) imag)));
             }
         }
 
-        for (int i = 0; i < _reglerTF.getZeros().length; i += 2) {
-            final double real = _reglerTF.getZeros()[i];
-            final double imag = _reglerTF.getZeros()[i + 1];
+        for (int i = 0; i < _controlTF.getZeros().length; i += 2) {
+            final double real = _controlTF.getZeros()[i];
+            final double imag = _controlTF.getZeros()[i + 1];
             if (real != 0 || imag != 0) {
                 _nomModel.addElement(new ComplexPrinter(new NComplex((float) real, (float) imag)));
             }
@@ -121,7 +121,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
         if (jRadButtPoly.isSelected()) {
             _inPolynomialMode = true;
-            _reglerTF._inPolynomMode.setUserValue(true);
+            _controlTF._inPolynomMode.setUserValue(true);
             jLabelPoleImag.setVisible(false);
             jLabelZeroIm.setVisible(false);
             jTFInsertDeNumIm.setVisible(false);
@@ -136,7 +136,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             updateTransferView();
         } else {
             _inPolynomialMode = false;
-            _reglerTF._inPolynomMode.setUserValue(false);
+            _controlTF._inPolynomMode.setUserValue(false);
             jLabelPoleImag.setVisible(true);
             jLabelZeroIm.setVisible(true);
             jTFInsertDeNumIm.setVisible(true);
@@ -151,23 +151,23 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         }
     }
 
-    private void updateReglerPolesZeros() {
-        _reglerTF.clearPolesAndZeros();
+    private void updateControlPolesZeros() {
+        _controlTF.clearPolesAndZeros();
 
         for (int i = 0; i < _deNomModel.getSize(); i++) {
-            _reglerTF.setPole(((ComplexPrinter) _deNomModel.get(i))._value.getRe(), 2 * i);
-            _reglerTF.setPole(((ComplexPrinter) _deNomModel.get(i))._value.getIm(), 2 * i + 1);
+            _controlTF.setPole(((ComplexPrinter) _deNomModel.get(i))._value.getRe(), 2 * i);
+            _controlTF.setPole(((ComplexPrinter) _deNomModel.get(i))._value.getIm(), 2 * i + 1);
         }
 
         for (int i = 0; i < _nomModel.getSize(); i++) {
-            _reglerTF.setZero(((ComplexPrinter) _nomModel.get(i))._value.getRe(), 2 * i);
-            _reglerTF.setZero(((ComplexPrinter) _nomModel.get(i))._value.getIm(), 2 * i + 1);
+            _controlTF.setZero(((ComplexPrinter) _nomModel.get(i))._value.getRe(), 2 * i);
+            _controlTF.setZero(((ComplexPrinter) _nomModel.get(i))._value.getIm(), 2 * i + 1);
         }
 
 
     }
 
-    private void updateReglerPolynom() {
+    private void updateControlPolynom() {
         assert _inPolynomialMode;
         final List<Double> numerator = new ArrayList<Double>();
         final List<Double> denominator = new ArrayList<Double>();
@@ -182,8 +182,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             denominator.add(value);
         }
 
-        _reglerTF.setNumeratorPolynom(numerator);
-        _reglerTF.setDeNominatorPolynom(denominator);
+        _controlTF.setNumeratorPolynom(numerator);
+        _controlTF.setDeNominatorPolynom(denominator);
     }
 
 
@@ -201,8 +201,8 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         final List<Double> nomPolynom = PolynomTools.evaluateFactorizedExpression(zeros, jTextFieldConst.getNumberFromField());
         final List<Double> denomPolynom = PolynomTools.evaluateFactorizedExpression(poles, 1f);
 
-        _reglerTF.setNumeratorPolynom(nomPolynom);
-        _reglerTF.setDeNominatorPolynom(denomPolynom);
+        _controlTF.setNumeratorPolynom(nomPolynom);
+        _controlTF.setDeNominatorPolynom(denomPolynom);
 
     }
 
@@ -211,12 +211,12 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         final List<Double> numerator = new ArrayList<Double>();
         final List<Double> denominator = new ArrayList<Double>();
 
-        for (int i = 0; i < _reglerTF.getNumeratorSize(); i++) {
-            numerator.add(_reglerTF.getNumeratorCoefficient(i));
+        for (int i = 0; i < _controlTF.getNumeratorSize(); i++) {
+            numerator.add(_controlTF.getNumeratorCoefficient(i));
         }
 
-        for (int i = 0; i < _reglerTF.getDenominatorSize(); i++) {
-            denominator.add(_reglerTF.getDenominatorCoefficients(i));
+        for (int i = 0; i < _controlTF.getDenominatorSize(); i++) {
+            denominator.add(_controlTF.getDenominatorCoefficients(i));
         }
 
 
@@ -239,10 +239,10 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
     private void updateTransferView() {
         if (_inPolynomialMode) {
-            updateReglerPolynom();
+            updateControlPolynom();
             updateTransferViewPolynom();
         } else {
-            updateReglerPolesZeros();
+            updateControlPolesZeros();
             updateTransferViewPoleZero();
             updateTransferViewPolynom();
         }
@@ -323,7 +323,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         jCheckBoxInitial = new javax.swing.JCheckBox();
         jTextFieldPoleZ = new gecko.geckocircuits.control.FractionPrinter();
         jTextFieldPoly = new gecko.geckocircuits.control.FractionPrinter();
-        jTextFieldConst = new gecko.geckocircuits.allg.FormatJTextField();
+        jTextFieldConst = new gecko.geckocircuits.general.FormatJTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Transfer Function");
@@ -671,7 +671,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             imagValue = 0;
         }
         final NComplex value = new NComplex(realValue, imagValue);
-        if (_nomModel.size() < ReglerTransferFunction.MAX_ARRAY_SIZE / 2) {
+        if (_nomModel.size() < ControlTransferFunction.MAX_ARRAY_SIZE / 2) {
             _nomModel.addElement(new ComplexPrinter(value));
         }
         updateTransferView();
@@ -698,7 +698,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         }
 
         final NComplex value = new NComplex(realValue, imagValue);
-        if (_deNomModel.size() < ReglerTransferFunction.MAX_ARRAY_SIZE / 2) {
+        if (_deNomModel.size() < ControlTransferFunction.MAX_ARRAY_SIZE / 2) {
             _deNomModel.addElement(new ComplexPrinter(value));
         }
         updateTransferView();
@@ -757,7 +757,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
     private void jTextFieldNameKeyReleased(java.awt.event.KeyEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldNameKeyReleased
         try {
-            _reglerTF.setNewNameCheckedUndoable(jTextFieldName.getText());
+            _controlTF.setNewNameCheckedUndoable(jTextFieldName.getText());
         } catch (NameAlreadyExistsException ex) {
             ex.printStackTrace();
         }
@@ -777,18 +777,18 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxEnabledActionPerformed
 
     private void jTextFieldConstKeyReleased(java.awt.event.KeyEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldConstKeyReleased
-        _reglerTF._constantFactor.setUserValue(jTextFieldConst.getNumberFromField());
+        _controlTF._constantFactor.setUserValue(jTextFieldConst.getNumberFromField());
         updateTransferView();
     }//GEN-LAST:event_jTextFieldConstKeyReleased
 
     private void jCheckBoxInitialActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jCheckBoxInitialActionPerformed
         if(_initDone) {
-            _reglerTF._useInitialState.setUserValue(jCheckBoxInitial.isSelected());
+            _controlTF._useInitialState.setUserValue(jCheckBoxInitial.isSelected());
         }
     }//GEN-LAST:event_jCheckBoxInitialActionPerformed
 
     private void jButtonSaveStateActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonSaveStateActionPerformed
-        _reglerTF.saveState();
+        _controlTF.saveState();
     }//GEN-LAST:event_jButtonSaveStateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -821,7 +821,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     private javax.swing.JTextField jTFInsertDeNumIm;
     private javax.swing.JTextField jTFInsertNumIm;
     private javax.swing.JTextField jTFInsertNumberRe;
-    private gecko.geckocircuits.allg.FormatJTextField jTextFieldConst;
+    private gecko.geckocircuits.general.FormatJTextField jTextFieldConst;
     private javax.swing.JTextField jTextFieldName;
     private FractionPrinter jTextFieldPoleZ;
     private FractionPrinter jTextFieldPoly;

@@ -21,7 +21,7 @@ public final class MUXControlCalculatable extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         for (int i1 = 0; i1 < _outputSignal[0].length; i1++) {
             _outputSignal[0][i1] = _inputSignal[i1][0];
         }

@@ -90,9 +90,9 @@ public final class DataLoader{
     }
     final double maxTimeValue = _curvePaintable.getRamData().getTimeValue(maximumDataContainerIndex, _curvePaintable._curve.getValueDataIndex());
     final int maxDataPixel = (int)xAxis.getPixelFromValue(maxTimeValue);
-    final int maxAxisPixel = (int)xAxis._axisOriginPixel.x + xAxis.getAxisLengthPixel();
+    final int maxAxisPixel = xAxis._axisOriginPixel.x + xAxis.getAxisLengthPixel();
 
-    final AbstractTimeSerie timeSerie = _curvePaintable.getRamData().getTimeSeries(_curvePaintable._curve.getValueDataIndex());
+    final AbstractTimeSeries timeSerie = _curvePaintable.getRamData().getTimeSeries(_curvePaintable._curve.getValueDataIndex());
     final int maxAxisIndex = timeSerie.findTimeIndex(xAxis.getValueFromPixel(maxAxisPixel));
 
     if(maxAxisIndex + 1 < maximumDataContainerIndex){
@@ -112,7 +112,7 @@ public final class DataLoader{
   private int getMinimumExtendedPixel(){
     final Axis xAxis = _curvePaintable.getXAxis();
     final double axisOriginValue = xAxis.getValueFromPixel(xAxis._axisOriginPixel.x);
-    final AbstractTimeSerie timeSerie = _curvePaintable.getRamData().getTimeSeries(0);
+    final AbstractTimeSeries timeSerie = _curvePaintable.getRamData().getTimeSeries(0);
     final int originDataIndex = timeSerie.findTimeIndex(axisOriginValue);
     final int indexToLoad = Math.max(0, originDataIndex - 1);
     final double loadXValue = timeSerie.getValue(indexToLoad);

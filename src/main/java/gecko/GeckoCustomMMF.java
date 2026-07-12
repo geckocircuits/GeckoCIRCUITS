@@ -179,7 +179,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
             //use reflection to get a handle to the right method
             final String name = methodObject.getMethodName();
             final Object[] arguments = methodObject.getMethodArguments();
-            final Class[] argumentTypes = new Class[arguments.length];
+            final Class<?>[] argumentTypes = new Class<?>[arguments.length];
             for (int i = 0; i < arguments.length; i++) {
                 argumentTypes[i] = checkForPrimitiveType(arguments[i].getClass());
             }
@@ -240,7 +240,7 @@ public class GeckoCustomMMF extends AbstractGeckoCustom {
      * @param type the class of the parameter extracted from the GeckoRemotePipeObject
      * @return the proper class of the parameter
      */
-    private Class checkForPrimitiveType(final Class<?> argType) {
+    private Class<?> checkForPrimitiveType(final Class<?> argType) {
         if (argType.equals(Double.class)) {
             return double.class;
         } else if (argType.equals(Integer.class)) {
