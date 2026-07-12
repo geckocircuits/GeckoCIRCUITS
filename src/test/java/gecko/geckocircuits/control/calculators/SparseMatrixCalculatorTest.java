@@ -320,8 +320,8 @@ public class SparseMatrixCalculatorTest {
 
     @Test
     public void testCalculateSwitchingTimesZeroDenominatorsRemainFinite() throws Exception {
-        setPrivateField(calculator, "seIN", 1);
-        setPrivateField(calculator, "seOUT", 1);
+        setPrivateField(calculator, "sectorIn", 1);
+        setPrivateField(calculator, "sectorOut", 1);
 
         invokePrivateMethod(calculator, "calculateSwitchingTimes",
                 new Class<?>[]{double.class, double.class, double.class, double.class, double.class, double.class, double.class},
