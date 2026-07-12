@@ -22,7 +22,7 @@ import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.control.calculators.NothingToDoCalculator;
 import java.awt.Window;
 
-public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReference {
+public abstract class AbstractCurrentMeasurement extends ControlWithSingleReference {
 
     public AbstractCurrentMeasurement() {
         super(0, 1);
@@ -37,7 +37,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         }
 
         @Override
-        public void berechneYOUT(final double deltaT) {
+        public void calculateYOUT(final double deltaT) {
             _outputSignal[0][0] = _coupled._currentInAmps;
 
         }
@@ -54,7 +54,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         }
 
         @Override
-        public void berechneYOUT(final double deltaT) {
+        public void calculateYOUT(final double deltaT) {
             // Bugfix in 171, release 49: current of freewheeling diode had wrong sign.
             // the diode is antiparallel to the Mosfet component, therefore a "-" is required.
             _outputSignal[0][0] = _mosefet._currentInAmps - _antiParallelDiode._currentInAmps;
@@ -63,16 +63,16 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
 
     private static class ThermPvChipFlowCalculation extends AbstractControlCalculatable {
         private final ThermPvChip _lossSource;
-        private final ReglerFlowMeter _flowMeasurement;
+        private final ControlFlowMeter _flowMeasurement;
 
-        public ThermPvChipFlowCalculation(final ThermPvChip loss, final ReglerFlowMeter measurement) {
+        public ThermPvChipFlowCalculation(final ThermPvChip loss, final ControlFlowMeter measurement) {
             super(0,1);
             _lossSource = loss;
             _flowMeasurement = measurement;
         }
 
         @Override
-        public void berechneYOUT(final double deltaT) {
+        public void calculateYOUT(final double deltaT) {
             switch (_flowMeasurement.getLossComponentBeingMeasured()) {
                 case TOTAL:
                     _outputSignal[0][0] = _lossSource.getTotalLosses();
@@ -97,8 +97,8 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
         if (coupled != null) {
             if(coupled instanceof MOSFET) {
                 return new MOSFETCurrentCalculation((MOSFET) _coupling._coupledElements[0]);
-            } else if (coupled instanceof ThermPvChip && this instanceof ReglerFlowMeter) {
-                return new ThermPvChipFlowCalculation((ThermPvChip) _coupling._coupledElements[0], (ReglerFlowMeter) this);
+            } else if (coupled instanceof ThermPvChip && this instanceof ControlFlowMeter) {
+                return new ThermPvChipFlowCalculation((ThermPvChip) _coupling._coupledElements[0], (ControlFlowMeter) this);
             } else {
                 return new CurrentCalculation((AbstractCircuitBlockInterface) _coupling._coupledElements[0]);
             }
@@ -118,7 +118,7 @@ public abstract class AbstractCurrentMeasurement extends ReglerWithSingleReferen
 
     @Override
     protected final Window openDialogWindow() {
-        return new ReglerAmpereMeterDialog(this);
+        return new ControlAmpereMeterDialog(this);
     }
 
 

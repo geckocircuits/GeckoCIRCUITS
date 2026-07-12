@@ -48,7 +48,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         double ur = _inputSignal[1][0], us = _inputSignal[2][0], ut = _inputSignal[3][0];  // Eingangs- bzw. Netzseitig 
         double uNmax = _inputSignal[4][0], uOUTmax = _inputSignal[5][0], fOUT = _inputSignal[6][0];  // Amplituden und Ausgangsfrequenz  
         double fDR = _inputSignal[0][0];  // Taktfrequenz fuer die Pulsperiode 

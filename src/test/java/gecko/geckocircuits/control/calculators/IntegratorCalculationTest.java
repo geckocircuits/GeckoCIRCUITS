@@ -48,7 +48,7 @@ public class IntegratorCalculationTest {
         integrator.initializeAtSimulationStart(dt);
         for(double time = 0; time < Math.PI; time+= dt) {
             integrator._inputSignal[0][0] = -Math.sin(time);
-            integrator.berechneYOUT(dt);
+            integrator.calculateYOUT(dt);
             // the integral of a sine is the cosine!
             assertEquals(Math.cos(time)-1, integrator._outputSignal[0][0], 1e-9);
         }
@@ -68,7 +68,7 @@ public class IntegratorCalculationTest {
                 integrator._inputSignal[1][0] = 0; // now, do normal integration!
             }
             integrator._inputSignal[0][0] = -Math.sin(time);
-            integrator.berechneYOUT(dt);
+            integrator.calculateYOUT(dt);
         }
         // the integral of a negateive half wave sine is -2!
         assertEquals(-1, integrator._outputSignal[0][0], 1e-5);
@@ -81,7 +81,7 @@ public class IntegratorCalculationTest {
 
         for(double time = 0; time < Math.PI; time+= dt) {
             integrator._inputSignal[0][0] = -Math.sin(time);
-            integrator.berechneYOUT(dt);
+            integrator.calculateYOUT(dt);
         }
         // the integral of a negateive half wave sine is -2!
         assertEquals(4, integrator._outputSignal[0][0], 1e-5);
@@ -98,7 +98,7 @@ public class IntegratorCalculationTest {
 
         for(double time = 0; time < Math.PI; time+= dt) {
             integrator._inputSignal[0][0] = -Math.sin(time);
-            integrator.berechneYOUT(dt);
+            integrator.calculateYOUT(dt);
         }
         // the integral of a negateive half wave sine is -2!
         assertEquals(-12, integrator._outputSignal[0][0], 1e-5);
@@ -111,7 +111,7 @@ public class IntegratorCalculationTest {
         integrator.initializeAtSimulationStart(dt);
         for(double time = 0; time < Math.PI; time+= dt) {
             integrator._inputSignal[0][0] = -Math.sin(time);
-            integrator.berechneYOUT(dt);
+            integrator.calculateYOUT(dt);
         }
         assertEquals(-1, integrator._outputSignal[0][0], 1e-5);
         integrator.setMinMax(-1, 0);
@@ -120,7 +120,7 @@ public class IntegratorCalculationTest {
         // limit.
         for(double time = Math.PI; time < 2*Math.PI; time+= dt) {
             integrator._inputSignal[0][0] = -Math.sin(time);
-            integrator.berechneYOUT(dt);
+            integrator.calculateYOUT(dt);
             if(time < Math.PI * (1.500)) {
                 assertTrue(integrator._outputSignal[0][0] < 0);
             }

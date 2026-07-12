@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.i18n.resources.I18nKeys;
@@ -60,7 +60,7 @@ public final class MotorPermanent extends AbstractMotorDC {
 
     @Override
     void calculateEMK() {
-        _emk = _fluxLinkage * _omegaElectric;  // innere Spannung der Maschine
+        _emk = _fluxLinkage * _omegaElectric;  // // internal tension of the machine
     }
 
     @Override

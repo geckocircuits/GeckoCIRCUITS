@@ -22,10 +22,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores thyristor control reference for parameter configuration")
 public class DialogThyristorControl extends javax.swing.JFrame {
 
-    ReglerThyristorControl _thyrControl;
+    ControlThyristorControl _thyrControl;
 
     /** Creates new form DialogThyristorControl */
-    public DialogThyristorControl(ReglerThyristorControl reglerThyrControl) {
+    public DialogThyristorControl(ControlThyristorControl reglerThyrControl) {
         initComponents();
 
         _thyrControl = reglerThyrControl;

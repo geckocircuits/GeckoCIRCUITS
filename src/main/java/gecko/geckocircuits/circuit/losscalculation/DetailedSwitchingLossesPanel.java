@@ -17,7 +17,7 @@ package gecko.geckocircuits.circuit.losscalculation;
 import gecko.core.circuit.losscalculation.DetailedLossLookupTable;
 import gecko.core.circuit.losscalculation.LossCurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.FormatJTextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JLabel;

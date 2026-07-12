@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit.circuitcomponents;
 import static gecko.core.circuit.losscalculation.LossCalculationDetail.DETAILED;
 import static gecko.core.circuit.losscalculation.LossCalculationDetail.SIMPLE;
 import gecko.geckocircuits.circuit.losscalculation.LossProperties;
-import gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;
+import gecko.geckocircuits.circuit.losscalculation.LossCalculationDetailed;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -65,14 +65,14 @@ public abstract class AbstractDialogPowerSwitch<T extends AbstractSemiconductor>
         });
 
         final LossProperties lossProps = (LossProperties) element.getVerlustBerechnung();
-        final VerlustBerechnungDetailed detailed = lossProps.getDetailedLosses();
+        final LossCalculationDetailed detailed = lossProps.getDetailedLosses();
         _panelHalbleiterDetail = new JPanelHalbleiterDetailButtons(detailed);
     }
 
     public abstract JPanel createParameterPanel();
 
     @Override
-    protected final void baueGUIIndividual() {
+    protected final void buildGUIIndividual() {
         _tabber = new JTabbedPane();
 
         populateCharacteristicsPanel();

@@ -45,11 +45,11 @@ public final class DataSaver extends Observable implements Observer {
     private static final double PERCENT_CONST = 100;
     private boolean _hasCounterValue = false;
     private static final int MAX_FILE_COUNTER = 1000;
-    private final ReglerSaveData _regler;
+    private final ControlSaveData _regler;
     private final FileNameGenerator _fileNameGenerator = new FileNameGenerator();
     private final SignalValidator _signalValidator = new SignalValidator();
 
-    public DataSaver(final AbstractDataContainer data, ReglerSaveData regler) {
+    public DataSaver(final AbstractDataContainer data, ControlSaveData regler) {
         super();
         _regler = regler;
         _data = data;
@@ -66,7 +66,7 @@ public final class DataSaver extends Observable implements Observer {
             throw new RuntimeException("Error: blocking save can only be initiated when simulation has stopped.");
         }
 
-        if(_regler._saveModus != ReglerSaveData.SaveModus.MANUAL) {
+        if(_regler._saveModus != ControlSaveData.SaveModus.MANUAL) {
             throw new RuntimeException("Error: Data export block must be set to \"Save manually.\"");
         }
         _saveRunnable.run();
@@ -78,7 +78,7 @@ public final class DataSaver extends Observable implements Observer {
 
     @Override
     public void update(final Observable obs, final Object arg) {
-        if (_regler._saveModus == ReglerSaveData.SaveModus.SIMULATION_END) {
+        if (_regler._saveModus == ControlSaveData.SaveModus.SIMULATION_END) {
             if (_data.getContainerStatus() == ContainerStatus.PAUSED) {
                 final Thread runThread = new Thread(_saveRunnable);
                 runThread.start();
@@ -120,7 +120,7 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         public void run() {
             try {
-                if (_regler._saveModus == ReglerSaveData.SaveModus.SIMULATION_END) {
+                if (_regler._saveModus == ControlSaveData.SaveModus.SIMULATION_END) {
                     initSave(_data);
                     doFullSave(_data);
                     try {
@@ -172,7 +172,7 @@ public final class DataSaver extends Observable implements Observer {
         if (_linePrinter != null) {
             try {
                 _linePrinter.closeStream();
-                if (_regler._saveModus == ReglerSaveData.SaveModus.DURING_SIMULATION) {
+                if (_regler._saveModus == ControlSaveData.SaveModus.DURING_SIMULATION) {
                     _abortSignal = true;
                     Thread.sleep(SLEEP_TIMER);
                 }
@@ -185,7 +185,7 @@ public final class DataSaver extends Observable implements Observer {
             }
         }
 
-        if (_regler._fileOverwrite.equals(ReglerSaveData.FileOverwrite.DO_NUMBERING) && new File(_regler._file.getValue()).exists()) {
+        if (_regler._fileOverwrite.equals(ControlSaveData.FileOverwrite.DO_NUMBERING) && new File(_regler._file.getValue()).exists()) {
             _regler._file.setValueWithoutUndo(findFreeFile(_regler._file.getValue()));
         }
 
@@ -259,9 +259,9 @@ public final class DataSaver extends Observable implements Observer {
         final AbstractDataContainer _data;
         final File _file;
         final int[] _selectedIndices;
-        final ReglerSaveData _settings;
+        final ControlSaveData _settings;
 
-        public AbstractLinePrinter(final File file, final AbstractDataContainer data, final ReglerSaveData settings)
+        public AbstractLinePrinter(final File file, final AbstractDataContainer data, final ControlSaveData settings)
                 throws SignalMissingException {
             _file = file;
             _data = data;
@@ -335,7 +335,7 @@ public final class DataSaver extends Observable implements Observer {
         private final String _separator;
 
         TxtLinePrinter(final File file, final AbstractDataContainer data,
-                final ReglerSaveData settings) throws SignalMissingException {
+                final ControlSaveData settings) throws SignalMissingException {
             super(file, data, settings);
             _separator = settings._itemSeparator.stringValue();
             setFormatters();
@@ -462,7 +462,7 @@ public final class DataSaver extends Observable implements Observer {
 
         private DataOutputStream _outputStream;
 
-        BinaryLinePrinter(final File file, final AbstractDataContainer data, final ReglerSaveData settings) throws SignalMissingException {
+        BinaryLinePrinter(final File file, final AbstractDataContainer data, final ControlSaveData settings) throws SignalMissingException {
             super(file, data, settings);
 
         }

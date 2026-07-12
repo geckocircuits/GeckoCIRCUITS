@@ -80,7 +80,7 @@ public abstract class AbstractPotentialMeasurement extends RegelBlock implements
 
     @Override
     protected final Window openDialogWindow() {
-        return new ReglerVOLTDialog(this);
+        return new ControlVOLTDialog(this);
     }
 
     @Override

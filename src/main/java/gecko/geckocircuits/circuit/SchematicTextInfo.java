@@ -14,10 +14,10 @@
 package gecko.geckocircuits.circuit;
 import gecko.core.circuit.TokenMap;
 
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.TechFormat;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.TechFormat;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
 import gecko.geckocircuits.circuit.circuitcomponents.Nonlinearable;
 import gecko.geckocircuits.control.ControlInputTwoTerminalStateable;
@@ -164,7 +164,7 @@ public final class SchematicTextInfo {
 
         final FontRenderContext frc = graphics.getFontRenderContext();
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        if (SchematicEditor2._thermDisplayMode.showName) {  // falls zusaetzlich auch der Name angezeigt werden soll
+        if (SchematicEditor2._thermDisplayMode.showName) {  // // if the name should also be displayed
             _yTxtKlickMin = _yTxtKlickMin - SchematicEditor2.DY_ZEILENABSTAND_TXT;
         }
 

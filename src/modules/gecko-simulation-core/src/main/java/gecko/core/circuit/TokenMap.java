@@ -38,9 +38,9 @@ public final class TokenMap {
     public TokenMap(final String[] ascii, final boolean makeSpecialPairs) {
         asciiLines = ascii;
         if (makeSpecialPairs) {
-            _specialTokens.put("verbindungLK", new SpecialPair("<Verbindung>", "<\\Verbindung>"));
-            _specialTokens.put("verbindungCONTROL", new SpecialPair("<Verbindung>", "<\\Verbindung>"));
-            _specialTokens.put("verbindungTHERM", new SpecialPair("<Verbindung>", "<\\Verbindung>"));
+            _specialTokens.put("verbindungLK", new SpecialPair("<Connection>", "<\\Connection>"));
+            _specialTokens.put("verbindungCONTROL", new SpecialPair("<Connection>", "<\\Connection>"));
+            _specialTokens.put("verbindungTHERM", new SpecialPair("<Connection>", "<\\Connection>"));
             _specialTokens.put("e", new SpecialPair("<ElementLK>", "<\\ElementLK>"));
             _specialTokens.put("sp", new SpecialPair("<ElementSPECIAL>", "<\\ElementSPECIAL>"));
             _specialTokens.put("eTH", new SpecialPair("<ElementTHERM>", "<\\ElementTHERM>"));

@@ -29,7 +29,7 @@ public class LimiterAndSignalBlocksTest {
 
     @Test
     public void testLimiterBlockCreation() {
-        ReglerLimit block = new ReglerLimit();
+        ControlLimit block = new ControlLimit();
         assertNotNull("Limiter block should be created", block);
     }
 
@@ -83,7 +83,7 @@ public class LimiterAndSignalBlocksTest {
 
     @Test
     public void testMinBlockCreation() {
-        ReglerMIN block = new ReglerMIN();
+        ControlMIN block = new ControlMIN();
         assertNotNull("Min block should be created", block);
     }
 
@@ -124,7 +124,7 @@ public class LimiterAndSignalBlocksTest {
 
     @Test
     public void testMaxBlockCreation() {
-        ReglerMAX block = new ReglerMAX();
+        ControlMAX block = new ControlMAX();
         assertNotNull("Max block should be created", block);
     }
 
@@ -164,7 +164,7 @@ public class LimiterAndSignalBlocksTest {
 
     @Test
     public void testSubBlockCreation() {
-        ReglerSubtraction block = new ReglerSubtraction();
+        ControlSubtraction block = new ControlSubtraction();
         assertNotNull("Sub block should be created", block);
     }
 
@@ -196,7 +196,7 @@ public class LimiterAndSignalBlocksTest {
 
     @Test
     public void testMultBlockCreation() {
-        ReglerMUL block = new ReglerMUL();
+        ControlMUL block = new ControlMUL();
         assertNotNull("Mult block should be created", block);
     }
 
@@ -228,7 +228,7 @@ public class LimiterAndSignalBlocksTest {
 
     @Test
     public void testDivBlockCreation() {
-        ReglerDivision block = new ReglerDivision();
+        ControlDivision block = new ControlDivision();
         assertNotNull("Div block should be created", block);
     }
 

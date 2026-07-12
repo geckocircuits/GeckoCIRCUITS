@@ -44,7 +44,7 @@ public class ThyristorControlCalculatorTest {
                 oldOutput[i] = calculator._outputSignal[i][0];
             }
             calculator._inputSignal[1][0] = 100 * Math.sin(2 * Math.PI * time / 50);
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             for(int i = 0; i < 6; i++) {
                 if(oldOutput[i] != calculator._outputSignal[i][0]) {
                     eventCounter[i]++;
@@ -73,7 +73,7 @@ public class ThyristorControlCalculatorTest {
             calc._inputSignal[1][0] = 100.0; // 100V sine input
 
             AbstractControlCalculatable.setTime(0.01);
-            calc.berechneYOUT(1e-6);
+            calc.calculateYOUT(1e-6);
 
             // Verify outputs exist and are valid
             for (int i = 0; i < 6; i++) {
@@ -90,7 +90,7 @@ public class ThyristorControlCalculatorTest {
         calculator._inputSignal[1][0] = 0.0;
 
         AbstractControlCalculatable.setTime(0.01);
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
 
         // All gates should be off (0)
         boolean allOff = true;
@@ -109,7 +109,7 @@ public class ThyristorControlCalculatorTest {
         calculator._inputSignal[1][0] = 500.0; // 500V input
 
         AbstractControlCalculatable.setTime(0.01);
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
 
         // Should still produce valid gate signals
         for (int i = 0; i < 6; i++) {
@@ -128,7 +128,7 @@ public class ThyristorControlCalculatorTest {
         calc._inputSignal[1][0] = 100.0;
 
         AbstractControlCalculatable.setTime(0.01);
-        calc.berechneYOUT(1e-6);
+        calc.calculateYOUT(1e-6);
 
         for (int i = 0; i < 6; i++) {
             assertFalse("Output should not be NaN at 0 phase", Double.isNaN(calc._outputSignal[i][0]));
@@ -145,7 +145,7 @@ public class ThyristorControlCalculatorTest {
         calc._inputSignal[1][0] = 100.0;
 
         AbstractControlCalculatable.setTime(0.01);
-        calc.berechneYOUT(1e-6);
+        calc.calculateYOUT(1e-6);
 
         for (int i = 0; i < 6; i++) {
             assertFalse("Output should not be NaN at 90 phase", Double.isNaN(calc._outputSignal[i][0]));
@@ -166,7 +166,7 @@ public class ThyristorControlCalculatorTest {
             for (double time = 0; time < 0.1; time += 1e-6) {
                 calc._inputSignal[1][0] = 100.0 * Math.sin(2 * Math.PI * freq * time);
                 AbstractControlCalculatable.setTime(time);
-                calc.berechneYOUT(1e-6);
+                calc.calculateYOUT(1e-6);
 
                 // Verify outputs are binary
                 for (int i = 0; i < 6; i++) {
@@ -185,7 +185,7 @@ public class ThyristorControlCalculatorTest {
         for (double phase = 0; phase <= 150; phase += 15.0) {
             calculator._inputSignal[0][0] = phase;
             AbstractControlCalculatable.setTime(0.01);
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
 
             // All outputs should be valid binary values
             for (int i = 0; i < 6; i++) {
@@ -202,7 +202,7 @@ public class ThyristorControlCalculatorTest {
         calculator._inputSignal[1][0] = -100.0;
 
         AbstractControlCalculatable.setTime(0.01);
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
 
         // Should still produce valid gate signals
         for (int i = 0; i < 6; i++) {

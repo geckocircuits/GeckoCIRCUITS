@@ -13,20 +13,20 @@
  */
 package gecko.geckocircuits.control.calculators;
 
-import gecko.geckocircuits.control.ReglerDemux;
+import gecko.geckocircuits.control.ControlDemux;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores parent control block reference for DEMUX operation")
 public final class DEMUXCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
-    private final ReglerDemux _parent;
+    private final ControlDemux _parent;
 
-    public DEMUXCalculator(final int noOutputs, final ReglerDemux parent) {
+    public DEMUXCalculator(final int noOutputs, final ControlDemux parent) {
         super(1, noOutputs);
         _parent = parent;
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         for (int i = 0; i < _outputSignal.length; i++) {
             _outputSignal[i][0] = _inputSignal[0][i];  // Signal-Quelle - direct reference required by architecture
         }

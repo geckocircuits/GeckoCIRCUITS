@@ -50,7 +50,7 @@ public final class SignalCalculatorTriangle extends AbstractSignalCalculatorPeri
 
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         //signal= amplitudeAC*(2/Math.PI*Math.asin(Math.sin(2*Math.PI*frequenz*t -phase))) +anteilDC; 
         _dyUP = (_amplitudeAC * 2 * _frequency * deltaT) / _dutyRatio;
         _dyDOWN = (_amplitudeAC * 2 * _frequency * deltaT) / (1 - _dutyRatio);

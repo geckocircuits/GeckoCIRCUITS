@@ -26,7 +26,7 @@ public final class PT2Calculator extends AbstractPTCalculator {
     
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         //        if (t==0) { xalt=0;  yalt=0;  yaltalt=0;  zalt=0; }  // re-init
         //
         //double yout= yalt*((4*T/dt*T/dt-1)/(4*T/dt*T/dt+1)) +a1/(1+4*T/dt*T/dt)*(xIN[0]+xalt) +zalt;

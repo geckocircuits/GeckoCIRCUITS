@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.scope;
 
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.TechFormat;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,10 +37,10 @@ class DisplayFourierWorksheet extends JPanel {
         this.jnSG = jnSG;
         this.nMin = nMin;
         this.schreibeData();
-        this.baueGUI();
+        this.buildGUI();
     }
 
-    private void baueGUI() {
+    private void buildGUI() {
         this.removeAll();
         this.setLayout(new BorderLayout());
         jsp = new JScrollPane(table);

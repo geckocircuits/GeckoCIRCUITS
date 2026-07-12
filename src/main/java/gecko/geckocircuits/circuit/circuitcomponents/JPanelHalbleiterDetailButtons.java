@@ -13,11 +13,11 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GeckoFileManagerWindow;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.circuit.losscalculation.DialogVerlusteDetail;
-import gecko.geckocircuits.circuit.losscalculation.VerlustBerechnungDetailed;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GeckoFileManagerWindow;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.circuit.losscalculation.DialogLossesDetail;
+import gecko.geckocircuits.circuit.losscalculation.LossCalculationDetailed;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -37,10 +37,10 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
 
     private final FormatJTextField _jlS2 = new FormatJTextField("-");
     private final FormatJTextField _jlS2b = new FormatJTextField();
-    private final VerlustBerechnungDetailed _detailedLosses;
+    private final LossCalculationDetailed _detailedLosses;
     private final JButton jbS2edit = GuiFabric.getJButton(I18nKeys.EDIT_SEMICONDUCTOR);
 
-    JPanelHalbleiterDetailButtons(final VerlustBerechnungDetailed detailedLosses) {
+    JPanelHalbleiterDetailButtons(final LossCalculationDetailed detailedLosses) {
         super();
         _detailedLosses = detailedLosses;
         setBorder(BorderFactory.createTitledBorder("Detailed Loss Model"));
@@ -66,7 +66,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
                 //focusIstFreigegeben= true;  // damit kann der Focus an das nun zu Oeffnende Fenster weitergegeben werden
-                final DialogVerlusteDetail dialog = DialogVerlusteDetail.fabricCreateExisiting(_detailedLosses, parentWindow);
+                final DialogLossesDetail dialog = DialogLossesDetail.fabricCreateExisiting(_detailedLosses, parentWindow);
                 dialog.setVisible(true);
                 checkFileLink();
             }
@@ -79,7 +79,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
         jbS2new.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                final DialogVerlusteDetail dialog = DialogVerlusteDetail.fabricCreateNew(_detailedLosses, parentWindow);
+                final DialogLossesDetail dialog = DialogLossesDetail.fabricCreateNew(_detailedLosses, parentWindow);
                 dialog.setVisible(true);
                 checkFileLink();
             }

@@ -25,11 +25,11 @@ class SlidingDFTCalculatorTest {
         double dt = 1e-3;
         calculator.initializeAtSimulationStart(dt);
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(dt);
+        calculator.calculateYOUT(dt);
 
         calculator.initWithNewDt(2 * dt);
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(2 * dt);
+        calculator.calculateYOUT(2 * dt);
 
         assertFalse(Double.isNaN(calculator._outputSignal[0][0]));
         assertFalse(Double.isInfinite(calculator._outputSignal[0][0]));

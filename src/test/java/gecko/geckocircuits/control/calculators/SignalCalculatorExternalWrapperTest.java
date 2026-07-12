@@ -48,7 +48,7 @@ public final class SignalCalculatorExternalWrapperTest {
 
         for(double time = 0; time < END_TIME/2; time+=DELTA_T) {
             double oldValue = _wrapped._outputSignal[0][0];
-            _signalCalcWrapper.berechneYOUT(DELTA_T);
+            _signalCalcWrapper.calculateYOUT(DELTA_T);
             double value = _signalCalcWrapper._outputSignal[0][0];
             if(value != oldValue) {
                 //System.out.println("swithcing time: " + time);
@@ -64,7 +64,7 @@ public final class SignalCalculatorExternalWrapperTest {
         _signalCalcWrapper.setAmplitudeAC(3);
         for(double time = END_TIME/2; time < END_TIME; time+=DELTA_T) {
             double oldValue = _signalCalcWrapper._outputSignal[0][0];
-            _signalCalcWrapper.berechneYOUT(DELTA_T);
+            _signalCalcWrapper.calculateYOUT(DELTA_T);
             double value = _signalCalcWrapper._outputSignal[0][0];
 
             if(time == SWITCHING_TIME2) {

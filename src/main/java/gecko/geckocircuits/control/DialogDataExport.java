@@ -13,9 +13,9 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoFileChooser;
-import gecko.geckocircuits.control.ReglerSaveData.OutputType;
+import gecko.geckocircuits.general.MainWindow;
+import gecko.geckocircuits.general.GeckoFileChooser;
+import gecko.geckocircuits.control.ControlSaveData.OutputType;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataIndexItem;
@@ -45,10 +45,10 @@ public final class DialogDataExport extends javax.swing.JDialog {
     private DefaultListModel _selectedModel;
     private final boolean _initDone;
     private DataSaver _dataSaver;
-    public final ReglerSaveData _reglerDataSave;
+    public final ControlSaveData _reglerDataSave;
     private boolean _inFillLists;
 
-    public DialogDataExport(final java.awt.Frame parent, final boolean modal, final ReglerSaveData dataSavable,
+    public DialogDataExport(final java.awt.Frame parent, final boolean modal, final ControlSaveData dataSavable,
             final List<AbstractDataContainer> selectContainers, final DataSaver _parentDataSaver) {
         super(parent, modal);
         _containers = selectContainers;
@@ -125,15 +125,15 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void setSaveModus() {
         if (jRadButtManSave.isSelected()) {
-            _reglerDataSave._saveModus = ReglerSaveData.SaveModus.MANUAL;
+            _reglerDataSave._saveModus = ControlSaveData.SaveModus.MANUAL;
         }
 
         if (jRadButtEndSave.isSelected()) {
-            _reglerDataSave._saveModus = ReglerSaveData.SaveModus.SIMULATION_END;
+            _reglerDataSave._saveModus = ControlSaveData.SaveModus.SIMULATION_END;
         }
 
         if (jRadButtContinSav.isSelected()) {
-            _reglerDataSave._saveModus = ReglerSaveData.SaveModus.DURING_SIMULATION;
+            _reglerDataSave._saveModus = ControlSaveData.SaveModus.DURING_SIMULATION;
         }
     }
 
@@ -229,9 +229,9 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void switchOverwrite() {
         if (jRadButtDoNumber.isSelected()) {
-            _reglerDataSave._fileOverwrite = ReglerSaveData.FileOverwrite.DO_NUMBERING;
+            _reglerDataSave._fileOverwrite = ControlSaveData.FileOverwrite.DO_NUMBERING;
         } else {
-            _reglerDataSave._fileOverwrite = ReglerSaveData.FileOverwrite.OVERWRITE;
+            _reglerDataSave._fileOverwrite = ControlSaveData.FileOverwrite.OVERWRITE;
         }
     }
 

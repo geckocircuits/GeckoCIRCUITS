@@ -33,7 +33,7 @@ public final class DelayCalculatorTest {
         _delCalculator.initializeAtSimulationStart(1);
         for (int i = 0; i < 10; i++) {
             _delCalculator._inputSignal[0][0] = 10 - i;
-            _delCalculator.berechneYOUT(1);
+            _delCalculator.calculateYOUT(1);
         }
 
         assertEquals(5, _delCalculator._outputSignal[0][0], 1e-20);
@@ -47,7 +47,7 @@ public final class DelayCalculatorTest {
             if(i == 3) { // test if values from the previous delay period are translated correctly!
                 assertEquals(3, _delCalculator._outputSignal[0][0], 1e-20);
             }
-            _delCalculator.berechneYOUT(1);
+            _delCalculator.calculateYOUT(1);
         }
         assertEquals(6, _delCalculator._outputSignal[0][0], 1e-20);
 
@@ -58,7 +58,7 @@ public final class DelayCalculatorTest {
         _delCalculator.initializeAtSimulationStart(1);
         for (int i = 0; i < 10; i++) {
             _delCalculator._inputSignal[0][0] = 10 - i;
-            _delCalculator.berechneYOUT(1);
+            _delCalculator.calculateYOUT(1);
             if(i < 4) { // test if the values are zero at the beginning of delay calculation (t < tDelay)
                 assertEquals(0, _delCalculator._outputSignal[0][0], 1e-20);
             } else {
@@ -89,7 +89,7 @@ public final class DelayCalculatorTest {
                 _delCalculator.setDelayTime(4);
             }
 
-            _delCalculator.berechneYOUT(1);
+            _delCalculator.calculateYOUT(1);
         }
         assertEquals(6, _delCalculator._outputSignal[0][0], 1e-20);
 

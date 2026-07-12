@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.i18n.resources.I18nKeys;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

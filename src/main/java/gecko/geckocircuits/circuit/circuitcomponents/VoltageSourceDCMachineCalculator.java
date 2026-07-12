@@ -75,7 +75,7 @@ public class VoltageSourceDCMachineCalculator extends VoltageSourceCalculator im
 
     @Override
     public void doPostProcess(double dt, double time) {
-        // aus dem internen Subcircuit -->
+        // // from the internal subcircuit -->
         double ia = - _la.getCurrent();  // Ankerstrom
         double ie = _le.getCurrent();  // Erregerstrom
 

@@ -27,7 +27,7 @@ public abstract class AbstractTerminal implements TerminalInterface {
     public static final int POINT_DIAMETER = 5;
     protected final CircuitLabel _label = new CircuitLabel();
     protected boolean _hasDoubleLabel = false;
-    protected int _pFa = 11, _pFb = 3;  // Symbol-Pfeil fuer Flussrichtung --> Pfeilspitzenabmessung
+    protected int _pFa = 11, _pFb = 3;  // // Symbol arrow for flow direction --> arrowhead dimension
     public final AbstractBlockInterface _parentElement;
     private int _circuitTerminalIndex;
 

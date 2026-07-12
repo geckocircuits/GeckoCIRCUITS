@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.core.circuit.waveform.TimeFunctionConstant;
 import gecko.core.circuit.TokenMap;

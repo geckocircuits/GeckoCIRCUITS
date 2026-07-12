@@ -171,12 +171,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxShowLabelMajActionPerformed"/>
           </Events>
         </Component>
-        <Component class="gecko.geckocircuits.allg.FormatJTextField" name="formatJTextFieldTickSpace">
+        <Component class="gecko.geckocircuits.general.FormatJTextField" name="formatJTextFieldTickSpace">
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="formatJTextFieldTickSpaceKeyReleased"/>
           </Events>
         </Component>
-        <Component class="gecko.geckocircuits.allg.FormatJTextField" name="formatJTextFieldTickLenghtMaj">
+        <Component class="gecko.geckocircuits.general.FormatJTextField" name="formatJTextFieldTickLenghtMaj">
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="formatJTextFieldTickLenghtMajKeyReleased"/>
           </Events>
@@ -289,12 +289,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBoxShowLabelMinActionPerformed"/>
           </Events>
         </Component>
-        <Component class="gecko.geckocircuits.allg.FormatJTextField" name="formatJTextFieldNumTicks">
+        <Component class="gecko.geckocircuits.general.FormatJTextField" name="formatJTextFieldNumTicks">
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="formatJTextFieldNumTicksKeyReleased"/>
           </Events>
         </Component>
-        <Component class="gecko.geckocircuits.allg.FormatJTextField" name="formatJTextFieldTickLengthMin">
+        <Component class="gecko.geckocircuits.general.FormatJTextField" name="formatJTextFieldTickLengthMin">
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="formatJTextFieldTickLengthMinKeyReleased"/>
           </Events>

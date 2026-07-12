@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.GlobalFonts;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -53,7 +53,7 @@ public class PreviewDialogSine extends PreviewDialog {
                 g.setColor(Color.lightGray);
                 g.drawLine(x2, y0 - offset, x1, y0 - offset);  // offset-Linie (Mittelwert)
                 g.setColor(Color.gray);
-                g.drawLine(x0 + xPh, y0 - offset - 10, x0 + xPh, y0 + 10);  // Markierungsline fuer Phasenverschiebung
+                g.drawLine(x0 + xPh, y0 - offset - 10, x0 + xPh, y0 + 10);  // // Marking line for phase shift
                 g.drawLine(x1, y0 - offset / 2, x1, y0 - offset - ac / 2);  // senkrechte Linie bei (2*PI)
                 g.drawPolyline(new int[]{x0 + xPh, x0 + xPh, x0 + xPh - p2, x0 + xPh}, new int[]{y0 - offset - 2 * p1, y0 - offset, y0 - offset - p1, y0 - offset - p1}, 4);  // Pfeilspitze senkrecht
                 g.drawPolyline(new int[]{x0 + xPh, x0 + xPh, x0 + xPh - p2, x0 + xPh}, new int[]{y0 + 2 * p1, y0, y0 + p1, y0 + p1}, 4);  // Pfeilspitze senkrecht

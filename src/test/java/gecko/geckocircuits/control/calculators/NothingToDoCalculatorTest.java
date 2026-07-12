@@ -38,8 +38,8 @@ public class NothingToDoCalculatorTest {
         calculator._inputSignal[1][0] = 10.0;
         calculator._inputSignal[2][0] = 15.0;
 
-        // Call berechneYOUT (should do nothing)
-        calculator.berechneYOUT(0.001);
+        // Call calculateYOUT (should do nothing)
+        calculator.calculateYOUT(0.001);
 
         // Verify no calculation occurred (outputs remain unchanged)
         // Output should still be 0 (uninitialized)
@@ -52,7 +52,7 @@ public class NothingToDoCalculatorTest {
         // Test that repeated calls do nothing
         for (int i = 0; i < 10; i++) {
             calculator._inputSignal[0][0] = i * 2.0;
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
             assertEquals("Output should remain 0 after step " + i,
                         0.0, calculator._outputSignal[0][0], 1e-10);
         }
@@ -64,7 +64,7 @@ public class NothingToDoCalculatorTest {
         NothingToDoCalculator zeroCalc = new NothingToDoCalculator(0, 0);
 
         // Should not throw exception
-        zeroCalc.berechneYOUT(0.001);
+        zeroCalc.calculateYOUT(0.001);
         assertEquals("Should handle 0 inputs", 0, zeroCalc._inputSignal.length);
         assertEquals("Should handle 0 outputs", 0, zeroCalc._outputSignal.length);
     }
@@ -88,7 +88,7 @@ public class NothingToDoCalculatorTest {
         }
 
         // Execute calculation
-        largeCalc.berechneYOUT(0.001);
+        largeCalc.calculateYOUT(0.001);
 
         // All outputs should remain 0
         for (int i = 0; i < 5; i++) {

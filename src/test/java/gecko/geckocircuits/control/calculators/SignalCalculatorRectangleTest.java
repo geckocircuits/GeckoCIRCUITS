@@ -52,7 +52,7 @@ public final class SignalCalculatorRectangleTest {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             AbstractSignalCalculator.setTime(time);
             double oldResult = _signalCalc._outputSignal[0][0];
-            _signalCalc.berechneYOUT(DELTA_T);
+            _signalCalc.calculateYOUT(DELTA_T);
             final double result = _signalCalc._outputSignal[0][0];
 
             if(time == EXPECTED_CHANGE_TIME) {

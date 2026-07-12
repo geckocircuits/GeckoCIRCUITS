@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.scope;
 
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.newscope.GeckoGraphics2D;
 import java.awt.AlphaComposite;
 
@@ -115,19 +115,19 @@ public class GraferV3 extends JPanel {
     protected int[][] showGridNormalXmajor, showGridNormalXminor, showGridNormalYmajor, showGridNormalYminor;  // welche Grid-Linien sollen dargestellt werden?
     // --> zB. showGridNormalXmajor[i1]= {index_xAchse, index_yAchse}
     //-------------
-    protected boolean[] xTickAutoSpacing, yTickAutoSpacing;  // sollen die Tick-Abstaende automatisch bestimmt werden?
-    protected double[] xTickSpacing, yTickSpacing;  // Abstand zwischen 2 Ticks, ausgehend von Null
+    protected boolean[] xTickAutoSpacing, yTickAutoSpacing;  // // should the tick spacing be determined automatically?
+    protected double[] xTickSpacing, yTickSpacing;  // // Distance between 2 ticks, starting from zero
     protected int[] xAnzTicksMinor, yAnzTicksMinor;  // Zahl der Minor-Ticks zwischen zwei regulaeren Ticks
     protected int[] xTickLaenge, yTickLaenge, xTickLaengeMinor, yTickLaengeMinor;
     protected boolean[] zeigeXticksUnten, zeigeYticksLinks;  // Ticks auf der x-Achse koennen nach unten oder nach oben zeigen, analog die der y-Achse
     //
     protected boolean[] zeigeLabelsXmaj, zeigeLabelsXmin, zeigeLabelsYmaj, zeigeLabelsYmin;  // sollen die entsprechenden Labels bei den jeweiligen Ticks angezeigt werden?
-    protected int[] posXtickLabels, posYtickLabels;  // wie weit sind die Tick-Beschriftungen von der jeweiligen Achse entfernt?
+    protected int[] posXtickLabels, posYtickLabels;  // // how far away are the tick labels from each axis?
     protected Font[] foTickLabelX, foTickLabelY;
     //-------------
-    protected int[][] tickX, tickY, tickXminor, tickYminor;  // Pixelpunkt-Position der Ticks
+    protected int[][] tickX, tickY, tickXminor, tickYminor;  // // Pixel point position of the ticks
     protected double[][] wertTickX, wertTickY, wertTickXminor, wertTickYminor;  // Zahlenwerte der einzelnen Ticks
-    protected double[] sfX, sfY;  // Streckfaktoren fuer Umrechnung Pixel <--> Werte
+    protected double[] sfX, sfY;  // // Stretch factors for converting pixels <--> values
     //-------------------------------------
     // (2) Kurven:
     protected DataContainer worksheetDaten;  // hier stehen die Punkte aller Kurven drinnen  --> derzeit nur EIN Worksheet implementiert
@@ -136,8 +136,8 @@ public class GraferV3 extends JPanel {
     protected int anzahlKurven;  // alle in diesem JPanel gezeichneten Kurven
     protected int[][] kurve_index_worksheetKolonnen_XY;  // int[][]{{index_x_kolonne,index_y_kolonne}}
     protected boolean[] kurvenPunktSymbolAnzeigen;  // Sollen die Punkte der Kurve als Punkte dargestellt werden
-    protected int[] crvSymbFrequ, crvSymbShape;     // Details zum Zeichnen der Symbole auf den Kurven-Datenpunkten
-    protected Color[] crvSymbFarbe;                 // Details zum Zeichnen der Symbole auf den Kurven-Datenpunkten
+    protected int[] crvSymbFrequ, crvSymbShape;     // // Details about drawing the symbols on the curve data points
+    protected Color[] crvSymbFarbe;                 // // Details about drawing the symbols on the curve data points
     protected double[] kurveClippling_xmin, kurveClippling_xmax, kurveClippling_ymin, kurveClippling_ymax;  // definierter Zahlenwert fuers Clipping
     protected int[] clipXmin, clipXmax, clipYmin, clipYmax;  // Art des Cilpping --> "AXIS", "NO CLIP", "VALUE"
     protected int[] kurveLinienstil;
@@ -146,7 +146,7 @@ public class GraferV3 extends JPanel {
     // sonstiges:
     protected NumberFormat nf = NumberFormat.getNumberInstance();
     protected TechFormat tcf = new TechFormat();
-    protected int digitsX = 3, digitsY = 3;  // Nachkomma-Stellen bei der Tick-Beschriftung
+    protected int digitsX = 3, digitsY = 3;  // // Decimal places in the tick label
     //-------------------------------------
     //-------------------------------------
     // speziell (eigentlich gepfuscht):
@@ -161,7 +161,7 @@ public class GraferV3 extends JPanel {
         this.worksheetDaten = daten;
         // Daten-Konsistenz (grob) pruefen:
         if (daten.getRowLength() < 2) {
-            return false;  // nur eine Kolonne --> mindestens 2 erforderlich fuer y=y(x) - Kurve
+            return false;  // // only one column --> at least 2 required for y=y(x) - curve
         }
 
         this.autoSettingsAnpassen();  // macht erst Sinn, wenn die Kurven-Daten da sind!
@@ -474,7 +474,7 @@ public class GraferV3 extends JPanel {
         this.zeichneGrid_NormalX(g);
         this.zeichneGrid_NormalY(g);
         //===============================================
-        // nachfolgend werden die X- und die Y-Achse noch einmal gezeichnet, damit sie nicht eventuell vom Grid (der eine andere Farbe haben kann)
+        //
         // ueberdeckt werden
         // die Methoden 'this.zeichneGrid_NormalX(g)' und 'this.zeichneGrid_NormalY(g)' koennen nicht vor die Schleife zum Zeichnen der Achsen
         // gestellt werden, weil in 'this.zeichneEinzelneKoordinatenAchse_X(g2,i1)' und 'this.zeichneEinzelneKoordinatenAchse_Y(g2,i1)' zuerst einmal
@@ -522,7 +522,7 @@ public class GraferV3 extends JPanel {
                 g2.setStroke(str_DOTTED_FAT);
             }
             //-----------------------
-            // jetzt die Linie ziehen:
+            //==================================
             grL.reset();
             grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
             grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
@@ -600,7 +600,7 @@ public class GraferV3 extends JPanel {
         }
 
         //-----------------------
-        // jetzt die Linie ziehen:
+        //
         grL.reset();
         if (kurveLinienstil[i1] != INVISIBLE) {
             grL.moveTo(xPix[0], yPix[0]);
@@ -680,7 +680,7 @@ public class GraferV3 extends JPanel {
                     j++;
                 }
             }
-            anzTicks = j;  // Korrektur der Tick-Anzahl -->
+            anzTicks = j;  // // Correction of the number of ticks -->
             double maxXtic = -100;
             int maxIndex = -1;
             for (int i3 = 0; i3 < _yAchseX.length; i3++) {
@@ -747,7 +747,7 @@ public class GraferV3 extends JPanel {
                     wertTickMinorX_temp[j] = wertMinor;
                     j++;
                 }
-                xMinorTicksAnzahl = j;  // Korrektur der Minor-Tick Anzahl
+                xMinorTicksAnzahl = j;  // // Correction of the minor tick number
                 wertTickXminor[i1] = new double[xMinorTicksAnzahl];
                 tickXminor[i1] = new int[xMinorTicksAnzahl];
                 System.arraycopy(wertTickMinorX_temp, 0, wertTickXminor[i1], 0, xMinorTicksAnzahl);
@@ -768,7 +768,7 @@ public class GraferV3 extends JPanel {
             }
             //==================================
         } else if (xAchseTyp[i1] == ACHSE_LOG) {
-            // zwingend -->  xTickSpacing[i1]=AUTO  weil nur sinnvollerweise die Zehner-Dekaden mit Ticks versehen werden
+            // // Here it is checked whether ticks should be entered at all -->
             sfX[i1] = breitePix[i1] / this.lg10(achseXmax[i1] / achseXmin[i1]);
             int anzTicks = (int) Math.round(this.lg10(achseXmax[i1] / achseXmin[i1])) + 3;
             double[] wertTickX_temp = new double[anzTicks];
@@ -783,10 +783,10 @@ public class GraferV3 extends JPanel {
                     j++;
                 }
             }
-            // hier wird abgecheckt, ob ueberhaupt Ticks eingetragen werden sollen -->
+            //
             if (j != 0) {
                 //-----------------------------------------------------------------------------------------------------------------------
-                anzTicks = j;  // Korrektur der Tick-Anzahl -->
+                anzTicks = j;  // // Correction of the number of ticks -->
                 wertTickX[i1] = new double[anzTicks];
                 System.arraycopy(wertTickX_temp, 0, wertTickX[i1], 0, anzTicks);
                 tickX[i1] = new int[anzTicks];
@@ -835,7 +835,7 @@ public class GraferV3 extends JPanel {
                         j++;
                     }
                 }
-                xMinorTicksAnzahl = j;  // Korrektur der Minor-Tick Anzahl
+                xMinorTicksAnzahl = j;  // // Correction of the minor tick number
                 wertTickXminor[i1] = new double[xMinorTicksAnzahl];
                 tickXminor[i1] = new int[xMinorTicksAnzahl];
                 System.arraycopy(wertTickMinorX_temp, 0, wertTickXminor[i1], 0, xMinorTicksAnzahl);
@@ -877,7 +877,7 @@ public class GraferV3 extends JPanel {
                     j++;
                 }
             }
-            anzTicks = j;  // Korrektur der Tick-Anzahl -->
+            anzTicks = j;  // // Correction of the number of ticks -->
             wertTickY[i1] = new double[anzTicks];
             System.arraycopy(wertTickY_temp, 0, wertTickY[i1], 0, anzTicks);
             tickY[i1] = new int[anzTicks];
@@ -926,7 +926,7 @@ public class GraferV3 extends JPanel {
                 wertTickMinorY_temp[j] = wertMinor;
                 j++;
             }
-            yMinorTicksAnzahl = j;  // Korrektur der Minor-Tick Anzahl
+            yMinorTicksAnzahl = j;  // // Correction of the minor tick number
             wertTickYminor[i1] = new double[yMinorTicksAnzahl];
             tickYminor[i1] = new int[yMinorTicksAnzahl];
             System.arraycopy(wertTickMinorY_temp, 0, wertTickYminor[i1], 0, yMinorTicksAnzahl);
@@ -948,7 +948,7 @@ public class GraferV3 extends JPanel {
             if (achseYmin[i1] <= 0) {
                 achseYmin[i1] = achseYmax[i1] / 1e4;
             }
-            // zwingend -->  yTickSpacing[i1]=AUTO  weil nur sinnvollerweise die Zehner-Dekaden mit Ticks versehen werden
+            // // Here it is checked whether ticks should be entered at all -->
             sfY[i1] = hoehePix[i1] / this.lg10(achseYmax[i1] / achseYmin[i1]);
             int anzTicks = (int) this.lg10(achseYmax[i1] / achseYmin[i1]) + 3;
             double[] wertTickY_temp = new double[anzTicks];
@@ -963,10 +963,10 @@ public class GraferV3 extends JPanel {
                     j++;
                 }
             }
-            // hier wird abgecheckt, ob ueberhaupt Ticks eingetragen werden sollen -->
+            //
             if (j != 0) {
                 //-----------------------------------------------------------------------------------------------------------------------
-                anzTicks = j;  // Korrektur der Tick-Anzahl -->
+                anzTicks = j;  // // Correction of the number of ticks -->
                 wertTickY[i1] = new double[anzTicks];
                 System.arraycopy(wertTickY_temp, 0, wertTickY[i1], 0, anzTicks);
                 tickY[i1] = new int[anzTicks];
@@ -1014,7 +1014,7 @@ public class GraferV3 extends JPanel {
                         j++;
                     }
                 }
-                yMinorTicksAnzahl = j;  // Korrektur der Minor-Tick Anzahl
+                yMinorTicksAnzahl = j;  // // Correction of the minor tick number
                 wertTickYminor[i1] = new double[yMinorTicksAnzahl];
                 tickYminor[i1] = new int[yMinorTicksAnzahl];
                 System.arraycopy(wertTickMinorY_temp, 0, wertTickYminor[i1], 0, yMinorTicksAnzahl);
@@ -1056,7 +1056,7 @@ public class GraferV3 extends JPanel {
         if ((gridNormalX_zugeordneteXAchse == null) || (gridNormalX_zugeordneteYAchse == null)) {
             return;  // um Fehler beim ersten Aufruf zu vermeiden
         }        //------------------------------------------------------------
-        // Grid-Linien parallel der y-Achse (dh. normal auf die x-Achse)  -->
+        //-----------------------
         for (int i1 = 0; i1 < gridNormalX_zugeordneteXAchse.length; i1++) {
             int indexAchseX = gridNormalX_zugeordneteXAchse[i1];
             int indexAchseY = gridNormalX_zugeordneteYAchse[i1];
@@ -1083,7 +1083,7 @@ public class GraferV3 extends JPanel {
                                 System.out.println("Fehler: p05kgh9");
                             }
                             //-----------------------
-                            // jetzt die Linie ziehen:
+                            //-----------------------
                             grL.reset();
                             grL.moveTo(tickXminor[indexAchseX][i2], _yAchseY[indexAchseY]);
                             grL.lineTo(tickXminor[indexAchseX][i2], _yAchseY[indexAchseY] - hoehePix[indexAchseY]);
@@ -1115,7 +1115,7 @@ public class GraferV3 extends JPanel {
                                 System.out.println("Fehler: hrtrjww5j");
                             }
                             //-----------------------
-                            // jetzt die Linie ziehen:
+                            // Minor-Grids -->
                             grL.reset();
                             grL.moveTo(tickX[indexAchseX][i2], _yAchseY[indexAchseY]);
                             grL.lineTo(tickX[indexAchseX][i2], _yAchseY[indexAchseY] - hoehePix[indexAchseY]);
@@ -1137,7 +1137,7 @@ public class GraferV3 extends JPanel {
         if ((gridNormalY_zugeordneteXAchse == null) || (gridNormalY_zugeordneteYAchse == null)) {
             return;  // um Fehler beim ersten Aufruf zu vermeiden
         }        //------------------------------------------------------------
-        // Grid-Linien parallel der x-Achse (dh. normal auf die y-Achse)  -->
+        // // now draw the line:
         for (int i1 = 0; i1 < gridNormalY_zugeordneteXAchse.length; i1++) {
             int indexAchseX = gridNormalY_zugeordneteXAchse[i1];
             int indexAchseY = gridNormalY_zugeordneteYAchse[i1];
@@ -1164,7 +1164,7 @@ public class GraferV3 extends JPanel {
                                 System.out.println("Fehler: hezwhwh6");
                             }
                             //-----------------------
-                            // jetzt die Linie ziehen:
+                            //-----------------------
                             grL.reset();
                             grL.moveTo(_xAchseX[indexAchseX], tickYminor[indexAchseY][i2]);
                             grL.lineTo(_xAchseX[indexAchseX] + breitePix[indexAchseX], tickYminor[indexAchseY][i2]);
@@ -1196,7 +1196,7 @@ public class GraferV3 extends JPanel {
                                 System.out.println("Fehler: gjigrije");
                             }
                             //-----------------------
-                            // jetzt die Linie ziehen:
+                            //
                             grL.reset();
                             grL.moveTo(_xAchseX[indexAchseX], tickY[indexAchseY][i2]);
                             grL.lineTo(_xAchseX[indexAchseX] + breitePix[indexAchseX], tickY[indexAchseY][i2]);
@@ -1213,19 +1213,19 @@ public class GraferV3 extends JPanel {
 
     protected void auto_BereichsgrenzenDerAchsen() {
         //----------------------
-        // wenn nur Achsen gezeichnet werden, aber (noch?) keine Kurvendaten vorhanden sind
+        //----------------------
         if (worksheetDaten == null) {
             return;
         }
         //
         //----------------------
-        // zuerst alle Minima und Maxima der Kurvendaten suchen:
+        //
         int laenge = worksheetDaten.getRowLength();
         double[] minEmpfehlungLIN = new double[laenge];  // empfohlene Achsen-Min-Werte bei AUTO / ACHSE_LIN
         double[] maxEmpfehlungLIN = new double[laenge];  // empfohlene Achsen-Max-Werte bei AUTO / ACHSE_LIN
         double[] minEmpfehlungLOG = new double[laenge];  // empfohlene Achsen-Min-Werte bei AUTO / ACHSE_LOG
         double[] maxEmpfehlungLOG = new double[laenge];  // empfohlene Achsen-Max-Werte bei AUTO / ACHSE_LOG
-        double[] min = new double[laenge];  // Min- u. Max-Werte der einzelnen Kolonnen von 'worksheetDaten'
+        double[] min = new double[laenge];  // // Min and max values ​​of the individual columns of 'worksheet data'
         double[] max = new double[laenge];
         //
         for (int i1 = 0; i1 < laenge; i1++) {
@@ -1250,7 +1250,7 @@ public class GraferV3 extends JPanel {
         //
         for (int achsenNr = 0; achsenNr < achseXmin.length; achsenNr++) {
             if (autoAchseXmin[achsenNr]) {
-                // jetzt den Achsen, die von Kurven besetzt sind, die entsprechenden Minima und Maxima zuteilen:
+                // // now assign the corresponding minimums and maximums to the axes occupied by curves:
                 achseXmin[achsenNr] = 1e99;  // default, falls keine Kurve zugeordnet ist
                 for (int nrKurve = 0; nrKurve < anzahlKurven; nrKurve++) {
                     if (achsenNr == indexZurKurveGehoerigeXachse[nrKurve]) {
@@ -1267,7 +1267,7 @@ public class GraferV3 extends JPanel {
         }
         for (int achsenNr = 0; achsenNr < achseXmax.length; achsenNr++) {
             if (autoAchseXmax[achsenNr]) {
-                // jetzt den Achsen, die von Kurven besetzt sind, die entsprechenden Minima und Maxima zuteilen:
+                // // now assign the corresponding minimums and maximums to the axes occupied by curves:
                 achseXmax[achsenNr] = -1e99;  // default, falls keine Kurve zugeordnet ist
                 for (int nrKurve = 0; nrKurve < anzahlKurven; nrKurve++) {
                     if (achsenNr == indexZurKurveGehoerigeXachse[nrKurve]) {
@@ -1284,7 +1284,7 @@ public class GraferV3 extends JPanel {
         }
         for (int achsenNr = 0; achsenNr < achseYmin.length; achsenNr++) {
             if (autoAchseYmin[achsenNr]) {
-                // jetzt den Achsen, die von Kurven besetzt sind, die entsprechenden Minima und Maxima zuteilen:
+                //----------------------
                 achseYmin[achsenNr] = 1e99;  // default, falls keine Kurve zugeordnet ist
                 for (int nrKurve = 0; nrKurve < anzahlKurven; nrKurve++) {
                     if (achsenNr == indexZurKurveGehoerigeYachse[nrKurve]) {
@@ -1301,7 +1301,7 @@ public class GraferV3 extends JPanel {
         }
         for (int achsenNr = 0; achsenNr < achseYmax.length; achsenNr++) {
             if (autoAchseYmax[achsenNr]) {
-                // jetzt den Achsen, die von Kurven besetzt sind, die entsprechenden Minima und Maxima zuteilen:
+                //
                 achseYmax[achsenNr] = -1e99;  // default, falls keine Kurve zugeordnet ist
                 for (int nrKurve = 0; nrKurve < anzahlKurven; nrKurve++) {
                     if (achsenNr == indexZurKurveGehoerigeYachse[nrKurve]) {
@@ -1322,7 +1322,7 @@ public class GraferV3 extends JPanel {
     protected double[] auto_Achsenbegrenzung_Wertempfehlung(double z1, double z2) {
         //----------------------
         // achse= [z1 .. z2] --> gesuchte Werte sollen 'rund'zahlig und eventuell ein bischen groesser als z1, z2 sein
-        // ACHTUNG: LIN- und LOG-Skalierung wird unterschiedliche behandelt!!
+        // // different bases can be examined in parallel e.g. 2 and 5, and then a final base is selected
         double z1empfLIN, z2empfLIN, z1empfLOG, z2empfLOG;
         double schrittEmpfLIN = 1.0;
         double z1lg = z1, z2lg = z2;

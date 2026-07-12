@@ -15,9 +15,9 @@ package gecko.geckocircuits.circuit;
 
 import gecko.geckocircuits.math.Matrix;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.circuit.circuitcomponents.DiodeCharacteristic;
@@ -37,7 +37,7 @@ public class LKMatrices {
     public double[] iALT, iALTALT, iALTALTALT;  // Stroeme in allen Bauteilen (inklusive SpgQuellen-Stroeme)
     private NetListLK netzliste;
     private int elementANZAHL;
-    // zur Implementierung der magnetischen Kopplungen -->
+    // // to implement the magnetic couplings -->
     public double[][] zuLKOP2gehoerigeM_spgQnr, zuLKOP2gehoerigeM_kWerte;
     private SolverType _solverType;
 
@@ -65,7 +65,7 @@ public class LKMatrices {
 
         this.elementANZAHL = netzliste.getElementANZAHLinklusiveSubcircuit();
 
-        matrixSize = netzliste.knotenMAX + netzliste.spgQuelleMAX + 1;  // 'plus Eins' weil Null-Potential (Bezug fuer alle Knoten) vorhanden
+        matrixSize = netzliste.knotenMAX + netzliste.spgQuelleMAX + 1;  // // 'plus one' because zero potential (reference for all nodes) exists
         //System.out.println("netzliste.knotenMAX= "+netzliste.knotenMAX+"\tnetzliste.spgQuelleMAX= "+netzliste.spgQuelleMAX);
         a = new double[matrixSize][matrixSize];
         bVector = new double[matrixSize];
@@ -80,7 +80,7 @@ public class LKMatrices {
 
         //------------------------------------
         try {
-            this.setzeAnfangsbedingungen(getAnfangsbedVomDialogfenster, solverType);  // pALT und iALT werden gesetzt, zB. u(0) bei C oder i(0) bei L
+            this.setzeAnfangsbedingungen(getAnfangsbedVomDialogfenster, solverType);  // // pALT and iALT are set, e.g. u(0) at C or i(0) at L
         } catch (RuntimeException ex) {
             // Calculate difference in days
             ex.printStackTrace();
@@ -90,16 +90,16 @@ public class LKMatrices {
         }
     }
 
-    // Setzen der Anfangsbedingungen in 'setzeAnfangsbedingungen()' -->
-    // wird nur von innerhalb dieser Klassse aufgerufen
+    //------------------------------------
+    //------------------------------------
     //
     private void initMatrizen(NetListLK netzliste) {
         this.netzliste = netzliste;
         this.elementANZAHL = netzliste.getElementANZAHLinklusiveSubcircuit();
         //------------------------------------
-        // netzliste.knotenMAX ... Zahl der Knoten minus Einer (eben der 'Ground'-Knoten) --> daher '+1' in der Bestimmungsgleichung fuer k -->
-        // Ordnung der Matrix a[][] ist  gesamtknotenzahl minus ground plus alleSpgQuellen plus alleLKOP2elemente -->
-        matrixSize = netzliste.knotenMAX + netzliste.spgQuelleMAX + 1;  // 'plus Eins' weil Null-Potential (Bezug fuer alle Knoten) vorhanden
+        // Calculate difference in days
+        // Calculate difference in days
+        matrixSize = netzliste.knotenMAX + netzliste.spgQuelleMAX + 1;  // // 'plus one' because zero potential (reference for all nodes) exists
         a = new double[matrixSize][matrixSize];
         bVector = new double[matrixSize];
         p = new double[matrixSize];
@@ -1004,7 +1004,7 @@ public class LKMatrices {
                         bVector[x] += (-bALT + bNEU);
                         bVector[y] += (+bALT - bNEU);
                     }
-                    // in 'parameter[8]' wird beim IGBT das aktuelle Gate-Signal hineingeschrieben (siehe 'Simulationskern.runSimulation()')
+                    // in diesem 'Element' fliessen keine Stroeme, di/dt-Berechung erfolgt in aktualisiereKnotenpotentiale()
                     if ((netzliste.parameter[i1][8] == 1) && ((p[x] - p[y]) > (stoergroesse * uf - acceptanceThreshold)) && (rD > 10000/*
                              * == Typ.rDoffDEFAULT
                              */)) {  // gateStatusOnOff==1  und  (uD > uf) und Thyristor "OFF"
@@ -1023,7 +1023,7 @@ public class LKMatrices {
                         bVector[x] += (-bALT + bNEU);
                         bVector[y] += (+bALT - bNEU);
                     }
-                    if ((netzliste.parameter[i1][8] == 0) && (netzliste.parameter[i1][0] == netzliste.parameter[i1][2])) {  // bis jetzt 'ON', aber das Gate wurde soeben auf 'OFF' gesetzt
+                    if ((netzliste.parameter[i1][8] == 0) && (netzliste.parameter[i1][0] == netzliste.parameter[i1][2])) {  // // until now 'ON', but the gate has just been set to 'OFF'
                         // rD(t) - uf - rON - rOFF - i(t) - u(t) - xxx - xxx - gateStatusOnOff   --> aehnlich wie THYR
                         double aALT = 1.0 / netzliste.parameter[i1][0];
                         double bALT = netzliste.parameter[i1][1] / netzliste.parameter[i1][0];
@@ -1176,14 +1176,14 @@ public class LKMatrices {
                 case LK_S:  // verhaelt sich exakt wie ein hoch- bzw. niederohmiger Widerstand
                     netzliste.parameter[i1][3] = netzliste.eLKneu[i1]._currentInAmps;
                     netzliste.parameter[i1][4] = p[x] - p[y];
-                    // ACHTUNG: bei Diodenschaltfehlern wird parameter[][3] und parameter[4] mit den aktualisierten korrekten Werten
-                    // ueberschrieben --> die Abfrage von parameter[][3] und parameter[][4] zur Schaltverlustberechnung darf daher erst
-                    // NACH Abschluss der Diodenzustands-Aktualisierung in der Simulation-Schleife in 'SimulationsKern' erfolgen
+                    //=======================================
+                    // // Initial condition, set in the dialog window, e.g. at INIT/START -->
+                    //
                     break;
                 case LK_L:
                 case NONLIN_REL:
                 case LK_LKOP2:
-                    // di/dt (fuer induktive Kopplungen M) -->
+                    // // here all C are replaced by Udc and a time step is simulated -->
                     netzliste.parameter[i1][4] = (netzliste.eLKneu[i1]._currentInAmps - netzliste.parameter[i1][2]) / dt;
                     // jetzt i(t) und u(t) aktualisieren -->
                     netzliste.parameter[i1][2] = netzliste.eLKneu[i1]._currentInAmps;
@@ -1299,8 +1299,8 @@ public class LKMatrices {
                 pALTALT[i1] = 0;
                 pALTALTALT[i1] = 0;
             }            //
-            // hier sind alle C durch Udc ersetzt, und es wird ein Zeitschritt simuliert -->
-            // damit stellen sich die richtigen Knotenpotentiale ein, wenn Anfangsbedingungen uC(0) gesetzt sind
+            //
+            //
             //---------
             // initialisieren:
             LKMatrices lkmInit = new LKMatrices(solverType);

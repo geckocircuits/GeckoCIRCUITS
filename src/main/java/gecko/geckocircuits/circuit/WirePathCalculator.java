@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author GeckoCIRCUITS Team
  * @see SchematicEditor2
- * @see Verbindung
+ * @see Connection
  */
 public class WirePathCalculator {
 

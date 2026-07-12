@@ -111,8 +111,8 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
         jPanelLinePropAxis = new JPanelLineProperties();
         jLabelAxisLabel = new javax.swing.JLabel();
         jTextFieldAxisLabel = new javax.swing.JTextField();
-        formatJTextFieldMinVal = new gecko.geckocircuits.allg.FormatJTextField();
-        formatJTextFieldMaxVal = new gecko.geckocircuits.allg.FormatJTextField();
+        formatJTextFieldMinVal = new gecko.geckocircuits.general.FormatJTextField();
+        formatJTextFieldMaxVal = new gecko.geckocircuits.general.FormatJTextField();
         jCheckBoxSymmetricZero = new javax.swing.JCheckBox();
 
         jPanelAxisSettings.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 0, 12))); // NOI18N
@@ -307,8 +307,8 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
     }//GEN-LAST:event_jCheckBoxSymmetricZeroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private gecko.geckocircuits.allg.FormatJTextField formatJTextFieldMaxVal;
-    private gecko.geckocircuits.allg.FormatJTextField formatJTextFieldMinVal;
+    private gecko.geckocircuits.general.FormatJTextField formatJTextFieldMaxVal;
+    private gecko.geckocircuits.general.FormatJTextField formatJTextFieldMinVal;
     private javax.swing.JCheckBox jCheckBoxAutoScale;
     public javax.swing.JCheckBox jCheckBoxSymmetricZero;
     private javax.swing.JComboBox jComboBoxScaleType;

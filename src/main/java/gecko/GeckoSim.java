@@ -13,7 +13,7 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.*;
+import gecko.geckocircuits.general.*;
 import gecko.i18n.LangInit;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Font;

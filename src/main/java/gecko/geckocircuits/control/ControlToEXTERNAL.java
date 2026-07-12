@@ -1,0 +1,250 @@
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
+ *
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *  PURPOSE.  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package gecko.geckocircuits.control;
+
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.StartupWindow;
+import gecko.geckocircuits.circuit.AbstractTerminal;
+import gecko.geckocircuits.circuit.TerminalControlInput;
+import gecko.core.circuit.TokenMap;
+import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
+import gecko.i18n.resources.I18nKeys;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Window;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public data vector for external data exchange with Simulink/external tools")
+public final class ControlToEXTERNAL extends RegelBlockSimulink implements Comparable, VariableTerminalNumber {
+
+    public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlToEXTERNAL.class, "ToEXT", I18nKeys.EXPORT_DATA_TO_SIMULINK);
+    private static final ArrayList<RegelBlock> toExternalsInternal = new ArrayList<>();
+    public static final List<RegelBlock> toExternals = Collections.unmodifiableList(toExternalsInternal);
+    private String _externalName = "";
+    private static final double WIDTH = 0.3;
+    // carful: this variable is only used when the model is read
+    // it is not updated when the terminal is changed in the current model.
+    private int externalOrderNumber = -1;
+    public double[] dataVector;
+
+    public ControlToEXTERNAL() {
+        super(3, 0);
+        setInputTerminalNumber(3);  // default: 3 Anschluss nach Aussen
+        toExternalsInternal.add(this);
+    }
+
+    @Override
+    public String[] getOutputNames() {
+        return new String[0];
+    }
+
+    @Override
+    public I18nKeys[] getOutputDescription() {
+        return new I18nKeys[0];
+    }
+
+    @Override
+    public void deleteActionIndividual() {
+        super.deleteActionIndividual();
+        toExternalsInternal.remove(this);
+    }
+
+    @Override
+    List<RegelBlock> getOrderList() {
+        return toExternalsInternal;
+    }
+
+    @Override
+    Stack<AbstractTerminal> getVariableTerminals() {
+        return XIN;
+    }
+
+    private static final class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public int compare(final RegelBlock compare1, final RegelBlock compare2) {
+            if (compare1 instanceof ControlToEXTERNAL && compare2 instanceof ControlToEXTERNAL) {
+                final ControlToEXTERNAL fromExtern1 = (ControlToEXTERNAL) compare1;
+                final ControlToEXTERNAL fromExtern2 = (ControlToEXTERNAL) compare2;
+                return Integer.compare(fromExtern1.externalOrderNumber, fromExtern2.externalOrderNumber);
+            }
+            return 0;
+        }
+    }
+
+    @Override
+    public void setInputTerminalNumber(final int number) {
+        while (XIN.size() > number) {
+            XIN.pop();
+        }
+
+        while (XIN.size() < number) {
+            XIN.add(new TerminalControlInput(this, -2, -XIN.size()));
+        }
+        this.dataVector = new double[XIN.size()];
+    }
+
+    @Override
+    public void setOutputTerminalNumber(final int number) {
+        // here, we don't have output terminals
+    }
+
+    public void insertOrderCorrect(final int orderNo) {
+        externalOrderNumber = orderNo;
+        Collections.sort(toExternalsInternal, new CompareOrder());
+    }
+
+    public void setExternalName(final String name) {
+        _externalName = name;
+    }
+
+    @Override
+    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
+        if (StartupWindow.testDialogOpenSourceVersion("Simulink interface")) {
+            return new AbstractControlCalculatable(XIN.size(), 0) {
+                @Override
+                public void calculateYOUT(double deltaT) {
+
+                    // no-op
+                }
+            };
+        } else {
+
+            return new AbstractControlCalculatable(XIN.size(), 0) {
+                @Override
+                public void calculateYOUT(final double deltaT) {
+                    try {
+                        for (int i1 = 0; i1 < XIN.size(); i1++) {
+                            dataVector[i1] = _inputSignal[i1][0];
+                            // // Program to be picked up
+                            // Programm abgeholt werden
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        dataVector = new double[XIN.size()];
+                        for (int i1 = 0; i1 < XIN.size(); i1++) {
+                            dataVector[i1] = _inputSignal[i1][0];
+                            // Klickbereich:
+                            // Programm abgeholt werden
+                        }
+                    }
+                }
+            };
+        }
+    }
+
+    @Override
+    public void drawBlockRectangle(final Graphics2D graphics) {
+        final int posX = getSheetPosition().x;
+        final int posY = getSheetPosition().y;
+        final Color origColor = graphics.getColor();
+        // Klickbereich:
+        xKlickMin = (int) (dpix * (posX - WIDTH));
+        xKlickMax = (int) (dpix * (posX + WIDTH));
+        yKlickMin = (int) (dpix * (posY - WIDTH));
+        yKlickMax = (int) (dpix * (posY + XIN.size()));
+        graphics.setColor(getBackgroundColor());
+
+        graphics.fillRect((int) (dpix * (posX - WIDTH)), (int) (dpix * (posY - WIDTH)),
+                (int) (dpix * 2 * WIDTH), (int) (dpix * XIN.size()));
+
+        graphics.setColor(origColor);
+        graphics.drawRect((int) (dpix * (posX - WIDTH)), (int) (dpix * (posY - WIDTH)),
+                (int) (dpix * 2 * WIDTH), (int) (dpix * XIN.size()));
+        // Pfeil-Symbol:
+        int d2 = 4, dpfx = 8, dpfy = 3;
+        double pf = 2.0;  // Pfeilspitzen-X-Abstand
+        double pfym = posY - WIDTH + XIN.size() / 2.0;  // Pfeil-Y-Koordinate
+        graphics.drawPolygon(new int[]{(int) (dpix * (posX + pf)) - dpfx, (int) (dpix * (posX + pf)) - dpfx,
+            (int) (dpix * (posX + pf))}, new int[]{(int) (dpix * pfym) - dpfy, (int) (dpix * pfym) + dpfy, (int) (dpix * pfym)}, 3);
+        graphics.drawString("To", (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * pfym - 1.0 * graphics.getFont().getSize() / 2));
+        graphics.drawString("EXTERN", (int) (dpix * (posX + WIDTH) + d2),
+                (int) (dpix * pfym + 3.0 * graphics.getFont().getSize() / 2));
+        graphics.drawLine((int) (dpix * (posX + WIDTH)), (int) (dpix * pfym), (int) (dpix * (posX + pf)),
+                (int) (dpix * pfym));  // zum Pfeil gehoerig
+        graphics.setColor(Color.black);
+        graphics.drawString(_externalName, (int) (dpix * (posX + WIDTH) + d2), (int) (dpix * (1 + pfym)
+                + 3.0 * graphics.getFont().getSize() / 2));
+        graphics.setColor(origColor);
+
+    }
+
+    @Override
+    protected String getCenteredDrawString() {
+        return "";
+    }
+
+    @Override
+    protected void exportAsciiIndividual(final StringBuffer ascii) {
+        ProjectData.appendAsString(ascii.append("\ntorder"), toExternalsInternal.indexOf(this));
+    }
+
+    @Override
+    protected void importIndividual(final TokenMap tokenMap) {
+        insertOrderCorrect(tokenMap.readDataLine("torder", externalOrderNumber));
+    }
+
+    @Override
+    public int compareTo(final Object toCompare) {
+        if (toCompare instanceof ControlToEXTERNAL) {
+            final ControlToEXTERNAL otherToExtern = (ControlToEXTERNAL) toCompare;
+            if (otherToExtern.externalOrderNumber == this.externalOrderNumber) {
+                return 0;
+            }
+            if (otherToExtern.externalOrderNumber < this.externalOrderNumber) {
+                return 1;
+            }
+            return -1;
+        }
+
+        assert false;
+        return 0;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final ControlToEXTERNAL other = (ControlToEXTERNAL) obj;
+        return this.externalOrderNumber == other.externalOrderNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(externalOrderNumber);
+    }
+
+    @Override
+    protected Window openDialogWindow() {
+        return new DialogExternal(this);
+    }
+
+    /**
+     * Clear the list of ToEXTERNAL blocks - used for initialization
+     */
+    public static void clearToExternals() {
+        toExternalsInternal.clear();
+    }
+}

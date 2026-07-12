@@ -37,7 +37,7 @@ public class SparseMatrixCalculatorTest {
     @Test
     public void testZeroInputs() {
         // Zero input should produce valid outputs (may not be exactly zero due to initialization)
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // All outputs should be initialized and valid
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -54,7 +54,7 @@ public class SparseMatrixCalculatorTest {
             calculator._inputSignal[0][0] = Math.sin(0.1 * step);
             calculator._inputSignal[1][0] = Math.cos(0.1 * step);
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             // Verify all outputs remain valid
             for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -79,7 +79,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[6][0] = 0.0;   // Frequency
         calculator._inputSignal[7][0] = 0.0;   // Phase
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // 9 outputs: typically 6 switch commands + 3 voltage outputs or similar
         for (int i = 0; i < 6; i++) {
@@ -95,7 +95,7 @@ public class SparseMatrixCalculatorTest {
         // Test across different switching frequencies (if parameter exists)
         for (double freq = 0.0; freq <= 1.0; freq += 0.2) {
             calculator._inputSignal[6][0] = freq;  // Frequency parameter
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             // Outputs should remain stable despite frequency changes
             for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -112,7 +112,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[1][0] = -3.0;
         calculator._inputSignal[2][0] = -2.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should handle negative inputs gracefully
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -127,7 +127,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[1][0] = 1000.0;
         calculator._inputSignal[2][0] = 1000.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should remain stable
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -142,7 +142,7 @@ public class SparseMatrixCalculatorTest {
     public void testSmallTimeStep() {
         // Test with very small time step
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(1e-8);
+        calculator.calculateYOUT(1e-8);
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid with small dt",
@@ -154,7 +154,7 @@ public class SparseMatrixCalculatorTest {
     public void testLargeTimeStep() {
         // Test with larger time step
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(0.01);
+        calculator.calculateYOUT(0.01);
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid with large dt",
@@ -168,7 +168,7 @@ public class SparseMatrixCalculatorTest {
         double[] output1 = new double[9];
 
         calculator._inputSignal[0][0] = 3.0;
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Store outputs
         for (int i = 0; i < 9; i++) {
@@ -177,7 +177,7 @@ public class SparseMatrixCalculatorTest {
 
         // Reset calculator and recalculate with same input - note: may not be exactly deterministic due to state
         calculator._inputSignal[0][0] = 3.0;
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Outputs should be close (allowing for floating point variations and internal state)
         for (int i = 0; i < 9; i++) {
@@ -202,7 +202,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[6][0] = 50.0;  // Frequency (Hz)
         calculator._inputSignal[7][0] = 0.0;   // Phase
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // All outputs should be valid
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -218,7 +218,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[1][0] = 0.0;
         calculator._inputSignal[2][0] = 0.0;
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should handle zero crossings gracefully
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -234,7 +234,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[1][0] = -250.0;  // High input Vb
         calculator._inputSignal[2][0] = -250.0;  // High input Vc
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should remain stable with large inputs
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -257,7 +257,7 @@ public class SparseMatrixCalculatorTest {
             calculator._inputSignal[6][0] = 50.0;  // 50 Hz frequency
             calculator._inputSignal[7][0] = 2 * Math.PI * 50 * timeNorm;  // Phase
 
-            calculator.berechneYOUT(0.001);
+            calculator.calculateYOUT(0.001);
 
             // Verify all outputs remain valid
             for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -279,7 +279,7 @@ public class SparseMatrixCalculatorTest {
                 calculator._inputSignal[2][0] = 100.0 * Math.sin(0.1 * freq * substep + 2*Math.PI/3);
                 calculator._inputSignal[6][0] = freq;  // Variable frequency
 
-                calculator.berechneYOUT(0.001);
+                calculator.calculateYOUT(0.001);
 
                 // Outputs should remain stable
                 for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -297,7 +297,7 @@ public class SparseMatrixCalculatorTest {
         calculator._inputSignal[1][0] = 50.0;   // Vb (unequal)
         calculator._inputSignal[2][0] = -150.0; // Vc (unequal)
 
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Should handle asymmetrical inputs
         for (int i = 0; i < calculator._outputSignal.length; i++) {
@@ -310,7 +310,7 @@ public class SparseMatrixCalculatorTest {
     public void testVerySmallTimeStep() {
         // Test with very small time step (high precision simulation)
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(1e-9);
+        calculator.calculateYOUT(1e-9);
 
         for (int i = 0; i < calculator._outputSignal.length; i++) {
             assertFalse("Output should be valid with very small dt",

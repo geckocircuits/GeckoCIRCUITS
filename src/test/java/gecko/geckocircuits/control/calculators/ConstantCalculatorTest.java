@@ -41,7 +41,7 @@ public final class ConstantCalculatorTest {
 
     @Test(expected=AssertionError.class)
     public void testBerechneYOUT() {
-            _constCalc.berechneYOUT(1e-9);
+            _constCalc.calculateYOUT(1e-9);
     }
 }
 

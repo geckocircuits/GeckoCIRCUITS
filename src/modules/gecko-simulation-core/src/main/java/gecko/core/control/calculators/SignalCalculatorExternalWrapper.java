@@ -35,7 +35,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _wrapped.setAmplitudeAC(_inputSignal[AMPLITUDE_INDEX][0]);
         _wrapped.setAnteilDC(_inputSignal[OFFSET_INDEX][0]);
         _wrapped.setPhase(Math.toRadians(_inputSignal[PHASE_INDEX][0]));
@@ -50,7 +50,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
             // proper input signal.
             initializeAtSimulationStart(deltaT);
         }
-        _wrapped.berechneYOUT(deltaT);
+        _wrapped.calculateYOUT(deltaT);
     }
 
     @Override

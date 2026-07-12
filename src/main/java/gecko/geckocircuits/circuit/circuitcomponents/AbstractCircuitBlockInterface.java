@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.TechFormat;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.TechFormat;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.ElementDisplayProperties;
@@ -30,7 +30,7 @@ import java.util.List;
 public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterface {
 
     static final TechFormat tcf = new TechFormat();
-    static final int ARROW_LENGTH = 11, ARROW_WIDTH = 3;  // Symbol-Pfeil fuer Flussrichtung --> Pfeilspitzenabmessung
+    static final int ARROW_LENGTH = 11, ARROW_WIDTH = 3;  // // Symbol arrow for flow direction --> arrowhead dimension
 
     public double _currentInAmps;
     public double _voltage;

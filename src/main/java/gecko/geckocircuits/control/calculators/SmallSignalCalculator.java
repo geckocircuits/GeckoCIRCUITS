@@ -94,7 +94,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         double smallSignal = calculateSmallSignal(deltaT);
 
 
@@ -184,11 +184,11 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
                 }
                 break;
             case RECTANGLE:
-                _signalTypeCalculator.berechneYOUT(deltaT);
+                _signalTypeCalculator.calculateYOUT(deltaT);
                 returnValue = _signalTypeCalculator._outputSignal[0][0];
                 break;
             case TRIANGLE:
-                _signalTypeCalculator.berechneYOUT(deltaT);
+                _signalTypeCalculator.calculateYOUT(deltaT);
                 returnValue = _signalTypeCalculator._outputSignal[0][0];
                 break;
             case EXTERNAL:

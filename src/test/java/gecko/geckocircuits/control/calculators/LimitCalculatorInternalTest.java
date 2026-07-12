@@ -44,17 +44,17 @@ public class LimitCalculatorInternalTest {
 
         // test the upper limit
         _limitCalculator._inputSignal[0] = new double[]{20};
-        _limitCalculator.berechneYOUT(1e-9);
+        _limitCalculator.calculateYOUT(1e-9);
         assertEquals(10, _limitCalculator._outputSignal[0][0], 1e-9);
 
         // test the lower limit
         _limitCalculator._inputSignal[0] = new double[]{-30};
-        _limitCalculator.berechneYOUT(1e-9);
+        _limitCalculator.calculateYOUT(1e-9);
         assertEquals(-20, _limitCalculator._outputSignal[0][0], 1e-9);
 
         // test without limiting signal:
         _limitCalculator._inputSignal[0] = new double[]{-3};
-        _limitCalculator.berechneYOUT(1e-9);
+        _limitCalculator.calculateYOUT(1e-9);
         assertEquals(-3, _limitCalculator._outputSignal[0][0], 1e-9);
     }
 }

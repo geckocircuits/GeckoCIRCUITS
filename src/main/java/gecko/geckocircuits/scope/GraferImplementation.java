@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.scope;
 
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.TechFormat;
 import java.awt.AlphaComposite;
 
 import java.awt.Color;
@@ -35,20 +35,20 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "Legacy graphing class with direct field access; stores worksheet data for scope visualization")
 public final class GraferImplementation extends GraferV3 implements MouseListener, MouseMotionListener {
-    // Anzahl der Intervalle auf der x-Achse, in denen Hi- und Lo-Werte zwecks Datenkompression ermittelt werden
+    // // Number of intervals on the x-axis in which Hi and Lo values ​​are determined for data compression
     private static final int INTERVALLE_ENTLANG_X = 2000;
 
     private static final long serialVersionUID = 364726123473711L;
     private final Scopable _scope;  // callback
     // XXX private final ScopeSettings _scopeSettings;
-    // gibt an, wieviel der Punkte im Worksheet als Kurve dargestellt werden sollen, siehe Fkt. weiter unten
+    // XXX private final ScopeSettings _scopeSettings;
     private int _zvCounter;
-    // kommen die darzustellenden Daten von einer ZV-Simulation oder von einer externen
+    // // specifies how many of the points in the worksheet should be displayed as a curve, see function below
     // (statischen) Datei? - default: ZV-Sim.
     public boolean _usesExternalData = false;
     //---------------------------------
     private static final int TXT_DISTANCE_Y = 10;
-    public static final int ANZ_DIAGRAM_MAX = 9;  // Zahl der maximal moeglichen Diagramme in einem SCOPE
+    public static final int ANZ_DIAGRAM_MAX = 9;  // // Number of maximum possible diagrams in a SCOPE
     public static final int DX_IN_LINKS = 60, DX_IN_RECHTS = 70;  // links- u. rechtsseitige x-Einrueckung der Achsen in Pixel
     public static final int DY_IN_OBEN = 8, DY_IN_UNTEN = 8;  // y-Einrueckung der Achsen in Pixel von Oben bzw. Unten und y-Abstand zwischen 2 Diagrammen
     public static final int ABSTAND_BESCHRIFTUNG_XACHSE = 35;  // soviel Abstand nach ganz unten gibt es zusaetzlich, damit die x-Achsen-Labels gesetzt werden koennen
@@ -56,31 +56,31 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     private int x1, x2, y1, y2;  // Rechteck-Koordinaten des Zoom-Fensters
     private boolean angeklicktZoom = false;
     //--------
-    // Bereichsgrenzen eines Diagramms bezueglich Maus-Klick:
+    //--------
     private int[] xGrfMIN, xGrfMAX, yGrfMIN, yGrfMAX;
     private int indexAngeklickterGraph;
     private boolean controlZoomOn = false;
     private boolean shiftZoomOn = false;
     //==========================================
     //
-    // Graph-Properties --> angepasst auf die spezielle SCOPE-Struktur
+    //==========================================
     public static final int DIAGRAM_TYP_ZV = 91, DIAGRAM_TYP_SGN = 92;
     //
-    private int anzGrfVisible;  // Anzahl der aktuell sichtbaren Graphen im Scope
-    private int anzDiagram;  // Anzahl der Diagramme
+    private int anzGrfVisible;  // // Number of currently visible graphs in the scope
+    private int anzDiagram;  // // Number of charts
     //
-    public String[] nameDiagram;  // Bezeichnungen der Diagramme
-    public double[] ySpacingDiagram;  // wieviel 'y-Anteil' hat das jeweilige Diagramm
-    public int[] notwendigeHoehePixGRF;  // bei SIGNAL wird die Graph-Hoehe in Pix vorgegeben, eventuell wird die Scope-Groesse angepasst (bei ZV --> '-1')
-    public int[] diagramTyp;  // ist das jeweilige Diagramm ein ZV-Typ oder ein Signal-Typ?
-    public boolean[] jcbShowLegende;  // sollen die Kurvennamen in Form einer Legende am linken Graph-Rand angezeigt werden?
-    public boolean[] showAxisX, showAxisY;  // Anzeigen oder Ausblenden der Achsen
+    public String[] nameDiagram;  // // Labels of the diagrams
+    public double[] ySpacingDiagram;  // // how much 'y-part' does the respective diagram have
+    public int[] notwendigeHoehePixGRF;  // // with SIGNAL the graph height is specified in pixels, the scope size may be adjusted (for ZV --> '-1')
+    public int[] diagramTyp;  // // is the respective diagram a ZV type or a signal type?
+    public boolean[] jcbShowLegende;  // // should the curve names be displayed in the form of a legend on the left edge of the graph?
+    public boolean[] showAxisX, showAxisY;  // // Show or hide the axes
     //
     public double[] minX, maxX, minY, maxY;  // Achsen-Begrenzungen
     public double[] minXOld, maxXOld, minYOld, maxYOld;  // Achsen-Begrenzungen
     public double[] minXOldOld, maxXOldOld, minYOldOld, maxYOldOld;  // Achsen-Begrenzungen
-    public boolean[] autoScaleX, autoScaleY;  // sollen die Achsenbegrenzungen automatisch an die Worksheetdaten angepasst werden?
-    public int[] xAchsenTyp, yAchsenTyp;  // Linear oder logarithmisch?
+    public boolean[] autoScaleX, autoScaleY;  // // should the axis limits be automatically adjusted to the worksheet data?
+    public int[] xAchsenTyp, yAchsenTyp;  // // Linear or logarithmic?
     public int[] xAchseFarbe, yAchseFarbe;
     public int[] xAchseStil, yAchseStil;
     // Note: xAchseBeschriftung, yAchseBeschriftung, gridNormal*, linStilGridNormal*,
@@ -92,17 +92,17 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     //
     public boolean[] xTickAutoSpacing, yTickAutoSpacing;
     //
-    private boolean[] zeichneDiagrammUmrandung;  // zu zeichnen, wenn der Grid wegen zu kleiner Darstellung (in Pixelpunkten) abgeschaltet ist
+    private boolean[] zeichneDiagrammUmrandung;  // // to draw if the grid is switched off because the display is too small (in pixel points).
     //-------------------------
-    // Graph-Properties --> speziell fuer SIGNAL
-    public int[] positionSIGNAL;  // fuer SIGNAL --> enthaelt die y-Postiion (Reihenfolge) der Signal-Kurve innerhalb des einzelnen Graphen
+    //
+    public int[] positionSIGNAL;  // // for SIGNAL --> contains the y-position (order) of the signal curve within the individual graph
     public int[] positionSIGNAL_ALT;
     public int[] sgnHeight, sgnDistance;
     public double[] sgnSchwelle;
     //
     //-------------------------
     // Graph-Properties zum Merken, wenn man Achsen ein- und ausblendet -->
-    // ... wird jeweils direkt aus 'DialogGraphProperties' gelesen und neugesetzt
+    //
     public boolean[] ORIGjcbXShowGridMaj, ORIGjcbXShowGridMin;
     public boolean[] ORIGjcbYShowGridMaj, ORIGjcbYShowGridMin;
     public int[] ORIGjcmXlinCol, ORIGjcmYlinCol;
@@ -113,28 +113,28 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     public boolean[] ORIGjcbYShowLabelMaj, ORIGjcbYShowLabelMin;
     //=========================
     //
-    // Verbindung / Zuordnung  Kurve - Diagramm -->
+    // Connection / Zuordnung  Kurve - Diagramm -->
     public static final int ZUORDNUNG_X = 51, ZUORDNUNG_Y = 52, ZUORDNUNG_SIGNAL = 54, ZUORDNUNG_NIX = 55, ZUORDNUNG_MEAN = 56;
     //
     // Signal-Namen bzw. Worksheet-Headers:
-    public int anzSignalePlusZeit;  // soviel verschiedene Kolonnen hat das Worksheet
+    public int anzSignalePlusZeit;  // // This is how many different columns the worksheet has
     public String[] signalNamen;
     // Zuordnungen Kurven - Diagramme:
     public int[][] matrixZuordnungKurveDiagram;
     //
-    //public int[] zugehoerigkeitX, zugehoerigkeitY;  // Zuordnung der Kurve zur x- und zur y-Achse
+    //=========================
     public int[][] indexWsXY;  // Zuordnung Worksheetdaten - Kurven
     //
     //=========================
     //
     // Kurven-Properties
     public int kurvenanzahl;  // soviel verschiedene Kurven werden aktuell im SCOPE dargestellt --> entspricht einer 'Kurven-ID'
-    // zur Zuordnung der Kurvenindizes zur Zuordnungsmatrix:
+    // Signal-Namen bzw. Worksheet-Headers:
     public int[] indexDerKurveInDerMatrix;  // Abspeichern in folgendem Format: --> 1000*i1 +i2 wobei (i1..Graphenanzahl / i2..Kurvenanzahl)
-    public int[] indexDerKurveInDerMatrixALT;  // Speicherung notwendig um Darstellung der SIGNAL-Ordnung korrekt durchfuehren zu koennen
+    public int[] indexDerKurveInDerMatrixALT;  // // Storage necessary to display the SIGNAL order correctly
     //
-    // jedem Eintrag in der Verknuepfungsmatrix entspricht eine potentielle Kurve -->
-    public int[][] crvAchsenTyp;  // wird ueber SET-Methode aktualisiert, damit die Matrix 'matrixZuordnungKurveDiagram' nicht vergessen wird!
+    //
+    public int[][] crvAchsenTyp;  // // is updated via the SET method so that the matrix 'matrixAssignmentCurveDiagram' is not forgotten!
     public int[][] crvLineStyle, crvLineColor;
     public boolean[][] crvSymbShow;
     public int[][] crvSymbFrequ;
@@ -145,24 +145,24 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     public boolean[][] crvFillDigitalCurves;
     public int[][] crvFillingDigitalColor;
     //==========================================
-    // Maus-Aktionen im Diagramm-Fenster:
-    public static final int MAUSMODUS_NIX = 546;  // Ruhestellung --> Maus ist deaktiviert
-    public static final int MAUSMODUS_ZOOM_AUTOFIT = 547;  // Diagramm passt sich immer an die Datenwerte an
-    public static final int MAUSMODUS_ZOOM_FENSTER = 548;  // man kann mit der Maus Zoom-Rechtecke markieren
+    // // each entry in the linkage matrix corresponds to a potential curve -->
+    public static final int MAUSMODUS_NIX = 546;  // // Rest position --> Mouse is deactivated
+    public static final int MAUSMODUS_ZOOM_AUTOFIT = 547;  // // Chart always adapts to the data values
+    public static final int MAUSMODUS_ZOOM_FENSTER = 548;  // // you can mark zoom rectangles with the mouse
     public static final int MAUSMODUS_ZEICHNE_LINIE = 550;  // Linien zeichnen (als Objekte!)
-    public static final int MAUSMODUS_WERTANZEIGE_SCHIEBER = 554;  // ein Schieber kann ueber alle Diagramme gelegt werden, die entsprechenden y-Werte alle Kurven werden angezeigt
+    public static final int MAUSMODUS_WERTANZEIGE_SCHIEBER = 554;  // // a slider can be placed over all diagrams, the corresponding y values ​​and all curves are displayed
     //
     public static final int MOUSE_CLICKED = 780;
     public static final int MOUSE_PRESSED = 781;
     public static final int MOUSE_RELEASED = 782;
     public static final int MOUSE_DRAGGED = 783;
     private int mausModus = MAUSMODUS_NIX;  // default --> Maus deaktiviert
-    private int mausModusALT = MAUSMODUS_NIX;  // damit man in den vorigen Modus zurueckkehren kann zB. nach Druecken von AutoFit
+    private int mausModusALT = MAUSMODUS_NIX;  // // so that you can return to the previous mode, e.g. after pressing AutoFit
     //
     private boolean simulationLaeuftGerade = false;
     private boolean nochNichtGeZoomt = true;
-    private double[][] worksheetDatenTEMP = null;  // vor dem Zoomen werden hier die Simulationsdaten abgelegt
-    private int zvCounterTEMP = 0;  // aktueller Zeiger vor dem Zoomen, wird bei AUTO_FIT reaktiviert
+    private double[][] worksheetDatenTEMP = null;  // // The simulation data is stored here before zooming
+    private int zvCounterTEMP = 0;  // // current pointer before zooming, is reactivated with AUTO_FIT
     //---------------------------------
     private boolean xSchieberAktiv = false;
     private int xSchieberPix;
@@ -239,14 +239,14 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //------------------------
     }
 
-    // gibt an, wieviel der Punkte im Worksheet als Kurve dargestellt werden sollen
-    // Uebergabe als Array damit die Uebergabe als Referenz erfolgen kann
+    //------------------------
+    //------------------------
     public void setZVCounter(final int zvCounter) {
         this._zvCounter = zvCounter;
     }
 
-    // zum Aufrufen externer Daten, die nicht mehr veraendert werden (im Gegensatz zum kontinuierlichen Kurvenaufbau in der Schaltungssimulation) -->
-    // bzw. beim Initialisieren/Aendern der Kurvenanzahl fuer die Simulation
+    // XXX _scopeSettings = scope.getScopeSettings();
+    // // XXX _scopeSettings.loadSettings(this);  // 'this' is parameterized here
     public void setzeKurvenUndWorksheetDaten(final String[] header, final DataContainer workSheet) {
         this.worksheetDaten = workSheet;
 
@@ -254,18 +254,18 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         this.anzSignalePlusZeit = header.length;
         //------------------------
         // XXX _scopeSettings.usesExternalData = this._usesExternalData;
-        // XXX _scopeSettings.update_ZVs(anzSignalePlusZeit, signalNamen);  // default-Initialisierung der Kurven bzw. bei Aenderung der Kurven-Anzahl
-        // XXX _scopeSettings.loadSettings(this);  // die in 'ScopeSettings' definierten Parameter werden importiert
+        // // Transfer as an array so that the transfer can be done as a reference
+        // // for calling external data that is no longer changed (in contrast to the continuous curve buildup in circuit simulation) -->
         //--------------------------
         if (this._usesExternalData) {
-            // Daten werden von extern importiert -->
+            // // or when initializing/changing the number of curves for the simulation
             this.definiereAchsenbegrenzungenImAutoZoom(workSheet);  // minX[],maxX[],minY[],maxY[],minY2[],maxY2[] werden aus 'worksheetDaten' berechnet
             this.initClipping();  // crvClipValXmin[][],crvClipValXmax[][],crvClipValYmin[][],crvClipValYmax[][] werden berechnet
             this.initAutotickSpacing();  // benoetigt 'minX[],maxX[],minY[],maxY[],...' zur Berechnung
         } else {
-            // Daten kommen von der laufenden ZV-Simulation / hier werden SCOPEs initialisiert, bevor Simulationsdaten da sind -->
+            //------------------------
             // (1) // minX[],maxX[],minY[],maxY[],minY2[],maxY2[] werden willkuerlich initial gesetzt:
-            // Previously set minX/maxX/minY/maxY from SimulationsKern values (now removed)
+            // Previously set minX/maxX/minY/maxY from SimulationKernel values (now removed)
             // Values are initialized elsewhere before use
             // (2) crvClipValXmin[][],crvClipValXmax[][],crvClipValYmin[][],crvClipValYmax[][] werden berechnet
             this.initClipping();
@@ -273,7 +273,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             this.initAutotickSpacing();
         }
         //--------------------------
-        // fuer den Schieber:
+        // // Data comes from the running ZV simulation / SCOPEs are initialized here before simulation data is available -->
         ySchieberWert = new double[worksheetDaten.getRowLength() - 1][2];
         ySchieberWert2 = new double[worksheetDaten.getRowLength() - 1][2];
 
@@ -284,7 +284,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         this.repaint();
     }
 
-    // regelmaessig wird vom Simulator aufgerufen, um die Kurven-Bilder zu aktualisieren -->
+    // // (2) crvClipValXmin[][],crvClipValXmax[][],crvClipValYmin[][],crvClipValYmax[][] are calculated
     //
     public void akualisiereKurvenUndWorksheetDaten(final double t1, final double t2) {
         //--------------------------
@@ -331,12 +331,12 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                         zd++;
                     }
                 }
-                this.beschrifteNamenDerEinzelnenZVKurve(g2, i1, zd);  // ZV-Kurven-Beschriftung: wird zwecks Allgemeinheit nicht in 'GraferV3' implementiert sondern gleich weiter unten
+                this.beschrifteNamenDerEinzelnenZVKurve(g2, i1, zd);  // // ZV curve labeling: for the sake of generality, is not implemented in 'GraferV3' but rather below
             }
         }
     }
 
-    // Beschriftung der Kurven-Namen der ZV-Kurven im Graph-->
+    //----------
     // i1 ... KurvenNummer
     private void beschrifteNamenDerEinzelnenZVKurve(final Graphics2D g2D, final int i1, final int zd) {
         //--------------------------------
@@ -350,8 +350,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             wert = cf.formatT(ySchieberWert2[index][0] - ySchieberWert[index][0], TechFormat.FORMAT_AUTO);
         }
 
-        // wenn der Schieber aktiviert ist, wird der y-Wert anstatt der Namen angezeigt -->
-        int delta = 16;  // Abstand der Signalnamen untereinander in der Graph-Legende
+        // // Labeling of the curve names of the ZV curves in the graph-->
+        int delta = 16;  // // Distance between the signal names in the graph legend
         g2D.setColor(kurveFarbe[i1]);
         if (xSchieberAktiv) {
             Font oldFont = g2D.getFont();
@@ -391,8 +391,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         sfX = new double[anzahlAchsenX];
         sfY = new double[anzahlAchsenY];
         //===============================================
-        // wenn die Grid-Linien ausgeblendet werden (automatisch, weil Diagramm zu klein in Pixelpunkten),
-        // dann wird eine Umrandungsbox fuer das Diagramm gezeichnet -->
+        //
+        //
         //
 
 
@@ -403,11 +403,11 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             }
         }
         //===============================================
-        // x-Achsen --> da wird nicht herumgepfuscht (ist gleich bei ZV und SIGNAL)
+        //
         for (int i1 = 0; i1 < anzahlAchsenX; i1++) {
             zeichneEinzelneKoordinatenAchse_X(g2, i1);
         }
-        // y-Achsen --> ist bei SIGNAL anders (Grid und Labels)
+        // // if the grid lines are hidden (automatically because the diagram is too small in pixel points),
         for (int i1 = 0; i1 < anzahlAchsenY; i1++) {
             if (diagramTyp[i1] == DIAGRAM_TYP_ZV) {
                 zeichneEinzelneKoordinatenAchse_Y(g2, i1);  // hier werden auch die Ticks fuer den Grid berechnet
@@ -419,11 +419,11 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         zeichneGrid_NormalX(g);
         zeichneGrid_NormalY(g);
         //===============================================
-        // nachfolgend werden die X- und die Y-Achse noch einmal gezeichnet, damit sie nicht eventuell vom Grid (der eine andere Farbe haben kann)
+        // // x-axes --> there is no messing around (it's the same for ZV and SIGNAL)
         // ueberdeckt werden
-        // die Methoden 'this.zeichneGrid_NormalX(g)' und 'this.zeichneGrid_NormalY(g)' koennen nicht vor die Schleife zum Zeichnen der Achsen
+        // // x-axes --> there is no messing around (it's the same for ZV and SIGNAL)
         // gestellt werden, weil in 'this.zeichneEinzelneKoordinatenAchse_X(g2,i1)' und 'this.zeichneEinzelneKoordinatenAchse_Y(g2,i1)' zuerst einmal
-        // der Grid berechnet werden muss
+        // // y-axes --> is different for SIGNAL (grid and labels)
         //
         final GeneralPath grL = new GeneralPath();
         //
@@ -445,7 +445,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 g2.setStroke(str_DOTTED_FAT);
             }
             //-----------------------
-            // jetzt die Linie ziehen:
+            // TODO: replace with switch statement
             grL.reset();
             grL.moveTo(_xAchseX[i1], _yAchseX[i1]);
             grL.lineTo(_xAchseX[i1] + breitePix[i1], _yAchseX[i1]);
@@ -471,7 +471,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 g2.setStroke(str_DOTTED_FAT);
             }
             //-----------------------
-            // jetzt die Linie ziehen:
+            // TODO: replace with switch statement
             grL.reset();
             grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
             grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
@@ -482,15 +482,15 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //==================================
     }
 
-    // UEberschreiben fuer SIGNAL:
+    //-----------------------
     protected void zeichneEinzelneSIGNALKoordinatenAchse_Y(final Graphics2D g2, final int i1) {
 
         GeneralPath grL = new GeneralPath();
         // i1 ... AchsenNummer --> Achtung: pro Graph gibt es je zwei y-Achsen
-        // SIGNAL --> y-Achse ist IMMER 'LIN'
+        // // now draw the line:
         //
         //==================================
-        // es gibt einen y-Tick bei '0' und einen bei '1'; und zwar fuer jeden SIGNAL-Verlauf innerhalb des entsprechenden Graphen
+        // // now draw the line:
         int z = 0;
         for (int curveIndex : indexDerKurveInDerMatrix) {
             final int grf = curveIndex / 1000;
@@ -521,7 +521,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         tickYminor[i1] = new int[yMinorTicksAnzahl];
         //==================================
         if (i1 % 2 != 0) {
-            return;  // nur linke y-Achse wird gezeichnet!
+            return;  // // only the left y-axis is drawn!
         }        //
         if (linienStilAchsenY[i1] == INVISIBLE) {
             return;
@@ -543,7 +543,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             System.out.println("Fehler: hhqqt5");
         }
         //-----------------------
-        // jetzt die Linie ziehen:
+        // TODO: replace with switch expression!
         grL.reset();
         grL.moveTo(_xAchseY[i1], _yAchseY[i1]);
         grL.lineTo(_xAchseY[i1], _yAchseY[i1] - hoehePix[i1]);
@@ -554,7 +554,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     }
 
     private void reorderLine(final int[] positionSIGNAL, int z1, int z2) {
-        // die zu bearbeitende Zeile ist im Array 'positionSIGNAL[]' von z1 nach z2 markiert -->
+        //-----------------------
         int[] toBeOrdered = new int[z2 - z1];
         int anzAlteEintraege = 0;  // ungleich '-1'
         for (int i1 = z1; i1 <= z2 - 1; i1++) {
@@ -600,21 +600,21 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-----------
     }
 
-    // y-Reihenfolge der SIGNAL-Verlaeufe -->
-    // wenn 'kurvenanzahl' veraendert wurde, muessen die unveraenderten SIGNAL-ZVs erhalten bleiben!
-    // daher muss der alte Wert von 'indexDerKurveInDerMatrix[]' gespeichert sein, und eine entsprechende Umrechnung erfolgen
+    // // now number everything '-1' after the old values ​​in ascending order -->
+    //-----------
+    //-----------
     private void setzeYPositionDerSIGNALverlaeufe() {
         //-------------------------------------
         if (positionSIGNAL != null) {
             //------------------------
-            // aktualisiert, weil sich die Kurvenanzahl geaendert haben koennte, zuwerst alles mit '-1' markieren -->
+            //-----------
             positionSIGNAL = new int[kurvenanzahl];
             for (int i1 = 0; i1 < kurvenanzahl; i1++) {
                 positionSIGNAL[i1] = -1;
             }
             //
-            // alte SIGNAL-Positionen werden in das neue 'positionSIGNAL'-Feld hineinkopiert,
-            // die nicht ueberschriebenen Werte sind weiterhin mit negativem Vorzeichen markiert
+            // // therefore the old value of 'indexDerKurveInDerMatrix[]' must be saved and a corresponding conversion must be carried out
+            // // therefore the old value of 'indexDerKurveInDerMatrix[]' must be saved and a corresponding conversion must be carried out
             for (int i1 = 0; i1 < indexDerKurveInDerMatrix.length; i1++) {
                 for (int i2 = 0; i2 < indexDerKurveInDerMatrixALT.length; i2++) {
                     if (indexDerKurveInDerMatrix[i1] == indexDerKurveInDerMatrixALT[i2]) {
@@ -623,9 +623,9 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 }
             }
             //
-            // jetzt Zeile fuer Zeile die ConnectionMatrix durchgehen:
-            // in jeder Zeile die alten Eintraege von 0 aufwaerts durchgehend nummerieren,
-            // dann die '-1'-Eintraege weitergehend aufsteigend nummerieren -->
+            //
+            // // old SIGNAL positions are copied into the new 'positionSIGNAL' field,
+            // // the values ​​that have not been overwritten are still marked with a negative sign
             int z1 = 0, z2 = 0;
             while (z2 < kurvenanzahl) {
                 while ((z2 < kurvenanzahl) && (indexDerKurveInDerMatrix[z1] / 1000 == indexDerKurveInDerMatrix[z2] / 1000)) {
@@ -648,7 +648,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 positionSIGNAL[i1] = positionsZaehler;
                 positionsZaehler++;
             }
-            // Anm.: die Kurve in der Matrix ganz links hat immer 'positionSIGNAL==0'
+            //-------------------------------------
             //
             this.speichereALTeWerteFuerPosition();
             //-------------------------------------
@@ -657,7 +657,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //System.out.println("******************************");
     }
 
-    // fuer Zugriff von 'DialogOrdnungSIGNAL' -->
+    // // Note: the curve in the matrix on the far left always has 'positionSIGNAL==0'
     public int[] getPositionSIGNAL() {
         return positionSIGNAL;
     }
@@ -686,7 +686,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             notwendigeHoehePixGRF[i1] = -1;  // default --> kein SIGNAL-Graph sondern ZV-Graph
             if (diagramTyp[i1] == DIAGRAM_TYP_SGN) {
-                int anzSGN = 0;  // Anzahl der SIGNAL-Verlaeufe pro SIGNAL-Graph
+                int anzSGN = 0;  // // Number of SIGNAL curves per SIGNAL graph
                 for (int i2 = 0; i2 < anzSignalePlusZeit; i2++) {
                     if (crvAchsenTyp[i1][i2] == ZUORDNUNG_SIGNAL) {
                         anzSGN++;
@@ -715,7 +715,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         final GeneralPath grL = new GeneralPath();
         // i1 ... KurvenNummer
         //===============================================
-        // nur die berechneten Datenpunkte werden auch gezeichnet --> zvCounter
+        // // the height available for the ZVs, ie. Total height minus SIGNAL heights -->
         //----------------------
         final int[] xPix = new int[_zvCounter];
         final int[] yPix = new int[_zvCounter];
@@ -733,7 +733,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             }
             //------------------
             double yValue = worksheetDaten.getValue(kurve_index_worksheetKolonnen_XY[i1][1], i2);
-            // Schwelle macht aus dem Analogsignal ein Digital-Signal -->
+            //
             try {
                 if (yValue < sgnSchwelle[indexZurKurveGehoerigeXachse[i1]]) {
                     yValue = positionSIGNAL[i1] * delta + sgnHeight[indexZurKurveGehoerigeXachse[i1]];
@@ -763,7 +763,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             assert false;
         }
         //-----------------------
-        // zur Beschriftung der SIGNAL-ZV im Graph -->
+        // TODO: replace with switch statement
         final String name = signalNamen[indexDerKurveInDerMatrix[i1] % 1000];
         if (xSchieberAktiv) {
             g2.drawString(
@@ -776,21 +776,21 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 this.getWidth() - DX_IN_RECHTS + TXT_DISTANCE_Y,
                 y0Kurve + sgnDistance[indexZurKurveGehoerigeXachse[i1]] + (int) (positionSIGNAL[i1] * delta + sgnHeight[indexZurKurveGehoerigeXachse[i1]]));
         //-----------------------
-        // jetzt die SIGNAL-Linie ziehen:
+        // // for labeling the SIGNAL-ZV in the graph -->
         g2.setClip(x0Kurve + 1, 0, breitePix[indexZurKurveGehoerigeYachse[i1]] - 2, 10000);
 
         grL.reset();
         if (kurveLinienstil[i1] != INVISIBLE) {
             grL.moveTo(xPix[0], yPix[0]);
             for (int i5 = 1; i5 < _zvCounter; i5++) {
-                if (yPix[i5] != yPix[i5 - 1]) {  // Umschaltvorgang wird in der Mitte zwischen 2 Datenpunkten realisiert --> optische Verbesserung
+                if (yPix[i5] != yPix[i5 - 1]) {  // // Switching process is implemented in the middle between 2 data points --> visual improvement
                     grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2.0, yPix[i5 - 1]);
                     grL.lineTo((xPix[i5 - 1] + xPix[i5]) / 2.0, yPix[i5]);
                 }
                 grL.lineTo(xPix[i5], yPix[i5]);
             }
             //---------------
-            // optional Farbfuellung der Digital-Signale zur besseren Unterscheidung von '0' und '1' -->
+            // // now draw the SIGNAL line:
             final GeneralPath grFill = new GeneralPath();
             grFill.append(grL.getPathIterator(null), false);
             final int nullLinie = y0Kurve + sgnDistance[indexZurKurveGehoerigeXachse[i1]] + (int) (positionSIGNAL[i1] * delta + sgnHeight[indexZurKurveGehoerigeXachse[i1]]);
@@ -825,7 +825,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //===============================================
     }
 
-    // wird aufgerufen von 'DigitalDialogGraphProperties' und 'DialogGraphProperties' -->
+    //---------------
     public void definiereAchsenbegrenzungenImAutoZoom() {
         this.definiereAchsenbegrenzungenImAutoZoom(worksheetDaten);
     }
@@ -841,7 +841,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             w2[i1] = -1e99;
         }  // init
         for (int i1 = 0; i1 < ws.getRowLength(); i1++) {  // geht durch die Spalten
-            for (int i2 = 0; i2 < _zvCounter; i2++) {  // geht Zeile fuer Zeile durch die selektierte Spalte
+            for (int i2 = 0; i2 < _zvCounter; i2++) {  // // goes through the selected column line by line
                 if (ws.getValue(i1, i2) < w1[i1]) {
                     w1[i1] = ws.getValue(i1, i2);
                 }
@@ -857,12 +857,12 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             minY[i1] = +1e99;
             maxY[i1] = -1e99;
         }
-        for (int i1 = 0; i1 < matrixZuordnungKurveDiagram.length; i1++) {   // geht durch die Zeilen
+        for (int i1 = 0; i1 < matrixZuordnungKurveDiagram.length; i1++) {   // // goes through the lines
             for (int i2 = 0; i2 < anzSignalePlusZeit; i2++) {
                 if (matrixZuordnungKurveDiagram[i1][i2] == ZUORDNUNG_X) {
                     minX[i1] = w1[i2];
                     maxX[i1] = w2[i2];
-                    // --> ausreichend, weil es nur eine X-Achse pro Matrix-Zeile gibt
+                    //--------------------------
                 } else if (matrixZuordnungKurveDiagram[i1][i2] == ZUORDNUNG_Y) {
                     if (w1[i2] < minY[i1]) {
                         minY[i1] = w1[i2];
@@ -870,7 +870,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                     if (w2[i2] > maxY[i1]) {
                         maxY[i1] = w2[i2];
                     }
-                    // --> Vergleich mit den Begrenzungen der eventuell anderen Y-Achsen
+                    // // --> sufficient because there is only one X-axis per matrix row
                 } else if (matrixZuordnungKurveDiagram[i1][i2] == ZUORDNUNG_SIGNAL) {
                     if (w1[i2] < minY[i1]) {
                         minY[i1] = w1[i2];
@@ -878,11 +878,11 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                     if (w2[i2] > maxY[i1]) {
                         maxY[i1] = w2[i2];
                     }
-                    // ist nur dann notwendig, wenn man Umschaltet DIGITAL --> ANALOG
+                    // // --> Comparison with the limitations of any other Y-axes
                 }
             }
-            // wenn Y definiert ist, nicht aber Y2, dann gibt es noch keine Achsenbegrenzung fuer die Y2-Achse (und umgekehrt)
-            // --> die Y2-Begrenzungen werden dann gleich den Y-Begrenzungen gesetzt (und umgekehrt) -->
+            // // --> Comparison with the limitations of any other Y-axes
+            // // --> Comparison with the limitations of any other Y-axes
             //if ((minY2[i1]==+1e99)||(maxY2[i1]==-1e99)) { minY2[i1]=minY[i1];   maxY2[i1]=maxY[i1]; }
             //if ((minY[i1] ==+1e99)||(maxY[i1] ==-1e99)) { minY[i1]= minY2[i1];  maxY[i1]= maxY2[i1]; }
             //
@@ -895,7 +895,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //--------------------------
         double[] xx1 = new double[anzGrfVisible], xx2 = new double[anzGrfVisible];  // X-Achse
         double[] yy1 = new double[anzGrfVisible], yy2 = new double[anzGrfVisible];  // Y-Achse  --> Muss noch individuell angepasst werden!!
-        boolean[] scX = new boolean[anzGrfVisible], scY = new boolean[anzGrfVisible];  // ist Auto-Scaling eingeschaltet?
+        boolean[] scX = new boolean[anzGrfVisible], scY = new boolean[anzGrfVisible];  // // is auto-scaling turned on?
         for (int i1 = 0; i1 < xx1.length; i1++) {
             xx1[i1] = minX[i1];
             xx2[i1] = maxX[i1];
@@ -931,8 +931,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             w1[i1] = +1e99;
             w2[i1] = -1e99;
         }  // init
-        for (int i1 = 0; i1 < ws.getRowLength(); i1++) {  // geht durch die Spalten
-            for (int i2 = 0; i2 < _zvCounter + 1; i2++) {  // geht Zeile fuer Zeile durch die selektierte Spalte
+        for (int i1 = 0; i1 < ws.getRowLength(); i1++) {  // // goes through the columns
+            for (int i2 = 0; i2 < _zvCounter + 1; i2++) {  // // goes through the selected column line by line
                 if (ws.getValue(i1, i2) < w1[i1]) {
                     w1[i1] = ws.getValue(i1, i2);
                 }
@@ -946,12 +946,12 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             minY[i1] = +1e99;
             maxY[i1] = -1e99;   // minX[i1]=+1e99;   maxX[i1]=-1e99;
         }
-        for (int i1 = 0; i1 < matrixZuordnungKurveDiagram.length; i1++) {   // geht durch die Zeilen
+        for (int i1 = 0; i1 < matrixZuordnungKurveDiagram.length; i1++) {   // // goes through the lines
             for (int i2 = 0; i2 < anzSignalePlusZeit; i2++) {
                 if (matrixZuordnungKurveDiagram[i1][i2] == ZUORDNUNG_X) {
                     minX[i1] = t1;
                     maxX[i1] = t2;
-                    // --> ausreichend, weil es nur eine X-Achse pro Matrix-Zeile gibt
+                    //--------------------------
                     if (minX[i1] == maxX[i1]) {
                         minX[i1] = 0;
                         maxX[i1] = 0.020;
@@ -965,8 +965,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                     }
                 }
             }
-            // wenn Y definiert ist, nicht aber Y2, dann gibt es noch keine Achsenbegrenzung fuer die Y2-Achse (und umgekehrt)
-            // --> die Y2-Begrenzungen werden dann gleich den Y-Begrenzungen gesetzt (und umgekehrt) -->
+            // // --> sufficient because there is only one X-axis per matrix row
+            // // --> sufficient because there is only one X-axis per matrix row
             //if ((minY2[i1]==+1e99)||(maxY2[i1]==-1e99)) { minY2[i1]=minY[i1];   maxY2[i1]=maxY[i1]; }
             //if ((minY[i1] ==+1e99)||(maxY[i1] ==-1e99)) { minY[i1]= minY2[i1];  maxY[i1]= maxY2[i1]; }
             //
@@ -1017,7 +1017,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-------------------------------------
         this.speichereALTeWerteFuerPosition();
         //
-        indexDerKurveInDerMatrix = new int[kurvenanzahl];  // zur Zuordnung der Kurven-Indizes zur Zuordnungsmatrix
+        indexDerKurveInDerMatrix = new int[kurvenanzahl];  // // to assign the curve indices to the assignment matrix
         //
         int[] zugehoerigkeitX = new int[kurvenanzahl];
         int[] zugehoerigkeitY = new int[kurvenanzahl];
@@ -1028,7 +1028,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
         for (int kurvenIndex = 0; kurvenIndex < kurvenanzahl; kurvenIndex++) {
             for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
-                final int zugX = i1;  // weil alle Kurven eines Graphen die gleiche X-Achse sehen
+                final int zugX = i1;  // // because all curves of a graph see the same x-axis
                 for (int i2 = 0; i2 < matrixZuordnungKurveDiagram[0].length; i2++) {
                     if ((matrixZuordnungKurveDiagram[i1][i2] == this.ZUORDNUNG_Y) || (matrixZuordnungKurveDiagram[i1][i2] == this.ZUORDNUNG_SIGNAL)) {
                         zugehoerigkeitX[kurvenIndex] = zugX;
@@ -1126,7 +1126,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     @Override
     public void setzeAchsen() {
         //-------------------------------------
-        anzGrfVisible = 0;  // Anzahl der anzuzeigenden Graphen (d.h.  visible==true)
+        anzGrfVisible = 0;  // // Number of graphs to display (i.e. visible==true)
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             anzGrfVisible++;
         }
@@ -1134,7 +1134,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //
         zeichneDiagrammUmrandung = new boolean[anzGrfVisible];
         //-----------
-        // Bereichsgrenzen fuers Maus-Klicken --> wird hier fuer 2 Diagramme definiert
+        //=====================================
         final int breite = this.getWidth(), hoehe = this.getHoeheFuerZVInPixel();
         xGrfMIN = new int[anzGrfVisible];
         xGrfMAX = new int[anzGrfVisible];
@@ -1144,8 +1144,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
         yGrfMIN = new int[anzGrfVisible];
         yGrfMAX = new int[anzGrfVisible];
-        double ySpGes = 0;   // Gewichtung der y-Achsen
-        int iyy = 1;  // Index fuer y-Achse
+        double ySpGes = 0;   // // Weighting of the y-axes
+        int iyy = 1;  // // Index for y-axis
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             if (diagramTyp[i1] == DIAGRAM_TYP_ZV) {
                 ySpGes += ySpacingDiagram[i1];
@@ -1161,7 +1161,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-----------
         int[] laenge_xAchse = new int[anzGrfVisible], posX_xAchse = new int[anzGrfVisible], posY_xAchse = new int[anzGrfVisible];
         int[] laenge_yAchse = new int[anzGrfVisible], posX_yAchse = new int[anzGrfVisible], posY_yAchse = new int[anzGrfVisible];
-        int ix = 0, iy = 0;  // Index fuer x- und y-Achse
+        int ix = 0, iy = 0;  // // Index for x and y axes
         ySpGes = 0;
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             if (diagramTyp[i1] == DIAGRAM_TYP_ZV) {
@@ -1188,7 +1188,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-----------
         double[] x1 = new double[anzGrfVisible], x2 = new double[anzGrfVisible];  // X-Achse
         double[] y1 = new double[anzGrfVisible], y2 = new double[anzGrfVisible];  // Y-Achse  --> Muss noch individuell angepasst werden!!
-        boolean[] scX = new boolean[anzGrfVisible], scY = new boolean[anzGrfVisible];  // ist Auto-Scaling eingeschaltet?
+        boolean[] scX = new boolean[anzGrfVisible], scY = new boolean[anzGrfVisible];  // // is auto-scaling turned on?
         for (int i1 = 0; i1 < x1.length; i1++) {
             x1[i1] = minX[i1];
             x2[i1] = maxX[i1];
@@ -1394,7 +1394,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
     public void aktualisiereAchsenNachResizing() {
         //-------------------------------------
-        // Bereichsgrenzen fuers Maus-Klicken --> wird hier fuer 2 Diagramme definiert
+        //-----------
         final int breite = this.getWidth(), hoehe = this.getHoeheFuerZVInPixel();
         xGrfMIN = new int[anzGrfVisible];
         xGrfMAX = new int[anzGrfVisible];
@@ -1404,8 +1404,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }
         yGrfMIN = new int[anzGrfVisible];
         yGrfMAX = new int[anzGrfVisible];
-        double ySpGes = 0;   // Gewichtung der y-Achsen
-        int iyy = 1;  // Index fuer y-Achse
+        double ySpGes = 0;   // // Weighting of the y-axes
+        int iyy = 1;  // // Index for y-axis
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             if (diagramTyp[i1] == DIAGRAM_TYP_ZV) {
                 ySpGes += ySpacingDiagram[i1];
@@ -1421,7 +1421,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-------------------------------------
         int[] laenge_xAchse = new int[anzGrfVisible], posX_xAchse = new int[anzGrfVisible], posY_xAchse = new int[anzGrfVisible];
         int[] laenge_yAchse = new int[anzGrfVisible], posX_yAchse = new int[anzGrfVisible], posY_yAchse = new int[anzGrfVisible];
-        int ix = 0, iy = 0;  // Index fuer x- und y-Achse
+        int ix = 0, iy = 0;  // // Index for x and y axes
         ySpGes = 0;
         for (int i1 = 0; i1 < this.getAnzahlDiagramme(); i1++) {
             if (diagramTyp[i1] == DIAGRAM_TYP_ZV) {
@@ -1455,8 +1455,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
     public void blendeEventuellGridLinienAus() {
         //-------------------------------------
-        // wenn die Diagramme in einem sehr kleinen Fenster gezeichnet werden, dann muessen eventuell die Grid-Linien ausgeblendet werden,
-        // um eine gewisse Uebersichtlichkeit zu wahren -->
+        //-------------
+        //-------------
         //
         final double px1 = 230, px2 = 100, pxr = 2.5;
         final int[][] showGridXMax = new int[anzGrfVisible][2], showGridXMin = new int[anzGrfVisible][2];
@@ -1503,7 +1503,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
     public void setMausModus(final int mausModus) {
         this.mausModusALT = this.mausModus;  // alten Zustand abspeichern
-        this.mausModus = mausModus;  // in den neuen Zustand gehen
+        this.mausModus = mausModus;  // // go to the new state
         //--------------------------
         switch (mausModus) {
             case MAUSMODUS_NIX:
@@ -1904,7 +1904,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         // no-op
     }
 
-    // Wenn mit der Maus in das Pixel-Feld geklickt wird -->
+    //-------------------
     private double[] getValueFromPixel(int xPix, int yPix) {
         //-------------------
         double achseXmin_ = -1, achseYmin_ = -1;
@@ -2053,8 +2053,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
     private void zoomRechteck(final boolean isUndoZoom) {
         //-------------------
-        // (1) fuer eines der Diagramme wird ein Rechteck-Zoom gemacht:
-        //  der x-Bereich gilt auch fuer alle anderen Diagramm, der y-Bereich des entsprechenden Diagramms entspricht dem Zoom-Rechteck
+        //
+        //
         //
         int indexAxis = -1;
         if (isUndoZoom) {
@@ -2129,7 +2129,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
 
             if (!controlZoomOn) {
                 minY[indexAxis] = yMIN;
-                maxY[indexAxis] = yMAX;  // die ZoomRechteck-Werte fuer Y nur fuer das selektierte Diagramm
+                maxY[indexAxis] = yMAX;  // // the ZoomRectangle values ​​for Y only for the selected diagram
             }
 
 
@@ -2145,7 +2145,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         }  // init
         for (int i1 = 0; i1 < worksheetDaten.getRowLength(); i1++) // geht durch die Spalten
         {
-            for (int i2 = 0; i2 < _zvCounter + 1; i2++) {  // geht Zeile fuer Zeile durch die selektierte Spalte
+            for (int i2 = 0; i2 < _zvCounter + 1; i2++) {  // // goes through the selected column line by line
                 if (i2 < worksheetDaten.getColumnLength()) {
                     if (worksheetDaten.getValue(i1, i2) < value1[i1]) {
                         value1[i1] = worksheetDaten.getValue(i1, i2);
@@ -2184,7 +2184,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-------------------
         double[] xx1 = new double[anzGrfVisible], xx2 = new double[anzGrfVisible];  // X-Achse
         double[] yy1 = new double[anzGrfVisible], yy2 = new double[anzGrfVisible];  // Y-Achse  --> Muss noch individuell angepasst werden!!
-        boolean[] scX = new boolean[anzGrfVisible], scY = new boolean[anzGrfVisible];  // ist Auto-Scaling eingeschaltet?
+        boolean[] scX = new boolean[anzGrfVisible], scY = new boolean[anzGrfVisible];  // // is auto-scaling turned on?
         for (int i1 = 0; i1 < xx1.length; i1++) {
             xx1[i1] = minX[i1];
             xx2[i1] = maxX[i1];
@@ -2218,8 +2218,8 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         //-------------------
     }
 
-    // In der SCOPE-Darstellung werden die Daten auf einige 1000 (Pixel)punkte in Hi-Lo-Darstellung reduziert, um die Effizient
-    // der grafischen Darstellung signifikant zu erhoehen. Wenn man beispielsweise hineinzoomt, dann muessen die Daten mit
+    //
+    //
     // deutlich hoeherer Aufloesung nachgeladen und in Hi-Lo-Darstellung uebertragen werden, damit die grafische Darstellung
     // nicht wichtige Info verliert (zB. 'ausgefranste' Rippelkurven, verschwundene Peaks, Aus Rechtecken werden Dreiecke usw.)
     //
@@ -2257,7 +2257,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             }
             double xmax = wsRAM.getValue(0, estimatedIndex);  // estimated
 
-            // falls man mit 'Pause' unvollstaendig simuliert und dann mehr als einmal zoomt:
+            //-------------
             while (xmax == 0) {
                 estimatedIndex = (int) (0.8 * estimatedIndex);
                 xmax = wsRAM.getValue(0, estimatedIndex);
@@ -2316,7 +2316,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             //-------------
             // RAM-Daten auf Hi-Lo mit SCOPE-Aufloesung reduzieren -->
             //
-            int zvC = 0;  // lokaler Zaehler in den komprimierten SCOPE-Daten
+            int zvC = 0;  // // local counter in the compressed SCOPE data
             final double dtSCOPE = (x2RAM - x1RAM) / INTERVALLE_ENTLANG_X;
             if (dtSCOPE > wsRAM.getTimeIntervalResolution()) {
                 int lowerIndex = zeigerX1_RAM;
@@ -2374,7 +2374,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 }
             }
             //-------------
-            // ZV-Daten in der Worksheet-Anzeige aktualisieren -->
+            // // Y-Clip --> Worksheet data is searched
             _scope.ladeWorkSheet();
 
             //-------------
@@ -2402,10 +2402,10 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
     }
 
     public double[] getXClipNo(final int im1, final int im2) {
-        // X-Clip --> Worksheet-Daten der zugeordneten X-Achse werden durchsucht
+        // dh. dort gibt es keine Y-Achsen-Begrenzung
         // CLIP_NO bedeutet: Worksheet-Daten sind begrenzend
         //------------------
-        // (1) Aufsuchen der zugeordneten X-Achse:
+        // dh. dort gibt es keine Y-Achsen-Begrenzung
         int indexX = -1;
         for (int i1 = 0; i1 < worksheetDaten.getRowLength(); i1++) {
             if (matrixZuordnungKurveDiagram[im1][i1] == ZUORDNUNG_X) {

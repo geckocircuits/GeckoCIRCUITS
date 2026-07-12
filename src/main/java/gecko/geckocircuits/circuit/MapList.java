@@ -33,7 +33,7 @@ public class MapList extends ArrayList<AbstractCircuitSheetComponent> {
     private final Class<?>[] registeredTypes = new Class<?>[]{
         AbstractCircuitBlockInterface.class, RegelBlock.class, AbstractSpecialBlock.class, TextFieldBlock.class,
         ComponentCoupable.class, PotentialCoupable.class,
-        AbstractBlockInterface.class, Verbindung.class, SubcircuitBlock.class
+        AbstractBlockInterface.class, Connection.class, SubcircuitBlock.class
     };
     private final Map<Class<?>, ArrayList> classMap = new HashMap<Class<?>, ArrayList>();
 

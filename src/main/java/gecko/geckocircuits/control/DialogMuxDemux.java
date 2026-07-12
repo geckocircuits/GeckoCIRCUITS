@@ -33,11 +33,11 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         jTextFieldIdString.setText(regelBlock.getStringID());
         _regelBlock = regelBlock;
 
-        if (_regelBlock instanceof ReglerMUX) {
+        if (_regelBlock instanceof ControlMUX) {
             jSpinnerPortNumber.setValue(regelBlock.XIN.size());
         }
 
-        if (_regelBlock instanceof ReglerDemux) {
+        if (_regelBlock instanceof ControlDemux) {
             jSpinnerPortNumber.setValue(regelBlock.YOUT.size());
         }
     }
@@ -157,20 +157,20 @@ public class DialogMuxDemux extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped
 
     private void jSpinnerPortNumberStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerPortNumberStateChanged
-        if (_regelBlock instanceof ReglerToEXTERNAL) {
-            ((ReglerToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlToEXTERNAL) {
+            ((ControlToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if (_regelBlock instanceof ReglerFromEXTERNAL) {
-            ((ReglerFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlFromEXTERNAL) {
+            ((ControlFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if(_regelBlock instanceof ReglerMUX) {
-            ((ReglerMUX) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if(_regelBlock instanceof ControlMUX) {
+            ((ControlMUX) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if(_regelBlock instanceof ReglerDemux) {
-            ((ReglerDemux) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if(_regelBlock instanceof ControlDemux) {
+            ((ControlDemux) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
 

@@ -14,7 +14,7 @@
 package gecko.geckocircuits.control;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -35,7 +35,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
 
 
     @Override
-    public void baueGUI() {
+    public void buildGUI() {
         this.setLocationRelativeTo(GeckoSim._win);
         con = this.getContentPane();
         con.setLayout(new BorderLayout());

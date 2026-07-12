@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.control.ControlOSZI;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -23,12 +23,12 @@ import javax.swing.JOptionPane;
  * @author andreas
  */
 public class DialogScopeSettings extends javax.swing.JDialog {
-    private final ReglerOSZI _reglerOSZI;
+    private final ControlOSZI _reglerOSZI;
     private final boolean _initDone;
     private final JFrame _parentScopeFrame;
 
 
-    DialogScopeSettings(final JFrame parent, final ReglerOSZI regelBlockOSZI, final boolean modal) {
+    DialogScopeSettings(final JFrame parent, final ControlOSZI regelBlockOSZI, final boolean modal) {
         super(parent, modal);
         initComponents();
         this.setTitle("General scope settings");

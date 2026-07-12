@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal;
 import gecko.geckocircuits.control.Point;
-import gecko.geckocircuits.control.ReglerTERMINAL;
+import gecko.geckocircuits.control.ControlTERMINAL;
 import gecko.geckocircuits.control.SubCircuitSheet;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -75,7 +75,7 @@ public final class TerminalSubCircuitBlock extends AbstractTerminal implements C
             return lkTerminal.getSimulationDomain();
         }
 
-        if (_lkTerminal instanceof ReglerTERMINAL) {
+        if (_lkTerminal instanceof ControlTERMINAL) {
             return ConnectorType.CONTROL;
         }
         assert false;

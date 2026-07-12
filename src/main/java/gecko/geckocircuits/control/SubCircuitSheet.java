@@ -17,7 +17,7 @@ import gecko.geckocircuits.circuit.circuitcomponents.TerminalCircuit;
 import gecko.geckocircuits.circuit.circuitcomponents.DialogSubCktSettings;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.geckocircuits.circuit.*;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -92,7 +92,7 @@ public class SubCircuitSheet extends CircuitSheet {
                         newElement = AbstractTypeInfo.fabricNew(AbstractTypeInfo.getTypeInfoFromClass(TerminalCircuit.class));
                         break;
                     case SchematicEditor2.WIRE_MODE_CONTROL:
-                        newElement = AbstractTypeInfo.fabricNew(AbstractTypeInfo.getTypeInfoFromClass(ReglerTERMINAL.class));
+                        newElement = AbstractTypeInfo.fabricNew(AbstractTypeInfo.getTypeInfoFromClass(ControlTERMINAL.class));
                         break;
                     default:
                         assert false;

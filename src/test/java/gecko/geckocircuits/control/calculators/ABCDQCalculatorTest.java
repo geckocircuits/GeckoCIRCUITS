@@ -36,7 +36,7 @@ public class ABCDQCalculatorTest {
     public void testZeroInputs() {
         // With all zero inputs, outputs should be zero
         setInputs(0, 0, 0, 0);
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
         assertEquals("d should be 0 for zero inputs", 0.0, calculator._outputSignal[0][0], TOLERANCE);
         assertEquals("q should be 0 for zero inputs", 0.0, calculator._outputSignal[1][0], TOLERANCE);
     }
@@ -51,7 +51,7 @@ public class ABCDQCalculatorTest {
         double theta = 0.0;
 
         setInputs(va, vb, vc, theta);
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertEquals("d-component at theta=0", 1.0, calculator._outputSignal[0][0], 1e-6);
         assertEquals("q-component at theta=0", 0.0, calculator._outputSignal[1][0], 1e-6);
@@ -66,7 +66,7 @@ public class ABCDQCalculatorTest {
         double theta = Math.PI / 2;
 
         setInputs(va, vb, vc, theta);
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         assertEquals("d-component at theta=90", 0.0, calculator._outputSignal[0][0], 1e-6);
         assertEquals("q-component at theta=90", -1.0, calculator._outputSignal[1][0], 1e-6);
@@ -76,7 +76,7 @@ public class ABCDQCalculatorTest {
     public void testSinglePhaseVoltage() {
         // Test with voltage only in phase A
         setInputs(1.0, 0.0, 0.0, 0.0);
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // With Va=1 and balanced reference at theta=0
         double expectedD = (2 * (1.0 - 0.0) * 1.0 + (0.0 - 0.0) * (1.0 + SQRT3 * 0.0)) / 3;
@@ -88,7 +88,7 @@ public class ABCDQCalculatorTest {
     public void testNegativeTheta() {
         // Test with negative angle
         setInputs(1.0, -0.5, -0.5, -Math.PI / 3);
-        calculator.berechneYOUT(0.001);
+        calculator.calculateYOUT(0.001);
 
         // Rotation should work for negative angles too
         assertNotNull("Should calculate output for negative theta",

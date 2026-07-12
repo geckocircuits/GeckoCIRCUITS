@@ -13,9 +13,9 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFonts;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -33,10 +33,10 @@ import javax.swing.border.TitledBorder;
 public final class PanelCharacteristicsResult extends JPanel {
     private final JPanel _pERGx = new JPanel();
 
-    private final FormatJTextField[] _ftfAVG;  // Textfelder fuer AVG-Werte
-    private final FormatJTextField[] _ftfRMS;  // Textfelder fuer RMS-Werte
-    private final FormatJTextField[] _ftfMIN, _ftfMAX;  // Textfelder fuer minimale und maximale Werte
-    // Textfelder fuer weitere Kennwerte:
+    private final FormatJTextField[] _ftfAVG;  // // Text fields for AVG values
+    private final FormatJTextField[] _ftfRMS;  // // Text fields for RMS values
+    private final FormatJTextField[] _ftfMIN, _ftfMAX;  // // Text fields for minimum and maximum values
+    // // Text fields for further characteristic values:
     private final FormatJTextField[] _ftfCREST;
     private final FormatJTextField[] _ftfSHAPE;
     private final FormatJTextField[] _ftfTHD;

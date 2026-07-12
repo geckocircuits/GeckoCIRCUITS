@@ -17,7 +17,7 @@ package gecko.core.control.calculators;
 public final class NotCalculator extends AbstractSingleInputSingleOutputCalculator {
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         if (_inputSignal[0][0] < SIGNAL_THRESHOLD) {
             _outputSignal[0][0] = 1;  // Logik-Schwellwert --> 0.5
         } else {

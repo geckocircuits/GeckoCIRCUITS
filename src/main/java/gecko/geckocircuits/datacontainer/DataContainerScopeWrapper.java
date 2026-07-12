@@ -163,7 +163,7 @@ public final class DataContainerScopeWrapper extends AbstractDataContainer imple
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _globalContainer.getTimeSeries(row);
     }
 

@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ComponentCoupable;
 import gecko.core.circuit.CircuitSourceType;
@@ -55,7 +55,7 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
     }
 
     @Override
-    void baueGUIIndividual() {
+    void buildGUIIndividual() {
 
         String labelText1 = "";
 

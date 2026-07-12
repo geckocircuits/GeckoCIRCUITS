@@ -23,13 +23,13 @@ public final class CounterCalculatable extends AbstractTwoInputsOneOutputCalcula
     private double _lastValue = 0;
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         if ((_inputSignal[0][0] >= SIGNAL_THRESHOLD) && (_lastValue < SIGNAL_THRESHOLD)) {
             _outputSignal[0][0]++;
         }
         if (_inputSignal[1][0] > SIGNAL_THRESHOLD) {
             _outputSignal[0][0] = 0;  // Logik-Schwelle --> 0.5;  RESET bei Input '1' (somit braucht man
-            // den Anschluss nicht extra mit einem const=1 - Block belegen, damit der Counter laeuft)
+            // // do not assign a const=1 block to the connection so that the counter runs)
         }
         _lastValue = _inputSignal[0][0];
 

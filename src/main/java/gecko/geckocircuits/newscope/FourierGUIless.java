@@ -23,9 +23,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class FourierGUIless {
     private final AbstractDataContainer _worksheet;
     private final String[] _header;
-    private final double _baseFreq;  // Grundfrequenz fuer Fourieranalyse
-    private final int _nMin, _nMax;  // Grundfrequenz-Vielfache fuer Fourieranalyse
-    private final double _rng1, _rng2;  // Bereichsgrenze fuer Berechnung
+    private final double _baseFreq;  // // Fundamental frequency for Fourier analysis
+    private final int _nMin, _nMax;  // // Fundamental frequency multiples for Fourier analysis
+    private final double _rng1, _rng2;  // // Range limit for calculation
     private int _nValues;
     private static final int FOUR = 4;
 

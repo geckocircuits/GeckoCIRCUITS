@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
@@ -50,7 +50,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     double _omegaElectric, _thetaElectric;
     public double _omegaMechanic, _omegaMechanicOld, _thetaMechanic, _thetaMechanicOld;
     private double _polePairs, _drehzahl, _torqueEl;
-    private double _torqueMech = 0; // wird vorgegeben (zB. als Signal) -->
+    private double _torqueMech = 0; // // is specified (e.g. as a signal) -->
 
     final UserParameter<Double> _polePairsParameter = UserParameter.Builder.
             <Double>start("polePairs", 1.0).

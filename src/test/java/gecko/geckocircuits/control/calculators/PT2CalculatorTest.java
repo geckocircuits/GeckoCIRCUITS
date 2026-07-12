@@ -33,7 +33,7 @@ public class PT2CalculatorTest {
     public void testBerechneYOUT() {
         _calculator._inputSignal[0][0] = 1;
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
-            _calculator.berechneYOUT(DELTA_T);
+            _calculator.calculateYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
             final double expected = 1 - Math.cos(time);
             if(time > END_TIME/2) { // the first value is nonsense!
@@ -48,7 +48,7 @@ public class PT2CalculatorTest {
         _calculator.setTimeConstant(newTimeConstant);
         _calculator._inputSignal[0][0] = 1;
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
-            _calculator.berechneYOUT(DELTA_T);
+            _calculator.calculateYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
             final double expected = 1 - Math.cos(time / newTimeConstant);
             if(time > END_TIME/2) { // the first value is nonsense!
@@ -64,7 +64,7 @@ public class PT2CalculatorTest {
         final double newGain = -2;
         _calculator.setGain(newGain);
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
-            _calculator.berechneYOUT(DELTA_T);
+            _calculator.calculateYOUT(DELTA_T);
             final double result = _calculator._outputSignal[0][0];
             final double expected = newGain * (1 - Math.cos(time));
             if(time > END_TIME/2) { // the first value is nonsense!

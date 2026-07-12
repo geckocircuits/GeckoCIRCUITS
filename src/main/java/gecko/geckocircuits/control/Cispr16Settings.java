@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.circuitcomponents.TextInfoType;
 import gecko.i18n.resources.I18nKeys;
 
@@ -37,7 +37,7 @@ public final class Cispr16Settings {
 
     public final UserParameter<Boolean> _automaticQPSelection;
 
-    public Cispr16Settings(final ReglerCISPR16 regler) {
+    public Cispr16Settings(final ControlCISPR16 regler) {
          _showName = UserParameter.Builder.
             <Boolean>start("showName", true).
             longName(I18nKeys.DISPLAY_COMPONENT_NAME_IN_CIRCUIT_SHEET).

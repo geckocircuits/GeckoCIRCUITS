@@ -204,7 +204,7 @@ public final class Cispr16Fft {
         }
     }
 
-    // float-Version von four1()
+    // // float version of four1()
     //
     public static void ffour1(final float[] data, final int numberPoints, final int isign) {
         int mmm;

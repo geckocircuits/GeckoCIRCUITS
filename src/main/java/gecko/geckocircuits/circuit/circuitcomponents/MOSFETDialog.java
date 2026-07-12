@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.FormatJTextField;
 import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;

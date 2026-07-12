@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.AbstractComponentTyp;
+import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @author andy
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Enum exposes type info for component configuration")
-public enum CircuitTyp implements AbstractComponentTyp {
+public enum CircuitTyp implements AbstractComponentType {
 
     LK_R(1, ResistorCircuit.TYPE_INFO),
     LK_L(2, InductorWOCoupling.TYPE_INFO),
@@ -53,7 +53,7 @@ public enum CircuitTyp implements AbstractComponentTyp {
     REL_RELUCTANCE(24, ResistorReluctance.TYPE_INFO),
     REL_INDUCTOR(25, ReluctanceInductor.TYPE_INFO),
     REL_MMF(26, VoltageSourceReluctanceMMF.TYPE_INFO),
-    // this was moved to SpecialTyp!!! : SUBCIRCUIT(27),
+    // this was moved to SpecialType!!! : SUBCIRCUIT(27),
     LK_MOSFET(28, MOSFET.TYPE_INFO),
     LK_TERMINAL(29, TerminalCircuit.TYPE_INFO ),
     REL_TERMINAL(30, RelTerminal.TYPE_INFO),

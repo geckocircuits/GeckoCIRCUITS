@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.ScopeSignalMean;
 import gecko.geckocircuits.newscope.ScopeSignalRegular;
@@ -164,7 +164,7 @@ public final class DataContainerMeanWrapper extends AbstractDataContainer {
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

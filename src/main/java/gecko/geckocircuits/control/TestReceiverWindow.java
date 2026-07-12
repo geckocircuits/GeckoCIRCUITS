@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.SaveViewFrame;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.SaveViewFrame;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerCompressable;
@@ -41,7 +41,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class TestReceiverWindow extends JFrame {
 
     private static final TechFormat tcf = new TechFormat();
-    private final ReglerCISPR16 _reglerCISPR16;
+    private final ControlCISPR16 _reglerCISPR16;
     private final Cispr16Settings _settings;
     private boolean initDone = false;
     private final GraferV4 _graferNew;
@@ -64,7 +64,7 @@ public final class TestReceiverWindow extends JFrame {
     public static final int INDEX_FOURIER = 7;
     private boolean _calculationCompleted = false;
 
-    public TestReceiverWindow(final ReglerCISPR16 regelBlock) {
+    public TestReceiverWindow(final ControlCISPR16 regelBlock) {
         initComponents();
         _reglerCISPR16 = regelBlock;
         _settings = regelBlock.getSettings();

@@ -14,8 +14,8 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.core.datacontainer.HiLoData;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalFonts;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.DataContainerNullData;

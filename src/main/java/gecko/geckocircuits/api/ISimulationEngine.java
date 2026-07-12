@@ -18,7 +18,7 @@ package gecko.geckocircuits.api;
  *
  * Defines the contract for simulation lifecycle management including initialization,
  * execution, pausing, and time control. This interface decouples simulation consumers
- * from the concrete SimulationsKern implementation.
+ * from the concrete SimulationKernel implementation.
  *
  * <p>Typical usage:
  * <pre>
@@ -28,7 +28,7 @@ package gecko.geckocircuits.api;
  * engine.runSimulation();
  * </pre>
  *
- * @see gecko.geckocircuits.circuit.SimulationsKern
+ * @see gecko.geckocircuits.circuit.SimulationKernel
  */
 public interface ISimulationEngine {
 

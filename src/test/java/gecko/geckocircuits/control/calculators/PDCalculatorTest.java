@@ -38,7 +38,7 @@ public class PDCalculatorTest {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             final double value = 2 * Math.sin(5 * time);
             _pdCalculator._inputSignal[0][0] = value;
-            _pdCalculator.berechneYOUT(DELTA_T);
+            _pdCalculator.calculateYOUT(DELTA_T);
             final double result = _pdCalculator._outputSignal[0][0];
             final double expected = 10 * Math.cos(5 * time);
 
@@ -57,7 +57,7 @@ public class PDCalculatorTest {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             double value = 2 * Math.sin(5 * time);
             _pdCalculator._inputSignal[0][0] = value;
-            _pdCalculator.berechneYOUT(DELTA_T);
+            _pdCalculator.calculateYOUT(DELTA_T);
             double result = _pdCalculator._outputSignal[0][0];
             double expected = -20 * Math.cos(5 * time);
 

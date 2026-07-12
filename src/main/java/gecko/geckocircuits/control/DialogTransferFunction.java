@@ -36,12 +36,12 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
 
     private final DefaultListModel<ComplexPrinter> _nomModel = new DefaultListModel<ComplexPrinter>();
     private final DefaultListModel<ComplexPrinter> _deNomModel = new DefaultListModel<ComplexPrinter>();
-    private final ReglerTransferFunction _reglerTF;
+    private final ControlTransferFunction _reglerTF;
     private boolean _inPolynomialMode = false;
     private final RegelBlock _elementControl;
     private final boolean _initDone;
 
-    public DialogTransferFunction(final ReglerTransferFunction reglerTF, final RegelBlock element) {
+    public DialogTransferFunction(final ControlTransferFunction reglerTF, final RegelBlock element) {
         super();
         initComponents();
         this.setLocationRelativeTo(GeckoSim._win);
@@ -323,7 +323,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         jCheckBoxInitial = new javax.swing.JCheckBox();
         jTextFieldPoleZ = new gecko.geckocircuits.control.FractionPrinter();
         jTextFieldPoly = new gecko.geckocircuits.control.FractionPrinter();
-        jTextFieldConst = new gecko.geckocircuits.allg.FormatJTextField();
+        jTextFieldConst = new gecko.geckocircuits.general.FormatJTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Transfer Function");
@@ -671,7 +671,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
             imagValue = 0;
         }
         final NComplex value = new NComplex(realValue, imagValue);
-        if (_nomModel.size() < ReglerTransferFunction.MAX_ARRAY_SIZE / 2) {
+        if (_nomModel.size() < ControlTransferFunction.MAX_ARRAY_SIZE / 2) {
             _nomModel.addElement(new ComplexPrinter(value));
         }
         updateTransferView();
@@ -698,7 +698,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         }
 
         final NComplex value = new NComplex(realValue, imagValue);
-        if (_deNomModel.size() < ReglerTransferFunction.MAX_ARRAY_SIZE / 2) {
+        if (_deNomModel.size() < ControlTransferFunction.MAX_ARRAY_SIZE / 2) {
             _deNomModel.addElement(new ComplexPrinter(value));
         }
         updateTransferView();
@@ -821,7 +821,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
     private javax.swing.JTextField jTFInsertDeNumIm;
     private javax.swing.JTextField jTFInsertNumIm;
     private javax.swing.JTextField jTFInsertNumberRe;
-    private gecko.geckocircuits.allg.FormatJTextField jTextFieldConst;
+    private gecko.geckocircuits.general.FormatJTextField jTextFieldConst;
     private javax.swing.JTextField jTextFieldName;
     private FractionPrinter jTextFieldPoleZ;
     private FractionPrinter jTextFieldPoly;

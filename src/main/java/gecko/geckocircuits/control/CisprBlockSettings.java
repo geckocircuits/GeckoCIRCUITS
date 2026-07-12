@@ -20,9 +20,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores CISPR block reference for configuration")
 public class CisprBlockSettings extends GeckoDialog {
-    private final ReglerCISPR16 _regler;
+    private final ControlCISPR16 _regler;
 
-    public CisprBlockSettings(final ReglerCISPR16 regler, final java.awt.Frame parent) {
+    public CisprBlockSettings(final ControlCISPR16 regler, final java.awt.Frame parent) {
         super(parent, true);
         initComponents();
         jTextFieldName.setText(regler.getStringID());

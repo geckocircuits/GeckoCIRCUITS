@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.CircuitComponentCore;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

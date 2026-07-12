@@ -42,7 +42,7 @@ public final class SignalCalculatorImport extends AbstractSignalCalculator imple
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
 
         if (_tSigStart > _time) {
             _tSigStart = 0;  // zB. bei Neustarten der Simulation

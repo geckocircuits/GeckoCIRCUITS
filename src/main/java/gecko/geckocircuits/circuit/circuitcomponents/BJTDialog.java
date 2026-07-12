@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFonts;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.ButtonGroup;
@@ -32,7 +32,7 @@ class BJTDialog extends DialogElementLK<BJT> {
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
         JPanel pIN = createParameterPanel(element._forwardBeta, element._backwardBeta,
                 element._baseResistance, element._emitterResistance, element._collectorResistance, element._forwardVoltage);
 

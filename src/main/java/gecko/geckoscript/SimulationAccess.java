@@ -15,7 +15,7 @@ package gecko.geckoscript;
 
 import gecko.GeckoSim;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.*;
@@ -253,10 +253,10 @@ public final class SimulationAccess implements GeckoFileable {
             throws Exception {
         AbstractBlockInterface block = IDStringDialog.getComponentByName(scopename);
 
-        if (!(block instanceof ReglerOSZI)) {
+        if (!(block instanceof ControlOSZI)) {
             throw new Exception("Supplied element " + scopename + "to getSignalCharacteristics function is not a SCOPE");
         } else {
-            ReglerOSZI scope = (ReglerOSZI) block;
+            ControlOSZI scope = (ControlOSZI) block;
             return scope.getChannelCharacteristics(port, start_time, end_time);
         }
 
@@ -265,10 +265,10 @@ public final class SimulationAccess implements GeckoFileable {
     public double[][] doFourierAnalysis(String scopename, int port, double start_time, double end_time, int harmonics) throws Exception {
         AbstractBlockInterface block = IDStringDialog.getComponentByName(scopename);
 
-        if (!(block instanceof ReglerOSZI)) {
+        if (!(block instanceof ControlOSZI)) {
             throw new Exception("Supplied element " + scopename + "to getSignalCharacteristics function is not a SCOPE");
         } else {
-            ReglerOSZI scope = (ReglerOSZI) block;
+            ControlOSZI scope = (ControlOSZI) block;
             return scope.doFourierAnalysis(port, start_time, end_time, harmonics);
         }
     }
@@ -393,7 +393,7 @@ public final class SimulationAccess implements GeckoFileable {
         final String oldLabel = label.getLabelString();
         label.setLabelFromUserDialog(labelName);
 
-        NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);
+        NetlistGeneral.fabricNetzlistComponentLabelUpdate(element, terminalType);
 
         se.updateRenamedLabel(oldLabel, labelName, terminalType);
         se.setDirtyFlag();

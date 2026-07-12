@@ -22,7 +22,7 @@ public final class LimitCalculatorExternal extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double youtMIN = _inputSignal[1][0];
         final double youtMAX = _inputSignal[2][0];
         _outputSignal[0][0] = _inputSignal[0][0];

@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.matrix;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 import gecko.geckocircuits.circuit.matrix.InitialConditionSetter.MatrixStateArrays;
 import org.junit.Before;
 import org.junit.Test;

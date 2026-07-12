@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 import gecko.modelviewcontrol.ModelMVC;
 
 public class SolverSettings {
@@ -26,7 +26,7 @@ public class SolverSettings {
     public final ModelMVC<Double> _tDURATION = new ModelMVC<Double>(20e-3, "simulation time");
     public final ModelMVC<Double> _tPAUSE = new ModelMVC<Double>(-1.0, "simulation pause time");
 
-    public double _dt_ALT;  // Merken der alten Werten nach einer Aenderung in 'DialogSimParameter'
+    public double _dt_ALT;  // // Remember the old values ​​after a change in 'DialogSimParameter'
     // flag used for solver start
     public boolean inPreCalculationMode = false;
 }

@@ -202,12 +202,12 @@
             <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="jTextFieldAxisLabelPropertyChange"/>
           </Events>
         </Component>
-        <Component class="gecko.geckocircuits.allg.FormatJTextField" name="formatJTextFieldMinVal">
+        <Component class="gecko.geckocircuits.general.FormatJTextField" name="formatJTextFieldMinVal">
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="formatJTextFieldMinValFocusLost"/>
           </Events>
         </Component>
-        <Component class="gecko.geckocircuits.allg.FormatJTextField" name="formatJTextFieldMaxVal">
+        <Component class="gecko.geckocircuits.general.FormatJTextField" name="formatJTextFieldMaxVal">
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="formatJTextFieldMaxValFocusLost"/>
           </Events>

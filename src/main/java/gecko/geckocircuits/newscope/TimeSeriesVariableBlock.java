@@ -22,7 +22,7 @@ import java.util.TreeMap;
  *
  * @author xtibi
  */
-public final class TimeSeriesVariableBlock extends AbstractTimeSerie {
+public final class TimeSeriesVariableBlock extends AbstractTimeSeries {
 
     private DataBlock _lastBlock;
     private int _overallSize;

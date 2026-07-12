@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.control.Point;
 import gecko.i18n.resources.I18nKeys;
@@ -38,7 +38,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
     private static final int X_CENTER = 430, Y_CENTER = 250;  // Zentrum des Modul-Bildes in PixelPunkten
     // Dateiname (inkl. Pfad) des Modul-ESBs:
     private String _fileName = GlobalFilePathes.DATNAM_NOT_DEFINED;
-    // ID-Strings der SubCircuit-Elemente -->
+    // // to draw a cooler (pixel point data measured from ICEPAK screenshot):
     private static final int D_E = 5;
     private static final double B_R = 2.5;
     private static final int MAX_INPUT_NO = 99;

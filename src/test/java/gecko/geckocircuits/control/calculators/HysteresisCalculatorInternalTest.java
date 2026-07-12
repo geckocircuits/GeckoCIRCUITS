@@ -31,26 +31,26 @@ public class HysteresisCalculatorInternalTest {
     @Test
     public void testBerechneYOUT() {
         hysCalc._inputSignal[0][0] = -2.0;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(-1, hysCalc._outputSignal[0][0], 1e-9);
 
         hysCalc._inputSignal[0][0] = -3.0;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(-1, hysCalc._outputSignal[0][0], 1e-9);
 
         // do transition
         hysCalc._inputSignal[0][0] = -1.0;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(1, hysCalc._outputSignal[0][0], 1e-9);
 
         // not yet a transition
         hysCalc._inputSignal[0][0] = -1.9;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(1, hysCalc._outputSignal[0][0], 1e-9);
 
         // not yet a transition
         hysCalc._inputSignal[0][0] = -2;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(-1, hysCalc._outputSignal[0][0], 1e-9);
 
     }
@@ -59,21 +59,21 @@ public class HysteresisCalculatorInternalTest {
     public void testSetHValue() {
         hysCalc.setHValue(1);
         hysCalc._inputSignal[0][0] = 1;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(1, hysCalc._outputSignal[0][0], 1e-9);
 
         hysCalc._inputSignal[0][0] = 2;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(1, hysCalc._outputSignal[0][0], 1e-9);
 
         // do transition
         hysCalc._inputSignal[0][0] = -1;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(1, hysCalc._outputSignal[0][0], 1e-9);
 
         // no transition!
         hysCalc._inputSignal[0][0] = -1.1;
-        hysCalc.berechneYOUT(1e-8);
+        hysCalc.calculateYOUT(1e-8);
         assertEquals(-1, hysCalc._outputSignal[0][0], 1e-9);
 
     }

@@ -23,7 +23,7 @@ public final class CounterCalculatable extends AbstractTwoInputsOneOutputCalcula
     private double _lastValue = 0;            
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         if ((_inputSignal[0][0] >= SIGNAL_THRESHOLD) && (_lastValue < SIGNAL_THRESHOLD)) {
             _outputSignal[0][0]++;
         }

@@ -29,7 +29,7 @@ class NonlinearReluctanceDialog extends DialogElementLK<NonLinearReluctance> {
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
         JPanel pINy = new JPanel();
         _nonLinearDialogPanel = new NonLinearDialogPanel(this, element, false);
         pINy.setLayout(new BorderLayout());

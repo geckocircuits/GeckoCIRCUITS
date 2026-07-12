@@ -41,55 +41,55 @@ public class LogicBlocksTest {
 
     @Test
     public void testAndBlockCreation() {
-        ReglerAnd block = new ReglerAnd();
+        ControlAnd block = new ControlAnd();
         assertNotNull("AND block should be created", block);
     }
 
     @Test
     public void testAnd_TrueTrue() {
-        ReglerAnd block = new ReglerAnd();
+        ControlAnd block = new ControlAnd();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
         calc._inputSignal[1][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("1 AND 1 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAnd_TrueFalse() {
-        ReglerAnd block = new ReglerAnd();
+        ControlAnd block = new ControlAnd();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
         calc._inputSignal[1][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("1 AND 0 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAnd_FalseTrue() {
-        ReglerAnd block = new ReglerAnd();
+        ControlAnd block = new ControlAnd();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
         calc._inputSignal[1][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("0 AND 1 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAnd_FalseFalse() {
-        ReglerAnd block = new ReglerAnd();
+        ControlAnd block = new ControlAnd();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
         calc._inputSignal[1][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("0 AND 0 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
@@ -97,55 +97,55 @@ public class LogicBlocksTest {
 
     @Test
     public void testOrBlockCreation() {
-        ReglerOr block = new ReglerOr();
+        ControlOr block = new ControlOr();
         assertNotNull("OR block should be created", block);
     }
 
     @Test
     public void testOr_TrueTrue() {
-        ReglerOr block = new ReglerOr();
+        ControlOr block = new ControlOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
         calc._inputSignal[1][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("1 OR 1 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testOr_TrueFalse() {
-        ReglerOr block = new ReglerOr();
+        ControlOr block = new ControlOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
         calc._inputSignal[1][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("1 OR 0 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testOr_FalseTrue() {
-        ReglerOr block = new ReglerOr();
+        ControlOr block = new ControlOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
         calc._inputSignal[1][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("0 OR 1 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testOr_FalseFalse() {
-        ReglerOr block = new ReglerOr();
+        ControlOr block = new ControlOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
         calc._inputSignal[1][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("0 OR 0 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
@@ -153,29 +153,29 @@ public class LogicBlocksTest {
 
     @Test
     public void testNotBlockCreation() {
-        ReglerNOT block = new ReglerNOT();
+        ControlNOT block = new ControlNOT();
         assertNotNull("NOT block should be created", block);
     }
 
     @Test
     public void testNot_True() {
-        ReglerNOT block = new ReglerNOT();
+        ControlNOT block = new ControlNOT();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("NOT 1 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testNot_False() {
-        ReglerNOT block = new ReglerNOT();
+        ControlNOT block = new ControlNOT();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("NOT 0 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
@@ -183,51 +183,51 @@ public class LogicBlocksTest {
 
     @Test
     public void testXorBlockCreation() {
-        ReglerExclusiveOr block = new ReglerExclusiveOr();
+        ControlExclusiveOr block = new ControlExclusiveOr();
         assertNotNull("XOR block should be created", block);
     }
 
     @Test
     public void testXor_TrueTrue() {
-        ReglerExclusiveOr block = new ReglerExclusiveOr();
+        ControlExclusiveOr block = new ControlExclusiveOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
         calc._inputSignal[1][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("1 XOR 1 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testXor_TrueFalse() {
-        ReglerExclusiveOr block = new ReglerExclusiveOr();
+        ControlExclusiveOr block = new ControlExclusiveOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = HIGH;
         calc._inputSignal[1][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("1 XOR 0 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testXor_FalseTrue() {
-        ReglerExclusiveOr block = new ReglerExclusiveOr();
+        ControlExclusiveOr block = new ControlExclusiveOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
         calc._inputSignal[1][0] = HIGH;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("0 XOR 1 = 1", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testXor_FalseFalse() {
-        ReglerExclusiveOr block = new ReglerExclusiveOr();
+        ControlExclusiveOr block = new ControlExclusiveOr();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = LOW;
         calc._inputSignal[1][0] = LOW;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("0 XOR 0 = 0", LOW, calc._outputSignal[0][0], DELTA);
     }
 
@@ -235,40 +235,40 @@ public class LogicBlocksTest {
 
     @Test
     public void testGreaterThanBlockCreation() {
-        ReglerGreaterThan block = new ReglerGreaterThan();
+        ControlGreaterThan block = new ControlGreaterThan();
         assertNotNull("GT block should be created", block);
     }
 
     @Test
     public void testGreaterThan_True() {
-        ReglerGreaterThan block = new ReglerGreaterThan();
+        ControlGreaterThan block = new ControlGreaterThan();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 3.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 > 3 = true", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testGreaterThan_False() {
-        ReglerGreaterThan block = new ReglerGreaterThan();
+        ControlGreaterThan block = new ControlGreaterThan();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 3.0;
         calc._inputSignal[1][0] = 5.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("3 > 5 = false", LOW, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testGreaterThan_Equal() {
-        ReglerGreaterThan block = new ReglerGreaterThan();
+        ControlGreaterThan block = new ControlGreaterThan();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 5.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 > 5 = false", LOW, calc._outputSignal[0][0], DELTA);
     }
 
@@ -276,40 +276,40 @@ public class LogicBlocksTest {
 
     @Test
     public void testGreaterEqualBlockCreation() {
-        ReglerGreaterEqual block = new ReglerGreaterEqual();
+        ControlGreaterEqual block = new ControlGreaterEqual();
         assertNotNull("GE block should be created", block);
     }
 
     @Test
     public void testGreaterEqual_Greater() {
-        ReglerGreaterEqual block = new ReglerGreaterEqual();
+        ControlGreaterEqual block = new ControlGreaterEqual();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 3.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 >= 3 = true", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testGreaterEqual_Equal() {
-        ReglerGreaterEqual block = new ReglerGreaterEqual();
+        ControlGreaterEqual block = new ControlGreaterEqual();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 5.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 >= 5 = true", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testGreaterEqual_Less() {
-        ReglerGreaterEqual block = new ReglerGreaterEqual();
+        ControlGreaterEqual block = new ControlGreaterEqual();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 3.0;
         calc._inputSignal[1][0] = 5.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("3 >= 5 = false", LOW, calc._outputSignal[0][0], DELTA);
     }
 
@@ -317,29 +317,29 @@ public class LogicBlocksTest {
 
     @Test
     public void testEqualBlockCreation() {
-        ReglerEqual block = new ReglerEqual();
+        ControlEqual block = new ControlEqual();
         assertNotNull("EQ block should be created", block);
     }
 
     @Test
     public void testEqual_True() {
-        ReglerEqual block = new ReglerEqual();
+        ControlEqual block = new ControlEqual();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 5.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 == 5 = true", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testEqual_False() {
-        ReglerEqual block = new ReglerEqual();
+        ControlEqual block = new ControlEqual();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 3.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 == 3 = false", LOW, calc._outputSignal[0][0], DELTA);
     }
 
@@ -347,29 +347,29 @@ public class LogicBlocksTest {
 
     @Test
     public void testNotEqualBlockCreation() {
-        ReglerNE block = new ReglerNE();
+        ControlNE block = new ControlNE();
         assertNotNull("NE block should be created", block);
     }
 
     @Test
     public void testNotEqual_True() {
-        ReglerNE block = new ReglerNE();
+        ControlNE block = new ControlNE();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 3.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 != 3 = true", HIGH, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testNotEqual_False() {
-        ReglerNE block = new ReglerNE();
+        ControlNE block = new ControlNE();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 5.0;
         calc._inputSignal[1][0] = 5.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("5 != 5 = false", LOW, calc._outputSignal[0][0], DELTA);
     }
 }

@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
  * simulation control, and window state. This interface decouples dependent code from
  * the concrete Fenster implementation.
  *
- * @see gecko.geckocircuits.allg.Fenster
+ * @see gecko.geckocircuits.general.Fenster
  */
 public interface IMainWindow {
 

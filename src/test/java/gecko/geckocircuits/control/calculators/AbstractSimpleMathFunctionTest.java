@@ -65,7 +65,7 @@ public abstract class AbstractSimpleMathFunctionTest {
 
     public double getValue(final double testValue) {
         _controlCalculatable._inputSignal[0][0] = testValue;
-        _controlCalculatable.berechneYOUT(TEST_DT);
+        _controlCalculatable.calculateYOUT(TEST_DT);
         return _controlCalculatable._outputSignal[0][0];
     }
 

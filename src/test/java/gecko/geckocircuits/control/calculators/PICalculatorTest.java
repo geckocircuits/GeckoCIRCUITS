@@ -53,7 +53,7 @@ public class PICalculatorTest extends AbstractSimpleMathFunctionTest {
         for(int i = 0; i < 100; i++) { // pure integration
             double val = getValue(i);
             _calculator._inputSignal[0][0] = i;
-            _calculator.berechneYOUT(dt);
+            _calculator.calculateYOUT(dt);
             double expected = 0.5 * dt * i * (i-1); // integral over i is 0.5 * i*i
             assertEquals(expected, val, 1e-5); // 3 * 2 = 6
         }

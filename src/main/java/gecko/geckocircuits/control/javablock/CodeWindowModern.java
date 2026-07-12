@@ -30,7 +30,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Code window stores Java function block and output buffer references")
 public class CodeWindowModern extends JFrame {
 
-    private ReglerJavaFunction _javaFunction;
+    private ControlJavaFunction _javaFunction;
     private final VariableBusWidth _variableBusWidth;
     private final StringBuffer _outputStringBuffer;
 
@@ -52,7 +52,7 @@ public class CodeWindowModern extends JFrame {
     final ExtraFilesWindow _extSourceWindow;
     private boolean _extWindowInit = false;
 
-    public CodeWindowModern(ReglerJavaFunction regelBlock, StringBuffer outputStringBuffer) {
+    public CodeWindowModern(ControlJavaFunction regelBlock, StringBuffer outputStringBuffer) {
         super();
         setTitle("Java Custom Code Control Block");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

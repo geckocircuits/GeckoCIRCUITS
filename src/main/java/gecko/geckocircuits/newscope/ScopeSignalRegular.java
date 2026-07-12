@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.control.ControlOSZI;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -25,9 +25,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class ScopeSignalRegular extends AbstractScopeSignal {
 
     private final int _scopeInputIndex;
-    private final ReglerOSZI _reglerOSZI;
+    private final ControlOSZI _reglerOSZI;
 
-    public ScopeSignalRegular(final int scopeInputIndex, final ReglerOSZI reglerOSZI) {
+    public ScopeSignalRegular(final int scopeInputIndex, final ControlOSZI reglerOSZI) {
         super();
         _scopeInputIndex = scopeInputIndex;
         _reglerOSZI = reglerOSZI;

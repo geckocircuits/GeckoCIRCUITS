@@ -1,0 +1,223 @@
+/*  This file is part of GeckoCIRCUITS. Copyright (C) ETH Zurich, Gecko-Simulations GmbH
+ *
+ *  GeckoCIRCUITS is free software: you can redistribute it and/or modify it under
+ *  the terms of the GNU General Public License as published by the Free Software
+ *  Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  GeckoCIRCUITS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ *  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *  PURPOSE.  See the GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along with
+ *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package gecko.geckocircuits.control;
+
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.StartupWindow;
+import gecko.geckocircuits.circuit.AbstractTerminal;
+import gecko.geckocircuits.circuit.TerminalControlOutput;
+import gecko.core.circuit.TokenMap;
+import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
+import gecko.i18n.resources.I18nKeys;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Window;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Stack;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+@SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
+        justification = "Public data vector for external data exchange with Simulink/external tools")
+public final class ControlFromEXTERNAL extends RegelBlockSimulink implements VariableTerminalNumber {
+
+    private static final List<RegelBlock> fromExternalsInternal = new ArrayList<>();
+    public static final List<RegelBlock> fromExternals = Collections.unmodifiableList(fromExternalsInternal);
+    public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlFromEXTERNAL.class, "FromEXT", I18nKeys.IMPORT_DATA_FROM_SIMULINK);
+    private int _terminalNumber;
+    private String _externalName = "name";
+    private static final double DA_CONST = 0.5;
+    private static final double WIDTH = 0.3;
+    private int externalOrderNumber;
+    private static final int DPFX = 8, DPFY = 3;
+    public double[] dataVector;
+
+    public ControlFromEXTERNAL() {
+        super();
+        _terminalNumber = 1;  // // default: 1 connection brings signals from EXTERNAL
+        this.setOutputTerminalNumber(_terminalNumber);
+        fromExternalsInternal.add(this);
+    }
+
+    @Override
+    public String[] getOutputNames() {
+        return new String[]{"0", "1", "2", "etc."};
+    }
+
+    @Override
+    public I18nKeys[] getOutputDescription() {
+        return new I18nKeys[0];
+    }
+
+    @Override
+    public void setInputTerminalNumber(final int number) {
+        // here, we don't have input terminals!
+    }
+
+    @Override
+    public void setOutputTerminalNumber(final int number) {
+        this._terminalNumber = number;
+
+        while (YOUT.size() > number) {
+            YOUT.pop();
+        }
+
+        while (YOUT.size() < number) {
+            YOUT.add(new TerminalControlOutput(this, 1, -YOUT.size()));
+        }
+
+        dataVector = new double[_terminalNumber];
+    }
+
+    public int getTerminalNumber() {
+        return _terminalNumber;
+    }
+
+    @SuppressWarnings("PMD")
+    @Override
+    public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
+        if (StartupWindow.testDialogOpenSourceVersion("Simulink interface")) {
+            return new AbstractControlCalculatable(0, YOUT.size()) {
+                @Override
+                public void calculateYOUT(double deltaT) {
+
+                }
+            };
+        } else {
+            return new AbstractControlCalculatable(0, _terminalNumber) {
+                @Override
+                public void calculateYOUT(final double deltaT) {
+                    // 'parameter[]' muss vom externen Programm mit den aktuellen Signal-Werten beschrieben werden
+                    for (int i = 0; i < _terminalNumber; i++) {
+                        _outputSignal[i][0] = dataVector[i];  // Signal-Quelle
+                    }
+                }
+            };
+        }
+    }
+
+    public void setExternalName(final String name) {
+        _externalName = name;
+    }
+
+    @SuppressWarnings("PMD")
+    @Override
+    public void drawBlockRectangle(final Graphics2D graphics) {
+        final int xPos = getSheetPosition().x;
+        final int yPos = getSheetPosition().y;
+        final Color origColor = graphics.getColor();
+
+        graphics.setColor(getBackgroundColor());
+
+        xKlickMin = (int) (dpix * (xPos - WIDTH));
+        xKlickMax = (int) (dpix * (xPos + WIDTH));
+        yKlickMin = (int) (dpix * (yPos - WIDTH));
+        yKlickMax = (int) (dpix * (yPos + 1.0 * _terminalNumber));
+
+        graphics.fillRect((int) (dpix * (xPos - 0.4)), (int) (dpix * (yPos - 0.4)), (int) (dpix * (2 * 0.4)), (int) (dpix * (1.0 * _terminalNumber)));
+        graphics.setColor(origColor);
+        graphics.drawRect((int) (dpix * (xPos - 0.4)), (int) (dpix * (yPos - 0.4)), (int) (dpix * (2 * 0.4)), (int) (dpix * (1.0 * _terminalNumber)));
+        // Pfeil-Symbol:
+
+        double pf = 3.5;  // Pfeilspitzen-X-Abstand
+        double pfym = yPos - 0.4 + (1.0 * _terminalNumber) / 2;  // Pfeil-Y-Koordinate
+        graphics.drawPolygon(new int[]{(int) (dpix * (xPos - 0.4)) - DPFX, (int) (dpix * (xPos - 0.4)) - DPFX, (int) (dpix * (xPos - 0.4))}, new int[]{(int) (dpix * pfym) - DPFY, (int) (dpix * pfym) + DPFY, (int) (dpix * pfym)}, 3);
+        graphics.drawString("From", (int) (dpix * (xPos - pf)), (int) (dpix * pfym - 1 * graphics.getFont().getSize() / 2.0));
+        graphics.drawString("EXTERN", (int) (dpix * (xPos - pf)), (int) (dpix * pfym + 3 * graphics.getFont().getSize() / 2.0));
+
+
+        graphics.drawLine((int) (dpix * (xPos - 0.4)), (int) (dpix * pfym), (int) (dpix * (xPos - pf)), (int) (dpix * pfym));  // zum Pfeil gehoerig
+        for (int i1 = 0; i1 < _terminalNumber; i1++) {
+            int xi1 = (int) (dpix * (xPos + 2 * DA_CONST)), yi1 = (int) (dpix * (yPos + 1.0 * i1));
+            graphics.setColor(GlobalColors.farbeEXTERNAL_TERMINAL);
+            graphics.drawString(Integer.toString(i1 + 1), xi1 + 8, (int) (yi1 + graphics.getFont().getSize() / 2.0));
+            graphics.setColor(origColor);
+        }
+
+        graphics.setColor(Color.black);
+        graphics.drawString(_externalName, (int) (dpix * (xPos - pf)),
+                (int) (dpix * (1 + pfym) + 3 * graphics.getFont().getSize() / 2.0));
+        graphics.setColor(origColor);
+    }
+
+    @Override
+    protected String getCenteredDrawString() {
+        return "";
+    }
+
+    @Override
+    public void deleteActionIndividual() {
+        super.deleteActionIndividual();
+        fromExternalsInternal.remove(this);
+    }
+
+    @Override
+    protected void importIndividual(final TokenMap tokenMap) {
+        _terminalNumber = tokenMap.readDataLine("tn", _terminalNumber);
+        int orderNumber = tokenMap.readDataLine("torder", externalOrderNumber);
+        insertOrderCorrect(orderNumber);
+        setOutputTerminalNumber(_terminalNumber);
+    }
+
+    @Override
+    protected void exportAsciiIndividual(final StringBuffer ascii) {
+        ProjectData.appendAsString(ascii.append("\ntn"), _terminalNumber);
+        ProjectData.appendAsString(ascii.append("\ntorder"), fromExternalsInternal.indexOf(this));
+    }
+
+    @Override
+    List<RegelBlock> getOrderList() {
+        return fromExternalsInternal;
+    }
+
+    @Override
+    Stack<AbstractTerminal> getVariableTerminals() {
+        return YOUT;
+    }
+
+    private static final class CompareOrder implements Comparator<RegelBlock>, java.io.Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public int compare(final RegelBlock obj1, final RegelBlock obj2) {
+            if (obj1 instanceof ControlFromEXTERNAL && obj2 instanceof ControlFromEXTERNAL) {
+                final ControlFromEXTERNAL toExtern1 = (ControlFromEXTERNAL) obj1;
+                final ControlFromEXTERNAL toExtern2 = (ControlFromEXTERNAL) obj2;
+                return Integer.compare(toExtern1.externalOrderNumber, toExtern2.externalOrderNumber);
+            }
+            return 0;
+        }
+    }
+
+    public void insertOrderCorrect(final int orderNo) {
+        externalOrderNumber = orderNo;
+        Collections.sort(fromExternalsInternal, new CompareOrder());
+    }
+
+    @Override
+    protected Window openDialogWindow() {
+        return new DialogExternal(this);
+    }
+
+    /**
+     * Clear the list of FromEXTERNAL blocks - used for initialization
+     */
+    public static void clearFromExternals() {
+        fromExternalsInternal.clear();
+    }
+}

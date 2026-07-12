@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author xtibi
  */
-public final class TimeSeriesVariableArray extends AbstractTimeSerie{
+public final class TimeSeriesVariableArray extends AbstractTimeSeries{
   private final List<Double> _timeSeries = new ArrayList<Double>();
 
   @Override

@@ -14,9 +14,9 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.core.datacontainer.HiLoData;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.core.circuit.TokenMap;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -69,7 +69,7 @@ public final class Axis {
     final AxisGridSettings _axisGridSettings = new AxisGridSettings();
     final AxisTickSettings _axisTickSettings = new AxisTickSettings();
     private int _axisLengthPix;
-    double _tickSpacing = DEF_TICK_SPACING;  // Abstand zwischen 2 Ticks, ausgehend von Null
+    double _tickSpacing = DEF_TICK_SPACING;  // // Distance between 2 ticks, starting from zero
     AbstractAxisScale _axisScale;
 
     /*

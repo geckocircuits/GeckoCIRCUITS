@@ -21,6 +21,6 @@ public class GateCalculatorTest {
     @Test(expected=AssertionError.class)
     public void testBerechneYOUT() {
         final GateCalculator gateCalc = new GateCalculator();
-        gateCalc.berechneYOUT(DUMMY_DT);
+        gateCalc.calculateYOUT(DUMMY_DT);
     }
 }

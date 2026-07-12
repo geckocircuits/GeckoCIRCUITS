@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
 import gecko.i18n.resources.I18nKeys;
@@ -80,7 +80,7 @@ public final class MotorSmRound extends AbstractMotorSM {
         double ubc = -_controlledAnchorSourceC.parameter[7];
         double uf = _controlledSource3.parameter[7];
 
-        // Berechnung der Maschinen-Diff.Gl:
+        // // Calculation of the machine diff. equation:
         // Block 'vdq':
         double ud = calculate_ud(uab, ubc);
         double uq = calculate_uq(uab, ubc);

@@ -14,8 +14,8 @@
 package gecko.geckocircuits.control;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.control.calculators.SmallSignalCalculator;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;
 import gecko.geckocircuits.newscope.BodePlot2;
@@ -37,7 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallSignalAnalysis> {
+public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmallSignalAnalysis> {
 
     private JComboBox<SSAShape> _jComboSignal;
     private GraferV4 _grafer;
@@ -47,7 +47,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     /**
      * Creates new form DialogSmallSignalAnalysis2
      */
-    public DialogSmallSignalAnalysis(final ReglerSmallSignalAnalysis parent) {
+    public DialogSmallSignalAnalysis(final ControlSmallSignalAnalysis parent) {
         super(parent);
         initComponents();
         //jPanelBode.add(new BodePlot2());
@@ -85,7 +85,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     }
 
     @Override
-    public void baueGUI() {
+    public void buildGUI() {
         this.setLocationRelativeTo(GeckoSim._win);
         jPanelName.setLayout(new GridLayout(1, 5));
         con = this.getContentPane();

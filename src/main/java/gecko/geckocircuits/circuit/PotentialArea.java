@@ -31,8 +31,8 @@ public final class PotentialArea {
 
     private final Set<Point> _pointsSchematic = new LinkedHashSet<Point>();
     private final Set<Point> _nodeTerminals = new LinkedHashSet<Point>();
-    private String _potentialLabel = "";  // der zu diesem Potential gehoerige Label
-    private final Set<Verbindung> _potentialConnections = new LinkedHashSet<Verbindung>();
+    private String _potentialLabel = "";  // // the label associated with this potential
+    private final Set<Connection> _potentialConnections = new LinkedHashSet<Connection>();
     private final Set<ElementNodes> _elementNodeTerminals = new LinkedHashSet<ElementNodes>();
     public final Set<SubCircuitTerminable> _potentialTerminals = new LinkedHashSet<SubCircuitTerminable>();
     private final Set<AbstractBlockInterface> _globalTerminals = new LinkedHashSet<AbstractBlockInterface>();
@@ -46,11 +46,11 @@ public final class PotentialArea {
     Point _upperLeftCorner;
     Point _lowerRightCorner;
 
-    private Collection<? extends Verbindung> getConnections() {
+    private Collection<? extends Connection> getConnections() {
         return Collections.unmodifiableCollection(_potentialConnections);
     }
 
-    public Set<Verbindung> getAllConnections() {
+    public Set<Connection> getAllConnections() {
         return Collections.unmodifiableSet(_potentialConnections);
     }
 
@@ -66,7 +66,7 @@ public final class PotentialArea {
         // use static fabric methods for object construction!
     }
 
-    public static PotentialArea fabricFromConnector(final Verbindung connector) {
+    public static PotentialArea fabricFromConnector(final Connection connector) {
         final PotentialArea returnValue = new PotentialArea();
         returnValue._potentialConnections.add(connector);
         returnValue._pointsSchematic.addAll(connector.getAllPointCoordinates());
@@ -74,7 +74,7 @@ public final class PotentialArea {
         for (TerminalInterface term : connector.getAllTerminals()) {
             returnValue._nodeTerminals.add(term.getPosition());
         }
-        returnValue._isShortConnector = connector instanceof VerbindungShortConnector;
+        returnValue._isShortConnector = connector instanceof ConnectionShortConnector;
         returnValue._potentialLabel = connector.getLabel();
         returnValue._highesPriority = connector.getLabelPriority();
 
@@ -265,7 +265,7 @@ public final class PotentialArea {
                 }
             }
 
-            for (Verbindung verb : _potentialConnections) {
+            for (Connection verb : _potentialConnections) {
                 verb.setLabel(_potentialLabel);
                 verb.setLabelPriority(_highesPriority);
             }
@@ -316,7 +316,7 @@ public final class PotentialArea {
         return false;
     }
 
-    public boolean containsConnector(final Verbindung verb) {
+    public boolean containsConnector(final Connection verb) {
         return _potentialConnections.contains(verb);
     }
 
@@ -326,7 +326,7 @@ public final class PotentialArea {
         // Labels auf Verbindungen werden gesetzt:
 
         // Labels auf Element-Knoten werden gesetzt (aber nur, wenn dort schon ein String eingetragen wurde, dh. '... !="" ...')
-        for (Verbindung verb : _potentialConnections) {
+        for (Connection verb : _potentialConnections) {
             if (!verb.getLabel().trim().isEmpty()) {
                 verb.setLabel(label);
             }
@@ -345,8 +345,8 @@ public final class PotentialArea {
     }
 
     // verschiedene Potentiale sind (eventuell) gerade miteinander verbunden worden -->
-    // die Labels werden nun aktualisiert, ein dominantes Label ist nicht vorgegeben
-    public void aktualisiereLabel(final List<Verbindung> connector, final Collection<AbstractBlockInterface> element) {
+    // // Labels on connections are set:
+    public void aktualisiereLabel(final List<Connection> connector, final Collection<AbstractBlockInterface> element) {
         // zuerst schaun wir, ob es Labels auf Element-Knoten des Potentials gibt:
 
         for (ElementNodes elInfo : _elementNodeTerminals) {
@@ -366,14 +366,14 @@ public final class PotentialArea {
     }
 
     private void adaptLabelDueToConnector() {
-        final List<Verbindung> allConnections = new ArrayList<Verbindung>();
+        final List<Connection> allConnections = new ArrayList<Connection>();
         allConnections.addAll(_potentialConnections);
 
         if (_potentialLabel.isEmpty()) {
             // iterate backward:
             for (int i1 = allConnections.size() - 1; i1 >= 0; i1--) {
-                final Verbindung verb = allConnections.get(i1);
-                if (!verb.getLabel().isEmpty() && !(verb instanceof VerbindungShortConnector)) {
+                final Connection verb = allConnections.get(i1);
+                if (!verb.getLabel().isEmpty() && !(verb instanceof ConnectionShortConnector)) {
                     _potentialLabel = verb.getLabel();
                     break;
                 }
@@ -408,7 +408,7 @@ public final class PotentialArea {
             }
         }
 
-        for (Verbindung verb : _potentialConnections) {
+        for (Connection verb : _potentialConnections) {
             verb.getLabelObject().clearPriority();
         }
 
@@ -526,12 +526,12 @@ public final class PotentialArea {
 
     private void setNewPotentialTyp(ConnectorType newPotentialTyp) {
         _potentialTyp = newPotentialTyp;
-        for (Verbindung verb : _potentialConnections) {
+        for (Connection verb : _potentialConnections) {
             verb.changeConnectorType(newPotentialTyp);
         }
     }
 
-    public List<TerminalVerbindung> getTermConnectors() {
+    public List<TerminalConnection> getTermConnectors() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -539,7 +539,7 @@ public final class PotentialArea {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void addTermConnector(TerminalVerbindung terminalVerbindung) {
+    public void addTermConnector(TerminalConnection terminalVerbindung) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

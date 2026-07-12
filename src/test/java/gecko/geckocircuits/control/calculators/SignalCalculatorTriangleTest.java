@@ -56,7 +56,7 @@ public final class SignalCalculatorTriangleTest {
 
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             AbstractSignalCalculator.setTime(time);
-            _signalCalc.berechneYOUT(DELTA_T);
+            _signalCalc.calculateYOUT(DELTA_T);
             final double result = _signalCalc._outputSignal[0][0];
             maxValue = Math.max(result, maxValue);
             minValue = Math.min(result, minValue);

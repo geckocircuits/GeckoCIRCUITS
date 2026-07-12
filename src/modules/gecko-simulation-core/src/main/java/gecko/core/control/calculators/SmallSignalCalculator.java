@@ -120,7 +120,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         double smallSignal = calculateSmallSignal(deltaT);
 
         if (_calculationDeltaT == deltaT) {
@@ -202,7 +202,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
                 break;
             case RECTANGLE:
             case TRIANGLE:
-                _signalTypeCalculator.berechneYOUT(deltaT);
+                _signalTypeCalculator.calculateYOUT(deltaT);
                 returnValue = _signalTypeCalculator._outputSignal[0][0];
                 break;
             case EXTERNAL:

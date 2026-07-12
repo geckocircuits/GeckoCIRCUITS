@@ -14,12 +14,12 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalFilePathes;
-import gecko.geckocircuits.allg.SaveViewFrame;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalFilePathes;
+import gecko.geckocircuits.general.SaveViewFrame;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.RegelBlock;
-import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.control.ControlOSZI;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.DataContainerIntegralCalculatable;
 import java.awt.Dimension;
@@ -46,7 +46,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Scope frame must share grafer reference for scope display; public scope field for external access")
 public final class ScopeFrame extends javax.swing.JFrame{
   private GraferV4 _grafer;
-  private ReglerOSZI _regelBlockOSZI;
+  private ControlOSZI _regelBlockOSZI;
   /**
    * Dialog fuer Zuordnungen SignalZV - Graph.
    */
@@ -214,7 +214,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
   }
 
   public void setReferenzAufRegelBlock(final RegelBlock regelBlockOSZI){
-    _regelBlockOSZI = (ReglerOSZI)regelBlockOSZI;
+    _regelBlockOSZI = (ControlOSZI)regelBlockOSZI;
   }
 
   public void setNewTerminalNumber(final int terminalNumber){
@@ -244,7 +244,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
       jMenuScopeData.setEnabled(false);
       jMenuGraphs.setEnabled(false);
       jMenuAnalysis.setEnabled(false);
-      // Worksheet-Daten waehrend der Simulation nicht zugaenglich:
+      // // Worksheet data not accessible during simulation:
     }else{
       jMenuItemInitAndStart.setEnabled(true);
       jMenuItemParameter.setEnabled(true);

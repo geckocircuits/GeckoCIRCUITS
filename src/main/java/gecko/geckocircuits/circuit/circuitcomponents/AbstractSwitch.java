@@ -17,7 +17,7 @@ import gecko.geckocircuits.circuit.ComponentCoupling;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.geckocircuits.circuit.DirectVoltageMeasurable;
 import gecko.geckocircuits.circuit.losscalculation.LossProperties;
-import gecko.geckocircuits.control.ReglerGate;
+import gecko.geckocircuits.control.ControlGate;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Switch exposes loss properties for configuration")
@@ -26,20 +26,20 @@ public abstract class AbstractSwitch extends AbstractSemiconductor implements Cu
     public static final double UF_DEFAULT = 0.60;
     public static final double RD_ON_DEFAULT = 10e-3;
     public static final double RD_OFF_DEFAULT = 1e7;
-    ReglerGate _connectedGateBlock;
+    ControlGate _connectedGateBlock;
 
     protected final LossProperties verluste = new LossProperties(this);
 
     @Override
     public final void doReferenceAddAction(final ComponentCoupling added) {
-        if (added.getParent() instanceof ReglerGate) {
-            _connectedGateBlock = ((ReglerGate) added.getParent());
+        if (added.getParent() instanceof ControlGate) {
+            _connectedGateBlock = ((ControlGate) added.getParent());
         }
     }
 
     @Override
     public final void doReferenceRemoveAction(final ComponentCoupling removed) {
-        if (removed.getParent() instanceof ReglerGate) {
+        if (removed.getParent() instanceof ControlGate) {
             _connectedGateBlock = null;
         }
     }
@@ -65,6 +65,6 @@ public abstract class AbstractSwitch extends AbstractSemiconductor implements Cu
 
     @Override
     public void setToolbarPaintProperties() {
-        _connectedGateBlock = new ReglerGate();
+        _connectedGateBlock = new ControlGate();
     }
 }

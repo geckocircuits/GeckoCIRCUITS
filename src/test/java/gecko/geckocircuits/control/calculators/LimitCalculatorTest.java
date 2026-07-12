@@ -33,7 +33,7 @@ public class LimitCalculatorTest {
     public void testInternalLimiterUpperClamp() {
         // Test upper limit clamping
         internalLimiter._inputSignal[0][0] = 15.0;  // Above limit of 10.0
-        internalLimiter.berechneYOUT(0.001);
+        internalLimiter.calculateYOUT(0.001);
         assertEquals("Should clamp to upper limit", 10.0,
                     internalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -42,7 +42,7 @@ public class LimitCalculatorTest {
     public void testInternalLimiterLowerClamp() {
         // Test lower limit clamping
         internalLimiter._inputSignal[0][0] = -15.0;  // Below limit of -10.0
-        internalLimiter.berechneYOUT(0.001);
+        internalLimiter.calculateYOUT(0.001);
         assertEquals("Should clamp to lower limit", -10.0,
                     internalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -51,7 +51,7 @@ public class LimitCalculatorTest {
     public void testInternalLimiterPassthrough() {
         // Test that values within range pass through unchanged
         internalLimiter._inputSignal[0][0] = 5.0;  // Within [-10, 10]
-        internalLimiter.berechneYOUT(0.001);
+        internalLimiter.calculateYOUT(0.001);
         assertEquals("Should pass through unchanged", 5.0,
                     internalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -60,7 +60,7 @@ public class LimitCalculatorTest {
     public void testInternalLimiterZero() {
         // Test zero input
         internalLimiter._inputSignal[0][0] = 0.0;
-        internalLimiter.berechneYOUT(0.001);
+        internalLimiter.calculateYOUT(0.001);
         assertEquals("Zero should pass through", 0.0,
                     internalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -69,12 +69,12 @@ public class LimitCalculatorTest {
     public void testInternalLimiterBoundaries() {
         // Test exact boundary values
         internalLimiter._inputSignal[0][0] = 10.0;
-        internalLimiter.berechneYOUT(0.001);
+        internalLimiter.calculateYOUT(0.001);
         assertEquals("Upper boundary should pass", 10.0,
                     internalLimiter._outputSignal[0][0], TOLERANCE);
 
         internalLimiter._inputSignal[0][0] = -10.0;
-        internalLimiter.berechneYOUT(0.001);
+        internalLimiter.calculateYOUT(0.001);
         assertEquals("Lower boundary should pass", -10.0,
                     internalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -87,7 +87,7 @@ public class LimitCalculatorTest {
         externalLimiter._inputSignal[1][0] = -10.0;   // Minimum
         externalLimiter._inputSignal[2][0] = 10.0;    // Maximum
 
-        externalLimiter.berechneYOUT(0.001);
+        externalLimiter.calculateYOUT(0.001);
         assertEquals("Should clamp to external maximum", 10.0,
                     externalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -99,7 +99,7 @@ public class LimitCalculatorTest {
         externalLimiter._inputSignal[1][0] = -15.0;   // Wider minimum
         externalLimiter._inputSignal[2][0] = 5.0;     // Narrower maximum
 
-        externalLimiter.berechneYOUT(0.001);
+        externalLimiter.calculateYOUT(0.001);
         assertEquals("Should respect asymmetric maximum", 5.0,
                     externalLimiter._outputSignal[0][0], TOLERANCE);
     }
@@ -112,7 +112,7 @@ public class LimitCalculatorTest {
 
         for (int i = 0; i < testValues.length; i++) {
             internalLimiter._inputSignal[0][0] = testValues[i];
-            internalLimiter.berechneYOUT(0.001);
+            internalLimiter.calculateYOUT(0.001);
             assertEquals("Value " + i + " should be clamped correctly",
                         expected[i], internalLimiter._outputSignal[0][0], TOLERANCE);
         }

@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.TechFormat;
 import java.awt.Graphics2D;
 
 /**

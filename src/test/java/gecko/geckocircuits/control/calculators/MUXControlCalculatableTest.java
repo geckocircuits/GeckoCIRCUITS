@@ -44,7 +44,7 @@ public final class MUXControlCalculatableTest {
             _muxCalculator._inputSignal[i][0] = rand.nextDouble();
         }
 
-        _muxCalculator.berechneYOUT(DELTA_T);
+        _muxCalculator.calculateYOUT(DELTA_T);
 
         for(int i = 0; i < _muxCalculator._inputSignal.length; i++) {
             assertEquals(_muxCalculator._inputSignal[i][0], _muxCalculator._outputSignal[0][i], TOL);

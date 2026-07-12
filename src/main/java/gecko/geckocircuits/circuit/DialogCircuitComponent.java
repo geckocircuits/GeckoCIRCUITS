@@ -13,10 +13,10 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -190,7 +190,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
     public void setVisible(boolean b) {
         this.setTitle(" " + element.getTypeDescription().getTranslation());
         this.setBackground(Color.lightGray);
-        this.baueGUI();
+        this.buildGUI();
         this.pack();
         this.setResizable(true);
         getRootPane().setDefaultButton(jButtonOk);
@@ -214,7 +214,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         _se._visibleCircuitSheet.requestFocus();
     }
 
-    public abstract void baueGUI();
+    public abstract void buildGUI();
 
     public final void setNewElementName() throws NameAlreadyExistsException {
         _originalName = element.getStringID();

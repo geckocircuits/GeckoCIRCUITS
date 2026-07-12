@@ -13,7 +13,7 @@
  */
 package gecko.geckoscript;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.control.Operationable;

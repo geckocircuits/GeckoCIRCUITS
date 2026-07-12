@@ -29,15 +29,15 @@ import gecko.GeckoExternal;
 import gecko.GeckoRemoteInterface;
 import gecko.GeckoSim;
 import gecko.MethodCategory;
-import gecko.geckocircuits.allg.GlobalFilePathes;
-import gecko.geckocircuits.allg.OperatingMode;
+import gecko.geckocircuits.general.GlobalFilePathes;
+import gecko.geckocircuits.general.OperatingMode;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractInductor;
 import gecko.geckocircuits.circuit.circuitcomponents.IdealSwitch;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.control.*;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.geckocircuits.newscope.CharacteristicsCalculator;
 import gecko.geckocircuits.newscope.Cispr16Fft;
 import gecko.i18n.resources.I18nKeys;
@@ -885,7 +885,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
             for (String stateVariable : stateVariables) {
                 elem = IDStringDialog.getComponentByName(stateVariable);
-                if (!((elem instanceof ReglerVOLT) || (elem instanceof ReglerAmperemeter) || (elem instanceof ReglerTEMP))) {
+                if (!((elem instanceof ControlVOLT) || (elem instanceof ControlAmperemeter) || (elem instanceof ControlTEMP))) {
                     writerOutputErrorLn("Supplied element " + stateVariable + " is not a measuring element. Steady state monitoring not initialized!");
                     return;
                 }
@@ -1588,7 +1588,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
 
         final int _checkedSkipPoints;
         private final AbstractDataContainer _data;
-        private final AbstractTimeSerie _timeSerie;
+        private final AbstractTimeSeries _timeSerie;
         final int _startIndex;
         final int _stopIndex;
         final int _numberOfSignalPoints;
@@ -1642,7 +1642,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     public final double[] getTimeArray(final String signalName, final double tStart, final double tEnd, final int skipPoints) {
         final AbstractDataContainer data = NetzlisteCONTROL.globalData;
         final TimeIntervalData timeIntervalData = new TimeIntervalData(tStart, tEnd, skipPoints, data);
-        final AbstractTimeSerie timeSerie = data.getTimeSeries(0);
+        final AbstractTimeSeries timeSerie = data.getTimeSeries(0);
 
         double[] returnValue = new double[timeIntervalData._numberOfSignalPoints];
         for (int i = timeIntervalData._startIndex, counter = 0; i < timeIntervalData._indexLimitMaximum;

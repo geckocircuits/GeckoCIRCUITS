@@ -43,7 +43,7 @@ public class IntegratorCalculatorExtendedTest {
         for (int i = 0; i < 100; i++) {
             calculator._inputSignal[0][0] = 1.0;
             expectedSum += 1.0 * DT;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         // Result should be close to expected integral
@@ -59,7 +59,7 @@ public class IntegratorCalculatorExtendedTest {
 
         for (int i = 0; i < steps; i++) {
             calculator._inputSignal[0][0] = Math.sin(i * DT);
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         // Result should be close to zero
@@ -75,7 +75,7 @@ public class IntegratorCalculatorExtendedTest {
 
         for (int i = 0; i < 10000; i++) {
             calculator._inputSignal[0][0] = Math.cos(i * DT);
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
             maxValue = Math.max(maxValue, calculator._outputSignal[0][0]);
             minValue = Math.min(minValue, calculator._outputSignal[0][0]);
         }
@@ -92,7 +92,7 @@ public class IntegratorCalculatorExtendedTest {
         // Integrate for a while
         for (int i = 0; i < 100; i++) {
             calculator._inputSignal[0][0] = 5.0;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         double valueBeforeReset = calculator._outputSignal[0][0];
@@ -100,7 +100,7 @@ public class IntegratorCalculatorExtendedTest {
 
         // Now apply reset signal
         calculator._inputSignal[1][0] = 1.0;
-        calculator.berechneYOUT(DT);
+        calculator.calculateYOUT(DT);
 
         // After reset, output should return to initial value
         assertEquals("Should reset to initial value", 0.0, calculator._outputSignal[0][0], 1e-6);
@@ -110,7 +110,7 @@ public class IntegratorCalculatorExtendedTest {
     public void testSmallTimeStep() {
         calculator.initializeAtSimulationStart(1e-9);
         calculator._inputSignal[0][0] = 100.0;
-        calculator.berechneYOUT(1e-9);
+        calculator.calculateYOUT(1e-9);
 
         assertFalse("Should handle very small time steps",
                    Double.isNaN(calculator._outputSignal[0][0]));
@@ -120,7 +120,7 @@ public class IntegratorCalculatorExtendedTest {
     public void testLargeTimeStep() {
         calculator.initializeAtSimulationStart(100.0);
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(100.0);
+        calculator.calculateYOUT(100.0);
 
         assertFalse("Should handle large time steps",
                    Double.isNaN(calculator._outputSignal[0][0]));
@@ -134,7 +134,7 @@ public class IntegratorCalculatorExtendedTest {
         for (int i = 0; i < 100; i++) {
             calculator._inputSignal[0][0] = -1.0;
             expectedSum -= 1.0 * DT;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         assertEquals("Negative integration", expectedSum, calculator._outputSignal[0][0], 1e-4);
@@ -151,7 +151,7 @@ public class IntegratorCalculatorExtendedTest {
         // Integrate with large gain to quickly reach limit
         for (int i = 0; i < 200; i++) {
             calculator._inputSignal[0][0] = 100.0;  // Large positive input
-            calculator.berechneYOUT(0.01);
+            calculator.calculateYOUT(0.01);
 
             if (calculator._outputSignal[0][0] >= 99.9) {
                 break;  // Reached saturation
@@ -173,7 +173,7 @@ public class IntegratorCalculatorExtendedTest {
         // Integrate with large gain to quickly reach negative limit
         for (int i = 0; i < 200; i++) {
             calculator._inputSignal[0][0] = -100.0;  // Large negative input
-            calculator.berechneYOUT(0.01);
+            calculator.calculateYOUT(0.01);
 
             if (calculator._outputSignal[0][0] <= -99.9) {
                 break;  // Reached saturation
@@ -194,7 +194,7 @@ public class IntegratorCalculatorExtendedTest {
         calculator.initializeAtSimulationStart(DT);
 
         // First output should be initial value
-        calculator.berechneYOUT(DT);
+        calculator.calculateYOUT(DT);
         assertEquals("Should start at initial value", initValue, calculator._outputSignal[0][0], 1e-6);
 
         // Then accumulate
@@ -202,7 +202,7 @@ public class IntegratorCalculatorExtendedTest {
         for (int i = 0; i < 100; i++) {
             calculator._inputSignal[0][0] = 1.0;
             expectedSum += 1.0 * DT;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         assertEquals("Should accumulate from initial value", expectedSum, calculator._outputSignal[0][0], 1e-4);
@@ -219,7 +219,7 @@ public class IntegratorCalculatorExtendedTest {
 
             for (int i = 0; i < 100; i++) {
                 calculator._inputSignal[0][0] = 1.0;
-                calculator.berechneYOUT(DT);
+                calculator.calculateYOUT(DT);
             }
 
             double result = calculator._outputSignal[0][0];
@@ -238,7 +238,7 @@ public class IntegratorCalculatorExtendedTest {
             double input = (i % 2 == 0) ? 1.0 : -1.0;
             calculator._inputSignal[0][0] = input;
             expectedSum += input * DT;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         // Result should be close to zero (alternating cancels out)
@@ -252,7 +252,7 @@ public class IntegratorCalculatorExtendedTest {
 
         for (int i = 0; i < 1000; i++) {
             calculator._inputSignal[0][0] = i * 0.001;  // Increasing ramp
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         // Integral of ramp is parabolic growth
@@ -265,13 +265,13 @@ public class IntegratorCalculatorExtendedTest {
         // Test response to single impulse (large spike)
         calculator.initializeAtSimulationStart(DT);
         calculator._inputSignal[0][0] = 0.0;
-        calculator.berechneYOUT(DT);
+        calculator.calculateYOUT(DT);
 
         double beforeImpulse = calculator._outputSignal[0][0];
 
         // Apply large impulse
         calculator._inputSignal[0][0] = 1000.0;
-        calculator.berechneYOUT(DT);
+        calculator.calculateYOUT(DT);
         double afterImpulse = calculator._outputSignal[0][0];
 
         // Should accumulate the impulse
@@ -281,11 +281,11 @@ public class IntegratorCalculatorExtendedTest {
         // current and previous input, so one more step with 0 input still adds
         // half the previous impulse value. After that, output should stabilize.
         calculator._inputSignal[0][0] = 0.0;
-        calculator.berechneYOUT(DT);
+        calculator.calculateYOUT(DT);
         double afterZero1 = calculator._outputSignal[0][0];
 
         // Second zero step should not change output further
-        calculator.berechneYOUT(DT);
+        calculator.calculateYOUT(DT);
         double afterZero2 = calculator._outputSignal[0][0];
 
         assertEquals("Should stabilize after impulse", afterZero1, afterZero2, 1e-6);
@@ -299,14 +299,14 @@ public class IntegratorCalculatorExtendedTest {
         // First half: zero input
         for (int i = 0; i < 500; i++) {
             calculator._inputSignal[0][0] = 0.0;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
         double atStep = calculator._outputSignal[0][0];
 
         // Second half: unit step
         for (int i = 0; i < 500; i++) {
             calculator._inputSignal[0][0] = 1.0;
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
         double afterStep = calculator._outputSignal[0][0];
 
@@ -326,7 +326,7 @@ public class IntegratorCalculatorExtendedTest {
         double target = 1.0;
         for (int i = 0; i < 1000000; i++) {
             calculator._inputSignal[0][0] = 1.0;
-            calculator.berechneYOUT(1e-6);
+            calculator.calculateYOUT(1e-6);
         }
 
         double result = calculator._outputSignal[0][0];
@@ -344,7 +344,7 @@ public class IntegratorCalculatorExtendedTest {
 
         for (int i = 0; i < 100; i++) {
             calculator._inputSignal[0][0] = 1000.0;  // Large input
-            calculator.berechneYOUT(DT);
+            calculator.calculateYOUT(DT);
         }
 
         // With zero gain, output should remain at initial value
@@ -361,7 +361,7 @@ public class IntegratorCalculatorExtendedTest {
 
         for (int i = 0; i < 50; i++) {
             calculator._inputSignal[0][0] = 1.0;
-            calculator.berechneYOUT(0.01);
+            calculator.calculateYOUT(0.01);
         }
 
         // Output should be saturated at limit

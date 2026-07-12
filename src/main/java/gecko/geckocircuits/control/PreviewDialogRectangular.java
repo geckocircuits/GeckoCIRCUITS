@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.GlobalFonts;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;

@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFonts;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.circuit.ComponentCoupable;
@@ -47,7 +47,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
 
         JPanel pIN = createParameterPanel(element._couplingCoefficient);
         _jcbM.setSelected(element._showLines.getValue());
@@ -152,7 +152,7 @@ class MutualInductanceDialog extends DialogElementLK<MutualInductance> {
     }
 
 
-    // eine kleine Auflistung der Trafo-Gleichungen im Dialogfenster der magnetischen Kopplung
+    //
     protected JComponent schreibeFormeln_M() {
         final int bG = 230, hG = 180, x1 = 10, y1 = 30, y2 = y1 + 30, y3 = y2 + 30, y4 = y3 + 35, y5 = y4 + 30;
         JComponent comp = new JComponent() {

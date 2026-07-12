@@ -100,7 +100,7 @@ public class LossPropertiesFullTest {
 
     @Test
     public void testGetDetailedLosses_NotNull() {
-        VerlustBerechnungDetailed detailed = diodeProperties.getDetailedLosses();
+        LossCalculationDetailed detailed = diodeProperties.getDetailedLosses();
         assertNotNull(detailed);
     }
 

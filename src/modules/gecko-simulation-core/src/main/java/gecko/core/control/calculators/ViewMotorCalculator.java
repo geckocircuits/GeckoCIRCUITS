@@ -22,7 +22,7 @@ import gecko.core.control.NotCalculateableMarker;
  * visualization happens in the GUI layer - this calculator exists only to
  * provide the control block structure required by the simulation engine.
  *
- * Since this implements NotCalculateableMarker, berechneYOUT() is never called.
+ * Since this implements NotCalculateableMarker, calculateYOUT() is never called.
  *
  * @author GeckoCIRCUITS Team
  */
@@ -36,8 +36,8 @@ public final class ViewMotorCalculator extends AbstractControlCalculatable imple
     }
 
     @Override
-    public void berechneYOUT(double deltaT) {
+    public void calculateYOUT(double deltaT) {
         // This is not calculatable - method should never be called
-        assert false : "ViewMotorCalculator.berechneYOUT should never be called";
+        assert false : "ViewMotorCalculator.calculateYOUT should never be called";
     }
 }

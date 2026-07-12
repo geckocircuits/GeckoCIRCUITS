@@ -16,9 +16,9 @@ package gecko.geckocircuits.control.calculators;
 public final class SampleHoldCalculator extends AbstractTwoInputsOneOutputCalculator {
 
         @Override
-        public void berechneYOUT(final double deltaT) {
+        public void calculateYOUT(final double deltaT) {
             if (_inputSignal[1][0] > SIGNAL_THRESHOLD) {
-                // Logik-Schwelle 0.5 --> wenn Taktsignal groesser ist, wird der Eingangswert direkt durchgeschaltet
+                // // Logic threshold 0.5 --> if the clock signal is larger, the input value is switched through directly
                 _outputSignal[0][0] = _inputSignal[0][0];
             }
         }

@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.swing.ImageIcon;
 import java.net.URL;
@@ -60,7 +60,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
     SpaceVector sv1;
     SpaceVector sv2;
     SpaceVector sv3;
-    private ReglerSpaceVector reglerSpaceVector;
+    private ControlSpaceVector reglerSpaceVector;
 
 
     private class SpaceVector {
@@ -178,8 +178,8 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         }
         initComponents();
 
-        if(regelBlock instanceof ReglerSpaceVector) {
-            reglerSpaceVector = (ReglerSpaceVector) regelBlock;
+        if(regelBlock instanceof ControlSpaceVector) {
+            reglerSpaceVector = (ControlSpaceVector) regelBlock;
         }
 
         doubleBufferImage = gfxConf.createCompatibleImage(getWidth(), getHeight());

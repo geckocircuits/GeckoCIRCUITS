@@ -65,7 +65,7 @@ class CorePackageValidationTest {
 
     // Calculators that are allowed to have GUI dependencies (explicitly excluded)
     private static final Set<String> CALCULATORS_WITH_GUI_ALLOWED = Set.of(
-        "DEMUXCalculator.java",      // Depends on ReglerDemux (GUI)
+        "DEMUXCalculator.java",      // Depends on ControlDemux (GUI)
         "SpaceVectorCalculator.java"  // Depends on SpaceVectorDisplay (GUI)
     );
 
@@ -74,7 +74,7 @@ class CorePackageValidationTest {
         "DetailedConductionLossPanel.java",
         "DetailedSwitchingLossesPanel.java",
         "DetailledLossPanel.java",
-        "DialogVerlusteDetail.java",
+        "DialogLossesDetail.java",
         "JPanelLossDataInterpolationSettings.java",
         "LossCurveTemperaturePanel.java"
     );
@@ -94,7 +94,7 @@ class CorePackageValidationTest {
         "DialogNonLinearity.java",
         "GeckoUndoableEditAdapter.java",  // Bridge to Swing undo manager (intentional Swing dependency)
         "IDStringDialog.java",
-        "KnotenLabel.java",
+        "NodeLabel.java",
         "MyTableCellEditor.java",
         "MyTableCellRenderer.java",
         "NonLinearDialogPanel.java",
@@ -112,9 +112,9 @@ class CorePackageValidationTest {
         "TerminalSubCircuitBlock.java",
         "TerminalToWrap.java",
         "TerminalTwoPortComponent.java",
-        "TerminalVerbindung.java",
+        "TerminalConnection.java",
         "ToolBar.java",
-        "Verbindung.java",
+        "Connection.java",
         // GUI-free as of Sprint 15:
         // ComponentPositioner.java - NOW GUI-FREE (uses GridPoint)
         // ConnectorType.java - NOW GUI-FREE (uses int RGB)

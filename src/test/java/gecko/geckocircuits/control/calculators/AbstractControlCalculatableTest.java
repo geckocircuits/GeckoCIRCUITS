@@ -18,7 +18,7 @@ public class AbstractControlCalculatableTest {
         }
 
         @Override
-        public void berechneYOUT(double deltaT) {
+        public void calculateYOUT(double deltaT) {
             // Simple pass-through: output[0] = input[0]
             if (_inputSignal[0] != null) {
                 _outputSignal[0][0] = _inputSignal[0][0];
@@ -142,7 +142,7 @@ public class AbstractControlCalculatableTest {
         calc.checkInputWithoutConnectionAndFill(0);
         calc._inputSignal[0][0] = 7.5;
 
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
 
         assertEquals("Output should equal input", 7.5, calc._outputSignal[0][0], TOLERANCE);
     }
@@ -181,8 +181,8 @@ public class AbstractControlCalculatableTest {
         source._outputSignal[0][0] = 100.0;
 
         // Propagate through chain
-        middle.berechneYOUT(0.001);
-        dest.berechneYOUT(0.001);
+        middle.calculateYOUT(0.001);
+        dest.calculateYOUT(0.001);
 
         assertEquals("Value should propagate to middle", 100.0, middle._outputSignal[0][0], TOLERANCE);
         assertEquals("Value should propagate to dest", 100.0, dest._outputSignal[0][0], TOLERANCE);

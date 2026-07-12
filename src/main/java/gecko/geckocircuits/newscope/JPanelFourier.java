@@ -14,8 +14,8 @@
 
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.GeckoFileChooser;
-import gecko.geckocircuits.allg.SaveViewFrame;
+import gecko.geckocircuits.general.GeckoFileChooser;
+import gecko.geckocircuits.general.SaveViewFrame;
 import gecko.geckocircuits.control.ScopeSignalSimpleName;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerFourier;
