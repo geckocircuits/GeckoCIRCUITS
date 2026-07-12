@@ -25,13 +25,13 @@ public class DialogThyristorControl extends javax.swing.JFrame {
     ControlThyristorControl _thyrControl;
 
     /** Creates new form DialogThyristorControl */
-    public DialogThyristorControl(ControlThyristorControl reglerThyrControl) {
+    public DialogThyristorControl(ControlThyristorControl controlThyrControl) {
         initComponents();
 
-        _thyrControl = reglerThyrControl;
-        jSpinnerInitFreq.setValue((Double) reglerThyrControl._initFreq.getValue());
-        jSpinnerPhaseShift.setValue((Double) reglerThyrControl._phaseShift.getValue());
-        jSpinnerGateOn.setValue((Double) reglerThyrControl._onTime.getValue() * 1000.0);
+        _thyrControl = controlThyrControl;
+        jSpinnerInitFreq.setValue((Double) controlThyrControl._initFreq.getValue());
+        jSpinnerPhaseShift.setValue((Double) controlThyrControl._phaseShift.getValue());
+        jSpinnerGateOn.setValue((Double) controlThyrControl._onTime.getValue() * 1000.0);
     }
 
     /** This method is called from within the constructor to

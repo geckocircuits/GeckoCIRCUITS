@@ -139,7 +139,7 @@ public class GeckoStatusBar extends JPanel {
                 switch (simKern._simulationStatus) {
                     case PAUSED:
                     case RUNNING:
-                        double prozentFertig = 100 * (simKern.getZeitAktuell()
+                        double prozentFertig = 100 * (simKern.getCurrentTime()
                                 - simKern.getTSTART()) / (simKern.getTEND() - simKern.getTSTART());
                         _runningPercentage = prozentFertig;
                         _jLabelSimulationStatus.setText("Running ...  " + cf.formatT(prozentFertig, TechFormat.FORMAT_AUTO) + " %");
@@ -278,10 +278,10 @@ public class GeckoStatusBar extends JPanel {
         g2d.drawRect(0, 0, barPixelLength, getHeight() - 1);
     }
 
-    void setzeStatusRechenzeit(long tsim) {
+    void setComputeTimeStatus(long tsim) {
         String displayText = "Stopped after  ";
         // tsim ... Simulationszeit in [ms]
-        double tsec = tsim / 1e3;  // // Total time in [s] --> [ms] are only displayed after the decimal place
+        double tsec = tsim / 1e3;  // Total time in [s] --> [ms] are only displayed after the decimal place
         int thour = (int) (tsec / 3600);  // Anzahl Stunden
         tsec -= (thour * 3600);
         int tmin = (int) (tsec / 60);  // Anzahl Minuten

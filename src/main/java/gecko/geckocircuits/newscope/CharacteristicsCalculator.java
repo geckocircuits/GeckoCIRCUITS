@@ -227,7 +227,7 @@ public final class CharacteristicsCalculator {
             _peakPeak[i2] = _max[i2] - _min[i2];
             _avg[i2] /= totalT;
             _rms2[i2] /= totalT;
-            _rms2[i2] = Math.sqrt(_rms2[i2]);  // // from here rms2 is no longer the squared value!!
+            _rms2[i2] = Math.sqrt(_rms2[i2]);  // from here rms2 is no longer the squared value!!
             _gleichrichtwert[i2] /= totalT;
             if (_gleichrichtwert[i2] > 0) {
                 _shape[i2] = _rms2[i2] / _gleichrichtwert[i2];

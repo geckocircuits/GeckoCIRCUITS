@@ -83,7 +83,7 @@ public final class GraferV4 extends JPanel {
             _manager.addDiagram(diag);
 
             for (AbstractCurve curve : diag.getCurves()) {
-                curve.setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+                curve.setAxisConnection(AxisConnection.ASSIGNMENT_Y);
             }
         }
     }
@@ -156,7 +156,7 @@ public final class GraferV4 extends JPanel {
         if(_manager.getDiagram(0) instanceof DiagramSignal) {
             _manager.getDiagram(0).getCurve(terminalNumber - 1).setAxisConnection(AxisConnection.ZUORDNUNG_SIGNAL);
         } else {
-            _manager.getDiagram(0).getCurve(terminalNumber - 1).setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            _manager.getDiagram(0).getCurve(terminalNumber - 1).setAxisConnection(AxisConnection.ASSIGNMENT_Y);
         }
 
     }
@@ -222,7 +222,7 @@ public final class GraferV4 extends JPanel {
             AbstractCurve curve = diag.getCurve(i);
             curve.setSymbolEnabled(true);
             curve.setSymbol(GeckoSymbol.RECT_FILLED);
-            curve.setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            curve.setAxisConnection(AxisConnection.ASSIGNMENT_Y);
             curve.setColor(color);
             color = GeckoColor.getNextColor(color);
         }
@@ -262,7 +262,7 @@ public final class GraferV4 extends JPanel {
         for (int i = 0; i < numberCurves; i++) {
             AbstractCurve curve = diag.getCurve(i);
             curve.setSymbol(GeckoSymbol.RECT_FILLED);
-            curve.setAxisConnection(AxisConnection.ZUORDNUNG_Y);
+            curve.setAxisConnection(AxisConnection.ASSIGNMENT_Y);
             curve.setColor(color);
             color = GeckoColor.getNextColor(color);
         }
@@ -513,7 +513,7 @@ public final class GraferV4 extends JPanel {
     }
 
     private void definiereAchsenbegrenzungenNumerischeSimulation(final HiLoData startStopTimes) {
-        for (AbstractDiagram diag : _manager.getDiagrams()) {   // // goes through the lines
+        for (AbstractDiagram diag : _manager.getDiagrams()) {   // goes through the lines
             final Axis xAxis = diag._xAxis;
             xAxis._axisMinMax.setGlobalAutoScaleValues(startStopTimes);
         }
@@ -536,14 +536,14 @@ public final class GraferV4 extends JPanel {
         }
     }
 
-    public void setMausModus(final MausModus mausModus) {
-        this._mausModus = mausModus;  // // go to the new state
+    public void setMouseMode(final MausModus mouseMode) {
+        this._mausModus = mouseMode;  // go to the new state
         //--------------------------
         for (AbstractDiagram diag : _manager.getDiagrams()) {
-            diag._zoomWindow.setMausModus(mausModus);
+            diag._zoomWindow.setMouseMode(mouseMode);
         }
 
-        switch (mausModus) {
+        switch (mouseMode) {
             case NONE:
                 _sliderContainer.setSliderActivity(false);  // aktives Ausschalten des Schiebers
                 this.remove(_xSliderDrawer);
@@ -559,7 +559,7 @@ public final class GraferV4 extends JPanel {
                 addSliderXDrawer();
                 if (!_sliderContainer.isSliderActive()) {
                     _sliderContainer.setSliderActivity(true);
-                    // // x slider is placed at the beginning: same for all diagrams, defined in GraferV3
+                    // x slider is placed at the beginning: same for all diagrams, defined in GraferV3
                     this.setAxisPositions();
                     this.repaint();
                 }

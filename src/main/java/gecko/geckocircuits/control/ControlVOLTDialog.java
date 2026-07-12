@@ -38,7 +38,7 @@ class ControlVOLTDialog extends DialogElementCONTROL<AbstractPotentialMeasuremen
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         dpvm = new DialogPanelVoltageMeasurement();
         PotentialCoupable potCoupable = (PotentialCoupable) element;
         jpM = dpvm;

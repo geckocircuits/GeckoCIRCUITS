@@ -25,12 +25,12 @@ import javax.swing.border.TitledBorder;
 
 class ControlPDDialog extends DialogElementCONTROL<ControlPD> {
 
-    public ControlPDDialog(final ControlPD reglerPD) {
-        super(reglerPD);
+    public ControlPDDialog(final ControlPD controlPD) {
+        super(controlPD);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Parameter", TitledBorder.LEFT, TitledBorder.TOP));

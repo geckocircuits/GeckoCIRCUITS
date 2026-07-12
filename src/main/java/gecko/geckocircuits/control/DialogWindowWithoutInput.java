@@ -20,7 +20,7 @@ class DialogWindowWithoutInput extends DialogElementCONTROL<RegelBlock> {
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         // no-op
     }
 }

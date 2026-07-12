@@ -320,22 +320,22 @@ public final class NetzlisteCONTROL {
         }
     }
 
-    public void berechneZeitschritt(final double deltaT, final double time) {
+    public void calculateTimeStep(final double deltaT, final double time) {
         AbstractControlCalculatable.setTime(time);
 
-////        if (!initDone) {
-////            initDone = true;
-////                try {
-////                    bufReader = new BufferedReader(new FileReader(compareFile));
-////
-////                } catch (IOException ex) {
-////                    Logger.getLogger(NetzlisteCONTROL.class.getName()).log(Level.SEVERE, null, ex);
-////                }
-////        }
-////        try {
-////            String readLine = bufReader.readLine();
-////            String timeCompare = "    simulation time: " + time;
-////            assert readLine.equals(timeCompare) : readLine + " xxx " + timeCompare;
+//        if (!initDone) {
+//            initDone = true;
+//                try {
+//                    bufReader = new BufferedReader(new FileReader(compareFile));
+//
+//                } catch (IOException ex) {
+//                    Logger.getLogger(NetzlisteCONTROL.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//        }
+//        try {
+//            String readLine = bufReader.readLine();
+//            String timeCompare = "    simulation time: " + time;
+//            assert readLine.equals(timeCompare) : readLine + " xxx " + timeCompare;
 //        counter++;
 //        if (counter == 2) {
 //            for(AbstractControlCalculatable calc : _sortedControlBlocksNew) {
@@ -366,7 +366,6 @@ public final class NetzlisteCONTROL {
 //                            }
 //                        }
 //                    }
-//
 //                }
 //            }
 //        }
@@ -432,9 +431,9 @@ public final class NetzlisteCONTROL {
 
         int maxNumOfInput = 0;
         for (int i = 0; i < _orderedControlBlocks.length; i++) {
-            final RegelBlock regler = _orderedControlBlocks[i];
-            if (regler instanceof ControlOSZI) {
-                Collection<AbstractTerminal> inputs = regler.XIN;
+            final RegelBlock control = _orderedControlBlocks[i];
+            if (control instanceof ControlOSZI) {
+                Collection<AbstractTerminal> inputs = control.XIN;
                 inputCoords.add(new ArrayList<AbstractTerminal>(inputs));
                 scopeIndices.add(i);
                 maxNumOfInput = Math.max(maxNumOfInput, inputs.size());

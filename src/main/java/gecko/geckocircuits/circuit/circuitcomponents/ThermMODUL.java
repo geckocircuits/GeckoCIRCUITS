@@ -38,7 +38,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
     private static final int X_CENTER = 430, Y_CENTER = 250;  // Zentrum des Modul-Bildes in PixelPunkten
     // Dateiname (inkl. Pfad) des Modul-ESBs:
     private String _fileName = GlobalFilePathes.DATNAM_NOT_DEFINED;
-    // // to draw a cooler (pixel point data measured from ICEPAK screenshot):
+    // to draw a cooler (pixel point data measured from ICEPAK screenshot):
     private static final int D_E = 5;
     private static final double B_R = 2.5;
     private static final int MAX_INPUT_NO = 99;
@@ -57,11 +57,11 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
         //_yOUT = (int) (sheetPosition.y + ho + 1);
     }
 
-    public int getChipAnzahl() {
+    public int getChipCount() {
         return _noOfChips;
     }
 
-    public void setDateiname(final String datnam) {
+    public void setFileName(final String datnam) {
         _fileName = datnam;
     }
 
@@ -86,7 +86,7 @@ final class ThermMODUL extends AbstractCircuitBlockInterface {
         _yOUT = (int) (_height + 1);
         graphics.drawLine((int) (dpix * _xOUT), (int) (dpix * (0 + 1)), (int) (dpix * _xOUT), (int) (dpix * _yOUT));
 
-        PowerModulePainter.zeichne(graphics, this, graphics.getColor(), dpix);
+        PowerModulePainter.draw(graphics, this, graphics.getColor(), dpix);
         if (_noOfChips > 0) {
             drawInputs(graphics, graphics.getColor());
         }

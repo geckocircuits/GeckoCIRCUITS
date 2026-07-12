@@ -25,20 +25,20 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class ScopeSignalRegular extends AbstractScopeSignal {
 
     private final int _scopeInputIndex;
-    private final ControlOSZI _reglerOSZI;
+    private final ControlOSZI _controlOSZI;
 
-    public ScopeSignalRegular(final int scopeInputIndex, final ControlOSZI reglerOSZI) {
+    public ScopeSignalRegular(final int scopeInputIndex, final ControlOSZI controlOSZI) {
         super();
         _scopeInputIndex = scopeInputIndex;
-        _reglerOSZI = reglerOSZI;
+        _controlOSZI = controlOSZI;
     }
 
     @Override
     public String getSignalName() {
-        if (_reglerOSZI == null) {
-            return "no regleroszi defined";
+        if (_controlOSZI == null) {
+            return "no controloszi defined";
         }
-        final String returnValue = _reglerOSZI.XIN.get(_scopeInputIndex).getLabelObject().getLabelString();
+        final String returnValue = _controlOSZI.XIN.get(_scopeInputIndex).getLabelObject().getLabelString();
         if (returnValue.isEmpty()) {
             return "sg." + _scopeInputIndex;
         } else {
@@ -52,6 +52,6 @@ public final class ScopeSignalRegular extends AbstractScopeSignal {
 
     @Override
     public String getSubcircuitPath() {
-        return _reglerOSZI.getSubCircuitPath();
+        return _controlOSZI.getSubCircuitPath();
     }
 }

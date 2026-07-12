@@ -116,7 +116,7 @@ public class SimulationKernel implements ISimulationEngine {
     }
 
     @Override
-    public double getZeitAktuell() {
+    public double getCurrentTime() {
         return t;
     }
 
@@ -166,18 +166,18 @@ public class SimulationKernel implements ISimulationEngine {
             lkmLK.schreibeMatrix_B(dt, t, false);
             lkmLK.p = _lkCachedMatrix.solve(lkmLK.bVector);
             doDiodeErrorsRecalculations();
-            nl.berechneSubCircuitAlsDifferentialgleichung(dt, t);  // interne Berechungen in SubCircuits diverser LK-Elemente
+            nl.calculateSubCircuitAsDifferentialEquation(dt, t);  // interne Berechungen in SubCircuits diverser LK-Elemente
             lkmLK.aktualisiereKnotenpotentiale(dt, t);     // pALT=p;
             dataTransferLK_Control();
         }
 
         if (simuliereThermKreis) {
             lkmTHERM.schreibeMatrix_B(dt, t, false);
-            // // Solving the matrix equations (power circuit):
+            // Solving the matrix equations (power circuit):
 
             lkmTHERM.p = _thCachedMatrix.solve(lkmTHERM.bVector);
-            lkmTHERM.berechneBauteilStroeme(-1, dt, t, false, 0);  // stoergroesse '-1' nur fuer die Dioden relevant, hier sind Werte egal
-            thermNL.berechneSubCircuitAlsDifferentialgleichung(dt, t);  // eventuelle analytische Berechungen in SubCircuits der THERM-Elemente
+            lkmTHERM.calculateComponentCurrents(-1, dt, t, false, 0);  // stoergroesse '-1' nur fuer die Dioden relevant, hier sind Werte egal
+            thermNL.calculateSubCircuitAsDifferentialEquation(dt, t);  // eventuelle analytische Berechungen in SubCircuits der THERM-Elemente
             lkmTHERM.aktualisiereKnotenpotentiale(dt, t);  // pALT_THERM= pTHERM;
             dataTransferTherm();
         }
@@ -186,11 +186,10 @@ public class SimulationKernel implements ISimulationEngine {
         // Regler:
         //===================================
         if (simuliereRegelkreis) {
-            controlNL.berechneZeitschritt(dt, t);
+            controlNL.calculateTimeStep(dt, t);
         }
 
         //lkmLK.schreibeRechendatenNachEinemZeitschritt(t);
-        //
         // // Pause is forced at a certain time -->
         if ((t - dt / 2 <= tPAUSE) && (tPAUSE <= t + dt / 2)) {
             _simulationStatus = SimulationStatus.PAUSED;
@@ -198,15 +197,15 @@ public class SimulationKernel implements ISimulationEngine {
     }
 
     private void doDiodeErrorsRecalculations() {
-        int switchingErrorCounter = 0;   // // 'stoersize<1.0' prevents the algorithm from getting stuck when switching diodes between states
+        int switchingErrorCounter = 0;   // 'stoersize<1.0' prevents the algorithm from getting stuck when switching diodes between states
         double stoergroesse = 1;//0.9999999;
         boolean isNewIteration = false;
 
-        while (lkmLK.berechneBauteilStroeme(stoergroesse, dt, t, isNewIteration, switchingErrorCounter)) {
+        while (lkmLK.calculateComponentCurrents(stoergroesse, dt, t, isNewIteration, switchingErrorCounter)) {
             isNewIteration = true;
             if (switchingErrorCounter > 10000) {
                 //new DialogDiodenError(switchingErrorCounter, t);
-                this.lastUpdateOfScope();  // // the final simulation will be updated again to be on the safe side
+                this.lastUpdateOfScope();  // the final simulation will be updated again to be on the safe side
                 throw new Error("Numerical instablity of switch!\nAborting simulation.");
             }
 
@@ -221,31 +220,31 @@ public class SimulationKernel implements ISimulationEngine {
     }
 
     private void setControlledSourcesFromControlValue() {
-        // // Control of the signal-controlled LK sources using a signal from the control circuit:
+        // Control of the signal-controlled LK sources using a signal from the control circuit:
         for (int[] mapping : zuordnung_QuelleLK_signalCONTROL) {
-            int reglerIndex = mapping[1];
+            int controlIndex = mapping[1];
             int outputIndex = mapping[2];
 
             AbstractCircuitBlockInterface e = nl.elements[mapping[0]];
             double[] par = e.parameter;
-            double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
+            double[][] blockOutput = unsortedCalculators[controlIndex]._outputSignal;
 
-            if (blockOutput != null) {  // // because yout was not yet defined at the first time step
-                par[1] = blockOutput[outputIndex][0];  // // for signal-controlled sources, parameter[1] is the signal
+            if (blockOutput != null) {  // because yout was not yet defined at the first time step
+                par[1] = blockOutput[outputIndex][0];  // for signal-controlled sources, parameter[1] is the signal
             }
         }
     }
 
     private void setThermalControlledSourcesFromControlValues() {
-        // // Control of the signal-controlled THERM sources using a signal from the control circuit:
+        // Control of the signal-controlled THERM sources using a signal from the control circuit:
         for (int[] mapping : zuordnung_QuelleTHERM_signalCONTROL) {
-            int reglerIndex = mapping[1];
+            int controlIndex = mapping[1];
             int outputIndex = mapping[2];
             AbstractCircuitBlockInterface e = thermNL.elements[mapping[0]];
             double[] par = e.parameter;
-            double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
-            if (blockOutput != null) {  // // because yout was not yet defined at the first time step
-                par[1] = blockOutput[outputIndex][0];  // // for signal-controlled sources, parameter[1] is the signal
+            double[][] blockOutput = unsortedCalculators[controlIndex]._outputSignal;
+            if (blockOutput != null) {  // because yout was not yet defined at the first time step
+                par[1] = blockOutput[outputIndex][0];  // for signal-controlled sources, parameter[1] is the signal
             }
         }
     }
@@ -279,14 +278,14 @@ public class SimulationKernel implements ISimulationEngine {
 
         setControlledSourcesFromControlValue();
         //------------------
-        // // Control of the external machine values ​​(e.g. load torque) using a signal from the control circuit:
+        // Control of the external machine values ​​(e.g. load torque) using a signal from the control circuit:
         for (int[] mapping : zuordnung_MaschineLK_LoadParameterInCONTROL) {
             AbstractCircuitBlockInterface e = nl.elements[mapping[0]];
-            int reglerIndex = mapping[1];
+            int controlIndex = mapping[1];
             int outputIndex = mapping[2];
             double[] par = e.parameter;
-            double[][] blockOutput = unsortedCalculators[reglerIndex]._outputSignal;
-            par[((AbstractMotor) e).getIndexForLoadTorque()] = blockOutput[outputIndex][0];  // // for signal-controlled sources, parameter[1] is the signal
+            double[][] blockOutput = unsortedCalculators[controlIndex]._outputSignal;
+            par[((AbstractMotor) e).getIndexForLoadTorque()] = blockOutput[outputIndex][0];  // for signal-controlled sources, parameter[1] is the signal
         }
         //-------------------------------------------------------------------
         // Potentialdifferenzen im LK-Kreis an Regelkreiselement VOLT uebergeben:
@@ -309,7 +308,7 @@ public class SimulationKernel implements ISimulationEngine {
         }
 
         //------------------
-        // // apply the internal machine parameter selected in VIEWMOT to the CONTROL output of C_VIEWMOT:
+        // apply the internal machine parameter selected in VIEWMOT to the CONTROL output of C_VIEWMOT:
         for (int[] mapping : zeiger_VIEWMOT_MaschineLK) {
             AbstractCircuitBlockInterface lkBlock = nl.elements[mapping[1]];
             double interneMaschienenGroesse = lkBlock.parameter[mapping[2]];
@@ -330,7 +329,7 @@ public class SimulationKernel implements ISimulationEngine {
                     // rDS(t) - rDS,on - rDS,off - i(t) - u(t) - uDSon[V] - k_on[Ws] - k_off[Ws]    -->
                     double rS_vorher = par[0];
                     if (schaltSignal > 0.5) {
-                        par[0] = par[1];  // // --> on, threshold '0.5' for switching
+                        par[0] = par[1];  // --> on, threshold '0.5' for switching
                     } else {
                         par[0] = par[2];  // --> off
                     }
@@ -343,7 +342,7 @@ public class SimulationKernel implements ISimulationEngine {
                     // rDS(t) - rDS,on - rDS,off - i(t) - u(t) - uDSon[V] - k_on[Ws] - k_off[Ws]    -->
                     rS_vorher = par[0];
                     if (schaltSignal > 0.5) {
-                        par[0] = par[2];  // // --> on, threshold '0.5' for switching
+                        par[0] = par[2];  // --> on, threshold '0.5' for switching
                     } else {
                         par[0] = par[3];  // --> off
                     }
@@ -353,11 +352,11 @@ public class SimulationKernel implements ISimulationEngine {
                     }
                     break;
                 case LK_THYR:
-                    // // THYR is treated like a diode (see below!!), the current gate state is stored here:
+                    // THYR is treated like a diode (see below!!), the current gate state is stored here:
                     if (schaltSignal > 0.5) {
                         par[8] = 1;
                     } else {
-                        par[8] = 0;  // // --> on, threshold '0.5' for switching
+                        par[8] = 0;  // --> on, threshold '0.5' for switching
                     }
                     break;
                 case LK_IGBT:
@@ -367,7 +366,7 @@ public class SimulationKernel implements ISimulationEngine {
                     if (schaltSignal > 0.5) {
                         par[8] = 1;
                     } else {
-                        par[8] = 0;  // // --> on, threshold '0.5' for switching
+                        par[8] = 0;  // --> on, threshold '0.5' for switching
                     }
                     break;
                 default:
@@ -387,7 +386,7 @@ public class SimulationKernel implements ISimulationEngine {
 
         this.lastUpdateOfScope();
 
-        // // Save the last solution in order to be able to continue correctly in the case of CONTINUE -->$
+        // Save the last solution in order to be able to continue correctly in the case of CONTINUE -->$
         pLK_ALT = new double[lkmLK.p.length];
         System.arraycopy(lkmLK.p, 0, pLK_ALT, 0, pLK_ALT.length);
         pTHERM_ALT = new double[lkmTHERM.p.length];
@@ -427,7 +426,7 @@ public class SimulationKernel implements ISimulationEngine {
         this.lastUpdateOfScope();
         //controlNL.tearDownOnPause();
         //-------------------------------
-        // // set the initial conditions according to the last calculation when CONTINUE was pressed -->
+        // set the initial conditions according to the last calculation when CONTINUE was pressed -->
         pLK_ALT = new double[lkmLK.p.length];
         System.arraycopy(lkmLK.p, 0, pLK_ALT, 0, pLK_ALT.length);
         pTHERM_ALT = new double[lkmTHERM.p.length];
@@ -500,15 +499,15 @@ public class SimulationKernel implements ISimulationEngine {
         //***************************
         // Leistungskreis:
         //
-        definiereInteraktion_VOLT_AMP_LK();  // // how do I measure currents and voltages in the LK with CONTROL-AMP or CONTROL-VOLT?
-        definiereInteraktion_MaschineLK_VIEWMOT();  // // for measuring internal machine parameters
+        definiereInteraktion_VOLT_AMP_LK();  // how do I measure currents and voltages in the LK with CONTROL-AMP or CONTROL-VOLT?
+        definiereInteraktion_MaschineLK_VIEWMOT();  // for measuring internal machine parameters
         //
-        zuordnung_SchalterLK_SWITCH = definiereInteraktion_Schalter_Regler();  // welches CONTROL-GATE steuert welchen LK_SWITCH (LK_S,LK_IGBT,LK_THYR) an?
+        zuordnung_SchalterLK_SWITCH = defineInteractionSwitchController();  // welches CONTROL-GATE steuert welchen LK_SWITCH (LK_S,LK_IGBT,LK_THYR) an?
         zuordnung_QuelleLK_signalCONTROL = definiereInteraktion_SignalgesteuerteQuelle_Regler(nl);  // welches allg. CONTROL-Signal steuert welche LK_QUELLE (LK_U, LK_I) an?
         zuordnung_QuelleTHERM_signalCONTROL = definiereInteraktion_SignalgesteuerteQuelle_Regler(thermNL);  // welches allg. CONTROL-Signal steuert welche THERM_QUELLE (LK_TEMP, LK_FLOW) an?
 
         zuordnung_MaschineLK_LoadParameterInCONTROL = definiereInteraktion_MaschineLK_LoadParameterInCONTROL();  // Welcher CONTROL-Knoten definiert welche mechanischen Signale (zB. externes Moment) des Motors?
-        definiereInteraktion_TEMP_FLOW_THERM();  // // how do I measure thermal flow and temperature differences in THERM with CONTROL-FLOW or CONTROL-TEMP?
+        definiereInteraktion_TEMP_FLOW_THERM();  // how do I measure thermal flow and temperature differences in THERM with CONTROL-FLOW or CONTROL-TEMP?
         setControlledSourcesFromControlValue();
         setThermalControlledSourcesFromControlValues();
 
@@ -516,28 +515,26 @@ public class SimulationKernel implements ISimulationEngine {
             lkmLK.schreibeMatrix_A(dt, tAktuell, false);
             lkmTHERM.schreibeMatrix_A(dt, tAktuell, false);
         }
-        //
         // Leistungskreis:
         if (getAnfangsbedVomDialogfenster) {
             lkmLK = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
             lkmLK.initMatrizen(nl, getAnfangsbedVomDialogfenster, true, MainWindow._solverSettings.SOLVER_TYPE.getValue());  // pALT= new double[..];   iALT= new double[..];
             lkmLK.schreibeMatrix_A(dt, tAktuell, false);
 
-            //
             // thermischer Kreis:
             lkmTHERM = new LKMatrices(MainWindow._solverSettings.SOLVER_TYPE.getValue());
             lkmTHERM.initMatrizen((NetListLK) thermNL, getAnfangsbedVomDialogfenster, false, MainWindow._solverSettings.SOLVER_TYPE.getValue());
             lkmTHERM.schreibeMatrix_A(dt, tAktuell, false);
         }
         //=============================
-        if (lkmLK.matrixSize < 2) { // // if the power circuit does not exist, it is consequently not simulated:
+        if (lkmLK.matrixSize < 2) { // if the power circuit does not exist, it is consequently not simulated:
             simuliereLeistungskreis = false;
         } else {
             simuliereLeistungskreis = true;
             _lkCachedMatrix = _luDecompCache.getCachedLUDecomposition(lkmLK.a, t);
         }
 
-        if (lkmTHERM.matrixSize < 2) { // // if the thermal circuit does not exist, it is consequently not simulated:
+        if (lkmTHERM.matrixSize < 2) { // if the thermal circuit does not exist, it is consequently not simulated:
             simuliereThermKreis = false;
         } else {
             simuliereThermKreis = true;
@@ -603,14 +600,14 @@ public class SimulationKernel implements ISimulationEngine {
         return zuordTEMP;
     }
 
-    private int[][] definiereInteraktion_Schalter_Regler() {
+    private int[][] defineInteractionSwitchController() {
         // Welcher Schalter wird von welchem SWITCH-Regelblock angesteuert? -->
         int[][] zuordnung_SchalterLK_SWITCH = new int[mult * controlANZAHL + add][];
         int zuordnungANZAHL_SchalterLK_SWITCH = 0;
         for (int iC = 0; iC < controlANZAHL; iC++) {
             if (controlNL._orderedControlBlocks[iC] instanceof ControlGate) {
-                ControlGate reglerGate = (ControlGate) controlNL._orderedControlBlocks[iC];
-                AbstractBlockInterface controlledSwitch = reglerGate.getComponentCoupling()._coupledElements[0];
+                ControlGate controlGate = (ControlGate) controlNL._orderedControlBlocks[iC];
+                AbstractBlockInterface controlledSwitch = controlGate.getComponentCoupling()._coupledElements[0];
                 if (controlledSwitch != null) {
                     for (int iLK = 0; iLK < nl.elements.length; iLK++) {
                         AbstractCircuitBlockInterface compareElement = nl.elements[iLK];
@@ -633,7 +630,6 @@ public class SimulationKernel implements ISimulationEngine {
 
     private int[][] definiereInteraktion_MaschineLK_LoadParameterInCONTROL() {
         //---------------------------------------
-        //
         //
         int[][] zuordnung_MaschineLK_LoadParameterInCONTROL = new int[mult * controlANZAHL + add][];
         int zuordnungANZAHL_MaschineLK_LoadParameterInCONTROL = 0;
@@ -665,8 +661,8 @@ public class SimulationKernel implements ISimulationEngine {
         jjZeiger = 0;
         for (int i1 = 0; i1 < controlANZAHL; i1++) {
             if (c[i1] instanceof ControlVIEWMOT) {
-                ControlVIEWMOT reglerVIEWMOT = (ControlVIEWMOT) c[i1];
-                AbstractBlockInterface selectedMotor = reglerVIEWMOT.getComponentCoupling()._coupledElements[0];
+                ControlVIEWMOT controlVIEWMOT = (ControlVIEWMOT) c[i1];
+                AbstractBlockInterface selectedMotor = controlVIEWMOT.getComponentCoupling()._coupledElements[0];
                 if (selectedMotor != null) {
                     iA2 = c[i1].getParameterString()[2];  // --> "omega"
                     for (int i2 = 0; i2 < nl.elements.length; i2++) {
@@ -696,8 +692,8 @@ public class SimulationKernel implements ISimulationEngine {
         jjZeiger = 0;
         for (int i1 = 0; i1 < controlANZAHL; i1++) {
             if (c[i1] instanceof ControlVOLT || c[i1] instanceof ControlMMF) {
-                AbstractPotentialMeasurement reglerVOLT = (AbstractPotentialMeasurement) c[i1];
-                AbstractBlockInterface directComponent = reglerVOLT.getComponentCoupling()._coupledElements[0];
+                AbstractPotentialMeasurement controlVOLT = (AbstractPotentialMeasurement) c[i1];
+                AbstractBlockInterface directComponent = controlVOLT.getComponentCoupling()._coupledElements[0];
 
                 String uA = c[i1].getParameterString()[0];
                 String uB = c[i1].getParameterString()[1];
@@ -705,13 +701,13 @@ public class SimulationKernel implements ISimulationEngine {
                     zeigerACE[jjZeiger] = i1;
                     jjZeiger++;
 
-                    int firstIndex = nl.findIndexFromLabelInSheet(uA, reglerVOLT);
+                    int firstIndex = nl.findIndexFromLabelInSheet(uA, controlVOLT);
                     iKn.add(firstIndex);
 
-                    int secondIndex = nl.findIndexFromLabelInSheet(uB, reglerVOLT);
+                    int secondIndex = nl.findIndexFromLabelInSheet(uB, controlVOLT);
                     iKn.add(secondIndex);
                 } else if (directComponent != null) {
-                    if (reglerVOLT instanceof ControlMMF
+                    if (controlVOLT instanceof ControlMMF
                             && (directComponent instanceof ReluctanceInductor)) {
                         directComponent = ((ReluctanceInductor) directComponent)._secondarySource;
                     }
@@ -751,8 +747,8 @@ public class SimulationKernel implements ISimulationEngine {
         jjZeiger = 0;
         for (int i1 = 0; i1 < controlANZAHL; i1++) {
             if (c[i1] instanceof ControlTEMP) {
-                ControlTEMP reglerTEMP = (ControlTEMP) c[i1];
-                AbstractBlockInterface directComponent = reglerTEMP.getComponentCoupling()._coupledElements[0];
+                ControlTEMP controlTEMP = (ControlTEMP) c[i1];
+                AbstractBlockInterface directComponent = controlTEMP.getComponentCoupling()._coupledElements[0];
 
                 String uA = c[i1].getParameterString()[0];
                 String uB = c[i1].getParameterString()[1];
@@ -761,13 +757,13 @@ public class SimulationKernel implements ISimulationEngine {
                     zeigerACE[jjZeiger] = i1;
                     jjZeiger++;
 
-                    int firstIndex = thermNL.findIndexFromLabelInSheet(uA, reglerTEMP);
+                    int firstIndex = thermNL.findIndexFromLabelInSheet(uA, controlTEMP);
                     if (firstIndex >= 0) {
                         iKn[jj] = firstIndex;
                         jj++;
                     }
 
-                    int secondIndex = thermNL.findIndexFromLabelInSheet(uB, reglerTEMP);
+                    int secondIndex = thermNL.findIndexFromLabelInSheet(uB, controlTEMP);
                     if (secondIndex >= 0) {
                         iKn[jj] = secondIndex;
                         jj++;
@@ -839,10 +835,9 @@ public class SimulationKernel implements ISimulationEngine {
     }
 
 //    public void external_step (double time, double[] input) {
-//        //-------------------------
+//-------------------------
 //        t= time;
 //System.out.println("\nexternal ended");
-//
 //
 //        int counter = 0;
 //        for(RegelBlock reg : ControlFromEXTERNAL.fromExternals) {
@@ -853,19 +848,17 @@ public class SimulationKernel implements ISimulationEngine {
 //                counter++;
 //            }
 //        }
-//
 //        //----
-////        if (index_FROM_EXTERNAL!=-1) {
-////            for (int i1=0;  i1<signals_from_external.length;  i1++) {
-////                double x= input[i1];
-////                if (x==x) signals_from_external[i1]= x; else signals_from_external[i1]=0;  // NaN, Inf
-////                //signals_from_external[i1]= input[i1];
-////            }
-////            c[index_FROM_EXTERNAL].setParameter(signals_from_external);
-////        }
-//        //-------------------------------
+//        if (index_FROM_EXTERNAL!=-1) {
+//            for (int i1=0;  i1<signals_from_external.length;  i1++) {
+//                double x= input[i1];
+//                if (x==x) signals_from_external[i1]= x; else signals_from_external[i1]=0;  // NaN, Inf
+//                //signals_from_external[i1]= input[i1];
+//            }
+//            c[index_FROM_EXTERNAL].setParameter(signals_from_external);
+//        }
+//-------------------------------
 //        simulateOneTimeStep();
-//
 //    }
     public double getTimeStep() {
         return dt;
@@ -873,7 +866,7 @@ public class SimulationKernel implements ISimulationEngine {
 
     public void external_end() {
         _simulationStatus = SimulationStatus.FINISHED;
-        this.lastUpdateOfScope();  // // the final simulation will be updated again to be on the safe side
+        this.lastUpdateOfScope();  // the final simulation will be updated again to be on the safe side
         //-------------------------------
         // Speichern der letzten Loesung, um im Fall von CONTINUE korrekt weitermachen zu koennen -->
         pLK_ALT = new double[lkmLK.p.length];

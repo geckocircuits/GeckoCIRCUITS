@@ -74,7 +74,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
     public void addTextInfoValue(final SchematicTextInfo textInfo) {
 
         // ist die Datei mit der Verlustbeschreibung ueberhaupt vorhanden?
-        final boolean isLossFileOk = _lossCalculationDetailed.pruefeLinkAufHalbleiterDatei();
+        final boolean isLossFileOk = _lossCalculationDetailed.checkLinkToSemiconductorFile();
         if (_lossType.getValue() == LossCalculationDetail.DETAILED) {
             if (isLossFileOk) {
                 textInfo.addParameter(_lossCalculationDetailed.lossFile.getName());

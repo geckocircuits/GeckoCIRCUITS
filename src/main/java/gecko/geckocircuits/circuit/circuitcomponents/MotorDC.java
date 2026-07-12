@@ -155,7 +155,7 @@ public final class MotorDC extends AbstractMotorDC {
     void calculateEMK() {
         double excitationCurrent = _Le.parameter[2];
         _flux = _fieldInductance / _fieldWindings * excitationCurrent;  // Erregerfluss
-        _emk = _machineConstant * _flux * _omegaElectric;  // // internal tension of the machine
+        _emk = _machineConstant * _flux * _omegaElectric;  // internal tension of the machine
     }
 
     @Override

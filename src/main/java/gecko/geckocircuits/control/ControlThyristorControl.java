@@ -24,7 +24,7 @@ public final class ControlThyristorControl extends RegelBlock {
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlThyristorControl.class, "THYRISTOR_CONTROL", I18nKeys.THYRISTOR_CONTROL);
 
     private DialogThyristorControl dtc;
-    private static final int TN_Y = 6;  // // Number of terminals for signal connection
+    private static final int TN_Y = 6;  // Number of terminals for signal connection
     transient final UserParameter<Double> _onTime = UserParameter.Builder.<Double>start("onTime", 4e-3).
             longName(I18nKeys.GATE_ON_TIME_SEC).
             shortName("ontime").

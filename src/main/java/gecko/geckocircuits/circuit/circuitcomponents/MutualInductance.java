@@ -67,7 +67,7 @@ public final class MutualInductance extends AbstractCircuitBlockInterface implem
 
     @Override
     protected void drawConnectorLines(final Graphics2D graphics) {
-        // // Connection lines to the coupled inductances:
+        // Connection lines to the coupled inductances:
         if (_showLines.getValue()) {
             Color origColor = graphics.getColor();
             graphics.setColor(Color.green);

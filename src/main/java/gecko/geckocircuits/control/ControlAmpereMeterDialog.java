@@ -26,12 +26,12 @@ class ControlAmpereMeterDialog extends DialogElementCONTROL<AbstractCurrentMeasu
 
     private JComboBox<LossComponent> _comboLossType;
 
-    public ControlAmpereMeterDialog(final AbstractCurrentMeasurement reglerAMP) {
-        super(reglerAMP);
+    public ControlAmpereMeterDialog(final AbstractCurrentMeasurement controlAMP) {
+        super(controlAMP);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         if (element instanceof ComponentCoupable) {
             jpM = createComponentCouplingPanel((AbstractBlockInterface) element);
             if (element instanceof ControlFlowMeter) {

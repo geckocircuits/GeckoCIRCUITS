@@ -417,7 +417,7 @@ private void jToggleButtonOffActionPerformed(java.awt.event.ActionEvent evt) {//
     jToggleButtonZoom.setSelected(false);
 
     for (GraferV4 grafer : _grafer) {
-        grafer.setMausModus(GraferV4.MausModus.NONE);
+        grafer.setMouseMode(GraferV4.MausModus.NONE);
     }
 
     disableZoomButtons();
@@ -429,7 +429,7 @@ private void jToggleButtonSliderActionPerformed(java.awt.event.ActionEvent evt) 
     jToggleButtonSlider.setSelected(true);
     jToggleButtonZoom.setSelected(false);
     for (GraferV4 grafer : _grafer) {
-        grafer.setMausModus(GraferV4.MausModus.SLIDER);
+        grafer.setMouseMode(GraferV4.MausModus.SLIDER);
         //grafer.setAxisPositions();
     }
 
@@ -442,7 +442,7 @@ private void jToggleButtonZoomActionPerformed(java.awt.event.ActionEvent evt) {/
     jToggleButtonSlider.setSelected(false);
     jToggleButtonZoom.setSelected(true);
     for (GraferV4 grafer : _grafer) {
-        grafer.setMausModus(GraferV4.MausModus.ZOOM_WINDOW);
+        grafer.setMouseMode(GraferV4.MausModus.ZOOM_WINDOW);
     }
 
     disableSliderButtons();

@@ -58,7 +58,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         jbOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                schliesseFenster();
+                closeWindow();
             }
         });
         JPanel jpOK = new JPanel();
@@ -129,7 +129,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
 
     @Override
     public void windowClosing(WindowEvent we) {
-        this.schliesseFenster();
+        this.closeWindow();
     }
 
     @Override
@@ -138,7 +138,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
     }
     //------------------------------------------------
 
-    private void schliesseFenster() {
+    private void closeWindow() {
         //mutterFenster.gibFocusZurueck();
         this.dispose();
     }

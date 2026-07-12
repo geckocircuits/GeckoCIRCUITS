@@ -130,7 +130,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmall
             }
         });
 
-        baueGuiIndividual();
+        buildIndividualGUI();
 
         ScopeSettings settings = new ScopeSettings();
         _grafer = new GraferV4(settings);
@@ -233,7 +233,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmall
     }
 
     @Override
-    void baueGuiIndividual() {
+    void buildIndividualGUI() {
 
         JPanel pAmpl = createParameterPanel(element._amplitude);
         jpM.add(pAmpl, BorderLayout.CENTER);

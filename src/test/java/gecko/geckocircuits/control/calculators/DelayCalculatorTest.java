@@ -29,7 +29,7 @@ public final class DelayCalculatorTest {
 
     @Test
     public void testInitWithNewDt() {
-        // same caculation / test as in testBerechneYOUT
+        // same caculation / test as in testCalculateYOUT
         _delCalculator.initializeAtSimulationStart(1);
         for (int i = 0; i < 10; i++) {
             _delCalculator._inputSignal[0][0] = 10 - i;
@@ -54,7 +54,7 @@ public final class DelayCalculatorTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _delCalculator.initializeAtSimulationStart(1);
         for (int i = 0; i < 10; i++) {
             _delCalculator._inputSignal[0][0] = 10 - i;

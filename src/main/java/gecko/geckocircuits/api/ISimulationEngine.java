@@ -58,7 +58,7 @@ public interface ISimulationEngine {
      *
      * @return Current time in seconds
      */
-    double getZeitAktuell();
+    double getCurrentTime();
 
     /**
      * Gets the simulation time step.

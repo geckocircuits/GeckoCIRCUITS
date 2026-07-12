@@ -40,7 +40,7 @@ public final class SignalCalculatorSinusTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             AbstractSignalCalculator.setTime(time);
             _signalCalc.calculateYOUT(DELTA_T);

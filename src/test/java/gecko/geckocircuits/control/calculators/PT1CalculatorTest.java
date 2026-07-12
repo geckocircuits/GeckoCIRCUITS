@@ -30,7 +30,7 @@ public class PT1CalculatorTest {
 
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _calculator._inputSignal[0][0] = 1;
         for(double time = 0; time < END_TIME; time+= DELTA_T) {
             _calculator.calculateYOUT(DELTA_T);

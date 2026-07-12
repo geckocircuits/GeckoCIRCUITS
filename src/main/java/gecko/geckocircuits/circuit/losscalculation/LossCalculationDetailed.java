@@ -16,7 +16,7 @@ package gecko.geckocircuits.circuit.losscalculation;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
-import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.ConductionLossMeasurementCurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.core.circuit.losscalculation.DetailedLossLookupTable;
 import gecko.geckocircuits.general.ProjectData;
@@ -58,12 +58,12 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
     private DetailedLossLookupTable _conductionTable;
 
     // Name der Datei (inkl. Pfad), die die Detail-Daten, d.h. Messkurven der Leit- und Schaltverluste enthaelt
-    private String datnamGemesseneVerluste = GlobalFilePathes.DATNAM_NOT_DEFINED;
+    private String _measuredLossesFilename = GlobalFilePathes.DATNAM_NOT_DEFINED;
     private long lossFileHashValue = 0;
     public GeckoFile lossFile = null;
     //
     private List<SwitchingLossCurve> _messkurvePvSWITCH = new ArrayList<SwitchingLossCurve>();
-    public final List<LeitverlusteMesskurve> _messkurvePvCOND = new ArrayList<LeitverlusteMesskurve>();
+    public final List<ConductionLossMeasurementCurve> _messkurvePvCOND = new ArrayList<ConductionLossMeasurementCurve>();
 
     public LossCalculationDetailed(final AbstractCircuitBlockInterface parent, final LossProperties lossParent) {
         this(parent, lossParent, new MainWindowLossFileAccessor());
@@ -85,11 +85,11 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         _onLossesLookupTable = DetailedLossLookupTable.fabric(_messkurvePvSWITCH, 1);
         _offLossesLookupTable = DetailedLossLookupTable.fabric(_messkurvePvSWITCH, 2);
 
-        LeitverlusteMesskurve initCurve25 = new LeitverlusteMesskurve(25);
+        ConductionLossMeasurementCurve initCurve25 = new ConductionLossMeasurementCurve(25);
         _messkurvePvCOND.add(initCurve25);  // Tj=25°C
         initCurve25.setCurveData(new double[][]{{0, 0.7, 1.7}, {0, 0.5, 7}});
 
-        LeitverlusteMesskurve initCurve115 = new LeitverlusteMesskurve(115);  // Tj=115°C
+        ConductionLossMeasurementCurve initCurve115 = new ConductionLossMeasurementCurve(115);  // Tj=115°C
         _messkurvePvCOND.add(initCurve115);
         initCurve115.setCurveData(new double[][]{{0, 0.8, 2.1}, {0, 0.6, 8}});
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
@@ -100,11 +100,11 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         return new LossCalculatorDetailed(_parent);
     }
 
-    public List<LeitverlusteMesskurve> getCopyOfLeitverlusteMesskurvenArray() {
-        List<LeitverlusteMesskurve> returnValue = new ArrayList<LeitverlusteMesskurve>();
-        // // A copy is issued so that you don't have to apply the changes with 'Cancel' in the parent window -->
-        for (LeitverlusteMesskurve toCopy : _messkurvePvCOND) {
-            LeitverlusteMesskurve theCopy = new LeitverlusteMesskurve(toCopy.tj.getValue());
+    public List<ConductionLossMeasurementCurve> getCopyOfConductionLossMeasurementCurvesArray() {
+        List<ConductionLossMeasurementCurve> returnValue = new ArrayList<ConductionLossMeasurementCurve>();
+        // A copy is issued so that you don't have to apply the changes with 'Cancel' in the parent window -->
+        for (ConductionLossMeasurementCurve toCopy : _messkurvePvCOND) {
+            ConductionLossMeasurementCurve theCopy = new ConductionLossMeasurementCurve(toCopy.tj.getValue());
             double[][] dataCopy = new double[toCopy.getCurveData().length][toCopy.getCurveData()[0].length];
             for (int i2 = 0; i2 < dataCopy.length; i2++) {
                 for (int i3 = 0; i3 < dataCopy[0].length; i3++) {
@@ -118,7 +118,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
     }
 
     // herausgegeben wird ein Kopie, damit man mit 'Cancel' im uebergeordneten Fenster die Aenderungen nicht zwingend uebernehmen muss -->
-    public List<SwitchingLossCurve> getCopyOfSchaltverlusteMesskurvenArray() {
+    public List<SwitchingLossCurve> getCopyOfSwitchingLossMeasurementCurvesArray() {
         List<SwitchingLossCurve> returnValue = new ArrayList<SwitchingLossCurve>();
         for (SwitchingLossCurve curve : _messkurvePvSWITCH) {
             SwitchingLossCurve curveCopy = new SwitchingLossCurve(curve.tj.getValue(),
@@ -137,7 +137,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
     }
 
     public void copyPropertiesFrom(LossCalculationDetailed origLosses) {
-        datnamGemesseneVerluste = origLosses.datnamGemesseneVerluste;
+        _measuredLossesFilename = origLosses._measuredLossesFilename;
         _onLossesLookupTable = DetailedLossLookupTable.fabric(origLosses._messkurvePvSWITCH, 1);
 
         lossFile = origLosses.lossFile;
@@ -147,7 +147,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         }
         _offLossesLookupTable = DetailedLossLookupTable.fabric(origLosses._messkurvePvSWITCH, 2);
 
-        for (LeitverlusteMesskurve toCopy : origLosses._messkurvePvCOND) {
+        for (ConductionLossMeasurementCurve toCopy : origLosses._messkurvePvCOND) {
             _messkurvePvCOND.add(toCopy.copy());
         }
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
@@ -159,14 +159,18 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
             lossFileHashValue = tokenMap.readDataLine("lossFileHashValue", lossFileHashValue);
         }
 
-        datnamGemesseneVerluste = tokenMap.readDataLine("datnamGemesseneVerluste", datnamGemesseneVerluste);
+        if (tokenMap.containsToken("datnamGemesseneVerluste")) {
+            _measuredLossesFilename = tokenMap.readDataLine("datnamGemesseneVerluste", _measuredLossesFilename);
+        } else {
+            _measuredLossesFilename = tokenMap.readDataLine("_measuredLossesFilename", _measuredLossesFilename);
+        }
 
 
         try {
             // Relative Pfadangaben pruefen und gegebenfalls aktualisieren:
-            if (!datnamGemesseneVerluste.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
-                String aktualisierterPfad = ProjectData.lokalisiereRelativenPfad(GlobalFilePathes.DATNAM, datnamGemesseneVerluste);
-                datnamGemesseneVerluste = aktualisierterPfad;
+            if (!_measuredLossesFilename.equals(GlobalFilePathes.DATNAM_NOT_DEFINED)) {
+                String aktualisierterPfad = ProjectData.lokalisiereRelativenPfad(GlobalFilePathes.DATNAM, _measuredLossesFilename);
+                _measuredLossesFilename = aktualisierterPfad;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,7 +179,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
     }
 
     public void exportASCII(StringBuffer ascii) {
-        ProjectData.appendAsString(ascii.append("\ndatnamGemesseneVerluste"), datnamGemesseneVerluste);
+        ProjectData.appendAsString(ascii.append("\n_measuredLossesFilename"), _measuredLossesFilename);
         if (lossFile != null) {
             ProjectData.appendAsString(ascii.append("\nlossFileHashValue"), lossFile.getHashValue());
         } else {
@@ -189,16 +193,15 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
             _fileAccessor.maintain(lossFile);
         }
 
-        datnamGemesseneVerluste = GlobalFilePathes.DATNAM_NOT_DEFINED;
+        _measuredLossesFilename = GlobalFilePathes.DATNAM_NOT_DEFINED;
         lossFile = null;
     }
 
     @SuppressFBWarnings(value = "REC_CATCH_EXCEPTION", justification = "Fallback chain relies on catching any Exception during parsing different file formats")
-    public boolean leseDetailVerlusteVonDatei(final GeckoFile newLossFile) {
+    public boolean readDetailedLossesFromFile(final GeckoFile newLossFile) {
         //------------------
         // Datei einlesen -->
         List<String> datVec = new ArrayList<String>();
-        //
         // GZIP-Format (March 2009) - ganz neu! -->
         try (InputStream inputStream = newLossFile.getInputStream();
              GZIPInputStream in1 = new GZIPInputStream(inputStream);
@@ -251,22 +254,22 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
                 needClearSwitchCurves = false;
             }
             _messkurvePvSWITCH.add(newCurve);
-            newCurve.importASCII(lossBlock);  // // Initialization of the corresponding measured curve
+            newCurve.importASCII(lossBlock);  // Initialization of the corresponding measured curve
         }
 
         _onLossesLookupTable = DetailedLossLookupTable.fabric(_messkurvePvSWITCH, 1);
         _offLossesLookupTable = DetailedLossLookupTable.fabric(_messkurvePvSWITCH, 2);
 
-        for (TokenMap lossBlock = tokenMap.getBlockTokenMap("<LeitverlusteMesskurve>"); lossBlock != null;
-                lossBlock = tokenMap.getBlockTokenMap("<LeitverlusteMesskurve>")) {
-            LeitverlusteMesskurve newCurve = new LeitverlusteMesskurve(-1);
+        for (TokenMap lossBlock = tokenMap.getBlockTokenMap("<ConductionLossMeasurementCurve>"); lossBlock != null;
+                lossBlock = tokenMap.getBlockTokenMap("<ConductionLossMeasurementCurve>")) {
+            ConductionLossMeasurementCurve newCurve = new ConductionLossMeasurementCurve(-1);
             _messkurvePvCOND.add(newCurve);
-            newCurve.importASCII(lossBlock);  // // Initialization of the corresponding measured curve
+            newCurve.importASCII(lossBlock);  // Initialization of the corresponding measured curve
         }
 
         _conductionTable = DetailedLossLookupTable.fabric(_messkurvePvCOND, 1);
 
-        datnamGemesseneVerluste = newLossFile.getCurrentAbsolutePath();
+        _measuredLossesFilename = newLossFile.getCurrentAbsolutePath();
         //remove old loss file, set new
         if (lossFile != null) {
             lossFile.removeUser(_parent.getUniqueObjectIdentifier());
@@ -283,11 +286,11 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         if (lossFileHashValue != 0) {
             try {
                 GeckoFile detailedLossFile = _fileAccessor.getFile(lossFileHashValue);
-                leseDetailVerlusteVonDatei(detailedLossFile);
+                readDetailedLossesFromFile(detailedLossFile);
             } catch (FileNotFoundException e) {
                 //this means this is probably an old .ipes file without a valid hash key for the GeckoFile (i.e. saved in an older version)
                 //here try to recover from the old file name
-                readLossesFromFileAndSetDetailedLossType(datnamGemesseneVerluste);
+                readLossesFromFileAndSetDetailedLossType(_measuredLossesFilename);
             }
         }
     }
@@ -300,7 +303,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         try {
             file = new GeckoFile(new File(fyomu), GeckoFile.StorageType.INTERNAL, _fileAccessor.getOpenFileName());
             System.out.println("try to load file " + file);
-            leseDetailVerlusteVonDatei(file);
+            readDetailedLossesFromFile(file);
             _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.DETAILED);
         } catch (FileNotFoundException e) { //if not, see if it is a relative path to the .ipes file location
             String modelFilePath = _fileAccessor.getOpenFileName();
@@ -309,7 +312,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
             String newPath = modelFilePath + File.separator + fyomu;
             try {
                 file = new GeckoFile(new File(newPath), GeckoFile.StorageType.INTERNAL, _fileAccessor.getOpenFileName());
-                leseDetailVerlusteVonDatei(file);
+                readDetailedLossesFromFile(file);
                 _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.SIMPLE);
             } catch (FileNotFoundException e2) {
                 System.err.println("Loss file " + fyomu + " for component " + _parent.getStringID() + " not found!");
@@ -319,8 +322,8 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         }
     }
 
-    public boolean schreibeDetailVerlusteAufDatei(final String fkaku, final List<SwitchingLossCurve> messkurvePvSWITCH,
-            final List<LeitverlusteMesskurve> messkurvePvCOND, final GeckoFile.StorageType storageType) {
+    public boolean writeDetailedLossesToFile(final String fkaku, final List<SwitchingLossCurve> messkurvePvSWITCH,
+            final List<ConductionLossMeasurementCurve> messkurvePvCOND, final GeckoFile.StorageType storageType) {
         //added boolean flag "external" - true if losses always looked up from external file,
         // false if loss file is to be saved with .ipes file
 
@@ -332,7 +335,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         }
 
         ProjectData.appendAsString(ascii.append("\nanzMesskurvenPvCOND"), messkurvePvCOND.size());
-        for (LeitverlusteMesskurve curve : messkurvePvCOND) {
+        for (ConductionLossMeasurementCurve curve : messkurvePvCOND) {
             curve.exportASCII(ascii);
         }
         GeckoFile newLossFile = null;
@@ -340,13 +343,12 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         //
         try {
             //--------
-            //
             // Plain-Test Variante in ASCII -->
             /// BufferedWriter out= new BufferedWriter(new FileWriter(fkaku));
             //--------
             File lossesFile;
             if (fkaku == null) {
-                lossesFile = new File(datnamGemesseneVerluste);
+                lossesFile = new File(_measuredLossesFilename);
             } else {
                 lossesFile = new File(fkaku);
             }
@@ -360,7 +362,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
             //blocks using this loss file can also see the changes
             newLossFile = new GeckoFile(lossesFile, storageType, _fileAccessor.getOpenFileName());
             newLossFile.setUser(_parent.getUniqueObjectIdentifier());
-            datnamGemesseneVerluste = fkaku;
+            _measuredLossesFilename = fkaku;
         } catch (java.io.IOException e) {
             return false;
         }
@@ -382,7 +384,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
      * @return String to be displayed in circuit sheet (file name). When link
      * could not be found, return null!
      */
-    public boolean pruefeLinkAufHalbleiterDatei() {
+    public boolean checkLinkToSemiconductorFile() {
 
         if (lossFile == null) {
             return false;
@@ -401,7 +403,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
     }
 
     public void setzeNeueParameter(final List<SwitchingLossCurve> messkurvePvSWITCH,
-            final List<LeitverlusteMesskurve> messkurvePvCOND) {
+            final List<ConductionLossMeasurementCurve> messkurvePvCOND) {
         _messkurvePvSWITCH.clear();
         _messkurvePvSWITCH.addAll(messkurvePvSWITCH);
         _messkurvePvCOND.clear();

@@ -20,13 +20,13 @@ import java.util.logging.Logger;
 
 public class JavaBlockMatrix extends AbstractJavaBlock {
     private ControlCalculatableMatrix _compiledInstance;
-    JavaBlockMatrix(final ControlJavaFunction regler) {
-        super(regler);
+    JavaBlockMatrix(final ControlJavaFunction control) {
+        super(control);
     }
 
     @Override
     AbstractJavaBlock createOtherBlockTypeCopy() {
-        final AbstractJavaBlock returnValue = new JavaBlockVector(_reglerJavaBlock);
+        final AbstractJavaBlock returnValue = new JavaBlockVector(_controlJavaBlock);
         returnValue._javaBlockSource = this._javaBlockSource;
         createNewJavaSourceCopy(returnValue);
         returnValue._additionalSourceFiles.addAll(this._additionalSourceFiles);

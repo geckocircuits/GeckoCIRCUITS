@@ -19,7 +19,7 @@ public class GateCalculatorTest {
     private static final double DUMMY_DT = 1e-9;
 
     @Test(expected=AssertionError.class)
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         final GateCalculator gateCalc = new GateCalculator();
         gateCalc.calculateYOUT(DUMMY_DT);
     }

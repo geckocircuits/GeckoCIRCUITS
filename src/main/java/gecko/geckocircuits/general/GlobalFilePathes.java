@@ -24,15 +24,15 @@ import java.net.URL;
         justification = "Static fields are intentionally mutable - they store runtime file paths and recent circuits loaded during application lifecycle")
 public class GlobalFilePathes {
     //------------------------
-    // // Path for storing all images used:
+    // Path for storing all images used:
     public static String RECENT_CIRCUITS_1 = "", RECENT_CIRCUITS_2 = "", RECENT_CIRCUITS_3 = "", RECENT_CIRCUITS_4 = "";
     //------------------------
-    // // Path in which the current JAR file is located -->
+    // Path in which the current JAR file is located -->
     public static URL PFAD_PICS_URL;  // gleich wie 'PFAD_PICS'
-    // // Path and name of the current file for the circuit simulation (*.ipes):
+    // Path and name of the current file for the circuit simulation (*.ipes):
     public static String PFAD_JAR_HOME;
 
-    // // --> is important if the path structure has been changed --> this will update local paths, see ProjectData.localizeRelativePath()
+    // --> is important if the path structure has been changed --> this will update local paths, see ProjectData.localizeRelativePath()
     public static String DATNAM;
     // this is the file path from where the original ipes file was loades. Be cautious, here:
     // this is the file path from where the original ipes file was loades. Be cautious, here:

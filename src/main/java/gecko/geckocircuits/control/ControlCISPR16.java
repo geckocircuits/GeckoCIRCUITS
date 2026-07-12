@@ -222,7 +222,7 @@ public final class ControlCISPR16 extends RegelBlock implements SpecialNameVisib
         return new CisprCalculator();
     }
 
-    public AbstractDataContainer getZVDatenImRAM() {
+    public AbstractDataContainer getZVDataInRAM() {
         assert _zvDatenRam != null;
         return _zvDatenRam;
     }

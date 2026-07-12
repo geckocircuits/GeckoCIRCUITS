@@ -46,12 +46,12 @@ final class ControlSlidingDFTDialog extends DialogElementCONTROL<ControlSlidingD
     private JButton _jButtonAddFreq;
     private JButton _jButtonRemoveFreq;
 
-    public ControlSlidingDFTDialog(final ControlSlidingDFT regler) {
-        super(regler);
+    public ControlSlidingDFTDialog(final ControlSlidingDFT control) {
+        super(control);
         jPanelFreqs = new JPanel();
         jPanelFreqs.setBorder(new TitledBorder("Fourier Transform Frequencies"));
-        _originalData = regler.getFrequencyData();
-        this.setTitle(LangInit.getTranslatedString(regler.getTypeDescription()));
+        _originalData = control.getFrequencyData();
+        this.setTitle(LangInit.getTranslatedString(control.getTypeDescription()));
         _grid = new GridLayout(_originalData.size(), 2);
         for (ControlSlidingDFT.FrequencyData data : _originalData) {
             addFreqData(data);
@@ -62,7 +62,7 @@ final class ControlSlidingDFTDialog extends DialogElementCONTROL<ControlSlidingD
     }
 
     @Override
-    void baueGuiIndividual() {
+    void buildIndividualGUI() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),

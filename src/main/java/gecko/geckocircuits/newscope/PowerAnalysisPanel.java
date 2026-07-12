@@ -41,7 +41,7 @@ public final class PowerAnalysisPanel extends JPanel {
 
     private final JComboBox<String>[] _comboU = new JComboBox[3];
     private final JComboBox<String>[] _comboI = new JComboBox[3];
-    private FormatJTextField[][] _pqTextFields;  // // Text fields for performance values (columns A, B, C)
+    private FormatJTextField[][] _pqTextFields;  // Text fields for performance values (columns A, B, C)
     private final TechFormat _cf = new TechFormat();
     private final GridBagConstraints _gbc = new GridBagConstraints();
     private final String[] signalListe;

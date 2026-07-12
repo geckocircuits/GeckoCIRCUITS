@@ -25,14 +25,14 @@ import java.util.logging.Logger;
 
 public abstract class AbstractJavaBlock {
 
-    protected final ControlJavaFunction _reglerJavaBlock;
+    protected final ControlJavaFunction _controlJavaBlock;
     protected AbstractCompileObject _compileObject = new CompileObjectNull();
     JavaBlockSource _javaBlockSource = new JavaBlockSource.Builder().build();
     final List<GeckoFile> _additionalSourceFiles = new ArrayList<GeckoFile>();
     protected Map<String, CompiledClassContainer> _classNameFileMap;
 
-    AbstractJavaBlock(final ControlJavaFunction reglerJavaBlock) {
-        _reglerJavaBlock = reglerJavaBlock;
+    AbstractJavaBlock(final ControlJavaFunction controlJavaBlock) {
+        _controlJavaBlock = controlJavaBlock;
     }
 
     abstract AbstractJavaBlock createOtherBlockTypeCopy();
@@ -50,7 +50,7 @@ public abstract class AbstractJavaBlock {
         SchematicEditor2.setZustandGeaendert(true);
 
         String className = CompileObject.findUniqueClassName();
-        String sourceString = SourceFileGenerator.createSourceCode(_javaBlockSource, className, _reglerJavaBlock.YOUT.size(), _reglerJavaBlock._variableBusWidth);
+        String sourceString = SourceFileGenerator.createSourceCode(_javaBlockSource, className, _controlJavaBlock.YOUT.size(), _controlJavaBlock._variableBusWidth);
 
         _compileObject = new CompileObject(sourceString, className, _additionalSourceFiles);
 
@@ -66,8 +66,8 @@ public abstract class AbstractJavaBlock {
 
         // test if the java block code changed from last compilation
         final String newSourceString = SourceFileGenerator.createSourceCode(_javaBlockSource,
-                _compileObject.getClassName(), _reglerJavaBlock.YOUT.size(),
-                _reglerJavaBlock._variableBusWidth);
+                _compileObject.getClassName(), _controlJavaBlock.YOUT.size(),
+                _controlJavaBlock._variableBusWidth);
         final String oldSourceString = _compileObject.getSourceCode();
 
         if (!newSourceString.equals(oldSourceString)) {

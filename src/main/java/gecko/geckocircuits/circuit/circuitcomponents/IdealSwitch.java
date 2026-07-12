@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-// // Power circuit Ideal switch (high or low resistance, therefore bidirectional)
+// Power circuit Ideal switch (high or low resistance, therefore bidirectional)
 public final class IdealSwitch extends AbstractSwitch {
     private static final double WIDTH = 1.6;
     private static final double HEIGHT = 0.8;

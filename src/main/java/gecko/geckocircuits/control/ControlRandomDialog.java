@@ -28,7 +28,7 @@ class ControlRandomDialog extends DialogElementCONTROL<ControlSignalSource>{
     }
 
     @Override
-    void baueGuiIndividual() {
+    void buildIndividualGUI() {
         jpM = new JPanel();
         JLabel infoLabel = new JLabel("Random walk output");
         jpM.add(infoLabel);

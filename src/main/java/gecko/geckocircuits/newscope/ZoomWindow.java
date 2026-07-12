@@ -157,8 +157,8 @@ final class ZoomWindow {
         _clickedDiagram = parentComponent;
     }
 
-    void setMausModus(final MausModus mausModus) {
-        if (mausModus == MausModus.ZOOM_WINDOW) {
+    void setMouseMode(final MausModus mouseMode) {
+        if (mouseMode == MausModus.ZOOM_WINDOW) {
             _zoomModusEnabled = true;
         } else {
             _zoomModusEnabled = false;

@@ -15,12 +15,12 @@ package gecko.geckocircuits.control;
 
 class ControlGateDialog extends DialogElementCONTROL<ControlGate> {
 
-    public ControlGateDialog(final ControlGate reglerGate) {
-        super(reglerGate);
+    public ControlGateDialog(final ControlGate controlGate) {
+        super(controlGate);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         jpM = createComponentCouplingPanel(element);
     }
 }

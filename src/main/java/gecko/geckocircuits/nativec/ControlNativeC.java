@@ -225,7 +225,7 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
     @Override
     public int istAngeklickt(final int mouseX, final int mouseY) {
         if ((xKlickMin <= mouseX) && (mouseX <= xKlickMax) && (yKlickMin <= mouseY) && (mouseY <= yKlickMax)) {
-            return 1;  // // SCOPE symbol has been clicked --> Dialog or editing mode
+            return 1;  // SCOPE symbol has been clicked --> Dialog or editing mode
         }
         if (_inputTri.isIncreaseClicked(mouseX, mouseY)) {
             setInputTerminalNumber(XIN.size() + 1);
@@ -296,17 +296,17 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
         // Klickbereich rote Dreiecke fuer Terminal-Anzahl-Aenderung:
         _inputTri._xKlickMinTerminal = xd2;
         _inputTri._xKlickMaxTerminal = xd1;
-        _inputTri._yKlickMinTerminalSUB = yp0;  // // upper triangle --> SUB / reduction of the number of terminals
+        _inputTri._yKlickMinTerminalSUB = yp0;  // upper triangle --> SUB / reduction of the number of terminals
         _inputTri._yKlickMaxTerminalSUB = yp1;
-        _inputTri._yKlickMinTerminalADD = ym1;  // // lower triangle --> ADD / increase the number of terminals
+        _inputTri._yKlickMinTerminalADD = ym1;  // lower triangle --> ADD / increase the number of terminals
         _inputTri._yKlickMaxTerminalADD = ym0;
 
-        // // Click area red triangles for terminal number change:
+        // Click area red triangles for terminal number change:
         _outputTri._xKlickMinTerminal = xdOUT2;
         _outputTri._xKlickMaxTerminal = xdOUT1;
-        _outputTri._yKlickMinTerminalSUB = ypOUT0;  // // upper triangle --> SUB / reduction of the number of terminals
+        _outputTri._yKlickMinTerminalSUB = ypOUT0;  // upper triangle --> SUB / reduction of the number of terminals
         _outputTri._yKlickMaxTerminalSUB = ypOUT1;
-        _outputTri._yKlickMinTerminalADD = ymOUT1;  // // lower triangle --> ADD / increase the number of terminals
+        _outputTri._yKlickMinTerminalADD = ymOUT1;  // lower triangle --> ADD / increase the number of terminals
         _outputTri._yKlickMaxTerminalADD = ymOUT0;
         graphics.setColor(origColor);
     }
@@ -331,16 +331,16 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
             _clearOutput = tokenMap.readDataLine("clearOutput", _clearOutput);
         }
 
-        if (tokenMap.containsToken("anzXIN")) {
+        if (tokenMap.containsToken("numberInputTerminals")) {
             int inNumber = XIN.size();
-            inNumber = tokenMap.readDataLine("anzXIN", inNumber);
+            inNumber = tokenMap.readDataLine("numberInputTerminals", inNumber);
             setInputTerminalNumber(inNumber);
         }
         // these two blocks are for backward-compatibility with versions before 1.60. Here,
         // we have to correct the number of input/output terminals!
-        if (tokenMap.containsToken("anzYOUT")) {
+        if (tokenMap.containsToken("numberOutputTerminals")) {
             int outNumber = YOUT.size();
-            outNumber = tokenMap.readDataLine("anzYOUT", outNumber);
+            outNumber = tokenMap.readDataLine("numberOutputTerminals", outNumber);
             setOutputTerminalNumber(outNumber);
         }
 
@@ -414,7 +414,6 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
 //                    _guiWindow = new NativeCDialog(this, GeckoSim._win, false);
 //                } else {
 //                    String test = (_paramLibNames.getValue());
-//
 //                }
                 //_guiWindow.setVisible(true);
                 //_guiWindow.loadSourcesText();

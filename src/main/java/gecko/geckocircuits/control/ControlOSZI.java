@@ -61,7 +61,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
      */
     private int _xKlickMinTerm, _xKlickMaxTerm, _yKlickMinTermADD,
             _yKlickMaxTermADD, _yKlickMinTermSUB, _yKlickMaxTermSUB;
-    // // all ZV data not compressed for possible hard disk storage --> storage critical
+    // all ZV data not compressed for possible hard disk storage --> storage critical
     //for use with GeckoSCRIPT - waveform characteristic
     private transient AbstractDataContainer _zvDatenRAM;
     //for use with GeckoSCRIPT - waveform characteristic
@@ -174,12 +174,12 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
         _grafer.refreshComponentPane();
     }
 
-    public AbstractDataContainer getZVDatenImRAM() {
+    public AbstractDataContainer getZVDataInRAM() {
         return _zvDatenRAM;
     }
 
-    public void setTerminalKnotenLabel(final String newLabel, final int knotenIndex) {
-        // TODO ??? _zvDatenRAM.setSignalName(knotenIndex, newLabel);
+    public void setTerminalNodeLabel(final String newLabel, final int nodeIndex) {
+        // TODO ??? _zvDatenRAM.setSignalName(nodeIndex, newLabel);
     }
 
     public void setDataContainerIndices(final int[] indices) {
@@ -190,7 +190,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
         _scopeWrapperIndices = new ScopeWrapperIndices(globalIndices, NetzlisteCONTROL.globalData);
     }
 
-    // // increase number of terminals by one and update SCOPE
+    // increase number of terminals by one and update SCOPE
     @Override
     public int istAngeklickt(final int mouseX, final int mouseY) {
 
@@ -201,7 +201,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
         final boolean lowerTriClicked = _xKlickMinTerm <= mouseX && mouseX <= _xKlickMaxTerm
                 && _yKlickMinTermADD <= mouseY && mouseY <= _yKlickMaxTermADD;
         if (symbolClicked) {
-            return 1;  // // SCOPE symbol has been clicked --> Dialog or editing mode
+            return 1;  // SCOPE symbol has been clicked --> Dialog or editing mode
         } else {
             if (lowerTriClicked) {
                 // erhoehe Zahl der Terminals um Eins und aktualisiere SCOPE
@@ -215,7 +215,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
                 setInputTerminalNumber(_inputTerminalNumber.getValue());
                 return 2;
             }
-            return 0;  // // SCOPE symbol was not clicked, therefore 'false'
+            return 0;  // SCOPE symbol was not clicked, therefore 'false'
         }
     }
 
@@ -313,7 +313,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
         graphics.drawRect((int) (dpix * (x - WIDTH)) + INSIDE_RECT, (int) (dpix * (y - WIDTH)) + 2 * INSIDE_RECT, (int) (dpix * 2 * WIDTH) - 2 * INSIDE_RECT,
                 (int) (dpix * 1.0 * _inputTerminalNumber.getValue()) - 4 * INSIDE_RECT);
 
-        // // Click area red triangles for terminal number change:
+        // Click area red triangles for terminal number change:
         graphics.setColor(Color.red);
 
 
@@ -329,9 +329,9 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
         // to 10 bytes. Here, I append the final scope String only
         _xKlickMinTerm = triXCoords[2];
         _xKlickMaxTerm = triXCoords[1];
-        _yKlickMinTermSUB = yp0;  // // upper triangle --> SUB / reduction of the number of terminals
+        _yKlickMinTermSUB = yp0;  // upper triangle --> SUB / reduction of the number of terminals
         _yKlickMaxTermSUB = yp1;
-        _yKlickMinTermADD = ym1;  // // lower triangle --> ADD / increase the number of terminals
+        _yKlickMinTermADD = ym1;  // lower triangle --> ADD / increase the number of terminals
         _yKlickMaxTermADD = ym0;
         graphics.setColor(origColor);
     }
@@ -486,7 +486,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
 
     void importScopeSettings(final TokenMap scopeMap) {
         _scopeSettings.importASCII(scopeMap);
-        _scopeSettings.loadSettings(_scopeFrame.getGrafer());  // // 'this' is parameterized here
+        _scopeSettings.loadSettings(_scopeFrame.getGrafer());  // 'this' is parameterized here
     }
 
     public boolean isAntiAliasing() {

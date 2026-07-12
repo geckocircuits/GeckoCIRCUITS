@@ -39,9 +39,9 @@ public final class SignalCalculatorExternalWrapperTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _signalCalcWrapper.setAmplitudeAC(2);
-        _signalCalcWrapper.setAnteilDC(3);
+        _signalCalcWrapper.setDcOffset(3);
         _signalCalcWrapper.setDuty(0.3);
         _signalCalcWrapper.setFrequency(3);
         _signalCalcWrapper.setPhase(-Math.PI);
@@ -60,7 +60,7 @@ public final class SignalCalculatorExternalWrapperTest {
         }
 
         _signalCalcWrapper.setDuty(0.5);
-        _signalCalcWrapper.setAnteilDC(5);
+        _signalCalcWrapper.setDcOffset(5);
         _signalCalcWrapper.setAmplitudeAC(3);
         for(double time = END_TIME/2; time < END_TIME; time+=DELTA_T) {
             double oldValue = _signalCalcWrapper._outputSignal[0][0];

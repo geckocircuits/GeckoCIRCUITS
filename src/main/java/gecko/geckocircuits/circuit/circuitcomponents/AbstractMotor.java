@@ -50,7 +50,7 @@ public abstract class AbstractMotor extends AbstractCircuitBlockInterface implem
     double _omegaElectric, _thetaElectric;
     public double _omegaMechanic, _omegaMechanicOld, _thetaMechanic, _thetaMechanicOld;
     private double _polePairs, _drehzahl, _torqueEl;
-    private double _torqueMech = 0; // // is specified (e.g. as a signal) -->
+    private double _torqueMech = 0; // is specified (e.g. as a signal) -->
 
     final UserParameter<Double> _polePairsParameter = UserParameter.Builder.
             <Double>start("polePairs", 1.0).

@@ -176,7 +176,7 @@ public final class AxisGridSettings{
    * muessen eventuell die Grid-Linien ausgeblendet werden, um eine gewisse
    * Uebersichtlichkeit zu wahren -->
    */
-  public void blendeEventuellGridLinienAus(final int axisLengthPix){
+  public void possiblyHideGridLines(final int axisLengthPix){
     if(_autoGrids){
       if(isUserShowGridMaj() && axisLengthPix > PX2 * PXR){
         _showGridMaj = true;

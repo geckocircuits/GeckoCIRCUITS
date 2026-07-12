@@ -61,14 +61,14 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
     private CodeWindowModern _codeWindow;
 
     transient final UserParameter<Integer> _inputTerminalNumber = UserParameter.Builder.
-            <Integer>start("anzXIN", 3).
+            <Integer>start("numberInputTerminals", 3).
             longName(I18nKeys.NO_INPUT_TERMINALS).
             shortName("numberInputTerminals").
             arrayIndex(this, -1).
             build();
 
     transient final UserParameter<Integer> _outputTerminalNumber = UserParameter.Builder.
-            <Integer>start("anzYOUT", 2).
+            <Integer>start("numberOutputTerminals", 2).
             longName(I18nKeys.NO_OUTPUT_TERMINALS).
             shortName("numberOutputTerminals").
             arrayIndex(this, -1).
@@ -364,7 +364,7 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
     @Override
     public int istAngeklickt(final int mouseX, final int mouseY) {
         if ((xKlickMin <= mouseX) && (mouseX <= xKlickMax) && (yKlickMin <= mouseY) && (mouseY <= yKlickMax)) {
-            return 1;  // // SCOPE symbol has been clicked --> Dialog or editing mode
+            return 1;  // SCOPE symbol has been clicked --> Dialog or editing mode
         }
         if (_inputTri.isIncreaseClicked(mouseX, mouseY)) {
             setInputTerminalNumber(XIN.size() + 1);
@@ -419,7 +419,7 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
         graphics.drawRect(xKlickMin, yKlickMin,
                 xKlickMax - xKlickMin, yKlickMax - yKlickMin);
 
-        // // Red triangles to click --> Change the number of terminals:
+        // Red triangles to click --> Change the number of terminals:
         graphics.setColor(Color.red);
         final int delta = THREE;  // Abstand vom roten Dreieck vom SCOPE-Block (nach oben bzw. nach unten)
         final int xd0 = (dpix * xPos) - dpix, xd1 = dpix * xPos + DIAMETER - dpix, xd2 = (dpix * xPos) - DIAMETER - dpix;
@@ -439,20 +439,20 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
         graphics.fillPolygon(new int[]{xdOUT0, xdOUT1, xdOUT2}, new int[]{ypOUT0, ypOUT1, ypOUT1}, THREE);
         graphics.fillPolygon(new int[]{xdOUT0, xdOUT1, xdOUT2}, new int[]{ymOUT0, ymOUT1, ymOUT1}, THREE);
 
-        // // Click area red triangles for terminal number change:
+        // Click area red triangles for terminal number change:
         _inputTri._xKlickMinTerminal = xd2;
         _inputTri._xKlickMaxTerminal = xd1;
-        _inputTri._yKlickMinTerminalSUB = yp0;  // // upper triangle --> SUB / reduction of the number of terminals
+        _inputTri._yKlickMinTerminalSUB = yp0;  // upper triangle --> SUB / reduction of the number of terminals
         _inputTri._yKlickMaxTerminalSUB = yp1;
-        _inputTri._yKlickMinTerminalADD = ym1;  // // lower triangle --> ADD / increase the number of terminals
+        _inputTri._yKlickMinTerminalADD = ym1;  // lower triangle --> ADD / increase the number of terminals
         _inputTri._yKlickMaxTerminalADD = ym0;
 
-        // // the same for the outputs:
+        // the same for the outputs:
         _outputTri._xKlickMinTerminal = xdOUT2;
         _outputTri._xKlickMaxTerminal = xdOUT1;
-        _outputTri._yKlickMinTerminalSUB = ypOUT0;  // // upper triangle --> SUB / reduction of the number of terminals
+        _outputTri._yKlickMinTerminalSUB = ypOUT0;  // upper triangle --> SUB / reduction of the number of terminals
         _outputTri._yKlickMaxTerminalSUB = ypOUT1;
-        _outputTri._yKlickMinTerminalADD = ymOUT1;  // // lower triangle --> ADD / increase the number of terminals
+        _outputTri._yKlickMinTerminalADD = ymOUT1;  // lower triangle --> ADD / increase the number of terminals
         _outputTri._yKlickMaxTerminalADD = ymOUT0;
         graphics.setColor(origColor);
     }
@@ -499,16 +499,16 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
             _clearOutput = tokenMap.readDataLine("clearOutput", _clearOutput);
         }
 
-        if (tokenMap.containsToken("anzXIN")) {
+        if (tokenMap.containsToken("numberInputTerminals")) {
             int inNumber = XIN.size();
-            inNumber = tokenMap.readDataLine("anzXIN", inNumber);
+            inNumber = tokenMap.readDataLine("numberInputTerminals", inNumber);
             setInputTerminalNumber(inNumber);
         }
         // these two blocks are for backward-compatibility with versions before 1.60. Here,
         // we have to correct the number of input/output terminals!
-        if (tokenMap.containsToken("anzYOUT")) {
+        if (tokenMap.containsToken("numberOutputTerminals")) {
             int outNumber = YOUT.size();
-            outNumber = tokenMap.readDataLine("anzYOUT", outNumber);
+            outNumber = tokenMap.readDataLine("numberOutputTerminals", outNumber);
             setOutputTerminalNumber(outNumber);
         }
 
@@ -630,11 +630,11 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
     protected Window openDialogWindow() {
         if (GeckoSim.compiler_toolsjar_missing) {
             // tools.jar ist nicht vorhanden --> der Compiler, der fuer den JAVA-Block notwendig ist, fehlt -->
-            // // tools.jar is not available --> the compiler, which is necessary for the JAVA block, is missing -->
+            // tools.jar is not available --> the compiler, which is necessary for the JAVA block, is missing -->
             JOptionPane.showMessageDialog(null, "No tools.jar library found!", "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         } else {
-            // // tools.jar is not available --> the compiler, which is necessary for the JAVA block, is missing -->
+            // tools.jar is not available --> the compiler, which is necessary for the JAVA block, is missing -->
             if (_codeWindow == null) {
                 _codeWindow = new CodeWindowModern(this, _outputStringBuffer);
                 _codeWindow.loadSourcesText();

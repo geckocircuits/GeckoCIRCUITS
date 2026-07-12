@@ -32,7 +32,7 @@ public class PDCalculatorTest {
 
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         // use 2*sin(5 * time) as input signal
         // the result should be 10 * cos(time) (differentiation)
         for(double time = 0; time < END_TIME; time+= DELTA_T) {

@@ -32,7 +32,7 @@ import gecko.geckocircuits.circuit.TerminalHiddenSubcircuit;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.i18n.resources.I18nKeys;
 
-// // Power circuit Ideal switch (high or low resistance, therefore bidirectional)
+// Power circuit Ideal switch (high or low resistance, therefore bidirectional)
 // BJT is NOT an AbstractSwitch, since it does not connect to a "control gate"!
 public final class BJT extends AbstractTwoPortLKreisBlock implements HiddenSubCircuitable {
 

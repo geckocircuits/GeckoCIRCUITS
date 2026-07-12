@@ -29,12 +29,12 @@ class ControlPTDialog extends DialogElementCONTROL<AbstractControlPT> {
     private static final int HEIGHT_PT1 = 45;
     private static final int DISTANCE_PT1 = 15;
 
-    public ControlPTDialog(final AbstractControlPT reglerPT) {
-        super(reglerPT);
+    public ControlPTDialog(final AbstractControlPT controlPT) {
+        super(controlPT);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),

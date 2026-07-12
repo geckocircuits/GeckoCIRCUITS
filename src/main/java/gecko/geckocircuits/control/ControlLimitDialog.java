@@ -32,7 +32,7 @@ class ControlLimitDialog extends AbstractDialogWithExternalOption<ControlLimit> 
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Parameter", TitledBorder.LEFT, TitledBorder.TOP));

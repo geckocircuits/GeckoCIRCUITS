@@ -55,7 +55,7 @@ public final class ProjectData implements Serializable {
     public int dpix = 16;
     public int fontSize;
     public String _fontTyp;
-    public int _fensterWidth = -1, _fensterHeight = -1;  // // Storage of the individual window size
+    public int _fensterWidth = -1, _fensterHeight = -1;  // Storage of the individual window size
     //------------------
     private DateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd");
     double _dt_pre;
@@ -74,7 +74,7 @@ public final class ProjectData implements Serializable {
     public int sizeX = 30;
     public int sizeY = 30;
     public static final String SEPARATOR_ASCII_STRINGARRAY = "/";
-    // // NULL symbol ("") for labels --> necessary because " " is used as a separator in ASCII storage, and "" is difficult to restore
+    // NULL symbol ("") for labels --> necessary because " " is used as a separator in ASCII storage, and "" is difficult to restore
     public static final String NIX = "NIX_NIX_NIX";
     public List<String> _optimizerNames = new ArrayList<String>();
     public List<Double> _optimizerData = new ArrayList<Double>();
@@ -655,8 +655,8 @@ public final class ProjectData implements Serializable {
         }
         //-------------------------
         //-------------------------
-        // // (1) Is the path structure unchanged? Can you use the old (saved) absolute path of the additional file?
-        // // (1) Is the path structure unchanged? Can you use the old (saved) absolute path of the additional file?
+        // (1) Is the path structure unchanged? Can you use the old (saved) absolute path of the additional file?
+        // (1) Is the path structure unchanged? Can you use the old (saved) absolute path of the additional file?
         try {
             if (File.separatorChar == '/' && datnamAbsLoadDETAIL.contains("\\")) {
                 datnamAbsLoadDETAIL = datnamAbsLoadDETAIL.replace('\\', '/');

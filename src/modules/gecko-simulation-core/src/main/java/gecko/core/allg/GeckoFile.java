@@ -744,7 +744,7 @@ public final class GeckoFile {
             }
         }
     }
-//    // test routine, do not remove!
+// test routine, do not remove!
 //    public static void main(String[] args) {
 //        try {
 //            GeckoFile geckoFile = new GeckoFile(new File("/home/andreas/testFile.txt"),

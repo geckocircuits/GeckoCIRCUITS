@@ -34,7 +34,7 @@ public class SignalCalculatorImportTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         for (double time = 0; time < 0.03; time += DELTA_T) {
             AbstractControlCalculatable.setTime(time);
             _signalCalculator.calculateYOUT(DELTA_T);

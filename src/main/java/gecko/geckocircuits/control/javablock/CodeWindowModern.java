@@ -97,7 +97,7 @@ public class CodeWindowModern extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                loadCodeIntoRegler();
+                loadCodeIntoControl();
             }
         });
     }
@@ -203,11 +203,11 @@ public class CodeWindowModern extends JFrame {
 
         btnCompile.addActionListener(e -> {
             _tabbedPane.setSelectedIndex(1);
-            loadCodeIntoRegler();
+            loadCodeIntoControl();
         });
 
         btnClose.addActionListener(e -> {
-            loadCodeIntoRegler();
+            loadCodeIntoControl();
             dispose();
         });
 
@@ -465,7 +465,7 @@ public class CodeWindowModern extends JFrame {
         _tabbedPane.setSelectedIndex(0);
     }
 
-    private void loadCodeIntoRegler() {
+    private void loadCodeIntoControl() {
         JavaBlockSource newSource = new JavaBlockSource.Builder()
                 .sourceCode(_codeTextArea.getText())
                 .importsCode(_importsTextArea.getText())

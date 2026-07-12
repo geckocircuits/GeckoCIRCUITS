@@ -303,7 +303,7 @@ public final class SimulationAccess implements GeckoFileable {
                  */x, y);
 
         if (positionOK) {
-            Point originalPoint = element.getPositionVorVerschieben();
+            Point originalPoint = element.getPositionBeforeMoving();
             element.moveComponent(new Point(x - originalPoint.x, y - originalPoint.y));
             element.absetzenElement();
         }
@@ -422,7 +422,7 @@ public final class SimulationAccess implements GeckoFileable {
     }
 
     public double getSimulationTime() {
-        return GeckoSim._win._simRunner.simKern.getZeitAktuell();
+        return GeckoSim._win._simRunner.simKern.getCurrentTime();
     }
 
     @Override

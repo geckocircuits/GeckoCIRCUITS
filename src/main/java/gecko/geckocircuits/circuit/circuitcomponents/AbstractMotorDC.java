@@ -166,7 +166,7 @@ abstract class AbstractMotorDC extends AbstractMotor {
 
     @Override
     void updateSourceParameters() {
-        _uEMK.parameter[1] = _emk;  // // DC value of the internal voltage source
+        _uEMK.parameter[1] = _emk;  // DC value of the internal voltage source
     }
 
     @Override

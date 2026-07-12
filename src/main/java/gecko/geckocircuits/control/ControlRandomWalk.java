@@ -26,7 +26,7 @@ final class ControlRandomWalk extends ControlSignalSource {
 
     public ControlRandomWalk() {
         super();
-        _typQuelle.setValueWithoutUndo(ControlSourceType.QUELLE_RANDOM);
+        _sourceType.setValueWithoutUndo(ControlSourceType.QUELLE_RANDOM);
     }
 
 

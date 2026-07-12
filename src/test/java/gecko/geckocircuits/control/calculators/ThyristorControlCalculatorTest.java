@@ -32,7 +32,7 @@ public class ThyristorControlCalculatorTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
 
         calculator._inputSignal[0][0] = 30; // phase
         int[] eventCounter = new int[6];

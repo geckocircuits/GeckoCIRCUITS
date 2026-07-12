@@ -64,7 +64,7 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
     private final double _rng1, _rng2;
     private final boolean[] _signalFourierAnalysiert;
     //
-    private int mouseMode = GraferImplementation.MAUSMODUS_NIX;
+    private int mouseMode = GraferImplementation.MOUSEMODE_NONE;
     private int previousActiveIconIndex = 0;
     //-------------------
     private ImageIcon[] iconOFF, iconON;
@@ -276,17 +276,17 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
         //--------------------
         switch (buttonPressedIndex) {
             case 0:
-                mouseMode = GraferImplementation.MAUSMODUS_NIX;
+                mouseMode = GraferImplementation.MOUSEMODE_NONE;
                 break;
             case 1:
                 previousMouseMode = mouseMode;
-                mouseMode = GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT;
+                mouseMode = GraferImplementation.MOUSEMODE_ZOOM_AUTOFIT;
                 break;
             case 2:
-                mouseMode = GraferImplementation.MAUSMODUS_ZOOM_FENSTER;
+                mouseMode = GraferImplementation.MOUSEMODE_ZOOM_WINDOW;
                 break;
             case 3:
-                mouseMode = GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER;
+                mouseMode = GraferImplementation.MOUSEMODE_VALUE_DISPLAY_SLIDER;
                 break;
             case 4:
                 if(yAxisType == GraferV3.ACHSE_LIN) {
@@ -299,7 +299,7 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
 
                 for (FourierDiagram diagram : diagrams) {
                     if (diagram != null) {
-                        diagram.setzeAchsenTyp(new int[]{GraferV3.ACHSE_LIN}, new int[]{yAxisType});
+                        diagram.setAxesType(new int[]{GraferV3.ACHSE_LIN}, new int[]{yAxisType});
                         diagram.repaint();
                     }
 
@@ -313,18 +313,18 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
         }
         for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
             if (_signalFourierAnalysiert[i1]) {
-                diagrams[i1 - 1].setMausModus(mouseMode);
-                reconstructions[i1 - 1].setMausModus(mouseMode);
+                diagrams[i1 - 1].setMouseMode(mouseMode);
+                reconstructions[i1 - 1].setMouseMode(mouseMode);
             }
         }
-        if (mouseMode == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+        if (mouseMode == GraferImplementation.MOUSEMODE_ZOOM_AUTOFIT) {
             mouseMode = previousMouseMode;
             mouseButtons[1].setIcon(iconOFF[1]);
             mouseButtons[previousActiveIconIndex].setIcon(iconON[previousActiveIconIndex]);
             for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {
                 if (_signalFourierAnalysiert[i1]) {
-                    diagrams[i1 - 1].setMausModus(mouseMode);
-                    reconstructions[i1 - 1].setMausModus(mouseMode);
+                    diagrams[i1 - 1].setMouseMode(mouseMode);
+                    reconstructions[i1 - 1].setMouseMode(mouseMode);
                 }
             }
         } else {

@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 
 // koppelbare Leistungskreis-Induktivitaet [H]
-// // behind it there is not a subcircuit, but the linearized Martix equation of the topology
-// // expanded to include the currents in these coupled inductors --> improved numerical stability
+// behind it there is not a subcircuit, but the linearized Martix equation of the topology
+// expanded to include the currents in these coupled inductors --> improved numerical stability
 public final class InductorCoupable extends AbstractInductor  {
     private static final int DOT_DIAMETER = 5;
     private static final double DOT_SPACING_X = 0.4;

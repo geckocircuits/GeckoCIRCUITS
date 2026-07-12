@@ -41,7 +41,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class TestReceiverWindow extends JFrame {
 
     private static final TechFormat tcf = new TechFormat();
-    private final ControlCISPR16 _reglerCISPR16;
+    private final ControlCISPR16 _controlCISPR16;
     private final Cispr16Settings _settings;
     private boolean initDone = false;
     private final GraferV4 _graferNew;
@@ -66,7 +66,7 @@ public final class TestReceiverWindow extends JFrame {
 
     public TestReceiverWindow(final ControlCISPR16 regelBlock) {
         initComponents();
-        _reglerCISPR16 = regelBlock;
+        _controlCISPR16 = regelBlock;
         _settings = regelBlock.getSettings();
 
         Dimension windowSize = new Dimension(800, 600);
@@ -80,7 +80,7 @@ public final class TestReceiverWindow extends JFrame {
         _graferPanel.setTabsInvisible();
         jPanelPlot.add(_graferPanel);
 
-        if (_reglerCISPR16._zvDatenRam == null) {
+        if (_controlCISPR16._zvDatenRam == null) {
             jButtonCalculate.setEnabled(false);
             jLabelStatus.setText("No simulation data available.");
         }
@@ -862,7 +862,7 @@ public final class TestReceiverWindow extends JFrame {
         public void run() {
 
             if (_calculatorNew == null || _calculationDoneForHash != getHashCodeForCalculator()) {
-                _calculatorNew = new TestReceiverCalculation(_reglerCISPR16._zvDatenRam, _settings);
+                _calculatorNew = new TestReceiverCalculation(_controlCISPR16._zvDatenRam, _settings);
                 _calculationDoneForHash = getHashCodeForCalculator();
             }
 
@@ -981,7 +981,7 @@ public final class TestReceiverWindow extends JFrame {
         }
 
         private int getHashCodeForCalculator() {
-            int returnValue = _reglerCISPR16._zvDatenRam.hashCode();
+            int returnValue = _controlCISPR16._zvDatenRam.hashCode();
             if (_settings._useBlackman.getValue()) {
                 returnValue += 1;
             }
@@ -1128,11 +1128,11 @@ public final class TestReceiverWindow extends JFrame {
     }//GEN-LAST:event_jSpinnerThresholdStateChanged
 
     private void jButtonPlotOptions1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPlotOptions1ActionPerformed
-        new CisprBlockSettings(_reglerCISPR16, this).setVisible(true);
+        new CisprBlockSettings(_controlCISPR16, this).setVisible(true);
     }//GEN-LAST:event_jButtonPlotOptions1ActionPerformed
 
     private void updateSettings() {
-        if (_reglerCISPR16 != null && initDone) {
+        if (_controlCISPR16 != null && initDone) {
             _settings._peak.setUserValue(jCheckBoxPeak.isSelected());
             _settings._qpeak.setUserValue(jCheckBoxQuasiPeak.isSelected());
             _settings._average.setUserValue(jCheckBoxAverage.isSelected());
@@ -1149,8 +1149,8 @@ public final class TestReceiverWindow extends JFrame {
     public void setVisible(final boolean value) {
         super.setVisible(value);
 
-        if (value && _reglerCISPR16 != null) {
-            this.setTitle(" " + _reglerCISPR16.getStringID());
+        if (value && _controlCISPR16 != null) {
+            this.setTitle(" " + _controlCISPR16.getStringID());
             jCheckBoxPeak.setSelected(_settings._peak.getValue());
             jCheckBoxQuasiPeak.setSelected(_settings._qpeak.getValue());
             jSpinnerMaximum.setValue((Double) _settings._maxFreq.getValue());

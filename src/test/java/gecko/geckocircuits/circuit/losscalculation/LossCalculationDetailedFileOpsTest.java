@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.ConductionLossMeasurementCurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.general.GlobalFilePathes;
@@ -92,7 +92,7 @@ public class LossCalculationDetailedFileOpsTest {
     }
 
     // ===========================================
-    // leseDetailVerlusteVonDatei Tests
+    // readDetailedLossesFromFile Tests
     // ===========================================
 
     @Test
@@ -101,7 +101,7 @@ public class LossCalculationDetailedFileOpsTest {
         writeLossFileContent(tmpFile);
         GeckoFile newLossFile = new GeckoFile(tmpFile, GeckoFile.StorageType.INTERNAL, "Untitled");
 
-        boolean result = verlust.leseDetailVerlusteVonDatei(newLossFile);
+        boolean result = verlust.readDetailedLossesFromFile(newLossFile);
 
         assertTrue("Should return true on success", result);
         assertSame("lossFile should be set to newLossFile", newLossFile, verlust.lossFile);
@@ -122,7 +122,7 @@ public class LossCalculationDetailedFileOpsTest {
         writeLossFileContent(newFile);
         GeckoFile newGeckoFile = new GeckoFile(newFile, GeckoFile.StorageType.INTERNAL, "Untitled");
 
-        boolean result = verlust.leseDetailVerlusteVonDatei(newGeckoFile);
+        boolean result = verlust.readDetailedLossesFromFile(newGeckoFile);
 
         assertTrue("Should return true on success", result);
         verify(mockAccessor).maintain(oldGeckoFile);
@@ -136,9 +136,9 @@ public class LossCalculationDetailedFileOpsTest {
         writeLossFileContentWithCurves(tmpFile);
         GeckoFile newLossFile = new GeckoFile(tmpFile, GeckoFile.StorageType.INTERNAL, "Untitled");
 
-        verlust.leseDetailVerlusteVonDatei(newLossFile);
+        verlust.readDetailedLossesFromFile(newLossFile);
 
-        List<SwitchingLossCurve> switchCurves = verlust.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlust.getCopyOfSwitchingLossMeasurementCurvesArray();
         assertFalse("Should have switching curves", switchCurves.isEmpty());
     }
 
@@ -148,9 +148,9 @@ public class LossCalculationDetailedFileOpsTest {
         writeLossFileContentWithCurves(tmpFile);
         GeckoFile newLossFile = new GeckoFile(tmpFile, GeckoFile.StorageType.INTERNAL, "Untitled");
 
-        verlust.leseDetailVerlusteVonDatei(newLossFile);
+        verlust.readDetailedLossesFromFile(newLossFile);
 
-        List<LeitverlusteMesskurve> condCurves = verlust.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlust.getCopyOfConductionLossMeasurementCurvesArray();
         assertFalse("Should have conduction curves", condCurves.isEmpty());
     }
 
@@ -259,7 +259,7 @@ public class LossCalculationDetailedFileOpsTest {
     }
 
     // ===========================================
-    // schreibeDetailVerlusteAufDatei Tests
+    // writeDetailedLossesToFile Tests
     // ===========================================
 
     @Test
@@ -267,10 +267,10 @@ public class LossCalculationDetailedFileOpsTest {
         File outFile = new File(tempFolder.getRoot(), "output.scl");
         when(mockAccessor.getOpenFileName()).thenReturn("Untitled");
 
-        List<SwitchingLossCurve> switchCurves = verlust.getCopyOfSchaltverlusteMesskurvenArray();
-        List<LeitverlusteMesskurve> condCurves = verlust.getCopyOfLeitverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlust.getCopyOfSwitchingLossMeasurementCurvesArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlust.getCopyOfConductionLossMeasurementCurvesArray();
 
-        boolean result = verlust.schreibeDetailVerlusteAufDatei(
+        boolean result = verlust.writeDetailedLossesToFile(
                 outFile.getAbsolutePath(), switchCurves, condCurves, GeckoFile.StorageType.INTERNAL);
 
         assertTrue("Should return true on success", result);
@@ -291,10 +291,10 @@ public class LossCalculationDetailedFileOpsTest {
         File outFile = new File(tempFolder.getRoot(), "new_output.scl");
         when(mockAccessor.getOpenFileName()).thenReturn("Untitled");
 
-        List<SwitchingLossCurve> switchCurves = verlust.getCopyOfSchaltverlusteMesskurvenArray();
-        List<LeitverlusteMesskurve> condCurves = verlust.getCopyOfLeitverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlust.getCopyOfSwitchingLossMeasurementCurvesArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlust.getCopyOfConductionLossMeasurementCurvesArray();
 
-        boolean result = verlust.schreibeDetailVerlusteAufDatei(
+        boolean result = verlust.writeDetailedLossesToFile(
                 outFile.getAbsolutePath(), switchCurves, condCurves, GeckoFile.StorageType.INTERNAL);
 
         assertTrue("Should return true", result);
@@ -307,24 +307,24 @@ public class LossCalculationDetailedFileOpsTest {
     public void testSchreibeDetailVerlusteAufDatei_InvalidPath_ReturnsFalse() {
         when(mockAccessor.getOpenFileName()).thenReturn("Untitled");
 
-        boolean result = verlust.schreibeDetailVerlusteAufDatei(
+        boolean result = verlust.writeDetailedLossesToFile(
                 "/nonexistent/directory/output.scl",
-                verlust.getCopyOfSchaltverlusteMesskurvenArray(),
-                verlust.getCopyOfLeitverlusteMesskurvenArray(),
+                verlust.getCopyOfSwitchingLossMeasurementCurvesArray(),
+                verlust.getCopyOfConductionLossMeasurementCurvesArray(),
                 GeckoFile.StorageType.INTERNAL);
 
         assertFalse("Should return false on I/O error", result);
     }
 
     // ===========================================
-    // pruefeLinkAufHalbleiterDatei Tests
+    // checkLinkToSemiconductorFile Tests
     // ===========================================
 
     @Test
     public void testPruefeLinkAufHalbleiterDatei_NullLossFile_ReturnsFalse() {
         assertNull(verlust.lossFile);
 
-        boolean result = verlust.pruefeLinkAufHalbleiterDatei();
+        boolean result = verlust.checkLinkToSemiconductorFile();
 
         assertFalse("Should return false when lossFile is null", result);
     }
@@ -336,7 +336,7 @@ public class LossCalculationDetailedFileOpsTest {
         GeckoFile geckoFile = new GeckoFile(tmpFile, GeckoFile.StorageType.EXTERNAL, "Untitled");
         verlust.lossFile = geckoFile;
 
-        boolean result = verlust.pruefeLinkAufHalbleiterDatei();
+        boolean result = verlust.checkLinkToSemiconductorFile();
 
         assertTrue("Should return true for existing external file", result);
     }
@@ -350,7 +350,7 @@ public class LossCalculationDetailedFileOpsTest {
         // Delete the file after creating GeckoFile
         tmpFile.delete();
 
-        boolean result = verlust.pruefeLinkAufHalbleiterDatei();
+        boolean result = verlust.checkLinkToSemiconductorFile();
 
         assertFalse("Should return false for non-existing external file", result);
     }
@@ -365,7 +365,7 @@ public class LossCalculationDetailedFileOpsTest {
         // Mock the file manager returning this file in the extension list
         when(mockAccessor.getFilesByExtension(".scl")).thenReturn(Collections.singletonList(geckoFile));
 
-        boolean result = verlust.pruefeLinkAufHalbleiterDatei();
+        boolean result = verlust.checkLinkToSemiconductorFile();
 
         assertTrue("Should return true when internal file found in manager", result);
         verify(mockAccessor).getFilesByExtension(".scl");
@@ -381,7 +381,7 @@ public class LossCalculationDetailedFileOpsTest {
         // Mock empty list — file not found in manager
         when(mockAccessor.getFilesByExtension(".scl")).thenReturn(new ArrayList<>());
 
-        boolean result = verlust.pruefeLinkAufHalbleiterDatei();
+        boolean result = verlust.checkLinkToSemiconductorFile();
 
         assertFalse("Should return false when internal file not in manager", result);
     }
@@ -423,8 +423,8 @@ public class LossCalculationDetailedFileOpsTest {
      */
     private void writeLossFileContent(File file) throws Exception {
         String content = generateLossFileContent(
-                verlust.getCopyOfSchaltverlusteMesskurvenArray().subList(0, 1),
-                verlust.getCopyOfLeitverlusteMesskurvenArray().subList(0, 1));
+                verlust.getCopyOfSwitchingLossMeasurementCurvesArray().subList(0, 1),
+                verlust.getCopyOfConductionLossMeasurementCurvesArray().subList(0, 1));
         try (BufferedWriter out = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             out.write(content);
@@ -436,8 +436,8 @@ public class LossCalculationDetailedFileOpsTest {
      */
     private void writeLossFileContentWithCurves(File file) throws Exception {
         String content = generateLossFileContent(
-                verlust.getCopyOfSchaltverlusteMesskurvenArray(),
-                verlust.getCopyOfLeitverlusteMesskurvenArray());
+                verlust.getCopyOfSwitchingLossMeasurementCurvesArray(),
+                verlust.getCopyOfConductionLossMeasurementCurvesArray());
         try (BufferedWriter out = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             out.write(content);
@@ -446,10 +446,10 @@ public class LossCalculationDetailedFileOpsTest {
 
     /**
      * Generates loss file content using the actual curve export methods,
-     * matching the format that LossCalculationDetailed.schreibeDetailVerlusteAufDatei produces.
+     * matching the format that LossCalculationDetailed.writeDetailedLossesToFile produces.
      */
     private String generateLossFileContent(List<SwitchingLossCurve> switchCurves,
-            List<LeitverlusteMesskurve> condCurves) {
+            List<ConductionLossMeasurementCurve> condCurves) {
         StringBuffer ascii = new StringBuffer();
         gecko.geckocircuits.general.ProjectData.appendAsString(
                 ascii.append("\nanzMesskurvenPvSWITCH"), switchCurves.size());
@@ -458,7 +458,7 @@ public class LossCalculationDetailedFileOpsTest {
         }
         gecko.geckocircuits.general.ProjectData.appendAsString(
                 ascii.append("\nanzMesskurvenPvCOND"), condCurves.size());
-        for (LeitverlusteMesskurve curve : condCurves) {
+        for (ConductionLossMeasurementCurve curve : condCurves) {
             curve.exportASCII(ascii);
         }
         return ascii.toString();

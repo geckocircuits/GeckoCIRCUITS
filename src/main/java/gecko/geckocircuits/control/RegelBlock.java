@@ -255,7 +255,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
     }
 
     @Override
-    public final void rotiereSymbol() {
+    public final void rotateSymbol() {
         // control components cannot be rotated at the moment!
     }
 

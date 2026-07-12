@@ -45,7 +45,7 @@ public class SmallSignalCalculatorTest {
         );
 
         assertNotNull("Calculator should be created", calc);
-        assertNotNull("Signal calculator should be created for rectangle", calc._signalTypeCalculator);
+        assertNotNull("Signal calculator should be created for rectangle", calc.AbstractControlCalculatable);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class SmallSignalCalculatorTest {
         );
 
         assertNotNull("Calculator should be created", calc);
-        assertNotNull("Signal calculator should be created for triangle", calc._signalTypeCalculator);
+        assertNotNull("Signal calculator should be created for triangle", calc.AbstractControlCalculatable);
     }
 
     @Test
@@ -241,11 +241,11 @@ public class SmallSignalCalculatorTest {
                 1.0, 100.0, 1000.0, SSAShape.RECTANGLE, 2, 1, false);
 
         // Initialize signal calculator input/output
-        for (int i = 0; i < calc._signalTypeCalculator._inputSignal.length; i++) {
-            calc._signalTypeCalculator._inputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._inputSignal.length; i++) {
+            calc.AbstractControlCalculatable._inputSignal[i] = new double[]{0};
         }
-        for (int i = 0; i < calc._signalTypeCalculator._outputSignal.length; i++) {
-            calc._signalTypeCalculator._outputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._outputSignal.length; i++) {
+            calc.AbstractControlCalculatable._outputSignal[i] = new double[]{0};
         }
 
         calc.initializeAtSimulationStart(DELTA_T);
@@ -261,11 +261,11 @@ public class SmallSignalCalculatorTest {
                 1.0, 100.0, 1000.0, SSAShape.TRIANGLE, 2, 1, false);
 
         // Initialize signal calculator input/output
-        for (int i = 0; i < calc._signalTypeCalculator._inputSignal.length; i++) {
-            calc._signalTypeCalculator._inputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._inputSignal.length; i++) {
+            calc.AbstractControlCalculatable._inputSignal[i] = new double[]{0};
         }
-        for (int i = 0; i < calc._signalTypeCalculator._outputSignal.length; i++) {
-            calc._signalTypeCalculator._outputSignal[i] = new double[]{0};
+        for (int i = 0; i < calc.AbstractControlCalculatable._outputSignal.length; i++) {
+            calc.AbstractControlCalculatable._outputSignal[i] = new double[]{0};
         }
 
         calc.initializeAtSimulationStart(DELTA_T);
@@ -388,7 +388,7 @@ public class SmallSignalCalculatorTest {
 
         assertEquals("Time should be set correctly", testTime, calc._time, TOLERANCE);
         assertEquals("Signal calculator time should be set", testTime,
-                    calc._signalTypeCalculator._time, TOLERANCE);
+                    calc.AbstractControlCalculatable._time, TOLERANCE);
     }
 
     @Test

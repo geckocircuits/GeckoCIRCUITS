@@ -266,7 +266,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             TokenMap subBlock = tokenMap.getBlockTokenMap("<Verluste>");
             if (subBlock != null) {
                 LossProperties verluste = (LossProperties) ((SemiconductorLossCalculatable) this).getVerlustBerechnung();
-                verluste.importASCII(subBlock);  // // Load the correct parameters
+                verluste.importASCII(subBlock);  // Load the correct parameters
             }
         }
 
@@ -325,7 +325,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
 
-        setPositionVorVerschieben(getSheetPosition());
+        setPositionBeforeMoving(getSheetPosition());
         setOrientationBeforeMove(getComponentDirection());
 
 
@@ -464,7 +464,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
         _textInfo.exportASCII(ascii);
-        // // Data of the individual control blocks:
+        // Data of the individual control blocks:
         ascii.append("\n");
         final String saveIdentifierEndString = "\n<\\" + getTypeInfo().getSaveIdentifier() + ">\n";
         ascii.append(saveIdentifierEndString);
@@ -562,7 +562,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             Point startPoint = XIN.get(i).getPosition();
             Point stopPoint = YOUT.get(i).getPosition();
 
-            verb.setzeStartKnoten(startPoint);
+            verb.setStartNode(startPoint);
 
             int distX = startPoint.x - stopPoint.x;
             int distY = startPoint.y - stopPoint.y;
@@ -571,19 +571,19 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
             if (distX != 0) {
                 for (int j = 0; j <= Math.abs(distX); j++) {
-                    verb.setzeAktuellenPunktAufVerbindung(new Point(xPos, yPos));
+                    verb.setCurrentPointOnConnection(new Point(xPos, yPos));
                     xPos += distX / distX;
                 }
             }
 
             if (distY != 0) {
                 for (int j = 0; j <= Math.abs(distY); j++) {
-                    verb.setzeAktuellenPunktAufVerbindung(new Point(xPos, yPos));
+                    verb.setCurrentPointOnConnection(new Point(xPos, yPos));
                     yPos += distY / distY;
                 }
             }
 
-            verb.setzeEndKnoten(stopPoint.x, stopPoint.y);
+            verb.setEndNode(stopPoint.x, stopPoint.y);
             returnValue.add(verb);
         }
         return returnValue;
@@ -622,7 +622,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     @Override
     public void absetzenElement() {
-        setPositionVorVerschieben(getSheetPosition());
+        setPositionBeforeMoving(getSheetPosition());
         setOrientationBeforeMove(getComponentDirection());
         setModus(ComponentState.FINISHED);
     }
@@ -654,10 +654,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @Override
     public void deselectViaESCAPE() {
         setComponentDirection(getOrientationBeforeMove());
-        setPositionWithoutUndo(getPositionVorVerschieben().x, getPositionVorVerschieben().y);
+        setPositionWithoutUndo(getPositionBeforeMoving().x, getPositionBeforeMoving().y);
     }
 
-    public void rotiereSymbol() {
+    public void rotateSymbol() {
         for (AbstractTerminal term : XIN) {
             term.getLabelObject().setLabelPriority(LabelPriority.LOW);
         }
@@ -686,7 +686,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     public void copyLKBlockPars(final AbstractBlockInterface copy) {
         copy.setSheetPositionWithoutUndo(getSheetPosition());
-        copy.setPositionVorVerschieben(getSheetPosition());
+        copy.setPositionBeforeMoving(getSheetPosition());
         System.arraycopy(parameter, 0, copy.parameter, 0, parameter.length);
         copy.parameterString = new String[this.parameterString.length];
         System.arraycopy(this.parameterString, 0, copy.parameterString, 0, this.parameterString.length);
@@ -769,14 +769,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         _textInfo.clearParameters();
 
         if (getDisplayProperties().showName || (this instanceof SpecialNameVisible
-                && ((SpecialNameVisible) this).isNameVisible())) {  // // if the name should also be displayed
+                && ((SpecialNameVisible) this).isNameVisible())) {  // if the name should also be displayed
             _textInfo.addParameter(getStringID());
         }
 
         this.addTextInfoParameters();
         _textInfo.addParameters(getRegisteredParameters(), getDisplayProperties());
 
-        _textInfo.zeichneLinie(graphics, getDisplayProperties().showTextLine);
+        _textInfo.drawLine(graphics, getDisplayProperties().showTextLine);
 
         for (TerminalInterface term : getAllTerminals()) {
             if (java.util.Objects.equals(term.getCircuitSheet(), _parentCircuitSheet)) {
@@ -840,14 +840,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     /**
      * @return the positionVorVerschieben
      */
-    public Point getPositionVorVerschieben() {
+    public Point getPositionBeforeMoving() {
         return _sheetPosBeforeMove;
     }
 
     /**
      * @param positionVorVerschieben the positionVorVerschieben to set
      */
-    public void setPositionVorVerschieben(Point positionVorVerschieben) {
+    public void setPositionBeforeMoving(Point positionVorVerschieben) {
         this._sheetPosBeforeMove = positionVorVerschieben;
     }
 

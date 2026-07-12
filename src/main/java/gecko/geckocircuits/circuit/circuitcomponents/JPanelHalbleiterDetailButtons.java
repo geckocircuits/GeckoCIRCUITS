@@ -106,7 +106,7 @@ final class JPanelHalbleiterDetailButtons extends JPanel {
     }
 
     private void checkFileLink() {
-        final boolean isFileLinkOK = _detailedLosses.pruefeLinkAufHalbleiterDatei();  // ist die Datei mit der Verlustbeschreibung ueberhaupt vorhanden?
+        final boolean isFileLinkOK = _detailedLosses.checkLinkToSemiconductorFile();  // ist die Datei mit der Verlustbeschreibung ueberhaupt vorhanden?
         //
         if (isFileLinkOK) {  // Datei vorhanden und OK
 

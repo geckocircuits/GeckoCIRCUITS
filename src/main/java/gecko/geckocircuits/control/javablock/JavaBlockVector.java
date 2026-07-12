@@ -22,13 +22,13 @@ public class JavaBlockVector extends AbstractJavaBlock {
     private ControlCalculatable _compiledInstance;
     private double[] _xINVector;
 
-    JavaBlockVector(final ControlJavaFunction regler) {
-        super(regler);
+    JavaBlockVector(final ControlJavaFunction control) {
+        super(control);
     }
 
     @Override
     AbstractJavaBlock createOtherBlockTypeCopy() {
-        final AbstractJavaBlock returnValue = new JavaBlockMatrix(_reglerJavaBlock);
+        final AbstractJavaBlock returnValue = new JavaBlockMatrix(_controlJavaBlock);
         createNewJavaSourceCopy(returnValue);
         returnValue._additionalSourceFiles.addAll(this._additionalSourceFiles);
         return returnValue;

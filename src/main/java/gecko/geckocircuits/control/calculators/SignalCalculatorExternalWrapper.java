@@ -41,7 +41,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
     @Override
     public void calculateYOUT(final double deltaT) {
         _wrapped.setAmplitudeAC(_inputSignal[AMPLITUDE_INDEX][0]);
-        _wrapped.setAnteilDC(_inputSignal[OFFSET_INDEX][0]);
+        _wrapped.setDcOffset(_inputSignal[OFFSET_INDEX][0]);
         _wrapped.setPhase(Math.toRadians(_inputSignal[PHASE_INDEX][0]));
         _wrapped.setDuty(Math.min(MAX_DUTY, Math.max(MIN_DUTY, _inputSignal[DUTY_INDEX][0])));
         if (_inputSignal[FREQUENCY_INDEX][0] < 0) {
@@ -74,7 +74,7 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
         _inputSignal[FREQUENCY_INDEX][0] = freq;
     }
 
-    void setAnteilDC(final double offset) {
+    void setDcOffset(final double offset) {
         _inputSignal[OFFSET_INDEX][0] = offset;
     }
 

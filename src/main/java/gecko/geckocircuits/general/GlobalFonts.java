@@ -26,7 +26,7 @@ public final class GlobalFonts {
 
     public static final Font foAUSWAHL = new Font("Arial", Font.PLAIN, 12);
     public static final Font foGRAFER = new Font("Arial", Font.PLAIN, 11);
-    // // uniform font for the dialogs -->
+    // uniform font for the dialogs -->
     //
     public static final Font LAB_FONT_DIALOG_1 = new Font("Arial", Font.PLAIN, 12);
 

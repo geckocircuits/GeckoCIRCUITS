@@ -55,15 +55,15 @@ public final class ControlSpaceVector extends RegelBlock {
         return new String[0];
     }
 
-    public void setTerminalKnotenLabel(final String q, final int knotenIndex) {
+    public void setTerminalNodeLabel(final String q, final int nodeIndex) {
         // ... wird von 'setLabelAnfangsKnoten()' in ElementCONTROL aufgerufen, immer wenn die Netzliste aktualisiert wird
         // aktueller Zugriff auf die Knoten-Labels fuer die SCOPE-Header -->
         if (header == null) {
             header = new String[NO_INPUTS + 1];
         }
-        header[knotenIndex + 1] = q;
-        if (header[knotenIndex + 1].equals("")) {
-            header[knotenIndex + 1] = "sg." + (knotenIndex + 1);
+        header[nodeIndex + 1] = q;
+        if (header[nodeIndex + 1].equals("")) {
+            header[nodeIndex + 1] = "sg." + (nodeIndex + 1);
         }
     }
 

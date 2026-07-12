@@ -28,7 +28,7 @@ public class GlobalColors {
     public static final Color farbeFertigElementLK = Color.decode("0x00008b");
     public static final Color farbeFertigVerbindungLK = Color.blue;
     public static final Color farbeLabelLK = Color.decode("0x00008b");
-    public static final Color farbeParallelLK = Color.decode("0xadd8e6");  // falls eine parallele Linie in Connection.zeichne() gezogen wird zur besseren Visualisierung
+    public static final Color farbeParallelLK = Color.decode("0xadd8e6");  // falls eine parallele Linie in Connection.draw() gezogen wird zur besseren Visualisierung
     public static final Color farbeElementLKHintergrund = Color.decode("0xccccff");
     public static final Color farbeElementRELFOREGROUND = Color.decode("#886A08");
     public static final Color farbeElementRELBACKGROUND = Color.decode("#f5f5dc");

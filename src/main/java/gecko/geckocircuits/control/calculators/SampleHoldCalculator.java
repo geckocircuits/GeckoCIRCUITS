@@ -18,7 +18,7 @@ public final class SampleHoldCalculator extends AbstractTwoInputsOneOutputCalcul
         @Override
         public void calculateYOUT(final double deltaT) {
             if (_inputSignal[1][0] > SIGNAL_THRESHOLD) {
-                // // Logic threshold 0.5 --> if the clock signal is larger, the input value is switched through directly
+                // Logic threshold 0.5 --> if the clock signal is larger, the input value is switched through directly
                 _outputSignal[0][0] = _inputSignal[0][0];
             }
         }

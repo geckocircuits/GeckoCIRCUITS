@@ -83,9 +83,9 @@ public final class MotorImSat extends AbstractMotorIMCommon {
     @Override
     void setSubCircuit() {
         super.setSubCircuit();
-        // // Input current source for iax(t) -->
+        // Input current source for iax(t) -->
         _controlledSource3 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
-        // // Input current source for iax(t) -->
+        // Input current source for iax(t) -->
         _controlledSource4 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         // hochohmiger Widerstand zur Anbindung des Rotorkreises -->
         _resistor = (AbstractResistor) fabricHiddenSub(CircuitTyp.LK_R, this);

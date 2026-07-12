@@ -48,7 +48,7 @@ public final class ControlFromEXTERNAL extends RegelBlockSimulink implements Var
 
     public ControlFromEXTERNAL() {
         super();
-        _terminalNumber = 1;  // // default: 1 connection brings signals from EXTERNAL
+        _terminalNumber = 1;  // default: 1 connection brings signals from EXTERNAL
         this.setOutputTerminalNumber(_terminalNumber);
         fromExternalsInternal.add(this);
     }

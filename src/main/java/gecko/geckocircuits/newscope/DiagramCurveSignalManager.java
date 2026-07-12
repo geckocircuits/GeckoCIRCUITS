@@ -222,11 +222,11 @@ public final class DiagramCurveSignalManager{
     _allScopeSignals.remove(deleteSignal);
   }
 
-  public void defineNewSignalNumber(final ControlOSZI regler, final int newTerminalNumber, final DefinedMeanSignals meanSigs){
+  public void defineNewSignalNumber(final ControlOSZI control, final int newTerminalNumber, final DefinedMeanSignals meanSigs){
     assert _inputSignals != null;
     // increasing terminal number
     while(_inputSignals.size() < newTerminalNumber){
-      final AbstractScopeSignal newSignal = new ScopeSignalRegular(_inputSignals.size(), regler);
+      final AbstractScopeSignal newSignal = new ScopeSignalRegular(_inputSignals.size(), control);
       _inputSignals.add(newSignal);
       _allScopeSignals.add(newSignal);
     }

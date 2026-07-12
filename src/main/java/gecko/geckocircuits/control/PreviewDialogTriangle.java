@@ -35,7 +35,7 @@ public class PreviewDialogTriangle extends PreviewDialog {
         final int[] kordY = new int[]{y2, y1, y1 + p1, y1 + p1, y1, y0, y0, y0, y0 - p2, y0 + p2, y0};
         final int[] triX = new int[b], triY = new int[triX.length];
         final int offset = 20, ac = 55, phase = 60;
-        final double duty = 0.2, anteilDC = offset;
+        final double duty = 0.2, dcOffset = offset;
         //------------------
         double tx = 0, tEnd = b, dt = 1, dreieck = 0;
         double phaseX = phase * Math.PI / 180.0, amplitudeAC = ac, frequenz = 1.0 / b, tastverhaeltnis = duty;
@@ -74,7 +74,7 @@ public class PreviewDialogTriangle extends PreviewDialog {
                 aufsteigend = true;
             }
             triX[i1] = x0 + i1;
-            triY[i1] = y0 - (int) (dreieck + anteilDC);
+            triY[i1] = y0 - (int) (dreieck + dcOffset);
             tx += dt;
             i1++;
         }
@@ -93,7 +93,7 @@ public class PreviewDialogTriangle extends PreviewDialog {
                 g.setColor(Color.lightGray);
                 g.drawLine(x2, y0 - offset, x1, y0 - offset);  // offset-Linie (Mittelwert)
                 g.setColor(Color.gray);
-                g.drawLine(x0 + xPh, y0 - offset - 10, x0 + xPh, y0 + 10);  // // Marking line for phase shift
+                g.drawLine(x0 + xPh, y0 - offset - 10, x0 + xPh, y0 + 10);  // Marking line for phase shift
                 g.drawLine(x1, y0 - offset / 2, x1, y0 - offset - ac / 2);  // senkrechte Linie bei (2*PI)
                 g.drawPolyline(new int[]{x0 + xPh, x0 + xPh, x0 + xPh - p2, x0 + xPh}, new int[]{y0 - offset - 2 * p1, y0 - offset, y0 - offset - p1, y0 - offset - p1}, 4);  // Pfeilspitze senkrecht
                 g.drawPolyline(new int[]{x0 + xPh, x0 + xPh, x0 + xPh - p2, x0 + xPh}, new int[]{y0 + 2 * p1, y0, y0 + p1, y0 + p1}, 4);  // Pfeilspitze senkrecht

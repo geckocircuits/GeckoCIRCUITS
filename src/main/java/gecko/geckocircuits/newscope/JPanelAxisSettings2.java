@@ -40,7 +40,7 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
 
     public void init(final GraferV4 grafer, final Axis axis) {
         _axis = axis;
-        jTextFieldAxisLabel.setText(_axis._axisSettings.getAchseBeschriftung());
+        jTextFieldAxisLabel.setText(_axis._axisSettings.getAxisLabel());
 
         for (AxisLinLog axisType : AxisLinLog.values()) {
             jComboBoxScaleType.addItem(axisType);
@@ -49,7 +49,7 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
         jCheckBoxAutoScale.setSelected(_axis._axisMinMax.isAutoEnabled());
         jCheckBoxSymmetricZero.setSelected(_axis._axisMinMax.isCommonZero());
         jCheckBoxAutoScaleActionPerformed(null);
-        jTextFieldAxisLabel.setText(_axis._axisSettings.getAchseBeschriftung());
+        jTextFieldAxisLabel.setText(_axis._axisSettings.getAxisLabel());
 
         setAxisLimitsToFields();
 
@@ -262,7 +262,7 @@ public class JPanelAxisSettings2 extends javax.swing.JPanel {
 
     private void jTextFieldAxisLabelPropertyChange(java.beans.PropertyChangeEvent evt) {//NOPMD//GEN-FIRST:event_jTextFieldAxisLabelPropertyChange
         if (_initDone) {
-            _axis._axisSettings.setAchseBeschriftung(jTextFieldAxisLabel.getText());
+            _axis._axisSettings.setAxisLabel(jTextFieldAxisLabel.getText());
             repaintComponent();
         }
     }//GEN-LAST:event_jTextFieldAxisLabelPropertyChange

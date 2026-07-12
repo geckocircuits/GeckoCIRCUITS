@@ -210,7 +210,6 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
         // Riso, internal isolation -->
         _qLK[2] = _rIsolation;
         _qLK[3] = _internalVoltageSource;
-        //
         // R14 (voltage-divider for voltage-clamping) -->
         _qLK[4] = _Ra;
         // R15 (voltage-divider for voltage-clamping) -->

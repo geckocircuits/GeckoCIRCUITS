@@ -133,7 +133,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         jButtonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                schliesseFenster();
+                closeWindow();
             }
         });
         jPanelButtonOkCancel = new JPanel();
@@ -166,7 +166,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
                 processRegisteredParameters();
                 processInputIndividual();
                 element.setParameter(element.getParameter());
-                schliesseFenster();
+                closeWindow();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -198,17 +198,17 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
         super.setVisible(b);
     }
 
-    private boolean schliesseFensterCalled = false;
+    private boolean closeWindowCalled = false;
 
     @Override
-    public void schliesseFenster() {
+    public void closeWindow() {
         // this function was called several times when closing a window.
         // the boolean flag is only a work-around, do this in a cleaner way
         // in the future!
-        if (schliesseFensterCalled) {
+        if (closeWindowCalled) {
             return;
         }
-        schliesseFensterCalled = true;
+        closeWindowCalled = true;
         _se.setDirtyFlag();
         this.dispose();
         _se._visibleCircuitSheet.requestFocus();
@@ -274,7 +274,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
 
     @Override
     public void windowClosing(WindowEvent we) {
-        this.schliesseFenster();
+        this.closeWindow();
     }
 
     @Override

@@ -34,7 +34,7 @@ public final class MUXControlCalculatableTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         Random rand = new Random();
 
         // enshure that the correct number of outputs/inputs is set up!

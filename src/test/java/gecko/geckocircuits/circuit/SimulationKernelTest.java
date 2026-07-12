@@ -73,7 +73,7 @@ public class SimulationKernelTest {
     @Test
     public void testGetZeitAktuell_ReturnsZeroInitially() {
         // Current time should be 0 before simulation starts
-        assertEquals("Initial time should be 0", 0.0, simulationsKern.getZeitAktuell(), 1e-15);
+        assertEquals("Initial time should be 0", 0.0, simulationsKern.getCurrentTime(), 1e-15);
     }
 
     @Test

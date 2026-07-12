@@ -281,7 +281,6 @@ public final class PolynomTools {
 //    public static void main(String[] args) {
 //        double[] lead = new double[0];
 //    public static void main(String[] args) {
-//
 //        System.out.println(PolynomTools.getPolynomString(remainder));
 //    }
     /**

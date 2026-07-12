@@ -21,19 +21,19 @@ public class SignalCalculatorSinus extends AbstractSignalCalculatorPeriodic {
      * @param amplitudeAC
      * @param frequency in Hz
      * @param phase measured in Radians
-     * @param anteilDC
+     * @param dcOffset
      * @param duty in fact, this parameter is not even used here. For conveniece, I kept it
      * to use similarities with signalREct and signalTri
      */
     public SignalCalculatorSinus(final int noInputs,  final double amplitudeAC,
-            final double frequency, final double phase, final double anteilDC, final double duty) {
-        super(noInputs, amplitudeAC, frequency, phase, anteilDC, duty);
+            final double frequency, final double phase, final double dcOffset, final double duty) {
+        super(noInputs, amplitudeAC, frequency, phase, dcOffset, duty);
     }
 
     @Override
     public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = _amplitudeAC * Math.sin(TWO_PI * _frequency * _time 
-                - _phase) + _anteilDC;
+                - _phase) + _dcOffset;
     }
 
     @Override

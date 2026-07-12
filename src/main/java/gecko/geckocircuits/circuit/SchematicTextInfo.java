@@ -76,7 +76,7 @@ public final class SchematicTextInfo {
         return (_xTxtKlickMin <= mouseX) && (mouseX <= _xTxtKlickMax) && (_yTxtKlickMin <= mouseY) && (mouseY <= _yTxtKlickMax);
     }
 
-    public void zeichneLinie(final Graphics graphics, final boolean showLine) {
+    public void drawLine(final Graphics graphics, final boolean showLine) {
 
         if (_neverVisible) {
             return;
@@ -164,7 +164,7 @@ public final class SchematicTextInfo {
 
         final FontRenderContext frc = graphics.getFontRenderContext();
         final int dpix = AbstractCircuitSheetComponent.dpix;
-        if (SchematicEditor2._thermDisplayMode.showName) {  // // if the name should also be displayed
+        if (SchematicEditor2._thermDisplayMode.showName) {  // if the name should also be displayed
             _yTxtKlickMin = _yTxtKlickMin - SchematicEditor2.DY_ZEILENABSTAND_TXT;
         }
 

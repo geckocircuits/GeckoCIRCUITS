@@ -21,12 +21,12 @@ class ControlTerminalDialog extends DialogElementCONTROL<ControlTERMINAL> {
 
     private FormatJTextField terminalLabel;
 
-    public ControlTerminalDialog(ControlTERMINAL reglerTerminal) {
-        super(reglerTerminal);
+    public ControlTerminalDialog(ControlTERMINAL controlTerminal) {
+        super(controlTerminal);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         JLabel label = new JLabel("Label:");
         terminalLabel = new FormatJTextField();
         terminalLabel.setText(element.XIN.get(0).getLabelObject().getLabelString());
@@ -39,7 +39,7 @@ class ControlTerminalDialog extends DialogElementCONTROL<ControlTERMINAL> {
         try {
             final CircuitLabel label = element.XIN.get(0).getLabelObject();
             label.setLabelFromUserDialog(terminalLabel.getText());
-            this.schliesseFenster();
+            this.closeWindow();
         } catch (Exception e) {
             e.printStackTrace();
         }

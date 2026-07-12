@@ -69,14 +69,14 @@ abstract class AbstractThreePhaseMotor extends AbstractMotor {
 
     @Override
     void setSubCircuit() {
-        // // Stator current source for isa(t) -->
+        // Stator current source for isa(t) -->
         _controlledAnchorSourceA = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         _controlledAnchorSourceA.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_SIGNALGESTEUERT);
 
         _controlledAnchorSourceA.setInputTerminal(0, XIN.get(0));
         _controlledAnchorSourceA.setOutputTerminal(0, XIN.get(1));
 
-        // // Stator current source for isa(t) -->
+        // Stator current source for isa(t) -->
         _controlledAnchorSourceC = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         _controlledAnchorSourceC.sourceType.setValueWithoutUndo(CircuitSourceType.QUELLE_SIGNALGESTEUERT);
         _controlledAnchorSourceC.setInputTerminal(0, XIN.get(2));

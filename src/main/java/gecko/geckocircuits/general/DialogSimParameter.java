@@ -118,8 +118,7 @@ public class DialogSimParameter extends JDialog implements ActionListener {
     }
 
     private JPanel getIntegrationPanel() {
-//
-        //------------------
+//------------------
         JPanel jpAllg = new JPanel();
         jpAllg.setLayout(new GridLayout(1, 1));
         jpAllg.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Integration algorithm selection", TitledBorder.LEFT, TitledBorder.TOP));
@@ -138,7 +137,6 @@ public class DialogSimParameter extends JDialog implements ActionListener {
         jtx.setWrapStyleWord(true);
         jtx.setBackground(this.getBackground());
         jtx.setEditable(false);
-        //
         //
         JPanel jpTxt = new JPanel();
         jpTxt.setLayout(new BorderLayout());
@@ -242,7 +240,6 @@ public class DialogSimParameter extends JDialog implements ActionListener {
         jtx.setWrapStyleWord(true);
         jtx.setBackground(this.getBackground());
         jtx.setEditable(false);
-        //
         //
         JPanel jpTxt = new JPanel();
         jpTxt.setLayout(new BorderLayout());

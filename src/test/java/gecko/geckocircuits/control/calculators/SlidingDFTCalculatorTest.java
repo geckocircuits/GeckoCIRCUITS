@@ -41,17 +41,17 @@ public final class SlidingDFTCalculatorTest {
 
     @Before
     public void setUp() {
-        ControlSlidingDFT regler = new ControlSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
 
         _freqData = new ArrayList<ControlSlidingDFT.FrequencyData>();
-        _freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
-        _freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.PHASE));
-        _freqData.add(regler.new FrequencyData(FREQ0, ControlSlidingDFT.OutputData.ABS));
+        _freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
+        _freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.PHASE));
+        _freqData.add(control.new FrequencyData(FREQ0, ControlSlidingDFT.OutputData.ABS));
         _sdft = new SlidingDFTCalculator(NO_OUTPUTS, AVG_SPAN, _freqData);
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _sdft._inputSignal[0] = new double[1];
         _sdft.initializeAtSimulationStart(DELTA_T);
 
@@ -133,10 +133,10 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testHigherFrequency() {
-        ControlSlidingDFT regler = new ControlSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
         double highFreq = 150;  // 150 Hz component
-        freqData.add(regler.new FrequencyData(highFreq, ControlSlidingDFT.OutputData.ABS));
+        freqData.add(control.new FrequencyData(highFreq, ControlSlidingDFT.OutputData.ABS));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -185,9 +185,9 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testRealOutputData() {
-        ControlSlidingDFT regler = new ControlSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.REAL));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.REAL));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -205,9 +205,9 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testImagOutputData() {
-        ControlSlidingDFT regler = new ControlSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.IMAG));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.IMAG));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -225,12 +225,12 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testAllOutputDataTypes() {
-        ControlSlidingDFT regler = new ControlSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.REAL));
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.IMAG));
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.PHASE));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.REAL));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.IMAG));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.PHASE));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(4, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -276,9 +276,9 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testAverageSpanSmallerThanStepWidth() {
-        ControlSlidingDFT regler = new ControlSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<FrequencyData>();
-        freqData.add(regler.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, 1e-6, freqData);
         sdft._inputSignal[0] = new double[1];

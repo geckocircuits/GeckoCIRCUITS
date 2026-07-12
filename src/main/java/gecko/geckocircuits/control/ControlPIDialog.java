@@ -30,7 +30,7 @@ class ControlPIDialog extends DialogElementCONTROL<ControlPI> {
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         //
         final int b = 30,
                 h = 45,

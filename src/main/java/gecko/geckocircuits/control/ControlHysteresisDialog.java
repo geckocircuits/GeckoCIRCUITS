@@ -29,12 +29,12 @@ class ControlHysteresisDialog extends AbstractDialogWithExternalOption<ControlHy
 
     private JPanel _parameterPanel;
 
-    public ControlHysteresisDialog(final ControlHysteresis reglerHys) {
-        super(reglerHys);
+    public ControlHysteresisDialog(final ControlHysteresis controlHys) {
+        super(controlHys);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         final JComponent compImG2 = createImageComponent();
         compImG2.setPreferredSize(new Dimension(IMAGE_COMPONENT_WIDTH, IMAGE_COMPONENT_HEIGHT));
 

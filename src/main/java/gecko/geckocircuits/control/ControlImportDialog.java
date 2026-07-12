@@ -35,14 +35,14 @@ import javax.swing.border.TitledBorder;
  */
 class ControlImportDialog extends DialogElementCONTROL<ControlSignalSource>{
 
-    private FormatJTextField jtfImportStatus;  // // for importing external time sequences, which are then output by the SIGNAL block
+    private FormatJTextField jtfImportStatus;  // for importing external time sequences, which are then output by the SIGNAL block
 
     public ControlImportDialog(ControlSignalSource element) {
         super(element);
     }
 
     @Override
-    void baueGuiIndividual() {
+    void buildIndividualGUI() {
         JTextArea jtx = new JTextArea();
         jtx.setForeground(GlobalColors.LAB_COLOR_DIALOG_1);
         jtx.setText("Data Format (Space-Separator)[ time  -  value ]");

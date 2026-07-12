@@ -47,7 +47,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
     private final double _freqEnd;
     private final int _nMax;
 
-    public AbstractSignalCalculatorPeriodic _signalTypeCalculator;
+    public AbstractSignalCalculatorPeriodic AbstractControlCalculatable;
     private int _noFreqs;
     private double[] ss_aVals;
     private double[] ss_bVals;
@@ -95,12 +95,12 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
             case EXTERNAL:
                 break;
             case RECTANGLE:
-                _signalTypeCalculator = new SignalCalculatorRectangle(1, 2 * _amplitude, _freqStart, 0, -_amplitude, 0.5);
-                _signalTypeCalculator.initializeAtSimulationStart(0);
+                AbstractControlCalculatable = new SignalCalculatorRectangle(1, 2 * _amplitude, _freqStart, 0, -_amplitude, 0.5);
+                AbstractControlCalculatable.initializeAtSimulationStart(0);
                 break;
             case TRIANGLE:
-                _signalTypeCalculator = new SignalCalculatorTriangle(1, _amplitude, _freqStart, 0, 0, 0.5);
-                _signalTypeCalculator.initializeAtSimulationStart(0);
+                AbstractControlCalculatable = new SignalCalculatorTriangle(1, _amplitude, _freqStart, 0, 0, 0.5);
+                AbstractControlCalculatable.initializeAtSimulationStart(0);
                 break;
             default:
                 break;
@@ -114,8 +114,8 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
      */
     public void externalSetTime(double time) {
         _time = time;
-        if (_signalTypeCalculator != null) {
-            _signalTypeCalculator._time = time;
+        if (AbstractControlCalculatable != null) {
+            AbstractControlCalculatable._time = time;
         }
     }
 
@@ -202,8 +202,8 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
                 break;
             case RECTANGLE:
             case TRIANGLE:
-                _signalTypeCalculator.calculateYOUT(deltaT);
-                returnValue = _signalTypeCalculator._outputSignal[0][0];
+                AbstractControlCalculatable.calculateYOUT(deltaT);
+                returnValue = AbstractControlCalculatable._outputSignal[0][0];
                 break;
             case EXTERNAL:
                 returnValue = _inputSignal[2][0];

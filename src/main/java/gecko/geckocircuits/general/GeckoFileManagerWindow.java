@@ -659,7 +659,7 @@ public class GeckoFileManagerWindow extends JDialog {
         if (_isLossElement) {
             if (!_newFilesToAdd.isEmpty()) { //if user has added new file, old one is removed automatically since semiconductor element can have only one loss file
                 GeckoFile lossFile = _newFilesToAdd.get(0);
-                boolean fileOK = _losses.leseDetailVerlusteVonDatei(lossFile);
+                boolean fileOK = _losses.readDetailedLossesFromFile(lossFile);
                 if (fileOK) {
                     String absPath = lossFile.getCurrentAbsolutePath();
                     _jlS2.setText(absPath.substring(0, absPath.lastIndexOf(System.getProperty("file.separator")) + 1));  // Pfad

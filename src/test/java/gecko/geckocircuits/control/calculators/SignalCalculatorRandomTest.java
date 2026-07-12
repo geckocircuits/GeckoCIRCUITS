@@ -34,7 +34,7 @@ public class SignalCalculatorRandomTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
 
         double oldValue = -1;
         for(int i = 0; i < 200; i++) {

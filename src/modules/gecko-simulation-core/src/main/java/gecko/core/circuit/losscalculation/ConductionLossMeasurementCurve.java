@@ -16,7 +16,7 @@ package gecko.core.circuit.losscalculation;
 import java.io.Serializable;
 
 // Datenbehaelter fuer eine Messkurve -->
-public class LeitverlusteMesskurve extends LossCurve implements Serializable {
+public class ConductionLossMeasurementCurve extends LossCurve implements Serializable {
 
     // Datenbehaelter mit folgendem Format fuer  data[][] -->
     // U [V] - I [A]
@@ -25,12 +25,12 @@ public class LeitverlusteMesskurve extends LossCurve implements Serializable {
     // usw.
     // Parameter: T_junction --> bei der Messung vorgegeben
     //
-    public LeitverlusteMesskurve(double tj) {
+    public ConductionLossMeasurementCurve(double tj) {
         this.tj.setValueWithoutUndo(tj);
     }
 
-    public LeitverlusteMesskurve copy() {
-        LeitverlusteMesskurve copy = new LeitverlusteMesskurve(-1);
+    public ConductionLossMeasurementCurve copy() {
+        ConductionLossMeasurementCurve copy = new ConductionLossMeasurementCurve(-1);
         copy.data = new double[this.data.length][this.data[0].length];
         for (int i1 = 0; i1 < this.data.length; i1++) {
             for (int i2 = 0; i2 < this.data[0].length; i2++) {
@@ -43,6 +43,6 @@ public class LeitverlusteMesskurve extends LossCurve implements Serializable {
 
     @Override
     String getXMLTag() {
-        return "LeitverlusteMesskurve";
+        return "ConductionLossMeasurementCurve";
     }
 }

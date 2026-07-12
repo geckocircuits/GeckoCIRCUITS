@@ -33,7 +33,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Connection exposes label and coordinates for circuit rendering and netlist generation")
 public class Connection extends AbstractCircuitSheetComponent implements ComponentTerminable, Labable {
 
-    private boolean _inMoveMode = false;  // // is only used for de-selection using ESCAPE
+    private boolean _inMoveMode = false;  // is only used for de-selection using ESCAPE
     private final List<Point> _connectorPoints = new ArrayList<Point>();
     private boolean _movementWestEast;  // Bewegungsrichtung mit der Maus beim Ziehen der Connection
     private CircuitLabel _label = new CircuitLabel();
@@ -94,13 +94,13 @@ public class Connection extends AbstractCircuitSheetComponent implements Compone
         return _label.getLabelString();
     }
 
-    public final void setzeStartKnoten(final Point clickPoint) {
+    public final void setStartNode(final Point clickPoint) {
         _inMoveMode = true;
         _connectorPoints.clear();
         _connectorPoints.add(clickPoint);
     }
 
-    public final void setzeEndKnoten(final int pointX, final int pointY) {
+    public final void setEndNode(final int pointX, final int pointY) {
         _inMoveMode = false;
         final Point endPoint = new Point(pointX, pointY);
         _connectorPoints.set(_connectorPoints.size() - 1, endPoint);
@@ -136,7 +136,7 @@ public class Connection extends AbstractCircuitSheetComponent implements Compone
         }
     }
 
-    public final void setzeAktuellenPunktAufVerbindung(final Point point) {
+    public final void setCurrentPointOnConnection(final Point point) {
         if (_connectorPoints.size() == 1) { // do the direction change only when crossing the zero-size
             if (Math.abs(point.x - _connectorPoints.get(0).x) >= Math.abs(point.y - _connectorPoints.get(0).y)) {
                 _movementWestEast = true;
@@ -147,7 +147,7 @@ public class Connection extends AbstractCircuitSheetComponent implements Compone
         final Point startPoint = _connectorPoints.get(0);
         _connectorPoints.clear();
         _connectorPoints.add(startPoint);
-        if (_movementWestEast) {  // // first part of the line along the x-axis (horizontal)
+        if (_movementWestEast) {  // first part of the line along the x-axis (horizontal)
             moveHorizontal(point, startPoint);
         } else {    // erster Teil der Linie entlang y-Achse (senkrecht)
             moveVertical(point, startPoint);

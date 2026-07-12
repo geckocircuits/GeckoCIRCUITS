@@ -50,10 +50,10 @@ public class DialogFourier extends JDialog {
     //-------------
     private TechFormat cf = new TechFormat();
     private FormatJTextField rngSc1, rngSc2, rngDf1, rngDf2, rngSl1, rngSl2;  // Angaben Zeitbereiche
-    private FormatJTextField ftfnMax, ftff1;  // // Text fields for Fourier data
-    private double f1;  // // Fundamental frequency for Fourier analysis
-    private int nMin, nMax;  // // Fundamental frequency multiples for Fourier analysis
-    private JCheckBox[] jcbZV;   // // Selection of the ZV curves to be Fourier analyzed
+    private FormatJTextField ftfnMax, ftff1;  // Text fields for Fourier data
+    private double f1;  // Fundamental frequency for Fourier analysis
+    private int nMin, nMax;  // Fundamental frequency multiples for Fourier analysis
+    private JCheckBox[] jcbZV;   // Selection of the ZV curves to be Fourier analyzed
     private JButton jbCALC;  // Berechnung starten
     //-------------
     //-------------
@@ -182,7 +182,7 @@ public class DialogFourier extends JDialog {
             pSEL.add(jlZV, gbc);
         }
 
-        final JDialog ich = this;  // // for reference in inner class
+        final JDialog ich = this;  // for reference in inner class
         //
         JPanel pOK = new JPanel();
         jbCALC = GuiFabric.getJButton(I18nKeys.CALCULATE);
@@ -206,7 +206,7 @@ public class DialogFourier extends JDialog {
 
                     @Override
                     public void run() {
-                        jbCALC.setEnabled(false);  // // so that you don't start multiple calculations by accidentally pressing it
+                        jbCALC.setEnabled(false);  // so that you don't start multiple calculations by accidentally pressing it
                         try {
                             erg = calculate();
                             //-----------------
@@ -256,7 +256,6 @@ public class DialogFourier extends JDialog {
         jpCalc.setLayout(new BorderLayout());
         jpCalc.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Calculate", TitledBorder.LEFT, TitledBorder.TOP));
         jpCalc.add(pOK, BorderLayout.SOUTH);
-        //
         //===========================================================
         //===========================================================
         JPanel jpERGx = new JPanel();

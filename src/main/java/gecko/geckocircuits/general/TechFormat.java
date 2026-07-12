@@ -186,7 +186,6 @@ public class TechFormat implements Serializable {
                 nfe.initCause(e1);
                 throw nfe;
             }
-            //
             // Assumption: all incorrect inputs have been eliminated - no more exceptions possible from here
             //-----------------------
             // (3) Characters are OK, we parse according to the technical inputs defined in abk[] e.g. -->

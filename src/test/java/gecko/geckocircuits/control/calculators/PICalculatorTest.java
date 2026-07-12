@@ -31,7 +31,7 @@ public class PICalculatorTest extends AbstractSimpleMathFunctionTest {
 
     @Override
     @Test
-    public void testBerechneYOUTResult0() {
+    public void testCalculateYOUTResult0() {
         for(int i = 0; i < 10; i++) {
             double val = getValue(0);
             assertWithTol(0, val);
@@ -39,7 +39,7 @@ public class PICalculatorTest extends AbstractSimpleMathFunctionTest {
     }
 
     @Override
-    public void testBerechneYOUTValue() {
+    public void testCalculateYOUTValue() {
         _calculator.setA1(0);
         _calculator.setR0(2);
         for(int i = 0; i < 10; i++) { // should behave like constant gain of R0 = 2;

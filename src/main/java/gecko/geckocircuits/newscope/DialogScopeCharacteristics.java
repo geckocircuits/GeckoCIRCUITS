@@ -34,7 +34,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
 
     private GridBagConstraints _gridBagConst = new GridBagConstraints();
     private final TechFormat _cf = new TechFormat();
-    private FormatJTextField _jTextFieldStatus;  // // Status display of the calculation
+    private FormatJTextField _jTextFieldStatus;  // Status display of the calculation
     private final JPanelDialogRange _panelDialRange;
     private final PanelCharacteristicsResult _characErgPanel;
     private PowerAnalysisPanel _powAnalPanel;

@@ -149,7 +149,7 @@ public class FormatJTextField extends JTextField {
             _lineSettable.getStroke().setStrokeStyle(g2d);
             g2d.setColor(_lineSettable.getColor().getJavaColor());
 
-            // // now draw the line:
+            // now draw the line:
             g2d.drawRect(OFFSET1, OFFSET1, getWidth() - OFFSET2, getHeight() - OFFSET2);
 
             AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, _lineSettable.getTransparency());

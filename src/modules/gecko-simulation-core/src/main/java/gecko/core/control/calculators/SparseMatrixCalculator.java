@@ -24,8 +24,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
     
     // Dedektion eines Pulsperioden-Beginns zur Berechnung --> 
-    private double fDRaltalt = 0, fDRalt = 0;
-    private boolean neuePulsperiodeBeginnt = true;
+    private double fDRPreviousOld = 0, fDRPrevious = 0;
+    private boolean newPulsePeriodBegins = true;
     private double tLokal = 0;  // Lokalzeit, wird bei Pulsperiodenbeginn auf Null gesetzt 
     // Globale Rechengroessen --> 
     private int seIN = -1, seOUT = -1;  // Sektorinfo des Matrix-Konverters
@@ -40,11 +40,11 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
-        fDRaltalt = 0;
-        fDRalt = 0;
+        fDRPreviousOld = 0;
+        fDRPrevious = 0;
         Tp = Tp0;
         tLokal = 0;
-        neuePulsperiodeBeginnt = true;
+        newPulsePeriodBegins = true;
     }
 
     @Override
@@ -53,20 +53,20 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         double uNmax = _inputSignal[4][0], uOUTmax = _inputSignal[5][0], fOUT = _inputSignal[6][0];  // Amplituden und Ausgangsfrequenz  
         double fDR = _inputSignal[0][0];  // Taktfrequenz fuer die Pulsperiode 
         double phi2 = _inputSignal[7][0];  // output-side angle for creating uaOUT*, ubOUT*, ucOUT* for PMSM-control; reliable alternative to fOUT 
-        if ((fDRaltalt < fDRalt) && (fDRalt > fDR)) {
-            neuePulsperiodeBeginnt = true;
+        if ((fDRPreviousOld < fDRPrevious) && (fDRPrevious > fDR)) {
+            newPulsePeriodBegins = true;
         }
-        fDRaltalt = fDRalt;
-        fDRalt = fDR;
+        fDRPreviousOld = fDRPrevious;
+        fDRPrevious = fDR;
         //-------------
-        if (neuePulsperiodeBeginnt) {
+        if (newPulsePeriodBegins) {
             if (tLokal != 0) {
                 Tp = tLokal;
             }
             tLokal = 0;
             sectorDetection(ur, us, ut, fOUT, phi2);  // Sektorindizes seIN, seOUT werden bestimmt 
             calculateSwitchingTimes(ur, us, ut, uNmax, uOUTmax, fOUT, phi2);  // Einschaltdauern dOUT=[d1..d5] und dIN=[da,db] werden berechnet 
-            neuePulsperiodeBeginnt = false;
+            newPulsePeriodBegins = false;
         }
         double switchingFrequency = safeDivide(1.0, Tp, safeDivide(1.0, Tp0, 0.0));
         setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], switchingFrequency);  // alle 9 Schaltsignale werden generiert 

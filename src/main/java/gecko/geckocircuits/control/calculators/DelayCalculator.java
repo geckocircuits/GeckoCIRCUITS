@@ -83,7 +83,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
             _outputSignal[0][0] = _youtVerzoegert[_zeigerYOUT];
             _youtVerzoegert[_zeigerYOUT] = _inputSignal[0][0];  // laufendes Nachfuellen des Speichers
             _zeigerYOUT++;
-            _zeigerYOUT %= _youtVerzoegert.length; // // Pointer runs 'in circles', this prevents the
+            _zeigerYOUT %= _youtVerzoegert.length; // Pointer runs 'in circles', this prevents the
             // Daten im Speicher bei jedem Zeitschritt geshiftet werden muessen
         }
     }

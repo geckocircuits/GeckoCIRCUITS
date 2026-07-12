@@ -60,7 +60,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
     private static final int IN_TERM_NUMBER_EXTERNAL = 5;
     private static final int IN_TERM_NUMBER_NORMAL = 0;
     private static final int BLOCK_WIDTH = 3;
-    final transient UserParameter<ControlSourceType> _typQuelle = UserParameter.Builder.
+    final transient UserParameter<ControlSourceType> _sourceType = UserParameter.Builder.
             <ControlSourceType>start("typQuelle", ControlSourceType.QUELLE_RECHTECK).
             longName(I18nKeys.TYPE_OF_SIGNAL_SOURCE).
             shortName("type").
@@ -83,7 +83,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
             build();
     private static final int OFFSET_PAR_INDEX = 3;
     final transient UserParameter<Double> _offsetDC = UserParameter.Builder.
-            <Double>start("anteilDC", 0.0).
+            <Double>start("dcOffset", 0.0).
             longName(I18nKeys.OFFSET_OF_WAVEFORM_FROM_ZERO).
             shortName("offset").
             arrayIndex(this, OFFSET_PAR_INDEX).
@@ -153,7 +153,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
 
     @Override
     protected String getCenteredDrawString() {
-        switch (_typQuelle.getValue()) {
+        switch (_sourceType.getValue()) {
             case QUELLE_DREIECK:
                 return "TRI";
             case QUELLE_IMPORT:
@@ -212,7 +212,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
 
     @Override
     public AbstractControlCalculatable getInternalControlCalculatableForSimulationStart() {
-        final AbstractSignalCalculator calculator = fabricSignalCalculator(_typQuelle.getValue());
+        final AbstractSignalCalculator calculator = fabricSignalCalculator(_sourceType.getValue());
         if (_useExternal.getValue()) {
             assert calculator instanceof AbstractSignalCalculatorPeriodic;
             return new SignalCalculatorExternalWrapper((AbstractSignalCalculatorPeriodic) calculator);
@@ -260,17 +260,17 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
             return;
         }
 
-        if (_typQuelle.getValue() == ControlSourceType.QUELLE_RANDOM) {
+        if (_sourceType.getValue() == ControlSourceType.QUELLE_RANDOM) {
             final String typus = "Random";
             _textInfo.addParameter(typus);
-        } else if (_typQuelle.getValue() == ControlSourceType.QUELLE_IMPORT) {
+        } else if (_sourceType.getValue() == ControlSourceType.QUELLE_IMPORT) {
             addImportParameters();
         } else {
             if (_displayDetails.getValue()) {
                 addDetailedTextInfo();
             } else {
                 final StringBuffer typus = new StringBuffer("I");
-                switch (_typQuelle.getValue()) {
+                switch (_sourceType.getValue()) {
                     case QUELLE_SIN:
                         typus.append("_sin");
                         break;
@@ -422,7 +422,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
 
     @Override
     protected Window openDialogWindow() {
-        switch (_typQuelle.getValue()) {
+        switch (_sourceType.getValue()) {
             case QUELLE_RANDOM:
                 return new ControlRandomDialog(this);
             case QUELLE_IMPORT:
@@ -435,11 +435,11 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
 
     private void addDetailedTextInfo() {
         String typus = null;
-        if (_typQuelle.getValue() == ControlSourceType.QUELLE_SIN) {
+        if (_sourceType.getValue() == ControlSourceType.QUELLE_SIN) {
             typus = "Sin.-Type";
-        } else if (_typQuelle.getValue() == ControlSourceType.QUELLE_RECHTECK) {
+        } else if (_sourceType.getValue() == ControlSourceType.QUELLE_RECHTECK) {
             typus = "Rect.-Type";
-        } else if (_typQuelle.getValue() == ControlSourceType.QUELLE_DREIECK) {
+        } else if (_sourceType.getValue() == ControlSourceType.QUELLE_DREIECK) {
             typus = "Tri.-Type";
         }
         _textInfo.addParameter(typus);
@@ -448,7 +448,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
         _textInfo.addParameter("offset= " + tcf.formatENG(_offsetDC.getValue(), DISP_DIGITS));
         final double degreesPhase = _phase.getValue();
         _textInfo.addParameter("phase= " + tcf.formatENG(Math.round(degreesPhase), DISP_DIGITS));
-        if (_typQuelle.getValue() != ControlSourceType.QUELLE_SIN) {
+        if (_sourceType.getValue() != ControlSourceType.QUELLE_SIN) {
             _textInfo.addParameter("duty= " + tcf.formatENG(_dutyRatio.getValue(), DISP_DIGITS));
         }
     }

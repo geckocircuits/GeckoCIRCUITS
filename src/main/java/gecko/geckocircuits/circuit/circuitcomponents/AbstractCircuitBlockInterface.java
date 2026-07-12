@@ -30,7 +30,7 @@ import java.util.List;
 public abstract class AbstractCircuitBlockInterface extends AbstractBlockInterface {
 
     static final TechFormat tcf = new TechFormat();
-    static final int ARROW_LENGTH = 11, ARROW_WIDTH = 3;  // // Symbol arrow for flow direction --> arrowhead dimension
+    static final int ARROW_LENGTH = 11, ARROW_WIDTH = 3;  // Symbol arrow for flow direction --> arrowhead dimension
 
     public double _currentInAmps;
     public double _voltage;

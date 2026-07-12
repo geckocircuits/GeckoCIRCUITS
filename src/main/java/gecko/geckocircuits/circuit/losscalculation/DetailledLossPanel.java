@@ -123,7 +123,7 @@ abstract class DetailledLossPanel<T extends LossCurve> extends JPanel {
             public void actionPerformed(final ActionEvent actionEvent) {
                 _testCurve = null;
                 if (_lossCurves.size() == 1) {
-                    return;  // // a maximum of one curve must always be there!
+                    return;  // a maximum of one curve must always be there!
                 }
                 deleteSelectedCurve();
             }

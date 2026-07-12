@@ -35,8 +35,8 @@ class ControlSignalSourceDialog extends AbstractDialogWithExternalOption<Control
     private final GridBagConstraints gbc = new GridBagConstraints();
     JPanel parameterPanel;
 
-    public ControlSignalSourceDialog(final ControlSignalSource reglerSignal) {
-        super(reglerSignal);
+    public ControlSignalSourceDialog(final ControlSignalSource controlSignal) {
+        super(controlSignal);
         gbc.fill = GridBagConstraints.BOTH;
         jComboShape.addItem(ControlSourceType.QUELLE_RECHTECK);
         jComboShape.addItem(ControlSourceType.QUELLE_SIN);
@@ -45,7 +45,7 @@ class ControlSignalSourceDialog extends AbstractDialogWithExternalOption<Control
 
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         jpM = new JPanel();
         jpM.setLayout(new BorderLayout());
 
@@ -67,7 +67,7 @@ class ControlSignalSourceDialog extends AbstractDialogWithExternalOption<Control
             }
         });
 
-        jComboShape.setSelectedItem(element._typQuelle.getValue());
+        jComboShape.setSelectedItem(element._sourceType.getValue());
 
 
         jCheckBoxShowDetails = new JCheckBox("Display Details");
@@ -114,7 +114,7 @@ class ControlSignalSourceDialog extends AbstractDialogWithExternalOption<Control
     protected void processInputs() {
         super.processInputs();
         element._displayDetails.setUserValue(displayDetails);
-        element._typQuelle.setUserValue((ControlSourceType) jComboShape.getSelectedItem());
+        element._sourceType.setUserValue((ControlSourceType) jComboShape.getSelectedItem());
     }
 
 

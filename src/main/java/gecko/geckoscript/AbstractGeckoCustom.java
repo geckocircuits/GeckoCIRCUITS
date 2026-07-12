@@ -1544,7 +1544,7 @@ public abstract class AbstractGeckoCustom implements GeckoRemoteInterface {
     @Override
     public final void rotate(final String elementName) {
         final AbstractBlockInterface parentElement = IDStringDialog.getComponentByName(elementName);
-        parentElement.rotiereSymbol();
+        parentElement.rotateSymbol();
         parentElement.absetzenElement();
     }
 

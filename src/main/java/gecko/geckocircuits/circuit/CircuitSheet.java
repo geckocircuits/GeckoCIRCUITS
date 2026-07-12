@@ -189,7 +189,7 @@ public class CircuitSheet extends JPanel {
             }
 
 
-            // // Pen symbol when drawing the connections:
+            // Pen symbol when drawing the connections:
             if (_se.wirePenVisible) {
                 g2d.setColor(Color.lightGray);
                 g2d.fillPolygon(_se.xStift, _se.yStift, 4);
@@ -202,7 +202,7 @@ public class CircuitSheet extends JPanel {
                 g2d.drawPolygon(_se.xStift, _se.yStift, 4);
             }
             //---------------------------
-            // // Marking rectangle for drag & drop:
+            // Marking rectangle for drag & drop:
             if (_se._mouseMoveMode == MouseMoveMode.SELECT_WINDOW) {
                 g2d.setColor(Color.orange);
                 if (_se.x1markRe < _se.x2markRe) {
@@ -368,7 +368,7 @@ public class CircuitSheet extends JPanel {
         return false;
     }
 
-    public void maus_connectorTest(final Point clickPoint) {
+    public void mouseConnectorTest(final Point clickPoint) {
         // damit man nicht (wie unten) beim 'return' vorzeitig aussteigt und eine Connection versehentlich
         // im Bearbeitungs-Modus laesst, die folgende kleine Schleife:
         _showNodesInternal.clear();

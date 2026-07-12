@@ -22,7 +22,7 @@ public class ViewMotorCalculatorTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         ViewMotorCalculator instance = new ViewMotorCalculator();
         try {
             instance.calculateYOUT(1e-8);

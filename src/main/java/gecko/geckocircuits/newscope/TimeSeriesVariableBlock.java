@@ -85,22 +85,16 @@ public final class TimeSeriesVariableBlock extends AbstractTimeSeries {
         }
         return dataBlock.findTimeIndex(time);
     }
-//
 //    public static void main(String args[]) {
-//
 //        final TimeSeriesVariableBlock tsb = new TimeSeriesVariableBlock();
-//
 //        int arraySize = 4000000;
 //        double scale = 1e-150;
 //        final Random rnd = new Random();
-//
 //        double startValue = 0.0;
 //        double dt = 1e-9;
 //        int reps = rnd.nextInt(1000) + 1;
-//
 //        System.out.println("----------------------------------------------------------------------");
 //        System.out.println("Setting values...");
-//
 //        double value = 0;
 //        int index = 0;
 //        int blockCount = 0;
@@ -113,24 +107,20 @@ public final class TimeSeriesVariableBlock extends AbstractTimeSeries {
 //            dt = 1.002 * dt;
 //            startValue = value + dt;
 //            reps = rnd.nextInt(1000) + 2;
-//
 //            blockCount++;
 //        }
-//
 //        System.out.println("There should be around " + blockCount + " DataBlocks");
 //        System.out.println("There are " + tsb.getNumBlocks() + " DataBlocks");
 //        System.out.println("----------------------------------------------------------------------");
-//
 //        int i1 = rnd.nextInt(arraySize - 1) + 1;
 //        int i2 = rnd.nextInt(arraySize - 1) + 1;
 //        int i3 = rnd.nextInt(arraySize - 1) + 1;
 //        System.out.println("Trying to get values at indices: " + i1 + ", " + i2 + ", " + i3 + ":");
-////        System.out.println("TIMESERIESVARIABLEARRAY:");
-////        System.out.println(tsa.getValue(i1) + ", " + tsa.getValue(i2) + ", " + tsa.getValue(i3));
+//        System.out.println("TIMESERIESVARIABLEARRAY:");
+//        System.out.println(tsa.getValue(i1) + ", " + tsa.getValue(i2) + ", " + tsa.getValue(i3));
 //        System.out.println("TIMESERIESVARIABLEBLOCK:");
 //        System.out.println(tsb.getValue(i1) + ", " + tsb.getValue(i2) + ", " + tsb.getValue(i3));
 //        System.out.println("----------------------------------------------------------------------");
-//
 //        double time = tsb.getValue(tsb.getMaximumIndex()) * rnd.nextDouble();
 //        System.out.println("Trying to find index of time value: " + time);
 //        int foundA = tsa.findTimeIndex(time, tsa.getMaximumIndex());
@@ -154,29 +144,24 @@ public final class TimeSeriesVariableBlock extends AbstractTimeSeries {
 //        System.out.println("Testing the speed...");
 //        reps = 10000;
 //        System.out.println("Trying to find indices for " + reps + " different time values: ");
-//
 //        System.out.println("TIMESERIESVARIABLEARRAY:");
 //        time = scale * tsa.getValue(tsa.getMaximumIndex()) * rnd.nextDouble();
-//
 //        long startTime = System.currentTimeMillis();
 //        for (int i = 0; i < reps; i++) {
 //            tsa.findTimeIndex(time, tsa.getMaximumIndex());
 //            time = scale * tsa.getValue(tsa.getMaximumIndex()) * rnd.nextDouble();
 //        }
 //        long endTime = System.currentTimeMillis();
-//
 //        System.out.println("Indices found in: " + (endTime - startTime) + " milliseconds");
 
 //        System.out.println("TIMESERIESVARIABLEBLOCK:");
 //        time = scale * tsb.getValue(tsb.getMaximumIndex()) * rnd.nextDouble();
-//
 //        long startTime = System.currentTimeMillis();
 //        for (int i = 0; i < reps; i++) {
 //            tsb.findTimeIndex(time, tsb.getMaximumIndex());
 //            time = scale * tsb.getValue(tsb.getMaximumIndex()) * rnd.nextDouble();
 //        }
 //        long endTime = System.currentTimeMillis();
-//
 //        System.out.println("Indices found in: " + (endTime - startTime) + " milliseconds");
 
 //    }

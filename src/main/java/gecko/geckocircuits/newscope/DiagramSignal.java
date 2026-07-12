@@ -51,7 +51,7 @@ final class DiagramSignal extends AbstractDiagram {
 
     @Override
     public int getHeight() {
-        int anzSGN = 0;  // // Number of SIGNAL curves per SIGNAL graph
+        int anzSGN = 0;  // Number of SIGNAL curves per SIGNAL graph
         for (AbstractCurve curve : getCurves()) {
             if (curve.getAxisConnection() == AxisConnection.ZUORDNUNG_SIGNAL) {
                 anzSGN++;

@@ -50,7 +50,7 @@ public final class SignalCalculatorTriangleTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         double maxValue = -Double.MAX_VALUE;
         double minValue = Double.MAX_VALUE;
 

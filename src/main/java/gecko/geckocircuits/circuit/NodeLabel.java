@@ -29,7 +29,7 @@ public class NodeLabel implements Serializable {
     //----------------------------------
     private String labelTxt;
     private int xTxt, yTxt;      // Pixel-Koord. vom Text
-    private int xAnker, yAnker;  // // ScematicEntry coord. from the anchor point, i.e. where the gray line is aimed
+    private int xAnker, yAnker;  // ScematicEntry coord. from the anchor point, i.e. where the gray line is aimed
     private int x1click, y1click, x2click, y2click;  // definiert Klickbereich in Pixel
     private boolean visible=false;
     //----------------------------------
@@ -54,7 +54,7 @@ public class NodeLabel implements Serializable {
     }
 
 
-    public void zeichne (Graphics g, Color f1, int dpix) {
+    public void draw (Graphics g, Color f1, int dpix) {
         if (!visible) { return; }
         //-----
         //g.setFont(font);

@@ -20,7 +20,7 @@ package gecko.geckocircuits.nativec;
  */
 class ControlJavaTriangles {
        public int _xKlickMinTerminal, _xKlickMaxTerminal, _yKlickMinTerminalADD, _yKlickMaxTerminalADD,
-            _yKlickMinTerminalSUB, _yKlickMaxTerminalSUB;  // // Click areas for red triangles --> change the number of terminals
+            _yKlickMinTerminalSUB, _yKlickMaxTerminalSUB;  // Click areas for red triangles --> change the number of terminals
 
     boolean isIncreaseClicked(final int mouseX, final int mouseY) {
         return _xKlickMinTerminal <= mouseX && mouseX <= _xKlickMaxTerminal

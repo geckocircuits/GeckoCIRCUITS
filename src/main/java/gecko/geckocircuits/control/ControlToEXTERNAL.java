@@ -135,7 +135,7 @@ public final class ControlToEXTERNAL extends RegelBlockSimulink implements Compa
                     try {
                         for (int i1 = 0; i1 < XIN.size(); i1++) {
                             dataVector[i1] = _inputSignal[i1][0];
-                            // // Program to be picked up
+                            // Program to be picked up
                             // Programm abgeholt werden
                         }
                     } catch (ArrayIndexOutOfBoundsException ex) {

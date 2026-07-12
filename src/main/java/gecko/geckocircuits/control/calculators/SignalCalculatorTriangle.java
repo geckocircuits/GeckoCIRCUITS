@@ -15,8 +15,8 @@ package gecko.geckocircuits.control.calculators;
 
 public final class SignalCalculatorTriangle extends AbstractSignalCalculatorPeriodic {
     public SignalCalculatorTriangle(final int noInputs, final double amplitudeAC, final double frequency,
-            final double phase, final double anteilDC, final double duty) {
-        super(noInputs, amplitudeAC, frequency, phase, anteilDC, duty);
+            final double phase, final double dcOffset, final double duty) {
+        super(noInputs, amplitudeAC, frequency, phase, dcOffset, duty);
     }
 
     /**
@@ -51,7 +51,7 @@ public final class SignalCalculatorTriangle extends AbstractSignalCalculatorPeri
 
     @Override
     public void calculateYOUT(final double deltaT) {
-        //signal= amplitudeAC*(2/Math.PI*Math.asin(Math.sin(2*Math.PI*frequenz*t -phase))) +anteilDC;
+        //signal= amplitudeAC*(2/Math.PI*Math.asin(Math.sin(2*Math.PI*frequenz*t -phase))) +dcOffset;
         _dyUP = _amplitudeAC * 2 * _frequency * deltaT / _dutyRatio;
         _dyDOWN = _amplitudeAC * 2 * _frequency * deltaT / (1 - _dutyRatio);
 
@@ -71,6 +71,6 @@ public final class SignalCalculatorTriangle extends AbstractSignalCalculatorPeri
                 _aufsteigend = true;
             }
         }
-        _outputSignal[0][0] = _triangle + _anteilDC;
+        _outputSignal[0][0] = _triangle + _dcOffset;
     }
 }

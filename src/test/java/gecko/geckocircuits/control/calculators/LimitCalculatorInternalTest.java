@@ -39,7 +39,7 @@ public class LimitCalculatorInternalTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _limitCalculator.setMinMaxValues(-20, 10);
 
         // test the upper limit

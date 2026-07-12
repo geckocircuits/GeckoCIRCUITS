@@ -22,9 +22,9 @@ public class UndoRedoManager {
     //------------------------------------------------------
     private int undoZustaendeMAX = 20;
     private byte[][] undoZustaende, redoZustaende;
-    private int zeigerAufUndoZustaende, zeigerAufRedoZustaende;
-    private boolean undoRingspeicherErstmalsUeberschritten;
-    private int undoAnzahl, redoAnzahl;  // soviele Undo- und Redo-Aktionen sind moeglich
+    private int pointerToUndoStates, zeigerAufRedoZustaende;
+    private boolean undoRingmemoryFirstExceeded;
+    private int undoNumber, redoAnzahl;  // soviele Undo- und Redo-Aktionen sind moeglich
     //------------------------------------------------------
 
     public UndoRedoManager() {
@@ -35,14 +35,14 @@ public class UndoRedoManager {
     public void init() {
         undoZustaende = new byte[undoZustaendeMAX][];
         redoZustaende = new byte[undoZustaendeMAX][];
-        zeigerAufUndoZustaende = 0;
+        pointerToUndoStates = 0;
         zeigerAufRedoZustaende = 0;
-        undoRingspeicherErstmalsUeberschritten = false;
-        undoAnzahl = 0;
+        undoRingmemoryFirstExceeded = false;
+        undoNumber = 0;
         redoAnzahl = 0;
     }
 
-    public void speichereAutomatischAktuellenZustandFuerUndoRedo(Object daten) {
+    public void speichereAutomatischAktuellenZustandFuerUndoRedo(Object data) {
         zeigerAufRedoZustaende = 0;  // dh. Redo nicht moeglich (Redo nur nach Undo moeglich)
         redoAnzahl = 0;
         //--------------
@@ -55,17 +55,17 @@ public class UndoRedoManager {
         try {
         ByteArrayOutputStream outByteArray= new ByteArrayOutputStream();
         ObjectOutputStream out= new ObjectOutputStream(new DeflaterOutputStream(outByteArray));
-        out.writeObject(daten);
+        out.writeObject(data);
         out.flush();
         out.close();
         byte[] zustand= outByteArray.toByteArray();
         //---------
-        if (undoAnzahl<undoZustaendeMAX-1) undoAnzahl++;
-        undoZustaende[zeigerAufUndoZustaende]= zustand;
-        zeigerAufUndoZustaende++;
-        if (zeigerAufUndoZustaende==undoZustaendeMAX) {
-        undoRingspeicherErstmalsUeberschritten= true;
-        zeigerAufUndoZustaende= 0;
+        if (undoNumber<undoZustaendeMAX-1) undoNumber++;
+        undoZustaende[pointerToUndoStates]= zustand;
+        pointerToUndoStates++;
+        if (pointerToUndoStates==undoZustaendeMAX) {
+        undoRingmemoryFirstExceeded= true;
+        pointerToUndoStates= 0;
         }
         //---------
         } catch (Exception e) {
@@ -74,74 +74,74 @@ public class UndoRedoManager {
         this.init();
         }
          */
-        //System.out.println("zeigerAufUndoZustaende= "+zeigerAufUndoZustaende+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
+        //System.out.println("pointerToUndoStates= "+pointerToUndoStates+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
         //--------------
     }
 
     public Object undo() {
-        undoAnzahl--;
-        zeigerAufUndoZustaende--;
-        int zeiger = zeigerAufUndoZustaende - 1;
-        if (undoRingspeicherErstmalsUeberschritten && (zeigerAufUndoZustaende == -1)) {
-            zeigerAufUndoZustaende = undoZustaendeMAX - 1;
-            zeiger = zeigerAufUndoZustaende - 1;
-        } else if (undoRingspeicherErstmalsUeberschritten && (zeigerAufUndoZustaende == 0)) {
+        undoNumber--;
+        pointerToUndoStates--;
+        int zeiger = pointerToUndoStates - 1;
+        if (undoRingmemoryFirstExceeded && (pointerToUndoStates == -1)) {
+            pointerToUndoStates = undoZustaendeMAX - 1;
+            zeiger = pointerToUndoStates - 1;
+        } else if (undoRingmemoryFirstExceeded && (pointerToUndoStates == 0)) {
             zeiger = undoZustaendeMAX - 1;
         }
         byte[] zustand = undoZustaende[zeiger];
-        Object daten = null;
+        Object data = null;
         //---------
         try {
             ByteArrayInputStream inByteArray = new ByteArrayInputStream(zustand);
             ObjectInputStream in = new ObjectInputStream(new InflaterInputStream(inByteArray));
-            daten = in.readObject();
+            data = in.readObject();
             in.close();
         } catch (Exception e) {
             System.out.println(e + "   e0oiv00'er");
         }
         //---------
-        //System.out.println("zeigerAufUndoZustaende= "+zeigerAufUndoZustaende+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
+        //System.out.println("pointerToUndoStates= "+pointerToUndoStates+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
         if (redoAnzahl < undoZustaendeMAX - 1) {
             redoAnzahl++;
         }
-        redoZustaende[zeigerAufRedoZustaende] = undoZustaende[zeigerAufUndoZustaende];
+        redoZustaende[zeigerAufRedoZustaende] = undoZustaende[pointerToUndoStates];
         zeigerAufRedoZustaende++;
         //---------
-        return daten;
+        return data;
     }
 
     public Object redo() {
         redoAnzahl--;
         zeigerAufRedoZustaende--;
         byte[] zustand = redoZustaende[zeigerAufRedoZustaende];
-        Object daten = null;
+        Object data = null;
         //---------
         try {
             ByteArrayInputStream inByteArray = new ByteArrayInputStream(zustand);
             ObjectInputStream in = new ObjectInputStream(new InflaterInputStream(inByteArray));
-            daten = in.readObject();
+            data = in.readObject();
             in.close();
         } catch (Exception e) {
             System.out.println(e + "   e0oiv00'er");
         }
         //---------
-        if (undoAnzahl < undoZustaendeMAX - 1) {
-            undoAnzahl++;
+        if (undoNumber < undoZustaendeMAX - 1) {
+            undoNumber++;
         }
-        undoZustaende[zeigerAufUndoZustaende] = redoZustaende[zeigerAufRedoZustaende];
-        zeigerAufUndoZustaende++;
-        if (zeigerAufUndoZustaende == undoZustaendeMAX) {
-            zeigerAufUndoZustaende = 0;
+        undoZustaende[pointerToUndoStates] = redoZustaende[zeigerAufRedoZustaende];
+        pointerToUndoStates++;
+        if (pointerToUndoStates == undoZustaendeMAX) {
+            pointerToUndoStates = 0;
         }
         //---------
-        return daten;
+        return data;
     }
 
     public boolean undoMoeglich() {
-        if ((!undoRingspeicherErstmalsUeberschritten) && (undoAnzahl <= 1)) {
+        if ((!undoRingmemoryFirstExceeded) && (undoNumber <= 1)) {
             return false;
         }
-        return undoAnzahl > 0;
+        return undoNumber > 0;
     }
 
     public boolean redoMoeglich() {

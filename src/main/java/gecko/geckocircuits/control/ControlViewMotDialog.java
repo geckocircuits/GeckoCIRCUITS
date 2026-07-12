@@ -33,7 +33,7 @@ class ControlViewMotDialog extends DialogElementCONTROL<ControlVIEWMOT> {
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         JPanel psw2 = new JPanel();
         psw2.setLayout(new BorderLayout());
         List<String> labelListeElementLK2 = new ArrayList<String>();

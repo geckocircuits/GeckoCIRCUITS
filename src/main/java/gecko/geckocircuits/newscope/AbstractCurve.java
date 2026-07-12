@@ -176,10 +176,8 @@ public abstract class AbstractCurve implements LineSettable, SymbolSettable {
 //                    _curveSettings._crvSymbShape.drawSymbol(g2d, _xPix[i2], _yPix[i2]);
 //                }
 //            }
-//
 //            final AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
 //            g2d.setComposite(alphaComposite);
-//
 //        }
 //    }
     public abstract CurveLabel getCurveLabel();

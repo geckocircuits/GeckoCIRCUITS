@@ -81,9 +81,9 @@ public final class DialogLossesDetail extends GeckoDialog {
         });
         // vorhandene Verlust-Details werden zum Editieren geladen
         _lossCalculation = lossCalculation;
-        // // existing loss details are loaded for editing
-        _switchingLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfSchaltverlusteMesskurvenArray());
-        _conductionLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfLeitverlusteMesskurvenArray());
+        // existing loss details are loaded for editing
+        _switchingLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfSwitchingLossMeasurementCurvesArray());
+        _conductionLossPanel._lossCurves.addAll(_lossCalculation.getCopyOfConductionLossMeasurementCurvesArray());
 
         if (_lossCalculation.lossFile != null) {
             this.setTitle(" " + _lossCalculation.lossFile.getName());
@@ -177,7 +177,7 @@ public final class DialogLossesDetail extends GeckoDialog {
         //NOTE - HERE I PASS "FALSE" BY DEFAULT ("FALSE" means losses are saved into .ipes file)
         //MODIFY GUI FOR DETAILED LOSSES TO GIVE USER A CHOICE
         //here pass 'false' for 'update' flag as this is a brand new file
-        _lossCalculation.schreibeDetailVerlusteAufDatei(fileName, _switchingLossPanel._lossCurves,
+        _lossCalculation.writeDetailedLossesToFile(fileName, _switchingLossPanel._lossCurves,
                 _conductionLossPanel._lossCurves, _storageType);
         //System.out.println("new loss file OK: " + OK);
         // (3) die neuen Daten uebernehmen:
@@ -186,7 +186,7 @@ public final class DialogLossesDetail extends GeckoDialog {
 
     private String getNewFileNameDialog() {
         final StringBuffer fileName = new StringBuffer();
-        // // (1) Losses are reset:
+        // (1) Losses are reset:
         Object[] options = {"External File", "Model-intern File"};
 
         int selected = JOptionPane.showOptionDialog(null,
@@ -210,7 +210,7 @@ public final class DialogLossesDetail extends GeckoDialog {
                 break;
             case 1:
                 _storageType = StorageType.INTERNAL;
-                // // Create array of data type Object, add options
+                // Create array of data type Object, add options
                 fileName.append(JOptionPane.showInputDialog(null, "Please select a file name identifier:",
                         "Choose file name",
                         JOptionPane.PLAIN_MESSAGE));

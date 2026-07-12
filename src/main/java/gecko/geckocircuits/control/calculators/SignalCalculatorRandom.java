@@ -14,7 +14,7 @@
 package gecko.geckocircuits.control.calculators;
 
 public final class SignalCalculatorRandom extends AbstractSignalCalculator {
-    private double _randomVal = 0;  // // Starting value for random walk
+    private double _randomVal = 0;  // Starting value for random walk
 
     public SignalCalculatorRandom() {
         super(0);

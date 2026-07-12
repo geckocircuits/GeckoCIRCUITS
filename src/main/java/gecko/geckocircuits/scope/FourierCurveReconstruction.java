@@ -30,23 +30,23 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class FourierCurveReconstruction extends GraferV3 implements MouseListener, MouseMotionListener {
 
     //----------------------------
-    float[] xNeu, yNeu, yRef;
+    float[] xNew, yNew, yRef;
     private int nMin;
     private double f1;
     private double[] _an, _bn;
     private int bi, hi, X0xi, X0yi, Y0xi, Y0yi;  // Hoehe, Breite, X-u-Y-Koord. des Achsenkreuzes (alles in Pix)
     //-----------------------
-    private int mausModus = GraferImplementation.MAUSMODUS_NIX;
+    private int mouseMode = GraferImplementation.MOUSEMODE_NONE;
     private int x1Zoom, y1Zoom, x2Zoom, y2Zoom;
     private boolean imDragModus = false;
     //----------------------------
     private int[] xGrfMIN, xGrfMAX, yGrfMIN, yGrfMAX;
     private int indexAngeklickterGraph = 0;
     //-----------------------
-    private boolean xSchieberAktiv = false;
-    private int xSchieberPix;
-    private double[] xSchieberWert = new double[]{-1, -1};  // einem einzelnen Pixelpunkt sind eventuell mehrere Werte zugeordnet
-    private double[] yRefWert = new double[]{-1, -1}, yNeuWert = new double[]{-1, -1};
+    private boolean xSliderActive = false;
+    private int xSliderPixels;
+    private double[] xSliderValue = new double[]{-1, -1};  // einem einzelnen Pixelpunkt sind eventuell mehrere Werte zugeordnet
+    private double[] yRefValue = new double[]{-1, -1}, yNewValue = new double[]{-1, -1};
     private TechFormat cf = new TechFormat();
     //-----------------------
 
@@ -104,8 +104,8 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
         }
         // ------------------------------------
 
-        xNeu = new float[NN];
-        yNeu = new float[NN];
+        xNew = new float[NN];
+        yNew = new float[NN];
         yRef = new float[NN];
         double timeSpan = rng2 - rng1;
         int j = startIndex;
@@ -113,30 +113,30 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
             while (worksheet.getTimeValue(j, 0) < rng1 + i * timeSpan / NN) {
                 j++;
             }
-            xNeu[i] = (float) worksheet.getTimeValue(j, 0);
+            xNew[i] = (float) worksheet.getTimeValue(j, 0);
             yRef[i] = (float) worksheet.getValue(dataIndex-1, j);
         }
 
         for(i = 0; i < an.length; i++) {
-            yNeu[2* i] = (float) an[i];
-            yNeu[2*i+1] = (float) bn[i];
+            yNew[2* i] = (float) an[i];
+            yNew[2*i+1] = (float) bn[i];
         }
 
-        Cispr16Fft.realft(yNeu, -1);
+        Cispr16Fft.realft(yNew, -1);
 
         //=======================================
-        DataContainer daten = new DataContainerSimple(3, xNeu.length);
+        DataContainer data = new DataContainerSimple(3, xNew.length);
 
-        for (int i1 = 0; i1 < xNeu.length; i1++) {
-            daten.setValue(xNeu[i1], 0, i1);
-            daten.setValue(yNeu[i1], 1, i1);
-            daten.setValue(yRef[i1], 2, i1);
+        for (int i1 = 0; i1 < xNew.length; i1++) {
+            data.setValue(xNew[i1], 0, i1);
+            data.setValue(yNew[i1], 1, i1);
+            data.setValue(yRef[i1], 2, i1);
         }
-        worksheetDaten = daten;
-        this.setzeKurveTransparenz(new double[]{0.5, 0.5});
+        worksheetData = data;
+        this.setCurveTransparency(new double[]{0.5, 0.5});
         //-----------------------
-        this.setzeAchsen();
-        this.setzeKurven();
+        this.setAxes();
+        this.setCurves();
 
     }
 
@@ -149,7 +149,7 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
         X0yi = hi + 30;
         Y0xi = X0xi;
         Y0yi = X0yi;
-        this.setzeAchsenBreiteHoeheX0Y0(new int[]{bi}, new int[]{hi}, new int[]{X0xi}, new int[]{X0yi}, new int[]{Y0xi}, new int[]{Y0yi});
+        this.setAxisWidthHeightX0Y0(new int[]{bi}, new int[]{hi}, new int[]{X0xi}, new int[]{X0yi}, new int[]{Y0xi}, new int[]{Y0yi});
         //---------------------------------------
         //=======================================
         xGrfMIN = new int[]{0};
@@ -159,21 +159,21 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
         //---------------------------------------
     }
 
-    public void setMausModus(int mausModus) {
-        this.mausModus = mausModus;
+    public void setMouseMode(int mouseMode) {
+        this.mouseMode = mouseMode;
         //---------
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX) {
-            xSchieberAktiv = false;
+        if (mouseMode == GraferImplementation.MOUSEMODE_NONE) {
+            xSliderActive = false;
             repaint();
-        } else if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+        } else if (mouseMode == GraferImplementation.MOUSEMODE_ZOOM_AUTOFIT) {
             //------------------------------------
             double ymin = 1e99, ymax = -1e99;
-            for (int i1 = 0; i1 < yNeu.length; i1++) {
-                if (yNeu[i1] > ymax) {
-                    ymax = yNeu[i1];
+            for (int i1 = 0; i1 < yNew.length; i1++) {
+                if (yNew[i1] > ymax) {
+                    ymax = yNew[i1];
                 }
-                if (yNeu[i1] < ymin) {
-                    ymin = yNeu[i1];
+                if (yNew[i1] < ymin) {
+                    ymin = yNew[i1];
                 }
                 if (yRef[i1] > ymax) {
                     ymax = yRef[i1];
@@ -183,21 +183,21 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
                 }
             }
             double[] empf = auto_Achsenbegrenzung_Wertempfehlung(ymin, ymax);
-            this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{empf[0]}, new double[]{empf[1]}, new boolean[]{true});
+            this.setzeAchsenBegrenzungen(new double[]{xNew[0]}, new double[]{xNew[xNew.length - 1]}, new boolean[]{true}, new double[]{empf[0]}, new double[]{empf[1]}, new boolean[]{true});
             this.setzeTickSpacing(new double[]{(0.2 / f1)}, new double[]{empf[4]});
             repaint();
-        } else if (mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) {
+        } else if (mouseMode == GraferImplementation.MOUSEMODE_VALUE_DISPLAY_SLIDER) {
             //------------------------------------
-            xSchieberAktiv = true;
-            xSchieberPix = X0xi;  // x-Schieber wird an den Anfang gesetzt
+            xSliderActive = true;
+            xSliderPixels = X0xi;  // x-Schieber wird an den Anfang gesetzt
         }
         //---------
     }
 
     //---------
     @Override
-    protected void zeichne(Graphics g) {
-        if ((mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) && imDragModus) {
+    protected void draw(Graphics g) {
+        if ((mouseMode == GraferImplementation.MOUSEMODE_ZOOM_WINDOW) && imDragModus) {
             g.setColor(GlobalColors.farbeZoomRechteck);
             int b = Math.abs(x2Zoom - x1Zoom), h = Math.abs(y2Zoom - y1Zoom);
             if ((x1Zoom > x2Zoom) && (y1Zoom > y2Zoom)) {
@@ -210,51 +210,51 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
                 g.drawRect(x1Zoom, y1Zoom, b, h);
             }
         }
-        if ((mausModus == GraferImplementation.MAUSMODUS_WERTANZEIGE_SCHIEBER) || xSchieberAktiv) {
+        if ((mouseMode == GraferImplementation.MOUSEMODE_VALUE_DISPLAY_SLIDER) || xSliderActive) {
             g.setColor(Color.red);
-            g.drawLine(xSchieberPix, X0yi, xSchieberPix, X0yi - hi);
+            g.drawLine(xSliderPixels, X0yi, xSliderPixels, X0yi - hi);
             int x0 = X0xi + bi - 15, y0 = X0yi - hi + 12, dy = 15;
             g.setColor(Color.white);
             g.fillRect(x0, y0 - 12, 25, 12 + 2 * dy);
             g.setColor(Color.black);
-            g.drawString("x = " + cf.formatT(xSchieberWert[0], TechFormat.FORMAT_AUTO), x0, y0);
+            g.drawString("x = " + cf.formatT(xSliderValue[0], TechFormat.FORMAT_AUTO), x0, y0);
             g.setColor(Color.darkGray);
-            g.drawString("y = " + cf.formatT(yRefWert[0], TechFormat.FORMAT_AUTO), x0, y0 + dy);
+            g.drawString("y = " + cf.formatT(yRefValue[0], TechFormat.FORMAT_AUTO), x0, y0 + dy);
             g.setColor(Color.blue);
-            g.drawString("y = " + cf.formatT(yNeuWert[0], TechFormat.FORMAT_AUTO), x0, y0 + 2 * dy);
+            g.drawString("y = " + cf.formatT(yNewValue[0], TechFormat.FORMAT_AUTO), x0, y0 + 2 * dy);
         }
     }
 
     @Override
-    public void setzeAchsen() {
+    public void setAxes() {
         //-------------------------------------
-        this.setzeAchsenAnzahl(1, 1);
-        this.setzeAchsenBreiteHoeheX0Y0(new int[]{bi}, new int[]{hi}, new int[]{X0xi}, new int[]{X0yi}, new int[]{Y0xi}, new int[]{Y0yi});
-        this.setzeAchsenFarbe(new Color[]{Color.black}, new Color[]{Color.black});
-        this.setzeAchsenTyp(new int[]{ACHSE_LIN}, new int[]{ACHSE_LIN});
-        this.setzeAchsenLinienStil(new int[]{SOLID_PLAIN}, new int[]{SOLID_PLAIN});
-        this.setzeAchsenBeschriftungen(new String[]{""}, new String[]{""});  // braucht es, damit kein NullPointer-Error
+        this.setAxesCount(1, 1);
+        this.setAxisWidthHeightX0Y0(new int[]{bi}, new int[]{hi}, new int[]{X0xi}, new int[]{X0yi}, new int[]{Y0xi}, new int[]{Y0yi});
+        this.setAxisColor(new Color[]{Color.black}, new Color[]{Color.black});
+        this.setAxesType(new int[]{ACHSE_LIN}, new int[]{ACHSE_LIN});
+        this.setAxesLineStyle(new int[]{SOLID_PLAIN}, new int[]{SOLID_PLAIN});
+        this.setAxesLabels(new String[]{""}, new String[]{""});  // braucht es, damit kein NullPointer-Error
         this.definiereGridNormalX(new int[]{0}, new int[]{0});
         this.definiereGridNormalY(new int[]{0}, new int[]{0});
-        this.setzeGridLinienStil(new int[]{DOTTED_PLAIN}, new int[]{DOTTED_PLAIN}, new int[]{INVISIBLE}, new int[]{INVISIBLE});
+        this.setGridLineStyle(new int[]{DOTTED_PLAIN}, new int[]{DOTTED_PLAIN}, new int[]{INVISIBLE}, new int[]{INVISIBLE});
         this.showGridLines(new int[][]{{0, 0}}, new int[][]{{0, 0}}, new int[][]{{0, 0}}, new int[][]{{0, 0}});
-        this.setzeGridFarben(new Color[]{Color.lightGray}, new Color[]{Color.lightGray}, new Color[]{Color.lightGray}, new Color[]{Color.lightGray});
-        this.setzeTickAnzMinor(new int[]{2}, new int[]{2});
-        this.setzeTickLaenge(new int[]{4}, new int[]{4}, new int[]{0}, new int[]{0});
+        this.setGridColors(new Color[]{Color.lightGray}, new Color[]{Color.lightGray}, new Color[]{Color.lightGray}, new Color[]{Color.lightGray});
+        this.setTickCountMinor(new int[]{2}, new int[]{2});
+        this.setTickLength(new int[]{4}, new int[]{4}, new int[]{0}, new int[]{0});
         this.setzeTickAusrichtung(new boolean[]{true}, new boolean[]{true});
-        this.setzeTickLabelAnzeige(new boolean[]{true}, new boolean[]{true}, new boolean[]{false}, new boolean[]{false});
+        this.setTickLabelVisible(new boolean[]{true}, new boolean[]{true}, new boolean[]{false}, new boolean[]{false});
         this.setzeTickLabelPosition(new int[]{20}, new int[]{16});
         this.setzeTickLabelFont(new Font[]{new Font("Arial", Font.PLAIN, 12)}, new Font[]{new Font("Arial", Font.PLAIN, 12)});
         //=========================================
 //        this.setzeAchsenBegrenzungen(new double[]{0.02}, new double[]{0.06}, new boolean[]{true}, new double[]{-4}, new double[]{4}, new boolean[]{true});
 //        this.setzeTickSpacing(new double[]{0.01}, new double[]{2});
         double ymin = 1e99, ymax = -1e99;
-        for (int i1 = 0; i1 < yNeu.length; i1++) {
-            if (yNeu[i1] > ymax) {
-                ymax = yNeu[i1];
+        for (int i1 = 0; i1 < yNew.length; i1++) {
+            if (yNew[i1] > ymax) {
+                ymax = yNew[i1];
             }
-            if (yNeu[i1] < ymin) {
-                ymin = yNeu[i1];
+            if (yNew[i1] < ymin) {
+                ymin = yNew[i1];
             }
             if (yRef[i1] > ymax) {
                 ymax = yRef[i1];
@@ -268,26 +268,26 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
             empf[4] *= 0.5;
         }
         //
-        this.setzeAchsenBegrenzungen(new double[]{xNeu[0]}, new double[]{xNeu[xNeu.length - 1]}, new boolean[]{true}, new double[]{empf[0]}, new double[]{empf[1]}, new boolean[]{true});
+        this.setzeAchsenBegrenzungen(new double[]{xNew[0]}, new double[]{xNew[xNew.length - 1]}, new boolean[]{true}, new double[]{empf[0]}, new double[]{empf[1]}, new boolean[]{true});
         this.setzeTickSpacing(new double[]{(0.2 / f1)}, new double[]{empf[4]});
         //-------------------------------------
     }
 
     @Override
-    protected void setzeKurven() {
+    protected void setCurves() {
         //=========================================
         // anhand der Worksheet-Daten zu setzen -->
         //-------------------------------------
-        this.setzeKurvenAnzahl(2);
-        this.setzeZugehoerigkeitKurveAchsen(new int[]{0, 0}, new int[]{0, 0});
-        this.setzeKurveIndexWorksheetKolonnenXY(new int[][]{{0, 1}, {0, 2}});
-        this.setzeKurvePunktSymbolAnzeigen(
+        this.setCurvesCount(2);
+        this.setCurveAxesAssignment(new int[]{0, 0}, new int[]{0, 0});
+        this.setCurveIndexWorksheetColumnsXY(new int[][]{{0, 1}, {0, 2}});
+        this.setCurvePointSymbolVisible(
                 new boolean[]{false, false}, new int[]{20, 20}, new int[]{SYBM_CIRCLE, SYBM_RECT_FILLED}, new Color[]{Color.black, Color.gray});
-        this.setzeKurveClipping(
-                new double[]{xNeu[0], xNeu[0]}, new double[]{xNeu[xNeu.length - 1], xNeu[xNeu.length - 1]}, new double[]{0, 0}, new double[]{1, 1},
+        this.setCurveClipping(
+                new double[]{xNew[0], xNew[0]}, new double[]{xNew[xNew.length - 1], xNew[xNew.length - 1]}, new double[]{0, 0}, new double[]{1, 1},
                 new int[]{CLIP_NO, CLIP_NO}, new int[]{CLIP_NO, CLIP_NO}, new int[]{CLIP_NO, CLIP_NO}, new int[]{CLIP_NO, CLIP_NO});
-        this.setzeKurveLinienstil(new int[]{SOLID_PLAIN, SOLID_PLAIN});
-        this.setzeKurveFarbe(new Color[]{Color.blue, Color.darkGray});
+        this.setCurveLineStyle(new int[]{SOLID_PLAIN, SOLID_PLAIN});
+        this.setCurveColor(new Color[]{Color.blue, Color.darkGray});
         //-------------------------------------
     }
 
@@ -304,7 +304,7 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
 
     @Override
     public void mousePressed(MouseEvent me) {
-        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mouseMode == GraferImplementation.MOUSEMODE_ZOOM_WINDOW) {
             x1Zoom = me.getX();
             y1Zoom = me.getY();
             imDragModus = true;
@@ -314,7 +314,7 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
     @Override
     public void mouseReleased(MouseEvent me) {
         //-------------------
-        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mouseMode == GraferImplementation.MOUSEMODE_ZOOM_WINDOW) {
             //--------------------------------------
             imDragModus = false;
             x2Zoom = me.getX();
@@ -340,7 +340,6 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
             while (empfY[4] > 0.5 * (xy2[1] - xy1[1])) {
                 empfY[4] *= 0.5;
             }
-            //
             // Achsen entsprechend neu setzen -->
             this.setzeAchsenBegrenzungen(
                     new double[]{empfX[0]}, new double[]{empfX[1]}, new boolean[]{true},
@@ -363,31 +362,31 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
 
     @Override
     public void mouseDragged(MouseEvent me) {
-        if (mausModus == GraferImplementation.MAUSMODUS_NIX
-                || mausModus == GraferImplementation.MAUSMODUS_ZOOM_AUTOFIT) {
+        if (mouseMode == GraferImplementation.MOUSEMODE_NONE
+                || mouseMode == GraferImplementation.MOUSEMODE_ZOOM_AUTOFIT) {
             return;
         }
-        if (mausModus == GraferImplementation.MAUSMODUS_ZOOM_FENSTER) {
+        if (mouseMode == GraferImplementation.MOUSEMODE_ZOOM_WINDOW) {
             if (!imDragModus) {
                 return;
             }
             x2Zoom = me.getX();
             y2Zoom = me.getY();
             repaint();
-        } else if (xSchieberAktiv) {
-            xSchieberPix = me.getX();
-            if (xSchieberPix < X0xi) {
-                xSchieberPix = X0xi;
+        } else if (xSliderActive) {
+            xSliderPixels = me.getX();
+            if (xSliderPixels < X0xi) {
+                xSliderPixels = X0xi;
             }
-            if (xSchieberPix > X0xi + bi) {
-                xSchieberPix = X0xi + bi;
+            if (xSliderPixels > X0xi + bi) {
+                xSliderPixels = X0xi + bi;
             }
-            xSchieberWert[0] = getValueFromPixel(xSchieberPix, 0)[0];
+            xSliderValue[0] = getValueFromPixel(xSliderPixels, 0)[0];
             // Reset the axes accordingly
-            for (int i1 = 1; i1 < xNeu.length; i1++) {
-                if ((xNeu[i1 - 1] <= xSchieberWert[0]) && (xSchieberWert[0] <= xNeu[i1])) {
-                    yNeuWert[0] = yNeu[i1];
-                    yRefWert[0] = yRef[i1];
+            for (int i1 = 1; i1 < xNew.length; i1++) {
+                if ((xNew[i1 - 1] <= xSliderValue[0]) && (xSliderValue[0] <= xNew[i1])) {
+                    yNewValue[0] = yNew[i1];
+                    yRefValue[0] = yRef[i1];
                     break;
                 }
             }
@@ -405,23 +404,23 @@ public class FourierCurveReconstruction extends GraferV3 implements MouseListene
         double sfX_ = -1, sfY_ = -1;
         int xAchseTyp_ = -1, yAchseTyp_ = -1;
         int indexDiagrammYachse = -1;
-        for (int xAxisIndex : indexZurKurveGehoerigeXachse) {
-            if ((_xAchseX[xAxisIndex] >= xGrfMIN[indexAngeklickterGraph])
-                    && (_xAchseX[xAxisIndex] <= xGrfMAX[indexAngeklickterGraph])) {
-                achseXmin_ = achseXmin[xAxisIndex];
-                xAchseX_ = _xAchseX[xAxisIndex];
+        for (int xAxisIndex : indexCurveAssociatedXAxis) {
+            if ((_xAxisX[xAxisIndex] >= xGrfMIN[indexAngeklickterGraph])
+                    && (_xAxisX[xAxisIndex] <= xGrfMAX[indexAngeklickterGraph])) {
+                achseXmin_ = axisXmin[xAxisIndex];
+                xAchseX_ = _xAxisX[xAxisIndex];
                 sfX_ = sfX[xAxisIndex];
-                xAchseTyp_ = xAchseTyp[xAxisIndex];
+                xAchseTyp_ = xAxisType[xAxisIndex];
                 break;
             }
         }
-        for (int yAxisIndex : indexZurKurveGehoerigeYachse) {
-            if ((_yAchseY[yAxisIndex] >= yGrfMIN[indexAngeklickterGraph])
-                    && (_yAchseY[yAxisIndex] <= yGrfMAX[indexAngeklickterGraph])) {
-                achseYmin_ = achseYmin[yAxisIndex];
-                yAchseY_ = _yAchseY[yAxisIndex];
+        for (int yAxisIndex : indexCurveAssociatedYAxis) {
+            if ((_yAxisY[yAxisIndex] >= yGrfMIN[indexAngeklickterGraph])
+                    && (_yAxisY[yAxisIndex] <= yGrfMAX[indexAngeklickterGraph])) {
+                achseYmin_ = axisYmin[yAxisIndex];
+                yAchseY_ = _yAxisY[yAxisIndex];
                 sfY_ = sfY[yAxisIndex];
-                yAchseTyp_ = yAchseTyp[yAxisIndex];
+                yAchseTyp_ = yAxisType[yAxisIndex];
                 indexDiagrammYachse = yAxisIndex;
                 break;
             }

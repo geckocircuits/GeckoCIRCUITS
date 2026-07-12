@@ -45,7 +45,7 @@ public final class SignalCalculatorRectangleTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         double maxValue = -Double.MAX_VALUE;
         double minValue = Double.MAX_VALUE;
 

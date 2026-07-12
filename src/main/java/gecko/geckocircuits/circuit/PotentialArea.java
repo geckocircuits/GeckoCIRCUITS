@@ -31,7 +31,7 @@ public final class PotentialArea {
 
     private final Set<Point> _pointsSchematic = new LinkedHashSet<Point>();
     private final Set<Point> _nodeTerminals = new LinkedHashSet<Point>();
-    private String _potentialLabel = "";  // // the label associated with this potential
+    private String _potentialLabel = "";  // the label associated with this potential
     private final Set<Connection> _potentialConnections = new LinkedHashSet<Connection>();
     private final Set<ElementNodes> _elementNodeTerminals = new LinkedHashSet<ElementNodes>();
     public final Set<SubCircuitTerminable> _potentialTerminals = new LinkedHashSet<SubCircuitTerminable>();
@@ -191,14 +191,14 @@ public final class PotentialArea {
 
         for (Point point : _pointsSchematic) {
             if (pot2._nodeTerminals.contains(point)) {
-                doVerbindungChangeType(this, pot2);
+                doConnectionChangeType(this, pot2);
                 return true;
             }
         }
 
         for (Point point2 : pot2._pointsSchematic) {
             if (_nodeTerminals.contains(point2)) {
-                doVerbindungChangeType(this, pot2);
+                doConnectionChangeType(this, pot2);
                 return true;
             }
         }
@@ -222,7 +222,7 @@ public final class PotentialArea {
             pot2._isShortConnector = true;
         }
 
-        doVerbindungChangeType(pot1, pot2);
+        doConnectionChangeType(pot1, pot2);
 
         final String label1 = pot1.getLabel().trim();
         final String label2 = pot2.getLabel().trim();
@@ -345,7 +345,7 @@ public final class PotentialArea {
     }
 
     // verschiedene Potentiale sind (eventuell) gerade miteinander verbunden worden -->
-    // // Labels on connections are set:
+    // Labels on connections are set:
     public void aktualisiereLabel(final List<Connection> connector, final Collection<AbstractBlockInterface> element) {
         // zuerst schaun wir, ob es Labels auf Element-Knoten des Potentials gibt:
 
@@ -511,7 +511,7 @@ public final class PotentialArea {
         return true;
     }
 
-    private void doVerbindungChangeType(PotentialArea pot1, PotentialArea pot2) {
+    private void doConnectionChangeType(PotentialArea pot1, PotentialArea pot2) {
         if (pot1._potentialTyp == pot2._potentialTyp) {
             return;
         }
@@ -539,7 +539,7 @@ public final class PotentialArea {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    public void addTermConnector(TerminalConnection terminalVerbindung) {
+    public void addTermConnector(TerminalConnection terminalConnection) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 

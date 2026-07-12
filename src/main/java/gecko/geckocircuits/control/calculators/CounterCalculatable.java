@@ -29,7 +29,7 @@ public final class CounterCalculatable extends AbstractTwoInputsOneOutputCalcula
         }
         if (_inputSignal[1][0] > SIGNAL_THRESHOLD) {
             _outputSignal[0][0] = 0;  // Logik-Schwelle --> 0.5;  RESET bei Input '1' (somit braucht man
-            // // do not assign a const=1 block to the connection so that the counter runs)
+            // do not assign a const=1 block to the connection so that the counter runs)
         }
         _lastValue = _inputSignal[0][0];
 

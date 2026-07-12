@@ -18,8 +18,8 @@ public final class SignalCalculatorRectangle extends AbstractSignalCalculatorPer
     private static final double FOUR = 4;
 
     public SignalCalculatorRectangle(final int noInputs, final double amplitudeAC,
-            final double frequency, final double phase, final double anteilDC, final double duty) {
-        super(noInputs, amplitudeAC, frequency, phase, anteilDC, duty);
+            final double frequency, final double phase, final double dcOffset, final double duty) {
+        super(noInputs, amplitudeAC, frequency, phase, dcOffset, duty);
     }
 
     @Override
@@ -41,9 +41,9 @@ public final class SignalCalculatorRectangle extends AbstractSignalCalculatorPer
             _aufsteigend = true;
         }
         if (_triangle > 1 - 2 * _dutyRatio) {
-            _outputSignal[0][0] = _amplitudeAC + _anteilDC;
+            _outputSignal[0][0] = _amplitudeAC + _dcOffset;
         } else {
-            _outputSignal[0][0] = _anteilDC;
+            _outputSignal[0][0] = _dcOffset;
         }
     }
 

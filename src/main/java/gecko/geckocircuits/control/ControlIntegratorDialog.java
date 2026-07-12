@@ -25,12 +25,12 @@ import javax.swing.JPanel;
 
 class ControlIntegratorDialog extends DialogElementCONTROL<ControlIntegrator> {
 
-    public ControlIntegratorDialog(final ControlIntegrator reglerIntegrator) {
-        super(reglerIntegrator);
+    public ControlIntegratorDialog(final ControlIntegrator controlIntegrator) {
+        super(controlIntegrator);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         JComponent compIm2 = getImageComponent();
         JPanel pIm2 = new JPanel();
         pIm2.setLayout(new BorderLayout());
@@ -39,7 +39,6 @@ class ControlIntegratorDialog extends DialogElementCONTROL<ControlIntegrator> {
         //
         JPanel pINT = createParameterPanel(element._a1Val, element._y0Val, element._minLimit, element._maxLimit);
         jpM.add(pINT, BorderLayout.CENTER);
-        //
         // Erklaerender Text:
         JLabel txtINT1 = new JLabel("z == 1    >>   Reset");
         txtINT1.setFont(GlobalFonts.LAB_FONT_DIALOG_1);

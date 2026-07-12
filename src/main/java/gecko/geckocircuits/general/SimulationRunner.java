@@ -69,7 +69,7 @@ public final class SimulationRunner {
 				getAnfangsbedVomDialogfenster, nlContainer, false);
 		simKern.setScopeMenuesStartStop();
 		solverSettings._dt_ALT = dtLoc;
-		simKern.initialisiereCONTROLatSimulationStart(dtLoc);  // // not done when 'Continue' is enabled
+		simKern.initialisiereCONTROLatSimulationStart(dtLoc);  // not done when 'Continue' is enabled
 
 		RunThreadRun _runThread = new RunThreadRun();
 
@@ -87,7 +87,7 @@ public final class SimulationRunner {
 		boolean getAnfangsbedVomDialogfenster = false;
 		_mainwindow.setMenuDuringSimulation(true, false);
 
-		double tAktuell = simKern.getZeitAktuell();
+		double tAktuell = simKern.getCurrentTime();
 		double tSTART = simKern.getTSTART();
 		double tEND = simKern.getTEND();
 
@@ -245,7 +245,7 @@ public final class SimulationRunner {
 			_mainwindow.pauseSimulation();
 			simKern._simulationStatus = SimulationStatus.FINISHED;
 			simKern.tearDownOnPause();
-			_mainwindow.jtfStatus.setzeStatusRechenzeit(q2 - q1);
+			_mainwindow.jtfStatus.setComputeTimeStatus(q2 - q1);
 			waitForDataSavers();
 			SwingUtilities.invokeLater(() -> _mainwindow.setMenuDuringSimulation(false, true));
 		}

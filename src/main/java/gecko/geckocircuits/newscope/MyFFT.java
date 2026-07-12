@@ -152,27 +152,24 @@ public final class MyFFT {
 //       re[i] = im[i] = 0;
         //beforeAfter(fft, re, im);
 
-//     // Nyquist
+// Nyquist
 //     for(int i=0; i<N; i++) {
 //       re[i] = Math.pow(-1, i);
 //       im[i] = 0;
 //     }
 //     beforeAfter(fft, re, im);
-//
 //     // Single sin
         for (int i = 0; i < N; i++) {
             re[i] = 1 + Math.cos(2 * Math.PI * i / N);
             im[i] = 0;
         }
         beforeAfter(fft, re, im);
-//
 //     // Ramp
 //     for(int i=0; i<N; i++) {
 //       re[i] = i;
 //       im[i] = 0;
 //     }
 //     beforeAfter(fft, re, im);
-//
 //     long time = System.currentTimeMillis();
 //     double iter = 30000;
 //     for(int i=0; i<iter; i++)

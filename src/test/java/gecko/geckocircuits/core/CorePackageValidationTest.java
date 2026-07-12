@@ -210,7 +210,7 @@ class CorePackageValidationTest {
         //   LossCalculatable, LossCalculationSplittable, LossFileAccessor,
         //   SwitchingLossCalculator, ConductionLossCalculator, LossComponent,
         //   LossCalculationDetail, LossContainer
-        // Phase 2B (4 classes): LossCurve, SwitchingLossCurve, LeitverlusteMesskurve,
+        // Phase 2B (4 classes): LossCurve, SwitchingLossCurve, ConductionLossMeasurementCurve,
         //   DetailedLossLookupTable
         assertPackageFileCount("circuit/losscalculation", 10, 14);  // 12 ± 2
     }

@@ -35,11 +35,11 @@ public final class ThermAmbient extends AbstractCircuitBlockInterface {
     private static final double LINE_LENTH = 0.7;
     private static final int RECT_WIDTH = 3;
 
-    // // the TEMP and FLOW elements generated 'behind' a MODULE (or PvCHIP) are placed
+    // the TEMP and FLOW elements generated 'behind' a MODULE (or PvCHIP) are placed
     // SchematicEntry aus unerreichbaren Punkt auf einen Bezugpunkt (Potential 'Null') gelegt -->
     public static final Point THERMAL_ZERO = new Point(-4711, -4711);
-    // // the TEMP and FLOW elements generated 'behind' a MODULE (or PvCHIP) are placed
-    // // from an unreachable point in SchematicEntry to a reference point (Potential 'Zero') -->
+    // the TEMP and FLOW elements generated 'behind' a MODULE (or PvCHIP) are placed
+    // from an unreachable point in SchematicEntry to a reference point (Potential 'Zero') -->
     public static final double T_ZERO = 0;
 
     final UserParameter<Double> _ambientTemp = UserParameter.Builder.

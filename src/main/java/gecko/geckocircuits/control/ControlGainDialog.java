@@ -22,12 +22,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 class ControlGainDialog extends DialogElementCONTROL<ControlGain> {
-    public ControlGainDialog(ControlGain reglerGain) {
-        super(reglerGain);
+    public ControlGainDialog(ControlGain controlGain) {
+        super(controlGain);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         final int bG = 80,
                 hG = 32,
                 abstandG = 15;

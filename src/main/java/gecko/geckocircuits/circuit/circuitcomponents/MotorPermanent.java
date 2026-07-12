@@ -60,7 +60,7 @@ public final class MotorPermanent extends AbstractMotorDC {
 
     @Override
     void calculateEMK() {
-        _emk = _fluxLinkage * _omegaElectric;  // // internal tension of the machine
+        _emk = _fluxLinkage * _omegaElectric;  // internal tension of the machine
     }
 
     @Override

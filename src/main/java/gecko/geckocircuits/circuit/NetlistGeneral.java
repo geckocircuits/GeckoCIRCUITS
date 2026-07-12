@@ -33,7 +33,7 @@ public final class NetlistGeneral {
         return Collections.unmodifiableList(_allElements);
     }
 
-    // // Result (used to create the netlist, i.e. linking the elements via the potentials):
+    // Result (used to create the netlist, i.e. linking the elements via the potentials):
     public PotentialArea[] getPotentiale() {
         return _potentialAreas.toArray(new PotentialArea[0]);
     }
@@ -138,10 +138,9 @@ public final class NetlistGeneral {
     // Verbindungen und Element-Knoten werden in PotentialGebieten zusammengefasst --> pot[]
     private void createPotentialSheetConnectedGeometric() {
         //-----------------------------------
-        // // Connections and element nodes are combined in potential areas --> pot[]
+        // Connections and element nodes are combined in potential areas --> pot[]
         // gleichlautenden Labels behaftete Knoten in sogenannte "Potentiale"
         // (--> PotentialGebiet) zusammengefasst :
-        //
         // zuerst: pro Connection ein Potentialgebiet:
 
         for (Connection verb : _connections) {
@@ -164,7 +163,7 @@ public final class NetlistGeneral {
 
     // die PotentialGebiete werden nun auch ueber gleichlautende Labels verknuepft, wo keine
     // direkte (optische) Connection am Bildschirm besteht --> potUeberLabelsVerbunden[]
-    // // the potential areas are now also linked via identical labels where there are none
+    // the potential areas are now also linked via identical labels where there are none
     private void mergePotentialAreasViaLabels() {
 
         boolean continueLoop = true;

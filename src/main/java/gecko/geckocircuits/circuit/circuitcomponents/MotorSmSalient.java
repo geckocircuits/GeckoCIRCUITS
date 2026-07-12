@@ -65,7 +65,7 @@ public final class MotorSmSalient extends AbstractMotorSM {
         double ubc = -_controlledAnchorSourceC.parameter[7];
         double uf = _controlledSource3.parameter[7];
 
-        // // Calculation of the machine diff. equation:
+        // Calculation of the machine diff. equation:
         // Block 'vdq':
         double ud = calculate_ud(uab, ubc);
         double uq = calculate_uq(uab, ubc);

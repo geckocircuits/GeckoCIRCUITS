@@ -29,7 +29,7 @@ public class HysteresisCalculatorInternalTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         hysCalc._inputSignal[0][0] = -2.0;
         hysCalc.calculateYOUT(1e-8);
         assertEquals(-1, hysCalc._outputSignal[0][0], 1e-9);

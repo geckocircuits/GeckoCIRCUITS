@@ -36,7 +36,7 @@ public final class JPanelDialogRange extends JPanel {
     private final FormatJTextField _rngSc1, _rngSc2, _rngDf1, _rngDf2, _rngSl1, _rngSl2;  // Angaben Zeitbereiche
     private final double _xScope1, _xScope2;
     private double _xSlider1, _xSlider2;  // vom Slider-Paar definierter Rechenbereich
-    private double _xDef1, _xDef2;  // // manually defined calculation area
+    private double _xDef1, _xDef2;  // manually defined calculation area
     private static final int MAX_FRACT_DIGITS = 9;
     private static final int NUM_COLS = 9;
     private static final int GRID_ROWS = 6;
@@ -114,7 +114,7 @@ public final class JPanelDialogRange extends JPanel {
 
         _xScope2 = xScope2value;
 
-        // // the other two settings are initially set in the same way:
+        // the other two settings are initially set in the same way:
         _xDef1 = _xScope1;
         _xDef2 = _xScope2;
         _xSlider1 = _xScope1;

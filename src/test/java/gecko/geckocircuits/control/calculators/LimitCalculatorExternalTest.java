@@ -42,7 +42,7 @@ public class LimitCalculatorExternalTest {
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         // test a signal within the limits:
         limitExternal._inputSignal[0][0] = 10;
         limitExternal._inputSignal[1][0] = -20; // minimum

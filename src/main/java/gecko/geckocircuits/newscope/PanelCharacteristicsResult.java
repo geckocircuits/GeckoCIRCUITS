@@ -33,10 +33,10 @@ import javax.swing.border.TitledBorder;
 public final class PanelCharacteristicsResult extends JPanel {
     private final JPanel _pERGx = new JPanel();
 
-    private final FormatJTextField[] _ftfAVG;  // // Text fields for AVG values
-    private final FormatJTextField[] _ftfRMS;  // // Text fields for RMS values
-    private final FormatJTextField[] _ftfMIN, _ftfMAX;  // // Text fields for minimum and maximum values
-    // // Text fields for further characteristic values:
+    private final FormatJTextField[] _ftfAVG;  // Text fields for AVG values
+    private final FormatJTextField[] _ftfRMS;  // Text fields for RMS values
+    private final FormatJTextField[] _ftfMIN, _ftfMAX;  // Text fields for minimum and maximum values
+    // Text fields for further characteristic values:
     private final FormatJTextField[] _ftfCREST;
     private final FormatJTextField[] _ftfSHAPE;
     private final FormatJTextField[] _ftfTHD;

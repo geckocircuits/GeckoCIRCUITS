@@ -68,7 +68,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
 
     public void updateTextFields() {
         formatJTextFieldTickSpace.setNumberToField(_axis._tickSpacing);
-        formatJTextFieldNumTicks.setNumberToField(_axis._axisTickSettings.getAnzTicksMinor());
+        formatJTextFieldNumTicks.setNumberToField(_axis._axisTickSettings.getNumTicksMinor());
 
         formatJTextFieldTickLenghtMaj.setNumberToField(_axis._axisTickSettings.getTickLengthMaj());
         formatJTextFieldTickLengthMin.setNumberToField(_axis._axisTickSettings.getTickLengthMin());
@@ -400,7 +400,7 @@ public class JPanelGridSettings extends javax.swing.JPanel {
 
     private void formatJTextFieldNumTicksKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formatJTextFieldNumTicksKeyReleased
         if (_initDone) {
-            _axis._axisTickSettings.setAnzTicksMinor((int) formatJTextFieldNumTicks.getNumberFromField());
+            _axis._axisTickSettings.setNumTicksMinor((int) formatJTextFieldNumTicks.getNumberFromField());
             repaintComponent();
         }
     }//GEN-LAST:event_formatJTextFieldNumTicksKeyReleased

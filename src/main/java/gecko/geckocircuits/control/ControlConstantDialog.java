@@ -15,12 +15,12 @@ package gecko.geckocircuits.control;
 
 class ControlConstantDialog extends DialogElementCONTROL<ControlConstant> {
 
-    public ControlConstantDialog(ControlConstant reglerConst) {
-        super(reglerConst);
+    public ControlConstantDialog(ControlConstant controlConst) {
+        super(controlConst);
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         jpM = createParameterPanel(element._constValue);
     }
 }

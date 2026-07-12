@@ -21,19 +21,19 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for the conduction loss curve class (LeitverlusteMesskurve).
+ * Tests for the conduction loss curve class (ConductionLossMeasurementCurve).
  *
  * The conduction loss curve stores V-I characteristic data at a specific
  * junction temperature, used for calculating semiconductor conduction losses.
  */
-@DisplayName("LeitverlusteMesskurve (Conduction Loss Curve) Tests")
-class LeitverlusteMesskurveTest {
+@DisplayName("ConductionLossMeasurementCurve (Conduction Loss Curve) Tests")
+class ConductionLossMeasurementCurveTest {
 
-    private LeitverlusteMesskurve curve;
+    private ConductionLossMeasurementCurve curve;
 
     @BeforeEach
     void setUp() {
-        curve = new LeitverlusteMesskurve(25.0);  // 25°C junction temp
+        curve = new ConductionLossMeasurementCurve(25.0);  // 25°C junction temp
     }
 
     @Nested
@@ -43,14 +43,14 @@ class LeitverlusteMesskurveTest {
         @Test
         @DisplayName("stores junction temperature on construction")
         void storesTemperature() {
-            LeitverlusteMesskurve testCurve = new LeitverlusteMesskurve(150.0);
+            ConductionLossMeasurementCurve testCurve = new ConductionLossMeasurementCurve(150.0);
             assertEquals(150.0, testCurve.tj.getValue(), 1e-10);
         }
 
         @Test
         @DisplayName("accepts negative temperature (cryogenic)")
         void acceptsNegativeTemperature() {
-            LeitverlusteMesskurve cryoCurve = new LeitverlusteMesskurve(-40.0);
+            ConductionLossMeasurementCurve cryoCurve = new ConductionLossMeasurementCurve(-40.0);
             assertEquals(-40.0, cryoCurve.tj.getValue(), 1e-10);
         }
     }
@@ -64,7 +64,7 @@ class LeitverlusteMesskurveTest {
         void copyCreatesIndependent() {
             curve.setCurveData(new double[][]{{0.0, 0.0}, {1.0, 10.0}, {2.0, 50.0}});
 
-            LeitverlusteMesskurve copy = curve.copy();
+            ConductionLossMeasurementCurve copy = curve.copy();
 
             // Modify original
             curve.tj.setValueWithoutUndo(999.0);
@@ -81,7 +81,7 @@ class LeitverlusteMesskurveTest {
             double[][] data = {{0.0, 0.0}, {1.0, 10.0}, {2.0, 50.0}};
             curve.setCurveData(data);
 
-            LeitverlusteMesskurve copy = curve.copy();
+            ConductionLossMeasurementCurve copy = curve.copy();
 
             assertEquals(data.length, copy.data.length);
             assertEquals(data[0].length, copy.data[0].length);
@@ -98,7 +98,7 @@ class LeitverlusteMesskurveTest {
             };
             curve.setCurveData(data);
 
-            LeitverlusteMesskurve copy = curve.copy();
+            ConductionLossMeasurementCurve copy = curve.copy();
 
             for (int i = 0; i < data.length; i++) {
                 for (int j = 0; j < data[i].length; j++) {
@@ -116,7 +116,7 @@ class LeitverlusteMesskurveTest {
         @Test
         @DisplayName("getXMLTag returns correct tag")
         void xmlTagCorrect() {
-            assertEquals("LeitverlusteMesskurve", curve.getXMLTag());
+            assertEquals("ConductionLossMeasurementCurve", curve.getXMLTag());
         }
 
         @Test
@@ -128,8 +128,8 @@ class LeitverlusteMesskurveTest {
             curve.exportASCII(ascii);
 
             String output = ascii.toString();
-            assertTrue(output.contains("<LeitverlusteMesskurve>"));
-            assertTrue(output.contains("<\\LeitverlusteMesskurve>"));
+            assertTrue(output.contains("<ConductionLossMeasurementCurve>"));
+            assertTrue(output.contains("<\\ConductionLossMeasurementCurve>"));
         }
     }
 

@@ -13,22 +13,16 @@
  */
 
 //package gecko.expressionscripting;
-//
 //import javax.script.ScriptException;
-//
 //class ConstantExpression extends AbstractExpression {
-//
 //    private final Double _constantReturnValue;
-//
 //    ConstantExpression(final Object nameable, final VariableExpression possibleReturnValue)
 //            throws ScriptException {
 //        super(nameable, possibleReturnValue._scriptingCodeGivenFromUser);
 //        _constantReturnValue = possibleReturnValue.evaluate();
 //    }
-//
 //    @Override
 //    Double evaluate() throws ScriptException {
 //        return _constantReturnValue;
 //    }
-//
 //}

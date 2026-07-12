@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.core.circuit.losscalculation.LeitverlusteMesskurve;
+import gecko.core.circuit.losscalculation.ConductionLossMeasurementCurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
@@ -65,7 +65,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_InitializesDefaultSwitchingCurves() {
-        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         assertNotNull("Switching curves should not be null", switchCurves);
         assertEquals("Should have 2 default switching curves", 2, switchCurves.size());
@@ -73,7 +73,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_InitializesDefaultConductionCurves() {
-        List<LeitverlusteMesskurve> condCurves = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
         assertNotNull("Conduction curves should not be null", condCurves);
         assertEquals("Should have 2 default conduction curves", 2, condCurves.size());
@@ -81,7 +81,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_SwitchingCurve25C() {
-        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         SwitchingLossCurve curve25 = switchCurves.get(0);
         assertEquals("First curve should be at 25°C", 25.0, curve25.tj.getValue(), TOLERANCE);
@@ -90,7 +90,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_SwitchingCurve110C() {
-        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         SwitchingLossCurve curve110 = switchCurves.get(1);
         assertEquals("Second curve should be at 110°C", 110.0, curve110.tj.getValue(), TOLERANCE);
@@ -99,7 +99,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_SwitchingCurveData25C() {
-        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         SwitchingLossCurve curve25 = switchCurves.get(0);
         double[][] data = curve25.getCurveData();
@@ -118,7 +118,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_SwitchingCurveData110C() {
-        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> switchCurves = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         SwitchingLossCurve curve110 = switchCurves.get(1);
         double[][] data = curve110.getCurveData();
@@ -137,25 +137,25 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_ConductionCurve25C() {
-        List<LeitverlusteMesskurve> condCurves = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
-        LeitverlusteMesskurve curve25 = condCurves.get(0);
+        ConductionLossMeasurementCurve curve25 = condCurves.get(0);
         assertEquals("First curve should be at 25°C", 25.0, curve25.tj.getValue(), TOLERANCE);
     }
 
     @Test
     public void testConstructor_ConductionCurve115C() {
-        List<LeitverlusteMesskurve> condCurves = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
-        LeitverlusteMesskurve curve115 = condCurves.get(1);
+        ConductionLossMeasurementCurve curve115 = condCurves.get(1);
         assertEquals("Second curve should be at 115°C", 115.0, curve115.tj.getValue(), TOLERANCE);
     }
 
     @Test
     public void testConstructor_ConductionCurveData25C() {
-        List<LeitverlusteMesskurve> condCurves = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
-        LeitverlusteMesskurve curve25 = condCurves.get(0);
+        ConductionLossMeasurementCurve curve25 = condCurves.get(0);
         double[][] data = curve25.getCurveData();
 
         assertNotNull("Curve data should not be null", data);
@@ -170,9 +170,9 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testConstructor_ConductionCurveData115C() {
-        List<LeitverlusteMesskurve> condCurves = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> condCurves = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
-        LeitverlusteMesskurve curve115 = condCurves.get(1);
+        ConductionLossMeasurementCurve curve115 = condCurves.get(1);
         double[][] data = curve115.getCurveData();
 
         assertNotNull("Curve data should not be null", data);
@@ -191,8 +191,8 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testGetCopyOfLeitverlusteMesskurvenArray_ReturnsDeepCopy() {
-        List<LeitverlusteMesskurve> copy1 = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
-        List<LeitverlusteMesskurve> copy2 = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> copy1 = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
+        List<ConductionLossMeasurementCurve> copy2 = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
         assertNotSame("Should return different list instances", copy1, copy2);
         assertEquals("Should have same number of curves", copy1.size(), copy2.size());
@@ -200,21 +200,21 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testGetCopyOfLeitverlusteMesskurvenArray_ModifyingCopyDoesNotAffectOriginal() {
-        List<LeitverlusteMesskurve> copy = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> copy = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
         // Modify the copy
-        LeitverlusteMesskurve firstCurve = copy.get(0);
+        ConductionLossMeasurementCurve firstCurve = copy.get(0);
         double originalTj = firstCurve.tj.getValue();
         firstCurve.tj.setValueWithoutUndo(999.0);
 
         // Get a new copy and verify original is unchanged
-        List<LeitverlusteMesskurve> newCopy = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> newCopy = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
         assertEquals("Original should not be affected", originalTj, newCopy.get(0).tj.getValue(), TOLERANCE);
     }
 
     @Test
     public void testGetCopyOfLeitverlusteMesskurvenArray_DataIsDeepCopied() {
-        List<LeitverlusteMesskurve> copy = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> copy = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
 
         // Modify the data in the copy
         double[][] copyData = copy.get(0).getCurveData();
@@ -222,15 +222,15 @@ public class LossCalculationDetailedTest {
         copyData[0][0] = 999.0;
 
         // Get a new copy and verify original data is unchanged
-        List<LeitverlusteMesskurve> newCopy = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> newCopy = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
         double[][] newCopyData = newCopy.get(0).getCurveData();
         assertEquals("Original data should not be affected", originalValue, newCopyData[0][0], TOLERANCE);
     }
 
     @Test
     public void testGetCopyOfSchaltverlusteMesskurvenArray_ReturnsDeepCopy() {
-        List<SwitchingLossCurve> copy1 = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
-        List<SwitchingLossCurve> copy2 = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> copy1 = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
+        List<SwitchingLossCurve> copy2 = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         assertNotSame("Should return different list instances", copy1, copy2);
         assertEquals("Should have same number of curves", copy1.size(), copy2.size());
@@ -238,7 +238,7 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testGetCopyOfSchaltverlusteMesskurvenArray_ModifyingCopyDoesNotAffectOriginal() {
-        List<SwitchingLossCurve> copy = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> copy = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         // Modify the copy
         SwitchingLossCurve firstCurve = copy.get(0);
@@ -246,13 +246,13 @@ public class LossCalculationDetailedTest {
         firstCurve.tj.setValueWithoutUndo(999.0);
 
         // Get a new copy and verify original is unchanged
-        List<SwitchingLossCurve> newCopy = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> newCopy = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
         assertEquals("Original should not be affected", originalTj, newCopy.get(0).tj.getValue(), TOLERANCE);
     }
 
     @Test
     public void testGetCopyOfSchaltverlusteMesskurvenArray_DataIsDeepCopied() {
-        List<SwitchingLossCurve> copy = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> copy = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
 
         // Modify the data in the copy
         double[][] copyData = copy.get(0).getCurveData();
@@ -260,7 +260,7 @@ public class LossCalculationDetailedTest {
         copyData[0][0] = 999.0;
 
         // Get a new copy and verify original data is unchanged
-        List<SwitchingLossCurve> newCopy = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> newCopy = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
         double[][] newCopyData = newCopy.get(0).getCurveData();
         assertEquals("Original data should not be affected", originalValue, newCopyData[0][0], TOLERANCE);
     }
@@ -275,9 +275,9 @@ public class LossCalculationDetailedTest {
         newCurve.setCurveData(new double[][]{{0, 5}, {0, 5e-3}, {0, 3e-3}});
         List<SwitchingLossCurve> newCurves = List.of(newCurve);
 
-        verlustBerechnung.setzeNeueParameter(newCurves, verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray());
+        verlustBerechnung.setzeNeueParameter(newCurves, verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray());
 
-        List<SwitchingLossCurve> result = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> result = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
         assertEquals("Should have 1 switching curve", 1, result.size());
         assertEquals("Temperature should be 50°C", 50.0, result.get(0).tj.getValue(), TOLERANCE);
         assertEquals("Voltage should be 600V", 600.0, result.get(0)._uBlock.getValue(), TOLERANCE);
@@ -285,13 +285,13 @@ public class LossCalculationDetailedTest {
 
     @Test
     public void testSetzeNeueParameter_ReplacesConductionCurves() {
-        LeitverlusteMesskurve newCurve = new LeitverlusteMesskurve(75.0);
+        ConductionLossMeasurementCurve newCurve = new ConductionLossMeasurementCurve(75.0);
         newCurve.setCurveData(new double[][]{{0, 1.0}, {0, 2.0}});
-        List<LeitverlusteMesskurve> newCurves = List.of(newCurve);
+        List<ConductionLossMeasurementCurve> newCurves = List.of(newCurve);
 
-        verlustBerechnung.setzeNeueParameter(verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray(), newCurves);
+        verlustBerechnung.setzeNeueParameter(verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray(), newCurves);
 
-        List<LeitverlusteMesskurve> result = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> result = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
         assertEquals("Should have 1 conduction curve", 1, result.size());
         assertEquals("Temperature should be 75°C", 75.0, result.get(0).tj.getValue(), TOLERANCE);
     }
@@ -304,20 +304,20 @@ public class LossCalculationDetailedTest {
         switchCurve2.setCurveData(new double[][]{{0, 5}, {0, 6e-3}, {0, 4e-3}});
         List<SwitchingLossCurve> newSwitchCurves = List.of(switchCurve1, switchCurve2);
 
-        LeitverlusteMesskurve condCurve1 = new LeitverlusteMesskurve(75.0);
+        ConductionLossMeasurementCurve condCurve1 = new ConductionLossMeasurementCurve(75.0);
         condCurve1.setCurveData(new double[][]{{0, 1.0}, {0, 2.0}});
-        LeitverlusteMesskurve condCurve2 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve condCurve2 = new ConductionLossMeasurementCurve(125.0);
         condCurve2.setCurveData(new double[][]{{0, 1.1}, {0, 2.2}});
-        LeitverlusteMesskurve condCurve3 = new LeitverlusteMesskurve(175.0);
+        ConductionLossMeasurementCurve condCurve3 = new ConductionLossMeasurementCurve(175.0);
         condCurve3.setCurveData(new double[][]{{0, 1.2}, {0, 2.4}});
-        List<LeitverlusteMesskurve> newCondCurves = List.of(condCurve1, condCurve2, condCurve3);
+        List<ConductionLossMeasurementCurve> newCondCurves = List.of(condCurve1, condCurve2, condCurve3);
 
         verlustBerechnung.setzeNeueParameter(newSwitchCurves, newCondCurves);
 
         assertEquals("Should have 2 switching curves", 2,
-            verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray().size());
+            verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray().size());
         assertEquals("Should have 3 conduction curves", 3,
-            verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray().size());
+            verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray().size());
     }
 
     // ===========================================
@@ -333,15 +333,15 @@ public class LossCalculationDetailedTest {
         SwitchingLossCurve newCurve = new SwitchingLossCurve(50.0, 600.0);
         newCurve.setCurveData(new double[][]{{0, 5}, {0, 5e-3}, {0, 3e-3}});
         List<SwitchingLossCurve> newCurves = List.of(newCurve);
-        source.setzeNeueParameter(newCurves, source.getCopyOfLeitverlusteMesskurvenArray());
+        source.setzeNeueParameter(newCurves, source.getCopyOfConductionLossMeasurementCurvesArray());
 
         // Note: copyPropertiesFrom ADDS curves to existing ones (doesn't clear first)
-        int originalCount = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray().size();
+        int originalCount = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray().size();
 
         // Copy properties
         verlustBerechnung.copyPropertiesFrom(source);
 
-        List<SwitchingLossCurve> result = verlustBerechnung.getCopyOfSchaltverlusteMesskurvenArray();
+        List<SwitchingLossCurve> result = verlustBerechnung.getCopyOfSwitchingLossMeasurementCurvesArray();
         assertEquals("Should have added 1 curve to existing curves", originalCount + 1, result.size());
 
         // Find the copied curve (last one added)
@@ -355,22 +355,22 @@ public class LossCalculationDetailedTest {
         Diode sourceDiode = new Diode();
         LossCalculationDetailed source = sourceDiode.getVerlustBerechnung().getDetailedLosses();
 
-        LeitverlusteMesskurve newCurve = new LeitverlusteMesskurve(75.0);
+        ConductionLossMeasurementCurve newCurve = new ConductionLossMeasurementCurve(75.0);
         newCurve.setCurveData(new double[][]{{0, 1.0}, {0, 2.0}});
-        List<LeitverlusteMesskurve> newCurves = List.of(newCurve);
-        source.setzeNeueParameter(source.getCopyOfSchaltverlusteMesskurvenArray(), newCurves);
+        List<ConductionLossMeasurementCurve> newCurves = List.of(newCurve);
+        source.setzeNeueParameter(source.getCopyOfSwitchingLossMeasurementCurvesArray(), newCurves);
 
         // Note: copyPropertiesFrom ADDS curves to existing ones (doesn't clear first)
-        int originalCount = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray().size();
+        int originalCount = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray().size();
 
         // Copy properties
         verlustBerechnung.copyPropertiesFrom(source);
 
-        List<LeitverlusteMesskurve> result = verlustBerechnung.getCopyOfLeitverlusteMesskurvenArray();
+        List<ConductionLossMeasurementCurve> result = verlustBerechnung.getCopyOfConductionLossMeasurementCurvesArray();
         assertEquals("Should have added 1 curve to existing curves", originalCount + 1, result.size());
 
         // Find the copied curve (last one added)
-        LeitverlusteMesskurve lastCurve = result.get(result.size() - 1);
+        ConductionLossMeasurementCurve lastCurve = result.get(result.size() - 1);
         assertEquals("Temperature should match", 75.0, lastCurve.tj.getValue(), TOLERANCE);
     }
 
@@ -412,8 +412,8 @@ public class LossCalculationDetailedTest {
         StringBuffer buffer = new StringBuffer();
         verlustBerechnung.exportASCII(buffer);
 
-        assertTrue("Should contain datnamGemesseneVerluste",
-            buffer.toString().contains("datnamGemesseneVerluste"));
+        assertTrue("Should contain _measuredLossesFilename",
+            buffer.toString().contains("_measuredLossesFilename"));
     }
 
     @Test
