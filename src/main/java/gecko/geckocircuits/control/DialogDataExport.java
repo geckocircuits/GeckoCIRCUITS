@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.MainWindow;
 import gecko.geckocircuits.general.GeckoFileChooser;
 import gecko.geckocircuits.control.ControlSaveData.OutputType;
@@ -25,8 +27,6 @@ import gecko.geckocircuits.datacontainer.TextSeparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -38,6 +38,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores references to data containers and saver for export configuration")
 public final class DialogDataExport extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogDataExport.class);
+
 
     private boolean _txtFormat;
     private final ReportingListTransferHandler _arrayListHandler = new ReportingListTransferHandler();
@@ -91,8 +93,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         _inFillLists = true;
         try { // somewhere, I have a race condition when a signal is deleted...
             Thread.sleep(100);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(DialogDataExport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {LogManager.getLogger(DialogDataExport.class).error("Exception occurred", ex);
         }
         final AbstractDataContainer container = _containers.get(0);
         if (container == null) {

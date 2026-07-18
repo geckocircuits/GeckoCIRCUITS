@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control.javablock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.general.GeckoFileManagerWindow;
 import gecko.geckocircuits.general.GlobalFilePathes;
@@ -20,8 +22,6 @@ import gecko.geckocircuits.circuit.GeckoFileable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.event.ListSelectionEvent;
@@ -35,6 +35,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings({"unchecked", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores GeckoFileable reference for file management operations")
 public final class ExtraFilesWindow extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(ExtraFilesWindow.class);
+
 
     private static final long serialVersionUID = 1L;
 
@@ -61,8 +63,7 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
-        } catch (Exception ex) {
-            Logger.getLogger(ExtraFilesWindow.class.getName()).log(Level.INFO, "could not load image icon!");
+        } catch (Exception ex) {LogManager.getLogger(ExtraFilesWindow.class).info("could not load image icon!");
         }
 
         _geckoFileable = geckoFileable;

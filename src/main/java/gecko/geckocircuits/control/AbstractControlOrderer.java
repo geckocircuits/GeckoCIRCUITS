@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,12 +22,11 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 @SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
         justification = "Abstract class - subclasses are designed to handle constructor properly")
  abstract class AbstractControlOrderer {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractControlOrderer.class);
+
     static final int MAX_ITERATION_COUNT = 10000;
 
     @SuppressWarnings("PMD")
@@ -111,9 +112,7 @@ import java.util.logging.Logger;
             warningsString.append(notSinkConnected.getElementControl().getStringID());
             warningsString.append(' ');
         }
-        warningsString.append('\n');
-
-        Logger.getLogger(StartFromSinkOrderer.class.getName()).log(Level.WARNING, warningsString.toString());
+        warningsString.append('\n');LogManager.getLogger(StartFromSinkOrderer.class).warn(warningsString.toString());
     }
 
     void addNodesToNextList(final ControlOrderNode node) {
@@ -136,7 +135,7 @@ import java.util.logging.Logger;
                 addNodesToNextList(node);
 
                 if(node.getElementControl().getStringID().equals("OR.1")) {
-                    System.out.println("next: " + _nextInsertBlocks.size());
+                    LOGGER.info("next: " + _nextInsertBlocks.size());
                 }
 
             }

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.MainWindow;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.general.GeckoFileChooser;
@@ -47,6 +49,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "Public OK button for external dialog configuration; stores references to parent dialog and component for interaction")
 public class NonLinearDialogPanel extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(NonLinearDialogPanel.class);
+
 
     private static final long serialVersionUID = 1L;
 
@@ -335,7 +339,7 @@ public class NonLinearDialogPanel extends JPanel {
             data[0] = nonLin[0];
             data[1] = nonLin[1];
             for(int i = 0; i < data[0].length; i++) {
-                System.out.println("iii " + i + " " + data[0][i] + " " + data[1][i] + " " + (data[0][i] * data[1][i]));
+                LOGGER.info("iii " + i + " " + data[0][i] + " " + data[1][i] + " " + (data[0][i] * data[1][i]));
             }
             table.setValues(data);
             loadedFile = file;

@@ -13,6 +13,8 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,9 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * This class is a wrapper for use in from external programs, e.g. MATLAB or
  * other Java programs. The communication is done via a network socket. Since
@@ -46,6 +45,8 @@ import java.util.logging.Logger;
 @SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.NullAssignment"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer reference for RMI invocation")
 public class GeckoRemoteObject {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoRemoteObject.class);
+
 
 
     private int portNumber;
@@ -111,13 +112,12 @@ public class GeckoRemoteObject {
             final String[] args = argsList.toArray(new String[0]);
 
             for(String arg : args) {
-                System.out.println("arg " + arg);
+                LOGGER.info("arg " + arg);
             }
             GeckoSim.main(args);
             try {
                 Thread.sleep(5);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(GeckoRemoteObject.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(GeckoRemoteObject.class).error("Exception occurred", ex);
             }
             if (GeckoSim.remoteLoaded) {
                 return connectToExistingInstance(port);
@@ -141,7 +141,7 @@ public class GeckoRemoteObject {
             if (geckoInstance instanceof CallbackServerInterface) {
                 ((CallbackServerInterface) geckoInstance).registerForCallback(callbackObj);
             } else {
-                System.err.println("Could not establish connection for callback. \nOutput messages from GeckoCIRCUITS"
+                LOGGER.error("Could not establish connection for callback. \nOutput messages from GeckoCIRCUITS"
                         + "may be dropped to nowhere!");
             }
         } catch (RemoteException ex) {
@@ -193,7 +193,7 @@ public class GeckoRemoteObject {
                 throw new RuntimeException(message, originalException);
             } finally { //this port is already occupied by a GeckoCIRCUITS instance - attempt to connect to it
                 if (existingInstance != null) {
-                    System.out.println("Port " + port + " is already occupied by GeckoCIRCUITS.");
+                    LOGGER.info("Port " + port + " is already occupied by GeckoCIRCUITS.");
                 }
             }
         } finally {
@@ -231,17 +231,17 @@ public class GeckoRemoteObject {
                     sessionID = newSessionID;
                     portNumber = port;
                     _wrapped.registerLastClientToCallMethod(sessionID);
-                    System.out.println("You are now connected to the GeckoCIRCUITS instance at port " + port);
+                    LOGGER.info("You are now connected to the GeckoCIRCUITS instance at port " + port);
                 } catch (Exception e) {
                     throw new RuntimeException("Error connecting to existing GeckoCIRCUITS instance at port " + port, e);
                 }
             } else {
                 if (_wrapped != null) {
                     if (_wrapped.checkSessionID(sessionID)) {
-                        System.out.println("You are already connected to the GeckoCIRCUITS instance available at port " + port);
+                        LOGGER.info("You are already connected to the GeckoCIRCUITS instance available at port " + port);
                         _wrapped.registerLastClientToCallMethod(sessionID);
                     } else {
-                        System.out.println("The GeckoCIRCUITS instance at port " + port
+                        LOGGER.info("The GeckoCIRCUITS instance at port " + port
                                 + " is busy with (an)other session(s). You cannot connect to it now.");
                     }
                 } else {
@@ -290,12 +290,12 @@ public class GeckoRemoteObject {
     public void disconnectFromGecko() {
         try {
             if (_wrapped == null) {
-                System.out.println("You have no existing connections to GeckoCIRCUITS");
+                LOGGER.info("You have no existing connections to GeckoCIRCUITS");
             } else {
                 _wrapped.disconnect(sessionID);
                 sessionID = NO_SESSION_ID;
                 _wrapped = null;
-                System.out.println("You have been disconnected from the GeckoCIRCUITS instance at port " + portNumber);
+                LOGGER.info("You have been disconnected from the GeckoCIRCUITS instance at port " + portNumber);
             }
 
         } catch (RemoteException e) {
@@ -329,7 +329,7 @@ public class GeckoRemoteObject {
 
     private boolean checkRemote() throws RemoteException {
         if (_wrapped == null) {
-            System.err.println("You are NOT connected to any instance of GeckoCIRCUITS! Use startGui(port) or"
+            LOGGER.error("You are NOT connected to any instance of GeckoCIRCUITS! Use startGui(port) or"
                     + " connectToGecko(port) to establish a connection.");
             return false;
         } else {
@@ -337,7 +337,7 @@ public class GeckoRemoteObject {
             if (_wrapped.checkSessionID(sessionID)) {
                 return true;
             } else {
-                System.out.println("Invalid session ID. Restart your connection by "
+                LOGGER.info("Invalid session ID. Restart your connection by "
                         + "calling disconnectFromGecko() and then reconnecting.");
                 return false;
             }

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.general.UserParameter;
@@ -38,6 +40,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmallSignalAnalysis> {
+    private static final Logger LOGGER = LogManager.getLogger(DialogSmallSignalAnalysis.class);
+
 
     private JComboBox<SSAShape> _jComboSignal;
     private GraferV4 _grafer;
@@ -197,7 +201,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmall
         double[] measuredValues = ssc._measuredValues;
         double dt = ssc._calculationDeltaT;
 
-        System.out.println("number of valid samples " + ssc._numberSamples + " " + ssc._N);
+        LOGGER.info("number of valid samples " + ssc._numberSamples + " " + ssc._N);
 
         double time = 0;
 

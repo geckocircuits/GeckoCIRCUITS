@@ -13,11 +13,11 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.PrintWriter;
@@ -42,6 +42,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Compiler stores MainWindow reference for optimization code execution")
 public class GeckoJavaCompiler {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoJavaCompiler.class);
+
 
     // fields contain source code, that is also saved in the JAVA-object .ipes stuff
     private String _javaSourceCode = "";
@@ -85,7 +87,7 @@ public class GeckoJavaCompiler {
 
             // Check for null methods before invocation (replaces catching NullPointerException)
             if (_setGecko == null || _run_script == null) {
-                System.out.println("Error: Could not invoke external Java method!");
+                LOGGER.info("Error: Could not invoke external Java method!");
                 _compileStatus = COMPILESTATUS.COMPILE_ERROR;
                 return false;
             }
@@ -99,10 +101,10 @@ public class GeckoJavaCompiler {
             ex.getTargetException().printStackTrace();  // Exception in the main method that we just tried to run
             return false;
         } catch (IllegalAccessException ex) {
-            System.err.println(ex.toString());
+            LOGGER.error(ex.toString());
             return false;
         } catch (IOException ex) {
-            System.err.println("IO error during compilation: " + ex.toString());
+            LOGGER.error("IO error during compilation: " + ex.toString());
             _compileStatus = COMPILESTATUS.COMPILE_ERROR;
             return false;
         }
@@ -197,8 +199,7 @@ public class GeckoJavaCompiler {
             appendSourcLine("// ****************** end of code segment **********************");
             appendSourcLine("    }");
             appendSourcLine("}");
-        } catch (IOException ex) {
-            Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
         }
     }
 
@@ -308,12 +309,10 @@ public class GeckoJavaCompiler {
                     //---------
                     _run_script = clazz.getMethod("run_script", partypes);
                     //---------
-                } catch (NoSuchMethodException ex) {
-                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
-                    System.err.println("could not set extern Java code method (_run_script)!");
+                } catch (NoSuchMethodException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
+                    LOGGER.error("could not set extern Java code method (_run_script)!");
                     _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-                } catch (SecurityException ex) {
-                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
                 }
                 Class<?>[] partypes2 = new Class<?>[1];
                 partypes2[0] = gecko.getClass();
@@ -321,18 +320,15 @@ public class GeckoJavaCompiler {
                     //---------
                     _setGecko = clazz.getMethod("_setGecko", partypes2);
                     //---------
-                } catch (NoSuchMethodException ex) {
-                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
-                    System.err.println("could not set extern Java code method (_setGecko)!");
+                } catch (NoSuchMethodException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
+                    LOGGER.error("could not set extern Java code method (_setGecko)!");
                     _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-                } catch (SecurityException ex) {
-                    Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SecurityException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
                 }
                 //------------------
             }
             } // end try-with-resources
-        } catch (IllegalArgumentException | SecurityException | ClassNotFoundException ex) {
-            Logger.getLogger(GeckoJavaCompiler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException | SecurityException | ClassNotFoundException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
         }
     }
 
@@ -415,11 +411,11 @@ public class GeckoJavaCompiler {
         try {
             this.doCompilation();
         } catch (Exception e) {
-            System.out.println("Error in GeckoJavaCompiler.test(): " + e);
+            LOGGER.info("Error in GeckoJavaCompiler.test(): " + e);
         }
-        System.out.println("_compilerMessage= \n" + compilerMessage + "\n\n===========\n");
+        LOGGER.info("_compilerMessage= \n" + compilerMessage + "\n\n===========\n");
         //System.out.println("_sourceString= \n"+_sourceString+"\n\n===========\n");
         boolean calcOK = this.startCalculation();
-        System.out.println("Fertig. calcOK=" + calcOK);
+        LOGGER.info("Fertig. calcOK=" + calcOK);
     }
 }

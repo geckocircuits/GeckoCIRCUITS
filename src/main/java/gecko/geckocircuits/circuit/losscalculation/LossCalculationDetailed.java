@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
@@ -48,6 +50,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
         justification = "Loss calculation must share references to parent block for circuit integration; public fields for file access and curve data")
 public final class LossCalculationDetailed implements GeckoFileable, AbstractLossCalculatorFabric {
+    private static final Logger LOGGER = LogManager.getLogger(LossCalculationDetailed.class);
+
 
     final AbstractCircuitBlockInterface _parent;
     private final LossProperties _lossParent;
@@ -302,7 +306,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
         //first assume given path is absolute
         try {
             file = new GeckoFile(new File(fyomu), GeckoFile.StorageType.INTERNAL, _fileAccessor.getOpenFileName());
-            System.out.println("try to load file " + file);
+            LOGGER.info("try to load file " + file);
             readDetailedLossesFromFile(file);
             _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.DETAILED);
         } catch (FileNotFoundException e) { //if not, see if it is a relative path to the .ipes file location
@@ -315,7 +319,7 @@ public final class LossCalculationDetailed implements GeckoFileable, AbstractLos
                 readDetailedLossesFromFile(file);
                 _lossParent._lossType.setValueWithoutUndo(LossCalculationDetail.SIMPLE);
             } catch (FileNotFoundException e2) {
-                System.err.println("Loss file " + fyomu + " for component " + _parent.getStringID() + " not found!");
+                LOGGER.error("Loss file " + fyomu + " for component " + _parent.getStringID() + " not found!");
             }
             }
 

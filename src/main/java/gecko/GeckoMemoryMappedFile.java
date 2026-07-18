@@ -13,6 +13,8 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,6 +33,8 @@ import java.nio.channels.FileChannel;
  * @author andrija s.
  */
 public final class GeckoMemoryMappedFile {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoMemoryMappedFile.class);
+
 
     private final File _file; //the file being used for communication
     private final MappedByteBuffer _mmb; //the memory-mapped byte buffer the file is mapped to
@@ -426,7 +430,7 @@ public final class GeckoMemoryMappedFile {
     public void deleteFile() {
         forceDisconnect();
         if (!_file.delete()) {
-            System.err.println("Warning: Could not delete file: " + _file.getAbsolutePath());
+            LOGGER.error("Warning: Could not delete file: " + _file.getAbsolutePath());
         }
     }
 

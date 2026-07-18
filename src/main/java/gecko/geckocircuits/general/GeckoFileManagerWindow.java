@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.GeckoFile;
 import gecko.core.allg.GeckoFile.StorageType;
 import gecko.geckocircuits.circuit.DialogNonLinearity;
@@ -38,6 +40,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "SE_BAD_FIELD"},
         justification = "Dialog intentionally stores references to external GUI components for interaction; dialog is not serialized")
 public class GeckoFileManagerWindow extends JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoFileManagerWindow.class);
+
 
     private static final long serialVersionUID = 1L;
 
@@ -116,7 +120,7 @@ public class GeckoFileManagerWindow extends JDialog {
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception ex) {
-            System.err.println("could not load image icon!");
+            LOGGER.error("could not load image icon!");
         }
 
         jLabelFileType.setText("*" + _fileExtension);
@@ -170,7 +174,7 @@ public class GeckoFileManagerWindow extends JDialog {
             _filesToRemove.add(file);
         } else { //otherwise this was a new file that the user decided not to add, everything is fine
             for (GeckoFile gFile : _newFilesToAdd) {
-                System.out.println(gFile);
+                LOGGER.info(gFile);
             }
             _newFilesToAdd.remove(index);
         }
@@ -620,7 +624,7 @@ public class GeckoFileManagerWindow extends JDialog {
                 selectedFile.setStorageType(StorageType.INTERNAL);
             } catch (FileNotFoundException e) {
                 //this exception is not thrown in this case
-                System.err.println(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
         jListSelectedFilesToAdd.repaint();
@@ -647,7 +651,7 @@ public class GeckoFileManagerWindow extends JDialog {
                 selectedFile.setStorageType(StorageType.INTERNAL);
             } catch (FileNotFoundException e) {
                 //this exception is not thrown in this case
-                System.err.println(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
         jListAvailableFiles.repaint();

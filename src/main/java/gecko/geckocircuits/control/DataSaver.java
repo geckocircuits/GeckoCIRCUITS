@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -23,8 +25,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,6 +33,8 @@ import javax.swing.JOptionPane;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Data saver stores data container reference for efficient data export")
 public final class DataSaver extends Observable implements Observer {
+    private static final Logger LOGGER = LogManager.getLogger(DataSaver.class);
+
 
     private final AbstractDataContainer _data;
     private AbstractLinePrinter _linePrinter;
@@ -125,8 +127,7 @@ public final class DataSaver extends Observable implements Observer {
                     doFullSave(_data);
                     try {
                         _linePrinter.closeStream();
-                    } catch (IOException ex) {
-                        Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
                     }
                     WAIT_COUNTER.decrementAndGet();
                     if (WAIT_COUNTER.get() < 0) {
@@ -139,16 +140,14 @@ public final class DataSaver extends Observable implements Observer {
                         doFullSave(_data);
                         try {
                             Thread.sleep(SLEEP_TIMER);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InterruptedException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
                         }
                     }
                     // do one final save at simulation end!
                     doFullSave(_data);
                     try {
                         _linePrinter.closeStream();
-                    } catch (IOException ex) {
-                        Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
                     }
                 }
             } catch (SignalMissingException exc) {
@@ -176,10 +175,8 @@ public final class DataSaver extends Observable implements Observer {
                     _abortSignal = true;
                     Thread.sleep(SLEEP_TIMER);
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(DataSaver.class.getName()).log(Level.WARNING, "Error while closing previous data stream", ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
+            } catch (IOException ex) {LogManager.getLogger(DataSaver.class).warn("Error while closing previous data stream", ex);
             } finally {
                 _linePrinter = null;
             }
@@ -247,8 +244,7 @@ public final class DataSaver extends Observable implements Observer {
                 }
             }
             _lastSavedDataIndex = maxIndex;
-        } catch (IOException ex) {
-            Logger.getLogger(DialogDataExport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {LogManager.getLogger(DialogDataExport.class).error("Exception occurred", ex);
         }
     }
 

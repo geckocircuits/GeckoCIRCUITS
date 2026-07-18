@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.general.GlobalColors;
 import gecko.i18n.GuiFabric;
@@ -28,6 +30,8 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 class JPanelLossDataInterpolationSettings extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(JPanelLossDataInterpolationSettings.class);
+
 
     private final JLabel _jlUTest = new JLabel("    U =");
     private final DialogLossesDetail _parentDialog;
@@ -42,7 +46,7 @@ class JPanelLossDataInterpolationSettings extends JPanel {
                 final double uMeas = _jtfVoltage.getNumberFromField();
                 _parentDialog.createTestCurve(temperature, uMeas);
             } catch (Exception exc) {
-                System.out.println(exc.getMessage());
+                LOGGER.info(exc.getMessage());
             }
         }
     };

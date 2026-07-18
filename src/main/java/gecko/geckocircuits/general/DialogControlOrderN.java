@@ -18,6 +18,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.control.RegelBlock;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
@@ -47,6 +49,8 @@ import javax.swing.DefaultListModel;
  * @author florian
  */
 public class DialogControlOrderN extends javax.swing.JDialog implements DragGestureListener, DragSourceListener, DropTargetListener{
+    private static final Logger LOGGER = LogManager.getLogger(DialogControlOrderN.class);
+
 
     /**
      * Creates new form DialogControlOrderN
@@ -173,7 +177,7 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         jButtonOK.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(final ActionEvent event){
-                System.out.println("OK pressed");
+                LOGGER.info("OK pressed");
                 final List<RegelBlock> userList = new ArrayList<RegelBlock>();
                 for(int i=0; i<jListUser.getModel().getSize(); i++){
                     userList.add((RegelBlock) jListUser.getModel().getElementAt(i));
@@ -188,14 +192,14 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
         jButtonCancel.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(final ActionEvent event){
-                System.out.println("Cancel pressed");
+                LOGGER.info("Cancel pressed");
                 dispose();
             }
         });
         jButtonReset.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(final ActionEvent event){
-                System.out.println("Reset pressed");
+                LOGGER.info("Reset pressed");
                 final DefaultListModel<RegelBlock> userModel = new DefaultListModel<>();
                 for(int i=0; i<jListOptimized.getModel().getSize(); i++){
                     userModel.addElement((RegelBlock) jListOptimized.getModel().getElementAt(i));
@@ -241,13 +245,13 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(DialogControlOrderN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(DialogControlOrderN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(DialogControlOrderN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(DialogControlOrderN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        }
 //</editor-fold>
 //        /* Create and display the dialog */

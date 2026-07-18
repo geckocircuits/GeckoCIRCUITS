@@ -13,13 +13,13 @@
  */
 package gecko.core.datacontainer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -29,6 +29,8 @@ import java.util.zip.Inflater;
  * @author andreas
  */
 public class CompressorIntMatrix {
+    private static final Logger LOGGER = LogManager.getLogger(CompressorIntMatrix.class);
+
 
     private static final Random RANDOM = new Random();
 
@@ -91,8 +93,7 @@ public class CompressorIntMatrix {
                 int localDecompressed = decompresser.inflate(result, bytesDecompressed, bytesToDecompress);
                 bytesToDecompress -= localDecompressed;
                 bytesDecompressed += localDecompressed;
-            } catch (DataFormatException ex) {
-                Logger.getLogger(CompressorIntMatrix.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (DataFormatException ex) {LogManager.getLogger(CompressorIntMatrix.class).error("Exception occurred", ex);
             }
         }
 
@@ -116,15 +117,15 @@ public class CompressorIntMatrix {
         CompressorIntMatrix compObj = new CompressorIntMatrix(origData);
 
         int[][] decompData = compObj.deCompress();
-        System.out.println("decompressed:");
+        LOGGER.info("decompressed:");
         for (int i = 0; i < decompData.length; i++) {
             for (int j = 0; j < decompData[0].length; j++) {
                 assert decompData[i][j] == origData[i][j];
             }
         }
 
-        System.out.println("compression ratio: " + compObj.compressionRatio);
-        System.out.println("compression time:  " + compObj.compressionTime);
+        LOGGER.info("compression ratio: " + compObj.compressionRatio);
+        LOGGER.info("compression time:  " + compObj.compressionTime);
     }
 
     private static int[][] convertByteArrayToInt(byte[] buffer, int m, int n) {

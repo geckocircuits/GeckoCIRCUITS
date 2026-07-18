@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.math.Matrix;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
 import gecko.geckocircuits.general.SolverType;
@@ -28,6 +30,8 @@ import java.text.NumberFormat;
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SF_SWITCH_FALLTHROUGH"},
         justification = "Performance-critical matrix class with direct field access for simulation speed; switch fallthroughs in TH_CTH to LK_C are intentional for thermal/electric capacitor handling")
 public class LKMatrices {
+    private static final Logger LOGGER = LogManager.getLogger(LKMatrices.class);
+
 
     private static final double FAST_NULL_R = 1e-9;
     private static final double FAST_NULL_L = 1e-12;
@@ -303,7 +307,7 @@ public class LKMatrices {
                     break;
                 case LK_M:
                     // wird in LK_LKOP2 abgehandelt
-                    System.out.println("Fehler a0'wetj2423443");
+                    LOGGER.info("Fehler a0'wetj2423443");
                     break;
 
                 case LK_TERMINAL:
@@ -314,7 +318,7 @@ public class LKMatrices {
                 case REL_GLOBAL_TERMINAL:
                     break;
                 default:
-                    System.out.println("Fehler : Bauteil nicht definiert!");
+                    LOGGER.info("Fehler : Bauteil nicht definiert!");
                     break;
             }
 
@@ -489,7 +493,7 @@ public class LKMatrices {
                             bW = 0;
                             break;
                         default:
-                            System.out.println("Fehler: Strom-Quelle nicht spezifiziert serzw45 w46 " + (int) netzliste.parameter[i1][0]);
+                            LOGGER.info("Fehler: Strom-Quelle nicht spezifiziert serzw45 w46 " + (int) netzliste.parameter[i1][0]);
                             break;
                     }
 
@@ -540,13 +544,13 @@ public class LKMatrices {
                             }
                             break;
                         default:
-                            System.out.println("Fehler: Spannungs-Quelle nicht spezifiziert");
+                            LOGGER.info("Fehler: Spannungs-Quelle nicht spezifiziert");
                             break;
                     }
                     break;
                 case LK_M:
                     // wird in LK_LKOP2 abgehandelt
-                    System.out.println("Fehler 0ierg030303333");
+                    LOGGER.info("Fehler 0ierg030303333");
                     break;
                 case LK_TERMINAL:
                 case TH_TERMINAL:
@@ -556,7 +560,7 @@ public class LKMatrices {
                 case REL_GLOBAL_TERMINAL:
                     break;
                 default:
-                    System.out.println("3 Fehler: Bauteil nicht definiert! " + netzliste.typ[i1]);
+                    LOGGER.info("3 Fehler: Bauteil nicht definiert! " + netzliste.typ[i1]);
                     break;
             }
 
@@ -1054,7 +1058,7 @@ public class LKMatrices {
                             //System.out.println("cur: " + (gain * (p[x1] - p[y1])) + " " + x1 + " " + y1);
                             break;
                         default:
-                            System.out.println("Fehler: Strom-Quelle nicht spezifiziert");
+                            LOGGER.info("Fehler: Strom-Quelle nicht spezifiziert");
                             break;
                     }
 
@@ -1126,7 +1130,7 @@ public class LKMatrices {
                 case REL_GLOBAL_TERMINAL:
                     break;
                 default:
-                    System.out.println("1 Fehler: Bauteil nicht definiert!");
+                    LOGGER.info("1 Fehler: Bauteil nicht definiert!");
                     break;
             }
         }
@@ -1219,7 +1223,7 @@ public class LKMatrices {
                 case REL_GLOBAL_TERMINAL:
                     break;
                 default:
-                    System.out.println("2 Fehler: Bauteil nicht definiert!");
+                    LOGGER.info("2 Fehler: Bauteil nicht definiert!");
                     break;
             }
         }
@@ -1258,10 +1262,10 @@ public class LKMatrices {
                 }
             }
         }
-        System.out.println("t [us] = " + nf.format(t * 1e6) + "\t---------");
+        LOGGER.info("t [us] = " + nf.format(t * 1e6) + "\t---------");
         this.schreibeMatrizenGleichung();
         for (String line : txt) {
-            System.out.println(line);
+            LOGGER.info(line);
         }
     }
 
@@ -1269,9 +1273,9 @@ public class LKMatrices {
         TechFormat cf = new TechFormat();
         for (int i1 = 0; i1 < a.length; i1++) {
             for (int i2 = 0; i2 < a[0].length; i2++) {
-                System.out.print(cf.formatT(a[i1][i2], TechFormat.FORMAT_AUTO) + "\t\t");
+                LOGGER.info(cf.formatT(a[i1][i2], TechFormat.FORMAT_AUTO) + "\t\t");
             }
-            System.out.println("\tB= " + cf.formatT(bVector[i1], TechFormat.FORMAT_AUTO));
+            LOGGER.info("\tB= " + cf.formatT(bVector[i1], TechFormat.FORMAT_AUTO));
         }
     }
 

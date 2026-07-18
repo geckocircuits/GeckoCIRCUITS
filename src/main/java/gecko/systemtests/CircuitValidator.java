@@ -13,6 +13,8 @@
  */
 package gecko.systemtests;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoExternal;
 import gecko.GeckoSim;
 
@@ -35,6 +37,8 @@ import java.io.File;
  *   2 - Usage error (no file specified or file not found)
  */
 public final class CircuitValidator {
+    private static final Logger LOGGER = LogManager.getLogger(CircuitValidator.class);
+
 
     private static final int MAX_WAIT_MS = 30000; // 30 seconds max wait for simulation
     private static final int POLL_INTERVAL_MS = 100;
@@ -56,19 +60,19 @@ public final class CircuitValidator {
         }
 
         if (filePath == null) {
-            System.err.println("Usage: CircuitValidator [--run-simulation] <circuit.ipes>");
+            LOGGER.error("Usage: CircuitValidator [--run-simulation] <circuit.ipes>");
             System.exit(2);
         }
 
         File file = new File(filePath);
 
         if (!file.exists()) {
-            System.err.println("File not found: " + file.getAbsolutePath());
+            LOGGER.error("File not found: " + file.getAbsolutePath());
             System.exit(2);
         }
 
         if (!file.getName().endsWith(".ipes")) {
-            System.err.println("Warning: File does not have .ipes extension: " + filePath);
+            LOGGER.error("Warning: File does not have .ipes extension: " + filePath);
         }
 
         int exitCode = validate(file, runSimulation);
@@ -93,7 +97,7 @@ public final class CircuitValidator {
             // Wait for initialization
             Thread.sleep(500);
 
-            System.out.println("Loading: " + file.getName());
+            LOGGER.info("Loading: " + file.getName());
             GeckoExternal.openFile(file.getAbsolutePath());
 
             // Wait for file to load
@@ -102,17 +106,17 @@ public final class CircuitValidator {
             // Verify circuit has elements (validates successful loading)
             String[] elements = GeckoExternal.getCircuitElements();
             if (elements == null || elements.length == 0) {
-                System.err.println("FAIL: No circuit elements found after loading");
+                LOGGER.error("FAIL: No circuit elements found after loading");
                 return 1;
             }
 
-            System.out.println("  - Loaded " + elements.length + " circuit elements");
+            LOGGER.info("  - Loaded " + elements.length + " circuit elements");
 
             if (runSimulation) {
                 // Initialize with short simulation time (1ms with 1us step)
                 GeckoExternal.initSimulation(1e-6, 1e-3);
 
-                System.out.println("Running simulation (1ms)...");
+                LOGGER.info("Running simulation (1ms)...");
                 GeckoExternal.runSimulation();
 
                 // Wait for simulation to complete
@@ -123,7 +127,7 @@ public final class CircuitValidator {
                 }
 
                 if (waited >= MAX_WAIT_MS) {
-                    System.err.println("FAIL: Simulation timeout after " + (MAX_WAIT_MS / 1000) + "s");
+                    LOGGER.error("FAIL: Simulation timeout after " + (MAX_WAIT_MS / 1000) + "s");
                     return 1;
                 }
 
@@ -132,15 +136,15 @@ public final class CircuitValidator {
 
                 // Verify simulation ran
                 double simTime = GeckoExternal.getSimulationTime();
-                System.out.println("  - Simulation time: " + simTime + "s");
+                LOGGER.info("  - Simulation time: " + simTime + "s");
             }
 
-            System.out.println("PASS: " + file.getName());
+            LOGGER.info("PASS: " + file.getName());
             return 0;
 
         } catch (Exception e) {
-            System.err.println("FAIL: " + file.getName());
-            System.err.println("  - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
+            LOGGER.error("FAIL: " + file.getName());
+            LOGGER.error("  - Error: " + e.getClass().getSimpleName() + ": " + e.getMessage());
             e.printStackTrace(System.err);
             return 1;
         }

@@ -13,6 +13,8 @@
  */
 package gecko.geckoscript;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.Category;
 import gecko.Declaration;
 import gecko.Documentation;
@@ -42,6 +44,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Script window stores simulation access reference for script execution")
 public final class ScriptWindow extends JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(ScriptWindow.class);
+
     ExtraFilesWindow _extSourceWindow;
     private boolean _extWindowInit = false;
     SimulationAccess _circuit;
@@ -637,7 +641,7 @@ public final class ScriptWindow extends JFrame {
             try {
                 _scriptObject.runScript();
             } catch (Throwable e) {
-                System.err.println("\t" + e);
+                LOGGER.error("\t" + e);
                 // this is UGLY: we need a newline at the end, otherwise the output is not written!
                 _outputStream.append("\n\t" + e.getMessage() + "\n");
                 for (StackTraceElement ste : e.getStackTrace()) {
@@ -697,7 +701,7 @@ public final class ScriptWindow extends JFrame {
         if (docAnnotation != null && declaration != null) {
             Category category = method.getAnnotation(Category.class);
             if (category == null) {
-                System.err.println("empty category " + method);
+                LOGGER.error("empty category " + method);
                 throw new NullPointerException("Empty Category " + method);
             }
             if (selection == MethodCategory.ALL_CATEGORIES || category.value() == selection) {
@@ -705,7 +709,7 @@ public final class ScriptWindow extends JFrame {
             }
         } else {
             if (docAnnotation == null && declaration != null || docAnnotation != null && declaration == null) {
-                System.out.println("method not properly documented " + method);
+                LOGGER.info("method not properly documented " + method);
             }
         }
     }

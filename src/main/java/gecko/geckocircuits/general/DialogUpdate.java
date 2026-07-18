@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import java.io.*;
 import java.net.SocketTimeoutException;
@@ -26,8 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
@@ -37,6 +37,8 @@ import javax.swing.JOptionPane;
  */
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.TooManyFields"})
 public final class DialogUpdate extends javax.swing.JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(DialogUpdate.class);
+
 
     private static void doRealUpdateCheck() {
         Thread updateThread = new Thread(new Runnable() {
@@ -44,8 +46,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
             public void run() {
                 try {
                     Thread.sleep(10000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(DialogUpdate.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {LogManager.getLogger(DialogUpdate.class).error("Exception occurred", ex);
                 }
 
                 doUpdateCheck(PRO_URL);
@@ -102,8 +103,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
             final Date rDate = _dFormat.parse(DialogAbout.RELEASE_DATE);
             jLabelCurrentDate.setText(_showFormat.format(rDate));
 
-        } catch (ParseException ex) {
-            Logger.getLogger(DialogUpdate.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {LogManager.getLogger(DialogUpdate.class).error("Exception occurred", ex);
         }
 
     }
@@ -386,8 +386,7 @@ public final class DialogUpdate extends javax.swing.JFrame {
                 }
             }
 
-        } catch (IOException | URISyntaxException ex) {
-            Logger.getLogger(DialogUpdate.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | URISyntaxException ex) {LogManager.getLogger(DialogUpdate.class).error("Exception occurred", ex);
             jButtonGetUpdateOS.setText("Download failed!");
         } catch (Throwable error) {
             JOptionPane.showMessageDialog(this,

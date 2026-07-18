@@ -13,12 +13,12 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -39,6 +39,8 @@ import javax.swing.JOptionPane;
  *
  */
 public class GetJarPath {
+    private static final Logger LOGGER = LogManager.getLogger(GetJarPath.class);
+
 
     private static boolean _initialized;
     private static String _JARpath;
@@ -105,8 +107,7 @@ public class GetJarPath {
         String path = "";
         try {
             path = URLDecoder.decode(_refToCallingPackage.getResource(_refToCallingPackage.getSimpleName() + ".class").toString(), "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(GetJarPath.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {LogManager.getLogger(GetJarPath.class).error("Exception occurred", ex);
         }
         if (path.startsWith("jar")) {
             path = path.replaceAll("jar:", "");
@@ -114,7 +115,7 @@ public class GetJarPath {
             path = path.replaceAll(_refToCallingPackage.getSimpleName() + ".class", "");
         }
 
-        System.out.println(path);
+        LOGGER.info(path);
 
         // path is coming from an URL - when a space is encountered here, it will
         // be converted to a %20-Character!?!
@@ -151,7 +152,7 @@ public class GetJarPath {
             // everything of the path inside the jar:
             final int jarIndex = path.indexOf(".jar!");
             _JARFilePath = path.substring(0, jarIndex + 4);
-            System.out.println(path);
+            LOGGER.info(path);
             path = path.substring(0, jarIndex);
             final int lastDelimiterIndex = path.lastIndexOf('/');
             path = path.substring(0, lastDelimiterIndex + 1);
@@ -163,7 +164,7 @@ public class GetJarPath {
         if (!MainWindow.IS_BRANDED) {
             final File testFile = new File(path);
             if (!testFile.isDirectory()) {
-                System.err.println("Error: jar-Path is not a directory!");
+                LOGGER.error("Error: jar-Path is not a directory!");
             }
         }
         _JARpath = path;

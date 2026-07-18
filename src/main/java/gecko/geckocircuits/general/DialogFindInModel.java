@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.circuit.SchematicEditor2;
 import java.awt.event.ActionEvent;
@@ -32,6 +34,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores schematic editor reference for search operations")
 public final class DialogFindInModel extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogFindInModel.class);
+
 
     private final SchematicEditor2 _se;
 
@@ -61,7 +65,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
                 jTextField.setText(foundString);
                 _se._visibleCircuitSheet.findString(foundString, jCheckBoxIgnore.isSelected(), !jCheckBoxExact.isSelected());
                 } catch (Exception ex) {
-                    System.err.println("could not find component!");
+                    LOGGER.error("could not find component!");
                 }
             }
         });

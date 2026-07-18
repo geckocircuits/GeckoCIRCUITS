@@ -13,6 +13,8 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckoscript.AbstractGeckoCustom;
 import gecko.geckoscript.SimulationAccess;
 import gecko.i18n.resources.I18nKeys;
@@ -21,10 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 /**
  * This is an implementation of GeckoCustom, that is to be used for remote
  * method invocation with GeckoRemote.
@@ -34,6 +32,8 @@ import java.util.logging.Logger;
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
         justification = "Static _lastSessionIDActive tracks session across instances for callback coordination")
 public final class GeckoCustomRemote extends AbstractGeckoCustom implements GeckoRemoteInterface, CallbackServerInterface {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoCustomRemote.class);
+
 
     private boolean _free = true; //denotes if this instance of GeckoCIRCUITS is free for a remote connection
     private static volatile long _lastSessionIDActive = 0;
@@ -53,8 +53,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
                 if (lastClient != null) {
                     lastClient.printErrorMessage(message);
                 }
-            } catch (RemoteException ex) {
-                Logger.getLogger(GeckoCustomRemote.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {LogManager.getLogger(GeckoCustomRemote.class).error("Exception occurred", ex);
             }
         }
     }
@@ -66,8 +65,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
                 if (lastClient != null) {
                     lastClient.printSystemMessage(message);
                 }
-            } catch (RemoteException ex) {
-                Logger.getLogger(GeckoCustomRemote.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {LogManager.getLogger(GeckoCustomRemote.class).error("Exception occurred", ex);
             }
         }
     }
@@ -117,8 +115,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
                 if(disconnectingClient != null) {
                     disconnectingClient.printSystemMessage("GeckoREMOTE session closed.");
                 }
-            } catch (RemoteException ex) {
-                Logger.getLogger(GeckoCustomRemote.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {LogManager.getLogger(GeckoCustomRemote.class).error("Exception occurred", ex);
             }
             clients.remove(remoteSessionID);
             _free = (clients.isEmpty() || (_acceptsExtraConnections && clients.size() < (_numberOfExtraConnectionsAccepted+1)));
@@ -183,7 +180,7 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
                         pongs = pongs.concat("\nAND\n" + pong);
                     }
                 } catch (RemoteException ex) {
-                    System.err.println(I18nKeys.CONNECTION_TEST_FAILED.getTranslation());
+                    LOGGER.error(I18nKeys.CONNECTION_TEST_FAILED.getTranslation());
                 }
             } else {
                 return null;

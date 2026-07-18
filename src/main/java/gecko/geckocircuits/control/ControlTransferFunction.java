@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.control.calculators.InitializableAtSimulationStart;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
@@ -28,6 +30,8 @@ import java.util.List;
 
 public final class ControlTransferFunction extends AbstractControlSingleInputSingleOutput
         implements Operationable {
+    private static final Logger LOGGER = LogManager.getLogger(ControlTransferFunction.class);
+
     private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlTransferFunction.class, "TF", I18nKeys.TRANSFER_FUNKTION_H_S, I18nKeys.DEFINES_A_TRANSFER_FUNCTION);
@@ -232,7 +236,7 @@ public final class ControlTransferFunction extends AbstractControlSingleInputSin
         try {
             _savedState = new StateVariables(tokenMap);
         } catch (Throwable ex) {
-            System.err.println("could not read transfer function initial state.");
+            LOGGER.error("could not read transfer function initial state.");
         }
     }
 

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.MainWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.general.GlobalColors;
@@ -32,6 +34,8 @@ import javax.swing.JViewport;
 import org.apache.batik.svggen.SVGGraphics2D;
 
 public class CircuitSheet extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(CircuitSheet.class);
+
 
     private static final long serialVersionUID = 1L;
 
@@ -240,7 +244,7 @@ public class CircuitSheet extends JPanel {
             g2d.setStroke(oldStroke);
             super.paintComponent(g2d);
         } catch (ConcurrentModificationException ex) {
-            System.err.println("Concurrent modification in paint: " + ex.getMessage());
+            LOGGER.error("Concurrent modification in paint: " + ex.getMessage());
         }
     }
 

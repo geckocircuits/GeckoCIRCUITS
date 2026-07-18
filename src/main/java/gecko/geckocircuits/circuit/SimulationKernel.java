@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.api.ISimulationEngine;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractMotor;
@@ -34,6 +36,8 @@ import java.util.List;
 @SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
         justification = "Static fields staticTSTART/staticTEND are intentionally written for backward compatibility; public simulation status for runtime monitoring")
 public class SimulationKernel implements ISimulationEngine {
+    private static final Logger LOGGER = LogManager.getLogger(SimulationKernel.class);
+
 
     private double dt, t, tPAUSE;
     private double tSTART, tEND;
@@ -266,7 +270,7 @@ public class SimulationKernel implements ISimulationEngine {
             try {
                 sortedCalculators[zeigerAufControlElementTHERM[i1 / 2]]._outputSignal[0][0] = potentialdifferenz;
             } catch (Exception ex) {
-                System.err.println(controlParameters[zeigerAufControlElementTHERM[i1 / 2]].length + " " + zeigerAufControlElementTHERM[i1 / 2]);
+                LOGGER.error(controlParameters[zeigerAufControlElementTHERM[i1 / 2]].length + " " + zeigerAufControlElementTHERM[i1 / 2]);
                 ex.printStackTrace();
             }
 

@@ -13,7 +13,11 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public final class MyFFT {
+    private static final Logger LOGGER = LogManager.getLogger(MyFFT.class);
+
 
     int n, m;
     // Lookup tables.  Only need to recompute when size of FFT changes.
@@ -140,7 +144,7 @@ public final class MyFFT {
             counter++;
         }
 
-        System.out.println("NNNNNNn: " + N + " " + counter);
+        LOGGER.info("NNNNNNn: " + N + " " + counter);
         MyFFT fft = new MyFFT(N);
 
         double[] re = new double[N];
@@ -179,24 +183,24 @@ public final class MyFFT {
     }
 
     protected static void beforeAfter(MyFFT fft, double[] re, double[] im) {
-        System.out.println("Before: ");
+        LOGGER.info("Before: ");
         printReIm(re, im);
         fft.fft(re, im);
-        System.out.println("After: ");
+        LOGGER.info("After: ");
         printReIm(re, im);
     }
 
     protected static void printReIm(double[] re, double[] im) {
-        System.out.print("Re: [");
+        LOGGER.info("Re: [");
         for (double value : re) {
-            System.out.print(((int) (value * 1000) / 1000.0) + " ");
+            LOGGER.info(((int) (value * 1000) / 1000.0) + " ");
         }
 
-        System.out.print("]\nIm: [");
+        LOGGER.info("]\nIm: [");
         for (double value : im) {
-            System.out.print(((int) (value * 1000) / 1000.0) + " ");
+            LOGGER.info(((int) (value * 1000) / 1000.0) + " ");
         }
 
-        System.out.println("]");
+        LOGGER.info("]");
     }
 }

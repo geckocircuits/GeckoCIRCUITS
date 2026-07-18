@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -23,6 +25,8 @@ import gecko.geckocircuits.datacontainer.DataContainerValuesSettable;
  * @author andy
  */
 public class DataContainerManyTimeSeries extends AbstractDataContainer implements DataContainerValuesSettable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerManyTimeSeries.class);
+
 
     // CHECKSTYLE:OFF
     protected final float[][] _data;
@@ -124,7 +128,7 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
         try {
             return _abMinMaxValues[row];
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.info("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
         }
         return _abMinMaxValues[0];
     }

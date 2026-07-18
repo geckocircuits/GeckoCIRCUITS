@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.circuit.SimulationKernel;
 import gecko.core.circuit.TokenMap;
@@ -25,14 +27,14 @@ import java.awt.event.MouseWheelEvent;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Grafer must share data container and manager references for scope visualization")
 public final class GraferV4 extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(GraferV4.class);
+
 
     private static final long serialVersionUID = 364726123473711L;
     final ScopeSettings _scopeSettings;
@@ -343,8 +345,7 @@ public final class GraferV4 extends JPanel {
                         _loadAndDraw = false;
                     }
                     Thread.sleep(_sleepMillis);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(GraferV4.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {LogManager.getLogger(GraferV4.class).error("Exception occurred", ex);
                 }
             }
         }
@@ -425,12 +426,12 @@ public final class GraferV4 extends JPanel {
     }
 
     public void plotConnections() {
-        System.out.println("----+++------------");
+        LOGGER.info("----+++------------");
         for (AbstractDiagram diag : getManager().getDiagrams()) {
             for (AbstractCurve crv : diag.getCurves()) {
-                System.out.print(crv.getAxisConnection());
+                LOGGER.info(crv.getAxisConnection());
             }
-            System.out.println("");
+            LOGGER.info("");
         }
     }
 

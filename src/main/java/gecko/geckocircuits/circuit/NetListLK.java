@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
@@ -28,6 +30,8 @@ import java.util.*;
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Performance-critical netlist class with direct field access for simulation speed")
 public final class NetListLK {
+    private static final Logger LOGGER = LogManager.getLogger(NetListLK.class);
+
 
     public int knotenMAX, spgQuelleMAX;  // knotenMAX ... Gesamt-Knotenanzahl minus 'Ground';  spgQuelleMAX ... Summe der SpgQuellen plus LKOP2-Elemente
     public CircuitTyp[] typ;
@@ -79,7 +83,7 @@ public final class NetListLK {
                 return i1;
             }
         }
-        System.out.println("Fehler qer^08gj03qhg4");
+        LOGGER.info("Fehler qer^08gj03qhg4");
         return -1;
     }
 

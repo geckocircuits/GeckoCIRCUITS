@@ -13,11 +13,15 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.util.zip.InflaterInputStream;
 
 public class UndoRedoManager {
+    private static final Logger LOGGER = LogManager.getLogger(UndoRedoManager.class);
+
 
     //------------------------------------------------------
     private int undoZustaendeMAX = 20;
@@ -97,7 +101,7 @@ public class UndoRedoManager {
             data = in.readObject();
             in.close();
         } catch (Exception e) {
-            System.out.println(e + "   e0oiv00'er");
+            LOGGER.info(e + "   e0oiv00'er");
         }
         //---------
         //System.out.println("pointerToUndoStates= "+pointerToUndoStates+"\t\tzeigerAufRedoZustaende= "+zeigerAufRedoZustaende);
@@ -122,7 +126,7 @@ public class UndoRedoManager {
             data = in.readObject();
             in.close();
         } catch (Exception e) {
-            System.out.println(e + "   e0oiv00'er");
+            LOGGER.info(e + "   e0oiv00'er");
         }
         //---------
         if (undoNumber < undoZustaendeMAX - 1) {

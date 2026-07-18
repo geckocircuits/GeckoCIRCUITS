@@ -13,11 +13,11 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import gecko.geckocircuits.control.SubCircuitSheet;
 import gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -27,6 +27,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores subcircuit block reference for settings configuration")
 public class DialogSubCktSettings extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogSubCktSettings.class);
+
 
     private final SubcircuitBlock _subBlock;
     private final SubCircuitSheet _subSheet;
@@ -221,8 +223,7 @@ public class DialogSubCktSettings extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this,
                     "Object name: " + jTextFieldSubName.getText() + " is already in use!",
                     "Warning",
-                    JOptionPane.WARNING_MESSAGE);
-            Logger.getLogger(DialogSubCktSettings.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.WARNING_MESSAGE);LogManager.getLogger(DialogSubCktSettings.class).error("Exception occurred", ex);
         }
 
     }//GEN-LAST:event_jButtonOkActionPerformed

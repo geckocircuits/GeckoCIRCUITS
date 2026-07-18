@@ -13,9 +13,13 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 
 public class DialogUpdateSettings extends javax.swing.JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(DialogUpdateSettings.class);
+
 
     public DialogUpdateSettings() {
         initComponents();

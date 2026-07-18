@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.datacontainer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.geckocircuits.newscope.DefinedMeanSignals;
 import gecko.core.datacontainer.HiLoData;
@@ -22,8 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -35,6 +35,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Data container shares mean signals reference for scope integration")
 public final class DataContainerCompressable extends AbstractDataContainer implements DataContainerValuesSettable,
         DataContainerIntegralCalculatable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerCompressable.class);
+
 
     private final List<DataJunkCompressable> _data = new ArrayList<DataJunkCompressable>();
     public static final int JUNK_SIZE = 4096;
@@ -104,8 +106,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     public boolean isInvalidNumbers(final int row) {
         try { // first enshure that all data ranges are read:
             getAbsoluteMinMaxValue(row);
-        } catch (ArithmeticException ex) {
-            Logger.getLogger(DataContainerCompressable.class.getName()).log(Level.WARNING, ex.getMessage());
+        } catch (ArithmeticException ex) {LogManager.getLogger(DataContainerCompressable.class).warn(ex.getMessage());
         }
         // then return the invalid number result!
         return _containsInvalidNumbers[row];

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.ExternalGeckoCustom;
 import gecko.GeckoCustomMMF;
 import gecko.GeckoSim;
@@ -40,8 +42,6 @@ import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -72,6 +72,8 @@ import gecko.modelviewcontrol.AbstractUndoGenericModel;
 @SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SE_BAD_FIELD", "SF_SWITCH_FALLTHROUGH"},
         justification = "MainWindow is effectively a singleton - static fields hold application-wide state; public fields for menu item access across UI components; JFrame is not serialized in this application; switch fallthrough in schliesseProgramm is intentional for save-then-exit flow")
 public final class MainWindow extends JFrame implements WindowListener, ActionListener, ComponentListener {
+    private static final Logger LOGGER = LogManager.getLogger(MainWindow.class);
+
 
 
     int _simMenuIndex = 2; // simulation menu is third in bar.
@@ -171,8 +173,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {LogManager.getLogger(MainWindow.class).error("Exception occurred", ex);
         } catch (ClassNotFoundException ex) {
             // ignored: fall back to default look and feel
         }
@@ -938,7 +939,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             //
         } catch (Exception e) {
             saveInProgress = false;
-            System.out.println(e + " peorkkkg");
+            LOGGER.info(e + " peorkkkg");
         }
         this.setTitle(currentFileName + spTitleX + "GeckoCIRCUITS");
         this.updateRecentProperties(currentFileName);
@@ -976,8 +977,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         }
         try {
             openFile(fileChooser.getFileWithCheckedEnding().getAbsolutePath());
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {LogManager.getLogger(MainWindow.class).error("Exception occurred", ex);
         }
     }
 
@@ -1097,7 +1097,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 ex.printStackTrace();
             }
         } else {
-            System.out.println("Warning: Check for auto-backup file disabled!");
+            LOGGER.info("Warning: Check for auto-backup file disabled!");
         }
     }
 
@@ -1459,19 +1459,19 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 drp.setVisible(true);
             } else if (befehl.equals(
                     "3Dtherm")) {
-                System.out.println("Nicht implementiert");
+                LOGGER.info("Nicht implementiert");
             } else if (befehl.equals(
                     "geckoScript")) {
                 _scripter.makeVisible();
             } else if (befehl.equals(
                     "magnet")) {
-                System.out.println("Nicht implementiert");
+                LOGGER.info("Nicht implementiert");
             } else if (befehl.equals(
                     "3Delmag")) {
-                System.out.println("Nicht implementiert");
+                LOGGER.info("Nicht implementiert");
             } else if (befehl.equals(
                     "optimize")) {
-                System.out.println("Nicht implementiert");
+                LOGGER.info("Nicht implementiert");
             } else if (befehl.equals(
                     "About")) {
                 doAboutDialog();
@@ -1526,9 +1526,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             }
             this.setAnsicht();
 
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MainWindow.class
-                    .getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {LogManager.getLogger(MainWindow.class).error("Exception occurred", ex);
         }
     }
 
@@ -1722,7 +1720,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             try {
                 exitApplication();
             } catch (Exception ex) {
-                System.err.println("Cannot exit applet. Setting invisible!");
+                LOGGER.error("Cannot exit applet. Setting invisible!");
                 this.setVisible(false);
             }
 
@@ -1829,8 +1827,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                             Thread.sleep(100);
                             progress++;
                             setProgress(progress);
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (InterruptedException ex) {LogManager.getLogger(MainWindow.class).error("Exception occurred", ex);
                         }
                     }
 
@@ -1898,7 +1895,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         try {
             data = loadProjectDataFromFile(dateiName, true, null);
         } catch (FileNotFoundException ex) {
-            System.err.println("Could not read autobackup-file: " + dateiName);
+            LOGGER.error("Could not read autobackup-file: " + dateiName);
             return;
         }
 
@@ -1917,9 +1914,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                     try {
                         openFile(dateiName);
 
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(MainWindow.class
-                                .getName()).log(Level.SEVERE, null, ex);
+                    } catch (FileNotFoundException ex) {LogManager.getLogger(MainWindow.class).error("Exception occurred", ex);
                     }
                 }
             }
@@ -2027,7 +2022,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
 
         } catch (Exception e) {
-            System.out.println("openFile() - GZIP >> " + e);
+            LOGGER.info("openFile() - GZIP >> " + e);
             e.printStackTrace();
             // new version 'gzipped' -->
             try (FileInputStream fileIn = new FileInputStream(GlobalFilePathes.DATNAM);
@@ -2045,7 +2040,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                     //System.out.println("zeile[i1]= "+zeile[i1]);
                 }
             } catch (Exception eGZIP) {
-                System.out.println("openFile() - A >> " + eGZIP);
+                LOGGER.info("openFile() - A >> " + eGZIP);
                 eGZIP.printStackTrace();
             }
         }

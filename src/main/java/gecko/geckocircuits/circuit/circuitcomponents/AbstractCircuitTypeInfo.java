@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.i18n.resources.I18nKeys;
@@ -22,6 +24,8 @@ import gecko.i18n.resources.I18nKeys;
  * Extends AbstractTypeInfo to add internationalization for circuit-specific types.
  */
 public abstract class AbstractCircuitTypeInfo extends AbstractTypeInfo {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractCircuitTypeInfo.class);
+
 
     public AbstractCircuitTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription) {
         super(typeClass, idString, typeDescription);
@@ -46,7 +50,7 @@ public abstract class AbstractCircuitTypeInfo extends AbstractTypeInfo {
         try {
             return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
-            System.err.println("error: " + _typeClass);
+            LOGGER.error("error: " + _typeClass);
             ex.printStackTrace();
         }
         return null;

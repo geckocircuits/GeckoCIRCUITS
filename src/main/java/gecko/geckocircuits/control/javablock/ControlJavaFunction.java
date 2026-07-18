@@ -12,6 +12,8 @@
  *  GeckoCIRCUITS.  If not, see <http://www.gnu.org/licenses/>.
  */
 package gecko.geckocircuits.control.javablock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.TokenMap;
 
 import gecko.geckocircuits.control.ControlTypeInfo;
@@ -53,6 +55,8 @@ import javax.swing.JOptionPane;
         justification = "_inputTerminalNumber may be read before field initialization when setInputTerminalNumber is called from superclass constructor - handled safely with null checks")
 public final class ControlJavaFunction extends RegelBlock implements VariableTerminalNumber, SpecialNameVisible,
         GeckoFileable, Operationable {
+    private static final Logger LOGGER = LogManager.getLogger(ControlJavaFunction.class);
+
     private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlJavaFunction.class, "JAVA", I18nKeys.JAVA_FUNCTION);
@@ -284,20 +288,20 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
             try {
                 _javaBlock.calculateYOUT(_time, deltaT, _inputSignal, _outputSignal);
             } catch (InvocationTargetException ex) {
-                System.err.println(ex.getTargetException());
+                LOGGER.error(ex.getTargetException());
                 final StackTraceElement[] ste = ex.getTargetException().getStackTrace();
                 if (ste.length > 0) {
-                    System.err.println(ste[0] + "\n");
+                    LOGGER.error(ste[0] + "\n");
                 }
 
                 // Exception in the main method that we just tried to run
                 //showMsg("Exception in main: " + ex.getTargetException());
                 //ex.getTargetException().printStackTrace();
             } catch (Exception ex) {
-                System.err.println(ex.getMessage());
+                LOGGER.error(ex.getMessage());
                 final StackTraceElement[] ste = ex.getStackTrace();
                 if (ste.length > 0) {
-                    System.err.println(ste[0] + "\n");
+                    LOGGER.error(ste[0] + "\n");
                 }
 
             }
@@ -314,10 +318,10 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
             try {
                 _javaBlock.initialize(_inputSignal, _outputSignal);
             } catch (Exception ex) {
-                System.err.println(ex.getMessage());
+                LOGGER.error(ex.getMessage());
                 final StackTraceElement[] ste = ex.getStackTrace();
                 if (ste.length > 0) {
-                    System.err.println(ste[0] + "\n");
+                    LOGGER.error(ste[0] + "\n");
                 }
             }
             SystemOutputRedirect.setOriginalOutput();

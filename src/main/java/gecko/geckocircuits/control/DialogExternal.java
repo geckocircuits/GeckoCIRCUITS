@@ -19,10 +19,10 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -33,6 +33,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control block reference for configuration")
 public class DialogExternal extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogExternal.class);
+
 
     private final RegelBlockSimulink _regelBlock;
     private List<RegelBlock> orderList;
@@ -220,8 +222,7 @@ public class DialogExternal extends javax.swing.JDialog {
         if (this.isVisible()) {
             try {
                 _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
-            } catch (NameAlreadyExistsException ex) {
-                Logger.getLogger(DialogExternal.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NameAlreadyExistsException ex) {LogManager.getLogger(DialogExternal.class).error("Exception occurred", ex);
             }
         }
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped

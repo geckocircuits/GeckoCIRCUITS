@@ -13,10 +13,10 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
@@ -27,6 +27,8 @@ import gecko.modelviewcontrol.AbstractUndoGenericModel;
  * @author andreas
  */
 public final class IDStringDialog {
+    private static final Logger LOGGER = LogManager.getLogger(IDStringDialog.class);
+
 
     private final AbstractBlockInterface _parent;
     private String _idString;
@@ -105,8 +107,7 @@ public final class IDStringDialog {
                 deleteIDString();
                 try {
                     setNewNameChecked(oldName);
-                } catch (NameAlreadyExistsException ex) {
-                    Logger.getLogger(IDStringDialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NameAlreadyExistsException ex) {LogManager.getLogger(IDStringDialog.class).error("Exception occurred", ex);
                 }
                 notifyListeners();
             }
@@ -121,8 +122,7 @@ public final class IDStringDialog {
                 deleteIDString();
                 try {
                     setNewNameChecked(newName);
-                } catch (NameAlreadyExistsException ex) {
-                    Logger.getLogger(IDStringDialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NameAlreadyExistsException ex) {LogManager.getLogger(IDStringDialog.class).error("Exception occurred", ex);
                 }
                 notifyListeners();
             }
@@ -283,8 +283,7 @@ public final class IDStringDialog {
         } catch (NameAlreadyExistsException ex) {
             try {
                 setNewNameChecked(this + "_" + rand.nextInt());
-            } catch (NameAlreadyExistsException ex1) {
-                Logger.getLogger(AbstractBlockInterface.class.getName()).log(Level.SEVERE, null, ex1);
+            } catch (NameAlreadyExistsException ex1) {LogManager.getLogger(AbstractBlockInterface.class).error("Exception occurred", ex1);
             }
         }
     }

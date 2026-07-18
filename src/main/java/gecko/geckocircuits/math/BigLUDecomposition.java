@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.math;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -31,6 +33,8 @@ LU decomposition is in the solution of square systems of simultaneous
 linear equations.  This will fail if isNonsingular() returns false.
  */
 public class BigLUDecomposition implements java.io.Serializable {
+    private static final Logger LOGGER = LogManager.getLogger(BigLUDecomposition.class);
+
 
     private static final MathContext mc = new MathContext(20, RoundingMode.HALF_EVEN);
 //test
@@ -206,7 +210,7 @@ public class BigLUDecomposition implements java.io.Serializable {
 
         for (int j = 0; j < n; j++) {
             if (LU[j][j].abs().doubleValue() == 0) {
-                System.err.println(" j: " + j);
+                LOGGER.error(" j: " + j);
                 return false;
             }
         }

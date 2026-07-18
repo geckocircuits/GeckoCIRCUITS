@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -35,6 +37,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
 public class DialogViewPowerModule extends JDialog implements WindowListener, ActionListener {
+    private static final Logger LOGGER = LogManager.getLogger(DialogViewPowerModule.class);
+
 
 
     public DialogViewPowerModule(AbstractCircuitBlockInterface elementTH, Container c) {
@@ -87,7 +91,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "modulIntern.png");
             imgMx = new ImageIcon(url).getImage();
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.info(e);
         }
         final Image imgM = imgMx;
         JComponent jc1 = new JComponent() {

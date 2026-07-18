@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.nativec;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.SystemOutputRedirect;
 import gecko.geckocircuits.general.ProjectData;
@@ -45,6 +47,8 @@ import javax.swing.JOptionPane;
  * @author andreas
  */
 public final class ControlNativeC extends RegelBlock implements VariableTerminalNumber {
+    private static final Logger LOGGER = LogManager.getLogger(ControlNativeC.class);
+
     private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlNativeC.class, "C DLL", I18nKeys.C_DLL);
@@ -168,10 +172,10 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
                         _nativeCBlock.unloadLibraries();
                         _nativeCBlock = null;
                     }
-                    System.err.println(ex.getTargetException());
+                    LOGGER.error(ex.getTargetException());
                     final StackTraceElement[] ste = ex.getTargetException().getStackTrace();
                     if (ste.length > 0) {
-                        System.err.println(ste[0] + "\n");
+                        LOGGER.error(ste[0] + "\n");
                     }
                     // Exception in the main method that we just tried to run
                     //showMsg("Exception in main: " + ex.getTargetException());
@@ -188,7 +192,7 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
                     } else {
                         errorStr = "No valid Native Library selected!";
                     }
-                    System.err.println(errorStr);
+                    LOGGER.error(errorStr);
                     JOptionPane.showMessageDialog(null, errorStr, "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (UnsatisfiedLinkError ex) {
                 severeErrorOccured = true; // native library was not found
@@ -197,15 +201,15 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
                     _nativeCBlock = null;
                 }
                 String errorStr = "Could not load Native Library " + _libFile.getFileName() + " !";
-                System.err.println(errorStr);
+                LOGGER.error(errorStr);
                 JOptionPane.showMessageDialog(null, errorStr, "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     severeErrorOccured = true;
                     ex.printStackTrace();
-                    System.err.println(ex.getMessage());
+                    LOGGER.error(ex.getMessage());
                     final StackTraceElement[] ste = ex.getStackTrace();
                     if (ste.length > 0) {
-                        System.err.println(ste[0] + "\n");
+                        LOGGER.error(ste[0] + "\n");
                     }
                 }
                 SystemOutputRedirect.setOriginalOutput();

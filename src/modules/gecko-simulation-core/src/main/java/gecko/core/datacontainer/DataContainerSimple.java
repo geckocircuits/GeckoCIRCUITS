@@ -13,9 +13,13 @@
  */
 package gecko.core.datacontainer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 // GUI-free imports - using core module classes instead of newscope
 
 public class DataContainerSimple extends AbstractDataContainer implements DataContainerValuesSettable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerSimple.class);
+
     protected float[][] _data;
     private static final int MEGA_BYTE = 1048000;
     private static final int DOUBLE_BYTES = 8;
@@ -103,7 +107,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
             HiLoData returnValue = _abMinMaxValues[row];
             return returnValue;
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.info("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
         }
         return _abMinMaxValues[0];
     }

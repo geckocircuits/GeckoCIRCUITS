@@ -13,17 +13,18 @@
  */
 package gecko.core.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.CircuitFileConstants;
 import gecko.core.datacontainer.HiLoData;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author andreas
  */
 public final class TokenMap {
+    private static final Logger LOGGER = LogManager.getLogger(TokenMap.class);
+
 
     private final Map<String, Integer> _map = new LinkedHashMap<String, Integer>();
     private final Map<String, Deque<BlockInfo>> _duplicateMap = new LinkedHashMap<String, Deque<BlockInfo>>();
@@ -251,7 +252,7 @@ public final class TokenMap {
                         }
                     }
                     } catch (Exception ex) {
-                        System.err.println("line token: " + lineToken);
+                        LOGGER.error("line token: " + lineToken);
                         ex.printStackTrace();
                     }
                 }
@@ -739,9 +740,7 @@ public final class TokenMap {
     }
 
     private static void logErrorString(final String identifier, final Exception exception) {
-        final String messageString = "Could not read data line with identifier " + identifier;
-        Logger.getLogger(TokenMap.class.getName()).log(Level.WARNING,
-                messageString);
+        final String messageString = "Could not read data line with identifier " + identifier;LogManager.getLogger(TokenMap.class).warn(messageString);
         exception.printStackTrace();
     }
 

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import javax.swing.JFrame;
 
@@ -21,6 +23,8 @@ import javax.swing.JFrame;
  * @author andy
  */
 public class DialogModule extends GeckoDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogModule.class);
+
 
     /** Creates new form DialogModule */
     public DialogModule(final JFrame parent, final boolean modal) {
@@ -107,8 +111,7 @@ public class DialogModule extends GeckoDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DialogModule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {LogManager.getLogger(DialogModule.class).error("Exception occurred", ex);
         }
         //</editor-fold>
 

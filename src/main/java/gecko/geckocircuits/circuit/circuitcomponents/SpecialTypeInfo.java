@@ -13,15 +13,16 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.SpecialType;
 import gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class SpecialTypeInfo extends AbstractTypeInfo {
+    private static final Logger LOGGER = LogManager.getLogger(SpecialTypeInfo.class);
+
 
     public SpecialTypeInfo(Class<? extends AbstractBlockInterface> typeClass, String idString, I18nKeys typeDescription) {
         super(typeClass, idString, typeDescription);
@@ -51,9 +52,8 @@ public class SpecialTypeInfo extends AbstractTypeInfo {
         try {
             return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
-            System.err.println("error: " + _typeClass);
-            ex.printStackTrace();
-            Logger.getLogger(SpecialType.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("error: " + _typeClass);
+            ex.printStackTrace();LogManager.getLogger(SpecialType.class).error("Exception occurred", ex);
         }
         return null;
 

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.ConnectorType;
@@ -42,6 +44,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings({"unchecked", "rawtypes"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "User parameter builder stores references to parent block for parameter binding")
 public final class UserParameter<T> {
+    private static final Logger LOGGER = LogManager.getLogger(UserParameter.class);
+
 
     private final List<String> _unit;
     private int _index = -1;
@@ -162,13 +166,13 @@ public final class UserParameter<T> {
                 return list.get(index);
             }
         } catch (Throwable ex) {
-            System.err.println("could not find domain " + " " + _parameterableObject.getSimulationDomain()
+            LOGGER.error("could not find domain " + " " + _parameterableObject.getSimulationDomain()
                     + " " + _parameterableObject.getStringID() + " from component\n"
                     + " " + _parameterableObject.getClass() + " \n parameter: " + _longName);
-            System.err.println("available domains are: ");
-            System.out.println("typemap: " + _typeMap);
+            LOGGER.error("available domains are: ");
+            LOGGER.info("typemap: " + _typeMap);
             for (ConnectorType type : _typeMap) {
-                System.out.println(type);
+                LOGGER.info(type);
             }
             ex.printStackTrace();
             return null;

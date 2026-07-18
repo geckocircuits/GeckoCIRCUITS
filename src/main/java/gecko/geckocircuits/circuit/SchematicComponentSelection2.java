@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.general.LastComponentButton;
@@ -38,8 +40,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -50,6 +50,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Selection panel stores button reference for component selection updates")
 public class SchematicComponentSelection2 extends JTabbedPane {
+    private static final Logger LOGGER = LogManager.getLogger(SchematicComponentSelection2.class);
+
 
     private static final long serialVersionUID = 1L;
 
@@ -328,8 +330,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
                     //robot.mousePress(InputEvent.BUTTON1_MASK);
 
 
-                } catch (AWTException ex) {
-                    Logger.getLogger(SchematicComponentSelection2.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (AWTException ex) {LogManager.getLogger(SchematicComponentSelection2.class).error("Exception occurred", ex);
                 }
             }
         }

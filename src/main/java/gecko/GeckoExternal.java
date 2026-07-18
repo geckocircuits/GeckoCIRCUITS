@@ -13,14 +13,13 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.MainWindow;
 import gecko.geckocircuits.general.OperatingMode;
 import gecko.geckocircuits.newscope.Cispr16Fft;
 import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * This is a simple wrapper, so that users can access GeckoCIRCUITS from within
  * matlab. Some specific things have been done, e.g. startGui which creates
@@ -47,6 +46,8 @@ import java.util.logging.Logger;
  * @author anstupar
  */
 public class GeckoExternal {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoExternal.class);
+
 
     protected static volatile ExternalGeckoCustom external;
     private static double[][] _globalDoubleMatrix;
@@ -54,19 +55,19 @@ public class GeckoExternal {
 
     public static void startGui() {
 
-        System.out.println("***WARNING: GeckoExternal is a DEPRECATED API***");
-        System.out.println("GeckoExternal is deprecated as of GeckoCIRCUITS version 1.6.");
-        System.out.println("Please switch to using GeckoRemote (as explained in the Appendix of the GeckoSCRIPT tutorial included with your GeckoCIRCUITS distribution).\n");
-        System.out.println("Reasons to switch: ");
-        System.out.println("Using GeckoRemote runs GeckoCIRCUITS in its own JVM, not inside MATLAB, this means that");
-        System.out.println("1) You can close GeckoCIRCUITS without having to close all of MATLAB;");
-        System.out.println("2) You don't have to worry about memory allocation for GeckoCIRCUITS in the MATLAB JVM;");
-        System.out.println("3) You will not have problems with compiling Java blocks in your model as was the case with some MATLAB installations.\n");
-        System.out.println("GeckoExternal continues to function as before for backwards compatibility. However it is no longer maintained.");
-        System.out.println("This means that:");
-        System.out.println("1) Any new problems with using GeckoExternal in MATLAB will not be addressed;");
-        System.out.println("2) Any new GeckoSCRIPT functions (version 1.6 and later) will not be available through GeckoExternal.");
-        System.out.println("***WARNING: GeckoExternal is a DEPRECATED API***");
+        LOGGER.info("***WARNING: GeckoExternal is a DEPRECATED API***");
+        LOGGER.info("GeckoExternal is deprecated as of GeckoCIRCUITS version 1.6.");
+        LOGGER.info("Please switch to using GeckoRemote (as explained in the Appendix of the GeckoSCRIPT tutorial included with your GeckoCIRCUITS distribution).\n");
+        LOGGER.info("Reasons to switch: ");
+        LOGGER.info("Using GeckoRemote runs GeckoCIRCUITS in its own JVM, not inside MATLAB, this means that");
+        LOGGER.info("1) You can close GeckoCIRCUITS without having to close all of MATLAB;");
+        LOGGER.info("2) You don't have to worry about memory allocation for GeckoCIRCUITS in the MATLAB JVM;");
+        LOGGER.info("3) You will not have problems with compiling Java blocks in your model as was the case with some MATLAB installations.\n");
+        LOGGER.info("GeckoExternal continues to function as before for backwards compatibility. However it is no longer maintained.");
+        LOGGER.info("This means that:");
+        LOGGER.info("1) Any new problems with using GeckoExternal in MATLAB will not be addressed;");
+        LOGGER.info("2) Any new GeckoSCRIPT functions (version 1.6 and later) will not be available through GeckoExternal.");
+        LOGGER.info("***WARNING: GeckoExternal is a DEPRECATED API***");
 
         GeckoSim.operatingmode = OperatingMode.EXTERNAL;
         if (external == null) {
@@ -84,8 +85,7 @@ public class GeckoExternal {
         while (!GeckoSim.mainLoaded) {
             try {
                 Thread.sleep(10);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(GeckoExternal.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(GeckoExternal.class).error("Exception occurred", ex);
             }
         }
 
@@ -485,8 +485,7 @@ public class GeckoExternal {
         checkExternal();
         try {
             external.importFromFile(fileName, subCircuitName);
-        } catch (RemoteException ex) {
-            Logger.getLogger(GeckoExternal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {LogManager.getLogger(GeckoExternal.class).error("Exception occurred", ex);
         }
     }
 

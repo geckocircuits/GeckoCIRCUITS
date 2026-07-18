@@ -13,10 +13,14 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.newscope.GeckoDialog;
 
 public class ControlDebugWindow extends GeckoDialog {
+    private static final Logger LOGGER = LogManager.getLogger(ControlDebugWindow.class);
+
 
     /**
      * Creates new form ControlDebugWindow
@@ -155,8 +159,7 @@ public class ControlDebugWindow extends GeckoDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ControlDebugWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {LogManager.getLogger(ControlDebugWindow.class).error("Exception occurred", ex);
         }
         //</editor-fold>
 

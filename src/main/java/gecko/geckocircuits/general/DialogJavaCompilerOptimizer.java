@@ -13,18 +13,20 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import java.net.URL;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores Java compiler reference for optimization code")
 public class DialogJavaCompilerOptimizer extends JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(DialogJavaCompilerOptimizer.class);
+
 
     private GeckoJavaCompiler geckoJavaCompiler;
     private javax.swing.JButton jButtonCloseWindow;
@@ -458,8 +460,7 @@ private void loadCode () {
             geckoJavaCompiler.setStaticVariables(jTextAreaVariables.getText());
             geckoJavaCompiler.doCompilation();
             jTextAreaCompilerMessage.setText(geckoJavaCompiler.getCompilerMessage());
-        } catch (IOException ex) {
-            Logger.getLogger(DialogJavaCompilerOptimizer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {LogManager.getLogger(DialogJavaCompilerOptimizer.class).error("Exception occurred", ex);
         }
 }
 

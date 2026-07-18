@@ -13,14 +13,16 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control block reference for port configuration")
 public class DialogMuxDemux extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogMuxDemux.class);
+
 
     private final RegelBlock _regelBlock;
 
@@ -150,8 +152,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         if (this.isVisible()) {
             try {
                 _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
-            } catch (NameAlreadyExistsException ex) {
-                Logger.getLogger(DialogMuxDemux.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NameAlreadyExistsException ex) {LogManager.getLogger(DialogMuxDemux.class).error("Exception occurred", ex);
             }
         }
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped

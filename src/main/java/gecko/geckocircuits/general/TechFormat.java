@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.text.NumberFormat;
 import java.text.DecimalFormat;
 import java.util.Locale;
@@ -20,6 +22,8 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class TechFormat implements Serializable {
+    private static final Logger LOGGER = LogManager.getLogger(TechFormat.class);
+
 
     public static final String FORMAT_AUTO = "AUTO";  // automatic adjustment to the size of the number to format
     //
@@ -312,18 +316,18 @@ public class TechFormat implements Serializable {
             "1234.676", "1,234.676", "1'234.676", "12'3'4.676", "1234.6m76", "12e4", "-98.55e45", "0.67E-67", "123n4.676", "1234n.676", "1234.676e", "1234.676EE",
             "2e.", "2e+.", "2e+0.67", "e3434", ".e3", "2k34", "2k2", "13m", "300", "7.1"
         };
-        System.out.println("Testing 'parseT()' -->");
+        LOGGER.info("Testing 'parseT()' -->");
         for (int i1 = 0; i1 < s.length; i1++) {
             try {
-                System.out.println(i1 + "\t" + this.parseT(s[i1]) + "\t\t" + s[i1]);
+                LOGGER.info(i1 + "\t" + this.parseT(s[i1]) + "\t\t" + s[i1]);
             } catch (Exception e) {
-                System.out.println(e + "   " + s[i1]);
+                LOGGER.info(e + "   " + s[i1]);
             }
         }
-        System.out.println();
+        LOGGER.info("");
         //----------------------------
         // Teste 'formatT()' -->
-        System.out.println("Testing 'formatT()' -->");
+        LOGGER.info("Testing 'formatT()' -->");
 
         double[] data = new double[]{
             0.000000000000123456, 0.00000000000123456, 0.0000000000123456, 0.000000000123456,
@@ -332,7 +336,7 @@ public class TechFormat implements Serializable {
             12345.6, 123456, 1234560, 12345600, 123456000, 1234560000, 300, 7.1, 7.11, 7.12, 0.071
         };
         for (double value : data) {
-            System.out.println(this.formatT(value, FORMAT_AUTO) + "\t\t" + value);
+            LOGGER.info(this.formatT(value, FORMAT_AUTO) + "\t\t" + value);
         }
         //----------------------------
     }
@@ -340,7 +344,7 @@ public class TechFormat implements Serializable {
     public void testAusgabe2() {
         //----------------------------
         // Teste 'formatT()' -->
-        System.out.println("Random-Testing 'formatT()' -->");
+        LOGGER.info("Random-Testing 'formatT()' -->");
         for (int i1 = 0; i1 < 999999; i1++) {
             int e1 = 1 + RANDOM.nextInt(8);  // [1 ... 8] --> number of digits
             int e2 = RANDOM.nextInt((int) Math.pow(10, e1));  // integer, maximum 8 digits
@@ -352,7 +356,7 @@ public class TechFormat implements Serializable {
                 ratio = data / q1;
             }
             if (ratio < 0.9999) {
-                System.out.println(data + "\t\t" + this.formatT(data, FORMAT_AUTO) + "\t\tratio= " + ratio);
+                LOGGER.info(data + "\t\t" + this.formatT(data, FORMAT_AUTO) + "\t\tratio= " + ratio);
             }
         }
     }

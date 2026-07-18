@@ -13,11 +13,11 @@
  */
 package gecko.geckocircuits.control.javablock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.tools.SimpleJavaFileObject;
 
 /**
@@ -28,6 +28,8 @@ import javax.tools.SimpleJavaFileObject;
  * @author andreas
  */
 class RamJavaFileObject extends SimpleJavaFileObject {
+    private static final Logger LOGGER = LogManager.getLogger(RamJavaFileObject.class);
+
 
     RamJavaFileObject(final String name, final Kind kind) {
         super(toURI(name), kind);
@@ -57,8 +59,7 @@ class RamJavaFileObject extends SimpleJavaFileObject {
     public static URI toURI(final String name) {
         try {
             return new URI(name);
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(RamJavaFileObject.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {LogManager.getLogger(RamJavaFileObject.class).error("Exception occurred", ex);
         }
         return null;
     }

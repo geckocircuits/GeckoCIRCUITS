@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
@@ -23,8 +25,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -32,6 +32,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "NetBeans GUI form generated public field; stores Fourier panel reference for visualization")
 public final class NewScope extends javax.swing.JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(NewScope.class);
+
 
     private static final long serialVersionUID = 1L;
 
@@ -483,8 +485,7 @@ private void jButtonNextMaxActionPerformed(java.awt.event.ActionEvent evt) {//NO
             _sliderContainer.goToExtrema(getIterationDirection(), ExtremumType.MAXIMUM, _grafer.get(0));
         }
         _grafer.get(0)._xSliderDrawer.setDisplayRanges(_sliderContainer.getSliderXRange());
-    } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextMaxActionPerformed
 
@@ -519,24 +520,21 @@ private void jButtonNextMinActionPerformed(java.awt.event.ActionEvent evt) {//NO
         } else {
             _sliderContainer.goToExtrema(getIterationDirection(), ExtremumType.MINIMUM, _grafer.get(0));
         }
-    } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextMinActionPerformed
 
 private void jButtonNextZeroActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonNextZeroActionPerformed
     try {
         _sliderContainer.goToZeroOrEqual(getIterationDirection(), true, _grafer.get(0));
-    } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextZeroActionPerformed
 
 private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonNextEqualActionPerformed
     try {
         _sliderContainer.goToZeroOrEqual(getIterationDirection(), false, _grafer.get(0));
-    } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextEqualActionPerformed
 

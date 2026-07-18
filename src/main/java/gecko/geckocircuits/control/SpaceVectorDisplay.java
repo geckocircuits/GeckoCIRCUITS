@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.GlobalFilePathes;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javax.swing.ImageIcon;
@@ -34,8 +36,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JSpinner;
 
 /**
@@ -45,6 +45,8 @@ import javax.swing.JSpinner;
 @SuppressFBWarnings(value = {"ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", "CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "Counter is shared across display updates for animation timing; constructor exceptions are expected on initialization failure; NetBeans GUI form generated public fields; stores control block reference for space vector display")
 public final class SpaceVectorDisplay extends javax.swing.JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(SpaceVectorDisplay.class);
+
     static long counter = 0;
     static final int ORIGINX = 180;
     static final int ORIGINY = 200;
@@ -173,8 +175,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
-        } catch (Exception ex) {
-            Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.WARNING, "Failed to load icon image", ex);
+        } catch (Exception ex) {LogManager.getLogger(SpaceVectorDisplay.class).warn("Failed to load icon image", ex);
         }
         initComponents();
 
@@ -481,7 +482,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
 //                svd.drawVector(time, r,s,t,r,s,t, r, s, t);
 //                Thread.sleep(10);
 //            } catch (InterruptedException ex) {
-//                Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.SEVERE, null, ex);
+//LogManager.getLogger(SpaceVectorDisplay.class).error("Exception occurred", ex);
 //            }
 //        }
 //        System.exit(-1);
@@ -529,8 +530,7 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         if (pauseValue >= 1) {
             try {
                 Thread.sleep(pauseValue / 1000, pauseValue % 1000 );
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(SpaceVectorDisplay.class).error("Exception occurred", ex);
             }
         }
 

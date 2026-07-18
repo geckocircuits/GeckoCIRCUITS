@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
@@ -39,10 +41,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class IdealTransformer extends AbstractCircuitBlockInterface implements HiddenSubCircuitable, CurrentMeasurable, DirectVoltageMeasurable {
+    private static final Logger LOGGER = LogManager.getLogger(IdealTransformer.class);
+
 
     private static final double HEIGHT = 0.8;
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealTransformer.class, "Trans", I18nKeys.IDEAL_TRANSFORMER);
@@ -143,8 +144,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         try {
             primaryVoltageSource.setNewNameChecked(getStringID() + " prim");
             secondaryVoltageSource.setNewNameChecked(getStringID() + " sec");
-        } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(IdealTransformer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NameAlreadyExistsException ex) {LogManager.getLogger(IdealTransformer.class).error("Exception occurred", ex);
         }
     }
 

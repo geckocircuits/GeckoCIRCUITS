@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.general.*;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
@@ -43,8 +45,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -52,6 +52,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Transient fields are repopulated during component initialization")
 public class ControlSignalSource extends RegelBlock implements ControlInputTwoTerminalStateable,
         GeckoFileable, Operationable {
+    private static final Logger LOGGER = LogManager.getLogger(ControlSignalSource.class);
+
     private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlSignalSource.class, "SIGNAL", I18nKeys.SIGNAL_SOURCE);
@@ -311,8 +313,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
                 _xy[1][i1] = Double.parseDouble(tokenizer.nextToken());      // value
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(ControlSignalSource.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            ex.printStackTrace();LogManager.getLogger(ControlSignalSource.class).error(ex.getMessage(), ex);
         } catch (NumberFormatException nfe) {
             nfe.printStackTrace();
             final String errorMessage = "External data file not formatted properly in " + getStringID() + "\n" + nfe.getMessage();
@@ -499,8 +500,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
                     _datnamXY = (String) parameterValue;
                     MainWindow._fileManager.addFile(_externalDataFile);
                     return true;
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(ControlSignalSource.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (FileNotFoundException ex) {LogManager.getLogger(ControlSignalSource.class).error("Exception occurred", ex);
                     throw new RuntimeException("File not found! " + ex, ex);
                 }
             }

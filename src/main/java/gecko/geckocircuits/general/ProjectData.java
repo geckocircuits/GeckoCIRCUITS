@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.GeckoFile;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
@@ -39,6 +41,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "readFileVersion is intentionally mutable; constructor stores external references; public fields for file format serialization compatibility; transient fields are repopulated during project load")
 @SuppressWarnings("serial")
 public final class ProjectData implements Serializable {
+    private static final Logger LOGGER = LogManager.getLogger(ProjectData.class);
+
     private static final long serialVersionUID = 1L;
 
     private static final Random RANDOM = new Random();
@@ -399,7 +403,7 @@ public final class ProjectData implements Serializable {
                 }
 
             } catch (Exception ex) {
-                System.err.println("Error! Could not create control block with id: " + typ);
+                LOGGER.error("Error! Could not create control block with id: " + typ);
                 ex.printStackTrace();
             }
         }
@@ -415,7 +419,7 @@ public final class ProjectData implements Serializable {
                     allSubCircuitBlocks.add((SubcircuitBlock) newBlock);
                 }
             } catch (Exception ex) {
-                System.err.println("Error! Could not create control block with id: " + typ);
+                LOGGER.error("Error! Could not create control block with id: " + typ);
                 ex.printStackTrace();
             }
 

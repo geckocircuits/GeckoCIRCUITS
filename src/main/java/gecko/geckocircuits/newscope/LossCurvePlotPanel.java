@@ -14,6 +14,8 @@
 
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.losscalculation.LossCurve;
 import gecko.core.circuit.losscalculation.SwitchingLossCurve;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class LossCurvePlotPanel extends SimpleGraferPanel {
+    private static final Logger LOGGER = LogManager.getLogger(LossCurvePlotPanel.class);
+
     private int _moreDataFactor;
 
 
@@ -83,7 +87,7 @@ public final class LossCurvePlotPanel extends SimpleGraferPanel {
                 }
             }
             } catch (Exception ex) {
-                System.err.println(curve + " " + curve.data );
+                LOGGER.error(curve + " " + curve.data );
                 ex.printStackTrace();
             }
         }

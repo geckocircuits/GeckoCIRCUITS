@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javax.swing.SwingUtilities;
 
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
@@ -33,6 +33,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "Public field for simulation kernel access; stores references to GUI components for simulation coordination")
 public final class SimulationRunner {
+    private static final Logger LOGGER = LogManager.getLogger(SimulationRunner.class);
+
 
 	final MainWindow _mainwindow;
 	final SchematicEditor2 _se;
@@ -128,8 +130,7 @@ public final class SimulationRunner {
 		while (DataSaver.WAIT_COUNTER.get() != 0 && counter < 100) {
 			try {
 				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				Logger.getLogger(SimulationAccess.class.getName()).log(Level.SEVERE, null, ex);
+			} catch (InterruptedException ex) {LogManager.getLogger(SimulationAccess.class).error("Exception occurred", ex);
 			}
 			counter++;
 		}

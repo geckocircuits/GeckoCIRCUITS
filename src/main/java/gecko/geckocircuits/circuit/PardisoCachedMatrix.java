@@ -14,11 +14,15 @@
 package gecko.geckocircuits.circuit;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  *
  * @author andy
  */
 public class PardisoCachedMatrix extends AbstractCachedMatrix {
+    private static final Logger LOGGER = LogManager.getLogger(PardisoCachedMatrix.class);
+
     private final int N;
     private SymmetricSparseMatrix sparseMatrix;
 
@@ -49,7 +53,7 @@ public class PardisoCachedMatrix extends AbstractCachedMatrix {
                     if (_originalMatrix[i][j] != 0) {
                         sysMatrix.setValue(i, j, _originalMatrix[i][j]);
                         if(_originalMatrix[j][i] != _originalMatrix[i][j]) {
-                            System.err.println("nonsymmetric: " + i + " " + j + " " + _originalMatrix[i][j] + " " + _originalMatrix[j][i]);
+                            LOGGER.error("nonsymmetric: " + i + " " + j + " " + _originalMatrix[i][j] + " " + _originalMatrix[j][i]);
                             throw new RuntimeException("Error in sparse matrix solver: system matrix is not symmetric!");
                         }
                     }

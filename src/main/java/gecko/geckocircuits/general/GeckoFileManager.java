@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.GeckoFile;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -22,6 +24,8 @@ import java.util.*;
  * @author anstupar This class keeps track of all the GeckoFile objects added to a model
  */
 public final class GeckoFileManager {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoFileManager.class);
+
 
     public final Set<GeckoFile> _allAvailableFiles = new LinkedHashSet<GeckoFile>();
 
@@ -80,7 +84,7 @@ public final class GeckoFileManager {
                 _allAvailableFiles.remove(getFile(fileHash));
             }
         } catch (Exception ex) {
-            System.err.println("GeckoFile not found: " + ex.getMessage());
+            LOGGER.error("GeckoFile not found: " + ex.getMessage());
         }
     }
 

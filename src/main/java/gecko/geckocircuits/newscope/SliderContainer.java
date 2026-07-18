@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.newscope.SliderUtils.ExtremumType;
@@ -27,6 +29,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 final class SliderContainer{
+    private static final Logger LOGGER = LogManager.getLogger(SliderContainer.class);
+
   private boolean _sliderActive = false;
   private final List<SliderValues> _ySliderValues = new ArrayList<SliderValues>();
   private boolean _inDiffMode = false;
@@ -69,7 +73,7 @@ final class SliderContainer{
       initYSliderValue();
     }
     if(_ySliderValues.size() != _grafer.getDataContainer().getRowLength()){
-      System.out.println("ERROR");
+      LOGGER.info("ERROR");
     }
     if(_activeSlider.equals(_redSlider)){
       return getSliderValues(curveID).getYValue1();

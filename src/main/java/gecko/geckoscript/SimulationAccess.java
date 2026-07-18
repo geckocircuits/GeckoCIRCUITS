@@ -13,6 +13,8 @@
  */
 package gecko.geckoscript;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.general.MainWindow;
@@ -23,13 +25,13 @@ import gecko.geckocircuits.control.DataSaver;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "EI_EXPOSE_REP"}, justification = "Simulation access stores main window reference for GUI interaction; returns file list for external access")
 public final class SimulationAccess implements GeckoFileable {
+    private static final Logger LOGGER = LogManager.getLogger(SimulationAccess.class);
+
 
     final static long DUMMY_BLOCK_ID = -1231231987;
     final List<GeckoFile> _additionalSourceFiles = new ArrayList<GeckoFile>();
@@ -48,7 +50,7 @@ public final class SimulationAccess implements GeckoFileable {
             scriptwindow = new ScriptWindow(this);
 
         } catch (Throwable ex) {
-            System.out.println("Could not find editor library jsyntaxpane.jar. Scripting tool disabled.");
+            LOGGER.info("Could not find editor library jsyntaxpane.jar. Scripting tool disabled.");
             // ex.printStackTrace();
         }
 
@@ -83,8 +85,7 @@ public final class SimulationAccess implements GeckoFileable {
         while (DataSaver.WAIT_COUNTER.get() != 0 && counter < 100) {
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SimulationAccess.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(SimulationAccess.class).error("Exception occurred", ex);
             }
             counter++;
         }

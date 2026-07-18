@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckoscript.GeckoInvalidArgumentException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -25,6 +27,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @author andy
  */
 public final class CharacteristicsCalculator {
+    private static final Logger LOGGER = LogManager.getLogger(CharacteristicsCalculator.class);
+
 
     private static CharacteristicsCalculator _valueCache = null;
     private static double _startTime;
@@ -162,14 +166,14 @@ public final class CharacteristicsCalculator {
         }
         if (start < 0) {
             bounderies[0] = worksheet.getTimeValue(startIndex, 0);
-            System.out.println("Changed startTime to: " + bounderies[0]);
+            LOGGER.info("Changed startTime to: " + bounderies[0]);
         }
 
         if (Math.abs(end - worksheet.getTimeValue(endIndex, 0)) > TIMETHRESHOLD) {
             bounderies[1] = worksheet.getTimeValue(endIndex, 0);
-            System.out.println("Changed endTime to: " + bounderies[1]);
+            LOGGER.info("Changed endTime to: " + bounderies[1]);
 
-            System.out.println("Difference range: " + Math.abs(bounderies[1] - worksheet.getTimeValue(endIndex, 0)));
+            LOGGER.info("Difference range: " + Math.abs(bounderies[1] - worksheet.getTimeValue(endIndex, 0)));
         }
 
         if (start != bounderies[0] && end != bounderies[1]) {

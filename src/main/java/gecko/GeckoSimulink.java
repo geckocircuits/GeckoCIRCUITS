@@ -13,6 +13,8 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.OperatingMode;
 import gecko.geckocircuits.general.StartupWindow;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
@@ -21,10 +23,9 @@ import gecko.geckocircuits.control.ControlFromEXTERNAL;
 import gecko.geckocircuits.control.ControlOSZI;
 import gecko.geckocircuits.control.ControlToEXTERNAL;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class GeckoSimulink {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoSimulink.class);
+
 
     private long tStartSimulink, tEndSimulink;
     private boolean isRunning = false;
@@ -43,8 +44,7 @@ public class GeckoSimulink {
         }
         try {
             GeckoSim._win.openFile(sFileName);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GeckoSimulink.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {LogManager.getLogger(GeckoSimulink.class).error("Exception occurred", ex);
         }
         return "returnValue";
     }
@@ -69,7 +69,7 @@ public class GeckoSimulink {
         }
         isRunning = true;
         if (GeckoSim._win == null) {
-            System.out.println("initializing GeckoCIRCUITS");
+            LOGGER.info("initializing GeckoCIRCUITS");
             return -1;
         }
         GeckoSim._win._simRunner.external_init(tend);

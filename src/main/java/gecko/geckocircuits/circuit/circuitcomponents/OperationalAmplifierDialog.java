@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.GlobalFilePathes;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,6 +30,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
 final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplifier> {
+    private static final Logger LOGGER = LogManager.getLogger(OperationalAmplifierDialog.class);
+
 
     public OperationalAmplifierDialog(final OperationalAmplifier parent) {
         super(parent);
@@ -73,7 +77,7 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
                     Image img = new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "dialog_opv_model.png").toURL()).getImage();
                     graphics.drawImage(img, 10, 10, new JFrame());
                 } catch (Exception e) {
-                    System.out.println(e + "   er4b");
+                    LOGGER.info(e + "   er4b");
                 }
             }
         };

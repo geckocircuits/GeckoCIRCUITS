@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.general.ProjectData;
@@ -34,8 +36,6 @@ import java.awt.event.MouseMotionListener;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -47,6 +47,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "NM_FIELD_NAMING_CONVENTION"},
         justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference; Singleton name is a widely-used pattern in codebase")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
+    private static final Logger LOGGER = LogManager.getLogger(SchematicEditor2.class);
+
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
     private SchematicComponentSelection2 _sea;
@@ -371,8 +373,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             try {
                 toRename.getIDStringDialog().setNewNameChecked(newName);
                 updateComponentCouplings(oldName, newName);
-            } catch (NameAlreadyExistsException ex) {
-                Logger.getLogger(SchematicEditor2.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NameAlreadyExistsException ex) {LogManager.getLogger(SchematicEditor2.class).error("Exception occurred", ex);
             }
         }
 
@@ -1515,8 +1516,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         _visibleCircuitSheet.requestFocusInWindow();  // damit koennen KeyEvents in MainWindow() abgearbeitet werden
         try {
             Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(SchematicEditor2.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {LogManager.getLogger(SchematicEditor2.class).error("Exception occurred", ex);
         }
 
         testCreateNewComponent();
@@ -1876,8 +1876,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                 } catch (NameAlreadyExistsException ex) {
                     try {
                         block.setNewNameChecked(IDStringDialog.findUnusedName(originalName));
-                    } catch (NameAlreadyExistsException ex1) {
-                        Logger.getLogger(SchematicEditor2.class.getName()).log(Level.SEVERE, null, ex1);
+                    } catch (NameAlreadyExistsException ex1) {LogManager.getLogger(SchematicEditor2.class).error("Exception occurred", ex1);
                     }
                 }
             }

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control.calculators;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.control.IsDtChangeSensitive;
 import gecko.geckocircuits.control.SSAShape;
 import static gecko.geckocircuits.control.calculators.AbstractSignalCalculator.TWO_PI;
@@ -24,6 +26,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Writes to inherited static _time field for simulation coordination; constructor exceptions for invalid shapes; public fields for analysis data sharing")
 // Public fields and static array required by simulator API; Constructor validation required for safety
 public final class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
+    private static final Logger LOGGER = LogManager.getLogger(SmallSignalCalculator.class);
+
 
     //static boolean isSimulationDC;
     private static final int THREE = 3;
@@ -129,7 +133,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
     public void tearDownOnPause() {
 
 
-        System.out.println("xxx " + _nMax + " " + _numberSamples);
+        LOGGER.info("xxx " + _nMax + " " + _numberSamples);
         if (_circularArrayFilled) {
 
             try {

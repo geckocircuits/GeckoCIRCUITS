@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.scope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.general.TechFormat;
 import java.awt.AlphaComposite;
@@ -27,14 +29,14 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.GeneralPath;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @Deprecated
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "Legacy graphing class with direct field access; stores worksheet data for scope visualization")
 public final class GraferImplementation extends GraferV3 implements MouseListener, MouseMotionListener {
+    private static final Logger LOGGER = LogManager.getLogger(GraferImplementation.class);
+
     // Number of intervals on the x-axis in which Hi and Lo values ​​are determined for data compression
     private static final int INTERVALS_ALONG_X = 2000;
 
@@ -529,7 +531,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
         } else if (lineStyleAxesY[i1] == DOTTED_FAT) {
             g2.setStroke(str_DOTTED_FAT);
         } else {
-            System.out.println("Fehler: hhqqt5");
+            LOGGER.info("Fehler: hhqqt5");
         }
         //-----------------------
         // TODO: replace with switch expression!
@@ -729,7 +731,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 }
                 yPix[i2] = y0Kurve + sgnDistance[indexCurveAssociatedXAxis[i1]] + (int) yValue;
             } catch (Exception e) {
-                System.out.println("Fehler: 5z6z4r447 " + e + "    kurvenanzahl= " + kurvenanzahl + "      i1= " + i1 + "     " + positionSIGNAL.length);
+                LOGGER.info("Fehler: 5z6z4r447 " + e + "    kurvenanzahl= " + kurvenanzahl + "      i1= " + i1 + "     " + positionSIGNAL.length);
             }
         }
         //--------------------------------
@@ -1509,8 +1511,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                     this.repaint();
                 }
                 break;
-            default:
-                Logger.getLogger(GraferImplementation.class.getName()).log(Level.SEVERE, "message");
+            default:LogManager.getLogger(GraferImplementation.class).error("message");
         }
         //--------------------------
     }
@@ -1729,7 +1730,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 break;
             //--------------------------
             default:
-                System.out.println("Fehler: eorivm3");
+                LOGGER.info("Fehler: eorivm3");
                 break;
         }
     }
@@ -1748,7 +1749,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
             //--------------------------
             //--------------------------
             default:
-                System.out.println("Fehler: oweifn03");
+                LOGGER.info("Fehler: oweifn03");
                 break;
         }
     }
@@ -1998,8 +1999,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 // Auch bei einigen anderen MausModus-Einstellungen soll der Schieber sichtbar sein
                 // daher: Anzeige abhaengig von 'xSliderActive', siehe unten -->
                 break;
-            default:
-                Logger.getLogger(GraferImplementation.class.getName()).log(Level.SEVERE, "Default in case statement reached.");
+            default:LogManager.getLogger(GraferImplementation.class).error("Default in case statement reached.");
                 break;
         }
         //-------------------
@@ -2394,8 +2394,7 @@ public final class GraferImplementation extends GraferV3 implements MouseListene
                 indexX = i1;
             }
         }
-        if (indexX == -1) {
-            Logger.getLogger(GraferImplementation.class.getName()).log(Level.SEVERE, "Index error in plot.");
+        if (indexX == -1) {LogManager.getLogger(GraferImplementation.class).error("Index error in plot.");
         }
         // (2) Min- und Max-Werte in dieser Kolonne finden:
         double wsMIN = 1e99, wsMAX = -1e99;

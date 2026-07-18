@@ -13,17 +13,18 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.GeckoFile;
 import java.io.*;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author andreas
  */
 public final class DialogMakeExternal extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogMakeExternal.class);
+
     private final byte[] _contents;
 
     private final GeckoFile _geckoFile;
@@ -240,14 +241,12 @@ public final class DialogMakeExternal extends javax.swing.JDialog {
         try {
             output = new BufferedOutputStream(new FileOutputStream(writeFile));
             output.write(_contents);
-        } catch (IOException ex) {
-            Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {LogManager.getLogger(DialogMakeExternal.class).error("Exception occurred", ex);
         } finally {
             if (output != null) {
                 try {
                     output.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(DialogMakeExternal.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {LogManager.getLogger(DialogMakeExternal.class).error("Exception occurred", ex);
                 }
             }
         }

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.scope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.newscope.GeckoGraphics2D;
 import java.awt.AlphaComposite;
@@ -37,6 +39,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @Deprecated
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Legacy scope class stores worksheet data for graph visualization")
 public class GraferV3 extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(GraferV3.class);
+
 
     //-------------------------------------
     // Konstanten:
@@ -216,7 +220,7 @@ public class GraferV3 extends JPanel {
         this.gridNormalX_associatedXAxis = Arrays.copyOf(zugeordneteXAchse, zugeordneteXAchse.length);
         this.gridNormalX_associatedYAxis = Arrays.copyOf(zugeordneteYAchse, zugeordneteYAchse.length);
         if (zugeordneteXAchse.length != zugeordneteYAchse.length) {
-            System.out.println("Fehler 45763425n");
+            LOGGER.info("Fehler 45763425n");
         }
     }
 
@@ -224,7 +228,7 @@ public class GraferV3 extends JPanel {
         this.gridNormalY_associatedXAxis = Arrays.copyOf(zugeordneteXAchse, zugeordneteXAchse.length);
         this.gridNormalY_associatedYAxis = Arrays.copyOf(zugeordneteYAchse, zugeordneteYAchse.length);
         if (zugeordneteXAchse.length != zugeordneteYAchse.length) {
-            System.out.println("Fehler 908hj4gw4");
+            LOGGER.info("Fehler 908hj4gw4");
         }
     }
 
@@ -393,18 +397,18 @@ public class GraferV3 extends JPanel {
             this.drawCoordinateAxes(g);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e + " in drawCoordinateAxes()");
+            LOGGER.info(e + " in drawCoordinateAxes()");
         }
         try {
             this.drawCurves(g);
         } catch (Exception e) {
-            System.out.println(e + " in drawCurves()");
+            LOGGER.info(e + " in drawCurves()");
             e.printStackTrace();
         }
         try {
             this.draw(g);
         } catch (Exception e) {
-            System.out.println(e + " in draw()");
+            LOGGER.info(e + " in draw()");
         }
         //--------------------------
     }
@@ -593,7 +597,7 @@ public class GraferV3 extends JPanel {
         } else if (curveLineStyle[i1] == DOTTED_FAT) {
             g2.setStroke(str_DOTTED_FAT);
         } else if (curveLineStyle[i1] != INVISIBLE) {
-            System.out.println("Fehler: rhjw5z65");
+            LOGGER.info("Fehler: rhjw5z65");
         }
 
         //-----------------------
@@ -646,7 +650,7 @@ public class GraferV3 extends JPanel {
                                     new int[]{Math.round(yPix[i2]) + (int) (0.29 * aTRIANG), Math.round(yPix[i2]) + (int) (0.29 * aTRIANG), Math.round(yPix[i2]) - (int) (0.58 * aTRIANG)}, 3);
                             break;
                         default:
-                            System.out.println("Fehler: q09gj023");
+                            LOGGER.info("Fehler: q09gj023");
                             break;
                     }
                 }
@@ -1075,7 +1079,7 @@ public class GraferV3 extends JPanel {
                             } else if (lineStyleGridNormalXminor[i1] == DOTTED_FAT) {
                                 g2.setStroke(str_DOTTED_FAT);
                             } else {
-                                System.out.println("Fehler: p05kgh9");
+                                LOGGER.info("Fehler: p05kgh9");
                             }
                             //-----------------------
                             //-----------------------
@@ -1107,7 +1111,7 @@ public class GraferV3 extends JPanel {
                             } else if (lineStyleGridNormalX[i1] == DOTTED_FAT) {
                                 g2.setStroke(str_DOTTED_FAT);
                             } else {
-                                System.out.println("Fehler: hrtrjww5j");
+                                LOGGER.info("Fehler: hrtrjww5j");
                             }
                             //-----------------------
                             // Minor-Grids -->
@@ -1156,7 +1160,7 @@ public class GraferV3 extends JPanel {
                             } else if (lineStyleGridNormalYminor[i1] == DOTTED_FAT) {
                                 g2.setStroke(str_DOTTED_FAT);
                             } else {
-                                System.out.println("Fehler: hezwhwh6");
+                                LOGGER.info("Fehler: hezwhwh6");
                             }
                             //-----------------------
                             //-----------------------
@@ -1188,7 +1192,7 @@ public class GraferV3 extends JPanel {
                             } else if (lineStyleGridNormalY[i1] == DOTTED_FAT) {
                                 g2.setStroke(str_DOTTED_FAT);
                             } else {
-                                System.out.println("Fehler: gjigrije");
+                                LOGGER.info("Fehler: gjigrije");
                             }
                             //-----------------------
                             //
@@ -1430,7 +1434,7 @@ public class GraferV3 extends JPanel {
             case DARKGREEN:
                 return Color.decode("0x006400");
             default:
-                System.out.println("Fehler: dtcjjztdm " + selector);
+                LOGGER.info("Fehler: dtcjjztdm " + selector);
                 return Color.black;
         }
     }

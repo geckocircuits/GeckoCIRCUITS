@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
@@ -50,6 +52,8 @@ import java.util.List;
 import java.util.Set;
 
 public final class SubcircuitBlock extends AbstractSpecialBlock {
+    private static final Logger LOGGER = LogManager.getLogger(SubcircuitBlock.class);
+
 
     public static final AbstractTypeInfo tInfo = new SpecialTypeInfo(SubcircuitBlock.class, "SUBCIRCUIT", I18nKeys.SUBCIRCUIT);
 
@@ -157,7 +161,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     }
 
     public boolean areTerminalPositionsOK() {
-        System.err.println("Warning: Terminal position check disabled!");
+        LOGGER.error("Warning: Terminal position check disabled!");
         if(1>0) { return true; }
         for (SubCircuitTerminable terminal1 : _myTerminals) {
             for (SubCircuitTerminable terminal2 : _myTerminals) {

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.general.ProjectData;
 import gecko.geckocircuits.general.GlobalFonts;
@@ -25,12 +27,12 @@ import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Axis stores diagram reference for coordinate transformations")
 public final class Axis {
+    private static final Logger LOGGER = LogManager.getLogger(Axis.class);
+
 
     private static final int HASH_CONSTANT1 = 3;
     private static final int HASH_CONSTANT2 = 7;
@@ -281,8 +283,7 @@ public final class Axis {
             if (!limits.equals(newLimits) || scaleFactor != scaleFactor2) {
                 try {
                     Thread.sleep(1);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Axis.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {LogManager.getLogger(Axis.class).error("Exception occurred", ex);
                 }
                 //System.out.println("correktur. " + scaleFactor + " " + scaleFactor2 + " " + limits + " " + newLimits);
                 double scaleFactor3 = getScaleFactor();

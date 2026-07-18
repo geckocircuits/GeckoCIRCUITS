@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.scope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -26,9 +28,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -50,6 +49,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings({"deprecation", "serial", "this-escape"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores Fourier data arrays and worksheet reference for analysis")
 public class DialogFourierDiagram extends JDialog implements ComponentListener {
+    private static final Logger LOGGER = LogManager.getLogger(DialogFourierDiagram.class);
+
 
     //-------------------
     private JTabbedPane tabbedPane;
@@ -168,7 +169,7 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
                 fkaku.flush();
                 fkaku.close();
             } catch (Exception e) {
-                System.out.println(e + "   qe90r8gn03g8q");
+                LOGGER.info(e + "   qe90r8gn03g8q");
             }
         });
         JMenuItem mItemF5 = GuiFabric.getJMenuItem(I18nKeys.EXIT);
@@ -195,9 +196,7 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
             for (int i = 0; i < iconFiles.length; i++) {
                 URL iconUrl = DialogFourierDiagram.class.getResource("/gecko/geckocircuits/general/" + iconFiles[i]);
                 iconON[i] = new ImageIcon(iconUrl);
-                if (iconON[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
-                    Logger.getLogger(DialogFourierDiagram.class.getName()).log(Level.WARNING,
-                        "Failed to load icon: " + iconFiles[i]);
+                if (iconON[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {LogManager.getLogger(DialogFourierDiagram.class).warn("Failed to load icon: " + iconFiles[i]);
                 }
             }
 
@@ -208,13 +207,10 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
             for (int i = 0; i < iconFilesOFF.length; i++) {
                 URL iconUrl = DialogFourierDiagram.class.getResource("/gecko/geckocircuits/general/" + iconFilesOFF[i]);
                 iconOFF[i] = new ImageIcon(iconUrl);
-                if (iconOFF[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
-                    Logger.getLogger(DialogFourierDiagram.class.getName()).log(Level.WARNING,
-                        "Failed to load icon: " + iconFilesOFF[i]);
+                if (iconOFF[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {LogManager.getLogger(DialogFourierDiagram.class).warn("Failed to load icon: " + iconFilesOFF[i]);
                 }
             }
-        } catch (Exception e) {
-            Logger.getLogger(DialogFourierDiagram.class.getName()).log(Level.WARNING, e.getMessage());
+        } catch (Exception e) {LogManager.getLogger(DialogFourierDiagram.class).warn(e.getMessage());
         }
         //
         mouseButtons = new JButton[iconOFF.length];
@@ -241,8 +237,7 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
                 case 4:
                     mouseButtons[i1].setToolTipText("set logarithmic y-axis");
                     break;
-                default:
-                    Logger.getLogger(DialogFourierDiagram.class.getName()).log(Level.WARNING, "Error: 49ugnw3grjgtfzj");
+                default:LogManager.getLogger(DialogFourierDiagram.class).warn("Error: 49ugnw3grjgtfzj");
                     break;
             }
             //--------------------
@@ -307,8 +302,7 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
                 }
 
                 break;
-            default:
-                Logger.getLogger(DialogFourierDiagram.class.getName()).log(Level.WARNING, "Error: 98n3gweggtq5t");
+            default:LogManager.getLogger(DialogFourierDiagram.class).warn("Error: 98n3gweggtq5t");
                 break;
         }
         for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {

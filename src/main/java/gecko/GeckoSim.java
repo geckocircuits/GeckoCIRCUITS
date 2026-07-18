@@ -13,6 +13,8 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.*;
 import gecko.i18n.LangInit;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -27,8 +29,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -56,6 +56,8 @@ import javax.swing.UIManager;
 @SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "MS_SHOULD_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
         justification = "Static fields are intentionally mutable for runtime configuration across different operating modes; public fields used across the application")
 public class GeckoSim {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoSim.class);
+
 
     static long startTime;  // MS_PKGPROTECT: only used within package
     public static MainWindow _win;
@@ -95,7 +97,7 @@ public class GeckoSim {
 
     public static void stopTime() {
         long stopTime = System.currentTimeMillis();
-        System.out.println("total execution:  " + (stopTime - startTime) / 1000.0);
+        LOGGER.info("total execution:  " + (stopTime - startTime) / 1000.0);
         System.exit(3);
     }
 
@@ -106,7 +108,7 @@ public class GeckoSim {
             try {
                 operatingmode = OperatingMode.valueOf(modeProperty.toUpperCase());
             } catch (IllegalArgumentException e) {
-                System.err.println("Invalid operating mode: " + modeProperty);
+                LOGGER.error("Invalid operating mode: " + modeProperty);
             }
         }
 
@@ -130,15 +132,15 @@ public class GeckoSim {
 
         if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF
                 && operatingmode != OperatingMode.HEADLESS) {
-            System.out.println("Starting GeckoCIRCUITS...");
+            LOGGER.info("Starting GeckoCIRCUITS...");
         }
 
         // Handle HEADLESS mode - skip all GUI initialization
         if (operatingmode == OperatingMode.HEADLESS) {
-            System.out.println("GeckoCIRCUITS running in HEADLESS mode");
+            LOGGER.info("GeckoCIRCUITS running in HEADLESS mode");
             loadApplicationProperties();
             mainLoaded = true;
-            System.out.println("GeckoCIRCUITS HEADLESS is ready");
+            LOGGER.info("GeckoCIRCUITS HEADLESS is ready");
             // Headless mode exits here - the REST API or CLI should handle further processing
             return;
         }
@@ -165,12 +167,12 @@ public class GeckoSim {
             }
 
             if (JavaMemoryRestart.startNewGeckoCIRCUITSJVM(reqMem, args, javaCommand)) {
-                System.out.println("GeckoCIRCUITS should now be running outside of MATLAB at port " + args[1]);
+                LOGGER.info("GeckoCIRCUITS should now be running outside of MATLAB at port " + args[1]);
                 remoteLoaded = true;
                 remoteLoading = false;
                 return;//System.exit(12);
             } else {
-                System.out.println("ERROR: Could not start GeckoCIRCUITS.");
+                LOGGER.info("ERROR: Could not start GeckoCIRCUITS.");
                 remoteLoaded = false;
                 remoteLoading = false;
                 return;//System.exit(12);
@@ -185,12 +187,12 @@ public class GeckoSim {
             }
 
             if (JavaMemoryRestart.startNewGeckoCIRCUITSJVM(reqMem, args, javaCommand)) {
-                System.out.println("GeckoCIRCUITS should now be running outside of MATLAB and accessible via file " + args[1] + " of size " + args[2]);
+                LOGGER.info("GeckoCIRCUITS should now be running outside of MATLAB and accessible via file " + args[1] + " of size " + args[2]);
                 mmfLoaded = true;
                 mmfLoading = false;
                 return;//System.exit(12);
             } else {
-                System.out.println("ERROR: Could not start GeckoCIRCUITS.");
+                LOGGER.info("ERROR: Could not start GeckoCIRCUITS.");
                 mmfLoaded = false;
                 mmfLoading = false;
                 return;//System.exit(12);
@@ -230,7 +232,7 @@ public class GeckoSim {
             if (args.length > 0) {
                 if (!(args[0].equals("-p") || args[0].equals("-mm"))) { //first argument could for port number or file for remote access
                     final File file = new File(args[0]);
-                    System.out.println(args[0]);
+                    LOGGER.info(args[0]);
 
                     loadFileSwingThreadSave(file.getAbsolutePath());
                 }
@@ -270,7 +272,7 @@ public class GeckoSim {
                                     MainWindow._mmf_access = new GeckoCustomMMF(MainWindow._scripter);
                                     MainWindow._mmf_access.enableAccess(fileName, fileSize);
                                 } else {
-                                    System.err.println("No file given for memory-mapped access.");
+                                    LOGGER.error("No file given for memory-mapped access.");
                                     System.exit(4);
                                 }
                             } catch (Throwable err) {
@@ -292,7 +294,7 @@ public class GeckoSim {
         mainLoaded = true;
 
         // don't modify this string, since it is used in the Java-Memory-Restart
-        System.out.println("GeckoCIRCUITS is ready");
+        LOGGER.info("GeckoCIRCUITS is ready");
     }
 
     public static boolean testIfBrandedVersion() {
@@ -378,7 +380,7 @@ public class GeckoSim {
         try {  // create and load default properties
             InputStream is = GeckoSim.class.getResourceAsStream(DEFAULT_PROPERTY_FILE);
             if (is == null) {
-                System.err.println("SEVERE: could not find default properties file, exiting!");
+                LOGGER.error("SEVERE: could not find default properties file, exiting!");
                 System.exit(-1);
             } else {
                 try (InputStream stream = is) {
@@ -410,10 +412,8 @@ public class GeckoSim {
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.SEVERE, "Could not find file: " + e.getMessage());
-        } catch (IOException ex) {
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException e) {LogManager.getLogger(GeckoSim.class).error("Could not find file: " + e.getMessage());
+        } catch (IOException ex) {LogManager.getLogger(GeckoSim.class).error("Exception occurred", ex);
         }
 
     }
@@ -427,8 +427,7 @@ public class GeckoSim {
             GlobalFilePathes.RECENT_CIRCUITS_3 = applicationProps.getProperty("RECENT_CIRCUITS_3");
             GlobalFilePathes.RECENT_CIRCUITS_4 = applicationProps.getProperty("RECENT_CIRCUITS_4");
 
-        } catch (Exception e) {
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.WARNING, "Failed to load recent circuit paths from properties", e);
+        } catch (Exception e) {LogManager.getLogger(GeckoSim.class).warn("Failed to load recent circuit paths from properties", e);
         }
     }
 
@@ -457,7 +456,7 @@ public class GeckoSim {
 
             }
         } catch (Throwable err) {
-            System.err.println("Could not check java version.");
+            LOGGER.error("Could not check java version.");
         }
     }
 
@@ -477,13 +476,13 @@ public class GeckoSim {
             javax.tools.JavaCompiler compiler = javax.tools.ToolProvider.getSystemJavaCompiler();
             if (compiler != null) {
                 compiler_toolsjar_missing = false;
-                System.out.println("Java Compiler found: " + compiler.getClass().getName());
+                LOGGER.info("Java Compiler found: " + compiler.getClass().getName());
             } else {
                 compiler_toolsjar_missing = true;
-                System.err.println("ERROR: Java Compiler not found. JDK is required (JRE is not sufficient).");
-                System.err.println("Current Java version: " + System.getProperty("java.version"));
-                System.err.println("Java vendor: " + System.getProperty("java.vendor"));
-                System.err.println("Java home: " + System.getProperty("java.home"));
+                LOGGER.error("ERROR: Java Compiler not found. JDK is required (JRE is not sufficient).");
+                LOGGER.error("Current Java version: " + System.getProperty("java.version"));
+                LOGGER.error("Java vendor: " + System.getProperty("java.vendor"));
+                LOGGER.error("Java home: " + System.getProperty("java.home"));
             }
 
             ScriptEngineManager manager = new ScriptEngineManager();
@@ -533,16 +532,13 @@ public class GeckoSim {
             }
 
 
-            File file = new File(APPLICATION_PROPERTY_FILE);
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.CONFIG, "Saving system properties: " + file.getAbsolutePath());
+            File file = new File(APPLICATION_PROPERTY_FILE);LogManager.getLogger(GeckoSim.class).debug("Saving system properties: " + file.getAbsolutePath());
             try (FileOutputStream out = new FileOutputStream(file)) {
                 applicationProps.store(out, "--- GeckoCIRCUITS Property File ---");
             }
-        } catch (FileNotFoundException fnfe) {
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.WARNING, "Could not write property file. Perhaps we do not have file write permissions.", "");
+        } catch (FileNotFoundException fnfe) {LogManager.getLogger(GeckoSim.class).warn("Could not write property file. Perhaps we do not have file write permissions.", "");
         } catch (IOException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();LogManager.getLogger(GeckoSim.class).error("Exception occurred", ex);
         }
     }
 
@@ -554,7 +550,7 @@ public class GeckoSim {
                 final File geckoAppData = new File(dataFolder + "/.GeckoCIRCUITS");
                 if (!geckoAppData.exists()) {
                     if (!geckoAppData.mkdir()) {
-                        System.err.println("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
+                        LOGGER.error("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
                     }
                 }
                 if (geckoAppData.exists()) {
@@ -568,7 +564,7 @@ public class GeckoSim {
             final File geckoAppData = new File(dataFolder + "/.GeckoCIRCUITS");
             if (!geckoAppData.exists()) {
                 if (!geckoAppData.mkdir()) {
-                    System.err.println("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
+                    LOGGER.error("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
                 }
             }
             if (geckoAppData.exists()) {
@@ -625,8 +621,7 @@ public class GeckoSim {
     private static void loadFileSwingThreadSave(final String absolutePath) {
         try {
             _win.openFile(absolutePath);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GeckoSim.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {LogManager.getLogger(GeckoSim.class).error("Exception occurred", ex);
         }
     }
 

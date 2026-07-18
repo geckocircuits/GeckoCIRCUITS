@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.datacontainer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.NiceScale;
@@ -26,6 +28,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Returns time series reference for external data access and visualization")
 public class DataContainerSimple extends AbstractDataContainer implements DataContainerValuesSettable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerSimple.class);
+
 
     // CHECKSTYLE:OFF
     protected float[][] _data;
@@ -145,7 +149,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
         try {
             return _abMinMaxValues[row];
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.info("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
         }
         return _abMinMaxValues[0];
     }

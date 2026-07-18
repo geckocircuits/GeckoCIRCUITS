@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.ComponentIdentifiable;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.ControlTypeInfo;
@@ -36,8 +38,6 @@ import java.awt.Stroke;
 import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -50,6 +50,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Block interface exposes terminals and parameters for circuit connectivity and configuration")
     public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
         implements ComponentTerminable, ComponentIdentifiable {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractBlockInterface.class);
+
 
     public List<UserParameter<? extends Object>> registeredParameters = new ArrayList<UserParameter<? extends Object>>();
     private ComponentDirection orientationBeforeMove = ComponentDirection.NORTH_SOUTH;
@@ -249,13 +251,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             } catch (NameAlreadyExistsException ex1) {
                 try {
                     final String oldName = getStringID();
-                    setNewNameChecked(IDStringDialog.findUnusedName(oldName));
-                    Logger.getLogger(AbstractBlockInterface.class.getName()).log(Level.SEVERE, null, ex1);
-                } catch (NameAlreadyExistsException ex2) {
-                    Logger.getLogger(AbstractBlockInterface.class.getName()).log(Level.SEVERE, null, ex2);
+                    setNewNameChecked(IDStringDialog.findUnusedName(oldName));LogManager.getLogger(AbstractBlockInterface.class).error("Exception occurred", ex1);
+                } catch (NameAlreadyExistsException ex2) {LogManager.getLogger(AbstractBlockInterface.class).error("Exception occurred", ex2);
                 }
             }
-            System.out.println(ex.getMessage() + " renamed to: " + getStringID());
+            LOGGER.info(ex.getMessage() + " renamed to: " + getStringID());
         }
 
     }

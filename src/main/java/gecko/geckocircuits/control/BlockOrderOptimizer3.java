@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -20,6 +22,8 @@ import java.util.Set;
 import java.util.*;
 
 public final class BlockOrderOptimizer3 {
+    private static final Logger LOGGER = LogManager.getLogger(BlockOrderOptimizer3.class);
+
 
     private final List<ControlOrderNode> _allNodes = new ArrayList<ControlOrderNode>();
     /**
@@ -63,7 +67,7 @@ public final class BlockOrderOptimizer3 {
                     iterateIntoNegativeDirection(node.getAllDirectInputs(), node.getPriority() - 1);
                 } catch (LoopDetectionException ex) {
                     ex.printLoopMessage();
-                    //Logger.getLogger(BlockOrderOptimizer3.class.getName()).log(Level.SEVERE, null, ex);
+                    //LogManager.getLogger(BlockOrderOptimizer3.class).error("Exception occurred", ex);
                 }
             }
         }
@@ -82,7 +86,7 @@ public final class BlockOrderOptimizer3 {
                     iterateIntoNegativeDirection(node.getAllDirectInputs(), node.getPriority() - 1);
                 } catch (LoopDetectionException ex) {
                     ex.printLoopMessage();
-                    //Logger.getLogger(BlockOrderOptimizer3.class.getName()).log(Level.SEVERE, null, ex);
+                    //LogManager.getLogger(BlockOrderOptimizer3.class).error("Exception occurred", ex);
                 }
             }
         }
@@ -156,7 +160,7 @@ public final class BlockOrderOptimizer3 {
         for (int i = 0; i < elements.size() - 1; i++) {
             for (int j = i; j < elements.size(); j++) {
                 if (elements.get(j).isDirectInputOfElement(elements.get(i))) {
-                    System.out.println("out of order: " + j + " " + elements.get(j).getElementControl().getStringID() + " "
+                    LOGGER.info("out of order: " + j + " " + elements.get(j).getElementControl().getStringID() + " "
                             + elements.get(j).getPriority()
                             + " " + i + " " + elements.get(i).getElementControl().getStringID() + " " + elements.get(i).getPriority());
                     loop++;
@@ -168,19 +172,19 @@ public final class BlockOrderOptimizer3 {
 
     private static void doConsistencyChecks(final List<RegelBlock> outList, final List<RegelBlock> allControlsInput) {
         if (outList.size() != allControlsInput.size()) {
-            System.err.println("unequal length of lists: input " + allControlsInput.size() + " output: " + outList.size());
+            LOGGER.error("unequal length of lists: input " + allControlsInput.size() + " output: " + outList.size());
             assert false;
         }
 
         final Set<RegelBlock> set1 = new HashSet<RegelBlock>(outList);
         if (outList.size() != set1.size()) {
-            System.err.println("duplicate components in sorted list!");
+            LOGGER.error("duplicate components in sorted list!");
             assert false;
         }
 
         final Set<RegelBlock> set2 = new HashSet<RegelBlock>(allControlsInput);
         if (allControlsInput.size() != set2.size()) {
-            System.err.println("duplicate components in input of sorted list!");
+            LOGGER.error("duplicate components in input of sorted list!");
             assert false;
         }
 

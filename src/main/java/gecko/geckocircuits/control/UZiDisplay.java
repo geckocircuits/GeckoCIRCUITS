@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -33,13 +35,13 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JSpinner;
 
 @SuppressFBWarnings(value = {"CT_CONSTRUCTOR_THROW", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
         justification = "Constructor exceptions are expected on initialization failure; NetBeans GUI form generated public fields")
 public final class UZiDisplay extends GeckoDialog {
+    private static final Logger LOGGER = LogManager.getLogger(UZiDisplay.class);
+
 
     static long counter = 0;
     static final int ORIGINX = 180;
@@ -464,8 +466,7 @@ public final class UZiDisplay extends GeckoDialog {
         if (pauseValue >= 1) {
             try {
                 Thread.sleep(pauseValue / 1000, pauseValue % 1000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SpaceVectorDisplay.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(SpaceVectorDisplay.class).error("Exception occurred", ex);
             }
         }
 

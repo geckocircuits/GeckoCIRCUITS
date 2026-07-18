@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.SaveViewFrame;
 import gecko.geckocircuits.general.TechFormat;
 import gecko.core.circuit.TokenMap;
@@ -39,6 +41,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores CISPR16 control block reference for EMI test receiver calculations")
 public final class TestReceiverWindow extends JFrame {
+    private static final Logger LOGGER = LogManager.getLogger(TestReceiverWindow.class);
+
 
     private static final TechFormat tcf = new TechFormat();
     private final ControlCISPR16 _controlCISPR16;
@@ -944,7 +948,7 @@ public final class TestReceiverWindow extends JFrame {
                         abortCalculation();
                         err.printStackTrace();
                     } catch (Throwable error) {
-                        System.err.println("error: " + error.getMessage());
+                        LOGGER.error("error: " + error.getMessage());
                         error.printStackTrace();
                     }
                 }

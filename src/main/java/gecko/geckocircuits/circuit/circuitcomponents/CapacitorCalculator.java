@@ -14,6 +14,8 @@
 
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.calculator.AStampable;
 import gecko.core.circuit.calculator.BStampable;
 import gecko.core.circuit.calculator.DirectCurrentCalculatable;
@@ -29,6 +31,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Static capError flag for error coordination; public fields for simulation; stores BVector reference")
 public final class CapacitorCalculator extends CircuitComponent implements AStampable, BStampable,
          DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
+    private static final Logger LOGGER = LogManager.getLogger(CapacitorCalculator.class);
+
 
     //private final LKreisC _lkCap;
     public static final boolean initCapacitor = false;
@@ -197,7 +201,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     @Override
     public void setZValue(int z) {
         assert z > 0;
-        System.out.println("setting z Value: + " + z);
+        LOGGER.info("setting z Value: + " + z);
         _z = z;
     }
 
