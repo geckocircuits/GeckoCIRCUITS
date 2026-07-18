@@ -13,13 +13,13 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.scope.DialogFourierDiagramm;
+import gecko.geckocircuits.scope.DialogFourierDiagram;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFilePathes;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.scope.FourierPlotFrame;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -39,9 +39,12 @@ import java.net.URL;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "DE_MIGHT_IGNORE"},
         justification = "Public field for FFT sample count; stores worksheet reference for Fourier analysis; icon loading is optional")
 public class DialogFourier extends JDialog {
+
+    private static final long serialVersionUID = 1L;
 
     //-------------
     private AbstractDataContainer worksheet;
@@ -50,10 +53,10 @@ public class DialogFourier extends JDialog {
     //-------------
     private TechFormat cf = new TechFormat();
     private FormatJTextField rngSc1, rngSc2, rngDf1, rngDf2, rngSl1, rngSl2;  // Angaben Zeitbereiche
-    private FormatJTextField ftfnMax, ftff1;  // Textfelder fuer Fourier-Daten
-    private double f1;  // Grundfrequenz fuer Fourieranalyse
-    private int nMin, nMax;  // Grundfrequenz-Vielfache fuer Fourieranalyse
-    private JCheckBox[] jcbZV;   // Auswahl der ZV-Kurven, die Fourier-analysiert werden soll
+    private FormatJTextField ftfnMax, ftff1;  // Text fields for Fourier data
+    private double f1;  // Fundamental frequency for Fourier analysis
+    private int nMin, nMax;  // Fundamental frequency multiples for Fourier analysis
+    private JCheckBox[] jcbZV;   // Selection of the ZV curves to be Fourier analyzed
     private JButton jbCALC;  // Berechnung starten
     //-------------
     //-------------
@@ -82,7 +85,7 @@ public class DialogFourier extends JDialog {
         this.setTitle(" Fourier-Transform");
         this.getContentPane().setLayout(new BorderLayout());
         _jPanelRange = new JPanelDialogRange(worksheet, sliderValues);
-        this.baueGUI();
+        this.buildGUI();
 
         _jPanelRange.registerActionListener(new ActionListener() {
             @Override
@@ -97,7 +100,7 @@ public class DialogFourier extends JDialog {
         //------------------------
     }
 
-    private void baueGUI() {
+    private void buildGUI() {
         //------------------
         Container con = this.getContentPane();
         con.setLayout(new BorderLayout());
@@ -158,7 +161,7 @@ public class DialogFourier extends JDialog {
         pSEL.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Select Curve(s)", TitledBorder.LEFT, TitledBorder.TOP));
         //
         jcbZV = new JCheckBox[worksheet.getRowLength()];
-        gbc.fill = gbc.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         for (int i1 = 1; i1 < worksheet.getRowLength() + 1; i1++) {
             gbc.gridx = 0;
             gbc.gridy = i1 - 1;
@@ -182,7 +185,7 @@ public class DialogFourier extends JDialog {
             pSEL.add(jlZV, gbc);
         }
 
-        final JDialog ich = this;  // fuer Referenz in innerer Klasse
+        final JDialog ich = this;  // for reference in inner class
         //
         JPanel pOK = new JPanel();
         jbCALC = GuiFabric.getJButton(I18nKeys.CALCULATE);
@@ -206,7 +209,7 @@ public class DialogFourier extends JDialog {
 
                     @Override
                     public void run() {
-                        jbCALC.setEnabled(false);  // damit man nicht mehrere Berechnungen durch versehentliches Druecken startet
+                        jbCALC.setEnabled(false);  // so that you don't start multiple calculations by accidentally pressing it
                         try {
                             erg = calculate();
                             //-----------------
@@ -218,7 +221,7 @@ public class DialogFourier extends JDialog {
                             }
                             //-----------------
                             // fertige Grafik nach Rechenende hochfahren ..
-                            DialogFourierDiagramm diagramm = new DialogFourierDiagramm(
+                            DialogFourierDiagram diagramm = new DialogFourierDiagram(
                                     erg, signalFourierAnalysiert, nMin, f1, worksheet, _jPanelRange.getStartTimeValue(),
                                     _jPanelRange.getStopTimeValue());
                             diagramm.setLocationRelativeTo(ich);
@@ -256,7 +259,6 @@ public class DialogFourier extends JDialog {
         jpCalc.setLayout(new BorderLayout());
         jpCalc.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Calculate", TitledBorder.LEFT, TitledBorder.TOP));
         jpCalc.add(pOK, BorderLayout.SOUTH);
-        //
         //===========================================================
         //===========================================================
         JPanel jpERGx = new JPanel();
@@ -355,7 +357,7 @@ public class DialogFourier extends JDialog {
                     while (worksheet.getTimeValue(j, 0) < startTime + i * timeSpan / NN) {
                         j++;
                     }
-                    data[i] = (float) worksheet.getValue(i2 - 1, j);
+                    data[i] = worksheet.getValue(i2 - 1, j);
                 }
 
                 Cispr16Fft.realft(data, 1);

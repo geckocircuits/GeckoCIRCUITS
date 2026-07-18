@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.AbstractSpecialBlock;
@@ -33,7 +33,7 @@ import gecko.geckocircuits.circuit.TerminalToWrap;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.DialogLabelEingeben;
 import gecko.geckocircuits.control.Point;
-import gecko.geckocircuits.control.ReglerTERMINAL;
+import gecko.geckocircuits.control.ControlTERMINAL;
 import gecko.geckocircuits.control.SubCircuitSheet;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Color;
@@ -406,7 +406,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
                     assert false;
                     return GlobalColors.farbeFertigElementLK;
             }
-        } else if (terminal instanceof ReglerTERMINAL) {
+        } else if (terminal instanceof ControlTERMINAL) {
             return GlobalColors.farbeFertigElementCONTROL;
         }
 

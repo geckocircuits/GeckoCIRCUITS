@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.losscalculation;
 
 import gecko.core.allg.GeckoFile;
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.core.circuit.losscalculation.LossFileAccessor;
 import java.io.FileNotFoundException;
 import java.util.List;

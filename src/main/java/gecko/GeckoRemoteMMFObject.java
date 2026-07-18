@@ -13,7 +13,7 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.OperatingMode;
+import gecko.geckocircuits.general.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

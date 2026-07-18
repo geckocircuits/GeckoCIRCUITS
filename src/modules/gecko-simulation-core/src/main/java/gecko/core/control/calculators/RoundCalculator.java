@@ -16,7 +16,7 @@ package gecko.core.control.calculators;
 public final class RoundCalculator extends AbstractSingleInputSingleOutputCalculator {
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.round(_inputSignal[0][0]);
     }
 }

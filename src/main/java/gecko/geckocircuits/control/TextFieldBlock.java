@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractSpecialBlock;
 import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.circuit.ElementDisplayProperties;

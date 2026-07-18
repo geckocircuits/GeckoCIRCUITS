@@ -13,7 +13,7 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;

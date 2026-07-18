@@ -16,7 +16,7 @@ package gecko.geckocircuits.control.calculators;
 public final class SqrtCalculator extends AbstractSingleInputSingleOutputCalculator {
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         assert _inputSignal[0][0] >= 0;
         _outputSignal[0][0] = Math.sqrt(_inputSignal[0][0]);
     }

@@ -16,7 +16,7 @@ package gecko.core.control.calculators;
 public final class ExpCalculator extends AbstractSingleInputSingleOutputCalculator {    
     private static final double LARGEST_POSSIBLE = 100;
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         assert _inputSignal[0][0] < LARGEST_POSSIBLE;
         _outputSignal[0][0] = Math.exp(_inputSignal[0][0]);
     }

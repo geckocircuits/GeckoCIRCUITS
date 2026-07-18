@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import gecko.geckocircuits.circuit.SchematicTextInfo;
 import gecko.core.circuit.TokenMap;
@@ -39,14 +39,14 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
     private final AbstractCircuitBlockInterface _parent;
 
     public LossProperties(final AbstractSemiconductor parent) {
-        _lossCalculationDetailed = new VerlustBerechnungDetailed(parent, this);
+        _lossCalculationDetailed = new LossCalculationDetailed(parent, this);
         _lossCalculationSimple = new LossCalculationSimple(parent);
         _parent = parent;
     }
     private final LossCalculationSimple _lossCalculationSimple;
-    public final VerlustBerechnungDetailed _lossCalculationDetailed;
+    public final LossCalculationDetailed _lossCalculationDetailed;
 
-    public VerlustBerechnungDetailed getDetailedLosses() {
+    public LossCalculationDetailed getDetailedLosses() {
         return _lossCalculationDetailed;
     }
 
@@ -74,7 +74,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
     public void addTextInfoValue(final SchematicTextInfo textInfo) {
 
         // ist die Datei mit der Verlustbeschreibung ueberhaupt vorhanden?
-        final boolean isLossFileOk = _lossCalculationDetailed.pruefeLinkAufHalbleiterDatei();
+        final boolean isLossFileOk = _lossCalculationDetailed.checkLinkToSemiconductorFile();
         if (_lossType.getValue() == LossCalculationDetail.DETAILED) {
             if (isLossFileOk) {
                 textInfo.addParameter(_lossCalculationDetailed.lossFile.getName());
@@ -139,7 +139,7 @@ public final class LossProperties implements AbstractLossCalculatorFabric {
 
     }
 
-    private final class LossCalculatorAdditionalDiode implements AbstractLossCalculator, LossCalculationSplittable {
+    private static final class LossCalculatorAdditionalDiode implements AbstractLossCalculator, LossCalculationSplittable {
 
         private final Diode _diode;
         private final AbstractLossCalculator _original;

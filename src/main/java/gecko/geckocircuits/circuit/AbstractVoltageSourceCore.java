@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 
 /**
  * Core voltage source simulation logic - NO GUI dependencies.

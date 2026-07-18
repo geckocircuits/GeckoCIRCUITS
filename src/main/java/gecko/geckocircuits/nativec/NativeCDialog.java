@@ -15,7 +15,7 @@
 package gecko.geckocircuits.nativec;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import gecko.geckocircuits.control.javablock.CodeWindowModern;
 import gecko.geckocircuits.newscope.GeckoDialog;
@@ -67,7 +67,7 @@ public class NativeCDialog extends GeckoDialog {
 
     private JFileChooser jFileChooser;
     protected final NativeCDialog _thisObj;
-    private final ReglerNativeC _regNCObj;
+    private final ControlNativeC _regNCObj;
 
     private final NativeCLibraryFile _selectedLibFile;
 
@@ -81,7 +81,7 @@ public class NativeCDialog extends GeckoDialog {
      * @param libFile       Reference to NativeCLibraryFile, used to fill with user inputs
      * @param libFileList   Reference to List of added Native Libraries, used to fill with user inputs
      */
-    public NativeCDialog(ReglerNativeC regObj, Window parent, boolean modal, NativeCLibraryFile libFile, DefaultListModel libFileList) {
+    public NativeCDialog(ControlNativeC regObj, Window parent, boolean modal, NativeCLibraryFile libFile, DefaultListModel libFileList) {
         super(parent, modal);
         _selectedLibFile = libFile;
         _fileList = libFileList;

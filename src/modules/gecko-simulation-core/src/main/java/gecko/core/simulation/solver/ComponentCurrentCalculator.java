@@ -21,7 +21,7 @@ import gecko.core.circuit.netlist.INetList;
 /**
  * Calculates component currents from node potentials after solving Ax=b system.
  *
- * Extracted from legacy LKMatrices.berechneBauteilStroeme() method (lines 596-1144).
+ * Extracted from legacy LKMatrices.calculateComponentCurrents() method (lines 596-1144).
  * This class implements the current calculation phase of the circuit simulation,
  * computing branch currents based on component types and node voltages.
  */

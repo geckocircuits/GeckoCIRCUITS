@@ -19,6 +19,8 @@ package gecko.geckoscript;
  */
 public class GeckoInvalidArgumentException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     public GeckoInvalidArgumentException(final String message) {
         super(message);
     }

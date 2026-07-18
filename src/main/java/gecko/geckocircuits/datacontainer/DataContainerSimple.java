@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.NiceScale;
 import gecko.geckocircuits.newscope.TimeSeriesArray;
@@ -33,7 +33,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     private static final int MEGA_BYTE = 1048000;
     private static final int DOUBLE_BYTES = 8;
     private static final int FLOAT_BYTES = 8;
-    private AbstractTimeSerie _timeSerieArray;
+    private AbstractTimeSeries _timeSerieArray;
     private String[] _signalNames;
     /*
      * the highest index where values are written into the container
@@ -245,7 +245,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerieArray;
     }
 

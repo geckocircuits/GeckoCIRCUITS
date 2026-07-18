@@ -25,7 +25,7 @@ public final class LimitCalculatorInternal extends AbstractControlCalculatable {
 
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = _inputSignal[0][0];
         if (_inputSignal[0][0] <= _lowerLimit) {
             _outputSignal[0][0] = _lowerLimit;

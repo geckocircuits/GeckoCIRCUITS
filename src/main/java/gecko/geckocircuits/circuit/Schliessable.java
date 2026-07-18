@@ -22,5 +22,5 @@ package gecko.geckocircuits.circuit;
  * @author andy
  */
 public interface Schliessable {
-    void schliesseFenster();
+    void closeWindow();
 }

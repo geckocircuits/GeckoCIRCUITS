@@ -46,7 +46,7 @@ public final class LAPACK {
     private LAPACK() {
     }
 
-    //////////////////////////////////////////////////////////
+    //
     /** Constants for LAPACK_JOB enum. */
     public final static class JOB {
 
@@ -64,7 +64,7 @@ public final class LAPACK {
         public final static int JobO = 205;
     }
 
-    //////////////////////////////////////////////////////////
+    //
     //--------- andy -----------
     /**
      * Computes the Cholesky factorization of a symmetric positive definite Matrix

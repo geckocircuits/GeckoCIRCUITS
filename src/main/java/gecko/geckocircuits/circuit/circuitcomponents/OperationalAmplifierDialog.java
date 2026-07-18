@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,7 +34,7 @@ final class OperationalAmplifierDialog extends DialogElementLK<OperationalAmplif
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
         JTabbedPane tabberOPV1 = this.createGUI_OPV1();
         con.add(tabberOPV1, BorderLayout.CENTER);
 

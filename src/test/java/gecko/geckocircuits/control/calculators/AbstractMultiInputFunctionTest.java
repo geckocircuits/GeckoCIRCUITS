@@ -85,8 +85,8 @@ public abstract class AbstractMultiInputFunctionTest {
         _controlCalculatableTwoInputs._inputSignal[0][0] = in1;
         _controlCalculatableTwoInputs._inputSignal[1][0] = in2;
 
-        _matchingTwoInputCalculator.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _matchingTwoInputCalculator.calculateYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         assertEquals(_matchingTwoInputCalculator._outputSignal[0][0], _controlCalculatableTwoInputs._outputSignal[0][0], 1e-6);
 
     }
@@ -95,7 +95,7 @@ public abstract class AbstractMultiInputFunctionTest {
         _controlCalculatableThreeInputs._inputSignal[0][0] = arg1;
         _controlCalculatableThreeInputs._inputSignal[1][0] = arg2;
         _controlCalculatableThreeInputs._inputSignal[2][0] = arg3;
-        _controlCalculatableThreeInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableThreeInputs.calculateYOUT(TEST_DT);
         return _controlCalculatableThreeInputs._outputSignal[0][0];
     }
 

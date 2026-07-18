@@ -47,18 +47,18 @@ public class TerminalControl extends TerminalRelativePosition implements Control
     public void paintControlState(Graphics2D graphics) {
         Color oldColor = graphics.getColor();
         final int CIRCLE_DIAMETER = 6;
-        RegelBlock _parentRegler = (RegelBlock) _parentElement;
+        RegelBlock _parentControl = (RegelBlock) _parentElement;
 
-        if(_parentRegler._calculator == null) {
+        if(_parentControl._calculator == null) {
             return;
         }
-        int index = _parentRegler.YOUT.indexOf(this);
+        int index = _parentControl.YOUT.indexOf(this);
         double value = 0;
         if(index < 0) {
-            index = _parentRegler.XIN.indexOf(this);
-            value = _parentRegler._calculator._inputSignal[index][0];
+            index = _parentControl.XIN.indexOf(this);
+            value = _parentControl._calculator._inputSignal[index][0];
         } else {
-            value = _parentRegler._calculator._outputSignal[index][0];
+            value = _parentControl._calculator._outputSignal[index][0];
         }
         if(index < 0) {
             return;

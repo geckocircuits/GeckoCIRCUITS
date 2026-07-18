@@ -25,7 +25,7 @@ public final class DQABCDCalculator extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double dVal = _inputSignal[0][0];
         final double qVal = _inputSignal[1][0];
         final double theta = _inputSignal[2][0];

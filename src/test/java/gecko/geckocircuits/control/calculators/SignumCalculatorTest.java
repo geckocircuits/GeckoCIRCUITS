@@ -33,14 +33,14 @@ public class SignumCalculatorTest extends AbstractSimpleMathFunctionTest {
 
     @Override
     @Test
-    public void testBerechneYOUTResult0() {
+    public void testCalculateYOUTResult0() {
         double val = getValue(0);
         assertWithTol(0, val);
     }
 
     @Override
     @Test
-    public void testBerechneYOUTValue() {
+    public void testCalculateYOUTValue() {
         double val = getValue(3);
         assertWithTol(1, val);
         double val2 = getValue(-3);

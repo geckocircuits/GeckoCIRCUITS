@@ -15,7 +15,7 @@ package gecko.geckocircuits.control;
 
 import java.awt.Window;
 
-abstract class AbstractTrigonometricFunction extends AbstractReglerSingleInputSingleOutput {
+abstract class AbstractTrigonometricFunction extends AbstractControlSingleInputSingleOutput {
 
     @Override
     protected final Window openDialogWindow() {

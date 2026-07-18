@@ -35,8 +35,8 @@ public final class BlockOrderOptimizer3 {
 
     public BlockOrderOptimizer3(final List<RegelBlock> allControlBlocks) {
         this._allControlsInput = Collections.unmodifiableList(allControlBlocks);
-        for (RegelBlock regler : _allControlsInput) {
-            _allNodes.add(new ControlOrderNode(regler));
+        for (RegelBlock control : _allControlsInput) {
+            _allNodes.add(new ControlOrderNode(control));
         }
 
         for (ControlOrderNode node : _allNodes) {

@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.geckocircuits.newscope.DefinedMeanSignals;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.MemoryContainer;
@@ -40,7 +40,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     public static final int JUNK_SIZE = 4096;
     private final int _rows;
     private int _totalDataSize = 0;
-    private final AbstractTimeSerie _timeSerie;
+    private final AbstractTimeSeries _timeSerie;
     private final HiLoData[] _totMinMaxValues;
     private int _lastMinMaxJunk = 0;
     private static final int MEGA_BYTES = 1048000;
@@ -56,7 +56,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     private MemoryContainer _memoryContainer;
 
     public DataContainerCompressable(final int rows,
-            final AbstractTimeSerie timeSerie, final String[] signalNames, final String xDataName) {
+            final AbstractTimeSeries timeSerie, final String[] signalNames, final String xDataName) {
         super();
 
         _totMinMaxValues = new HiLoData[rows];
@@ -306,7 +306,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerie;
     }
 

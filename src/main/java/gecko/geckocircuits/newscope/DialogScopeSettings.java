@@ -14,7 +14,7 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.control.ControlOSZI;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -23,20 +23,20 @@ import javax.swing.JOptionPane;
  * @author andreas
  */
 public class DialogScopeSettings extends javax.swing.JDialog {
-    private final ReglerOSZI _reglerOSZI;
+    private final ControlOSZI _controlOSZI;
     private final boolean _initDone;
     private final JFrame _parentScopeFrame;
 
 
-    DialogScopeSettings(final JFrame parent, final ReglerOSZI regelBlockOSZI, final boolean modal) {
+    DialogScopeSettings(final JFrame parent, final ControlOSZI regelBlockOSZI, final boolean modal) {
         super(parent, modal);
         initComponents();
         this.setTitle("General scope settings");
-        _reglerOSZI = regelBlockOSZI;
+        _controlOSZI = regelBlockOSZI;
         _parentScopeFrame = parent;
-        jTextFieldScopeName.setText(_reglerOSZI.getStringID());
-        jCheckBoxAntiAliasing.setSelected(_reglerOSZI.isAntiAliasing());
-        jCheckBoxShowName.setSelected(_reglerOSZI.isNameVisible());
+        jTextFieldScopeName.setText(_controlOSZI.getStringID());
+        jCheckBoxAntiAliasing.setSelected(_controlOSZI.isAntiAliasing());
+        jCheckBoxShowName.setSelected(_controlOSZI.isNameVisible());
         _initDone = true;
         setLocationRelativeTo(parent);
         this.getRootPane().setDefaultButton(jButtonOk);
@@ -147,7 +147,7 @@ public class DialogScopeSettings extends javax.swing.JDialog {
         if(!_initDone) {
             return;
         }
-        _reglerOSZI.setAntiAliasing(jCheckBoxAntiAliasing.isSelected());
+        _controlOSZI.setAntiAliasing(jCheckBoxAntiAliasing.isSelected());
         _parentScopeFrame.repaint();
 
     }//GEN-LAST:event_jCheckBoxAntiAliasingActionPerformed
@@ -156,13 +156,13 @@ public class DialogScopeSettings extends javax.swing.JDialog {
         if(!_initDone) {
             return;
         }
-        _reglerOSZI.setNameVisible(jCheckBoxShowName.isSelected());
+        _controlOSZI.setNameVisible(jCheckBoxShowName.isSelected());
     }//GEN-LAST:event_jCheckBoxShowNameActionPerformed
 
     private void jButtonOkActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonOkActionPerformed
 
             try {
-                _reglerOSZI.setNewNameCheckedUndoable(jTextFieldScopeName.getText());
+                _controlOSZI.setNewNameCheckedUndoable(jTextFieldScopeName.getText());
                 this.dispose();
             } catch (NameAlreadyExistsException ex) {
                 JOptionPane.showMessageDialog(null, "The selected Scope name  \"" + jTextFieldScopeName.getText() +

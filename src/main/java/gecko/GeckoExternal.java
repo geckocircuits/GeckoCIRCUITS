@@ -13,8 +13,8 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.OperatingMode;
+import gecko.geckocircuits.general.MainWindow;
+import gecko.geckocircuits.general.OperatingMode;
 import gecko.geckocircuits.newscope.Cispr16Fft;
 import java.io.FileNotFoundException;
 import java.rmi.RemoteException;

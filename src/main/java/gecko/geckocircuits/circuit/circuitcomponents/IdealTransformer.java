@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ComponentDirection;
@@ -306,7 +306,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
     @Override
     protected void drawForeground(final Graphics2D graphics) {
         int pkd = (int) (0.4 * dpix);  // Durchmesser des Kopplungspunktes in Pixel
-        double pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen
+        double pk2 = -0.48;  // Point to mark possible coupling with other coils
         graphics.fillOval((int) (dpix * (+pk2) - pkd / 2.0), (int) (dpix * (-1.4) - pkd / 2.0), pkd, pkd);
         graphics.fillOval((int) (dpix * (-pk2) - pkd / 2.0), (int) (dpix * +_reversed.getValue() * 1.4 - pkd / 2.0), pkd, pkd);
     }

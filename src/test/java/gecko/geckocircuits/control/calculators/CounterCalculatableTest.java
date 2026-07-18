@@ -31,16 +31,16 @@ public class CounterCalculatableTest extends AbstractTwoInputsMathFunctionTest {
     @Test
     public void testInputTrueTrue() {
         _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[1][0] = 0;
         _controlCalculatableTwoInputs._inputSignal[0][0] = 0;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[0][0] = 0;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         assertEquals(2, _controlCalculatableTwoInputs._outputSignal[0][0], 1e-6);
     }
 
@@ -48,13 +48,13 @@ public class CounterCalculatableTest extends AbstractTwoInputsMathFunctionTest {
     @Test
     public void testInputTrueFalse() {
         _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[0][0] = 0;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         assertEquals(0, _controlCalculatableTwoInputs._outputSignal[0][0], 1e-6);
     }
 
@@ -63,10 +63,10 @@ public class CounterCalculatableTest extends AbstractTwoInputsMathFunctionTest {
     public void testInputFalseFalse() {
         _controlCalculatableTwoInputs._inputSignal[0][0] = 1;
         _controlCalculatableTwoInputs._inputSignal[1][0] = 1; // reset;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         _controlCalculatableTwoInputs._inputSignal[1][0] = 0; // reset;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT); // counter should
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT); // counter should
         // count only "flanks"
         assertEquals(0, _controlCalculatableTwoInputs._outputSignal[0][0], 1e-6);
     }

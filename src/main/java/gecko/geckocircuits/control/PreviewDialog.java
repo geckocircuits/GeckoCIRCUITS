@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import java.net.URL;
 import java.text.NumberFormat;
 import javax.swing.ImageIcon;

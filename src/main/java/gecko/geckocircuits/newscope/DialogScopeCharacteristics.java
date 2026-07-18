@@ -13,9 +13,9 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalFilePathes;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalFilePathes;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -29,12 +29,15 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores worksheet and slider values for scope characteristics calculations")
 public class DialogScopeCharacteristics extends GeckoDialog {
 
+    private static final long serialVersionUID = 1L;
+
     private GridBagConstraints _gridBagConst = new GridBagConstraints();
     private final TechFormat _cf = new TechFormat();
-    private FormatJTextField _jTextFieldStatus;  // Staus-Anzeige der Berechnung
+    private FormatJTextField _jTextFieldStatus;  // Status display of the calculation
     private final JPanelDialogRange _panelDialRange;
     private final PanelCharacteristicsResult _characErgPanel;
     private PowerAnalysisPanel _powAnalPanel;

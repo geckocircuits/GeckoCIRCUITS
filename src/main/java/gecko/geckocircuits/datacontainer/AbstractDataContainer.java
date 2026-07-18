@@ -14,7 +14,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.geckocircuits.api.IScopeData;
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import java.util.Observable;
 
@@ -76,7 +76,7 @@ public abstract class AbstractDataContainer extends Observable implements IScope
   public abstract boolean isInvalidNumbers(final int row);
 
   @Override
-  public abstract AbstractTimeSerie getTimeSeries(final int row);
+  public abstract AbstractTimeSeries getTimeSeries(final int row);
 
   @Override
   public abstract float[] getDataArray();

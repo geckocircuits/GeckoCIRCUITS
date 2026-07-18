@@ -14,10 +14,10 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.general.TechFormat;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -36,12 +36,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  *
  * @author andy
  */
+@SuppressWarnings({"unchecked", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Inner class stores outer class reference for power calculations")
 public final class PowerAnalysisPanel extends JPanel {
 
+    private static final long serialVersionUID = 1L;
+
     private final JComboBox<String>[] _comboU = new JComboBox[3];
     private final JComboBox<String>[] _comboI = new JComboBox[3];
-    private FormatJTextField[][] _pqTextFields;  // Textfelder fuer Leistungswerte A und B
+    private FormatJTextField[][] _pqTextFields;  // Text fields for performance values (columns A, B, C)
     private final TechFormat _cf = new TechFormat();
     private final GridBagConstraints _gbc = new GridBagConstraints();
     private final String[] signalListe;

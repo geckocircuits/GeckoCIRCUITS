@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.CurrentMeasurable;
 import gecko.geckocircuits.circuit.DirectVoltageMeasurable;

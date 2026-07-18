@@ -16,7 +16,7 @@ package gecko.geckocircuits.control.calculators;
 public final class SignumCalculator extends AbstractSingleInputSingleOutputCalculator {
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.signum(_inputSignal[0][0]);
     }
 }

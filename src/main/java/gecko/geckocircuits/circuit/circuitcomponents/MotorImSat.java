@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
@@ -83,9 +83,9 @@ public final class MotorImSat extends AbstractMotorIMCommon {
     @Override
     void setSubCircuit() {
         super.setSubCircuit();
-        // Eingangsstromquelle fuer iax(t) -->
+        // Input current source for iax(t) -->
         _controlledSource3 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
-        // Eingangsstromquelle fuer icx(t) -->
+        // Input current source for iax(t) -->
         _controlledSource4 = (AbstractCurrentSource) fabricHiddenSub(CircuitTyp.LK_I, this);
         // hochohmiger Widerstand zur Anbindung des Rotorkreises -->
         _resistor = (AbstractResistor) fabricHiddenSub(CircuitTyp.LK_R, this);

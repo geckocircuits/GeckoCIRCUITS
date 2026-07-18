@@ -23,7 +23,7 @@ import gecko.core.circuit.TokenMap;
  * while maintaining backward compatibility with the full GUI-enabled UserParameter class.
  *
  * Design pattern: Interface extraction with adapter pattern for GUI integration.
- * See: LossFileAccessor pattern used in VerlustBerechnungDetailed.
+ * See: LossFileAccessor pattern used in LossCalculationDetailed.
  */
 public interface UserParameterCore<T> {
 

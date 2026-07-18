@@ -62,7 +62,7 @@ public class LangInit extends javax.swing.JDialog implements PropertyChangeListe
      * Inner class used to execute download instructions from a separate
      * thread so that the LangInit GUI doesn't freeze up.
      */
-    private final class Task extends SwingWorker<Void, Void> {
+    private static final class Task extends SwingWorker<Void, Void> {
 
         @Override
         public Void doInBackground() {

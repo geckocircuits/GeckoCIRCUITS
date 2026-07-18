@@ -39,13 +39,13 @@ public class EqualCalculatorMultiInputTest extends AbstractMultiInputFunctionTes
         _controlCalculatableThreeInputs._inputSignal[0][0] = 2;
         _controlCalculatableThreeInputs._inputSignal[1][0] = 2;
         _controlCalculatableThreeInputs._inputSignal[2][0] = 2;
-        _controlCalculatableThreeInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableThreeInputs.calculateYOUT(TEST_DT);
         assertEquals(1.0, _controlCalculatableThreeInputs._outputSignal[0][0], 1e-8);
 
         _controlCalculatableThreeInputs._inputSignal[0][0] = 2;
         _controlCalculatableThreeInputs._inputSignal[1][0] = 1;
         _controlCalculatableThreeInputs._inputSignal[2][0] = 2;
-        _controlCalculatableThreeInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableThreeInputs.calculateYOUT(TEST_DT);
         assertEquals(0, _controlCalculatableThreeInputs._outputSignal[0][0], 1e-8);
     }
 

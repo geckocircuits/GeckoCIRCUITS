@@ -735,7 +735,7 @@ public final class GeckoFile {
         public String promptForExternalPath(GeckoFile geckoFile, byte[] originalContents) {
             // Use reflection to avoid hard dependency on GUI class
             try {
-                Class<?> dialogClass = Class.forName("gecko.geckocircuits.allg.DialogMakeExternal");
+                Class<?> dialogClass = Class.forName("gecko.geckocircuits.general.DialogMakeExternal");
                 Method factory = dialogClass.getMethod("dialogResultFabric", GeckoFile.class, byte[].class);
                 return (String) factory.invoke(null, geckoFile, originalContents);
             } catch (Exception e) {
@@ -744,7 +744,7 @@ public final class GeckoFile {
             }
         }
     }
-//    // test routine, do not remove!
+// test routine, do not remove!
 //    public static void main(String[] args) {
 //        try {
 //            GeckoFile geckoFile = new GeckoFile(new File("/home/andreas/testFile.txt"),

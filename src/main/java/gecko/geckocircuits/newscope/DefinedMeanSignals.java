@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.DataContainerMeanWrapper;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;

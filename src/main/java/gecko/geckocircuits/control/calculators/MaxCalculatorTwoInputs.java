@@ -15,7 +15,7 @@ package gecko.geckocircuits.control.calculators;
 
 public final class MaxCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator {
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.max(_inputSignal[0][0], _inputSignal[1][0]);
     }
 }

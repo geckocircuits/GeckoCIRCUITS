@@ -39,57 +39,57 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testSinBlockCreation() {
-        ReglerSIN block = new ReglerSIN();
+        ControlSIN block = new ControlSIN();
         assertNotNull("SIN block should be created", block);
     }
 
     @Test
     public void testSinOfZero() {
-        ReglerSIN block = new ReglerSIN();
+        ControlSIN block = new ControlSIN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("sin(0) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testSinOfPiOverTwo() {
-        ReglerSIN block = new ReglerSIN();
+        ControlSIN block = new ControlSIN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI / 2;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("sin(π/2) = 1", 1.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testSinOfPi() {
-        ReglerSIN block = new ReglerSIN();
+        ControlSIN block = new ControlSIN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("sin(π) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testSinOfNegativePiOverTwo() {
-        ReglerSIN block = new ReglerSIN();
+        ControlSIN block = new ControlSIN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = -PI / 2;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("sin(-π/2) = -1", -1.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testSinOfPiOverSix() {
-        ReglerSIN block = new ReglerSIN();
+        ControlSIN block = new ControlSIN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI / 6;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("sin(π/6) = 0.5", 0.5, calc._outputSignal[0][0], DELTA);
     }
 
@@ -97,47 +97,47 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testCosBlockCreation() {
-        ReglerCosine block = new ReglerCosine();
+        ControlCosine block = new ControlCosine();
         assertNotNull("COS block should be created", block);
     }
 
     @Test
     public void testCosOfZero() {
-        ReglerCosine block = new ReglerCosine();
+        ControlCosine block = new ControlCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("cos(0) = 1", 1.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testCosOfPiOverTwo() {
-        ReglerCosine block = new ReglerCosine();
+        ControlCosine block = new ControlCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI / 2;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("cos(π/2) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testCosOfPi() {
-        ReglerCosine block = new ReglerCosine();
+        ControlCosine block = new ControlCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("cos(π) = -1", -1.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testCosOfPiOverThree() {
-        ReglerCosine block = new ReglerCosine();
+        ControlCosine block = new ControlCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI / 3;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("cos(π/3) = 0.5", 0.5, calc._outputSignal[0][0], DELTA);
     }
 
@@ -145,47 +145,47 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testTanBlockCreation() {
-        ReglerTAN block = new ReglerTAN();
+        ControlTAN block = new ControlTAN();
         assertNotNull("TAN block should be created", block);
     }
 
     @Test
     public void testTanOfZero() {
-        ReglerTAN block = new ReglerTAN();
+        ControlTAN block = new ControlTAN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("tan(0) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testTanOfPiOverFour() {
-        ReglerTAN block = new ReglerTAN();
+        ControlTAN block = new ControlTAN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI / 4;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("tan(π/4) = 1", 1.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testTanOfNegativePiOverFour() {
-        ReglerTAN block = new ReglerTAN();
+        ControlTAN block = new ControlTAN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = -PI / 4;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("tan(-π/4) = -1", -1.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testTanOfPi() {
-        ReglerTAN block = new ReglerTAN();
+        ControlTAN block = new ControlTAN();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = PI;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("tan(π) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
@@ -193,47 +193,47 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testAsinBlockCreation() {
-        ReglerAreaSine block = new ReglerAreaSine();
+        ControlAreaSine block = new ControlAreaSine();
         assertNotNull("ASIN block should be created", block);
     }
 
     @Test
     public void testAsinOfZero() {
-        ReglerAreaSine block = new ReglerAreaSine();
+        ControlAreaSine block = new ControlAreaSine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("asin(0) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAsinOfOne() {
-        ReglerAreaSine block = new ReglerAreaSine();
+        ControlAreaSine block = new ControlAreaSine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 1.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("asin(1) = π/2", PI / 2, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAsinOfNegativeOne() {
-        ReglerAreaSine block = new ReglerAreaSine();
+        ControlAreaSine block = new ControlAreaSine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = -1.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("asin(-1) = -π/2", -PI / 2, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAsinOfHalf() {
-        ReglerAreaSine block = new ReglerAreaSine();
+        ControlAreaSine block = new ControlAreaSine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.5;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("asin(0.5) = π/6", PI / 6, calc._outputSignal[0][0], DELTA);
     }
 
@@ -241,47 +241,47 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testAcosBlockCreation() {
-        ReglerAreaCosine block = new ReglerAreaCosine();
+        ControlAreaCosine block = new ControlAreaCosine();
         assertNotNull("ACOS block should be created", block);
     }
 
     @Test
     public void testAcosOfOne() {
-        ReglerAreaCosine block = new ReglerAreaCosine();
+        ControlAreaCosine block = new ControlAreaCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 1.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("acos(1) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAcosOfZero() {
-        ReglerAreaCosine block = new ReglerAreaCosine();
+        ControlAreaCosine block = new ControlAreaCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("acos(0) = π/2", PI / 2, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAcosOfNegativeOne() {
-        ReglerAreaCosine block = new ReglerAreaCosine();
+        ControlAreaCosine block = new ControlAreaCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = -1.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("acos(-1) = π", PI, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAcosOfHalf() {
-        ReglerAreaCosine block = new ReglerAreaCosine();
+        ControlAreaCosine block = new ControlAreaCosine();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.5;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("acos(0.5) = π/3", PI / 3, calc._outputSignal[0][0], DELTA);
     }
 
@@ -289,47 +289,47 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testAtanBlockCreation() {
-        ReglerAreaTangens block = new ReglerAreaTangens();
+        ControlAreaTangens block = new ControlAreaTangens();
         assertNotNull("ATAN block should be created", block);
     }
 
     @Test
     public void testAtanOfZero() {
-        ReglerAreaTangens block = new ReglerAreaTangens();
+        ControlAreaTangens block = new ControlAreaTangens();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 0.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("atan(0) = 0", 0.0, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAtanOfOne() {
-        ReglerAreaTangens block = new ReglerAreaTangens();
+        ControlAreaTangens block = new ControlAreaTangens();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 1.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("atan(1) = π/4", PI / 4, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAtanOfNegativeOne() {
-        ReglerAreaTangens block = new ReglerAreaTangens();
+        ControlAreaTangens block = new ControlAreaTangens();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = -1.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         assertEquals("atan(-1) = -π/4", -PI / 4, calc._outputSignal[0][0], DELTA);
     }
 
     @Test
     public void testAtanOfLargeValue() {
-        ReglerAreaTangens block = new ReglerAreaTangens();
+        ControlAreaTangens block = new ControlAreaTangens();
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
         calc._inputSignal[0][0] = 1000.0;
-        calc.berechneYOUT(0.001);
+        calc.calculateYOUT(0.001);
         // atan approaches π/2 as input → ∞
         assertTrue("atan(1000) should be close to π/2", calc._outputSignal[0][0] > PI / 2 - 0.01);
         assertTrue("atan(1000) should be less than π/2", calc._outputSignal[0][0] < PI / 2);
@@ -340,8 +340,8 @@ public class TrigFunctionBlocksTest {
     @Test
     public void testPythagoreanIdentity() {
         // sin²(x) + cos²(x) = 1
-        ReglerSIN sinBlock = new ReglerSIN();
-        ReglerCosine cosBlock = new ReglerCosine();
+        ControlSIN sinBlock = new ControlSIN();
+        ControlCosine cosBlock = new ControlCosine();
         AbstractControlCalculatable sinCalc = sinBlock.getInternalControlCalculatableForSimulationStart();
         initializeInputs(sinCalc);
         AbstractControlCalculatable cosCalc = cosBlock.getInternalControlCalculatableForSimulationStart();
@@ -352,8 +352,8 @@ public class TrigFunctionBlocksTest {
         for (double angle : testAngles) {
             sinCalc._inputSignal[0][0] = angle;
             cosCalc._inputSignal[0][0] = angle;
-            sinCalc.berechneYOUT(0.001);
-            cosCalc.berechneYOUT(0.001);
+            sinCalc.calculateYOUT(0.001);
+            cosCalc.calculateYOUT(0.001);
 
             double sin2 = sinCalc._outputSignal[0][0] * sinCalc._outputSignal[0][0];
             double cos2 = cosCalc._outputSignal[0][0] * cosCalc._outputSignal[0][0];
@@ -366,8 +366,8 @@ public class TrigFunctionBlocksTest {
 
     @Test
     public void testSinAsinInverse() {
-        ReglerSIN sinBlock = new ReglerSIN();
-        ReglerAreaSine asinBlock = new ReglerAreaSine();
+        ControlSIN sinBlock = new ControlSIN();
+        ControlAreaSine asinBlock = new ControlAreaSine();
         AbstractControlCalculatable sinCalc = sinBlock.getInternalControlCalculatableForSimulationStart();
         initializeInputs(sinCalc);
         AbstractControlCalculatable asinCalc = asinBlock.getInternalControlCalculatableForSimulationStart();
@@ -377,10 +377,10 @@ public class TrigFunctionBlocksTest {
 
         for (double val : testValues) {
             asinCalc._inputSignal[0][0] = val;
-            asinCalc.berechneYOUT(0.001);
+            asinCalc.calculateYOUT(0.001);
 
             sinCalc._inputSignal[0][0] = asinCalc._outputSignal[0][0];
-            sinCalc.berechneYOUT(0.001);
+            sinCalc.calculateYOUT(0.001);
 
             assertEquals("sin(asin(" + val + ")) = " + val, val, sinCalc._outputSignal[0][0], DELTA);
         }

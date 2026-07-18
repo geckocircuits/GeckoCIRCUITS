@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.matrix;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

@@ -70,10 +70,10 @@ public class CalculatorChainTest {
         initializeInputs(gain);
         gain._inputSignal[0][0] = 2.0;
 
-        gain.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
         assertEquals("Gain should output 4.0", 4.0, gain._outputSignal[0][0], TOLERANCE);
 
-        limit.berechneYOUT(DT);
+        limit.calculateYOUT(DT);
         assertEquals("Limit should pass through 4.0", 4.0, limit._outputSignal[0][0], TOLERANCE);
     }
 
@@ -88,8 +88,8 @@ public class CalculatorChainTest {
         initializeInputs(gain);
         gain._inputSignal[0][0] = 1.0;  // 1.0 * 10 = 10.0, should be limited to 2.0
 
-        gain.berechneYOUT(DT);
-        limit.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
+        limit.calculateYOUT(DT);
         assertEquals("Should saturate at upper limit", 2.0, limit._outputSignal[0][0], TOLERANCE);
     }
 
@@ -104,8 +104,8 @@ public class CalculatorChainTest {
         initializeInputs(gain);
         gain._inputSignal[0][0] = 1.0;  // 1.0 * -8 = -8.0, should be limited to -3.0
 
-        gain.berechneYOUT(DT);
-        limit.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
+        limit.calculateYOUT(DT);
         assertEquals("Should saturate at lower limit", -3.0, limit._outputSignal[0][0], TOLERANCE);
     }
 
@@ -123,8 +123,8 @@ public class CalculatorChainTest {
 
         for (int i = 0; i < inputs.length; i++) {
             gain._inputSignal[0][0] = inputs[i];
-            gain.berechneYOUT(DT);
-            limit.berechneYOUT(DT);
+            gain.calculateYOUT(DT);
+            limit.calculateYOUT(DT);
             assertEquals("Step " + i + ": Output should match",
                         expectedLimitOutputs[i], limit._outputSignal[0][0], TOLERANCE);
         }
@@ -146,8 +146,8 @@ public class CalculatorChainTest {
         for (int step = 0; step < 1000; step++) {
             double angle = step * DT;
             sin._inputSignal[0][0] = angle;  // Input angle
-            sin.berechneYOUT(DT);
-            filter.berechneYOUT(DT);
+            sin.calculateYOUT(DT);
+            filter.calculateYOUT(DT);
 
             // The filter should smooth the sine wave
             // Output should be less than max possible (1.0)
@@ -179,9 +179,9 @@ public class CalculatorChainTest {
         for (int step = 0; step < 100; step++) {
             double angle = step * DT * 10;  // Scaled angle
             sin._inputSignal[0][0] = angle;
-            sin.berechneYOUT(DT);
-            fastFilter.berechneYOUT(DT);
-            slowFilter.berechneYOUT(DT);
+            sin.calculateYOUT(DT);
+            fastFilter.calculateYOUT(DT);
+            slowFilter.calculateYOUT(DT);
 
             fastFilterOutput = fastFilter._outputSignal[0][0];
             slowFilterOutput = slowFilter._outputSignal[0][0];
@@ -206,9 +206,9 @@ public class CalculatorChainTest {
 
         // Simulate over time
         for (int step = 0; step < 100; step++) {
-            timeCalc.berechneYOUT(DT);
-            gain.berechneYOUT(DT);
-            limit.berechneYOUT(DT);
+            timeCalc.calculateYOUT(DT);
+            gain.calculateYOUT(DT);
+            limit.calculateYOUT(DT);
 
             // Output should be limited to [0, 1.0]
             assertTrue("Output should be >= 0", limit._outputSignal[0][0] >= 0);
@@ -235,8 +235,8 @@ public class CalculatorChainTest {
         gain._inputSignal[0][0] = 5.0;
 
         for (int step = 0; step < 100; step++) {
-            gain.berechneYOUT(DT);
-            integrator.berechneYOUT(DT);
+            gain.calculateYOUT(DT);
+            integrator.calculateYOUT(DT);
         }
 
         // Should have accumulated some value over 100 steps
@@ -261,8 +261,8 @@ public class CalculatorChainTest {
 
         // Integrate for 50 steps
         for (int step = 0; step < 50; step++) {
-            gain.berechneYOUT(DT);
-            integrator.berechneYOUT(DT);
+            gain.calculateYOUT(DT);
+            integrator.calculateYOUT(DT);
         }
 
         double valueBeforeReset = integrator._outputSignal[0][0];
@@ -270,13 +270,13 @@ public class CalculatorChainTest {
 
         // Reset the integrator
         integrator._inputSignal[1][0] = 1;
-        gain.berechneYOUT(DT);
-        integrator.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
+        integrator.calculateYOUT(DT);
 
         // After one reset step, should be near zero or reset
         integrator._inputSignal[1][0] = 0;
-        gain.berechneYOUT(DT);
-        integrator.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
+        integrator.calculateYOUT(DT);
 
         // The reset should have triggered
         assertTrue("Reset functionality should work", true);  // Integration with reset verified
@@ -299,9 +299,9 @@ public class CalculatorChainTest {
         // Input 1.0 -> Gain1 (2.0) -> 2.0 -> Gain2 (3.0) -> 6.0 -> Limit
         gain1._inputSignal[0][0] = 1.0;
 
-        gain1.berechneYOUT(DT);
-        gain2.berechneYOUT(DT);
-        limit.berechneYOUT(DT);
+        gain1.calculateYOUT(DT);
+        gain2.calculateYOUT(DT);
+        limit.calculateYOUT(DT);
 
         assertEquals("Cascaded gain should multiply", 6.0, limit._outputSignal[0][0], TOLERANCE);
     }
@@ -321,9 +321,9 @@ public class CalculatorChainTest {
         // Input 1.0 -> Gain1 (5.0) -> 5.0 -> Gain2 (4.0) -> 20.0 -> Limit (should be 10.0)
         gain1._inputSignal[0][0] = 1.0;
 
-        gain1.berechneYOUT(DT);
-        gain2.berechneYOUT(DT);
-        limit.berechneYOUT(DT);
+        gain1.calculateYOUT(DT);
+        gain2.calculateYOUT(DT);
+        limit.calculateYOUT(DT);
 
         assertEquals("Should saturate at upper limit", 10.0, limit._outputSignal[0][0], TOLERANCE);
     }
@@ -346,9 +346,9 @@ public class CalculatorChainTest {
         gain1._inputSignal[0][0] = 5.0;  // 5.0 * 2.0 = 10.0
         gain2._inputSignal[0][0] = 2.0;  // 2.0 * 3.0 = 6.0
 
-        gain1.berechneYOUT(DT);
-        gain2.berechneYOUT(DT);
-        maxCalc.berechneYOUT(DT);
+        gain1.calculateYOUT(DT);
+        gain2.calculateYOUT(DT);
+        maxCalc.calculateYOUT(DT);
 
         assertEquals("Should select maximum (10.0)", 10.0, maxCalc._outputSignal[0][0], TOLERANCE);
     }
@@ -369,17 +369,17 @@ public class CalculatorChainTest {
         // First step: gain1 wins
         gain1._inputSignal[0][0] = 10.0;
         gain2._inputSignal[0][0] = 5.0;
-        gain1.berechneYOUT(DT);
-        gain2.berechneYOUT(DT);
-        maxCalc.berechneYOUT(DT);
+        gain1.calculateYOUT(DT);
+        gain2.calculateYOUT(DT);
+        maxCalc.calculateYOUT(DT);
         assertEquals("First step: 10.0 should win", 10.0, maxCalc._outputSignal[0][0], TOLERANCE);
 
         // Second step: gain2 wins
         gain1._inputSignal[0][0] = 3.0;
         gain2._inputSignal[0][0] = 8.0;
-        gain1.berechneYOUT(DT);
-        gain2.berechneYOUT(DT);
-        maxCalc.berechneYOUT(DT);
+        gain1.calculateYOUT(DT);
+        gain2.calculateYOUT(DT);
+        maxCalc.calculateYOUT(DT);
         assertEquals("Second step: 8.0 should win", 8.0, maxCalc._outputSignal[0][0], TOLERANCE);
     }
 
@@ -404,10 +404,10 @@ public class CalculatorChainTest {
             double angle = step * DT * 10;
             sin._inputSignal[0][0] = angle;
 
-            sin.berechneYOUT(DT);
-            gain.berechneYOUT(DT);
-            filter.berechneYOUT(DT);
-            limit.berechneYOUT(DT);
+            sin.calculateYOUT(DT);
+            gain.calculateYOUT(DT);
+            filter.calculateYOUT(DT);
+            limit.calculateYOUT(DT);
 
             // Verify limits are enforced
             assertTrue("Should be within upper limit", limit._outputSignal[0][0] <= 3.0);
@@ -434,10 +434,10 @@ public class CalculatorChainTest {
 
         double maxOutput = 0;
         for (int step = 0; step < 2000; step++) {
-            preGain.berechneYOUT(DT);
-            filter.berechneYOUT(DT);
-            postGain.berechneYOUT(DT);
-            limit.berechneYOUT(DT);
+            preGain.calculateYOUT(DT);
+            filter.calculateYOUT(DT);
+            postGain.calculateYOUT(DT);
+            limit.calculateYOUT(DT);
 
             maxOutput = Math.max(maxOutput, Math.abs(limit._outputSignal[0][0]));
         }
@@ -458,8 +458,8 @@ public class CalculatorChainTest {
         initializeInputs(gain);
 
         gain._inputSignal[0][0] = 999.0;  // Large input
-        gain.berechneYOUT(DT);
-        limit.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
+        limit.calculateYOUT(DT);
 
         assertEquals("Zero gain should always produce zero", 0.0, limit._outputSignal[0][0], TOLERANCE);
     }
@@ -474,8 +474,8 @@ public class CalculatorChainTest {
         initializeInputs(gain);
 
         gain._inputSignal[0][0] = 3.0;
-        gain.berechneYOUT(DT);
-        limit.berechneYOUT(DT);
+        gain.calculateYOUT(DT);
+        limit.calculateYOUT(DT);
 
         assertEquals("Should produce -15 but be limited to -10", -10.0, limit._outputSignal[0][0], TOLERANCE);
     }
@@ -492,8 +492,8 @@ public class CalculatorChainTest {
         double verySmallDT = 1e-7;
         gain._inputSignal[0][0] = 2.0;
 
-        gain.berechneYOUT(verySmallDT);
-        limit.berechneYOUT(verySmallDT);
+        gain.calculateYOUT(verySmallDT);
+        limit.calculateYOUT(verySmallDT);
 
         assertEquals("Should handle small time steps", 3.0, limit._outputSignal[0][0], TOLERANCE);
     }
@@ -511,8 +511,8 @@ public class CalculatorChainTest {
 
         double[] outputs = new double[3];
         for (int i = 0; i < 3; i++) {
-            gain.berechneYOUT(DT);
-            filter.berechneYOUT(DT);
+            gain.calculateYOUT(DT);
+            filter.calculateYOUT(DT);
             outputs[i] = filter._outputSignal[0][0];
         }
 

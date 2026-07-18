@@ -21,7 +21,7 @@ import gecko.core.control.NotCalculateableMarker;
  * This block has no inputs and one output. The output value is set via the
  * constructor or setConst() method and remains constant throughout the simulation.
  *
- * Since this implements NotCalculateableMarker, berechneYOUT() is never called
+ * Since this implements NotCalculateableMarker, calculateYOUT() is never called
  * during normal simulation - the output is set directly when the constant changes.
  *
  * @author GeckoCIRCUITS Team
@@ -41,7 +41,7 @@ public final class ConstantCalculator extends AbstractControlCalculatable implem
     /**
      * Sets the constant output value.
      *
-     * Since this calculator is "not calculatable", berechneYOUT will never be
+     * Since this calculator is "not calculatable", calculateYOUT will never be
      * executed. Therefore, the output must be updated immediately when setting
      * the constant value.
      *
@@ -61,8 +61,8 @@ public final class ConstantCalculator extends AbstractControlCalculatable implem
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         // This is not calculatable - method should never be called
-        assert false : "ConstantCalculator.berechneYOUT should never be called";
+        assert false : "ConstantCalculator.calculateYOUT should never be called";
     }
 }

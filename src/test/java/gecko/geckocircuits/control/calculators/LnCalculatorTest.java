@@ -24,7 +24,7 @@ public class LnCalculatorTest extends AbstractSimpleMathFunctionTest {
     }
 
     @Test
-    public void testBerechneYOUTResult0() {
+    public void testCalculateYOUTResult0() {
 
         try {
             double val = getValue(0);
@@ -36,7 +36,7 @@ public class LnCalculatorTest extends AbstractSimpleMathFunctionTest {
 
     @Override
     @Test
-    public void testBerechneYOUTValue() {
+    public void testCalculateYOUTValue() {
         double val = getValue(1);
         assertWithTol(0, val);
     }

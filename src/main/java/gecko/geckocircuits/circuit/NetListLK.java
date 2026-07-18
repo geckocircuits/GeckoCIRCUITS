@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
-import gecko.geckocircuits.allg.AbstractComponentTyp;
+import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCapacitor;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractInductor;
@@ -35,27 +35,27 @@ public final class NetListLK {
     public int[][] nodePairDirVoltContSrc;
     public double[][] parameter;  // Bauteilwert; Typus 'sinus', 'dreieck', ... bei Strom/Spg-Quelle; init-Werte iL_ALT und uC_ALT; ...
     public int[] spgQuelleNr;  // zaehlt nicht nur die SpgQuellen von 1 beginnend aufsteigen, sondern auch die LKOP2-Elemente, wobei Durchmischung mit den SpgQuellen moeglich ist
-    public Verbindung[] v;
+    public Connection[] v;
     public int verbindungANZAHL;
     public AbstractCircuitBlockInterface[] elements, eLKneu;
     public int elementANZAHL, elementANZAHLneu;
     public String[] labelListe;
     //
     public PotentialArea[] potLab;
-    public double t;  // Aktuelle Zeit in der Simulation
+    public double t;  // Current time in the simulation
     // zur Beschreibung magnetischer Kopplungen -->
-    private AbstractCircuitBlockInterface[] alleGekoppeltenLc;  // eine Auflistung aller verschiedenen gekoppelten Lc-Elemente
-    private AbstractCircuitBlockInterface[][] partnerLc;  // jedem gelisteten Lc-Element werden die Kopplungspartner-Lc zugeteilt
-    private double[][] kopplungen;    // das sind die zugehoerigen Kopplungs-Werte
+    private AbstractCircuitBlockInterface[] alleGekoppeltenLc;  // a listing of all the different coupled Lc elements
+    private AbstractCircuitBlockInterface[][] partnerLc;  // The coupling partner Lc is assigned to each listed Lc element
+    private double[][] kopplungen;    // these are the associated coupling values
     private PostCalculatable[] _postCalculatables = new PostCalculatable[0];
     public int[] _singularityEntries = new int[0];
 
 
-    public double getSimulationsZeit() {
+    public double getSimulationTime() {
         return t;
     }
 
-    public Verbindung[] getVerbindungen() {
+    public Connection[] getConnectionen() {
         return v;
     }
 
@@ -71,9 +71,8 @@ public final class NetListLK {
         return elementANZAHLneu;
     }  //  Kopplungen M werden nicht mitgezaehlt!
 
-    // die Nummer eines ElementLK in der Netzliste ist oft nicht ident mit der ID-Nummer,
-    // zB. wenn Kopplung k eingebaut wird, und anschliessend weitere ElementLK hinzugefuegt werden -->
-    // fuer die Kopplung von Induktivitaeten braucht man aber die NUmmer in der aktuellen Netzliste zur Zuordnung -->
+    //
+    // to describe magnetic couplings -->
     private int getNetzlistenNummer(AbstractCircuitBlockInterface search) {
         for (int i1 = 0; i1 < elementANZAHLneu; i1++) {
             if (search.equals(eLKneu[i1])) {
@@ -88,7 +87,7 @@ public final class NetListLK {
     public double[][][] getAlleKopplungenM() {
         double[][] zuLKOP2gehoerigeM_spgQnr = new double[elementANZAHLneu][];
         double[][] zuLKOP2gehoerigeM_kWerte = new double[elementANZAHLneu][];
-        this.definiere_magnetischeKopplungen_im_LK();  // was sind die Koppelpartner (und Koppelwerte) der einzelnen Induktivitaeten? -->
+        this.definiere_magnetischeKopplungen_im_LK();  // what are the coupling partners (and coupling values) of the individual inductances? -->
         //--------------------
         for (int i1 = 0; i1 < elementANZAHLneu; i1++) {
             if (eLKneu[i1] instanceof InductorCoupable) {
@@ -124,20 +123,20 @@ public final class NetListLK {
      * @param e
      * @return
      */
-    public static NetListLK fabricIncludingSubcircuits(final Set<Verbindung> v, List<? extends AbstractBlockInterface> e) {
-        NetzlisteAllg nl = NetzlisteAllg.fabricNetzlistDisabledParentSubsRemoved(v, e);
+    public static NetListLK fabricIncludingSubcircuits(final Set<Connection> v, List<? extends AbstractBlockInterface> e) {
+        NetlistGeneral nl = NetlistGeneral.fabricNetzlistDisabledParentSubsRemoved(v, e);
         nl.deSingularizeIsolatedPotentials();
         return new NetListLK(nl, true);
     }
 
-    public static NetListLK fabricExcludingSubcircuits(final Collection<Verbindung> v, List<? extends AbstractBlockInterface> e) {
-        return new NetListLK(NetzlisteAllg.fabricNetzlistLabelUpdate(v, e), false);
+    public static NetListLK fabricExcludingSubcircuits(final Collection<Connection> v, List<? extends AbstractBlockInterface> e) {
+        return new NetListLK(NetlistGeneral.fabricNetzlistLabelUpdate(v, e), false);
     }
 
-    private NetListLK(NetzlisteAllg nlLK, boolean includeSubCircuits) {
+    private NetListLK(NetlistGeneral nlLK, boolean includeSubCircuits) {
         _singularityEntries = nlLK._singularityIndices;
 
-        this.v = nlLK._connections.toArray(new Verbindung[0]);
+        this.v = nlLK._connections.toArray(new Connection[0]);
         this.verbindungANZAHL = v.length;
         this.potLab = nlLK.getPotentiale();
 
@@ -153,7 +152,7 @@ public final class NetListLK {
         }
 
         this.elementANZAHL = this.elements.length;
-        this.elementANZAHLneu = this.elementANZAHL;  // wird weiter unten im Fall eventueller Subcircuits korregiert
+        this.elementANZAHLneu = this.elementANZAHL;  // will be corrected below in the case of possible subcircuits
         if (includeSubCircuits) {
             this.initialisiereMitSubcircuit();
             this.defineNodePairDirVoltContSrc();
@@ -192,8 +191,8 @@ public final class NetListLK {
         //------------------------------
         // Voraussetzung 2: Spannungsquellen-Nummern sind von Eins weg durchgehend und aufsteigend numeriert
         // -->
-        knotenMAX = 0;  // Anzahl der (verschiedenen) Knoten
-        spgQuelleMAX = 0;  // Anzahl der (verschiedenen) Spannungsquellen
+        knotenMAX = 0;  // Number of (different) nodes
+        spgQuelleMAX = 0;  // Number of (different) voltage sources
         for (int i1 = 0; i1 < elementANZAHL; i1++) {
             if (knotenX[i1] > knotenMAX) {
                 knotenMAX = knotenX[i1];
@@ -213,7 +212,7 @@ public final class NetListLK {
     private void defineNodePairDirVoltContSrc() {
         nodePairDirVoltContSrc = new int[elementANZAHLneu][2];
         for (int i1 = 0; i1 < elementANZAHLneu; i1++) {
-            AbstractComponentTyp circuitTyp = eLKneu[i1].getTypeEnum();
+            AbstractComponentType circuitTyp = eLKneu[i1].getTypeEnum();
             if (circuitTyp == CircuitTyp.LK_U || circuitTyp == CircuitTyp.LK_I || circuitTyp == CircuitTyp.REL_MMF) {
                 ComponentCoupable compCoupable = (ComponentCoupable) eLKneu[i1];
                 ComponentCoupling coupling = compCoupable.getComponentCoupling();
@@ -239,9 +238,9 @@ public final class NetListLK {
         return returnValue;
     }
 
-    // bei jedem Zeitschritt in der Simulationsschleife in 'SimulationsKern' werden analytische Komponenten des SubCircuit berechnet,
+    // bei jedem Zeitschritt in der Simulationsschleife in 'SimulationKernel' werden analytische Komponenten des SubCircuit berechnet,
     // (dh. nicht als Netzliste um Rechenaufwand zu reduzieren)
-    public void berechneSubCircuitAlsDifferentialgleichung(double dt, double t) {
+    public void calculateSubCircuitAsDifferentialEquation(double dt, double t) {
         this.t = t;
         for (PostCalculatable calc : _postCalculatables) {
             calc.doCalculation(dt, t);
@@ -250,33 +249,33 @@ public final class NetListLK {
 
     // zB. die im SubCircuit definierten ElementeLK werden in die LK-Netzliste integriert -->
     public final void integriereSubCircuits() {
-        Set<AbstractBlockInterface> eLKneuSet = new LinkedHashSet<AbstractBlockInterface>();
+        Set<AbstractBlockInterface> eLK_M_vec = new LinkedHashSet<AbstractBlockInterface>();
 
         for (AbstractCircuitBlockInterface elem : elements) {
             if (elem instanceof HiddenSubCircuitable) {
-                // Element wird aufgeloest in seine einzelnen LK-Elemente -->
+                // Requirement 1: Nodes are numbered continuously from zero
 
                 HiddenSubCircuitable subCircuitable = (HiddenSubCircuitable) elem;
                 if (subCircuitable.includeParentInSimulation()) {
-                    eLKneuSet.add(elem);
+                    eLK_M_vec.add(elem);
                 }
-                eLKneuSet.addAll(subCircuitable.getHiddenSubCircuitElements());
+                eLK_M_vec.addAll(subCircuitable.getHiddenSubCircuitElements());
 
             } else {
                 if (!(elem instanceof MutualInductance)) {
-                    eLKneuSet.add(elem);
+                    eLK_M_vec.add(elem);
                 }
             }
         }
 
-        elementANZAHLneu = eLKneuSet.size();
-        eLKneu = eLKneuSet.toArray(new AbstractCircuitBlockInterface[0]);
+        elementANZAHLneu = eLK_M_vec.size();
+        eLKneu = eLK_M_vec.toArray(new AbstractCircuitBlockInterface[0]);
     }
 
     protected void initialisiereMitSubcircuit() {
         this.integriereSubCircuits();
-        Set<Verbindung> connections = new LinkedHashSet<Verbindung>();
-        for (Verbindung verb : v) {
+        Set<Connection> connections = new LinkedHashSet<Connection>();
+        for (Connection verb : v) {
             connections.add(verb);
         }
 
@@ -286,7 +285,7 @@ public final class NetListLK {
                 eLKneuList.add(element);
             }
         }
-        NetzlisteAllg netList = NetzlisteAllg.fabricNetzlistComplete(connections, eLKneuList);
+        NetlistGeneral netList = NetlistGeneral.fabricNetzlistComplete(connections, eLKneuList);
         netList.deSingularizeIsolatedPotentials();
         _singularityEntries = netList._singularityIndices;
 
@@ -313,7 +312,7 @@ public final class NetListLK {
             //------------------
             // Anfangsknoten:
             List<AbstractTerminal> startTerminals = elem.XIN;
-            int[] nrAnfangsKn = new int[startTerminals.size()];  // dieses Array muss mit Knotennummern gefuellt werden
+            int[] nrAnfangsKn = new int[startTerminals.size()];  // this array must be filled with node numbers
             for (int i2 = 0; i2 < startTerminals.size(); i2++) {
                 for (int i3 = 0; i3 < potLab.length; i3++) {
                     if (potLab[i3].isTerminalOnPotential(startTerminals.get(i2))) {
@@ -324,7 +323,7 @@ public final class NetListLK {
 
             // Endknoten:
             List<AbstractTerminal> endTerminals = elem.YOUT;
-            int[] nrEndKn = new int[endTerminals.size()];  // dieses Array muss mit Knotennummern gefuellt werden
+            int[] nrEndKn = new int[endTerminals.size()];  // this array must be filled with node numbers
             for (int i2 = 0; i2 < endTerminals.size(); i2++) {
                 for (int i3 = 0; i3 < potLab.length; i3++) {
                     if (potLab[i3].isTerminalOnPotential(endTerminals.get(i2))) {
@@ -333,7 +332,7 @@ public final class NetListLK {
                 }
             }
 
-            // Zuweisung der KnotenNummern fuer LK-Netzliste (es gibt bei den LK-Elementen nur je einen Anfangs- u. End-Knoten):
+            // (i.e. not as a netlist to reduce computing effort)
 
             try {
                 knotenX[i1] = nrAnfangsKn[0];
@@ -346,15 +345,14 @@ public final class NetListLK {
 //        System.out.println("yyyyyyyyyyyyyyyyyyyyyyy repair!!!");
 //        int[] saveKnotenX = new int[]{5, 2, 3, 4, 0, 5, 1};
 //        int[] saveKnotenY = new int[]{6, 3, 2, 6, 1, 4, 0};
-//
 //        knotenX = saveKnotenX;
 //        knotenY = saveKnotenY;
         //------------------
-        // Voraussetzung 1: Knoten sind durchgehend von Null weg aufsteigend numeriert
-        // Voraussetzung 2: Spannungsquellen-Nummern sind von Eins weg durchgehend und aufsteigend numeriert
+        // Element is broken down into its individual LK elements -->
+        // Element is broken down into its individual LK elements -->
         // -->
-        knotenMAX = 0;  // Anzahl der (verschiedenen) Knoten
-        spgQuelleMAX = 0;  // Anzahl der (verschiedenen) Spannungsquellen
+        knotenMAX = 0;  // Number of (different) nodes
+        spgQuelleMAX = 0;  // Number of (different) voltage sources
         for (int i1 = 0; i1 < elementANZAHLneu; i1++) {
             knotenMAX = Math.max(knotenMAX, knotenX[i1]);
             knotenMAX = Math.max(knotenMAX, knotenY[i1]);
@@ -387,8 +385,8 @@ public final class NetListLK {
         for (int i1 = 0; i1 < nl.typ.length; i1++) {
             switch (nl.typ[i1]) {
                 case LK_C:
-                    // wird fuer die Initialisierung durch DC-SpgQuelle ersetzt -->
-                    // aber nur, wenn die Anfangsbedingung uC(0) ungleich Null gesetzt wurde
+                    //***********************************************************
+                    //***********************************************************
                     if (nl.parameter[i1][1] != 0) {
                         i_typ[i1] = CircuitTyp.LK_U;
                         i_knotenX[i1] = nl.knotenX[i1];
@@ -409,8 +407,8 @@ public final class NetListLK {
                     }
                     break;
                 case TH_CTH:
-                    // wird fuer die Initialisierung durch DC-SpgQuelle ersetzt -->
-                    // aber nur, wenn die Anfangsbedingung uC(0) ungleich Null gesetzt wurde
+                    //------------------
+                    // Anfangsknoten:
                     if (nl.parameter[i1][1] != 0) {
                         i_typ[i1] = CircuitTyp.TH_TEMP;
                         i_knotenX[i1] = nl.knotenX[i1];
@@ -481,14 +479,14 @@ public final class NetListLK {
                     double kValue = parM[0];
                     double M = kValue * Math.sqrt(inductor1.getStartInductance() * inductor2.getStartInductance());
                     kM.add(M);
-                    kLc.add(new AbstractMap.SimpleEntry(inductor1, inductor2));
+                    kLc.add(new AbstractMap.SimpleEntry<>(inductor1, inductor2));
                 } //else one or two couplings are not defined
             }
         }
 
         //-----------------------------
-        // (3) Aufbereitung: Welche gekoppelten LK-Lc-Elemente sieht das jeweilige LK-Lc-Element ?  -->
-        // (a) zuerst eine Auflistung aller verschiedenen gekoppelten Lc-Elemente -->
+        // bleibt unveraendert -->
+        // bleibt unveraendert -->
 
         Set<AbstractCircuitBlockInterface> alleGekoppeltenLcSet = new LinkedHashSet<AbstractCircuitBlockInterface>();
         for (AbstractMap.SimpleEntry<AbstractCircuitBlockInterface, AbstractCircuitBlockInterface> pair : kLc) {
@@ -496,8 +494,7 @@ public final class NetListLK {
             alleGekoppeltenLcSet.add(pair.getValue());
         }
         alleGekoppeltenLc = alleGekoppeltenLcSet.toArray(new AbstractCircuitBlockInterface[0]);
-        //
-        // (b) jedem gelisteten Lc-Element werden die Kopplungspartner-Lc zugeteilt -->
+        // // is replaced by DC voltage source for initialization -->
         partnerLc = new AbstractCircuitBlockInterface[alleGekoppeltenLc.length][alleGekoppeltenLc.length];
         kopplungen = new double[alleGekoppeltenLc.length][alleGekoppeltenLc.length];
         int ix = 0;

@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit;
 import gecko.core.circuit.TokenMap;
 
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.control.Point;
 import gecko.geckocircuits.control.SubCircuitSheet;
@@ -47,8 +47,8 @@ public final class TerminalToWrap {
     public void reCalculateLocation(final Point moveToPoint) {
         final int wsSizeX = _parentComponent.getParentCircuitSheet()._worksheetSize.getSizeX();
         final int wsSizeY = _parentComponent.getParentCircuitSheet()._worksheetSize.getSizeY();
-        final int checkedPointX = Math.min(moveToPoint.x + _parentComponent.getPositionVorVerschieben().x, wsSizeX - 1);
-        final int checkedPointY = Math.min(moveToPoint.y + _parentComponent.getPositionVorVerschieben().y, wsSizeY - 1);
+        final int checkedPointX = Math.min(moveToPoint.x + _parentComponent.getPositionBeforeMoving().x, wsSizeX - 1);
+        final int checkedPointY = Math.min(moveToPoint.y + _parentComponent.getPositionBeforeMoving().y, wsSizeY - 1);
         if (checkedPointY > checkedPointX * 1.0 * wsSizeY / wsSizeX) {
             if (checkedPointY < wsSizeY - checkedPointX * 1.0 * wsSizeY / wsSizeX) {
                 _parentComponent.setSheetPositionWithoutUndo(new Point(1, checkedPointY));

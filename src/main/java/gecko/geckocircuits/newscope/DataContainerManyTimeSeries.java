@@ -224,13 +224,13 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerieArray[row];
     }
 
     public double getNiceMaximumXValue() {
         double maxXValue = 0;
-        for(AbstractTimeSerie ts : _timeSerieArray) {
+        for(AbstractTimeSeries ts : _timeSerieArray) {
             maxXValue = Math.max(maxXValue, ts.getValue(ts.getMaximumIndex()));
         }
 

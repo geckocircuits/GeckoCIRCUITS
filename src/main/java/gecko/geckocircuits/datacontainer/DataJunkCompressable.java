@@ -14,7 +14,7 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.MemoryContainer;
 import java.lang.ref.SoftReference;
@@ -71,7 +71,7 @@ public final class DataJunkCompressable implements DataJunk {
 //    private static int _compCounter = 1;
 //    private static double _compSum = 0;
     private static final int MORDER_DIFF = 2;
-    private final AbstractTimeSerie _timeSerie;
+    private final AbstractTimeSeries _timeSerie;
     private final int _rows;
     private int _memInBytes = 0;
     /**
@@ -88,7 +88,7 @@ public final class DataJunkCompressable implements DataJunk {
     private final MemoryContainer _container;
 
     public DataJunkCompressable(final MemoryContainer container, final int startIndex, final int rows, final int columns,
-            final AbstractTimeSerie timeSeries) {
+            final AbstractTimeSeries timeSeries) {
         // the data array is not completely initialized. This will happen later,
         // when data is inserted
         _container = container;

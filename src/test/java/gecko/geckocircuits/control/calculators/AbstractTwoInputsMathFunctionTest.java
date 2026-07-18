@@ -57,7 +57,7 @@ public abstract class AbstractTwoInputsMathFunctionTest {
     public double getValue(final double arg1, final double arg2) {
         _controlCalculatableTwoInputs._inputSignal[0][0] = arg1;
         _controlCalculatableTwoInputs._inputSignal[1 ][0] = arg2;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         return _controlCalculatableTwoInputs._outputSignal[0][0];
     }
 

@@ -22,7 +22,7 @@ import gecko.geckocircuits.control.javablock.CompileObjectNull;
 import gecko.geckocircuits.control.javablock.CompileStatus;
 import gecko.geckocircuits.control.javablock.CompiledClassContainer;
 import gecko.geckocircuits.control.javablock.JavaBlockClassLoader;
-import gecko.geckocircuits.control.javablock.ReglerJavaFunction;
+import gecko.geckocircuits.control.javablock.ControlJavaFunction;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -154,7 +154,6 @@ public class CompileScript {
             sw.addSourceLine("    }");
             sw.addSourceLine("  }");
             sw.addSourceLine("}");
-            //
             //System.out.println("createSourceCode() --> \n\n_compilerMessage= \n"+_compilerMessage+"\n\n===========\n_sourceString= \n"+_sourceString+"\n\n===========\n");
         } catch (IOException ex) {
             Logger.getLogger(ScriptWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -215,12 +214,12 @@ public class CompileScript {
             } catch (NoClassDefFoundError err) {
                 err.printStackTrace();
             } catch (InstantiationException | IllegalAccessException | SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException | InvocationTargetException ex) {
                 Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControlJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -137,7 +137,7 @@ public abstract class AbstractDataContainer extends Observable {
      * @param row the row index
      * @return the time series
      */
-    public abstract AbstractTimeSerie getTimeSeries(final int row);
+    public abstract AbstractTimeSeries getTimeSeries(final int row);
 
     /**
      * Gets the raw data array.

@@ -23,13 +23,13 @@ import static org.junit.Assert.*;
  */
 public class Cispr16SettingsTest {
 
-    private ReglerCISPR16 _cispr16Block;
+    private ControlCISPR16 _cispr16Block;
     private Cispr16Settings _settings;
 
     @Before
     public void setUp() {
         // Create a CISPR16 block for initializing settings
-        _cispr16Block = new ReglerCISPR16();
+        _cispr16Block = new ControlCISPR16();
         _settings = new Cispr16Settings(_cispr16Block);
     }
 

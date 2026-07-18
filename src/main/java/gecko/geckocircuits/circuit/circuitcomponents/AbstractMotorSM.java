@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.core.circuit.CircuitSourceType;
 import gecko.geckocircuits.circuit.TerminalRelativePosition;
 import gecko.i18n.resources.I18nKeys;

@@ -15,7 +15,7 @@ package gecko.geckocircuits.circuit;
 
 import gecko.GeckoSim;
 import gecko.core.allg.GeckoFile;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
 import gecko.geckocircuits.newscope.GeckoDialog;
 
@@ -24,8 +24,11 @@ import java.net.URL;
 import java.awt.Dimension;
 import javax.swing.*;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "DE_MIGHT_IGNORE", justification = "Icon loading is optional - dialog works without it")
 public class DialogNonLinearity extends GeckoDialog {
+
+    private static final long serialVersionUID = 1L;
     private final NonLinearDialogPanel _content;
     private static final Dimension _windowSize = new Dimension(800, 600);
     public DialogNonLinearity(final AbstractNonLinearCircuitComponent elementLK, final boolean yAxisLog) {
