@@ -78,6 +78,31 @@ mvn test
 
 Requires: Java 21 JDK + Maven 3.6+
 
+## Logging Configuration
+
+GeckoCIRCUITS uses **Apache Log4j2** for structured console and file logging.
+
+### Output Locations
+- **Console**: Logs are outputted to stdout.
+- **File**: Logs are saved in a rolling file at `logs/gecko.log` (automatically rolled over at 10 MB, up to 10 archives / 100 MB max).
+
+### Configuring Log Levels at Startup
+You can configure the log level dynamically using the `gecko.log.level` system property:
+
+| Level | VM Option / Command | Description |
+|-------|---------------------|-------------|
+| **Disabled** | `-Dgecko.log.level=OFF` | Silences all logging output |
+| **Error Only** | `-Dgecko.log.level=ERROR` | Logs only error events |
+| **Standard (Default)** | `-Dgecko.log.level=INFO` | Logs standard informational events |
+| **Full / Debug** | `-Dgecko.log.level=TRACE` | Logs verbose debug and trace info |
+
+Example running the JAR with error-only logging:
+```bash
+java -Dgecko.log.level=ERROR -jar target/gecko-1.0-jar-with-dependencies.jar
+```
+
+To redirect the logs to a custom directory, set `-Dgecko.log.dir=/path/to/logs`.
+
 ## Architecture
 
 ```
