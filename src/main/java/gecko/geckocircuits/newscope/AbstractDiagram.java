@@ -14,8 +14,8 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.core.datacontainer.HiLoData;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalFonts;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalFonts;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.DataContainerNullData;
@@ -28,14 +28,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author andy
  */
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Diagram component intentionally shares mutable UI components with other scope classes")
 public abstract class AbstractDiagram extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(AbstractDiagram.class);
 
     public final DiagramSettings _diagramSettings;
     protected Axis _xAxis = new Axis(Axis.Direction.X, false, this);
@@ -163,6 +170,8 @@ public abstract class AbstractDiagram extends JPanel {
 
     private class LabelPanel extends JPanel {
 
+        private static final long serialVersionUID = 1L;
+
         LabelPanel() {
             super();
             addMouseListener(new MouseAdapter() {
@@ -227,15 +236,15 @@ public abstract class AbstractDiagram extends JPanel {
 
     /**
      *
-     * @param worksheetDaten
+     * @param worksheetData
      * @param niceScale
      * @return value can be used to detect if a redraw has to be performed or
      * not, e.g. when the axis limits where not changed, the axis does not have
      * to be redrawn.
      */
-    public boolean fitYRangesFromGlobalData(final AbstractDataContainer worksheetDaten, final boolean niceScale) {
+    public boolean fitYRangesFromGlobalData(final AbstractDataContainer worksheetData, final boolean niceScale) {
         final long hash = _yAxis1.getAxisHash() + _xAxis.getAxisHash() + _yAxis2.getAxisHash();
-        calculateAutoScaleYBothYAxis(worksheetDaten);
+        calculateAutoScaleYBothYAxis(worksheetData);
         _yAxis1._axisMinMax.setNiceScale(niceScale);
         _yAxis2._axisMinMax.setNiceScale(niceScale);
         _yAxis1._axisMinMax.globalFit();
@@ -354,16 +363,16 @@ public abstract class AbstractDiagram extends JPanel {
     }
 
     private HiLoData calculateAutoScaleYMinMax(final AxisConnection axisConnection,
-            final AbstractDataContainer worksheetDaten) {
+            final AbstractDataContainer worksheetData) {
 
-        if (worksheetDaten == null) {
+        if (worksheetData == null) {
             return HiLoData.hiLoDataFabric(-1, 1);
         }
         HiLoData minMaxValue = null;
         for (AbstractCurve curve : _curves) {
             final int index = _curves.indexOf(curve);
             if (curve.getAxisConnection() == axisConnection) {
-                final HiLoData addValue = worksheetDaten.getAbsoluteMinMaxValue(index);
+                final HiLoData addValue = worksheetData.getAbsoluteMinMaxValue(index);
                 assert addValue != null : index;
                 minMaxValue = HiLoData.merge(addValue, minMaxValue);
             }
@@ -371,9 +380,9 @@ public abstract class AbstractDiagram extends JPanel {
         return minMaxValue;
     }
 
-    private void calculateAutoScaleYBothYAxis(final AbstractDataContainer worksheetDaten) {
-        final HiLoData minMaxValue1 = calculateAutoScaleYMinMax(AxisConnection.ZUORDNUNG_Y, worksheetDaten);
-        final HiLoData minMaxValue2 = calculateAutoScaleYMinMax(AxisConnection.ZUORDNUNG_Y2, worksheetDaten);
+    private void calculateAutoScaleYBothYAxis(final AbstractDataContainer worksheetData) {
+        final HiLoData minMaxValue1 = calculateAutoScaleYMinMax(AxisConnection.ASSIGNMENT_Y, worksheetData);
+        final HiLoData minMaxValue2 = calculateAutoScaleYMinMax(AxisConnection.ZUORDNUNG_Y2, worksheetData);
 
         if (minMaxValue1 != null) {
             _yAxis1._axisMinMax.setGlobalAutoScaleValues(minMaxValue1);
@@ -402,7 +411,7 @@ public abstract class AbstractDiagram extends JPanel {
                 try {
                     curve._curvePainter.loadRequiredData(container, forceLoad);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    LOGGER.error("Failed to load required data for curve", ex);
                 }
             }
         }

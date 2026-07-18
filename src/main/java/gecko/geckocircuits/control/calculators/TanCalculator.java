@@ -16,7 +16,7 @@ package gecko.geckocircuits.control.calculators;
 public final class TanCalculator extends AbstractSingleInputSingleOutputCalculator {
     private static final double SMALL_NUMBER = 1e-14;
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         assert Math.abs(_inputSignal[0][0] - Math.PI/2) > SMALL_NUMBER:
                 "Tangens argument of" + _inputSignal[0][0] + " too close to PI/2!";
         assert Math.abs(_inputSignal[0][0] + Math.PI/2) > SMALL_NUMBER :

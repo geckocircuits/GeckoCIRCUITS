@@ -13,6 +13,8 @@
  */
 package gecko.core.signal;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.AbstractDataContainer;
 import gecko.core.datacontainer.DataContainerSimple;
 import gecko.core.math.FFTLibrary;
@@ -21,6 +23,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "FFT computation class with public fields for direct data access during signal processing")
 public final class Cispr16Fft {
+    private static final Logger LOGGER = LogManager.getLogger(Cispr16Fft.class);
+
 
     public float[] _zvResampled;
     public float[] _magnitudes;
@@ -152,8 +156,8 @@ public final class Cispr16Fft {
                 return;
             }
         } catch (NoClassDefFoundError error) {
-            System.err.println("Error: could not find JTransforms class library!\n"
-                    + "Continue with built-in FFT algorithm.");
+            LOGGER.error("Could not find JTransforms class library!\n"
+                    + "Continue with built-in FFT algorithm.", error);
 
         }
 

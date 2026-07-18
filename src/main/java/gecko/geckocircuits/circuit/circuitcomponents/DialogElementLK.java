@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.DialogCircuitComponent;
 import gecko.geckocircuits.circuit.PotentialCoupable;
@@ -41,15 +41,15 @@ public abstract class DialogElementLK<T extends AbstractCircuitBlockInterface> e
         getContentPane().setLayout(new BorderLayout());
     }
 
-    abstract void baueGUIIndividual();
+    abstract void buildGUIIndividual();
 
     @Override
-    public void baueGUI() {
+    public void buildGUI() {
         con = this.getContentPane();
         con.setLayout(new BorderLayout());
         gbc.fill = GridBagConstraints.BOTH;
         con.add(jPanelName, BorderLayout.NORTH);
-        baueGUIIndividual();
+        buildGUIIndividual();
         con.add(jPanelButtonOkCancel, BorderLayout.SOUTH);
     }
 

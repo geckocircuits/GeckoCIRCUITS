@@ -13,15 +13,16 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ConnectorType;
-import gecko.geckocircuits.circuit.SpecialTyp;
+import gecko.geckocircuits.circuit.SpecialType;
 import gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public final class ControlTypeInfo extends AbstractTypeInfo {
+    private static final Logger LOGGER = LogManager.getLogger(ControlTypeInfo.class);
+
 
     public ControlTypeInfo(final Class<? extends AbstractBlockInterface> typeClass, final String idString, final I18nKeys typeDescription, final I18nKeys typeDescriptionVerbose) {
         super(typeClass, idString, typeDescription);
@@ -51,9 +52,7 @@ public final class ControlTypeInfo extends AbstractTypeInfo {
         try {
             return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
-            System.err.println("error: " + _typeClass);
-            ex.printStackTrace();
-            Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Failed to instantiate control block: " + _typeClass, ex);
         }
         return null;
 

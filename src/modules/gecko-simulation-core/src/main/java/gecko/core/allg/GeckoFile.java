@@ -13,6 +13,8 @@
  */
 package gecko.core.allg;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.ComponentIdentifiable;
 import gecko.core.circuit.TokenMap;
 import gecko.core.io.SerializationUtils;
@@ -23,9 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author anstupar This class is for handling all extra files that are used
@@ -33,6 +32,8 @@ import java.util.logging.Logger;
  * future) nonlinear characteristic files
  */
 public final class GeckoFile {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoFile.class);
+
 
     /**
      * the java File object for this file, i.e. the actual file
@@ -163,7 +164,7 @@ public final class GeckoFile {
         } catch (Exception e) {
             final String errorMessage = e.toString() + "GeckoFile constructor: could not get canonical "
                     + "path of specified file. Using getAbsolutePath instead";
-            Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, errorMessage);
+            LOGGER.error(errorMessage);
             _absolutePath = _file.getAbsolutePath();
         }
 
@@ -382,7 +383,7 @@ public final class GeckoFile {
             }
         } catch (Exception e) {
             final String errorMessage = "GeckoFile read in file contents: cannot find file. " + e.toString();
-            Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, errorMessage);
+            LOGGER.error(errorMessage);
         }
 
         return fileContents;
@@ -700,7 +701,7 @@ public final class GeckoFile {
             try {
                 return new FileInputStream(_file);
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Failed to open input stream for file: " + _file.getAbsolutePath(), ex);
             }
             return null;
         }
@@ -735,7 +736,7 @@ public final class GeckoFile {
         public String promptForExternalPath(GeckoFile geckoFile, byte[] originalContents) {
             // Use reflection to avoid hard dependency on GUI class
             try {
-                Class<?> dialogClass = Class.forName("gecko.geckocircuits.allg.DialogMakeExternal");
+                Class<?> dialogClass = Class.forName("gecko.geckocircuits.general.DialogMakeExternal");
                 Method factory = dialogClass.getMethod("dialogResultFabric", GeckoFile.class, byte[].class);
                 return (String) factory.invoke(null, geckoFile, originalContents);
             } catch (Exception e) {
@@ -744,7 +745,7 @@ public final class GeckoFile {
             }
         }
     }
-//    // test routine, do not remove!
+// test routine, do not remove!
 //    public static void main(String[] args) {
 //        try {
 //            GeckoFile geckoFile = new GeckoFile(new File("/home/andreas/testFile.txt"),
@@ -756,7 +757,7 @@ public final class GeckoFile {
 //            System.out.println("relativeNew: " + geckoFile._relativePath);
 //            System.out.println("finally storage type: " + geckoFile.getStorageType());
 //        } catch (FileNotFoundException ex) {
-//            Logger.getLogger(GeckoFile.class.getName()).log(Level.SEVERE, null, ex);
+//LogManager.getLogger(GeckoFile.class).error("Exception occurred", ex);
 //        }
 //    }
 }

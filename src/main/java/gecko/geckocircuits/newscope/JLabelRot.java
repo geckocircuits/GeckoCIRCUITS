@@ -20,7 +20,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.Dimension;
 
+@SuppressWarnings({"this-escape", "serial"})
 public class JLabelRot extends JLabel {
+
+    private static final long serialVersionUID = 1L;
 
     private double _phiDegClockWise = 0;
     private String _txt;

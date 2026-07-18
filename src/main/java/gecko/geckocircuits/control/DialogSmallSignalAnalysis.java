@@ -13,9 +13,11 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.control.calculators.SmallSignalCalculator;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;
 import gecko.geckocircuits.newscope.BodePlot2;
@@ -37,7 +39,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallSignalAnalysis> {
+public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmallSignalAnalysis> {
+    private static final Logger LOGGER = LogManager.getLogger(DialogSmallSignalAnalysis.class);
+
 
     private JComboBox<SSAShape> _jComboSignal;
     private GraferV4 _grafer;
@@ -47,7 +51,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     /**
      * Creates new form DialogSmallSignalAnalysis2
      */
-    public DialogSmallSignalAnalysis(final ReglerSmallSignalAnalysis parent) {
+    public DialogSmallSignalAnalysis(final ControlSmallSignalAnalysis parent) {
         super(parent);
         initComponents();
         //jPanelBode.add(new BodePlot2());
@@ -85,7 +89,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     }
 
     @Override
-    public void baueGUI() {
+    public void buildGUI() {
         this.setLocationRelativeTo(GeckoSim._win);
         jPanelName.setLayout(new GridLayout(1, 5));
         con = this.getContentPane();
@@ -99,8 +103,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
 
             con.add(namePanel2, BorderLayout.NORTH);
         } catch (Exception ex) {
-            // sometimes, I git an XException here... don't know the reason.
-            ex.printStackTrace();
+            LOGGER.error("Failed to initialize small signal analysis dialog GUI", ex);
         }
 
         _bodePlot = new BodePlot2();
@@ -130,7 +133,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
             }
         });
 
-        baueGuiIndividual();
+        buildIndividualGUI();
 
         ScopeSettings settings = new ScopeSettings();
         _grafer = new GraferV4(settings);
@@ -197,7 +200,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
         double[] measuredValues = ssc._measuredValues;
         double dt = ssc._calculationDeltaT;
 
-        System.out.println("number of valid samples " + ssc._numberSamples + " " + ssc._N);
+        LOGGER.info("number of valid samples " + ssc._numberSamples + " " + ssc._N);
 
         double time = 0;
 
@@ -233,7 +236,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ReglerSmallS
     }
 
     @Override
-    void baueGuiIndividual() {
+    void buildIndividualGUI() {
 
         JPanel pAmpl = createParameterPanel(element._amplitude);
         jpM.add(pAmpl, BorderLayout.CENTER);

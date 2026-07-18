@@ -13,10 +13,14 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.HashSet;
 
 public final class SymmetricDoubleSparseMatrix {
+    private static final Logger LOGGER = LogManager.getLogger(SymmetricDoubleSparseMatrix.class);
+
 
     public HashMap<Integer, HashSet<Integer>> rowEntries = new HashMap<Integer, HashSet<Integer>>();
     public HashMap<Integer, HashMap<Integer, Double>> rowEntriesValue = new HashMap<Integer, HashMap<Integer, Double>>();
@@ -96,20 +100,20 @@ public final class SymmetricDoubleSparseMatrix {
 
     public void print() {
 
-        System.out.println("----------------------");
+        LOGGER.info("----------------------");
         for (int i = 0; i < _N; i++) {
-            System.out.print(i + "\t");
+            LOGGER.info(i + "\t");
         }
 
-        System.out.println("\n [");
+        LOGGER.info("\n [");
 
         for (int i = 0; i < _N; i++) {
             for (int j = 0; j < _N; j++) {
-                System.out.print(getValue(i, j) + ",\t");
+                LOGGER.info(getValue(i, j) + ",\t");
             }
-            System.out.println(";");
+            LOGGER.info(";");
         }
-        System.out.println("]");
+        LOGGER.info("]");
     }
 
     public int getNumberOfNonZeros() {

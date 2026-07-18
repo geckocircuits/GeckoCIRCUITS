@@ -13,18 +13,19 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.GetJarPath;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.GetJarPath;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 @SuppressWarnings("removal")  // AccessControlException is deprecated but required for legacy applet security
 final class JavaMemoryRestart {
+    private static final Logger LOGGER = LogManager.getLogger(JavaMemoryRestart.class);
+
 
     private static final int MINIMUM_MEM_MB = 128;
     private static final int MEGA_BYTE = 1098300;
@@ -39,9 +40,9 @@ final class JavaMemoryRestart {
 
     public static boolean isMemoryRestartRequired(final int userMemorySize) {
         final int memorySize = setLowerMemoryBound(userMemorySize);
-        System.out.println("Requested memory size: " + memorySize + "MB.");
+        LOGGER.info("Requested memory size: " + memorySize + "MB.");
         final long jvmMemory = Runtime.getRuntime().maxMemory();
-        System.out.println("Available JVM memory: " + jvmMemory / MEGA_BYTE + " MB.");
+        LOGGER.info("Available JVM memory: " + jvmMemory / MEGA_BYTE + " MB.");
         return jvmMemory < MEM_FACTOR * memorySize * MEGA_BYTE;
     }
 
@@ -64,13 +65,13 @@ final class JavaMemoryRestart {
                 pathToJarFile = jarPath.substring(0, jarPath.length() - 15) + "/dist/GeckoCIRCUITS.jar";
             }
         } catch (AccessControlException ex) {
-            System.err.println("Could not re-start GeckoCIRCUITS.jar with increased memory size,"
+            LOGGER.error("Could not re-start GeckoCIRCUITS.jar with increased memory size,"
                     + "\nsince it was probably started as applet.");
             return false;
         }
 
         if (new File(pathToJarFile).exists()) {
-            System.out.println("Starting GeckoCIRCUITS JVM with " + memorySize + " MB memory");
+            LOGGER.info("Starting GeckoCIRCUITS JVM with " + memorySize + " MB memory");
 
             final List<String> commands = createJVMCallCommands(javaCommand, memorySize, pathToJarFile, args);
 
@@ -89,8 +90,7 @@ final class JavaMemoryRestart {
                     // get the encoding from the Content-TYpe header
                     return searchForReadyString(bufRead, errBufRead);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {LogManager.getLogger(JavaMemoryRestart.class).error("Exception occurred", ex);
             }
         }
         return false;
@@ -113,8 +113,7 @@ final class JavaMemoryRestart {
                             return;
                         }
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {LogManager.getLogger(JavaMemoryRestart.class).error("Exception occurred", ex);
                 }
             }
         }
@@ -127,10 +126,9 @@ final class JavaMemoryRestart {
                 try {
                     String line;
                     while (!shouldStop && (line = errBufRead.readLine()) != null) {
-                        System.err.println(line);
+                        LOGGER.error(line);
                     }
-                } catch (IOException ex) {
-                    Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {LogManager.getLogger(JavaMemoryRestart.class).error("Exception occurred", ex);
                 }
             }
         }
@@ -147,11 +145,10 @@ final class JavaMemoryRestart {
                 Thread.sleep(TIMEOUT);
             }
 
-        } catch (InterruptedException ex) {
-            Logger.getLogger(JavaMemoryRestart.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {LogManager.getLogger(JavaMemoryRestart.class).error("Exception occurred", ex);
         }
         if (!searchRunnable.readyStringFound) {
-            System.err.println("Timeout, probably GeckoCIRCUITS was not started properly.");
+            LOGGER.error("Timeout, probably GeckoCIRCUITS was not started properly.");
             errorPrintRunnable.shouldStop = true;
             errPrintThread.interrupt();
             searchRunnable.shouldStop = true;

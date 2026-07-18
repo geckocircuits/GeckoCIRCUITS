@@ -16,7 +16,7 @@ package gecko.geckocircuits.control;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.Window;
 
-abstract class AbstractInversTrigFunction extends AbstractReglerSingleInputSingleOutput {
+abstract class AbstractInversTrigFunction extends AbstractControlSingleInputSingleOutput {
     @Override
     public final String[] getOutputNames() {
         return new String[]{getFixedIDString().toLowerCase()};

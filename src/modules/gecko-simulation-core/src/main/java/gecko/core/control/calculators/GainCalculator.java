@@ -27,7 +27,7 @@ public final class GainCalculator extends AbstractSingleInputSingleOutputCalcula
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = _gain * _inputSignal[0][0];
     }
 

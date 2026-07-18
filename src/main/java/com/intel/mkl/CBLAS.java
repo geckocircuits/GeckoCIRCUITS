@@ -42,7 +42,7 @@ package com.intel.mkl;
 public final class CBLAS {
 
        
-    //////////////////////////////////////////////////////////
+    //
 
     /**
      * Instantiation is disabled.
@@ -64,7 +64,7 @@ public final class CBLAS {
 
     }
 
-    //////////////////////////////////////////////////////////
+    //
 
     /** Constants for CBLAS_ORDER enum. */
     public final static class ORDER {
@@ -113,7 +113,7 @@ public final class CBLAS {
         public final static int Right=142;
     }
 
-    //////////////////////////////////////////////////////////
+    //
 
     /** Wrapper to cblas_sgemm(). */
     public static native void sgemm(int Order, int TransA, int TransB, int M, int N, int K,
@@ -204,7 +204,7 @@ public final class CBLAS {
     public static native void zgemv(int order, int TransA, int M, int N,
         double[] alpha, double[] A, int lda, double[] X, int incX, double[] beta, double[] Y, int incY);
 
-    //////////////////////////////////////////////////////////
+    //
 
     /** Wrapper to cblas_sdot(). */
     public static native float sdot(int N, float[] X, int incX, float[] Y, int incY);

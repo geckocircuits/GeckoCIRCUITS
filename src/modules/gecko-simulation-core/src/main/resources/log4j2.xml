@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Default Log4j2 configuration for the gecko-simulation-core module when used
+    standalone (REST API, CLI tools, headless batch simulation, containers).
+
+    This file is intentionally identical to the application-level config so that
+    consumers of the core library get sane INFO-level console + rolling-file
+    logging without having to provide their own configuration. Override by
+    placing a log4j2.xml on the application classpath, or by setting
+    -Dlog4j2.configurationFile=... / -Dgecko.log.dir=...
+-->
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logDir">${sys:gecko.log.dir:-logs}</Property>
+        <Property name="logPattern">%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern}"/>
+        </Console>
+
+        <RollingFile name="File"
+                     fileName="${logDir}/gecko-core.log"
+                     filePattern="${logDir}/gecko-core-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${logPattern}"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10">
+                <Delete basePath="${logDir}" maxDepth="1">
+                    <IfAccumulatedFileSize exceeds="100 MB"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>

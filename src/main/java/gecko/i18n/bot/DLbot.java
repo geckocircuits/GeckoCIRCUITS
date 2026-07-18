@@ -18,6 +18,8 @@
  */
 package gecko.i18n.bot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
 import net.sourceforge.jwbf.core.contentRep.SimpleArticle;
 import gecko.i18n.translationtoolbox.TranslationDialog;
@@ -27,6 +29,8 @@ import gecko.i18n.LangInit;
 import gecko.i18n.resources.I18nKeys;
 
 public class DLbot {
+    private static final Logger LOGGER = LogManager.getLogger(DLbot.class);
+
 
     private static volatile boolean connected = false; // Applet-Wiki connection status indicator
     private static volatile int progress = 0; // download progress (percent)

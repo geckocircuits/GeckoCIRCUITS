@@ -13,8 +13,10 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalColors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
@@ -28,9 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
 class JPanelLossDataInterpolationSettings extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(JPanelLossDataInterpolationSettings.class);
+
 
     private final JLabel _jlUTest = new JLabel("    U =");
-    private final DialogVerlusteDetail _parentDialog;
+    private final DialogLossesDetail _parentDialog;
     private final FormatJTextField _jtfTemperature = new FormatJTextField(100);
     private final JPanel _jpTt = new JPanel();
     private final FormatJTextField _jtfVoltage = new FormatJTextField(300);
@@ -42,12 +46,12 @@ class JPanelLossDataInterpolationSettings extends JPanel {
                 final double uMeas = _jtfVoltage.getNumberFromField();
                 _parentDialog.createTestCurve(temperature, uMeas);
             } catch (Exception exc) {
-                System.out.println(exc.getMessage());
+                LOGGER.info(exc.getMessage());
             }
         }
     };
 
-    JPanelLossDataInterpolationSettings(final DialogVerlusteDetail parentDialog) {
+    JPanelLossDataInterpolationSettings(final DialogLossesDetail parentDialog) {
         super();
         _parentDialog = parentDialog;
 

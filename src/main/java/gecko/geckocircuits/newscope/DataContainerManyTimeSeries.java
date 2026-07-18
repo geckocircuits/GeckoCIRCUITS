@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
@@ -23,6 +25,8 @@ import gecko.geckocircuits.datacontainer.DataContainerValuesSettable;
  * @author andy
  */
 public class DataContainerManyTimeSeries extends AbstractDataContainer implements DataContainerValuesSettable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerManyTimeSeries.class);
+
 
     // CHECKSTYLE:OFF
     protected final float[][] _data;
@@ -124,7 +128,7 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
         try {
             return _abMinMaxValues[row];
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.info("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
         }
         return _abMinMaxValues[0];
     }
@@ -224,13 +228,13 @@ public class DataContainerManyTimeSeries extends AbstractDataContainer implement
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerieArray[row];
     }
 
     public double getNiceMaximumXValue() {
         double maxXValue = 0;
-        for(AbstractTimeSerie ts : _timeSerieArray) {
+        for(AbstractTimeSeries ts : _timeSerieArray) {
             maxXValue = Math.max(maxXValue, ts.getValue(ts.getMaximumIndex()));
         }
 

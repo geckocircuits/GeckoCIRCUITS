@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.geckocircuits.newscope.DefinedMeanSignals;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.MemoryContainer;
@@ -22,8 +24,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -35,12 +35,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Data container shares mean signals reference for scope integration")
 public final class DataContainerCompressable extends AbstractDataContainer implements DataContainerValuesSettable,
         DataContainerIntegralCalculatable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerCompressable.class);
+
 
     private final List<DataJunkCompressable> _data = new ArrayList<DataJunkCompressable>();
     public static final int JUNK_SIZE = 4096;
     private final int _rows;
     private int _totalDataSize = 0;
-    private final AbstractTimeSerie _timeSerie;
+    private final AbstractTimeSeries _timeSerie;
     private final HiLoData[] _totMinMaxValues;
     private int _lastMinMaxJunk = 0;
     private static final int MEGA_BYTES = 1048000;
@@ -56,7 +58,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     private MemoryContainer _memoryContainer;
 
     public DataContainerCompressable(final int rows,
-            final AbstractTimeSerie timeSerie, final String[] signalNames, final String xDataName) {
+            final AbstractTimeSeries timeSerie, final String[] signalNames, final String xDataName) {
         super();
 
         _totMinMaxValues = new HiLoData[rows];
@@ -105,7 +107,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
         try { // first enshure that all data ranges are read:
             getAbsoluteMinMaxValue(row);
         } catch (ArithmeticException ex) {
-            Logger.getLogger(DataContainerCompressable.class.getName()).log(Level.WARNING, ex.getMessage());
+            LOGGER.warn(ex.getMessage());
         }
         // then return the invalid number result!
         return _containsInvalidNumbers[row];
@@ -298,7 +300,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
                 _memoryContainer = null;
             }
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to calculate min/max values when pausing container", ex);
         }
         setChanged();
         notifyObservers();
@@ -306,7 +308,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerie;
     }
 

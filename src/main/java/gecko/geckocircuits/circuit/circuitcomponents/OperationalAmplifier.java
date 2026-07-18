@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTerminal;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
@@ -210,7 +210,6 @@ public final class OperationalAmplifier extends AbstractCircuitBlockInterface im
         // Riso, internal isolation -->
         _qLK[2] = _rIsolation;
         _qLK[3] = _internalVoltageSource;
-        //
         // R14 (voltage-divider for voltage-clamping) -->
         _qLK[4] = _Ra;
         // R15 (voltage-divider for voltage-clamping) -->

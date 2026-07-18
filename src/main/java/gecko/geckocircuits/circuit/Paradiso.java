@@ -13,18 +13,16 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.intel.mkl.LAPACK;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
-
-
 /**
  *
  * @author muesinga
  */
 public class Paradiso {
+    private static final Logger LOGGER = LogManager.getLogger(Paradiso.class);
+
 
 
     private final static int nrhs = 1;
@@ -105,7 +103,7 @@ public class Paradiso {
                 paradiso.iparm, msglvl, ddum, ddum, error);
 
         if (error != 0) {
-                Logger.getLogger(Paradiso.class.getName()).log(Level.SEVERE, "\nERROR during symbolic factorization: " + error);
+            LOGGER.error("during symbolic factorization: " + error);
         }
 
         //System.out.println("\nReordering completed ... ");
@@ -121,7 +119,7 @@ public class Paradiso {
                 paradiso.iparm, msglvl, ddum, ddum, error);
 
         if (error != 0) {
-            Logger.getLogger(Paradiso.class.getName()).log(Level.SEVERE, "ERROR during numerical factorization: " + error);
+            LOGGER.error("during numerical factorization: " + error);
         }
         //long facstop = System.currentTimeMillis();
         //System.out.println("factorization time: " + (facstop - facstart)/1000.0);
@@ -152,7 +150,7 @@ public class Paradiso {
 
 
         if (error != 0) {
-            Logger.getLogger(Paradiso.class.getName()).log(Level.SEVERE, "\nERROR during solution: " + error);
+            LOGGER.error("during solution: " + error);
         }
 
         /* -------------------------------------------------------------------- */

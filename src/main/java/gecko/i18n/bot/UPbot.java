@@ -19,6 +19,8 @@
  */
 package gecko.i18n.bot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.i18n.InitParameters;
 import java.util.Random;
 import net.sourceforge.jwbf.mediawiki.bots.MediaWikiBot;
@@ -27,6 +29,8 @@ import gecko.i18n.translationtoolbox.TranslationDialog;
 import gecko.i18n.resources.I18nKeys;
 
 public class UPbot {
+    private static final Logger LOGGER = LogManager.getLogger(UPbot.class);
+
 
     private static volatile boolean connected = false; // Applet-Wiki connection status indicator
     private static volatile int progress = 0; // upload progress (percent)

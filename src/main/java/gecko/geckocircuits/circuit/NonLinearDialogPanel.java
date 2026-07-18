@@ -13,10 +13,12 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.MainWindow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.core.allg.GeckoFile;
-import gecko.geckocircuits.allg.GeckoFileChooser;
-import gecko.geckocircuits.allg.GeckoFileManagerWindow;
+import gecko.geckocircuits.general.GeckoFileChooser;
+import gecko.geckocircuits.general.GeckoFileManagerWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractNonLinearCircuitComponent;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;
@@ -43,9 +45,14 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "Public OK button for external dialog configuration; stores references to parent dialog and component for interaction")
 public class NonLinearDialogPanel extends JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(NonLinearDialogPanel.class);
+
+
+    private static final long serialVersionUID = 1L;
 
     private static final int BUTTON_HEIGHT = 30;
     private static final Dimension BUTTON_DIMENSION = new Dimension(80, BUTTON_HEIGHT);
@@ -78,8 +85,8 @@ public class NonLinearDialogPanel extends JPanel {
         _type = "nonlinear " + _nonlinearParent.getNonlinearName() + " characteristic";
 
         this.initCharacteristic();
-        baueGUIok();
-        add(this.baueGUIInput(), BorderLayout.CENTER);
+        buildGUIok();
+        add(this.buildGUIInput(), BorderLayout.CENTER);
 
         this.add(lowerPanel, BorderLayout.SOUTH);
         _parentDialog.setTitle(_type);
@@ -113,7 +120,7 @@ public class NonLinearDialogPanel extends JPanel {
         }
     }
 
-    private JPanel baueGUIInput() {
+    private JPanel buildGUIInput() {
         table = new DataTablePanel(new String[]{_nonlinearParent.getIndependentVariableName(),
             _nonlinearParent.getNonlinearNameShort()});
         table.setPreferredSize(new Dimension(150, 100));
@@ -182,7 +189,7 @@ public class NonLinearDialogPanel extends JPanel {
         return jpCOND;
     }
 
-    private void baueGUIok() {
+    private void buildGUIok() {
         lowerPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "", TitledBorder.LEFT, TitledBorder.TOP));
         //---------------
         _jbOK = GuiFabric.getJButton(I18nKeys.OK);
@@ -332,7 +339,7 @@ public class NonLinearDialogPanel extends JPanel {
             data[0] = nonLin[0];
             data[1] = nonLin[1];
             for(int i = 0; i < data[0].length; i++) {
-                System.out.println("iii " + i + " " + data[0][i] + " " + data[1][i] + " " + (data[0][i] * data[1][i]));
+                LOGGER.info("iii " + i + " " + data[0][i] + " " + data[1][i] + " " + (data[0][i] * data[1][i]));
             }
             table.setValues(data);
             loadedFile = file;

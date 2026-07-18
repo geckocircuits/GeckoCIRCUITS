@@ -13,9 +13,11 @@
  */
 package gecko.geckoscript;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
-import gecko.geckocircuits.allg.MainWindow;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.*;
@@ -23,13 +25,13 @@ import gecko.geckocircuits.control.DataSaver;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "EI_EXPOSE_REP"}, justification = "Simulation access stores main window reference for GUI interaction; returns file list for external access")
 public final class SimulationAccess implements GeckoFileable {
+    private static final Logger LOGGER = LogManager.getLogger(SimulationAccess.class);
+
 
     final static long DUMMY_BLOCK_ID = -1231231987;
     final List<GeckoFile> _additionalSourceFiles = new ArrayList<GeckoFile>();
@@ -48,7 +50,7 @@ public final class SimulationAccess implements GeckoFileable {
             scriptwindow = new ScriptWindow(this);
 
         } catch (Throwable ex) {
-            System.out.println("Could not find editor library jsyntaxpane.jar. Scripting tool disabled.");
+            LOGGER.info("Could not find editor library jsyntaxpane.jar. Scripting tool disabled.");
             // ex.printStackTrace();
         }
 
@@ -83,8 +85,7 @@ public final class SimulationAccess implements GeckoFileable {
         while (DataSaver.WAIT_COUNTER.get() != 0 && counter < 100) {
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SimulationAccess.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(SimulationAccess.class).error("Exception occurred", ex);
             }
             counter++;
         }
@@ -253,10 +254,10 @@ public final class SimulationAccess implements GeckoFileable {
             throws Exception {
         AbstractBlockInterface block = IDStringDialog.getComponentByName(scopename);
 
-        if (!(block instanceof ReglerOSZI)) {
+        if (!(block instanceof ControlOSZI)) {
             throw new Exception("Supplied element " + scopename + "to getSignalCharacteristics function is not a SCOPE");
         } else {
-            ReglerOSZI scope = (ReglerOSZI) block;
+            ControlOSZI scope = (ControlOSZI) block;
             return scope.getChannelCharacteristics(port, start_time, end_time);
         }
 
@@ -265,10 +266,10 @@ public final class SimulationAccess implements GeckoFileable {
     public double[][] doFourierAnalysis(String scopename, int port, double start_time, double end_time, int harmonics) throws Exception {
         AbstractBlockInterface block = IDStringDialog.getComponentByName(scopename);
 
-        if (!(block instanceof ReglerOSZI)) {
+        if (!(block instanceof ControlOSZI)) {
             throw new Exception("Supplied element " + scopename + "to getSignalCharacteristics function is not a SCOPE");
         } else {
-            ReglerOSZI scope = (ReglerOSZI) block;
+            ControlOSZI scope = (ControlOSZI) block;
             return scope.doFourierAnalysis(port, start_time, end_time, harmonics);
         }
     }
@@ -303,7 +304,7 @@ public final class SimulationAccess implements GeckoFileable {
                  */x, y);
 
         if (positionOK) {
-            Point originalPoint = element.getPositionVorVerschieben();
+            Point originalPoint = element.getPositionBeforeMoving();
             element.moveComponent(new Point(x - originalPoint.x, y - originalPoint.y));
             element.absetzenElement();
         }
@@ -393,7 +394,7 @@ public final class SimulationAccess implements GeckoFileable {
         final String oldLabel = label.getLabelString();
         label.setLabelFromUserDialog(labelName);
 
-        NetzlisteAllg.fabricNetzlistComponentLabelUpdate(element, terminalType);
+        NetlistGeneral.fabricNetzlistComponentLabelUpdate(element, terminalType);
 
         se.updateRenamedLabel(oldLabel, labelName, terminalType);
         se.setDirtyFlag();
@@ -422,7 +423,7 @@ public final class SimulationAccess implements GeckoFileable {
     }
 
     public double getSimulationTime() {
-        return GeckoSim._win._simRunner.simKern.getZeitAktuell();
+        return GeckoSim._win._simRunner.simKern.getCurrentTime();
     }
 
     @Override

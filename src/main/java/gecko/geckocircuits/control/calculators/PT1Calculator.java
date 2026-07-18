@@ -23,7 +23,7 @@ public final class PT1Calculator extends AbstractPTCalculator {
         }
 
         @Override
-        public void berechneYOUT(final double deltaT) {
+        public void calculateYOUT(final double deltaT) {
             //if (t==0) { xalt=yaltInit;  yalt=xaltInit; }  // re-init
             _outputSignal[0][0] = _yOld * (2 * _TVal - deltaT) / (2 * _TVal + deltaT) + _a1Val / (1 + 2 * _TVal / deltaT)
                     * (_inputSignal[0][0] + _xOld);

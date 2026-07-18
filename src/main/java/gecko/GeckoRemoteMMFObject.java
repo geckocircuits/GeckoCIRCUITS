@@ -13,14 +13,13 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.OperatingMode;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.OperatingMode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * This class is a wrapper for use in from external programs, e.g. MATLAB or
  * other Java programs. The communication is done via a memory-mapped file (MMF).
@@ -33,6 +32,8 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings({"PMD.ExcessivePublicCount", "PMD.NullAssignment"})
 public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoRemoteMMFObject.class);
+
 
 
     GeckoMemoryMappedFile _mmf = null;
@@ -68,19 +69,18 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             final String[] args = argsList.toArray(new String[0]);
 
             for(String arg : args) {
-                System.out.println("arg " + arg);
+                LOGGER.info("arg " + arg);
             }
             GeckoSim.main(args);
             try {
                 Thread.sleep(5);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(GeckoRemoteMMFObject.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {LogManager.getLogger(GeckoRemoteMMFObject.class).error("Exception occurred", ex);
             }
             if (GeckoSim.mmfLoaded) {
                 return connectToExistingInstance(file);
             }
         } else {
-            System.out.println("The given file " + file + " already exists. Will attempt to treat it as a runnning GeckoCIRCUITS instance\nand connect to it. If this fails, please try a different (non-existing!) file name.");
+            LOGGER.info("The given file " + file + " already exists. Will attempt to treat it as a runnning GeckoCIRCUITS instance\nand connect to it. If this fails, please try a different (non-existing!) file name.");
             return connectToExistingInstance(file);
 
         }
@@ -143,7 +143,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
                         }
                         _mmf = file;
                         sessionID = newSessionID;
-                        System.out.println("You are now connected to the GeckoCIRCUITS instance via file " + file.getFileName());
+                        LOGGER.info("You are now connected to the GeckoCIRCUITS instance via file " + file.getFileName());
                     } else if (newSessionID == 0) {
                         throw new RuntimeException("Connection to GeckoCIRCUITS via file " + file.getFileName() + " rejected by that instance of GeckoCIRCUITS.");
                     } else if (newSessionID == -1) {
@@ -159,9 +159,9 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             } else {
                 if (_mmf != null) {
                     if (_mmf.getConnectionID() == sessionID) {
-                        System.out.println("You are already connected to the GeckoCIRCUITS instance available through file " + file.getFileName());
+                        LOGGER.info("You are already connected to the GeckoCIRCUITS instance available through file " + file.getFileName());
                     } else {
-                        System.out.println("The GeckoCIRCUITS instance at file " + file.getFileName()
+                        LOGGER.info("The GeckoCIRCUITS instance at file " + file.getFileName()
                                 + " is busy with (an)other session(s). You cannot connect to it now.");
                     }
                 } else {
@@ -193,12 +193,12 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
     public void disconnectFromGecko() {
         try {
             if (_mmf == null) {
-                System.out.println("You have no existing connections to GeckoCIRCUITS");
+                LOGGER.info("You have no existing connections to GeckoCIRCUITS");
             } else {
                 final String fileName = _mmf.getFileName();
                 _mmf.disconnect(sessionID);
                 sessionID = NO_SESSION_ID;
-                System.out.println("You have been disconnected from the GeckoCIRCUITS instance at file" + fileName);
+                LOGGER.info("You have been disconnected from the GeckoCIRCUITS instance at file" + fileName);
                 _mmf = null;
             }
 
@@ -218,7 +218,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
 
     private boolean checkRemote() {
         if (_mmf == null) {
-            System.err.println("You are NOT connected to any instance of GeckoCIRCUITS! Use startNewRemoteInstance(file,size) or"
+            LOGGER.error("You are NOT connected to any instance of GeckoCIRCUITS! Use startNewRemoteInstance(file,size) or"
                     + " connectToExistingInstance(file) to establish a connection.");
             return false;
         } else {
@@ -226,7 +226,7 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
             if (_mmf.getConnectionID() == sessionID) {
                 return true;
             } else {
-                System.out.println("Invalid session ID. Restart your connection by "
+                LOGGER.info("Invalid session ID. Restart your connection by "
                         + "calling disconnectFromGecko() and then reconnecting.");
                 return false;
             }
@@ -250,12 +250,12 @@ public final class GeckoRemoteMMFObject extends GeckoRemoteObject {
     public void shutdown() {
         try {
             if (_mmf == null) {
-                System.out.println("You have no existing connections to GeckoCIRCUITS");
+                LOGGER.info("You have no existing connections to GeckoCIRCUITS");
             } else {
                 final String fileName = _mmf.getFileName();
                 _mmf.shutdown(sessionID);
                 sessionID = NO_SESSION_ID;
-                System.out.println("GeckoCIRCUITS has been shutdown.");
+                LOGGER.info("GeckoCIRCUITS has been shutdown.");
                 _mmf = null;
             }
 

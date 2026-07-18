@@ -140,7 +140,7 @@ public final class DataContainerNullData extends AbstractDataContainer implement
   }
 
   @Override
-  public AbstractTimeSerie getTimeSeries(final int row){
+  public AbstractTimeSeries getTimeSeries(final int row){
     throw new UnsupportedOperationException("Not supported yet.");
   }
 

@@ -17,7 +17,7 @@
  */
 package gecko.geckocircuits.control.calculators;
 
-import gecko.geckocircuits.control.ReglerDemux;
+import gecko.geckocircuits.control.ControlDemux;
 import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,25 +31,25 @@ public class DEMUXCalculatorTest {
     private static final int NO_OUPUTS = 5;
 
     private DEMUXCalculator _demux;
-    private ReglerDemux _reglerDemux;
+    private ControlDemux _controlDemux;
 
 
     @Before
     public void setUp() {
-        _reglerDemux = new ReglerDemux();
-        _demux = new DEMUXCalculator(NO_OUPUTS, _reglerDemux);
+        _controlDemux = new ControlDemux();
+        _demux = new DEMUXCalculator(NO_OUPUTS, _controlDemux);
         _demux._inputSignal[0] = new double[NO_OUPUTS];
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         Random rand = new Random();
 
         for(int i = 0; i < _demux._outputSignal.length; i++) {
             _demux._inputSignal[0][i] = rand.nextDouble();
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for(int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals(_demux._inputSignal[0][i], _demux._outputSignal[i][0], 1e-9);
@@ -58,7 +58,7 @@ public class DEMUXCalculatorTest {
 
     @Test(expected=Exception.class)
     public void testInitializeAtSimulationStart() {
-        DEMUXCalculator demux = new DEMUXCalculator(NO_OUPUTS, _reglerDemux);
+        DEMUXCalculator demux = new DEMUXCalculator(NO_OUPUTS, _controlDemux);
         // the +1 should produce an error!
         demux._inputSignal[0] = new double[NO_OUPUTS+1];
         demux.initializeAtSimulationStart(1);
@@ -70,7 +70,7 @@ public class DEMUXCalculatorTest {
             _demux._inputSignal[0][i] = 0.0;
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("Output " + i + " should be zero", 0.0, _demux._outputSignal[i][0], 1e-9);
@@ -83,7 +83,7 @@ public class DEMUXCalculatorTest {
             _demux._inputSignal[0][i] = -1.0 - i;  // -1, -2, -3, -4, -5
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("Output " + i + " should be negative",
@@ -99,7 +99,7 @@ public class DEMUXCalculatorTest {
         _demux._inputSignal[0][3] = -0.5;
         _demux._inputSignal[0][4] = 3.3;
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         assertEquals(1.5, _demux._outputSignal[0][0], 1e-9);
         assertEquals(-2.5, _demux._outputSignal[1][0], 1e-9);
@@ -114,7 +114,7 @@ public class DEMUXCalculatorTest {
             _demux._inputSignal[0][i] = 1e6 + i;
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("Output " + i + " should preserve large value",
@@ -128,7 +128,7 @@ public class DEMUXCalculatorTest {
             _demux._inputSignal[0][i] = 1e-6 * (i + 1);
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("Output " + i + " should preserve small value",
@@ -143,7 +143,7 @@ public class DEMUXCalculatorTest {
             _demux._inputSignal[0][i] = (i % 2 == 0) ? 5.5 : -5.5;
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             double expected = (i % 2 == 0) ? 5.5 : -5.5;
@@ -159,14 +159,14 @@ public class DEMUXCalculatorTest {
 
         // First calculation
         System.arraycopy(input1, 0, _demux._inputSignal[0], 0, NO_OUPUTS);
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("First calculation output " + i, input1[i], _demux._outputSignal[i][0], 1e-9);
         }
 
         // Second calculation
         System.arraycopy(input2, 0, _demux._inputSignal[0], 0, NO_OUPUTS);
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("Second calculation output " + i, input2[i], _demux._outputSignal[i][0], 1e-9);
         }
@@ -179,7 +179,7 @@ public class DEMUXCalculatorTest {
             _demux._inputSignal[0][i] = 1e300;
         }
 
-        _demux.berechneYOUT(1);
+        _demux.calculateYOUT(1);
 
         for (int i = 0; i < _demux._outputSignal.length; i++) {
             assertEquals("Output " + i + " should preserve very large value",

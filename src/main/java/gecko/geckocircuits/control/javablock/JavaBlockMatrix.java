@@ -13,20 +13,21 @@
  */
 package gecko.geckocircuits.control.javablock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.ControlCalculatableMatrix;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class JavaBlockMatrix extends AbstractJavaBlock {
+    private static final Logger LOGGER = LogManager.getLogger(JavaBlockMatrix.class);
+
     private ControlCalculatableMatrix _compiledInstance;
-    JavaBlockMatrix(final ReglerJavaFunction regler) {
-        super(regler);
+    JavaBlockMatrix(final ControlJavaFunction control) {
+        super(control);
     }
 
     @Override
     AbstractJavaBlock createOtherBlockTypeCopy() {
-        final AbstractJavaBlock returnValue = new JavaBlockVector(_reglerJavaBlock);
+        final AbstractJavaBlock returnValue = new JavaBlockVector(_controlJavaBlock);
         returnValue._javaBlockSource = this._javaBlockSource;
         createNewJavaSourceCopy(returnValue);
         returnValue._additionalSourceFiles.addAll(this._additionalSourceFiles);
@@ -83,16 +84,16 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
                 _compiledInstance = (ControlCalculatableMatrix) clazz.newInstance();
 
             } catch (NoClassDefFoundError err) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
+                LOGGER.error("NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
             } catch (InstantiationException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
+                LOGGER.error("InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
+                LOGGER.error("IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "SecurityException while creating Java block instance: " + ex.getMessage(), ex);
+                LOGGER.error("SecurityException while creating Java block instance: " + ex.getMessage(), ex);
             }
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
+            LOGGER.error("ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
         }
     }
 

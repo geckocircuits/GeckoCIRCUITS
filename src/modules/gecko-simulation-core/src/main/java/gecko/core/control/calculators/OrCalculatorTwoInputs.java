@@ -16,7 +16,7 @@ package gecko.core.control.calculators;
 public final class OrCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator {
 
     @Override
-    public void berechneYOUT(final double deltaT) {        
+    public void calculateYOUT(final double deltaT) {        
         if (_inputSignal[0][0] > SIGNAL_THRESHOLD || _inputSignal[1][0] > SIGNAL_THRESHOLD) {
             _outputSignal[0][0] = 1;
         } else {

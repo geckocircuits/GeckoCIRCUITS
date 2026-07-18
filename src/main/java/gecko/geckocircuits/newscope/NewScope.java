@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.ProjectData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.newscope.SliderUtils.ExtremumType;
@@ -23,14 +25,17 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.GroupLayout;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = {"PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2"},
         justification = "NetBeans GUI form generated public field; stores Fourier panel reference for visualization")
 public final class NewScope extends javax.swing.JPanel {
+    private static final Logger LOGGER = LogManager.getLogger(NewScope.class);
+
+
+    private static final long serialVersionUID = 1L;
 
     public final List<GraferV4> _grafer = new ArrayList<GraferV4>();
     private boolean _signalCrvSelected;
@@ -156,7 +161,7 @@ public final class NewScope extends javax.swing.JPanel {
         jToolBarLeft.setRollover(true);
         jToolBarLeft.setOpaque(false);
 
-        jToggleButtonOff.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/iconOFF_off.png"))); // NOI18N
+        jToggleButtonOff.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/iconOFF_off.png"))); // NOI18N
         jToggleButtonOff.setToolTipText("Disable cursors and zoom modus");
         jToggleButtonOff.setFocusPainted(false);
         jToggleButtonOff.addActionListener(new java.awt.event.ActionListener() {
@@ -167,7 +172,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jToggleButtonOff);
 
-        jToggleButtonZoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/iconOFF_zoomFenster.png"))); // NOI18N
+        jToggleButtonZoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/iconOFF_zoomWindow.png"))); // NOI18N
         jToggleButtonZoom.setSelected(true);
         jToggleButtonZoom.setToolTipText("<html>Activate zoom modus. Drag the mouse to zoom. Pressing Ctrl<br>\nor Shift during draggin enables zooming into a single axis direction.<br>\nAs alternative, you can use the mouse wheel for zooming. Alt-Drag<br>\nenables the pan modus.\n</html>");
         jToggleButtonZoom.setFocusable(false);
@@ -181,7 +186,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jToggleButtonZoom);
 
-        jToggleButtonSlider.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/iconON_getXYschieber.png"))); // NOI18N
+        jToggleButtonSlider.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/iconON_getXYslider.png"))); // NOI18N
         jToggleButtonSlider.setToolTipText("<html>Activate sliders (cursors). You can use the mouse wheel for fine-<br>\nadjustment of the cursors. The second (green) cursor moves by dragging<br>\nthe right mouse button. The green cursor shows DIFFERENCES values w.r.t<br>\nthe first (red) cursor values.</html>");
         jToggleButtonSlider.setFocusable(false);
         jToggleButtonSlider.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -197,7 +202,7 @@ public final class NewScope extends javax.swing.JPanel {
         jSeparator1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
         jToolBarLeft.add(jSeparator1);
 
-        jButtonNextMax.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/icon_nextMax.png"))); // NOI18N
+        jButtonNextMax.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/icon_nextMax.png"))); // NOI18N
         jButtonNextMax.setToolTipText("Move active cursor to next (ctrl-previous) maximum");
         jButtonNextMax.setFocusable(false);
         jButtonNextMax.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -210,7 +215,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonNextMax);
 
-        jButtonNextMin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/icon_nextMin.png"))); // NOI18N
+        jButtonNextMin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/icon_nextMin.png"))); // NOI18N
         jButtonNextMin.setToolTipText("Move active cursor to next (ctrl-previous) maximum");
         jButtonNextMin.setFocusable(false);
         jButtonNextMin.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -223,7 +228,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonNextMin);
 
-        jButtonNextZero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/icon_nextZero.png"))); // NOI18N
+        jButtonNextZero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/icon_nextZero.png"))); // NOI18N
         jButtonNextZero.setToolTipText("Move active cursor to next (ctrl-previous) zero crossing");
         jButtonNextZero.setFocusable(false);
         jButtonNextZero.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -236,7 +241,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonNextZero);
 
-        jButtonNextEqual.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/icon_nextEqual.png"))); // NOI18N
+        jButtonNextEqual.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/icon_nextEqual.png"))); // NOI18N
         jButtonNextEqual.setToolTipText("<html>Move inactive cursor to next (ctrl-previous)<br>  value equal to the active cursor value</html>");
         jButtonNextEqual.setFocusable(false);
         jButtonNextEqual.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -249,7 +254,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonNextEqual);
 
-        jButtonShowAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/iconOFF_zoomFit2.png"))); // NOI18N
+        jButtonShowAll.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/iconOFF_zoomFit2.png"))); // NOI18N
         jButtonShowAll.setToolTipText("Auto-zoom to data in memory");
         jButtonShowAll.setFocusable(false);
         jButtonShowAll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -262,7 +267,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonShowAll);
 
-        jButtonZoomBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/iconUnZoom.png"))); // NOI18N
+        jButtonZoomBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/iconUnZoom.png"))); // NOI18N
         jButtonZoomBack.setToolTipText("Undo last zoom operation");
         jButtonZoomBack.setFocusable(false);
         jButtonZoomBack.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -275,7 +280,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonZoomBack);
 
-        jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/ctrlForward.png"))); // NOI18N
+        jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/ctrlForward.png"))); // NOI18N
         jToggleButtonCtrl.setFocusable(false);
         jToggleButtonCtrl.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButtonCtrl.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -287,7 +292,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jToggleButtonCtrl);
 
-        jToggleButtonZoomShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/zoomY.png"))); // NOI18N
+        jToggleButtonZoomShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/zoomY.png"))); // NOI18N
         jToggleButtonZoomShift.setToolTipText("<html>Lock zoom to Y-axis. Alternatively, press<br> SHIFT button when dragging the zoom window</html>");
         jToggleButtonZoomShift.setFocusable(false);
         jToggleButtonZoomShift.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -300,7 +305,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jToggleButtonZoomShift);
 
-        jButtonSaveZoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/iconON_zoomFit2.png"))); // NOI18N
+        jButtonSaveZoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/iconON_zoomFit2.png"))); // NOI18N
         jButtonSaveZoom.setToolTipText("Save currently selected zoom settings");
         jButtonSaveZoom.setFocusable(false);
         jButtonSaveZoom.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -313,7 +318,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonSaveZoom);
 
-        jButtonLoadZoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/loadZoom.png"))); // NOI18N
+        jButtonLoadZoom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/loadZoom.png"))); // NOI18N
         jButtonLoadZoom.setToolTipText("Load zoom settings that were saved last time");
         jButtonLoadZoom.setEnabled(false);
         jButtonLoadZoom.setFocusable(false);
@@ -327,7 +332,7 @@ public final class NewScope extends javax.swing.JPanel {
         });
         jToolBarLeft.add(jButtonLoadZoom);
 
-        jToggleButtonAuto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/autoScale.png"))); // NOI18N
+        jToggleButtonAuto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/autoScale.png"))); // NOI18N
         jToggleButtonAuto.setSelected(true);
         jToggleButtonAuto.setFocusable(false);
         jToggleButtonAuto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -417,7 +422,7 @@ private void jToggleButtonOffActionPerformed(java.awt.event.ActionEvent evt) {//
     jToggleButtonZoom.setSelected(false);
 
     for (GraferV4 grafer : _grafer) {
-        grafer.setMausModus(GraferV4.MausModus.NONE);
+        grafer.setMouseMode(GraferV4.MausModus.NONE);
     }
 
     disableZoomButtons();
@@ -429,7 +434,7 @@ private void jToggleButtonSliderActionPerformed(java.awt.event.ActionEvent evt) 
     jToggleButtonSlider.setSelected(true);
     jToggleButtonZoom.setSelected(false);
     for (GraferV4 grafer : _grafer) {
-        grafer.setMausModus(GraferV4.MausModus.SLIDER);
+        grafer.setMouseMode(GraferV4.MausModus.SLIDER);
         //grafer.setAxisPositions();
     }
 
@@ -442,7 +447,7 @@ private void jToggleButtonZoomActionPerformed(java.awt.event.ActionEvent evt) {/
     jToggleButtonSlider.setSelected(false);
     jToggleButtonZoom.setSelected(true);
     for (GraferV4 grafer : _grafer) {
-        grafer.setMausModus(GraferV4.MausModus.ZOOM_WINDOW);
+        grafer.setMouseMode(GraferV4.MausModus.ZOOM_WINDOW);
     }
 
     disableSliderButtons();
@@ -481,7 +486,7 @@ private void jButtonNextMaxActionPerformed(java.awt.event.ActionEvent evt) {//NO
         }
         _grafer.get(0)._xSliderDrawer.setDisplayRanges(_sliderContainer.getSliderXRange());
     } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextMaxActionPerformed
 
@@ -517,7 +522,7 @@ private void jButtonNextMinActionPerformed(java.awt.event.ActionEvent evt) {//NO
             _sliderContainer.goToExtrema(getIterationDirection(), ExtremumType.MINIMUM, _grafer.get(0));
         }
     } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextMinActionPerformed
 
@@ -525,7 +530,7 @@ private void jButtonNextZeroActionPerformed(java.awt.event.ActionEvent evt) {//N
     try {
         _sliderContainer.goToZeroOrEqual(getIterationDirection(), true, _grafer.get(0));
     } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextZeroActionPerformed
 
@@ -533,7 +538,7 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
     try {
         _sliderContainer.goToZeroOrEqual(getIterationDirection(), false, _grafer.get(0));
     } catch (NoCurveSelectedException ex) {
-        Logger.getLogger(NewScope.class.getName()).log(Level.WARNING, ex.getMessage());
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextEqualActionPerformed
 
@@ -598,18 +603,18 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
     private void enableSliderButtons() {
         if (_signalCrvSelected) {
             jButtonNextMax.setIcon(new javax.swing.ImageIcon(getClass().
-                    getResource("/gecko/geckocircuits/allg/icon_nextSIGAsc.png")));
+                    getResource("/gecko/geckocircuits/general/icon_nextSIGAsc.png")));
             jButtonNextMin.setIcon(new javax.swing.ImageIcon(getClass().
-                    getResource("/gecko/geckocircuits/allg/icon_nextSIGDesc.png")));
+                    getResource("/gecko/geckocircuits/general/icon_nextSIGDesc.png")));
             jButtonNextMax.setVisible(true);
             jButtonNextMin.setVisible(true);
             jButtonNextZero.setVisible(false);
             jButtonNextEqual.setVisible(false);
         } else {
             jButtonNextMax.setIcon(new javax.swing.ImageIcon(getClass().
-                    getResource("/gecko/geckocircuits/allg/icon_nextMax.png")));
+                    getResource("/gecko/geckocircuits/general/icon_nextMax.png")));
             jButtonNextMin.setIcon(new javax.swing.ImageIcon(getClass().
-                    getResource("/gecko/geckocircuits/allg/icon_nextMin.png")));
+                    getResource("/gecko/geckocircuits/general/icon_nextMin.png")));
             jButtonNextMax.setVisible(true);
             jButtonNextMin.setVisible(true);
             jButtonNextZero.setVisible(true);
@@ -657,14 +662,14 @@ private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//
     private void setCTRLCursors() {
 
         if (jToggleButtonZoom.isSelected()) {
-            jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/zoomX.png")));
+            jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/zoomX.png")));
             jToggleButtonCtrl.setToolTipText(ZOOM_INFO);
         } else {
             jToggleButtonCtrl.setToolTipText(CURSOR_FORWARD_INFO);
             if (jToggleButtonCtrl.isSelected()) {
-                jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/ctrlBackward.png")));
+                jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/ctrlBackward.png")));
             } else {
-                jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/allg/ctrlForward.png")));
+                jToggleButtonCtrl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gecko/geckocircuits/general/ctrlForward.png")));
             }
         }
     }

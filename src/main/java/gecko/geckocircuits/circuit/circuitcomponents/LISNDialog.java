@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -31,13 +33,15 @@ import javax.swing.JTabbedPane;
  * @author andy
  */
 class LISNDialog extends DialogElementLK {
+    private static final Logger LOGGER = LogManager.getLogger(LISNDialog.class);
+
 
     public LISNDialog(final LISN parent) {
         super(parent);
     }
 
     @Override
-    protected void baueGUIIndividual() {
+    protected void buildGUIIndividual() {
         JPanel jpDefLISN = new JPanel();
         jpDefLISN.setLayout(new BorderLayout());
         JComponent jcLISN = new JComponent() {
@@ -49,7 +53,7 @@ class LISNDialog extends DialogElementLK {
                     Image img = new ImageIcon(URI.create(GlobalFilePathes.PFAD_PICS_URL + "lisn.png").toURL()).getImage();
                     g.drawImage(img, 10, 0, new JFrame());
                 } catch (Exception e) {
-                    System.out.println(e + "   srthrszhj5shj");
+                    LOGGER.info(e + "   srthrszhj5shj");
                 }
             }
         };

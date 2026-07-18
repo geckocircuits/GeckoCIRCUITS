@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.datacontainer;
 
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.NiceScale;
 import gecko.geckocircuits.newscope.TimeSeriesArray;
@@ -26,6 +28,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Returns time series reference for external data access and visualization")
 public class DataContainerSimple extends AbstractDataContainer implements DataContainerValuesSettable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerSimple.class);
+
 
     // CHECKSTYLE:OFF
     protected float[][] _data;
@@ -33,7 +37,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     private static final int MEGA_BYTE = 1048000;
     private static final int DOUBLE_BYTES = 8;
     private static final int FLOAT_BYTES = 8;
-    private AbstractTimeSerie _timeSerieArray;
+    private AbstractTimeSeries _timeSerieArray;
     private String[] _signalNames;
     /*
      * the highest index where values are written into the container
@@ -145,7 +149,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
         try {
             return _abMinMaxValues[row];
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.info("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
         }
         return _abMinMaxValues[0];
     }
@@ -245,7 +249,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerieArray;
     }
 

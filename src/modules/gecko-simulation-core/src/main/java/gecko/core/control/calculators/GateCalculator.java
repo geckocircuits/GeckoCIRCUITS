@@ -22,7 +22,7 @@ import gecko.core.control.NotCalculateableMarker;
  * gate signals for switching components. The actual gate signal processing
  * happens elsewhere - this calculator just provides the input connection point.
  *
- * Since this implements NotCalculateableMarker, berechneYOUT() is never called.
+ * Since this implements NotCalculateableMarker, calculateYOUT() is never called.
  *
  * @author GeckoCIRCUITS Team
  */
@@ -36,8 +36,8 @@ public final class GateCalculator extends AbstractControlCalculatable implements
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         // This is not calculatable - method should never be called
-        assert false : "GateCalculator.berechneYOUT should never be called";
+        assert false : "GateCalculator.calculateYOUT should never be called";
     }
 }

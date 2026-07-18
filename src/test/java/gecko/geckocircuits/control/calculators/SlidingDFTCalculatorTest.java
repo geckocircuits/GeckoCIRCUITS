@@ -13,8 +13,8 @@
  */
 package gecko.geckocircuits.control.calculators;
 
-import gecko.geckocircuits.control.ReglerSlidingDFT;
-import gecko.geckocircuits.control.ReglerSlidingDFT.FrequencyData;
+import gecko.geckocircuits.control.ControlSlidingDFT;
+import gecko.geckocircuits.control.ControlSlidingDFT.FrequencyData;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -41,23 +41,23 @@ public final class SlidingDFTCalculatorTest {
 
     @Before
     public void setUp() {
-        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
 
-        _freqData = new ArrayList<ReglerSlidingDFT.FrequencyData>();
-        _freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.ABS));
-        _freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.PHASE));
-        _freqData.add(regler.new FrequencyData(FREQ0, ReglerSlidingDFT.OutputData.ABS));
+        _freqData = new ArrayList<ControlSlidingDFT.FrequencyData>();
+        _freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
+        _freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.PHASE));
+        _freqData.add(control.new FrequencyData(FREQ0, ControlSlidingDFT.OutputData.ABS));
         _sdft = new SlidingDFTCalculator(NO_OUTPUTS, AVG_SPAN, _freqData);
     }
 
     @Test
-    public void testBerechneYOUT() {
+    public void testCalculateYOUT() {
         _sdft._inputSignal[0] = new double[1];
         _sdft.initializeAtSimulationStart(DELTA_T);
 
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             _sdft._inputSignal[0][0] = OFFSET + AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         assertEquals(AMPLITUDE, _sdft._outputSignal[0][0], TOLERANCE);
@@ -73,7 +73,7 @@ public final class SlidingDFTCalculatorTest {
         double time = 0;
         for (; time < END_TIME; time += DELTA_T) {
             _sdft._inputSignal[0][0] = OFFSET + AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         // solve with larger stepwidth:
@@ -81,7 +81,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (; time < 2 * END_TIME; time += STEP_INCREASE * DELTA_T) {
             _sdft._inputSignal[0][0] = OFFSET + AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(DELTA_T * STEP_INCREASE);
+            _sdft.calculateYOUT(DELTA_T * STEP_INCREASE);
         }
 
         assertEquals(AMPLITUDE, _sdft._outputSignal[0][0], LARGE_TOLERANCE);
@@ -93,7 +93,7 @@ public final class SlidingDFTCalculatorTest {
         _sdft.initWithNewDt(STEP_INCREASE2 * DELTA_T);
         for (; time < (2 + 1) * END_TIME; time += STEP_INCREASE2 * DELTA_T) {
             _sdft._inputSignal[0][0] = OFFSET + AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(DELTA_T * STEP_INCREASE2);
+            _sdft.calculateYOUT(DELTA_T * STEP_INCREASE2);
         }
 
         assertEquals(AMPLITUDE, _sdft._outputSignal[0][0], LARGE_TOLERANCE);
@@ -109,7 +109,7 @@ public final class SlidingDFTCalculatorTest {
         // Feed constant DC value
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             _sdft._inputSignal[0][0] = OFFSET;  // Only DC, no AC
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         // DC component should be OFFSET * 2 (the algorithm sums all components)
@@ -125,7 +125,7 @@ public final class SlidingDFTCalculatorTest {
         double dcValue = 5.0;
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             _sdft._inputSignal[0][0] = dcValue;
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         assertEquals(dcValue * 2, _sdft._outputSignal[2][0], LARGE_TOLERANCE);
@@ -133,10 +133,10 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testHigherFrequency() {
-        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
         double highFreq = 150;  // 150 Hz component
-        freqData.add(regler.new FrequencyData(highFreq, ReglerSlidingDFT.OutputData.ABS));
+        freqData.add(control.new FrequencyData(highFreq, ControlSlidingDFT.OutputData.ABS));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -144,7 +144,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * highFreq);
-            sdft.berechneYOUT(DELTA_T);
+            sdft.calculateYOUT(DELTA_T);
         }
 
         assertEquals(AMPLITUDE, sdft._outputSignal[0][0], LARGE_TOLERANCE);
@@ -157,7 +157,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             _sdft._inputSignal[0][0] = 0;
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         // All outputs should be near zero
@@ -174,7 +174,7 @@ public final class SlidingDFTCalculatorTest {
         // Sum of 50Hz and DC
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             _sdft._inputSignal[0][0] = OFFSET + AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         // Verify outputs exist and are reasonable
@@ -185,9 +185,9 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testRealOutputData() {
-        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.REAL));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.REAL));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -195,7 +195,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             sdft._inputSignal[0][0] = AMPLITUDE * Math.cos(2 * Math.PI * time * FREQ1);
-            sdft.berechneYOUT(DELTA_T);
+            sdft.calculateYOUT(DELTA_T);
         }
 
         // Real part should be close to amplitude for cosine input
@@ -205,9 +205,9 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testImagOutputData() {
-        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.IMAG));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.IMAG));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -215,7 +215,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            sdft.berechneYOUT(DELTA_T);
+            sdft.calculateYOUT(DELTA_T);
         }
 
         // Imaginary part for sine input
@@ -225,12 +225,12 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testAllOutputDataTypes() {
-        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<>();
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.ABS));
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.REAL));
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.IMAG));
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.PHASE));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.REAL));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.IMAG));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.PHASE));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(4, AVG_SPAN, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -238,7 +238,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (double time = 0; time < END_TIME; time += DELTA_T) {
             sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            sdft.berechneYOUT(DELTA_T);
+            sdft.calculateYOUT(DELTA_T);
         }
 
         // All outputs should be valid
@@ -259,7 +259,7 @@ public final class SlidingDFTCalculatorTest {
         double time = 0;
         for (; time < END_TIME / 2; time += DELTA_T) {
             _sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(DELTA_T);
+            _sdft.calculateYOUT(DELTA_T);
         }
 
         // Switch to larger time step (size decreases)
@@ -268,7 +268,7 @@ public final class SlidingDFTCalculatorTest {
 
         for (; time < END_TIME; time += largerDt) {
             _sdft._inputSignal[0][0] = AMPLITUDE * Math.sin(2 * Math.PI * time * FREQ1);
-            _sdft.berechneYOUT(largerDt);
+            _sdft.calculateYOUT(largerDt);
         }
 
         assertFalse("Output should be valid after dt change", Double.isNaN(_sdft._outputSignal[0][0]));
@@ -276,9 +276,9 @@ public final class SlidingDFTCalculatorTest {
 
     @Test
     public void testAverageSpanSmallerThanStepWidth() {
-        ReglerSlidingDFT regler = new ReglerSlidingDFT();
+        ControlSlidingDFT control = new ControlSlidingDFT();
         List<FrequencyData> freqData = new ArrayList<FrequencyData>();
-        freqData.add(regler.new FrequencyData(FREQ1, ReglerSlidingDFT.OutputData.ABS));
+        freqData.add(control.new FrequencyData(FREQ1, ControlSlidingDFT.OutputData.ABS));
 
         SlidingDFTCalculator sdft = new SlidingDFTCalculator(1, 1e-6, freqData);
         sdft._inputSignal[0] = new double[1];
@@ -286,11 +286,11 @@ public final class SlidingDFTCalculatorTest {
         double dt = 1e-3;
         sdft.initializeAtSimulationStart(dt);
         sdft._inputSignal[0][0] = AMPLITUDE;
-        sdft.berechneYOUT(dt);
+        sdft.calculateYOUT(dt);
 
         sdft.initWithNewDt(2 * dt);
         sdft._inputSignal[0][0] = AMPLITUDE;
-        sdft.berechneYOUT(2 * dt);
+        sdft.calculateYOUT(2 * dt);
 
         assertFalse("Output should be finite", Double.isNaN(sdft._outputSignal[0][0]));
         assertFalse("Output should be finite", Double.isInfinite(sdft._outputSignal[0][0]));

@@ -19,7 +19,7 @@ import gecko.core.datacontainer.HiLoData;
  * compatibility reasons, it is still here. It should be refactored or removed, soon!
  *
  */
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -27,32 +27,35 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Legacy scope settings with direct field access for GUI compatibility")
 public class ScopeSettings implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public static final int ANZ_DIAGRAM_MAX = 12;
-    private int anzDiagram;  // Anzahl der Diagramme
+    private int anzDiagram;  // Number of charts
     private List<String> nameDiagram;  // Bezeichnungen der Diagramme
     private List<Double> ySpacingDiagram;  // wieviel 'y-Anteil' hat das jeweilige Diagramm
-    private int[] diagramTyp;  // ist das jeweilige Diagramm ein ZV-Typ oder ein Signal-Typ?
+    private int[] diagramTyp;  // is the respective diagram a ZV type or a signal type?
     //
-    private boolean[] autoScaleX, autoScaleY;  // sollen die Achsenbegrenzungen automatisch an die Worksheetdaten angepasst werden?
+    private boolean[] autoScaleX, autoScaleY;  // should the axis limits be automatically adjusted to the worksheet data?
     private List<Double> userScaleXMin, userScaleXMax, userScaleYMin, userScaleYMax;
     private List<String> signalNamen = new ArrayList<String>();
-    private int[] xAchsenTyp, yAchsenTyp;  // Linear oder logarithmisch?
+    private int[] xAchsenTyp, yAchsenTyp;  // Linear or logarithmic?
     private int[] xAchseFarbe, yAchseFarbe;
     private int[] xAchseStil, yAchseStil;
-    private List<String> xAchseBeschriftung, yAchseBeschriftung;
+    private List<String> xAxisLabel, yAxisLabel;
     //
-    private int[] farbeGridNormalX, farbeGridNormalXminor, farbeGridNormalY, farbeGridNormalYminor;
-    private int[] linStilGridNormalX, linStilGridNormalXminor, linStilGridNormalY, linStilGridNormalYminor;
+    private int[] colorGridNormalX, colorGridNormalXminor, colorGridNormalY, colorGridNormalYminor;
+    private int[] lineStyleGridNormalX, lineStyleGridNormalXminor, lineStyleGridNormalY, lineStyleGridNormalYminor;
     private boolean[] xShowGridMaj, xShowGridMin, yShowGridMaj, yShowGridMin;
     //
-    private int[] xAnzTicksMinor, yAnzTicksMinor;
-    private int[] xTickLaenge, xTickLaengeMinor, yTickLaenge, yTickLaengeMinor;
+    private int[] xNumTicksMinor, yNumTicksMinor;
+    private int[] xTickLength, xTickLengthMinor, yTickLength, yTickLengthMinor;
     //
-    private boolean[] zeigeLabelsXmaj, zeigeLabelsXmin, zeigeLabelsYmaj, zeigeLabelsYmin;
+    private boolean[] showLabelsXmaj, showLabelsXmin, showLabelsYmaj, showLabelsYmin;
     private boolean[] ORIGjcbXShowGridMaj, ORIGjcbXShowGridMin;
     private boolean[] ORIGjcbYShowGridMaj, ORIGjcbYShowGridMin;
     private int[] ORIGjcmXlinCol, ORIGjcmYlinCol;
@@ -63,7 +66,7 @@ public class ScopeSettings implements Serializable {
     private boolean[] ORIGjcbYShowLabelMaj, ORIGjcbYShowLabelMin;
     private int[][] matrixZuordnungKurveDiagram;
     private int[][] indexWsXY;  // Zuordnung Worksheetdaten - Kurven
-    private int[][] crvAchsenTyp;  // wird ueber SET-Methode aktualisiert, damit die Matrix 'matrixZuordnungKurveDiagram' nicht vergessen wird!
+    private int[][] crvAchsenTyp;  // is updated via the SET method so that the matrix 'matrixAssignmentCurveDiagram' is not forgotten!
     private int[][] crvLineStyle, crvLineColor;
     private boolean[][] crvSymbShow;
     private int[][] crvSymbFrequ;
@@ -131,40 +134,40 @@ public class ScopeSettings implements Serializable {
         yAchseFarbe = new int[ANZ_DIAGRAM_MAX];
         xAchseStil = new int[ANZ_DIAGRAM_MAX];
         yAchseStil = new int[ANZ_DIAGRAM_MAX];
-        xAchseBeschriftung = new ArrayList<String>();
+        xAxisLabel = new ArrayList<String>();
 
-        yAchseBeschriftung = new ArrayList<String>();
+        yAxisLabel = new ArrayList<String>();
 
         for (int i = 0; i < ANZ_DIAGRAM_MAX; i++) {
-            xAchseBeschriftung.add("");
-            yAchseBeschriftung.add("");
+            xAxisLabel.add("");
+            yAxisLabel.add("");
         }
 
         //
-        farbeGridNormalX = new int[ANZ_DIAGRAM_MAX];
-        farbeGridNormalXminor = new int[ANZ_DIAGRAM_MAX];
-        farbeGridNormalY = new int[ANZ_DIAGRAM_MAX];
-        farbeGridNormalYminor = new int[ANZ_DIAGRAM_MAX];
-        linStilGridNormalX = new int[ANZ_DIAGRAM_MAX];
-        linStilGridNormalXminor = new int[ANZ_DIAGRAM_MAX];
-        linStilGridNormalY = new int[ANZ_DIAGRAM_MAX];
-        linStilGridNormalYminor = new int[ANZ_DIAGRAM_MAX];
+        colorGridNormalX = new int[ANZ_DIAGRAM_MAX];
+        colorGridNormalXminor = new int[ANZ_DIAGRAM_MAX];
+        colorGridNormalY = new int[ANZ_DIAGRAM_MAX];
+        colorGridNormalYminor = new int[ANZ_DIAGRAM_MAX];
+        lineStyleGridNormalX = new int[ANZ_DIAGRAM_MAX];
+        lineStyleGridNormalXminor = new int[ANZ_DIAGRAM_MAX];
+        lineStyleGridNormalY = new int[ANZ_DIAGRAM_MAX];
+        lineStyleGridNormalYminor = new int[ANZ_DIAGRAM_MAX];
         xShowGridMaj = new boolean[ANZ_DIAGRAM_MAX];
         xShowGridMin = new boolean[ANZ_DIAGRAM_MAX];
         yShowGridMaj = new boolean[ANZ_DIAGRAM_MAX];
         yShowGridMin = new boolean[ANZ_DIAGRAM_MAX];
         //
-        xAnzTicksMinor = new int[ANZ_DIAGRAM_MAX];
-        yAnzTicksMinor = new int[ANZ_DIAGRAM_MAX];
-        xTickLaenge = new int[ANZ_DIAGRAM_MAX];
-        xTickLaengeMinor = new int[ANZ_DIAGRAM_MAX];
-        yTickLaenge = new int[ANZ_DIAGRAM_MAX];
-        yTickLaengeMinor = new int[ANZ_DIAGRAM_MAX];
+        xNumTicksMinor = new int[ANZ_DIAGRAM_MAX];
+        yNumTicksMinor = new int[ANZ_DIAGRAM_MAX];
+        xTickLength = new int[ANZ_DIAGRAM_MAX];
+        xTickLengthMinor = new int[ANZ_DIAGRAM_MAX];
+        yTickLength = new int[ANZ_DIAGRAM_MAX];
+        yTickLengthMinor = new int[ANZ_DIAGRAM_MAX];
         //
-        zeigeLabelsXmaj = new boolean[ANZ_DIAGRAM_MAX];
-        zeigeLabelsXmin = new boolean[ANZ_DIAGRAM_MAX];
-        zeigeLabelsYmaj = new boolean[ANZ_DIAGRAM_MAX];
-        zeigeLabelsYmin = new boolean[ANZ_DIAGRAM_MAX];
+        showLabelsXmaj = new boolean[ANZ_DIAGRAM_MAX];
+        showLabelsXmin = new boolean[ANZ_DIAGRAM_MAX];
+        showLabelsYmaj = new boolean[ANZ_DIAGRAM_MAX];
+        showLabelsYmin = new boolean[ANZ_DIAGRAM_MAX];
 
         ORIGjcbXShowGridMaj = new boolean[ANZ_DIAGRAM_MAX];
         ORIGjcbXShowGridMin = new boolean[ANZ_DIAGRAM_MAX];
@@ -182,7 +185,7 @@ public class ScopeSettings implements Serializable {
         ORIGjcbXShowLabelMin = new boolean[ANZ_DIAGRAM_MAX];
         ORIGjcbYShowLabelMaj = new boolean[ANZ_DIAGRAM_MAX];
         ORIGjcbYShowLabelMin = new boolean[ANZ_DIAGRAM_MAX];
-        // speziell fuer SIGNAL -->
+        // especially for SIGNAL -->
 
         crvTransparency = new double[50][50];
         for (int i = 0; i < 10; i++) {
@@ -215,25 +218,25 @@ public class ScopeSettings implements Serializable {
 
                 final DiagramSettings diagramSettings = diag._diagramSettings;
                 diagramSettings.setNameDiagram(nameDiagram.get(i));
-                xAxis._axisTickSettings.setShowLabelsMaj(zeigeLabelsXmaj[i]);
-                xAxis._axisTickSettings.setShowLabelsMin(zeigeLabelsXmin[i]);
-                yAxis._axisTickSettings.setShowLabelsMaj(zeigeLabelsYmaj[i]);
-                yAxis._axisTickSettings.setShowLabelsMin(zeigeLabelsYmin[i]);
-                xAxis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(linStilGridNormalX[i]));
-                xAxis._axisGridSettings.setLinStyleMin(GeckoLineStyle.getFromCode(linStilGridNormalXminor[i]));
-                yAxis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(linStilGridNormalY[i]));
-                yAxis._axisGridSettings.setLinStyleMin(GeckoLineStyle.getFromCode(linStilGridNormalYminor[i]));
-                xAxis._axisTickSettings.setAnzTicksMinor(xAnzTicksMinor[i]);
-                yAxis._axisTickSettings.setAnzTicksMinor(yAnzTicksMinor[i]);
-                xAxis._axisTickSettings.setTickLengthMaj(xTickLaenge[i]);
-                xAxis._axisTickSettings.setTickLengthMin(xTickLaengeMinor[i]);
-                yAxis._axisTickSettings.setTickLengthMaj(yTickLaenge[i]);
-                yAxis._axisTickSettings.setTickLengthMin(yTickLaengeMinor[i]);
+                xAxis._axisTickSettings.setShowLabelsMaj(showLabelsXmaj[i]);
+                xAxis._axisTickSettings.setShowLabelsMin(showLabelsXmin[i]);
+                yAxis._axisTickSettings.setShowLabelsMaj(showLabelsYmaj[i]);
+                yAxis._axisTickSettings.setShowLabelsMin(showLabelsYmin[i]);
+                xAxis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(lineStyleGridNormalX[i]));
+                xAxis._axisGridSettings.setLinStyleMin(GeckoLineStyle.getFromCode(lineStyleGridNormalXminor[i]));
+                yAxis._axisGridSettings.setLinStyleMaj(GeckoLineStyle.getFromCode(lineStyleGridNormalY[i]));
+                yAxis._axisGridSettings.setLinStyleMin(GeckoLineStyle.getFromCode(lineStyleGridNormalYminor[i]));
+                xAxis._axisTickSettings.setNumTicksMinor(xNumTicksMinor[i]);
+                yAxis._axisTickSettings.setNumTicksMinor(yNumTicksMinor[i]);
+                xAxis._axisTickSettings.setTickLengthMaj(xTickLength[i]);
+                xAxis._axisTickSettings.setTickLengthMin(xTickLengthMinor[i]);
+                yAxis._axisTickSettings.setTickLengthMaj(yTickLength[i]);
+                yAxis._axisTickSettings.setTickLengthMin(yTickLengthMinor[i]);
                 diagramSettings.setWeightDiagram(ySpacingDiagram.get(i));
-                xAxis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(farbeGridNormalX[i]));
-                xAxis._axisGridSettings.setColorGridMin(GeckoColor.getFromCode(farbeGridNormalXminor[i]));
-                yAxis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(farbeGridNormalY[i]));
-                yAxis._axisGridSettings.setColorGridMin(GeckoColor.getFromCode(farbeGridNormalYminor[i]));
+                xAxis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(colorGridNormalX[i]));
+                xAxis._axisGridSettings.setColorGridMin(GeckoColor.getFromCode(colorGridNormalXminor[i]));
+                yAxis._axisGridSettings.setColorGridMaj(GeckoColor.getFromCode(colorGridNormalY[i]));
+                yAxis._axisGridSettings.setColorGridMin(GeckoColor.getFromCode(colorGridNormalYminor[i]));
 
                 xAxis._axisSettings.setColor(GeckoColor.getFromCode(xAchseFarbe[i]));
                 yAxis._axisSettings.setColor(GeckoColor.getFromCode(yAchseFarbe[i]));
@@ -311,7 +314,7 @@ public class ScopeSettings implements Serializable {
 
     }
 
-    // zum Speichern im ASCII-Format (anstatt als Object-Stream) -->
+    // to save in ASCII format (instead of as an object stream) -->
     //
     public void exportASCII(final StringBuffer ascii) {
         ascii.append("\n<scopeSettings>");
@@ -355,10 +358,10 @@ public class ScopeSettings implements Serializable {
         xShowGridMin = tokenMap.readDataLine("xShowGridMin[]", xShowGridMin);
         yShowGridMaj = tokenMap.readDataLine("yShowGridMaj[]", yShowGridMaj);
         yShowGridMin = tokenMap.readDataLine("yShowGridMin[]", yShowGridMin);
-        zeigeLabelsXmaj = tokenMap.readDataLine("zeigeLabelsXmaj[]", zeigeLabelsXmaj);
-        zeigeLabelsXmin = tokenMap.readDataLine("zeigeLabelsXmin[]", zeigeLabelsXmin);
-        zeigeLabelsYmaj = tokenMap.readDataLine("zeigeLabelsYmaj[]", zeigeLabelsYmaj);
-        zeigeLabelsYmin = tokenMap.readDataLine("zeigeLabelsYmin[]", zeigeLabelsYmin);
+        showLabelsXmaj = tokenMap.readDataLine("showLabelsXmaj[]", showLabelsXmaj);
+        showLabelsXmin = tokenMap.readDataLine("showLabelsXmin[]", showLabelsXmin);
+        showLabelsYmaj = tokenMap.readDataLine("showLabelsYmaj[]", showLabelsYmaj);
+        showLabelsYmin = tokenMap.readDataLine("showLabelsYmin[]", showLabelsYmin);
         diagramTyp = tokenMap.readDataLine("diagramTyp[]", diagramTyp);
         xAchsenTyp = tokenMap.readDataLine("xAchsenTyp[]", xAchsenTyp);
         yAchsenTyp = tokenMap.readDataLine("yAchsenTyp[]", yAchsenTyp);
@@ -366,25 +369,25 @@ public class ScopeSettings implements Serializable {
         yAchseFarbe = tokenMap.readDataLine("yAchseFarbe[]", yAchseFarbe);
         xAchseStil = tokenMap.readDataLine("xAchseStil[]", xAchseStil);
         yAchseStil = tokenMap.readDataLine("yAchseStil[]", yAchseStil);
-        farbeGridNormalX = tokenMap.readDataLine("farbeGridNormalXminor[]", farbeGridNormalX);
-        farbeGridNormalXminor = tokenMap.readDataLine("farbeGridNormalXminor[]", farbeGridNormalXminor);
-        farbeGridNormalY = tokenMap.readDataLine("farbeGridNormalY[]", farbeGridNormalY);
-        farbeGridNormalYminor = tokenMap.readDataLine("farbeGridNormalYminor[]", farbeGridNormalYminor);
-        linStilGridNormalX = tokenMap.readDataLine("linStilGridNormalX[]", linStilGridNormalX);
-        linStilGridNormalXminor = tokenMap.readDataLine("linStilGridNormalXminor[]", linStilGridNormalXminor);
-        linStilGridNormalY = tokenMap.readDataLine("linStilGridNormalY[]", linStilGridNormalY);
-        linStilGridNormalYminor = tokenMap.readDataLine("linStilGridNormalYminor[]", linStilGridNormalYminor);
-        xAnzTicksMinor = tokenMap.readDataLine("xAnzTicksMinor[]", xAnzTicksMinor);
-        yAnzTicksMinor = tokenMap.readDataLine("yAnzTicksMinor[]", yAnzTicksMinor);
-        xTickLaenge = tokenMap.readDataLine("xTickLaenge[]", xTickLaenge);
-        xTickLaengeMinor = tokenMap.readDataLine("xTickLaengeMinor[]", xTickLaengeMinor);
-        yTickLaenge = tokenMap.readDataLine("yTickLaenge[]", yTickLaenge);
+        colorGridNormalX = tokenMap.readDataLine("colorGridNormalXminor[]", colorGridNormalX);
+        colorGridNormalXminor = tokenMap.readDataLine("colorGridNormalXminor[]", colorGridNormalXminor);
+        colorGridNormalY = tokenMap.readDataLine("colorGridNormalY[]", colorGridNormalY);
+        colorGridNormalYminor = tokenMap.readDataLine("colorGridNormalYminor[]", colorGridNormalYminor);
+        lineStyleGridNormalX = tokenMap.readDataLine("lineStyleGridNormalX[]", lineStyleGridNormalX);
+        lineStyleGridNormalXminor = tokenMap.readDataLine("lineStyleGridNormalXminor[]", lineStyleGridNormalXminor);
+        lineStyleGridNormalY = tokenMap.readDataLine("lineStyleGridNormalY[]", lineStyleGridNormalY);
+        lineStyleGridNormalYminor = tokenMap.readDataLine("lineStyleGridNormalYminor[]", lineStyleGridNormalYminor);
+        xNumTicksMinor = tokenMap.readDataLine("xNumTicksMinor[]", xNumTicksMinor);
+        yNumTicksMinor = tokenMap.readDataLine("yNumTicksMinor[]", yNumTicksMinor);
+        xTickLength = tokenMap.readDataLine("xTickLength[]", xTickLength);
+        xTickLengthMinor = tokenMap.readDataLine("xTickLengthMinor[]", xTickLengthMinor);
+        yTickLength = tokenMap.readDataLine("yTickLength[]", yTickLength);
 
-        yTickLaengeMinor = tokenMap.readDataLine("yTickLaengeMinor[]", yTickLaengeMinor);
+        yTickLengthMinor = tokenMap.readDataLine("yTickLengthMinor[]", yTickLengthMinor);
         ySpacingDiagram = tokenMap.readDataLineDoubleArray("ySpacingDiagram[]");
         nameDiagram = tokenMap.readDataLineStringArray("nameDiagram[]");
-        xAchseBeschriftung = tokenMap.readDataLineStringArray("xAchseBeschriftung[]");
-        yAchseBeschriftung = tokenMap.readDataLineStringArray("yAchseBeschriftung[]");
+        xAxisLabel = tokenMap.readDataLineStringArray("xAxisLabel[]");
+        yAxisLabel = tokenMap.readDataLineStringArray("yAxisLabel[]");
         ORIGjcbXShowGridMaj = tokenMap.readDataLine("ORIGjcbXShowGridMaj[]", ORIGjcbXShowGridMaj);
         ORIGjcbXShowGridMin = tokenMap.readDataLine("ORIGjcbXShowGridMin[]", ORIGjcbXShowGridMin);
         ORIGjcbYShowGridMaj = tokenMap.readDataLine("ORIGjcbYShowGridMaj[]", ORIGjcbYShowGridMaj);
@@ -458,7 +461,7 @@ public class ScopeSettings implements Serializable {
         }
 
 
-        // Achtung: in alten Versionen sind diese beiden Parameter nicht gesetzt, daher hier default-Initialisierung:
+        // Attention: these two parameters are not set in old versions, so default initialization here:
         if (crvTransparency == null) {
             crvTransparency = new double[crvLineColor.length][crvLineColor[0].length];
             for (double[] transparencyRow : crvTransparency) {

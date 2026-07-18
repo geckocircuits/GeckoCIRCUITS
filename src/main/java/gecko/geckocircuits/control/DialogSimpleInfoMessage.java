@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,7 +28,7 @@ class DialogSimpleInfoMessage extends DialogWindowWithoutInput {
     }
 
     @Override
-    protected void baueGuiIndividual() {
+    protected void buildIndividualGUI() {
         ((TitledBorder) jpM.getBorder()).setTitle("Information");
         JPanel pSIN = new JPanel();
         final JLabel labPar1 = new JLabel(_displayMessage);
@@ -36,6 +36,6 @@ class DialogSimpleInfoMessage extends DialogWindowWithoutInput {
         pSIN.add(labPar1);
         jpM.add(pSIN, BorderLayout.CENTER);
         con.add(jpM, BorderLayout.CENTER);
-        super.baueGuiIndividual();
+        super.buildIndividualGUI();
     }
 }

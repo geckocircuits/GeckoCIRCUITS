@@ -69,7 +69,7 @@ public final class SlidingDFTCalculator extends AbstractControlCalculatable
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _oldestDataReal = _timeData[_idx];
         _timeData[_idx] = _inputSignal[0][0];
         _newestDataReal = _inputSignal[0][0];

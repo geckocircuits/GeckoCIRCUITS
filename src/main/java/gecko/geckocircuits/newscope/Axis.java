@@ -13,10 +13,12 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.HiLoData;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalFonts;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalFonts;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.core.circuit.TokenMap;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -25,12 +27,12 @@ import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Axis stores diagram reference for coordinate transformations")
 public final class Axis {
+    private static final Logger LOGGER = LogManager.getLogger(Axis.class);
+
 
     private static final int HASH_CONSTANT1 = 3;
     private static final int HASH_CONSTANT2 = 7;
@@ -69,7 +71,7 @@ public final class Axis {
     final AxisGridSettings _axisGridSettings = new AxisGridSettings();
     final AxisTickSettings _axisTickSettings = new AxisTickSettings();
     private int _axisLengthPix;
-    double _tickSpacing = DEF_TICK_SPACING;  // Abstand zwischen 2 Ticks, ausgehend von Null
+    double _tickSpacing = DEF_TICK_SPACING;  // Distance between 2 ticks, starting from zero
     AbstractAxisScale _axisScale;
 
     /*
@@ -123,7 +125,7 @@ public final class Axis {
                 assert false;
                 break;
         }
-        _axisTickSettings.setAnzTicksMinor(_axisScale.getDefaultNumberMinorTicks());
+        _axisTickSettings.setNumTicksMinor(_axisScale.getDefaultNumberMinorTicks());
     }
 
     abstract class AbstractAxisScale {
@@ -151,7 +153,7 @@ public final class Axis {
         protected void drawMinorTicks(final Graphics2D g2D, final Axis otherAxis, final List<Tick> majorTicks) {
 
             final HiLoData axisMinMax = _axisMinMax.getLimits();
-            final double yTickSpacingMinor = _tickSpacing / _axisTickSettings.getAnzTicksMinor();
+            final double yTickSpacingMinor = _tickSpacing / _axisTickSettings.getNumTicksMinor();
             final int yMinorTicksAnzahl = (int) (axisMinMax.getIntervalRange() / yTickSpacingMinor) + 2;
 
             if (yMinorTicksAnzahl <= 0 || majorTicks.size() < 2) {
@@ -159,9 +161,9 @@ public final class Axis {
             }
 
             for (int i = 0; i < majorTicks.size() - 1; i++) {
-                for (int j = 1; j < _axisTickSettings.getAnzTicksMinor(); j++) {
+                for (int j = 1; j < _axisTickSettings.getNumTicksMinor(); j++) {
                     final double value = majorTicks.get(i)._wert + j * (majorTicks.get(i + 1)._wert
-                            - majorTicks.get(i)._wert) / _axisTickSettings.getAnzTicksMinor();
+                            - majorTicks.get(i)._wert) / _axisTickSettings.getNumTicksMinor();
                     final Tick minorTick = new Tick(value, _axisTickSettings.getTickLengthMin(), false);
                     minorTick.drawTick(g2D, TECH_FORMAT.formatENG(minorTick._wert, DIGITS_TO_SHOW), _axisTickSettings.isShowLabelsMin());
                     if (_axisGridSettings.isShowGridNormalMinor()) {
@@ -218,7 +220,7 @@ public final class Axis {
                 double tickValue = lowerValue;
                 for(int i = 0; i < noTicks; i++) {
                     tickValue += distance;
-                    Tick newTick = new Tick(tickValue, (int) _axisTickSettings.getTickLengthMin(), false);
+                    Tick newTick = new Tick(tickValue, _axisTickSettings.getTickLengthMin(), false);
                     newTick.drawTick(g2d, TECH_FORMAT.formatT(newTick._wert, "#.#E0"),
                                 true);
                 }
@@ -282,7 +284,7 @@ public final class Axis {
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(Axis.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Thread.sleep interrupted while waiting for axis limits to stabilize", ex);
                 }
                 //System.out.println("correktur. " + scaleFactor + " " + scaleFactor2 + " " + limits + " " + newLimits);
                 double scaleFactor3 = getScaleFactor();
@@ -409,7 +411,7 @@ public final class Axis {
     }
 
     public void drawAxis(final Graphics2D g2d, final boolean isSignalAxis, final Axis otherAxis) {
-        _axisGridSettings.blendeEventuellGridLinienAus(_axisLengthPix);
+        _axisGridSettings.possiblyHideGridLines(_axisLengthPix);
         g2d.setFont(FONT_TICK_LABEL);
         if (_axisTickSettings.isAutoTickSpacing()) {
             _tickSpacing = getAutoTickSpacing();
@@ -521,11 +523,11 @@ public final class Axis {
     void drawAxisLabel(final Graphics2D g2d) {
         switch (_direction) {
             case X:
-                g2d.drawString(_axisSettings.getAchseBeschriftung(), _axisOriginPixel.x
+                g2d.drawString(_axisSettings.getAxisLabel(), _axisOriginPixel.x
                         + _axisLengthPix / 2, _axisOriginPixel.y + POS_TICK_LABELS);
                 break;
             case Y:
-                g2d.drawString(_axisSettings.getAchseBeschriftung(), _axisOriginPixel.x - POS_TICK_LABELS,
+                g2d.drawString(_axisSettings.getAxisLabel(), _axisOriginPixel.x - POS_TICK_LABELS,
                         _axisOriginPixel.y - _axisLengthPix / 2);
                 break;
             default:

@@ -13,8 +13,10 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -26,6 +28,8 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogCircuitComponent<T> {
+    private static final Logger LOGGER = LogManager.getLogger(DialogElementCONTROL.class);
+
     JPanel jpM = new JPanel();
 
     public DialogElementCONTROL(final T element) {
@@ -35,21 +39,20 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
 
 
     @Override
-    public void baueGUI() {
+    public void buildGUI() {
         this.setLocationRelativeTo(GeckoSim._win);
         con = this.getContentPane();
         con.setLayout(new BorderLayout());
         try {
         con.add(jPanelName, BorderLayout.NORTH);
         } catch (Exception ex) {
-            // sometimes, I git an XException here... don't know the reason.
-            ex.printStackTrace();
+            LOGGER.error("Failed to add jPanelName to content pane", ex);
         }
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Parameter", TitledBorder.LEFT, TitledBorder.TOP));
 
-        baueGuiIndividual();
+        buildIndividualGUI();
         con.add(jpM, BorderLayout.CENTER);
         con.add(jPanelButtonOkCancel, BorderLayout.SOUTH);
     }
@@ -129,13 +132,13 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
         }
     };
 
-    abstract void baueGuiIndividual();
+    abstract void buildIndividualGUI();
 
     @Override
     public void processInputIndividual() {
         processInputs();
         processRegisteredParameters();
-        schliesseFenster();
+        closeWindow();
     }
 
     protected void processInputs() {

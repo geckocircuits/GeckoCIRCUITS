@@ -13,7 +13,9 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.MainWindow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.MainWindow;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -32,6 +34,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 public final class GeckoRemoteRegistry {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoRemoteRegistry.class);
+
 
     private static final String INTERFACE_NAME = "GeckoRemoteInterface";
     private static Registry _rmiRegistry = null;
@@ -107,7 +111,7 @@ public final class GeckoRemoteRegistry {
             _remote.disconnectAll();
             _rmiRegistry.unbind(INTERFACE_NAME);
             UnicastRemoteObject.unexportObject(remoteAccess, true);
-            System.out.println("GeckoCIRCUITS disconnect from client.");
+            LOGGER.info("GeckoCIRCUITS disconnect from client.");
             System.out.flush();
             System.err.flush();
             _remote = null;
@@ -142,8 +146,8 @@ public final class GeckoRemoteRegistry {
             }
 
             _remote = remoteAccess;
-            System.out.println("GeckoCIRCUITS configured for remote access at port " + getRemoteAccessPort() + ".");
-            System.out.println("Using IP address: " + _ipAddress);
+            LOGGER.info("GeckoCIRCUITS configured for remote access at port " + getRemoteAccessPort() + ".");
+            LOGGER.info("Using IP address: " + _ipAddress);
         } catch (Exception ex) {
             throw new Exception("Error in enabling new remote port!\n" + ex.getMessage(), ex);
         }

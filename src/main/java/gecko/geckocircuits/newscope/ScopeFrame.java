@@ -14,12 +14,12 @@
 package gecko.geckocircuits.newscope;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.GlobalFilePathes;
-import gecko.geckocircuits.allg.SaveViewFrame;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.GlobalFilePathes;
+import gecko.geckocircuits.general.SaveViewFrame;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.RegelBlock;
-import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.control.ControlOSZI;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.DataContainerIntegralCalculatable;
 import java.awt.Dimension;
@@ -36,17 +36,23 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  *
  * @author Tibor Keresztfalvi
  */
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE"},
         justification = "Scope frame must share grafer reference for scope display; public scope field for external access")
 public final class ScopeFrame extends javax.swing.JFrame{
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = LogManager.getLogger(ScopeFrame.class);
   private GraferV4 _grafer;
-  private ReglerOSZI _regelBlockOSZI;
+  private ControlOSZI _regelBlockOSZI;
   /**
    * Dialog fuer Zuordnungen SignalZV - Graph.
    */
@@ -150,7 +156,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
       URL gifUrl = new URL(picsUrl, "gecko.gif");
       this.setIconImage(new ImageIcon(gifUrl).getImage());
     }catch(Exception e){
-      e.printStackTrace();
+      LOGGER.error("Failed to load scope frame icon image", e);
     }
 
     this.addComponentListener(
@@ -214,7 +220,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
   }
 
   public void setReferenzAufRegelBlock(final RegelBlock regelBlockOSZI){
-    _regelBlockOSZI = (ReglerOSZI)regelBlockOSZI;
+    _regelBlockOSZI = (ControlOSZI)regelBlockOSZI;
   }
 
   public void setNewTerminalNumber(final int terminalNumber){
@@ -244,7 +250,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
       jMenuScopeData.setEnabled(false);
       jMenuGraphs.setEnabled(false);
       jMenuAnalysis.setEnabled(false);
-      // Worksheet-Daten waehrend der Simulation nicht zugaenglich:
+      // Worksheet data not accessible during simulation:
     }else{
       jMenuItemInitAndStart.setEnabled(true);
       jMenuItemParameter.setEnabled(true);
@@ -467,7 +473,7 @@ private void jMenuItemSignalGraphActionPerformed(java.awt.event.ActionEvent evt)
 }//GEN-LAST:event_jMenuItemSignalGraphActionPerformed
 
 private void jMenuItemCharacteristicsActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jMenuItemCharacteristicsActionPerformed
-  final AbstractDataContainer ramData = _regelBlockOSZI.getZVDatenImRAM();
+  final AbstractDataContainer ramData = _regelBlockOSZI.getZVDataInRAM();
   if(ramData == null){
     return;
   }
@@ -480,7 +486,7 @@ private void jMenuItemCharacteristicsActionPerformed(java.awt.event.ActionEvent 
 }//GEN-LAST:event_jMenuItemCharacteristicsActionPerformed
 
 private void jMenuItemFourierActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jMenuItemFourierActionPerformed
-  final AbstractDataContainer ramData = _regelBlockOSZI.getZVDatenImRAM();
+  final AbstractDataContainer ramData = _regelBlockOSZI.getZVDataInRAM();
   if(ramData == null){
     return;
   }
@@ -506,7 +512,7 @@ private void jMenuItemContinueActionPerformed(java.awt.event.ActionEvent evt) {/
   try{
         GeckoSim._win.continueCalculationWithPossibleErrorMessage();
   }catch(RuntimeException re){
-    re.printStackTrace();
+    LOGGER.error("Failed to continue calculation", re);
   }
 }//GEN-LAST:event_jMenuItemContinueActionPerformed
 
@@ -519,7 +525,7 @@ private void jMenuItemContinueActionPerformed(java.awt.event.ActionEvent evt) {/
 
     private void jMenuItemAvgSgnActionPerformed(ActionEvent evt) {//GEN-FIRST:event_jMenuItemAvgSgnActionPerformed
       final DialogDefineAvg dialog = new DialogDefineAvg(this, true,
-                                                         (DataContainerIntegralCalculatable)_regelBlockOSZI.getZVDatenImRAM());
+                                                         (DataContainerIntegralCalculatable)_regelBlockOSZI.getZVDataInRAM());
       dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItemAvgSgnActionPerformed
 

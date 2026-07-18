@@ -13,9 +13,11 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.*;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -30,7 +32,9 @@ import javax.swing.*;
 
 public final class DialogLabelEingeben extends JDialog {
 
-    private final Verbindung _connector;
+    private static final Logger LOGGER = LogManager.getLogger(DialogLabelEingeben.class);
+
+    private final Connection _connector;
     private final FormatJTextField _textField = new FormatJTextField();
     private final String _originalLabel;
     private JCheckBox jCheckBoxEnabled;
@@ -47,25 +51,25 @@ public final class DialogLabelEingeben extends JDialog {
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to set dialog icon image", e);
         }
 
         _clickedTerminal = terminal;
         _label = terminal.getLabelObject();
         _conType = _clickedTerminal.getCategory();
-        if (terminal instanceof TerminalVerbindung) {
-            _connector = ((TerminalVerbindung) terminal).getParentConnection();
+        if (terminal instanceof TerminalConnection) {
+            _connector = ((TerminalConnection) terminal).getParentConnection();
         } else {
             _connector = null;
         }
 
         _originalLabel = _label.getLabelString();
         setTitle(" Label");
-        baueGUI();
+        buildGUI();
 
     }
 
-    private void baueGUI() {
+    private void buildGUI() {
         final Container con = this.getContentPane();
         con.setLayout(new BorderLayout());
         this.setLocationRelativeTo(GeckoSim._win);

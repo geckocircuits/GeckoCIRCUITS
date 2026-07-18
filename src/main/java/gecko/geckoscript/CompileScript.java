@@ -14,6 +14,8 @@
 
 package gecko.geckoscript;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.control.javablock.AbstractCompileObject;
 import gecko.geckocircuits.control.javablock.CodeWindowModern;
@@ -22,7 +24,7 @@ import gecko.geckocircuits.control.javablock.CompileObjectNull;
 import gecko.geckocircuits.control.javablock.CompileStatus;
 import gecko.geckocircuits.control.javablock.CompiledClassContainer;
 import gecko.geckocircuits.control.javablock.JavaBlockClassLoader;
-import gecko.geckocircuits.control.javablock.ReglerJavaFunction;
+import gecko.geckocircuits.control.javablock.ControlJavaFunction;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,8 +38,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.tools.SimpleJavaFileObject;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -47,6 +47,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @author andy
  */
 public class CompileScript {
+    private static final Logger LOGGER = LogManager.getLogger(CompileScript.class);
+
 
     static AbstractCompileObject _compileObject = new CompileObjectNull();
     static Map<String, CompiledClassContainer> _classNameFileMap;
@@ -154,10 +156,8 @@ public class CompileScript {
             sw.addSourceLine("    }");
             sw.addSourceLine("  }");
             sw.addSourceLine("}");
-            //
             //System.out.println("createSourceCode() --> \n\n_compilerMessage= \n"+_compilerMessage+"\n\n===========\n_sourceString= \n"+_sourceString+"\n\n===========\n");
-        } catch (IOException ex) {
-            Logger.getLogger(ScriptWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {LogManager.getLogger(ScriptWindow.class).error("Exception occurred", ex);
         }
 
 
@@ -177,8 +177,7 @@ public class CompileScript {
                 sw._compileStatus = CompileStatus.COMPILED_SUCCESSFULL;
             }
 
-        } catch (IllegalArgumentException | SecurityException ex) {
-            Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalArgumentException | SecurityException ex) {LogManager.getLogger(CompileScript.class).error("Exception occurred", ex);
         }
 
 
@@ -214,13 +213,10 @@ public class CompileScript {
                     }
             } catch (NoClassDefFoundError err) {
                 err.printStackTrace();
-            } catch (InstantiationException | IllegalAccessException | SecurityException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(CompileScript.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InstantiationException | IllegalAccessException | SecurityException ex) {LogManager.getLogger(ControlJavaFunction.class).error("Exception occurred", ex);
+            } catch (IllegalArgumentException | InvocationTargetException ex) {LogManager.getLogger(CompileScript.class).error("Exception occurred", ex);
             }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {LogManager.getLogger(ControlJavaFunction.class).error("Exception occurred", ex);
         }
     }
 

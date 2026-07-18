@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control.calculators;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.control.IsDtChangeSensitive;
 import gecko.geckocircuits.control.SSAShape;
 import static gecko.geckocircuits.control.calculators.AbstractSignalCalculator.TWO_PI;
@@ -24,6 +26,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Writes to inherited static _time field for simulation coordination; constructor exceptions for invalid shapes; public fields for analysis data sharing")
 // Public fields and static array required by simulator API; Constructor validation required for safety
 public final class SmallSignalCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, IsDtChangeSensitive {
+    private static final Logger LOGGER = LogManager.getLogger(SmallSignalCalculator.class);
+
 
     //static boolean isSimulationDC;
     private static final int THREE = 3;
@@ -40,7 +44,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
 
     private final int _nMax;
 
-    public AbstractSignalCalculatorPeriodic _signalTypeCalculator;
+    public AbstractSignalCalculatorPeriodic AbstractControlCalculatable;
     private int _noFreqs;
     private double[] ss_aVals;
     private double[] ss_bVals;
@@ -76,12 +80,12 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
             case EXTERNAL:
                 break;
             case RECTANGLE:
-                _signalTypeCalculator = new SignalCalculatorRectangle(1, 2 * _amplitude, _freqStart, 0, -_amplitude, 0.5);
-                _signalTypeCalculator.initializeAtSimulationStart(0);
+                AbstractControlCalculatable = new SignalCalculatorRectangle(1, 2 * _amplitude, _freqStart, 0, -_amplitude, 0.5);
+                AbstractControlCalculatable.initializeAtSimulationStart(0);
                 break;
             case TRIANGLE:
-                _signalTypeCalculator = new SignalCalculatorTriangle(1, _amplitude, _freqStart, 0, 0, 0.5);
-                _signalTypeCalculator.initializeAtSimulationStart(0);
+                AbstractControlCalculatable = new SignalCalculatorTriangle(1, _amplitude, _freqStart, 0, 0, 0.5);
+                AbstractControlCalculatable.initializeAtSimulationStart(0);
                 break;
             default:
                 assert false;
@@ -90,11 +94,11 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
 
     public void externalSetTime(double time) {
         _time = time;
-        _signalTypeCalculator._time = time;
+        AbstractControlCalculatable._time = time;
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         double smallSignal = calculateSmallSignal(deltaT);
 
 
@@ -129,7 +133,7 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
     public void tearDownOnPause() {
 
 
-        System.out.println("xxx " + _nMax + " " + _numberSamples);
+        LOGGER.info("xxx " + _nMax + " " + _numberSamples);
         if (_circularArrayFilled) {
 
             try {
@@ -184,12 +188,12 @@ public final class SmallSignalCalculator extends AbstractControlCalculatable imp
                 }
                 break;
             case RECTANGLE:
-                _signalTypeCalculator.berechneYOUT(deltaT);
-                returnValue = _signalTypeCalculator._outputSignal[0][0];
+                AbstractControlCalculatable.calculateYOUT(deltaT);
+                returnValue = AbstractControlCalculatable._outputSignal[0][0];
                 break;
             case TRIANGLE:
-                _signalTypeCalculator.berechneYOUT(deltaT);
-                returnValue = _signalTypeCalculator._outputSignal[0][0];
+                AbstractControlCalculatable.calculateYOUT(deltaT);
+                returnValue = AbstractControlCalculatable._outputSignal[0][0];
                 break;
             case EXTERNAL:
                 returnValue = _inputSignal[2][0];

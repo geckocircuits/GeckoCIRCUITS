@@ -19,10 +19,10 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -33,6 +33,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control block reference for configuration")
 public class DialogExternal extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogExternal.class);
+
 
     private final RegelBlockSimulink _regelBlock;
     private List<RegelBlock> orderList;
@@ -221,18 +223,18 @@ public class DialogExternal extends javax.swing.JDialog {
             try {
                 _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
             } catch (NameAlreadyExistsException ex) {
-                Logger.getLogger(DialogExternal.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Name already exists when changing control block name", ex);
             }
         }
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped
 
     private void jSpinnerPortNumberStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerPortNumberStateChanged
-        if (_regelBlock instanceof ReglerToEXTERNAL) {
-            ((ReglerToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlToEXTERNAL) {
+            ((ControlToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if (_regelBlock instanceof ReglerFromEXTERNAL) {
-            ((ReglerFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlFromEXTERNAL) {
+            ((ControlFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
     }//GEN-LAST:event_jSpinnerPortNumberStateChanged
@@ -276,7 +278,7 @@ public class DialogExternal extends javax.swing.JDialog {
         try {
             _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
         } catch (NameAlreadyExistsException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Name already exists when changing control block name", ex);
         }
 
 

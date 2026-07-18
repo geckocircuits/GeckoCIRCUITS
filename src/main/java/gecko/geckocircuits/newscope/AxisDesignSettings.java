@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 
 /**
@@ -27,11 +27,11 @@ public final class AxisDesignSettings implements LineSettable{
   public static final GeckoLineStyle ZERO_LINE_STYLE = GeckoLineStyle.SOLID_THIN;
   public static final GeckoColor ZERO_LINE_COL = GeckoColor.LIGHTGRAY;
 
-  public String getAchseBeschriftung(){
+  public String getAxisLabel(){
     return _axisCaption;
   }
 
-  public void setAchseBeschriftung(final String newName){
+  public void setAxisLabel(final String newName){
     _axisCaption = newName;
   }
 

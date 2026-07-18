@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ComponentDirection;
@@ -39,10 +41,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class IdealTransformer extends AbstractCircuitBlockInterface implements HiddenSubCircuitable, CurrentMeasurable, DirectVoltageMeasurable {
+    private static final Logger LOGGER = LogManager.getLogger(IdealTransformer.class);
+
 
     private static final double HEIGHT = 0.8;
     public static final AbstractTypeInfo TYPE_INFO = new CircuitTypeInfo(IdealTransformer.class, "Trans", I18nKeys.IDEAL_TRANSFORMER);
@@ -143,8 +144,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
         try {
             primaryVoltageSource.setNewNameChecked(getStringID() + " prim");
             secondaryVoltageSource.setNewNameChecked(getStringID() + " sec");
-        } catch (NameAlreadyExistsException ex) {
-            Logger.getLogger(IdealTransformer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NameAlreadyExistsException ex) {LogManager.getLogger(IdealTransformer.class).error("Exception occurred", ex);
         }
     }
 
@@ -306,7 +306,7 @@ public class IdealTransformer extends AbstractCircuitBlockInterface implements H
     @Override
     protected void drawForeground(final Graphics2D graphics) {
         int pkd = (int) (0.4 * dpix);  // Durchmesser des Kopplungspunktes in Pixel
-        double pk2 = -0.48;  // Punkt zur Markierung der eventuellen Kopplung mit anderen Spulen
+        double pk2 = -0.48;  // Point to mark possible coupling with other coils
         graphics.fillOval((int) (dpix * (+pk2) - pkd / 2.0), (int) (dpix * (-1.4) - pkd / 2.0), pkd, pkd);
         graphics.fillOval((int) (dpix * (-pk2) - pkd / 2.0), (int) (dpix * +_reversed.getValue() * 1.4 - pkd / 2.0), pkd, pkd);
     }

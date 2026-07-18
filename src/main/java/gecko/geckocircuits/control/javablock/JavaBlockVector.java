@@ -13,22 +13,23 @@
  */
 package gecko.geckocircuits.control.javablock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.ControlCalculatable;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class JavaBlockVector extends AbstractJavaBlock {
+    private static final Logger LOGGER = LogManager.getLogger(JavaBlockVector.class);
+
     private ControlCalculatable _compiledInstance;
     private double[] _xINVector;
 
-    JavaBlockVector(final ReglerJavaFunction regler) {
-        super(regler);
+    JavaBlockVector(final ControlJavaFunction control) {
+        super(control);
     }
 
     @Override
     AbstractJavaBlock createOtherBlockTypeCopy() {
-        final AbstractJavaBlock returnValue = new JavaBlockMatrix(_reglerJavaBlock);
+        final AbstractJavaBlock returnValue = new JavaBlockMatrix(_controlJavaBlock);
         createNewJavaSourceCopy(returnValue);
         returnValue._additionalSourceFiles.addAll(this._additionalSourceFiles);
         return returnValue;
@@ -88,13 +89,13 @@ public class JavaBlockVector extends AbstractJavaBlock {
             justification = "ClassLoader creation is intentional for dynamic class loading in scripting code")
     @SuppressWarnings("PMD.CloseResource") // ClassLoader must persist for dynamically loaded class lifecycle
     public void findAndLoadClass() {
-        System.out.println("JavaBlockVector.findAndLoadClass() - Loading compiled class...");
-        System.out.println("Compilation status: " + _compileObject.getCompileStatus());
-        System.out.println("Compiler message: " + _compileObject.getCompilerMessage());
-        System.out.println("Class name: " + _compileObject.getClassName());
+        LOGGER.info("JavaBlockVector.findAndLoadClass() - Loading compiled class...");
+        LOGGER.info("Compilation status: " + _compileObject.getCompileStatus());
+        LOGGER.info("Compiler message: " + _compileObject.getCompilerMessage());
+        LOGGER.info("Class name: " + _compileObject.getClassName());
 
         if (_compileObject.getCompileStatus() != CompileStatus.COMPILED_SUCCESSFULL) {
-            System.err.println("ERROR: Compilation was not successful! Status: " + _compileObject.getCompileStatus());
+            LOGGER.error("ERROR: Compilation was not successful! Status: " + _compileObject.getCompileStatus());
             return;
         }
 
@@ -103,27 +104,22 @@ public class JavaBlockVector extends AbstractJavaBlock {
 
             final ClassLoader classLoader = new JavaBlockClassLoader(_classNameFileMap);
             final Class<?> clazz = Class.forName(_compileObject.getClassName(), false, classLoader);
-            System.out.println("Class loaded successfully: " + clazz.getName());
+            LOGGER.info("Class loaded successfully: " + clazz.getName());
 
             try {
                 _compiledInstance = (ControlCalculatable) clazz.newInstance();
-                System.out.println("Instance created successfully: " + _compiledInstance.getClass().getName());
+                LOGGER.info("Instance created successfully: " + _compiledInstance.getClass().getName());
             } catch (NoClassDefFoundError err) {
-                System.err.println("ERROR: NoClassDefFoundError while loading Java block: " + err.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
+                LOGGER.error("ERROR: NoClassDefFoundError while loading Java block: " + err.getMessage());LogManager.getLogger(ControlJavaFunction.class).error("NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
             } catch (InstantiationException ex) {
-                System.err.println("ERROR: InstantiationException while creating Java block instance: " + ex.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
+                LOGGER.error("ERROR: InstantiationException while creating Java block instance: " + ex.getMessage());LogManager.getLogger(ControlJavaFunction.class).error("InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (IllegalAccessException ex) {
-                System.err.println("ERROR: IllegalAccessException while creating Java block instance: " + ex.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
+                LOGGER.error("ERROR: IllegalAccessException while creating Java block instance: " + ex.getMessage());LogManager.getLogger(ControlJavaFunction.class).error("IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
             } catch (SecurityException ex) {
-                System.err.println("ERROR: SecurityException while creating Java block instance: " + ex.getMessage());
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "SecurityException while creating Java block instance: " + ex.getMessage(), ex);
+                LOGGER.error("ERROR: SecurityException while creating Java block instance: " + ex.getMessage());LogManager.getLogger(ControlJavaFunction.class).error("SecurityException while creating Java block instance: " + ex.getMessage(), ex);
             }
         } catch (ClassNotFoundException ex) {
-            System.err.println("ERROR: ClassNotFoundException while loading Java block class: " + ex.getMessage());
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
+            LOGGER.error("ERROR: ClassNotFoundException while loading Java block class: " + ex.getMessage());LogManager.getLogger(ControlJavaFunction.class).error("ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
         }
     }
 

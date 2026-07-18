@@ -14,6 +14,8 @@
 
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +25,8 @@ import java.io.IOException;
  * @author Zimmi
  */
 public class CompressedData {
+    private static final Logger LOGGER = LogManager.getLogger(CompressedData.class);
+
 
 //    private final List<Byte> compData;
     private final int _blockLength;
@@ -133,13 +137,13 @@ public class CompressedData {
     }
 
     public void printCompressInfo() {
-        System.out.println("\tcompression rate:\t" + _compressRate + "%");
-        System.out.println("\tNeeded Bits:\t" + _bits);
-        System.out.println("\tMaximal Difference:\t" + _maxDiff);
-        System.out.println("\tLast byte:\t" + Integer.toBinaryString(_compressedData[_compressedData.length - 1] & 0xFF));
-        System.out.println("\tLast Difference:\t" + Integer.toBinaryString(trimByte(_differences[_differences.length - 1], _bits)));
-        System.out.println("\tresult length:\t" + _compressedData.length);
-        System.out.println("\tblock length:\t" + (_blockLength + 1));
+        LOGGER.info("\tcompression rate:\t" + _compressRate + "%");
+        LOGGER.info("\tNeeded Bits:\t" + _bits);
+        LOGGER.info("\tMaximal Difference:\t" + _maxDiff);
+        LOGGER.info("\tLast byte:\t" + Integer.toBinaryString(_compressedData[_compressedData.length - 1] & 0xFF));
+        LOGGER.info("\tLast Difference:\t" + Integer.toBinaryString(trimByte(_differences[_differences.length - 1], _bits)));
+        LOGGER.info("\tresult length:\t" + _compressedData.length);
+        LOGGER.info("\tblock length:\t" + (_blockLength + 1));
 
     }
 
@@ -152,21 +156,21 @@ public class CompressedData {
             fip = new FileInputStream(file);
 
             byte[] fileContent = new byte[(int) file.length()];
-            System.out.println("DataPoints: " + ((int) file.length()));
+            LOGGER.info("DataPoints: " + ((int) file.length()));
             fip.read(fileContent);
 
             fip.close();
             return fileContent;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to read data from file: " + path, e);
         } finally {
             try {
                 if (fip != null) {
                     fip.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to close file input stream", e);
             }
         }
         return new byte[0];
@@ -178,11 +182,11 @@ public class CompressedData {
 
         byte[] compressableData = new byte[32];
 
-        System.out.println("Full Container Compressed");
+        LOGGER.info("Full Container Compressed");
         CompressedData block = new CompressedData(data);
         block.printCompressInfo();
 
-        System.out.println("Container separated 32 byte blocks:");
+        LOGGER.info("Container separated 32 byte blocks:");
         int minbits = Integer.MAX_VALUE;
         int maxbits = Integer.MIN_VALUE;
         double avgBits = 0;
@@ -206,11 +210,11 @@ public class CompressedData {
         }
 
 
-        System.out.println("\tAvg compression rate:\t" + (avgResultLength / (32 * 32) * 100) + "%");
-        System.out.println("\t\tmin:\t" + ((double) minResultLength / blockLength * 100) + "%");
-        System.out.println("\t\tmax:\t" + ((double) maxResultLength / blockLength * 100) + "%");
-        System.out.println("\tAvg Needed Bits:\t" + ((double) avgBits / 32));
-        System.out.println("\t\tmin:\t" + minbits);
-        System.out.println("\t\tmax:\t" + maxbits);
+        LOGGER.info("\tAvg compression rate:\t" + (avgResultLength / (32 * 32) * 100) + "%");
+        LOGGER.info("\t\tmin:\t" + ((double) minResultLength / blockLength * 100) + "%");
+        LOGGER.info("\t\tmax:\t" + ((double) maxResultLength / blockLength * 100) + "%");
+        LOGGER.info("\tAvg Needed Bits:\t" + ((double) avgBits / 32));
+        LOGGER.info("\t\tmin:\t" + minbits);
+        LOGGER.info("\t\tmax:\t" + maxbits);
     }
 }

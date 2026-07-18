@@ -13,14 +13,13 @@
  */
 package gecko;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * This class implements the remote interface CallbackClientInterface, which we use for
  * propagating System.out and System.err messages to Matlab.
@@ -28,6 +27,8 @@ import java.util.logging.Logger;
  *
  */
 public final class CallbackClientImpl extends UnicastRemoteObject implements CallbackClientInterface {
+    private static final Logger LOGGER = LogManager.getLogger(CallbackClientImpl.class);
+
 
     private final String _clientHostname;
     private final String _clientUserID;
@@ -40,7 +41,7 @@ public final class CallbackClientImpl extends UnicastRemoteObject implements Cal
         try {
             addr = InetAddress.getLocalHost();
         } catch (java.net.UnknownHostException ex) {
-            Logger.getLogger(CallbackClientImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Could not determine local host address for callback client", ex);
         }
 
         if(addr == null) {
@@ -58,12 +59,12 @@ public final class CallbackClientImpl extends UnicastRemoteObject implements Cal
 
     @Override
     public void printSystemMessage(final String message) {
-        System.out.println(message);
+        LOGGER.info(message);
     }
 
     @Override
     public void printErrorMessage(final String message) {
-        System.err.println(message);
+        LOGGER.error(message);
     }
 
 

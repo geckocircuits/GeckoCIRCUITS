@@ -28,15 +28,15 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     private static final double DEFAULT_DUTY_RATIO = 0.5;
 
 
-    // Dedektion eines Pulsperioden-Beginns zur Berechnung -->
-    private double fDRaltalt = 0, fDRalt = 0;
-    private boolean neuePulsperiodeBeginnt = true;
-    private double tLokal = 0;  // Lokalzeit, wird bei Pulsperiodenbeginn auf Null gesetzt
-    // Globale Rechengroessen -->
-    private int seIN = -1, seOUT = -1;  // Sektorinfo des Matrix-Konverters
-    private double Tp0 = 1 / 25e3, Tp = Tp0;  // initiale Annahme fuer die Schaltfrequenz (muss erst ermittelt werden und kann sich aendern)
-    private double[] dIN = new double[2], dOUT = new double[5];  // relative Einschaltdauern
-    private double sRp, sSp, sTp, sRm, sSm, sTm, s1, s2, s3;  // Schaltsignale --> 0 oder 1
+    // Detection of the start of a pulse period for calculation -->
+    private double fDRPreviousOld = 0, fDRPrevious = 0;
+    private boolean newPulsePeriodBegins = true;
+    private double tLocal = 0;  // Local time, reset to zero at the start of a pulse period
+    // Global calculation variables -->
+    private int sectorIn = -1, sectorOut = -1;  // Sector info of the matrix converter
+    private double Tp0 = 1 / 25e3, Tp = Tp0;  // initial assumption for the switching frequency (must be determined first and can change)
+    private double[] dIN = new double[2], dOUT = new double[5];  // relative duty ratios / turn-on durations
+    private double sRp, sSp, sTp, sRm, sSm, sTm, s1, s2, s3;  // Switching signals --> 0 or 1
 
 
     public SparseMatrixCalculator() {
@@ -45,37 +45,37 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
-        fDRaltalt = 0;
-        fDRalt = 0;
+        fDRPreviousOld = 0;
+        fDRPrevious = 0;
         Tp = Tp0;
-        tLokal = 0;
-        neuePulsperiodeBeginnt = true;
+        tLocal = 0;
+        newPulsePeriodBegins = true;
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
-        double ur = _inputSignal[1][0], us = _inputSignal[2][0], ut = _inputSignal[3][0];  // Eingangs- bzw. Netzseitig
-        double uNmax = _inputSignal[4][0], uOUTmax = _inputSignal[5][0], fOUT = _inputSignal[6][0];  // Amplituden und Ausgangsfrequenz
-        double fDR = _inputSignal[0][0];  // Taktfrequenz fuer die Pulsperiode
+    public void calculateYOUT(final double deltaT) {
+        double ur = _inputSignal[1][0], us = _inputSignal[2][0], ut = _inputSignal[3][0];  // input / grid-side
+        double uNmax = _inputSignal[4][0], uOUTmax = _inputSignal[5][0], fOUT = _inputSignal[6][0];  // amplitudes and output frequency
+        double fDR = _inputSignal[0][0];  // Clock frequency for the pulse period
         double phi2 = _inputSignal[7][0];  // output-side angle for creating uaOUT*, ubOUT*, ucOUT* for PMSM-control; reliable alternative to fOUT
-        if ((fDRaltalt < fDRalt) && (fDRalt > fDR)) {
-            neuePulsperiodeBeginnt = true;
+        if ((fDRPreviousOld < fDRPrevious) && (fDRPrevious > fDR)) {
+            newPulsePeriodBegins = true;
         }
-        fDRaltalt = fDRalt;
-        fDRalt = fDR;
+        fDRPreviousOld = fDRPrevious;
+        fDRPrevious = fDR;
         //-------------
-        if (neuePulsperiodeBeginnt) {
-            if (tLokal != 0) {
-                Tp = tLokal;
+        if (newPulsePeriodBegins) {
+            if (tLocal != 0) {
+                Tp = tLocal;
             }
-            tLokal = 0;
-            sectorDetection(ur, us, ut, fOUT, phi2);  // Sektorindizes seIN, seOUT werden bestimmt
-            calculateSwitchingTimes(ur, us, ut, uNmax, uOUTmax, fOUT, phi2);  // Einschaltdauern dOUT=[d1..d5] und dIN=[da,db] werden berechnet
-            neuePulsperiodeBeginnt = false;
+            tLocal = 0;
+            sectorDetection(ur, us, ut, fOUT, phi2);  // Sector indices sectorIn, sectorOut are determined
+            calculateSwitchingTimes(ur, us, ut, uNmax, uOUTmax, fOUT, phi2);  // Duty ratios dOUT=[d1..d5] and dIN=[da,db] are calculated
+            newPulsePeriodBegins = false;
         }
         double switchingFrequency = safeDivide(1.0, Tp, safeDivide(1.0, Tp0, 0.0));
-        setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], switchingFrequency);  // alle 9 Schaltsignale werden generiert
-        tLokal += deltaT;
+        setPulseWidths(dOUT[0], dOUT[1], dOUT[2], dOUT[3], dOUT[4], dIN[0], dIN[1], switchingFrequency);  // all 9 switching signals are generated
+        tLocal += deltaT;
 
         _outputSignal[0][0] = sRp;
         _outputSignal[1][0] = sSp;
@@ -89,7 +89,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     }
 
     public void setPulseWidths(double d1, double d2, double d3, double d4, double d5, double da, double db, double fDR) {
-        int LG = 1000;  // maximale zeitliche Aufloesung innerhalb der Pulsperiode
+        int LG = 1000;  // maximum temporal resolution within the pulse period
         int x1, x2, xm, dxh;
         int x1a = -1, x1b = -1, x1c, x1d, x2a = -1, x2b = -1, x2c, x2d, x3a = -1, x3b = -1, x3c, x3d, x4a = -1, x4b = -1, x4c, x4d, x5a = -1, x5b = -1, x5c, x5d;
         int x6a = -1, x6b = -1, x6c, x6d, x7a = -1, x7b = -1, x7c, x7d, x8a = -1, x8b = -1, x8c, x8d, x9a = -1, x9b = -1, x9c, x9d;
@@ -97,8 +97,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         x2 = LG;
         xm = (x2 + x1) / 2;
         dxh = xm - x1;
-        double xLokal = LG * fDR * tLokal;
-        switch (seIN) {
+        double xLocal = LG * fDR * tLocal;
+        switch (sectorIn) {
             case 1:
                 x1a = x1;
                 x1b = xm;
@@ -282,36 +282,36 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         x5d = x1 + x2 - x5a;
         x6c = 2 * xm - x6b;
         x6d = x1 + x2 - x6a;
-        if (seIN == 1) {
+        if (sectorIn == 1) {
             sRp = 1;
             sSp = 0;
             sTp = 0;
             sRm = 0;
-            if (xLokal < x5a) {
+            if (xLocal < x5a) {
                 sSm = 0;
-            } else if (xLokal < x5d) {
+            } else if (xLocal < x5d) {
                 sSm = 1;
             } else {
                 sSm = 0;
             }
-            if (xLokal < x6b) {
+            if (xLocal < x6b) {
                 sTm = 1;
-            } else if (xLokal < x6c) {
+            } else if (xLocal < x6c) {
                 sTm = 0;
             } else {
                 sTm = 1;
             }
-        } else if (seIN == 2) {
-            if (xLokal < x1b) {
+        } else if (sectorIn == 2) {
+            if (xLocal < x1b) {
                 sRp = 1;
-            } else if (xLokal < x1c) {
+            } else if (xLocal < x1c) {
                 sRp = 0;
             } else {
                 sRp = 1;
             }
-            if (xLokal < x2a) {
+            if (xLocal < x2a) {
                 sSp = 0;
-            } else if (xLokal < x2d) {
+            } else if (xLocal < x2d) {
                 sSp = 1;
             } else {
                 sSp = 0;
@@ -320,17 +320,17 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             sRm = 0;
             sSm = 0;
             sTm = 1;
-        } else if (seIN == 3) {
-            if (xLokal < x1a) {
+        } else if (sectorIn == 3) {
+            if (xLocal < x1a) {
                 sRp = 0;
-            } else if (xLokal < x1d) {
+            } else if (xLocal < x1d) {
                 sRp = 1;
             } else {
                 sRp = 0;
             }
-            if (xLokal < x2b) {
+            if (xLocal < x2b) {
                 sSp = 1;
-            } else if (xLokal < x2c) {
+            } else if (xLocal < x2c) {
                 sSp = 0;
             } else {
                 sSp = 1;
@@ -339,56 +339,56 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             sRm = 0;
             sSm = 0;
             sTm = 1;
-        } else if (seIN == 4) {
+        } else if (sectorIn == 4) {
             sRp = 0;
             sSp = 1;
             sTp = 0;
-            if (xLokal < x4a) {
+            if (xLocal < x4a) {
                 sRm = 0;
-            } else if (xLokal < x4d) {
+            } else if (xLocal < x4d) {
                 sRm = 1;
             } else {
                 sRm = 0;
             }
             sSm = 0;
-            if (xLokal < x6b) {
+            if (xLocal < x6b) {
                 sTm = 1;
-            } else if (xLokal < x6c) {
+            } else if (xLocal < x6c) {
                 sTm = 0;
             } else {
                 sTm = 1;
             }
-        } else if (seIN == 5) {
+        } else if (sectorIn == 5) {
             sRp = 0;
             sSp = 1;
             sTp = 0;
-            if (xLokal < x4b) {
+            if (xLocal < x4b) {
                 sRm = 1;
-            } else if (xLokal < x4c) {
+            } else if (xLocal < x4c) {
                 sRm = 0;
             } else {
                 sRm = 1;
             }
             sSm = 0;
-            if (xLokal < x6a) {
+            if (xLocal < x6a) {
                 sTm = 0;
-            } else if (xLokal < x6d) {
+            } else if (xLocal < x6d) {
                 sTm = 1;
             } else {
                 sTm = 0;
             }
-        } else if (seIN == 6) {
+        } else if (sectorIn == 6) {
             sRp = 0;
-            if (xLokal < x2b) {
+            if (xLocal < x2b) {
                 sSp = 1;
-            } else if (xLokal < x2c) {
+            } else if (xLocal < x2c) {
                 sSp = 0;
             } else {
                 sSp = 1;
             }
-            if (xLokal < x3a) {
+            if (xLocal < x3a) {
                 sTp = 0;
-            } else if (xLokal < x3d) {
+            } else if (xLocal < x3d) {
                 sTp = 1;
             } else {
                 sTp = 0;
@@ -396,18 +396,18 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             sRm = 1;
             sSm = 0;
             sTm = 0;
-        } else if (seIN == 7) {
+        } else if (sectorIn == 7) {
             sRp = 0;
-            if (xLokal < x2a) {
+            if (xLocal < x2a) {
                 sSp = 0;
-            } else if (xLokal < x2d) {
+            } else if (xLocal < x2d) {
                 sSp = 1;
             } else {
                 sSp = 0;
             }
-            if (xLokal < x3b) {
+            if (xLocal < x3b) {
                 sTp = 1;
-            } else if (xLokal < x3c) {
+            } else if (xLocal < x3c) {
                 sTp = 0;
             } else {
                 sTp = 1;
@@ -415,56 +415,56 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             sRm = 1;
             sSm = 0;
             sTm = 0;
-        } else if (seIN == 8) {
+        } else if (sectorIn == 8) {
             sRp = 0;
             sSp = 0;
             sTp = 1;
-            if (xLokal < x4b) {
+            if (xLocal < x4b) {
                 sRm = 1;
-            } else if (xLokal < x4c) {
+            } else if (xLocal < x4c) {
                 sRm = 0;
             } else {
                 sRm = 1;
             }
-            if (xLokal < x5a) {
+            if (xLocal < x5a) {
                 sSm = 0;
-            } else if (xLokal < x5d) {
+            } else if (xLocal < x5d) {
                 sSm = 1;
             } else {
                 sSm = 0;
             }
             sTm = 0;
-        } else if (seIN == 9) {
+        } else if (sectorIn == 9) {
             sRp = 0;
             sSp = 0;
             sTp = 1;
-            if (xLokal < x4a) {
+            if (xLocal < x4a) {
                 sRm = 0;
-            } else if (xLokal < x4d) {
+            } else if (xLocal < x4d) {
                 sRm = 1;
             } else {
                 sRm = 0;
             }
-            if (xLokal < x5b) {
+            if (xLocal < x5b) {
                 sSm = 1;
-            } else if (xLokal < x5c) {
+            } else if (xLocal < x5c) {
                 sSm = 0;
             } else {
                 sSm = 1;
             }
             sTm = 0;
-        } else if (seIN == 10) {
-            if (xLokal < x1a) {
+        } else if (sectorIn == 10) {
+            if (xLocal < x1a) {
                 sRp = 0;
-            } else if (xLokal < x1d) {
+            } else if (xLocal < x1d) {
                 sRp = 1;
             } else {
                 sRp = 0;
             }
             sSp = 0;
-            if (xLokal < x3b) {
+            if (xLocal < x3b) {
                 sTp = 1;
-            } else if (xLokal < x3c) {
+            } else if (xLocal < x3c) {
                 sTp = 0;
             } else {
                 sTp = 1;
@@ -472,18 +472,18 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             sRm = 0;
             sSm = 1;
             sTm = 0;
-        } else if (seIN == 11) {
-            if (xLokal < x1b) {
+        } else if (sectorIn == 11) {
+            if (xLocal < x1b) {
                 sRp = 1;
-            } else if (xLokal < x1c) {
+            } else if (xLocal < x1c) {
                 sRp = 0;
             } else {
                 sRp = 1;
             }
             sSp = 0;
-            if (xLokal < x3a) {
+            if (xLocal < x3a) {
                 sTp = 0;
-            } else if (xLokal < x3d) {
+            } else if (xLocal < x3d) {
                 sTp = 1;
             } else {
                 sTp = 0;
@@ -491,28 +491,28 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             sRm = 0;
             sSm = 1;
             sTm = 0;
-        } else if (seIN == 12) {
+        } else if (sectorIn == 12) {
             sRp = 1;
             sSp = 0;
             sTp = 0;
             sRm = 0;
-            if (xLokal < x5b) {
+            if (xLocal < x5b) {
                 sSm = 1;
-            } else if (xLokal < x5c) {
+            } else if (xLocal < x5c) {
                 sSm = 0;
             } else {
                 sSm = 1;
             }
-            if (xLokal < x6a) {
+            if (xLocal < x6a) {
                 sTm = 0;
-            } else if (xLokal < x6d) {
+            } else if (xLocal < x6d) {
                 sTm = 1;
             } else {
                 sTm = 0;
             }
         }
-        switch (seOUT) {
-            case 1:  //inverseKurve=false;
+        switch (sectorOut) {
+            case 1:  //inverseCurve=false;
                 x7a = x1;
                 x7b = xm;
                 x8a = x1 + (int) (d1 * dxh);
@@ -520,7 +520,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) ((d1 + d2) * dxh);
                 x9b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 break;
-            case 2:  //inverseKurve=true;
+            case 2:  //inverseCurve=true;
                 x7a = x1 + (int) ((d1 + d2) * dxh);
                 x7b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 x8a = x1 + (int) (d1 * dxh);
@@ -528,7 +528,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = -1;
                 x9b = -1;
                 break;
-            case 3:  //inverseKurve=true;
+            case 3:  //inverseCurve=true;
                 x7a = x1 + (int) (d1 * dxh);
                 x7b = x1 + (int) ((1 - d5) * dxh);
                 x8a = x1 + (int) ((d1 + d2) * dxh);
@@ -536,7 +536,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = -1;
                 x9b = -1;
                 break;
-            case 4:  //inverseKurve=false;
+            case 4:  //inverseCurve=false;
                 x7a = x1 + (int) (d1 * dxh);
                 x7b = x1 + (int) ((1 - d5) * dxh);
                 x8a = x1;
@@ -544,7 +544,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) ((d1 + d2) * dxh);
                 x9b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 break;
-            case 5:  //inverseKurve=false;
+            case 5:  //inverseCurve=false;
                 x7a = x1 + (int) ((d1 + d2) * dxh);
                 x7b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 x8a = x1;
@@ -552,7 +552,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) (d1 * dxh);
                 x9b = x1 + (int) ((1 - d5) * dxh);
                 break;
-            case 6:  //inverseKurve=true;
+            case 6:  //inverseCurve=true;
                 x7a = -1;
                 x7b = -1;
                 x8a = x1 + (int) ((d1 + d2) * dxh);
@@ -560,7 +560,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) (d1 * dxh);
                 x9b = x1 + (int) ((1 - d5) * dxh);
                 break;
-            case 7:  //inverseKurve=true;
+            case 7:  //inverseCurve=true;
                 x7a = -1;
                 x7b = -1;
                 x8a = x1 + (int) (d1 * dxh);
@@ -568,7 +568,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) ((d1 + d2) * dxh);
                 x9b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 break;
-            case 8:  //inverseKurve=false;
+            case 8:  //inverseCurve=false;
                 x7a = x1 + (int) ((d1 + d2) * dxh);
                 x7b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 x8a = x1 + (int) (d1 * dxh);
@@ -576,7 +576,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1;
                 x9b = xm;
                 break;
-            case 9:  //inverseKurve=false;
+            case 9:  //inverseCurve=false;
                 x7a = x1 + (int) (d1 * dxh);
                 x7b = x1 + (int) ((1 - d5) * dxh);
                 x8a = x1 + (int) ((d1 + d2) * dxh);
@@ -584,7 +584,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1;
                 x9b = xm;
                 break;
-            case 10:  //inverseKurve=true;
+            case 10:  //inverseCurve=true;
                 x7a = x1 + (int) (d1 * dxh);
                 x7b = x1 + (int) ((1 - d5) * dxh);
                 x8a = -1;
@@ -592,7 +592,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) ((d1 + d2) * dxh);
                 x9b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 break;
-            case 11:  //inverseKurve=true;
+            case 11:  //inverseCurve=true;
                 x7a = x1 + (int) ((d1 + d2) * dxh);
                 x7b = x1 + (int) ((d1 + d2 + d3) * dxh);
                 x8a = -1;
@@ -600,7 +600,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x9a = x1 + (int) (d1 * dxh);
                 x9b = x1 + (int) ((1 - d5) * dxh);
                 break;
-            case 12:  //inverseKurve=false;
+            case 12:  //inverseCurve=false;
                 x7a = x1;
                 x7b = xm;
                 x8a = x1 + (int) ((d1 + d2) * dxh);
@@ -617,146 +617,146 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         x8d = x1 + x2 - x8a;
         x9c = 2 * xm - x9b;
         x9d = x1 + x2 - x9a;
-        if ((seOUT == 1) || (seOUT == 12)) {
+        if ((sectorOut == 1) || (sectorOut == 12)) {
             s1 = 1;
-            if (xLokal < x8a) {
+            if (xLocal < x8a) {
                 s2 = 0;
-            } else if (xLokal < x8b) {
+            } else if (xLocal < x8b) {
                 s2 = 1;
-            } else if (xLokal < x8c) {
+            } else if (xLocal < x8c) {
                 s2 = 0;
-            } else if (xLokal < x8d) {
+            } else if (xLocal < x8d) {
                 s2 = 1;
             } else {
                 s2 = 0;
             }
-            if (xLokal < x9a) {
+            if (xLocal < x9a) {
                 s3 = 0;
-            } else if (xLokal < x9b) {
+            } else if (xLocal < x9b) {
                 s3 = 1;
-            } else if (xLokal < x9c) {
+            } else if (xLocal < x9c) {
                 s3 = 0;
-            } else if (xLokal < x9d) {
+            } else if (xLocal < x9d) {
                 s3 = 1;
             } else {
                 s3 = 0;
             }
-        } else if ((seOUT == 2) || (seOUT == 3)) {
-            if (xLokal < x7a) {
+        } else if ((sectorOut == 2) || (sectorOut == 3)) {
+            if (xLocal < x7a) {
                 s1 = 1;
-            } else if (xLokal < x7b) {
+            } else if (xLocal < x7b) {
                 s1 = 0;
-            } else if (xLokal < x7c) {
+            } else if (xLocal < x7c) {
                 s1 = 1;
-            } else if (xLokal < x7d) {
+            } else if (xLocal < x7d) {
                 s1 = 0;
             } else {
                 s1 = 1;
             }
-            if (xLokal < x8a) {
+            if (xLocal < x8a) {
                 s2 = 1;
-            } else if (xLokal < x8b) {
+            } else if (xLocal < x8b) {
                 s2 = 0;
-            } else if (xLokal < x8c) {
+            } else if (xLocal < x8c) {
                 s2 = 1;
-            } else if (xLokal < x8d) {
+            } else if (xLocal < x8d) {
                 s2 = 0;
             } else {
                 s2 = 1;
             }
             s3 = 0;
-        } else if ((seOUT == 4) || (seOUT == 5)) {
-            if (xLokal < x7a) {
+        } else if ((sectorOut == 4) || (sectorOut == 5)) {
+            if (xLocal < x7a) {
                 s1 = 0;
-            } else if (xLokal < x7b) {
+            } else if (xLocal < x7b) {
                 s1 = 1;
-            } else if (xLokal < x7c) {
+            } else if (xLocal < x7c) {
                 s1 = 0;
-            } else if (xLokal < x7d) {
+            } else if (xLocal < x7d) {
                 s1 = 1;
             } else {
                 s1 = 0;
             }
             s2 = 1;
-            if (xLokal < x9a) {
+            if (xLocal < x9a) {
                 s3 = 0;
-            } else if (xLokal < x9b) {
+            } else if (xLocal < x9b) {
                 s3 = 1;
-            } else if (xLokal < x9c) {
+            } else if (xLocal < x9c) {
                 s3 = 0;
-            } else if (xLokal < x9d) {
+            } else if (xLocal < x9d) {
                 s3 = 1;
             } else {
                 s3 = 0;
             }
-        } else if ((seOUT == 6) || (seOUT == 7)) {
+        } else if ((sectorOut == 6) || (sectorOut == 7)) {
             s1 = 0;
-            if (xLokal < x8a) {
+            if (xLocal < x8a) {
                 s2 = 1;
-            } else if (xLokal < x8b) {
+            } else if (xLocal < x8b) {
                 s2 = 0;
-            } else if (xLokal < x8c) {
+            } else if (xLocal < x8c) {
                 s2 = 1;
-            } else if (xLokal < x8d) {
+            } else if (xLocal < x8d) {
                 s2 = 0;
             } else {
                 s2 = 1;
             }
-            if (xLokal < x9a) {
+            if (xLocal < x9a) {
                 s3 = 1;
-            } else if (xLokal < x9b) {
+            } else if (xLocal < x9b) {
                 s3 = 0;
-            } else if (xLokal < x9c) {
+            } else if (xLocal < x9c) {
                 s3 = 1;
-            } else if (xLokal < x9d) {
+            } else if (xLocal < x9d) {
                 s3 = 0;
             } else {
                 s3 = 1;
             }
-        } else if ((seOUT == 8) || (seOUT == 9)) {
-            if (xLokal < x7a) {
+        } else if ((sectorOut == 8) || (sectorOut == 9)) {
+            if (xLocal < x7a) {
                 s1 = 0;
-            } else if (xLokal < x7b) {
+            } else if (xLocal < x7b) {
                 s1 = 1;
-            } else if (xLokal < x7c) {
+            } else if (xLocal < x7c) {
                 s1 = 0;
-            } else if (xLokal < x7d) {
+            } else if (xLocal < x7d) {
                 s1 = 1;
             } else {
                 s1 = 0;
             }
-            if (xLokal < x8a) {
+            if (xLocal < x8a) {
                 s2 = 0;
-            } else if (xLokal < x8b) {
+            } else if (xLocal < x8b) {
                 s2 = 1;
-            } else if (xLokal < x8c) {
+            } else if (xLocal < x8c) {
                 s2 = 0;
-            } else if (xLokal < x8d) {
+            } else if (xLocal < x8d) {
                 s2 = 1;
             } else {
                 s2 = 0;
             }
             s3 = 1;
-        } else if ((seOUT == 10) || (seOUT == 11)) {
-            if (xLokal < x7a) {
+        } else if ((sectorOut == 10) || (sectorOut == 11)) {
+            if (xLocal < x7a) {
                 s1 = 1;
-            } else if (xLokal < x7b) {
+            } else if (xLocal < x7b) {
                 s1 = 0;
-            } else if (xLokal < x7c) {
+            } else if (xLocal < x7c) {
                 s1 = 1;
-            } else if (xLokal < x7d) {
+            } else if (xLocal < x7d) {
                 s1 = 0;
             } else {
                 s1 = 1;
             }
             s2 = 0;
-            if (xLokal < x9a) {
+            if (xLocal < x9a) {
                 s3 = 1;
-            } else if (xLokal < x9b) {
+            } else if (xLocal < x9b) {
                 s3 = 0;
-            } else if (xLokal < x9c) {
+            } else if (xLocal < x9c) {
                 s3 = 1;
-            } else if (xLokal < x9d) {
+            } else if (xLocal < x9d) {
                 s3 = 0;
             } else {
                 s3 = 1;
@@ -765,7 +765,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     }
 
     private void calculateSwitchingTimes(double ur, double us, double ut, double uNmax, double uOUTmax, double fOUT, double phi2) {
-        switch (seIN) {
+        switch (sectorIn) {
             case 1:
                 dIN[0] = safeDutyRatio(-ut, ur);
                 break;
@@ -808,8 +808,8 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         dIN[0] = clampDutyRatio(dIN[0]);
         dIN[1] = 1 - dIN[0];
 
-        // Ausgang:
-        double k = safeDivide(uOUTmax, uNmax * uNmax, 0.0) / Math.sqrt(3);  // Ann.: Ideales 3-ph. Spannungsnetz am Eingang
+        // Output:
+        double k = safeDivide(uOUTmax, uNmax * uNmax, 0.0) / Math.sqrt(3);  // Assumption: Ideal 3-phase voltage grid at input
         double phiOUT = 2 * Math.PI * fOUT * _time - Math.PI / 2;  // old version, does not work for PMSM-control
         if (fOUT <= 0) {
             phiOUT = phi2 - Math.PI / 2;  // phiOUT= thetaEl +dPhiEl -Math.PI/2;  --> improvement EPE 2009
@@ -821,7 +821,7 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         double ub = sanitizeFinite(k * Math.sin(phiOUT), 0.0);
         double x1 = 0;
         double x2 = 0;
-        switch (seIN) {
+        switch (sectorIn) {
             case 1:
                 x1 = (-2 * ut);
                 x2 = (-2 * us);
@@ -871,9 +871,9 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
                 x2 = (-2 * ut);
                 break;
             default:
-                throw new IllegalArgumentException("Invalid input sector: " + seIN);
+                throw new IllegalArgumentException("Invalid input sector: " + sectorIn);
         }
-        switch (seOUT) {
+        switch (sectorOut) {
             case 1:
                 dOUT[0] = ua * x1;
                 dOUT[1] = ub * x1;
@@ -965,33 +965,33 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
     }
 
     private void sectorDetection(double ur, double us, double ut, double fOUT, double phi2) {
-        // Sektor der Eingangsspannungen:
+        // Sector of input voltages:
         if ((us <= 0) && (ut <= us)) {
-            seIN = 1;
+            sectorIn = 1;
         } else if ((us >= 0) && (ur >= us)) {
-            seIN = 2;
+            sectorIn = 2;
         } else if ((ur >= 0) && (us >= ur)) {
-            seIN = 3;
+            sectorIn = 3;
         } else if ((ur <= 0) && (ut <= ur)) {
-            seIN = 4;
+            sectorIn = 4;
         } else if ((ut <= 0) && (ur <= ut)) {
-            seIN = 5;
+            sectorIn = 5;
         } else if ((ut >= 0) && (us >= ut)) {
-            seIN = 6;
+            sectorIn = 6;
         } else if ((us >= 0) && (ut >= us)) {
-            seIN = 7;
+            sectorIn = 7;
         } else if ((us <= 0) && (ur <= us)) {
-            seIN = 8;
+            sectorIn = 8;
         } else if ((ur <= 0) && (us <= ur)) {
-            seIN = 9;
+            sectorIn = 9;
         } else if ((ur >= 0) && (ut >= ur)) {
-            seIN = 10;
+            sectorIn = 10;
         } else if ((ut >= 0) && (ur >= ut)) {
-            seIN = 11;
+            sectorIn = 11;
         } else if ((ut <= 0) && (us <= ut)) {
-            seIN = 12;
+            sectorIn = 12;
         }
-        // Sektor der Ausgangsspannungen:
+        // Output voltage sector:
         double phiOUT = 2 * Math.PI * fOUT * _time;  // old version, does not work for PMSM-control
         if (fOUT <= 0) {
             phiOUT = phi2;  // phiOUT= thetaEl +dPhiEl; --> improvement EPE 2009
@@ -1000,29 +1000,29 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         double u2 = Math.sin(phiOUT - 2 * Math.PI / 3);
         double u3 = Math.sin(phiOUT - 4 * Math.PI / 3);
         if ((u2 < 0) && (u3 < u2)) {
-            seOUT = 1;
+            sectorOut = 1;
         } else if ((u2 > 0) && (u1 > u2)) {
-            seOUT = 2;
+            sectorOut = 2;
         } else if ((u1 > 0) && (u2 > u1)) {
-            seOUT = 3;
+            sectorOut = 3;
         } else if ((u1 < 0) && (u3 < u1)) {
-            seOUT = 4;
+            sectorOut = 4;
         } else if ((u3 < 0) && (u1 < u3)) {
-            seOUT = 5;
+            sectorOut = 5;
         } else if ((u3 > 0) && (u2 > u3)) {
-            seOUT = 6;
+            sectorOut = 6;
         } else if ((u2 > 0) && (u3 > u2)) {
-            seOUT = 7;
+            sectorOut = 7;
         } else if ((u2 < 0) && (u1 < u2)) {
-            seOUT = 8;
+            sectorOut = 8;
         } else if ((u1 < 0) && (u2 < u1)) {
-            seOUT = 9;
+            sectorOut = 9;
         } else if ((u1 > 0) && (u3 > u1)) {
-            seOUT = 10;
+            sectorOut = 10;
         } else if ((u3 > 0) && (u1 > u3)) {
-            seOUT = 11;
+            sectorOut = 11;
         } else if ((u3 < 0) && (u2 < u3)) {
-            seOUT = 12;
+            sectorOut = 12;
         }
     }
 

@@ -1,5 +1,7 @@
 package gecko.examples;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 /**
  * Headless Circuit Simulation Example
  *
@@ -120,31 +122,33 @@ package gecko.examples;
  * ============================================================================
  */
 public class HeadlessCircuitSimulationExample {
+    private static final Logger LOGGER = LogManager.getLogger(HeadlessCircuitSimulationExample.class);
+
 
     // This is a documentation class showing how to use gecko-simulation-core.
     // For actual implementation examples, see the documentation files above.
 
     public static void main(String[] args) {
-        System.out.println("╔════════════════════════════════════════════════════════════════╗");
-        System.out.println("║  Headless Circuit Simulation Example - gecko-simulation-core  ║");
-        System.out.println("╚════════════════════════════════════════════════════════════════╝");
-        System.out.println();
-        System.out.println("This example demonstrates gecko-simulation-core usage for");
-        System.out.println("pure circuit simulation without GUI dependencies.");
-        System.out.println();
-        System.out.println("Key Features:");
-        System.out.println("  ✓ No AWT/Swing imports required");
-        System.out.println("  ✓ Pure Java simulation logic");
-        System.out.println("  ✓ Headless deployment (no display needed)");
-        System.out.println("  ✓ Server/Cloud ready");
-        System.out.println("  ✓ 215+ GUI-free extractable classes");
-        System.out.println();
-        System.out.println("To get started:");
-        System.out.println("  1. Build gecko-simulation-core: mvn clean install");
-        System.out.println("  2. Add as dependency in pom.xml");
-        System.out.println("  3. Import core classes (gecko.core.*)");
-        System.out.println("  4. Create and run simulations without GUI layer");
-        System.out.println();
-        System.out.println("See HeadlessCircuitSimulationExample.java for full documentation.");
+        LOGGER.info("╔════════════════════════════════════════════════════════════════╗");
+        LOGGER.info("║  Headless Circuit Simulation Example - gecko-simulation-core  ║");
+        LOGGER.info("╚════════════════════════════════════════════════════════════════╝");
+        LOGGER.info("");
+        LOGGER.info("This example demonstrates gecko-simulation-core usage for");
+        LOGGER.info("pure circuit simulation without GUI dependencies.");
+        LOGGER.info("");
+        LOGGER.info("Key Features:");
+        LOGGER.info("  ✓ No AWT/Swing imports required");
+        LOGGER.info("  ✓ Pure Java simulation logic");
+        LOGGER.info("  ✓ Headless deployment (no display needed)");
+        LOGGER.info("  ✓ Server/Cloud ready");
+        LOGGER.info("  ✓ 215+ GUI-free extractable classes");
+        LOGGER.info("");
+        LOGGER.info("To get started:");
+        LOGGER.info("  1. Build gecko-simulation-core: mvn clean install");
+        LOGGER.info("  2. Add as dependency in pom.xml");
+        LOGGER.info("  3. Import core classes (gecko.core.*)");
+        LOGGER.info("  4. Create and run simulations without GUI layer");
+        LOGGER.info("");
+        LOGGER.info("See HeadlessCircuitSimulationExample.java for full documentation.");
     }
 }

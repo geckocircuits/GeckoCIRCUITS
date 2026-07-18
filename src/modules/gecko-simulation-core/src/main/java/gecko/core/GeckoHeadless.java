@@ -13,6 +13,8 @@
  */
 package gecko.core;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.allg.SolverSettingsCore;
 import gecko.core.allg.SolverType;
 import gecko.core.simulation.HeadlessSimulationEngine;
@@ -46,6 +48,8 @@ import java.util.Arrays;
  * </ul>
  */
 public class GeckoHeadless {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoHeadless.class);
+
 
     public static final String VERSION = "1.0.0";
 
@@ -110,7 +114,7 @@ public class GeckoHeadless {
 
                 case "--version":
                 case "-v":
-                    System.out.println("GeckoCIRCUITS Headless v" + VERSION);
+                    LOGGER.info("GeckoCIRCUITS Headless v" + VERSION);
                     return false;
 
                 case "--circuit":
@@ -182,12 +186,12 @@ public class GeckoHeadless {
      */
     private int runSimulation() {
         if (!quiet) {
-            System.out.println("GeckoCIRCUITS Headless v" + VERSION);
-            System.out.println("Circuit: " + circuitFile);
-            System.out.println("Solver: " + solverType);
-            System.out.println("dt: " + dt + " s");
-            System.out.println("Duration: " + duration + " s");
-            System.out.println();
+            LOGGER.info("GeckoCIRCUITS Headless v" + VERSION);
+            LOGGER.info("Circuit: " + circuitFile);
+            LOGGER.info("Solver: " + solverType);
+            LOGGER.info("dt: " + dt + " s");
+            LOGGER.info("Duration: " + duration + " s");
+            LOGGER.info("");
         }
 
         // Create simulation configuration
@@ -210,14 +214,14 @@ public class GeckoHeadless {
 
         // Run simulation
         if (!quiet) {
-            System.out.println("Starting simulation...");
+            LOGGER.info("Starting simulation...");
         }
 
         SimulationResult result = engine.runSimulation(config);
 
         if (!quiet) {
-            System.out.println();
-            System.out.println();
+            LOGGER.info("");
+            LOGGER.info("");
         }
 
         // Check result
@@ -227,7 +231,7 @@ public class GeckoHeadless {
         }
 
         if (!quiet) {
-            System.out.println("Simulation completed successfully!");
+            LOGGER.info("Simulation completed successfully!");
             System.out.printf("  Simulated time: %.4f s%n", result.getSimulatedTime());
             System.out.printf("  Time steps: %d%n", result.getTotalTimeSteps());
             System.out.printf("  Wall clock: %d ms%n", result.getExecutionTimeMs());
@@ -238,7 +242,7 @@ public class GeckoHeadless {
             try {
                 exportToCsv(result, outputFile);
                 if (!quiet) {
-                    System.out.println("  Results exported to: " + outputFile);
+                    LOGGER.info("  Results exported to: " + outputFile);
                 }
             } catch (IOException e) {
                 printError("Failed to write output file: " + e.getMessage());
@@ -330,32 +334,32 @@ public class GeckoHeadless {
      * @param message the error message
      */
     private void printError(String message) {
-        System.err.println("Error: " + message);
+        LOGGER.error("Error: " + message);
     }
 
     /**
      * Prints the help message.
      */
     private void printHelp() {
-        System.out.println("GeckoCIRCUITS Headless Simulator v" + VERSION);
-        System.out.println();
-        System.out.println("Usage: java -jar gecko-headless.jar [options] [circuit-file]");
-        System.out.println();
-        System.out.println("Options:");
-        System.out.println("  --circuit, -c <file>   Path to circuit file (.ipes)");
-        System.out.println("  --output, -o <file>    Path to output file (CSV format)");
-        System.out.println("  --dt <value>           Simulation time step in seconds (default: 1e-6)");
-        System.out.println("  --duration, -d <value> Simulation duration in seconds (default: 20e-3)");
-        System.out.println("  --solver <type>        Solver type: be (backward-euler), trz (trapezoidal),");
-        System.out.println("                         gs (gear-shichman). Default: be");
-        System.out.println("  --quiet, -q            Suppress progress output");
-        System.out.println("  --help, -h             Show this help message");
-        System.out.println("  --version, -v          Show version information");
-        System.out.println();
-        System.out.println("Examples:");
-        System.out.println("  java -jar gecko-headless.jar --circuit buck.ipes --output results.csv");
-        System.out.println("  java -jar gecko-headless.jar -c buck.ipes -d 50e-3 --dt 0.5e-6 -o out.csv");
-        System.out.println();
-        System.out.println("For more information, visit: https://github.com/geckocircuits");
+        LOGGER.info("GeckoCIRCUITS Headless Simulator v" + VERSION);
+        LOGGER.info("");
+        LOGGER.info("Usage: java -jar gecko-headless.jar [options] [circuit-file]");
+        LOGGER.info("");
+        LOGGER.info("Options:");
+        LOGGER.info("  --circuit, -c <file>   Path to circuit file (.ipes)");
+        LOGGER.info("  --output, -o <file>    Path to output file (CSV format)");
+        LOGGER.info("  --dt <value>           Simulation time step in seconds (default: 1e-6)");
+        LOGGER.info("  --duration, -d <value> Simulation duration in seconds (default: 20e-3)");
+        LOGGER.info("  --solver <type>        Solver type: be (backward-euler), trz (trapezoidal),");
+        LOGGER.info("                         gs (gear-shichman). Default: be");
+        LOGGER.info("  --quiet, -q            Suppress progress output");
+        LOGGER.info("  --help, -h             Show this help message");
+        LOGGER.info("  --version, -v          Show version information");
+        LOGGER.info("");
+        LOGGER.info("Examples:");
+        LOGGER.info("  java -jar gecko-headless.jar --circuit buck.ipes --output results.csv");
+        LOGGER.info("  java -jar gecko-headless.jar -c buck.ipes -d 50e-3 --dt 0.5e-6 -o out.csv");
+        LOGGER.info("");
+        LOGGER.info("For more information, visit: https://github.com/geckocircuits");
     }
 }

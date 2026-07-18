@@ -13,12 +13,11 @@
  */
 package gecko.geckocircuits.control.javablock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Utility class (only static methods) which constructs the javablock
  * sourcecode, when import code, class source code, ... is given.
@@ -27,6 +26,8 @@ import java.util.logging.Logger;
  * @author andreas
  */
 public final class SourceFileGenerator {
+    private static final Logger LOGGER = LogManager.getLogger(SourceFileGenerator.class);
+
 
     private static final String DOUBLE_TAB = "\t\t";
     private static final int MIN_BUFFER_SIZE = 64;
@@ -64,7 +65,7 @@ public final class SourceFileGenerator {
             appendClassFooter(sourceStringBuilder);
             return sourceStringBuilder.toString();
         } catch (IOException ex) {
-            Logger.getLogger(JavaBlockSource.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Failed to generate Java block source code", ex);
         }
         assert false;
         return null;

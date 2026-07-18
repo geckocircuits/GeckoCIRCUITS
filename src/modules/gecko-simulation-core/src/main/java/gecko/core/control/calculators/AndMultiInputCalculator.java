@@ -24,7 +24,7 @@ public final class AndMultiInputCalculator extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _outputSignal[0][0] = 1;
         for (int i = 0; i < _inputSignal.length; i++) {
             if (_inputSignal[i][0] < SIGNAL_THRESHOLD) {

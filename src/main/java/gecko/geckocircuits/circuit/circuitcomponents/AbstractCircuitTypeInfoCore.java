@@ -13,18 +13,19 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.TypeInfoCore;
-import gecko.geckocircuits.circuit.SpecialTyp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import gecko.geckocircuits.circuit.SpecialType;
 /**
  * Core circuit type information - NO GUI/I18n dependencies.
  * Pure circuit component type registration logic.
  */
 public abstract class AbstractCircuitTypeInfoCore extends TypeInfoCore {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractCircuitTypeInfoCore.class);
+
 
     public AbstractCircuitTypeInfoCore(Class<? extends AbstractBlockInterface> typeClass, String idString) {
         super(typeClass, idString);
@@ -45,9 +46,8 @@ public abstract class AbstractCircuitTypeInfoCore extends TypeInfoCore {
         try {
             return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
-            System.err.println("error: " + _typeClass);
-            ex.printStackTrace();
-            Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("error: " + _typeClass);
+            ex.printStackTrace();LogManager.getLogger(SpecialType.class).error("Exception occurred", ex);
         }
         return null;
     }

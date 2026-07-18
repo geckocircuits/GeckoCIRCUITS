@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.circuit.losscalculation;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSemiconductor;
 import gecko.geckocircuits.circuit.circuitcomponents.ForwardVoltageDropable;
 import gecko.core.circuit.losscalculation.AbstractLossCalculator;
@@ -21,6 +23,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Calculator stores semiconductor reference for loss calculation")
 public final class LossCalculationSimple implements AbstractLossCalculatorFabric {
+    private static final Logger LOGGER = LogManager.getLogger(LossCalculationSimple.class);
+
     public static final double UK_DEFAULT_VALUE = 400.0;
 
     double _kON;
@@ -82,7 +86,7 @@ public final class LossCalculationSimple implements AbstractLossCalculatorFabric
         double calculateRelativeVoltageFactor(final double appliedVoltage) {
             double returnValue = Math.abs(appliedVoltage / _uSWnorm);
             if(returnValue != returnValue) {
-                System.out.println("xxxxxxxx " + _uSWnorm);
+                LOGGER.info("xxxxxxxx " + _uSWnorm);
             }
             return returnValue;
         }

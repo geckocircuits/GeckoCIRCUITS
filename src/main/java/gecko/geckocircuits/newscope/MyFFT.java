@@ -13,7 +13,11 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public final class MyFFT {
+    private static final Logger LOGGER = LogManager.getLogger(MyFFT.class);
+
 
     int n, m;
     // Lookup tables.  Only need to recompute when size of FFT changes.
@@ -140,7 +144,7 @@ public final class MyFFT {
             counter++;
         }
 
-        System.out.println("NNNNNNn: " + N + " " + counter);
+        LOGGER.info("NNNNNNn: " + N + " " + counter);
         MyFFT fft = new MyFFT(N);
 
         double[] re = new double[N];
@@ -152,27 +156,24 @@ public final class MyFFT {
 //       re[i] = im[i] = 0;
         //beforeAfter(fft, re, im);
 
-//     // Nyquist
+// Nyquist
 //     for(int i=0; i<N; i++) {
 //       re[i] = Math.pow(-1, i);
 //       im[i] = 0;
 //     }
 //     beforeAfter(fft, re, im);
-//
 //     // Single sin
         for (int i = 0; i < N; i++) {
             re[i] = 1 + Math.cos(2 * Math.PI * i / N);
             im[i] = 0;
         }
         beforeAfter(fft, re, im);
-//
 //     // Ramp
 //     for(int i=0; i<N; i++) {
 //       re[i] = i;
 //       im[i] = 0;
 //     }
 //     beforeAfter(fft, re, im);
-//
 //     long time = System.currentTimeMillis();
 //     double iter = 30000;
 //     for(int i=0; i<iter; i++)
@@ -182,24 +183,24 @@ public final class MyFFT {
     }
 
     protected static void beforeAfter(MyFFT fft, double[] re, double[] im) {
-        System.out.println("Before: ");
+        LOGGER.info("Before: ");
         printReIm(re, im);
         fft.fft(re, im);
-        System.out.println("After: ");
+        LOGGER.info("After: ");
         printReIm(re, im);
     }
 
     protected static void printReIm(double[] re, double[] im) {
-        System.out.print("Re: [");
+        LOGGER.info("Re: [");
         for (double value : re) {
-            System.out.print(((int) (value * 1000) / 1000.0) + " ");
+            LOGGER.info(((int) (value * 1000) / 1000.0) + " ");
         }
 
-        System.out.print("]\nIm: [");
+        LOGGER.info("]\nIm: [");
         for (double value : im) {
-            System.out.print(((int) (value * 1000) / 1000.0) + " ");
+            LOGGER.info(((int) (value * 1000) / 1000.0) + " ");
         }
 
-        System.out.println("]");
+        LOGGER.info("]");
     }
 }

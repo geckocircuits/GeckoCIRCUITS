@@ -13,7 +13,7 @@
  */
 package gecko.geckoscript;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.control.Operationable;
@@ -310,7 +310,7 @@ public class ParameterSupport extends javax.swing.JFrame {
                 if (firstElement instanceof RegelBlock) {
                     final List<String[]> currentElemTypeOutputs = ((RegelBlock) firstElement).getOutputs();
                     _availableParametersModel.addElement("-- OUTPUT --");
-                    if (currentElemTypeOutputs != null) {
+                    if (!currentElemTypeOutputs.isEmpty()) {
                         for (String[] output : currentElemTypeOutputs) {
                             _availableParametersModel.addElement(output[0] + "\t(" + output[1] + ")");
                         }

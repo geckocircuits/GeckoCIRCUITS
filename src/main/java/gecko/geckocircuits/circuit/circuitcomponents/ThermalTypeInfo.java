@@ -13,15 +13,16 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ConnectorType;
-import gecko.geckocircuits.circuit.SpecialTyp;
+import gecko.geckocircuits.circuit.SpecialType;
 import gecko.i18n.resources.I18nKeys;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class ThermalTypeInfo extends AbstractTypeInfo {
+    private static final Logger LOGGER = LogManager.getLogger(ThermalTypeInfo.class);
+
 
     public ThermalTypeInfo(final Class<? extends AbstractBlockInterface> typeClass,
             final String idString, final I18nKeys typeDescription) {
@@ -53,8 +54,7 @@ public class ThermalTypeInfo extends AbstractTypeInfo {
         try {
             return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
-            System.err.println("error: " + _typeClass);
-            Logger.getLogger(SpecialTyp.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("error: " + _typeClass);LogManager.getLogger(SpecialType.class).error("Exception occurred", ex);
         }
         return null;
 

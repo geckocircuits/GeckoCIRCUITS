@@ -13,9 +13,11 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.GeckoFileChooser;
-import gecko.geckocircuits.control.ReglerSaveData.OutputType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.MainWindow;
+import gecko.geckocircuits.general.GeckoFileChooser;
+import gecko.geckocircuits.control.ControlSaveData.OutputType;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import gecko.geckocircuits.datacontainer.DataIndexItem;
@@ -25,8 +27,6 @@ import gecko.geckocircuits.datacontainer.TextSeparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -38,6 +38,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores references to data containers and saver for export configuration")
 public final class DialogDataExport extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogDataExport.class);
+
 
     private boolean _txtFormat;
     private final ReportingListTransferHandler _arrayListHandler = new ReportingListTransferHandler();
@@ -45,20 +47,20 @@ public final class DialogDataExport extends javax.swing.JDialog {
     private DefaultListModel _selectedModel;
     private final boolean _initDone;
     private DataSaver _dataSaver;
-    public final ReglerSaveData _reglerDataSave;
+    public final ControlSaveData _controlDataSave;
     private boolean _inFillLists;
 
-    public DialogDataExport(final java.awt.Frame parent, final boolean modal, final ReglerSaveData dataSavable,
+    public DialogDataExport(final java.awt.Frame parent, final boolean modal, final ControlSaveData dataSavable,
             final List<AbstractDataContainer> selectContainers, final DataSaver _parentDataSaver) {
         super(parent, modal);
         _containers = selectContainers;
-        _reglerDataSave = dataSavable;
+        _controlDataSave = dataSavable;
         init();
 
-        jSpinnerDigits.setValue(_reglerDataSave._significDigits.getValue());
+        jSpinnerDigits.setValue(_controlDataSave._significDigits.getValue());
         _dataSaver = _parentDataSaver;
 
-        jTextArea1.setText(MainWindow.aktuellerDateiName.replace(".ipes", "CISPR.txt"));
+        jTextArea1.setText(MainWindow.currentFileName.replace(".ipes", "CISPR.txt"));
 
         if (_containers.size() == 1) {
             jLabelFilter.setVisible(false);
@@ -80,9 +82,9 @@ public final class DialogDataExport extends javax.swing.JDialog {
             jButtonDoSave.setText("No data available");
         }
 
-        jSpinnerSkip.setValue(_reglerDataSave._skipDataPoints.getValue());
-        jCheckPrintHdr.setSelected(_reglerDataSave._printHeader.getValue());
-        jCheckBoxTranspose.setSelected(_reglerDataSave._transposeData.getValue());
+        jSpinnerSkip.setValue(_controlDataSave._skipDataPoints.getValue());
+        jCheckPrintHdr.setSelected(_controlDataSave._printHeader.getValue());
+        jCheckBoxTranspose.setSelected(_controlDataSave._transposeData.getValue());
         disableContSave();
         _initDone = true;
     }
@@ -92,14 +94,14 @@ public final class DialogDataExport extends javax.swing.JDialog {
         try { // somewhere, I have a race condition when a signal is deleted...
             Thread.sleep(100);
         } catch (InterruptedException ex) {
-            Logger.getLogger(DialogDataExport.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("fillLists sleep interrupted", ex);
         }
         final AbstractDataContainer container = _containers.get(0);
         if (container == null) {
             return;
         }
 
-        final List<String> selectedStrings = _reglerDataSave.getSelectedNames();
+        final List<String> selectedStrings = _controlDataSave.getSelectedNames();
         final int rowLength = container.getRowLength();
         ((DefaultListModel<DataIndexItem>) jListAvailable.getModel()).clear();
         for (int i = 0; i < rowLength; i++) {
@@ -125,22 +127,22 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void setSaveModus() {
         if (jRadButtManSave.isSelected()) {
-            _reglerDataSave._saveModus = ReglerSaveData.SaveModus.MANUAL;
+            _controlDataSave._saveModus = ControlSaveData.SaveModus.MANUAL;
         }
 
         if (jRadButtEndSave.isSelected()) {
-            _reglerDataSave._saveModus = ReglerSaveData.SaveModus.SIMULATION_END;
+            _controlDataSave._saveModus = ControlSaveData.SaveModus.SIMULATION_END;
         }
 
         if (jRadButtContinSav.isSelected()) {
-            _reglerDataSave._saveModus = ReglerSaveData.SaveModus.DURING_SIMULATION;
+            _controlDataSave._saveModus = ControlSaveData.SaveModus.DURING_SIMULATION;
         }
     }
 
     private void init() {
         initComponents();
 
-        if (_reglerDataSave._printHeader.getValue()) {
+        if (_controlDataSave._printHeader.getValue()) {
             jCheckPrintHdr.setSelected(true);
         } else {
             jCheckPrintHdr.setSelected(false);
@@ -149,19 +151,19 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
         for (HeaderSymbol symb : HeaderSymbol.values()) {
             jComboHeaderSym.addItem(symb);
-            if (symb == _reglerDataSave._headerSymbol) {
+            if (symb == _controlDataSave._headerSymbol) {
                 jComboHeaderSym.setSelectedItem(symb);
             }
         }
 
         for (TextSeparator sep : TextSeparator.values()) {
             jComboSeparator.addItem(sep);
-            if (sep == _reglerDataSave._itemSeparator) {
+            if (sep == _controlDataSave._itemSeparator) {
                 jComboSeparator.setSelectedItem(sep);
             }
         }
 
-        switch (_reglerDataSave._saveModus) {
+        switch (_controlDataSave._saveModus) {
             case MANUAL:
                 jRadButtManSave.setSelected(true);
                 break;
@@ -175,7 +177,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
                 assert false;
         }
 
-        switch (_reglerDataSave._fileOverwrite) {
+        switch (_controlDataSave._fileOverwrite) {
             case OVERWRITE:
                 jRadButtOverwrite.setSelected(true);
                 break;
@@ -193,7 +195,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         jListSelected.setModel(_selectedModel);
         jListAvailable.setTransferHandler(_arrayListHandler);
         jListSelected.setTransferHandler(_arrayListHandler);
-        jTxtFildFileName.setText(_reglerDataSave._file.getValue());
+        jTxtFildFileName.setText(_controlDataSave._file.getValue());
 
         _selectedModel.addListDataListener(new ListDataListener() {
 
@@ -218,7 +220,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
                     for (int i = 0; i < listItems.length; i++) {
                         listItems[i] = (DataIndexItem) jListSelected.getModel().getElementAt(i);
                     }
-                    _reglerDataSave.setSelectedSignals(listItems);
+                    _controlDataSave.setSelectedSignals(listItems);
                 }
             }
         });
@@ -229,19 +231,19 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void switchOverwrite() {
         if (jRadButtDoNumber.isSelected()) {
-            _reglerDataSave._fileOverwrite = ReglerSaveData.FileOverwrite.DO_NUMBERING;
+            _controlDataSave._fileOverwrite = ControlSaveData.FileOverwrite.DO_NUMBERING;
         } else {
-            _reglerDataSave._fileOverwrite = ReglerSaveData.FileOverwrite.OVERWRITE;
+            _controlDataSave._fileOverwrite = ControlSaveData.FileOverwrite.OVERWRITE;
         }
     }
 
     private void switchBinaryTxt() {
         if (jRadioBinary.isSelected()) {
             _txtFormat = false;
-            _reglerDataSave._outputType = OutputType.BINARY;
+            _controlDataSave._outputType = OutputType.BINARY;
         } else {
             _txtFormat = true;
-            _reglerDataSave._outputType = OutputType.TEXT;
+            _controlDataSave._outputType = OutputType.TEXT;
         }
 
         jSpinnerDigits.setEnabled(_txtFormat);
@@ -754,7 +756,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void jButtonSaveData(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonSaveData
 
-        _dataSaver = new DataSaver(_containers.get(0), _reglerDataSave);
+        _dataSaver = new DataSaver(_containers.get(0), _controlDataSave);
 
         _dataSaver.addObserver(new Observer() {
 
@@ -789,30 +791,30 @@ public final class DialogDataExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonAbortActionPerformed
 
     private void jTxtFildFileNameKeyReleased(java.awt.event.KeyEvent evt) {//NOPMD//GEN-FIRST:event_jTxtFildFileNameKeyReleased
-        _reglerDataSave._file.setUserValue(jTxtFildFileName.getText());
+        _controlDataSave._file.setUserValue(jTxtFildFileName.getText());
     }//GEN-LAST:event_jTxtFildFileNameKeyReleased
 
     private void jCheckPrintHdrActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jCheckPrintHdrActionPerformed
         if (_initDone) {
-            _reglerDataSave._printHeader.setUserValue(jCheckPrintHdr.isSelected());
+            _controlDataSave._printHeader.setUserValue(jCheckPrintHdr.isSelected());
         }
     }//GEN-LAST:event_jCheckPrintHdrActionPerformed
 
     private void jSpinnerDigitsStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerDigitsStateChanged
         if (_initDone) {
-            _reglerDataSave._significDigits.setUserValue((Integer) jSpinnerDigits.getValue());
+            _controlDataSave._significDigits.setUserValue((Integer) jSpinnerDigits.getValue());
         }
     }//GEN-LAST:event_jSpinnerDigitsStateChanged
 
     private void jComboSeparatorActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jComboSeparatorActionPerformed
         if (_initDone) {
-            _reglerDataSave._itemSeparator = (TextSeparator) jComboSeparator.getSelectedItem();
+            _controlDataSave._itemSeparator = (TextSeparator) jComboSeparator.getSelectedItem();
         }
     }//GEN-LAST:event_jComboSeparatorActionPerformed
 
     private void jComboHeaderSymActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jComboHeaderSymActionPerformed
         if (_initDone) {
-            _reglerDataSave._headerSymbol = (HeaderSymbol) jComboHeaderSym.getSelectedItem();
+            _controlDataSave._headerSymbol = (HeaderSymbol) jComboHeaderSym.getSelectedItem();
         }
     }//GEN-LAST:event_jComboHeaderSymActionPerformed
 
@@ -838,7 +840,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
 
     private void jSpinnerSkipStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinnerSkipStateChanged
         if (_initDone) {
-            _reglerDataSave._skipDataPoints.setUserValue((Integer) jSpinnerSkip.getValue());
+            _controlDataSave._skipDataPoints.setUserValue((Integer) jSpinnerSkip.getValue());
         }
     }//GEN-LAST:event_jSpinnerSkipStateChanged
 
@@ -848,7 +850,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonTableActionPerformed
 
     private void jCheckBoxTransposeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransposeActionPerformed
-        _reglerDataSave._transposeData.setUserValue(jCheckBoxTranspose.isSelected());
+        _controlDataSave._transposeData.setUserValue(jCheckBoxTranspose.isSelected());
         disableContSave();
 
     }//GEN-LAST:event_jCheckBoxTransposeActionPerformed
@@ -861,7 +863,7 @@ public final class DialogDataExport extends javax.swing.JDialog {
         }
         String fileName = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
         jTxtFildFileName.setText(fileName);
-        _reglerDataSave._file.setUserValue(fileName);
+        _controlDataSave._file.setUserValue(fileName);
 
 
     }//GEN-LAST:event_jButtonFileChooserActionPerformed

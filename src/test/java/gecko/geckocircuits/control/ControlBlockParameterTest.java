@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -30,39 +30,39 @@ public class ControlBlockParameterTest {
 
     @Test
     public void testReglerLimit_MinLimitParameterExists() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         UserParameter<Double> minLimit = limit._minLimit;
         assertNotNull("minLimit parameter should exist", minLimit);
     }
 
     @Test
     public void testReglerLimit_MaxLimitParameterExists() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         UserParameter<Double> maxLimit = limit._maxLimit;
         assertNotNull("maxLimit parameter should exist", maxLimit);
     }
 
     @Test
     public void testReglerLimit_MinLimitDefaultValue() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         assertEquals("minLimit default should be -1.0", -1.0, limit._minLimit.getValue(), 1e-9);
     }
 
     @Test
     public void testReglerLimit_MaxLimitDefaultValue() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         assertEquals("maxLimit default should be 1.0", 1.0, limit._maxLimit.getValue(), 1e-9);
     }
 
     @Test
     public void testReglerLimit_IsExternalDefaultValue() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         assertFalse("isExternal default should be false", limit._isExternalSet.getValue());
     }
 
     @Test
     public void testUserParameter_GetShortName() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         String shortName = limit._minLimit.getShortName();
         assertNotNull("Short name should not be null", shortName);
         assertEquals("Short name should be 'min'", "min", shortName);
@@ -70,14 +70,14 @@ public class ControlBlockParameterTest {
 
     @Test
     public void testUserParameter_GetDoubleValue() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         double value = limit._maxLimit.getDoubleValue();
         assertEquals("getDoubleValue should return 1.0", 1.0, value, 1e-9);
     }
 
     @Test
     public void testUserParameter_GetSaveIdentifier() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         String identifier = limit._minLimit.getSaveIdentifier();
         assertNotNull("Save identifier should not be null", identifier);
         assertEquals("Save identifier should be 'minLimit'", "minLimit", identifier);
@@ -85,14 +85,14 @@ public class ControlBlockParameterTest {
 
     @Test
     public void testUserParameter_SetValueWithoutUndo() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         limit._minLimit.setValueWithoutUndo(-10.0);
         assertEquals("Value should be updated to -10.0", -10.0, limit._minLimit.getValue(), 1e-9);
     }
 
     @Test
     public void testUserParameter_BooleanParameter() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         UserParameter<Boolean> isExternal = limit._isExternalSet;
 
         // Test boolean specific behavior
@@ -103,7 +103,7 @@ public class ControlBlockParameterTest {
 
     @Test
     public void testReglerLimit_ParameterLinksToArray() {
-        ReglerLimit limit = new ReglerLimit();
+        ControlLimit limit = new ControlLimit();
         // minLimit is at index 0, maxLimit at index 1
         limit._minLimit.setValueWithoutUndo(-5.0);
         limit._maxLimit.setValueWithoutUndo(5.0);
@@ -116,7 +116,7 @@ public class ControlBlockParameterTest {
     @Test
     public void testReglerDivision_NoRegisteredParameters() {
         // Division block is simple - no configurable parameters
-        ReglerDivision div = new ReglerDivision();
+        ControlDivision div = new ControlDivision();
         // It should still work without registered parameters
         assertNotNull("Division block should be creatable", div);
     }

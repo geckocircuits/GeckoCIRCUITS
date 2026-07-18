@@ -13,14 +13,18 @@
  */
 package gecko.core.datacontainer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 // GUI-free imports - using core module classes instead of newscope
 
 public class DataContainerSimple extends AbstractDataContainer implements DataContainerValuesSettable {
+    private static final Logger LOGGER = LogManager.getLogger(DataContainerSimple.class);
+
     protected float[][] _data;
     private static final int MEGA_BYTE = 1048000;
     private static final int DOUBLE_BYTES = 8;
     private static final int FLOAT_BYTES = 8;
-    private AbstractTimeSerie _timeSerieArray;
+    private AbstractTimeSeries _timeSerieArray;
     private String[] _signalNames;
     private int _maximumIndex = -1;
     private final HiLoData[] _abMinMaxValues;
@@ -103,7 +107,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
             HiLoData returnValue = _abMinMaxValues[row];
             return returnValue;
         } catch (ArrayIndexOutOfBoundsException ex) {
-            System.out.println("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.error("ArrayIndexOutOfBoundsException at index: " + row + ", _abMinMaxValues = " + _abMinMaxValues.length, ex);
         }
         return _abMinMaxValues[0];
     }
@@ -181,7 +185,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
         return true;
     }
     @Override
-    public AbstractTimeSerie getTimeSeries(final int row) {
+    public AbstractTimeSeries getTimeSeries(final int row) {
         return _timeSerieArray;
     }
     @Override

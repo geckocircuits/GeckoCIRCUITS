@@ -13,9 +13,11 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.UserParameter;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.MainWindow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.UserParameter;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.MainWindow;
 import gecko.core.allg.GeckoFile;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.SchematicEditor2;
@@ -38,8 +40,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -49,6 +49,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Public fields for nonlinear characteristic data shared during simulation and file I/O")
 public abstract class AbstractNonLinearCircuitComponent extends AbstractTwoPortLKreisBlock
 implements Operationable, Nonlinearable {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractNonLinearCircuitComponent.class);
+
 
     private static final Random RANDOM = new Random();
 
@@ -238,7 +240,7 @@ implements Operationable, Nonlinearable {
                     try {
                         AbstractNonLinearCircuitComponent.this.setNonLinearFile(nonLinFile);
                     } catch (IllegalAccessException ex) {
-                        System.out.println("exception " + ex);
+                        LOGGER.info("exception " + ex);
                         ex.printStackTrace();
                         throw new RuntimeException(ex);
                     }
@@ -519,8 +521,7 @@ implements Operationable, Nonlinearable {
             ArrayList<GeckoFile> newFiles = new ArrayList<GeckoFile>();
             newFiles.add(newFile);
             addFiles(newFiles);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(AbstractNonLinearCircuitComponent.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {LogManager.getLogger(AbstractNonLinearCircuitComponent.class).error("Exception occurred", ex);
         }
     }
 
@@ -535,8 +536,7 @@ implements Operationable, Nonlinearable {
             byte[] returnValue = baos.toByteArray();
             out.close();
             return returnValue;
-        } catch (IOException ex) {
-            Logger.getLogger(AbstractNonLinearCircuitComponent.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {LogManager.getLogger(AbstractNonLinearCircuitComponent.class).error("Exception occurred", ex);
         }
         return new byte[0];
     }

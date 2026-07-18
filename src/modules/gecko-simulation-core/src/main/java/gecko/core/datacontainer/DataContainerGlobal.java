@@ -228,7 +228,7 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
     }
 
     @Override
-    public AbstractTimeSerie getTimeSeries(int row) {
+    public AbstractTimeSeries getTimeSeries(int row) {
         if (_data == null) {
             return null;
         }

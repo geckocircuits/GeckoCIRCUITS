@@ -77,7 +77,7 @@ public class ControlNetlist {
         AbstractControlCalculatable.setTime(time);
         for (AbstractControlCalculatable calc : sortedCalculators) {
             if (calc != null) {
-                calc.berechneYOUT(dt);
+                calc.calculateYOUT(dt);
             }
         }
     }

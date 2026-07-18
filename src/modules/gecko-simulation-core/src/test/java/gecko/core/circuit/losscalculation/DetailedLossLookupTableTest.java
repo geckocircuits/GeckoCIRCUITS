@@ -23,7 +23,7 @@ import java.util.List;
  * Comprehensive tests for DetailedLossLookupTable - 2D interpolation for loss curves.
  *
  * The lookup table performs bilinear interpolation across temperature and current
- * to determine energy losses. It handles both conduction (LeitverlusteMesskurve)
+ * to determine energy losses. It handles both conduction (ConductionLossMeasurementCurve)
  * and switching losses (SwitchingLossCurve) with voltage normalization.
  */
 class DetailedLossLookupTableTest {
@@ -37,14 +37,14 @@ class DetailedLossLookupTableTest {
     @Test
     public void testSingleTemperatureCurve_ExactPoint() {
         // Single curve at 25°C
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20, 30},  // Current [A]
             {0, 2.5, 6.0, 10.5}  // Loss [W]
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -59,14 +59,14 @@ class DetailedLossLookupTableTest {
     @Test
     public void testSingleTemperatureCurve_LinearInterpolation() {
         // Single curve for linear interpolation between points
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20},  // Current [A]
             {0, 10, 30}   // Loss [W]
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -91,21 +91,21 @@ class DetailedLossLookupTableTest {
     @Test
     public void testTwoTemperatureCurves_ExactTemperature() {
         // Two curves at 25°C and 125°C
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {
             {0, 10, 20},  // Current [A]
             {0, 5, 12}    // Loss at 25°C [W]
         };
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {
             {0, 10, 20},  // Current [A]
             {0, 8, 18}    // Loss at 125°C [W]
         };
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 
@@ -125,21 +125,21 @@ class DetailedLossLookupTableTest {
     @Test
     public void testTwoTemperatureCurves_BilinearInterpolation() {
         // Two curves at 25°C and 125°C
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {
             {0, 10, 20},  // Current [A]
             {0, 10, 20}   // Loss at 25°C [W]
         };
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {
             {0, 10, 20},  // Current [A]
             {0, 20, 40}   // Loss at 125°C [W]
         };
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 
@@ -164,21 +164,21 @@ class DetailedLossLookupTableTest {
     @Test
     public void testTwoTemperatureCurves_AsymmetricInterpolation() {
         // Test non-midpoint temperature interpolation
-        LeitverlusteMesskurve curve0 = new LeitverlusteMesskurve(0.0);
+        ConductionLossMeasurementCurve curve0 = new ConductionLossMeasurementCurve(0.0);
         double[][] data0 = {
             {0, 10},  // Current [A]
             {0, 10}   // Loss at 0°C [W]
         };
         curve0.setCurveData(data0);
 
-        LeitverlusteMesskurve curve100 = new LeitverlusteMesskurve(100.0);
+        ConductionLossMeasurementCurve curve100 = new ConductionLossMeasurementCurve(100.0);
         double[][] data100 = {
             {0, 10},  // Current [A]
             {0, 20}   // Loss at 100°C [W]
         };
         curve100.setCurveData(data100);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve0);
         curves.add(curve100);
 
@@ -197,14 +197,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testBoundaryValues_ZeroCurrent() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20},
             {0, 5, 12}
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -214,14 +214,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testBoundaryValues_MaxCurrent() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20, 30},
             {0, 5, 12, 21}
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -231,14 +231,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testBoundaryValues_CurveEndpoints() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(50.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(50.0);
         double[][] data = {
             {5, 15, 25},  // Note: starts at 5A, not 0A
             {2, 8, 16}
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -260,14 +260,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testExtrapolation_BelowMinCurrent() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {5, 10, 15},  // Starts at 5A
             {10, 20, 30}
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -280,14 +280,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testExtrapolation_AboveMaxCurrent() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20},
             {0, 10, 25}
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -301,14 +301,14 @@ class DetailedLossLookupTableTest {
     @Test
     public void testNegativeExtrapolation_ClampedToZero() {
         // Test that negative interpolated values are clamped to zero
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {10, 20},  // Starts at 10A
             {5, 10}    // Positive slope
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -328,14 +328,14 @@ class DetailedLossLookupTableTest {
     @Test
     public void testNegativeCurrent_AllPositiveCurves() {
         // When all currents in curves are positive, negative input current uses absolute value
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20},   // All positive
             {0, 5, 12}
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -348,14 +348,14 @@ class DetailedLossLookupTableTest {
     @Test
     public void testNegativeCurrent_MixedSignCurves() {
         // When curves have negative currents, use as-is (for bidirectional devices)
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {-20, -10, 0, 10, 20},   // Negative and positive
             {12, 5, 0, 5, 12}         // Symmetric loss curve
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -373,14 +373,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testInverseLookup_ExactPoint() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20, 30},  // Current [A]
             {0, 5, 15, 30}    // Loss [W]
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -394,14 +394,14 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testInverseLookup_Interpolation() {
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20},  // Current [A]
             {0, 10, 30}   // Loss [W]
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -415,21 +415,21 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testInverseLookup_TwoTemperatures() {
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {
             {0, 10, 20},  // Current [A]
             {0, 10, 20}   // Loss at 25°C [W]
         };
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {
             {0, 10, 20},  // Current [A]
             {0, 20, 40}   // Loss at 125°C [W]
         };
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 
@@ -451,14 +451,14 @@ class DetailedLossLookupTableTest {
     @Test
     public void testInverseLookup_AllowsNegativeResult() {
         // Unlike getInterpolatedYValue, getInterpolatedXValue allows negative results
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {-20, -10, 0, 10, 20},   // Bidirectional current
             {20, 10, 0, 10, 20}      // Symmetric loss
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -557,20 +557,20 @@ class DetailedLossLookupTableTest {
     }
 
     // ====================================================
-    // LeitverlusteMesskurve Factory Tests
+    // ConductionLossMeasurementCurve Factory Tests
     // ====================================================
 
     @Test
     public void testLeitverlusteFactory_NoNormalization() {
         // Conduction losses are NOT normalized (no voltage division)
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {0, 10, 20},   // Current [A]
             {0, 5.0, 12.0} // Voltage drop [V]
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -586,21 +586,21 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testTemperature_BelowAllCurves() {
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {
             {0, 10},
             {0, 10}
         };
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {
             {0, 10},
             {0, 20}
         };
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 
@@ -613,21 +613,21 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testTemperature_AboveAllCurves() {
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {
             {0, 10},
             {0, 10}
         };
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {
             {0, 10},
             {0, 20}
         };
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 
@@ -642,19 +642,19 @@ class DetailedLossLookupTableTest {
 
     @Test
     public void testTemperature_ThreeCurves() {
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {{0, 10}, {0, 10}};
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve75 = new LeitverlusteMesskurve(75.0);
+        ConductionLossMeasurementCurve curve75 = new ConductionLossMeasurementCurve(75.0);
         double[][] data75 = {{0, 10}, {0, 15}};
         curve75.setCurveData(data75);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {{0, 10}, {0, 20}};
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve75);
         curves.add(curve125);
@@ -679,14 +679,14 @@ class DetailedLossLookupTableTest {
     public void testTwoDataPoints_MinimumForInterpolation() {
         // Single data point would cause ArrayIndexOutOfBoundsException
         // Minimum of two points is needed for interpolation
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {10, 20},   // Two current points (minimum)
             {5, 15}     // Two loss values
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -704,14 +704,14 @@ class DetailedLossLookupTableTest {
         // Test extrapolation below minimum current with SINGLE temperature curve
         // Note: With single temperature curve, early return at line 88 bypasses clamping
         // So negative values ARE returned (this may be a bug, but it's current behavior)
-        LeitverlusteMesskurve curve = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve = new ConductionLossMeasurementCurve(25.0);
         double[][] data = {
             {5, 10},   // Two points starting at 5A
             {2, 5}     // Losses
         };
         curve.setCurveData(data);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve);
 
         DetailedLossLookupTable table = DetailedLossLookupTable.fabric(curves, 1);
@@ -734,15 +734,15 @@ class DetailedLossLookupTableTest {
     @Test
     public void testExtrapolation_BelowMinimumWithTwoCurvesClampsToZero() {
         // Test that with MULTIPLE temperature curves, clamping to zero DOES happen
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {{5, 10}, {2, 5}};
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {{5, 10}, {3, 6}};
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 
@@ -765,21 +765,21 @@ class DetailedLossLookupTableTest {
     @Test
     public void testPhysicalRealism_IGBT_ConductionLoss() {
         // Realistic IGBT conduction loss curve
-        LeitverlusteMesskurve curve25 = new LeitverlusteMesskurve(25.0);
+        ConductionLossMeasurementCurve curve25 = new ConductionLossMeasurementCurve(25.0);
         double[][] data25 = {
             {0, 25, 50, 75, 100, 150},        // Current [A]
             {0, 0.9, 1.1, 1.25, 1.4, 1.65}    // VCE(sat) at 25°C [V]
         };
         curve25.setCurveData(data25);
 
-        LeitverlusteMesskurve curve125 = new LeitverlusteMesskurve(125.0);
+        ConductionLossMeasurementCurve curve125 = new ConductionLossMeasurementCurve(125.0);
         double[][] data125 = {
             {0, 25, 50, 75, 100, 150},        // Current [A]
             {0, 1.1, 1.4, 1.6, 1.8, 2.2}      // VCE(sat) at 125°C [V] (higher)
         };
         curve125.setCurveData(data125);
 
-        List<LeitverlusteMesskurve> curves = new ArrayList<>();
+        List<ConductionLossMeasurementCurve> curves = new ArrayList<>();
         curves.add(curve25);
         curves.add(curve125);
 

@@ -90,7 +90,7 @@ public final class ThermPvChip extends AbstractCircuitBlockInterface implements 
         return false;
     }
 
-    // beim Laden von Datei muessen die SubCircuit-IDstrings geladen und aktualisiert werden -->
+    // When loading a file, the SubCircuit ID strings must be loaded and updated -->
     public void initialisiereSubcircuit() {
         _thFlow.getIDStringDialog().setNameUnChecked(getStringID());
         _parallelRes.getIDStringDialog().setRandomStringID();  // RTH
@@ -169,7 +169,7 @@ public final class ThermPvChip extends AbstractCircuitBlockInterface implements 
             _switchingLosses = ((LossCalculationSplittable) _lossCalculator).getSwitchingLoss();
         }
 
-        _thFlow.parameter[1] = _currentInAmps;  // Verluste repraesentieren Waermestrom [W/m2] in der gesteuerten FLOW-Quelle
+        _thFlow.parameter[1] = _currentInAmps;  // Losses represent heat flow [W/m2] in the controlled FLOW source
     }
 
     @Override

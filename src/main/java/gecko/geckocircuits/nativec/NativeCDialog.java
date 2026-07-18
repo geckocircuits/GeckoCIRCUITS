@@ -14,10 +14,11 @@
 
 package gecko.geckocircuits.nativec;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import gecko.geckocircuits.control.javablock.CodeWindowModern;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -32,8 +33,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -55,6 +54,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog intentionally stores references to external GUI components for interaction")
 public class NativeCDialog extends GeckoDialog {
+    private static final Logger LOGGER = LogManager.getLogger(NativeCDialog.class);
+
     private final DefaultListModel _fileList;
     private final Container _con;
     private final JButton jButtonOK = GuiFabric.getJButton(I18nKeys.OK);
@@ -67,7 +68,7 @@ public class NativeCDialog extends GeckoDialog {
 
     private JFileChooser jFileChooser;
     protected final NativeCDialog _thisObj;
-    private final ReglerNativeC _regNCObj;
+    private final ControlNativeC _regNCObj;
 
     private final NativeCLibraryFile _selectedLibFile;
 
@@ -81,7 +82,7 @@ public class NativeCDialog extends GeckoDialog {
      * @param libFile       Reference to NativeCLibraryFile, used to fill with user inputs
      * @param libFileList   Reference to List of added Native Libraries, used to fill with user inputs
      */
-    public NativeCDialog(ReglerNativeC regObj, Window parent, boolean modal, NativeCLibraryFile libFile, DefaultListModel libFileList) {
+    public NativeCDialog(ControlNativeC regObj, Window parent, boolean modal, NativeCLibraryFile libFile, DefaultListModel libFileList) {
         super(parent, modal);
         _selectedLibFile = libFile;
         _fileList = libFileList;
@@ -138,7 +139,7 @@ public class NativeCDialog extends GeckoDialog {
                         _regNCObj.setNewNameChecked(_selectedLibFile.getFile().getName());
                     }
                     catch (NameAlreadyExistsException exc) {
-                        Logger.getLogger(CodeWindowModern.class.getName()).log(Level.SEVERE, null, exc);
+                        LOGGER.error("Native library name already in use: " + _selectedLibFile.getFile().getName(), exc);
                         JOptionPane.showMessageDialog(null, "Seems like the selected Native Library is already used by another block!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -187,7 +188,7 @@ public class NativeCDialog extends GeckoDialog {
                                         _selectedLibFile.setFile((String) _fileList.get(0));
                                         jListLibFiles.setSelectedIndex(0);
                                     } catch (Exception exc) {
-                                        exc.printStackTrace();
+                                        LOGGER.error("Failed to set selected library file", exc);
                                         JOptionPane.showMessageDialog(null, exc.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }

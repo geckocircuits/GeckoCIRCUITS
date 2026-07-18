@@ -13,17 +13,18 @@
  */
 package gecko.core.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.CircuitFileConstants;
 import gecko.core.datacontainer.HiLoData;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author andreas
  */
 public final class TokenMap {
+    private static final Logger LOGGER = LogManager.getLogger(TokenMap.class);
+
 
     private final Map<String, Integer> _map = new LinkedHashMap<String, Integer>();
     private final Map<String, Deque<BlockInfo>> _duplicateMap = new LinkedHashMap<String, Deque<BlockInfo>>();
@@ -38,9 +39,9 @@ public final class TokenMap {
     public TokenMap(final String[] ascii, final boolean makeSpecialPairs) {
         asciiLines = ascii;
         if (makeSpecialPairs) {
-            _specialTokens.put("verbindungLK", new SpecialPair("<Verbindung>", "<\\Verbindung>"));
-            _specialTokens.put("verbindungCONTROL", new SpecialPair("<Verbindung>", "<\\Verbindung>"));
-            _specialTokens.put("verbindungTHERM", new SpecialPair("<Verbindung>", "<\\Verbindung>"));
+            _specialTokens.put("verbindungLK", new SpecialPair("<Connection>", "<\\Connection>"));
+            _specialTokens.put("verbindungCONTROL", new SpecialPair("<Connection>", "<\\Connection>"));
+            _specialTokens.put("verbindungTHERM", new SpecialPair("<Connection>", "<\\Connection>"));
             _specialTokens.put("e", new SpecialPair("<ElementLK>", "<\\ElementLK>"));
             _specialTokens.put("sp", new SpecialPair("<ElementSPECIAL>", "<\\ElementSPECIAL>"));
             _specialTokens.put("eTH", new SpecialPair("<ElementTHERM>", "<\\ElementTHERM>"));
@@ -66,12 +67,12 @@ public final class TokenMap {
     }
 
     public boolean containsToken(final String token) {
-        return _map.containsKey(token);
+        return getLineNumber(token) != null;
     }
 
     public String getLineString(final String identifier, final String targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             return asciiLines[lineNumber];
 
         } catch (Exception ex) {
@@ -80,9 +81,94 @@ public final class TokenMap {
         }
     }
 
+    private String getLegacyKey(final String identifier) {
+        switch (identifier) {
+            case "_measuredLossesFilename": return "datnamGemesseneVerluste";
+            case "numAxesX": return "anzahlAchsenX";
+            case "numAxesY": return "anzahlAchsenY";
+            case "widthPix": return "breitePix";
+            case "heightPix": return "hoehePix";
+            case "xAxisType": return "xAchseTyp";
+            case "yAxisType": return "yAchseTyp";
+            case "colorAxesX": return "farbeAchsenX";
+            case "colorAxesY": return "farbeAchsenY";
+            case "lineStyleAxesX": return "linienStilAchsenX";
+            case "lineStyleAxesY": return "linienStilAchsenY";
+            case "axisXmin": return "achseXmin";
+            case "axisXmax": return "achseXmax";
+            case "axisYmin": return "achseYmin";
+            case "axisYmax": return "achseYmax";
+            case "autoAxisXmin": return "autoAchseXmin";
+            case "autoAxisXmax": return "autoAchseXmax";
+            case "autoAxisYmin": return "autoAchseYmin";
+            case "autoAxisYmax": return "autoAchseYmax";
+            case "xAxisLabel": return "xAchseBeschriftung";
+            case "yAxisLabel": return "yAchseBeschriftung";
+            case "colorGridNormalX": return "farbeGridNormalX";
+            case "colorGridNormalY": return "farbeGridNormalY";
+            case "colorGridNormalXminor": return "farbeGridNormalXminor";
+            case "colorGridNormalYminor": return "farbeGridNormalYminor";
+            case "lineStyleGridNormalX": return "linStilGridNormalX";
+            case "lineStyleGridNormalY": return "linStilGridNormalY";
+            case "lineStyleGridNormalXminor": return "linStilGridNormalXminor";
+            case "lineStyleGridNormalYminor": return "linStilGridNormalYminor";
+            case "gridNormalX_associatedXAxis": return "gridNormalX_zugeordneteXAchse";
+            case "gridNormalX_associatedYAxis": return "gridNormalX_zugeordneteYAchse";
+            case "gridNormalY_associatedXAxis": return "gridNormalY_zugeordneteXAchse";
+            case "gridNormalY_associatedYAxis": return "gridNormalY_zugeordneteYAchse";
+            case "xNumTicksMinor": return "xAnzTicksMinor";
+            case "yNumTicksMinor": return "yAnzTicksMinor";
+            case "xTickLength": return "xTickLaenge";
+            case "yTickLength": return "yTickLaenge";
+            case "xTickLengthMinor": return "xTickLaengeMinor";
+            case "yTickLengthMinor": return "yTickLaengeMinor";
+            case "showXTicksBottom": return "zeigeXticksUnten";
+            case "showYTicksLeft": return "zeigeYticksLinks";
+            case "showLabelsXmaj": return "zeigeLabelsXmaj";
+            case "showLabelsXmin": return "zeigeLabelsXmin";
+            case "showLabelsYmaj": return "zeigeLabelsYmaj";
+            case "showLabelsYmin": return "zeigeLabelsYmin";
+            case "valueTickX": return "wertTickX";
+            case "valueTickY": return "wertTickY";
+            case "valueTickXminor": return "wertTickXminor";
+            case "valueTickYminor": return "wertTickYminor";
+            case "worksheetData": return "worksheetDaten";
+            case "indexCurveAssociatedXAxis": return "indexZurKurveGehoerigeXachse";
+            case "indexCurveAssociatedYAxis": return "indexZurKurveGehoerigeYachse";
+            case "numCurves": return "anzahlKurven";
+            case "curve_index_worksheetColumns_XY": return "kurve_index_worksheetKolonnen_XY";
+            case "showCurvePointSymbol": return "kurvenPunktSymbolAnzeigen";
+            case "curveClipping_xmin": return "kurveClippling_xmin";
+            case "curveClipping_xmax": return "kurveClippling_xmax";
+            case "curveClipping_ymin": return "kurveClippling_ymin";
+            case "curveClipping_ymax": return "kurveClippling_ymax";
+            case "mouseMode": return "mausModus";
+            case "xSliderActive": return "xSchieberAktiv";
+            case "xSliderPixels": return "xSchieberPix";
+            case "xSliderValue": return "xSchieberWert";
+            default: return null;
+        }
+    }
+
     public Integer getLineNumber(final String identifier) {
         try {
-            return _map.get(identifier);
+            Integer lineNum = _map.get(identifier);
+            if (lineNum == null) {
+                String baseId = identifier;
+                String suffix = "";
+                if (identifier.endsWith("[][]")) {
+                    baseId = identifier.substring(0, identifier.length() - 4);
+                    suffix = "[][]";
+                } else if (identifier.endsWith("[]")) {
+                    baseId = identifier.substring(0, identifier.length() - 2);
+                    suffix = "[]";
+                }
+                String legacyBase = getLegacyKey(baseId);
+                if (legacyBase != null) {
+                    lineNum = _map.get(legacyBase + suffix);
+                }
+            }
+            return lineNum;
         } catch (Exception ex) {
             logErrorString(identifier, ex);
             return null;
@@ -120,8 +206,11 @@ public final class TokenMap {
 //                        System.err.println("reading: xxx " + ascii[readLineNumber + 1]);
 //                        System.err.println("reading: " + ascii[readLineNumber + 2]);
 
-                        if (ascii[readLineNumber + 1].equals(pair._startToken)) {
-                            final String endToken = pair._stopToken;
+                        final String nextLine = ascii[readLineNumber + 1];
+                        if (nextLine.equals(pair._startToken)
+                                || (pair._startToken.equals("<Connection>") && nextLine.equals("<Verbindung>"))
+                                || (pair._startToken.equals("<Verbindung>") && nextLine.equals("<Connection>"))) {
+                            final String endToken = nextLine.equals("<Verbindung>") ? "<\\Verbindung>" : pair._stopToken;
                             int j = readLineNumber;
                             for (; j < ascii.length && (ascii[j].isEmpty()
                                     || ascii[j].charAt(0) != '<'
@@ -163,8 +252,7 @@ public final class TokenMap {
                         }
                     }
                     } catch (Exception ex) {
-                        System.err.println("line token: " + lineToken);
-                        ex.printStackTrace();
+                        LOGGER.error("Failed to parse line token: " + lineToken, ex);
                     }
                 }
                 //System.out.println(lineToken);
@@ -288,7 +376,7 @@ public final class TokenMap {
 
     public long readDataLine(final String identifier, final long targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
@@ -301,7 +389,7 @@ public final class TokenMap {
 
     public String readDataLine(final String identifier, final String targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
@@ -320,7 +408,7 @@ public final class TokenMap {
 
     public boolean readDataLine(final String identifier, final boolean targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
@@ -333,7 +421,7 @@ public final class TokenMap {
 
     public double readDataLine(final String identifier, final double targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
@@ -346,7 +434,7 @@ public final class TokenMap {
 
     public HiLoData readDataLine(final String identifier, final HiLoData targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
@@ -361,7 +449,7 @@ public final class TokenMap {
 
     public String[] readDataLine(final String identifier, final String[] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final String asciiDaten = ascii.substring(ascii.indexOf(' '));
             final StringTokenizer stk = new StringTokenizer(asciiDaten, CircuitFileConstants.SEPARATOR_ASCII_STRINGARRAY);
@@ -382,7 +470,7 @@ public final class TokenMap {
 
     public List<String> readDataLineStringArray(final String identifier) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, CircuitFileConstants.SEPARATOR_ASCII_STRINGARRAY);
             stk.nextToken();  // erster Wert wird uebersprungen
@@ -406,7 +494,7 @@ public final class TokenMap {
 
     public boolean[][] readDataLine(final String identifier, final boolean[][] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen
@@ -427,7 +515,7 @@ public final class TokenMap {
 
     public int[][] readDataLine(final String identifier, final int[][] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -449,7 +537,7 @@ public final class TokenMap {
 
     public double[][] readDataLine(final String identifier, final double[][] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -471,7 +559,7 @@ public final class TokenMap {
 
     public boolean[] readDataLine(final String identifier, final boolean[] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -500,7 +588,7 @@ public final class TokenMap {
      */
     public String leseASCIITextBlock(final String identifier, final String targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -523,7 +611,7 @@ public final class TokenMap {
 
     public double[] readDataLine(final String identifier, final double[] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -546,7 +634,7 @@ public final class TokenMap {
 
     public List<Double> readDataLineDoubleArray(final String identifier) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -570,7 +658,7 @@ public final class TokenMap {
 
     public int[] readDataLine(final String identifier, final int[] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -592,7 +680,7 @@ public final class TokenMap {
 
     public long[] readDataLine(final String identifier, final long[] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -616,7 +704,7 @@ public final class TokenMap {
 
     public byte[] readDataLine(final String identifier, final byte[] targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -638,7 +726,7 @@ public final class TokenMap {
 
     public int readDataLine(final String identifier, final int targetObject) {
         try {
-            final Integer lineNumber = _map.get(identifier);
+            final Integer lineNumber = getLineNumber(identifier);
             final String ascii = asciiLines[lineNumber];
 
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
@@ -652,9 +740,7 @@ public final class TokenMap {
 
     private static void logErrorString(final String identifier, final Exception exception) {
         final String messageString = "Could not read data line with identifier " + identifier;
-        Logger.getLogger(TokenMap.class.getName()).log(Level.WARNING,
-                messageString);
-        exception.printStackTrace();
+        LOGGER.warn(messageString, exception);
     }
 
     public String[] findSubBlock(String startIdentifier, String stopIdentifier) {

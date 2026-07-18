@@ -57,8 +57,6 @@ public class NativeCTest {
                 + "src" + File.separator
                 + "test" + File.separator
                 + "java" + File.separator
-                + "ch" + File.separator
-                + "technokrat" + File.separator
                 + "gecko" + File.separator
                 + "geckocircuits" + File.separator
                 + "nativec" + File.separator

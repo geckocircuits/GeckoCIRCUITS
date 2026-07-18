@@ -25,7 +25,7 @@
  * 
  * <h2>Excluded (remain in desktop)</h2>
  * <ul>
- *   <li>{@code DEMUXCalculator} - Depends on ReglerDemux GUI class</li>
+ *   <li>{@code DEMUXCalculator} - Depends on ControlDemux GUI class</li>
  *   <li>{@code SpaceVectorCalculator} - Depends on SpaceVectorDisplay GUI</li>
  * </ul>
  * 

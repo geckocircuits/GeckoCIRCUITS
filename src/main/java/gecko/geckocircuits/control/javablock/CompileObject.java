@@ -14,10 +14,12 @@
 //CHECKSTYLE:OFF // automatic import formatting introduces some checkstyle errors...
 package gecko.geckocircuits.control.javablock;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoRuntimeException;
 import gecko.core.allg.GeckoFile;
-import gecko.geckocircuits.allg.GetJarPath;
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import gecko.geckocircuits.general.GetJarPath;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,8 +27,6 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.util.Map.Entry;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.*;
@@ -40,6 +40,8 @@ import javax.tools.*;
  * @author andreas
  */
 public final class CompileObject extends AbstractCompileObject {
+    private static final Logger LOGGER = LogManager.getLogger(CompileObject.class);
+
 
     private final String _compilerMessage;
     private final String _className;
@@ -106,14 +108,14 @@ public final class CompileObject extends AbstractCompileObject {
                 _compilerWriter.append("Compile status: ERROR");
             }
         } catch (IllegalArgumentException | SecurityException ex) {
-            Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Exception during compilation task setup", ex);
         } finally {
             // Close the file manager
             if (fileManagerHolder[0] != null) {
                 try {
                     fileManagerHolder[0].close();
                 } catch (IOException ex) {
-                    Logger.getLogger(CompileObject.class.getName()).log(Level.SEVERE, "Failed to close file manager", ex);
+                    LOGGER.error("Failed to close file manager", ex);
                 }
             }
         }
@@ -167,22 +169,22 @@ public final class CompileObject extends AbstractCompileObject {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
         if (compiler != null) {
-            Logger.getLogger(CompileObject.class.getName()).log(Level.INFO, "Java Compiler found: " + compiler.getClass().getName());
+            LOGGER.info("Java Compiler found: " + compiler.getClass().getName());
         } else {
-            Logger.getLogger(CompileObject.class.getName()).log(Level.SEVERE, "Java Compiler not found via ToolProvider, trying fallback...");
+            LOGGER.error("Java Compiler not found via ToolProvider, trying fallback...");
 
             // this fixes the java 1.7 compilation problem
             try {
                 try {
                     compiler = (JavaCompiler) Class.forName("com.sun.tools.javac.api.JavacTool").newInstance();
-                    Logger.getLogger(CompileObject.class.getName()).log(Level.INFO, "Java Compiler found via fallback: " + compiler.getClass().getName());
+                    LOGGER.info("Java Compiler found via fallback: " + compiler.getClass().getName());
                 } catch (InstantiationException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "InstantiationException in fallback compiler", ex);
+                    LOGGER.error("InstantiationException in fallback compiler", ex);
                 } catch (IllegalAccessException ex) {
-                    Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "IllegalAccessException in fallback compiler", ex);
+                    LOGGER.error("IllegalAccessException in fallback compiler", ex);
                 }
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(ReglerJavaFunction.class.getName()).log(Level.SEVERE, "ClassNotFoundException in fallback compiler", ex);
+                LOGGER.error("ClassNotFoundException in fallback compiler", ex);
             }
 
             if (compiler == null) {

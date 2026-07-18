@@ -33,30 +33,30 @@ public class RegelBlockBasicsTest {
         }
     }
 
-    // ========== ReglerConstant Tests ==========
+    // ========== ControlConstant Tests ==========
 
     @Test
     public void testConstantBlockCreation() {
-        ReglerConstant block = new ReglerConstant();
+        ControlConstant block = new ControlConstant();
         assertNotNull("Block should be created", block);
     }
 
     @Test
     public void testConstantBlockDefaultValue() {
-        ReglerConstant block = new ReglerConstant();
+        ControlConstant block = new ControlConstant();
         assertEquals("Default constant value should be 1.0", 1.0, block._constValue.getValue(), 1e-10);
     }
 
     @Test
     public void testConstantBlockSetValue() {
-        ReglerConstant block = new ReglerConstant();
+        ControlConstant block = new ControlConstant();
         block._constValue.setValueWithoutUndo(5.0);
         assertEquals("Constant value should be set", 5.0, block._constValue.getValue(), 1e-10);
     }
 
     @Test
     public void testConstantBlockCalculator() {
-        ReglerConstant block = new ReglerConstant();
+        ControlConstant block = new ControlConstant();
         block._constValue.setValueWithoutUndo(3.14);
         AbstractControlCalculatable calc = block.getInternalControlCalculatableForSimulationStart();
         initializeInputs(calc);
@@ -91,7 +91,7 @@ public class RegelBlockBasicsTest {
 
     @Test
     public void testConstantBlockOutputNames() {
-        ReglerConstant block = new ReglerConstant();
+        ControlConstant block = new ControlConstant();
         String[] outputs = block.getOutputNames();
         assertNotNull("Output names should not be null", outputs);
         assertEquals("Should have one output", 1, outputs.length);
@@ -100,15 +100,15 @@ public class RegelBlockBasicsTest {
 
     @Test
     public void testConstantBlockOutputDescription() {
-        ReglerConstant block = new ReglerConstant();
+        ControlConstant block = new ControlConstant();
         assertNotNull("Output description should not be null", block.getOutputDescription());
         assertEquals("Should have one description", 1, block.getOutputDescription().length);
     }
 
     @Test
     public void testConstantBlockTypeInfo() {
-        assertNotNull("Type info should exist", ReglerConstant.tinfo);
-        assertEquals("ID string should be CONST", "CONST", ReglerConstant.tinfo._fixedIDString);
+        assertNotNull("Type info should exist", ControlConstant.tinfo);
+        assertEquals("ID string should be CONST", "CONST", ControlConstant.tinfo._fixedIDString);
     }
 
     // ========== Large Value Tests ==========

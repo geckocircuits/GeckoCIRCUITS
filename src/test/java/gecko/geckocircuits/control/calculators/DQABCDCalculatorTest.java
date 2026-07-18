@@ -49,8 +49,8 @@ public class DQABCDCalculatorTest {
                 dqABC._inputSignal[j][0] = random.nextDouble();
             }
 
-            dqABC.berechneYOUT(1e-8);
-            ABCdq.berechneYOUT(1e-8);
+            dqABC.calculateYOUT(1e-8);
+            ABCdq.calculateYOUT(1e-8);
             // compare the output with input. should be identical, since
             // the functions are inverse to each other!
             for (int j = 0; j < 2; j++) {

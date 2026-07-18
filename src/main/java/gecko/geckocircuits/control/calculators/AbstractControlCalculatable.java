@@ -18,7 +18,7 @@ package gecko.geckocircuits.control.calculators;
  *
  * @author andreas
  */
-@SuppressWarnings({"PMD.ArrayIsStoredDirectly", "PMD.PublicAttribute", "PMD.StaticNonFinal"}) // Public fields required by simulator architecture
+@SuppressWarnings({"this-escape", "PMD.ArrayIsStoredDirectly", "PMD.PublicAttribute", "PMD.StaticNonFinal"}) // Public fields required by simulator architecture
 @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "PA_PUBLIC_ARRAY_ATTRIBUTE"},
         justification = "_time is intentionally mutable - tracks current simulation time; public fields for signal array access required for performance")
 public abstract class AbstractControlCalculatable {
@@ -38,7 +38,7 @@ public abstract class AbstractControlCalculatable {
         _outputSignal = createOutputSignal(noOutputs);
     }
 
-    public abstract void berechneYOUT(final double deltaT);
+    public abstract void calculateYOUT(final double deltaT);
 
     public void setInputSignal(final int inputIndex, final AbstractControlCalculatable output,
             final int outputIndex) throws Exception {

@@ -26,14 +26,14 @@ public class TanCalculatorTest extends AbstractSimpleMathFunctionTest {
 
     @Override
     @Test
-    public void testBerechneYOUTResult0() {
+    public void testCalculateYOUTResult0() {
         double val = getValue(0);
         assertWithTol(0, val);
     }
 
     @Override
     @Test
-    public void testBerechneYOUTValue() {
+    public void testCalculateYOUTValue() {
         double val = getValue(-Math.PI/3);
         assertWithTol(-Math.sqrt(3), val);
     }

@@ -31,7 +31,7 @@ public class PmsmControlCalculator extends AbstractControlCalculatable {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         final double ia = _inputSignal[0][0];
         final double ib = _inputSignal[1][0];
         final double w = _inputSignal[2][0];

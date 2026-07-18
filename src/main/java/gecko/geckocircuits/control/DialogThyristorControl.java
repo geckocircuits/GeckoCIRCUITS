@@ -22,16 +22,16 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores thyristor control reference for parameter configuration")
 public class DialogThyristorControl extends javax.swing.JFrame {
 
-    ReglerThyristorControl _thyrControl;
+    ControlThyristorControl _thyrControl;
 
     /** Creates new form DialogThyristorControl */
-    public DialogThyristorControl(ReglerThyristorControl reglerThyrControl) {
+    public DialogThyristorControl(ControlThyristorControl controlThyrControl) {
         initComponents();
 
-        _thyrControl = reglerThyrControl;
-        jSpinnerInitFreq.setValue((Double) reglerThyrControl._initFreq.getValue());
-        jSpinnerPhaseShift.setValue((Double) reglerThyrControl._phaseShift.getValue());
-        jSpinnerGateOn.setValue((Double) reglerThyrControl._onTime.getValue() * 1000.0);
+        _thyrControl = controlThyrControl;
+        jSpinnerInitFreq.setValue((Double) controlThyrControl._initFreq.getValue());
+        jSpinnerPhaseShift.setValue((Double) controlThyrControl._phaseShift.getValue());
+        jSpinnerGateOn.setValue((Double) controlThyrControl._onTime.getValue() * 1000.0);
     }
 
     /** This method is called from within the constructor to

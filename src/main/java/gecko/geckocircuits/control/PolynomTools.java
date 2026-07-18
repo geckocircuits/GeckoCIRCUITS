@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.control;
 
-import gecko.geckocircuits.allg.TechFormat;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.math.NComplex;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,8 @@ import javax.swing.DefaultListModel;
  * @author andy
  */
 public final class PolynomTools {
+    private static final Logger LOGGER = LogManager.getLogger(PolynomTools.class);
+
 
     public static final int MAX_ARRAY_SIZE = 20;
     private static final String HTML_TAG = "<html>";
@@ -50,7 +54,7 @@ public final class PolynomTools {
 
     public static void main(String[] args) {
         List<Double> testPoly = Arrays.asList(-2.0, -2.0);
-        System.out.println(getPolynomString(testPoly));
+        LOGGER.info(getPolynomString(testPoly));
     }
 
 
@@ -278,10 +282,9 @@ public final class PolynomTools {
 
 //    public static void main(String[] args) {
 //        double [] num = new double[]{ 1, 1};
-//        double [] den = new double[]{ 1, 2, 1};
+//    public static void main(String[] args) {
 //        double[] lead = new double[0];
-//        double[] remainder = polynomialDivision(num, den, lead);
-//
+//    public static void main(String[] args) {
 //        System.out.println(PolynomTools.getPolynomString(remainder));
 //    }
     /**

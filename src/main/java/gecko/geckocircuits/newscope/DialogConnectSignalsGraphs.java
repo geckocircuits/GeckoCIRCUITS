@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.FormatJTextField;
+import gecko.geckocircuits.general.FormatJTextField;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -25,14 +25,17 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings("serial")
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores grafer reference for signal-graph connection configuration")
 public final class DialogConnectSignalsGraphs extends GeckoDialog {
+
+    private static final long serialVersionUID = 1L;
 
     private final GraferV4 _grafer;
     private final Container _container;
     private FormatJTextField[][] jbM;
     private JButton[] jlGRF;  // draufklicken --> Fenster zum Graph-Editieren
-    private JCheckBox[] _jCheckBoxSignals;  // ist Graph 'Digital'?
+    private JCheckBox[] _jCheckBoxSignals;  // is graph 'digital'?
     private FormatJTextField[] jtfWEIG;  // relative Graphen-Gewichtung (y-Achse) mi SCOPE
     private JButton _jButtonClose;
     private JButton _jButtonAdd;
@@ -63,13 +66,13 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
         _container = this.getContentPane();
         _container.setLayout(new BorderLayout());
         //--------------------
-        this.baueGUI();
+        this.buildGUI();
         this.pack();
         this.setMinimumSize(new Dimension(this.getWidth(), this.getHeight()));
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    private void baueGUI() {
+    private void buildGUI() {
         _jButtonClose = new JButton(I18nKeys.CLOSE_WINDOW.getTranslation());
         _origBackColor = _jButtonClose.getBackground();
         _jButtonAdd = new JButton(I18nKeys.ADD_GRAPH.getTranslation());
@@ -217,14 +220,14 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 _grafer.getManager().addDiagram(diag);
 
                 _grafer.refreshComponentPane();
-                baueGUI();
+                buildGUI();
                 jtfWEIG[jtfWEIG.length - 1].setNumberToField(110.0 / jtfWEIG.length);
                 modifiedWeightIndex = jtfWEIG.length - 1;
                 setMinimumSize(new Dimension(getWidth(), getHeight()));
-                // die x-Achse wird nur beim untesten Diagramm angezeigt --> Aktualisierung
+                // the x-axis is only displayed on the bottom diagram --> update
                 updateXAxisVisibilityAfterAdd(diag);
                 // Graph-Gewichtung des neuen Graphen muss angepasst werden:
-                aktualisiereGrafer();
+                updateGrafer();
             }
         });
         _jButtonDelete.addActionListener(new ActionListener() {
@@ -251,19 +254,19 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 _manager.deleteDiagram(_selectedDiagram);
                 setSelectedDiagram(_manager.getDiagram(Math.max(0, deleteIndex - 1)));
                 //setResizable(true);
-                baueGUI();
+                buildGUI();
                 setMinimumSize(new Dimension(getWidth(), getHeight()));
-                // die x-Achse wird nur beim untesten Diagramm angezeigt --> Aktualisierung
+                //setResizable(true);
 
-                // Graph-Gewichtung der verringerten Graphen muss angepasst werden:
-                aktualisiereGrafer();
+                //setResizable(true);
+                updateGrafer();
             }
         });
 
         _jButtonClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
-                aktualisiereGrafer();
+                updateGrafer();
                 dispose();
             }
         });
@@ -283,7 +286,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 }
 
                 _grafer.getManager().swapDiagrams(_selectedDiagram, _manager.getDiagram(oldIndex - 1));
-                baueGUI();
+                buildGUI();
             }
         });
 
@@ -304,13 +307,13 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                     oldLastDiagram._xAxis.setAxisInvisible();
                 }
 
-                baueGUI();
+                buildGUI();
             }
         });
 
     }
 
-    private void aktualisiereGrafer() {
+    private void updateGrafer() {
         recalculateWeights();
         _grafer.refreshComponentPane();
         _grafer.setAxisPositions();
@@ -328,7 +331,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 if (!(diagram instanceof DiagramSignal)) {
                     final Dialog dialog = new DialogDiagramProps(DialogConnectSignalsGraphs.this, true, diagram, _grafer);
                     dialog.setVisible(true);
-                    baueGUI();
+                    buildGUI();
                 }
                 setSelectedDiagram(diagram);
             }
@@ -352,7 +355,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
         _gbc.gridy = rowIndex + 1;
         jpMatrix.add(jbM[rowIndex][columnIndex], _gbc);  // MATRIX: x/y/y2/sg - Knoepfe als zentrales Element
         jbM[rowIndex][columnIndex].setLineSettable(curve);
-        jbM[rowIndex][columnIndex].addMouseListener(new MouseAdapter() {  // x-Achse (Zeit) nicht anklick- und veraenderbar
+        jbM[rowIndex][columnIndex].addMouseListener(new MouseAdapter() {  // x-axis (time) cannot be clicked or changed
             @Override
             public void mousePressed(final MouseEvent mouseEvent) {
                 final List<AbstractDiagram> diagrams = _manager.getDiagrams();
@@ -370,7 +373,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                     _grafer.setAxisPositions();
                     return;
                 }
-                // linke Maus --> Dialogfenster
+                // right mouse --> 'Flipping' the ASSIGNMENT without dialog window input
 
 
                 final Dialog dialog = new DialogCurveProperties(DialogConnectSignalsGraphs.this, true, curve, _grafer);
@@ -398,7 +401,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
             @Override
             public void actionPerformed(final ActionEvent actionEvent) {
                 DialogConnectSignalsGraphs.this.modifiedWeightIndex = rowIndex;
-                aktualisiereGrafer();
+                updateGrafer();
                 setSelectedDiagram(_manager.getDiagram(rowIndex));
             }
         });
@@ -443,7 +446,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 }
 
                 _grafer.doZoomAutoFit();
-                aktualisiereGrafer();
+                updateGrafer();
                 setSelectedDiagram(_manager.getDiagram(rowIndex));
             }
         });
@@ -452,11 +455,11 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
         _gbc.gridy = rowIndex + 1;
         _gbc.fill = GridBagConstraints.NONE;
         jpMatrix.add(_jCheckBoxSignals[rowIndex], _gbc);  // MATRIX: Check-Boxen Digital JA/NEIN ?
-        _gbc.fill = GridBagConstraints.BOTH;  // fuer alle anderen Elemente
+        _gbc.fill = GridBagConstraints.BOTH;  // for all other elements
     }
 
     private void recalculateWeights() {
-        int totalYSpace = 0;  // // fuer Normierung auf 100% insgesamt
+        int totalYSpace = 0;  // // for normalization to 100% overall
         int spaceWOSelection = 100;
         for (int i1 = 0; i1 < jtfWEIG.length; i1++) {
 
@@ -488,7 +491,7 @@ public final class DialogConnectSignalsGraphs extends GeckoDialog {
                 _yWeightDiagram[i1] = jtfWEIG[i1].getNumberFromField() / 100.0;
             }
             if (totalYSpace == 0) {
-                totalYSpace = 1;  // ist dann relevant, wenn nur DIGITAL-Signale
+                totalYSpace = 1;  // is relevant if only DIGITAL signals
             }
 
             _manager.getDiagram(i1)._diagramSettings.setWeightDiagram(_yWeightDiagram[i1]);

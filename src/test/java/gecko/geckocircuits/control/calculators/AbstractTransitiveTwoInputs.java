@@ -29,7 +29,7 @@ public abstract class AbstractTransitiveTwoInputs extends AbstractTwoInputsMathF
         double swapTmp = _controlCalculatableTwoInputs._inputSignal[1][0];
         _controlCalculatableTwoInputs._inputSignal[1][0] = _controlCalculatableTwoInputs._inputSignal[0][0];
         _controlCalculatableTwoInputs._inputSignal[0][0] = swapTmp;
-        _controlCalculatableTwoInputs.berechneYOUT(TEST_DT);
+        _controlCalculatableTwoInputs.calculateYOUT(TEST_DT);
         assertTrue(oldResult == _controlCalculatableTwoInputs._outputSignal[0][0]);
     }
 }

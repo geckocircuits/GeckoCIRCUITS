@@ -13,18 +13,19 @@
  */
 package gecko;
 
-import gecko.geckocircuits.allg.OperatingMode;
-import gecko.geckocircuits.allg.StartupWindow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.OperatingMode;
+import gecko.geckocircuits.general.StartupWindow;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.SchematicEditor2;
-import gecko.geckocircuits.control.ReglerFromEXTERNAL;
-import gecko.geckocircuits.control.ReglerOSZI;
-import gecko.geckocircuits.control.ReglerToEXTERNAL;
+import gecko.geckocircuits.control.ControlFromEXTERNAL;
+import gecko.geckocircuits.control.ControlOSZI;
+import gecko.geckocircuits.control.ControlToEXTERNAL;
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class GeckoSimulink {
+    private static final Logger LOGGER = LogManager.getLogger(GeckoSimulink.class);
+
 
     private long tStartSimulink, tEndSimulink;
     private boolean isRunning = false;
@@ -44,14 +45,14 @@ public class GeckoSimulink {
         try {
             GeckoSim._win.openFile(sFileName);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(GeckoSimulink.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Failed to open Simulink coupling file: " + sFileName, ex);
         }
         return "returnValue";
     }
 
     public GeckoSimulink(String filePath) {
-        ReglerFromEXTERNAL.clearFromExternals();
-        ReglerToEXTERNAL.clearToExternals();
+        ControlFromEXTERNAL.clearFromExternals();
+        ControlToEXTERNAL.clearToExternals();
         if(!setSimulinkOperatingMode()) {
             GeckoSim.main(new String[]{filePath});
         }
@@ -69,15 +70,15 @@ public class GeckoSimulink {
         }
         isRunning = true;
         if (GeckoSim._win == null) {
-            System.out.println("initializing GeckoCIRCUITS");
+            LOGGER.info("initializing GeckoCIRCUITS");
             return -1;
         }
         GeckoSim._win._simRunner.external_init(tend);
         tStartSimulink = System.currentTimeMillis();
 
         for (AbstractBlockInterface block : SchematicEditor2.Singleton.getElementCONTROL()) {
-                if (block instanceof ReglerOSZI) {
-                    ((ReglerOSZI) block).setSimulationTimeBoundaries(0, tend);
+                if (block instanceof ControlOSZI) {
+                    ((ControlOSZI) block).setSimulationTimeBoundaries(0, tend);
                 }
             }
 
@@ -100,8 +101,8 @@ public class GeckoSimulink {
     }
 
     public int external_getTerminalNumber_TO_EXTERNAL(int portNo) {
-        if(portNo < ReglerToEXTERNAL.toExternals.size()) {
-            return ((ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(portNo)).XIN.size();
+        if(portNo < ControlToEXTERNAL.toExternals.size()) {
+            return ((ControlToEXTERNAL) ControlToEXTERNAL.toExternals.get(portNo)).XIN.size();
         } else {
             return 0;
         }
@@ -109,22 +110,22 @@ public class GeckoSimulink {
     }
 
     public static void external_setInputPortName(int index, String name) {
-        if(index < ReglerFromEXTERNAL.fromExternals.size()) {
-            ReglerFromEXTERNAL fromExt = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(index);
+        if(index < ControlFromEXTERNAL.fromExternals.size()) {
+            ControlFromEXTERNAL fromExt = (ControlFromEXTERNAL) ControlFromEXTERNAL.fromExternals.get(index);
             fromExt.setExternalName(name);
         }
     }
 
     public static void external_setOutputPortName(int index, String name) {
-        if(index < ReglerToEXTERNAL.toExternals.size()) {
-            ReglerToEXTERNAL fromExt = (ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(index);
+        if(index < ControlToEXTERNAL.toExternals.size()) {
+            ControlToEXTERNAL fromExt = (ControlToEXTERNAL) ControlToEXTERNAL.toExternals.get(index);
             fromExt.setExternalName(name);
         }
     }
 
     public int external_getTerminalNumber_FROM_EXTERNAL(int portNo) {
-        if(portNo < ReglerFromEXTERNAL.fromExternals.size()) {
-            return ((ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(portNo)).getTerminalNumber();
+        if(portNo < ControlFromEXTERNAL.fromExternals.size()) {
+            return ((ControlFromEXTERNAL) ControlFromEXTERNAL.fromExternals.get(portNo)).getTerminalNumber();
         } else {
             return 0;
         }
@@ -135,26 +136,26 @@ public class GeckoSimulink {
     }
 
     public int getNumOutputPorts() {
-        return ReglerToEXTERNAL.toExternals.size();
+        return ControlToEXTERNAL.toExternals.size();
     }
 
     public int getNumInputPorts() {
-        return ReglerFromEXTERNAL.fromExternals.size();
+        return ControlFromEXTERNAL.fromExternals.size();
     }
 
     static double[] tmpRemove = new double[10];
 
     public double[] external_getValues(int portNumber) {
-        return ((ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(portNumber)).dataVector;
+        return ((ControlToEXTERNAL) ControlToEXTERNAL.toExternals.get(portNumber)).dataVector;
     }
 
     public void external_setScalarInputValue(double value, int portNo) {
-        ReglerFromEXTERNAL reg = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(portNo);
+        ControlFromEXTERNAL reg = (ControlFromEXTERNAL) ControlFromEXTERNAL.fromExternals.get(portNo);
         reg.dataVector[0] = value;
     }
 
     public void external_setVectorInputValue(double value, int portNo, int index) {
-        ReglerFromEXTERNAL reg = (ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(portNo);
+        ControlFromEXTERNAL reg = (ControlFromEXTERNAL) ControlFromEXTERNAL.fromExternals.get(portNo);
         double[] par = reg.dataVector;
         par[index] = value;
     }

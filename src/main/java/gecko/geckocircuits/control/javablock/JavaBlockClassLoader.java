@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.control.javablock;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +30,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "ClassLoader stores class map reference for dynamic class loading")
 public final class JavaBlockClassLoader extends URLClassLoader {
+    private static final Logger LOGGER = LogManager.getLogger(JavaBlockClassLoader.class);
+
 
     private final Map<String, CompiledClassContainer> _classMap;
 
@@ -60,7 +64,7 @@ public final class JavaBlockClassLoader extends URLClassLoader {
                 final File file = new File(tmpfile.getAbsolutePath());
                 final String path = file.getAbsolutePath();
                 final URL url = new URL("file://" + path + "/");
-                System.out.print(url);
+                LOGGER.info(url);
 
                 return Class.forName(name, true, createUrlClassLoader(url));
             } catch (MalformedURLException | ClassNotFoundException ex) {

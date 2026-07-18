@@ -14,6 +14,8 @@
 
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.calculator.AStampable;
 import gecko.core.circuit.calculator.BStampable;
 import gecko.core.circuit.calculator.DirectCurrentCalculatable;
@@ -21,7 +23,7 @@ import gecko.core.circuit.calculator.HistoryUpdatable;
 import gecko.core.circuit.calculator.PostProcessable;
 import gecko.core.circuit.calculator.BVector;
 
-import gecko.geckocircuits.allg.SolverType;
+import gecko.geckocircuits.general.SolverType;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -29,6 +31,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Static capError flag for error coordination; public fields for simulation; stores BVector reference")
 public final class CapacitorCalculator extends CircuitComponent implements AStampable, BStampable,
          DirectCurrentCalculatable, CurrentCalculatable, HistoryUpdatable {
+    private static final Logger LOGGER = LogManager.getLogger(CapacitorCalculator.class);
+
 
     //private final LKreisC _lkCap;
     public static final boolean initCapacitor = false;
@@ -126,7 +130,6 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     public void calculateCurrent(final double[] p, final double dt, final double t) {
 
 //        _updateMatrixFlag = false;
-//
 //        double fac = 1 - _lkCap.getParameter()[7] / _lkCap.getParameter()[6];
 //        double nonLinearCorrectionCurrent = -fac * _lkCap.getParameter()[10];
 //        if (capError) {
@@ -142,23 +145,20 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
 //            if (Math.abs((_lkCap.getParameter()[6] - _lkCap.getParameter()[7]) / (_lkCap.getParameter()[6] + _lkCap.getParameter()[7])) > 0.1) {
 //                capCorrection = true;
 //            }
-//            //---------
+//---------
 //            if (capCorrection) {
 //                stepBack = true;
 //                double facOld = (1 - _lkCap.getParameter()[7] / _lkCap.getParameter()[6]);
 //                bWOld = (_lkCap.getParameter()[6] / dt) * (pALT[matrixIndices[0]] - pALT[matrixIndices[1]]) + facOld * _lkCap.getParameter()[10];
 //                aWOld = _lkCap.getParameter()[6] / dt;  //  +C/dt
 //                _updateMatrixFlag = true;
-//
 //                //------
-//                // correction of the capacitance value
+// correction of the capacitance value
 //                _lkCap.getParameter()[6] = _lkCap.getParameter()[7];
 //                _lkCap.getParameter()[10] = i[_componentNumber];
 //                double facNew = (1 - _lkCap.getParameter()[7] / _lkCap.getParameter()[6]);
 //                bWNew = (_lkCap.getParameter()[6] / dt) * (pALT[matrixIndices[0]] - pALT[matrixIndices[1]]) + facNew * _lkCap.getParameter()[10];
-//
 //                aWNew = _lkCap.getParameter()[6] / dt;  //  +C/dt
-//
 //            }
 //            _lkCap.getParameter()[10] = i[_componentNumber];
 //            i[_componentNumber] += nonLinearCorrectionCurrent;
@@ -201,7 +201,7 @@ public final class CapacitorCalculator extends CircuitComponent implements AStam
     @Override
     public void setZValue(int z) {
         assert z > 0;
-        System.out.println("setting z Value: + " + z);
+        LOGGER.info("setting z Value: + " + z);
         _z = z;
     }
 

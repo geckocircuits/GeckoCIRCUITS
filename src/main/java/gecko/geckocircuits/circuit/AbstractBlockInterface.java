@@ -13,14 +13,16 @@
  */
 package gecko.geckocircuits.circuit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.circuit.ComponentIdentifiable;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.ControlTypeInfo;
-import gecko.geckocircuits.allg.AbstractComponentTyp;
+import gecko.geckocircuits.general.AbstractComponentType;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractSwitch;
-import gecko.geckocircuits.allg.ProjectData;
-import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.ProjectData;
+import gecko.geckocircuits.general.MainWindow;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
 import gecko.geckocircuits.circuit.circuitcomponents.Diode;
 import gecko.geckocircuits.circuit.circuitcomponents.SemiconductorLossCalculatable;
@@ -36,8 +38,6 @@ import java.awt.Stroke;
 import java.awt.Window;
 import java.awt.geom.AffineTransform;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -50,6 +50,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Block interface exposes terminals and parameters for circuit connectivity and configuration")
     public abstract class AbstractBlockInterface extends AbstractCircuitSheetComponent
         implements ComponentTerminable, ComponentIdentifiable {
+    private static final Logger LOGGER = LogManager.getLogger(AbstractBlockInterface.class);
+
 
     public List<UserParameter<? extends Object>> registeredParameters = new ArrayList<UserParameter<? extends Object>>();
     private ComponentDirection orientationBeforeMove = ComponentDirection.NORTH_SOUTH;
@@ -250,12 +252,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                 try {
                     final String oldName = getStringID();
                     setNewNameChecked(IDStringDialog.findUnusedName(oldName));
-                    Logger.getLogger(AbstractBlockInterface.class.getName()).log(Level.SEVERE, null, ex1);
                 } catch (NameAlreadyExistsException ex2) {
-                    Logger.getLogger(AbstractBlockInterface.class.getName()).log(Level.SEVERE, null, ex2);
+                    LOGGER.error("Failed to assign unused name during import", ex2);
                 }
             }
-            System.out.println(ex.getMessage() + " renamed to: " + getStringID());
+            LOGGER.info(ex.getMessage() + " renamed to: " + getStringID());
         }
 
     }
@@ -266,7 +267,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             TokenMap subBlock = tokenMap.getBlockTokenMap("<Verluste>");
             if (subBlock != null) {
                 LossProperties verluste = (LossProperties) ((SemiconductorLossCalculatable) this).getVerlustBerechnung();
-                verluste.importASCII(subBlock);  // Laden der korrekten Parameter
+                verluste.importASCII(subBlock);  // Load the correct parameters
             }
         }
 
@@ -325,7 +326,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
 
-        setPositionVorVerschieben(getSheetPosition());
+        setPositionBeforeMoving(getSheetPosition());
         setOrientationBeforeMove(getComponentDirection());
 
 
@@ -464,7 +465,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
         _textInfo.exportASCII(ascii);
-        // Daten der individuellen ReglerBloecke:
+        // Data of the individual control blocks:
         ascii.append("\n");
         final String saveIdentifierEndString = "\n<\\" + getTypeInfo().getSaveIdentifier() + ">\n";
         ascii.append(saveIdentifierEndString);
@@ -554,15 +555,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         YOUT.set(termIndex, terminal);
     }
 
-    public List<Verbindung> getShortConnectors() {
-        final List<Verbindung> returnValue = new ArrayList<Verbindung>();
+    public List<Connection> getShortConnectors() {
+        final List<Connection> returnValue = new ArrayList<Connection>();
 
         for (int i = 0; i < Math.min(XIN.size(), YOUT.size()); i++) {
-            final Verbindung verb = new VerbindungShortConnector(ConnectorType.LK, this.getParentCircuitSheet());
+            final Connection verb = new ConnectionShortConnector(ConnectorType.LK, this.getParentCircuitSheet());
             Point startPoint = XIN.get(i).getPosition();
             Point stopPoint = YOUT.get(i).getPosition();
 
-            verb.setzeStartKnoten(startPoint);
+            verb.setStartNode(startPoint);
 
             int distX = startPoint.x - stopPoint.x;
             int distY = startPoint.y - stopPoint.y;
@@ -571,19 +572,19 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
             if (distX != 0) {
                 for (int j = 0; j <= Math.abs(distX); j++) {
-                    verb.setzeAktuellenPunktAufVerbindung(new Point(xPos, yPos));
+                    verb.setCurrentPointOnConnection(new Point(xPos, yPos));
                     xPos += distX / distX;
                 }
             }
 
             if (distY != 0) {
                 for (int j = 0; j <= Math.abs(distY); j++) {
-                    verb.setzeAktuellenPunktAufVerbindung(new Point(xPos, yPos));
+                    verb.setCurrentPointOnConnection(new Point(xPos, yPos));
                     yPos += distY / distY;
                 }
             }
 
-            verb.setzeEndKnoten(stopPoint.x, stopPoint.y);
+            verb.setEndNode(stopPoint.x, stopPoint.y);
             returnValue.add(verb);
         }
         return returnValue;
@@ -622,7 +623,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     @Override
     public void absetzenElement() {
-        setPositionVorVerschieben(getSheetPosition());
+        setPositionBeforeMoving(getSheetPosition());
         setOrientationBeforeMove(getComponentDirection());
         setModus(ComponentState.FINISHED);
     }
@@ -654,10 +655,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @Override
     public void deselectViaESCAPE() {
         setComponentDirection(getOrientationBeforeMove());
-        setPositionWithoutUndo(getPositionVorVerschieben().x, getPositionVorVerschieben().y);
+        setPositionWithoutUndo(getPositionBeforeMoving().x, getPositionBeforeMoving().y);
     }
 
-    public void rotiereSymbol() {
+    public void rotateSymbol() {
         for (AbstractTerminal term : XIN) {
             term.getLabelObject().setLabelPriority(LabelPriority.LOW);
         }
@@ -686,7 +687,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     public void copyLKBlockPars(final AbstractBlockInterface copy) {
         copy.setSheetPositionWithoutUndo(getSheetPosition());
-        copy.setPositionVorVerschieben(getSheetPosition());
+        copy.setPositionBeforeMoving(getSheetPosition());
         System.arraycopy(parameter, 0, copy.parameter, 0, parameter.length);
         copy.parameterString = new String[this.parameterString.length];
         System.arraycopy(this.parameterString, 0, copy.parameterString, 0, this.parameterString.length);
@@ -769,14 +770,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         _textInfo.clearParameters();
 
         if (getDisplayProperties().showName || (this instanceof SpecialNameVisible
-                && ((SpecialNameVisible) this).isNameVisible())) {  // falls zusaetzlich auch der Name angezeigt werden soll
+                && ((SpecialNameVisible) this).isNameVisible())) {  // if the name should also be displayed
             _textInfo.addParameter(getStringID());
         }
 
         this.addTextInfoParameters();
         _textInfo.addParameters(getRegisteredParameters(), getDisplayProperties());
 
-        _textInfo.zeichneLinie(graphics, getDisplayProperties().showTextLine);
+        _textInfo.drawLine(graphics, getDisplayProperties().showTextLine);
 
         for (TerminalInterface term : getAllTerminals()) {
             if (java.util.Objects.equals(term.getCircuitSheet(), _parentCircuitSheet)) {
@@ -840,14 +841,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     /**
      * @return the positionVorVerschieben
      */
-    public Point getPositionVorVerschieben() {
+    public Point getPositionBeforeMoving() {
         return _sheetPosBeforeMove;
     }
 
     /**
      * @param positionVorVerschieben the positionVorVerschieben to set
      */
-    public void setPositionVorVerschieben(Point positionVorVerschieben) {
+    public void setPositionBeforeMoving(Point positionVorVerschieben) {
         this._sheetPosBeforeMove = positionVorVerschieben;
     }
 
@@ -1012,7 +1013,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
      *
      * @return
      */
-    public final AbstractComponentTyp getTypeEnum() {
+    public final AbstractComponentType getTypeEnum() {
         return ControlTypeInfo.getTypeEnumFromClass(this.getClass());
     }
 

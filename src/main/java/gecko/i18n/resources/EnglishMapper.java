@@ -34,7 +34,7 @@ public class EnglishMapper {
             dm.insertPair(value, value._englishTranslation);
         }
 
-//        // initialize single-line pairs
+// initialize single-line pairs
 //        dm.putPair("File", "File");
 //        dm.putPair("New", "New");
 //        dm.putPair("Open", "Open");

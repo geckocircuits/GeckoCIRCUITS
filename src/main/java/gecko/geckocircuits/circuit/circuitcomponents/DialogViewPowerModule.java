@@ -13,7 +13,9 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
-import gecko.geckocircuits.allg.GlobalFilePathes;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
 import java.awt.BorderLayout;
@@ -35,6 +37,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
 public class DialogViewPowerModule extends JDialog implements WindowListener, ActionListener {
+    private static final Logger LOGGER = LogManager.getLogger(DialogViewPowerModule.class);
+
 
 
     public DialogViewPowerModule(AbstractCircuitBlockInterface elementTH, Container c) {
@@ -51,14 +55,14 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         this.setTitle(" " + ((ThermMODUL) elementTH).getDateiname());
         JTabbedPane tabber = new JTabbedPane();
         tabber.addTab("RthCth-Network Model", c);
-        tabber.addTab("3D Structure", this.baueGUI());
+        tabber.addTab("3D Structure", this.buildGUI());
         //
         JButton jbOK = GuiFabric.getJButton(I18nKeys.OK);
         jbOK.setActionCommand("OK");
         jbOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                schliesseFenster();
+                closeWindow();
             }
         });
         JPanel jpOK = new JPanel();
@@ -74,7 +78,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
         //------------------------
     }
 
-    private JPanel baueGUI() {
+    private JPanel buildGUI() {
         //------------------------
         // Grafische Beschreibung des PowerModule -->
         //
@@ -87,7 +91,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "modulIntern.png");
             imgMx = new ImageIcon(url).getImage();
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.info(e);
         }
         final Image imgM = imgMx;
         JComponent jc1 = new JComponent() {
@@ -129,7 +133,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
 
     @Override
     public void windowClosing(WindowEvent we) {
-        this.schliesseFenster();
+        this.closeWindow();
     }
 
     @Override
@@ -138,7 +142,7 @@ public class DialogViewPowerModule extends JDialog implements WindowListener, Ac
     }
     //------------------------------------------------
 
-    private void schliesseFenster() {
+    private void closeWindow() {
         //mutterFenster.gibFocusZurueck();
         this.dispose();
     }

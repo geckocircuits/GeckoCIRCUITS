@@ -15,6 +15,8 @@
 package gecko.core.nativec;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Native C/C++ integration block for custom control algorithms.
@@ -26,9 +28,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * @author DIEHL Controls Ricardo Richter
  * @since Core Module Extraction Sprint - Phase 2
  */
-@SuppressFBWarnings(value = "DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED",
-        justification = "ClassLoader creation is intentional for native C code integration")
+@SuppressFBWarnings(value = {"DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED", "DM_GC"},
+        justification = "ClassLoader creation and explicit System.gc() call are intentional to load and unload native C code")
 public class NativeCBlock {
+    private static final Logger LOGGER = LogManager.getLogger(NativeCBlock.class);
+
+
     NativeCClassLoader _customCClassLoader;
     Class _nativeCWrapperClass;
     InterfaceNativeCWrapper _nativeCWrapperObj;
@@ -78,10 +83,7 @@ public class NativeCBlock {
             _nativeCWrapperObj.loadLibrary(name);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getCause() != null) {
-                e.getCause().printStackTrace();
-            }
+            LOGGER.error("Failed to load native library: " + name, e);
             return false;
         }
     }
@@ -102,9 +104,9 @@ public class NativeCBlock {
             _customCClassLoader = null;
             _xINVector = null;
             _xOUTVector = null;
-            // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
+            System.gc();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to unload native libraries", e);
         }
     }
 

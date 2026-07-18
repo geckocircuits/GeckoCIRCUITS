@@ -529,7 +529,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="gecko.geckocircuits.allg.FormatJTextField" name="jTextFieldConst">
+    <Component class="gecko.geckocircuits.general.FormatJTextField" name="jTextFieldConst">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" value="1"/>

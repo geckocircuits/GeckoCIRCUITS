@@ -60,7 +60,7 @@ public class AxisTickSettingsTest {
 
     @Test
     public void testDefaultAnzTicksMinor_IsTwo() {
-        assertEquals("Default number of minor ticks should be 2", 2, settings.getAnzTicksMinor());
+        assertEquals("Default number of minor ticks should be 2", 2, settings.getNumTicksMinor());
     }
 
     // ====================================================
@@ -156,26 +156,26 @@ public class AxisTickSettingsTest {
 
     @Test
     public void testSetAnzTicksMinor_CustomValue() {
-        settings.setAnzTicksMinor(5);
-        assertEquals("Number of minor ticks should be 5", 5, settings.getAnzTicksMinor());
+        settings.setNumTicksMinor(5);
+        assertEquals("Number of minor ticks should be 5", 5, settings.getNumTicksMinor());
     }
 
     @Test
     public void testSetAnzTicksMinor_One() {
-        settings.setAnzTicksMinor(1);
-        assertEquals("Number of minor ticks should be 1", 1, settings.getAnzTicksMinor());
+        settings.setNumTicksMinor(1);
+        assertEquals("Number of minor ticks should be 1", 1, settings.getNumTicksMinor());
     }
 
     @Test
     public void testSetAnzTicksMinor_Ten() {
-        settings.setAnzTicksMinor(10);
-        assertEquals("Number of minor ticks should be 10", 10, settings.getAnzTicksMinor());
+        settings.setNumTicksMinor(10);
+        assertEquals("Number of minor ticks should be 10", 10, settings.getNumTicksMinor());
     }
 
     @Test
     public void testSetAnzTicksMinor_Zero() {
-        settings.setAnzTicksMinor(0);
-        assertEquals("Number of minor ticks should be 0", 0, settings.getAnzTicksMinor());
+        settings.setNumTicksMinor(0);
+        assertEquals("Number of minor ticks should be 0", 0, settings.getNumTicksMinor());
     }
 
     // ====================================================
@@ -188,24 +188,24 @@ public class AxisTickSettingsTest {
         settings.setShowLabelsMaj(false);
         settings.setShowLabelsMin(true);
         settings.setTickLengthMaj(15);
-        settings.setAnzTicksMinor(4);
+        settings.setNumTicksMinor(4);
 
         assertFalse("Auto tick spacing should remain false", settings.isAutoTickSpacing());
         assertFalse("Major labels should remain hidden", settings.isShowLabelsMaj());
         assertTrue("Minor labels should remain visible", settings.isShowLabelsMin());
         assertEquals("Major tick length should remain 15", 15, settings.getTickLengthMaj());
-        assertEquals("Minor ticks should remain 4", 4, settings.getAnzTicksMinor());
+        assertEquals("Minor ticks should remain 4", 4, settings.getNumTicksMinor());
     }
 
     @Test
     public void testTickLengthIndependentFromCount() {
         settings.setTickLengthMaj(10);
         settings.setTickLengthMin(6);
-        settings.setAnzTicksMinor(3);
+        settings.setNumTicksMinor(3);
 
         assertEquals("Major tick length should be independent", 10, settings.getTickLengthMaj());
         assertEquals("Minor tick length should be independent", 6, settings.getTickLengthMin());
-        assertEquals("Minor tick count should be independent", 3, settings.getAnzTicksMinor());
+        assertEquals("Minor tick count should be independent", 3, settings.getNumTicksMinor());
     }
 
     // ====================================================
@@ -220,8 +220,8 @@ public class AxisTickSettingsTest {
 
     @Test
     public void testSetAnzTicksMinor_LargeBoundary() {
-        settings.setAnzTicksMinor(Integer.MAX_VALUE);
-        assertEquals("Minor ticks should handle max int", Integer.MAX_VALUE, settings.getAnzTicksMinor());
+        settings.setNumTicksMinor(Integer.MAX_VALUE);
+        assertEquals("Minor ticks should handle max int", Integer.MAX_VALUE, settings.getNumTicksMinor());
     }
 
     @Test
@@ -247,7 +247,7 @@ public class AxisTickSettingsTest {
         settings.setShowLabelsMin(true);
         settings.setTickLengthMaj(16);
         settings.setTickLengthMin(7);
-        settings.setAnzTicksMinor(6);
+        settings.setNumTicksMinor(6);
 
         // Verify all values are exactly as set
         assertFalse("Auto tick spacing consistency", settings.isAutoTickSpacing());
@@ -255,7 +255,7 @@ public class AxisTickSettingsTest {
         assertTrue("Show minor labels consistency", settings.isShowLabelsMin());
         assertEquals("Major tick length consistency", 16, settings.getTickLengthMaj());
         assertEquals("Minor tick length consistency", 7, settings.getTickLengthMin());
-        assertEquals("Minor ticks count consistency", 6, settings.getAnzTicksMinor());
+        assertEquals("Minor ticks count consistency", 6, settings.getNumTicksMinor());
     }
 
     @Test

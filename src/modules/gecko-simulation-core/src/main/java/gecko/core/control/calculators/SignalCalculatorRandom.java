@@ -21,7 +21,7 @@ public final class SignalCalculatorRandom extends AbstractSignalCalculator {
     }
 
     @Override
-    public void berechneYOUT(final double deltaT) {
+    public void calculateYOUT(final double deltaT) {
         _randomVal += 1 - 2 * Math.random();  // [-1 .. +1]
         _outputSignal[0][0] = _randomVal;
     }

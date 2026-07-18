@@ -13,7 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
-import gecko.geckocircuits.allg.GlobalColors;
+import gecko.geckocircuits.general.GlobalColors;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

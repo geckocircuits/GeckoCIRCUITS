@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.geckocircuits.datacontainer.DataContainerSimple;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -20,6 +22,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "FFT computation class with public fields for direct data access during signal processing")
 public final class Cispr16Fft {
+    private static final Logger LOGGER = LogManager.getLogger(Cispr16Fft.class);
+
 
     public float[] _zvResampled;
     public float[] _magnitudes;
@@ -151,7 +155,7 @@ public final class Cispr16Fft {
                 return;
             }
         } catch (NoClassDefFoundError error) {
-            System.err.println("Error: could not find JTransforms class library!\n"
+            LOGGER.error("Error: could not find JTransforms class library!\n"
                     + "Continue with built-in FFT algorithm.");
 
         }
@@ -204,7 +208,7 @@ public final class Cispr16Fft {
         }
     }
 
-    // float-Version von four1()
+    // float version of four1()
     //
     public static void ffour1(final float[] data, final int numberPoints, final int isign) {
         int mmm;

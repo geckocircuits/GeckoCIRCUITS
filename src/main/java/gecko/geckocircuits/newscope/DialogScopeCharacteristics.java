@@ -13,9 +13,9 @@
  */
 package gecko.geckocircuits.newscope;
 
-import gecko.geckocircuits.allg.FormatJTextField;
-import gecko.geckocircuits.allg.GlobalFilePathes;
-import gecko.geckocircuits.allg.TechFormat;
+import gecko.geckocircuits.general.FormatJTextField;
+import gecko.geckocircuits.general.GlobalFilePathes;
+import gecko.geckocircuits.general.TechFormat;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -27,14 +27,21 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+@SuppressWarnings({"this-escape", "serial"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores worksheet and slider values for scope characteristics calculations")
 public class DialogScopeCharacteristics extends GeckoDialog {
 
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogScopeCharacteristics.class);
+
     private GridBagConstraints _gridBagConst = new GridBagConstraints();
     private final TechFormat _cf = new TechFormat();
-    private FormatJTextField _jTextFieldStatus;  // Staus-Anzeige der Berechnung
+    private FormatJTextField _jTextFieldStatus;  // Status display of the calculation
     private final JPanelDialogRange _panelDialRange;
     private final PanelCharacteristicsResult _characErgPanel;
     private PowerAnalysisPanel _powAnalPanel;
@@ -95,7 +102,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                     java.awt.Image equ1 = new ImageIcon(pngUrl).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exc) {
-                    exc.printStackTrace();
+                    LOGGER.error("Failed to load characteristics equation image", exc);
                 }
             }
         };
@@ -124,7 +131,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                     java.awt.Image equ1 = new ImageIcon(pngUrl).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    LOGGER.error("Failed to load power analysis equation image", exception);
                 }
             }
         };
@@ -258,12 +265,12 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 _jTextFieldStatus.setText("Calculation OK");
 
             } catch (IndexOutOfBoundsException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Index out of bounds when calculating characteristics", ex);
                 _jTextFieldStatus.setForeground(Color.red);
                 _jTextFieldStatus.setText(ex.getMessage());
 
             } catch (Exception exc) {
-                exc.printStackTrace();
+                LOGGER.error("Failed to calculate scope characteristics", exc);
                 _jTextFieldStatus.setForeground(Color.red);
                 _jTextFieldStatus.setText("Data-Error");
             } finally {

@@ -289,13 +289,13 @@ public class SparseMatrixCalculatorExtendedTest {
 
         // Clock signal rises
         calculator._inputSignal[0][0] = 0.5;
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
 
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
 
         calculator._inputSignal[0][0] = 0.5;
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
 
         assertValidOutputs("Pulse period detection");
     }
@@ -308,13 +308,13 @@ public class SparseMatrixCalculatorExtendedTest {
         for (int period = 0; period < 3; period++) {
             // Rising edge
             calculator._inputSignal[0][0] = 0.0;
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
 
             calculator._inputSignal[0][0] = 1.0;
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
 
             calculator._inputSignal[0][0] = 0.0;
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
         }
 
         assertValidOutputs("Multiple pulse periods");
@@ -327,7 +327,7 @@ public class SparseMatrixCalculatorExtendedTest {
 
         // Run multiple time steps within one pulse period
         for (int i = 0; i < 100; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Step " + i);
         }
     }
@@ -356,7 +356,7 @@ public class SparseMatrixCalculatorExtendedTest {
         double[][] switchHistory = new double[100][9];
 
         for (int step = 0; step < 100; step++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             for (int i = 0; i < 9; i++) {
                 switchHistory[step][i] = calculator._outputSignal[i][0];
             }
@@ -382,7 +382,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 0.0);
 
         // Should handle zero voltages without crashing
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
         // May produce NaN/Inf due to division, but should not crash
     }
 
@@ -444,11 +444,11 @@ public class SparseMatrixCalculatorExtendedTest {
     private void runCalculatorCycle() {
         // Simulate a pulse period detection by generating a clock edge
         calculator._inputSignal[0][0] = 0.0;
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
         calculator._inputSignal[0][0] = 1.0;
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
         calculator._inputSignal[0][0] = 0.5;
-        calculator.berechneYOUT(DELTA_T);
+        calculator.calculateYOUT(DELTA_T);
     }
 
     private void assertValidOutputs(String context) {
@@ -470,7 +470,7 @@ public class SparseMatrixCalculatorExtendedTest {
 
         // Run many time steps to cover different xLokal values
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector1 time step " + i);
         }
     }
@@ -481,7 +481,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, Math.PI/6);  // seOUT=2
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector2 time step " + i);
         }
     }
@@ -492,7 +492,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, Math.PI/3);  // seOUT=3
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector3 time step " + i);
         }
     }
@@ -503,7 +503,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, Math.PI/2);  // seOUT=4
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector4 time step " + i);
         }
     }
@@ -514,7 +514,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 2*Math.PI/3);  // seOUT=5
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector5 time step " + i);
         }
     }
@@ -525,7 +525,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 5*Math.PI/6);  // seOUT=6
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector6 time step " + i);
         }
     }
@@ -536,7 +536,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, Math.PI);  // seOUT=7
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector7 time step " + i);
         }
     }
@@ -547,7 +547,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 7*Math.PI/6);  // seOUT=8
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector8 time step " + i);
         }
     }
@@ -558,7 +558,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 4*Math.PI/3);  // seOUT=9
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector9 time step " + i);
         }
     }
@@ -569,7 +569,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 3*Math.PI/2);  // seOUT=10
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector10 time step " + i);
         }
     }
@@ -580,7 +580,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 5*Math.PI/3);  // seOUT=11
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector11 time step " + i);
         }
     }
@@ -591,7 +591,7 @@ public class SparseMatrixCalculatorExtendedTest {
         setOutputParameters(100.0, 50.0, 50.0, 11*Math.PI/6);  // seOUT=12
 
         for (int i = 0; i < 200; i++) {
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Sector12 time step " + i);
         }
     }
@@ -610,7 +610,7 @@ public class SparseMatrixCalculatorExtendedTest {
             setThreePhaseInputVoltages(ur, us, ut);
             setOutputParameters(100.0, 50.0, 25.0, omega * t);
 
-            calculator.berechneYOUT(DELTA_T);
+            calculator.calculateYOUT(DELTA_T);
             assertValidOutputs("Continuous step " + step);
         }
     }

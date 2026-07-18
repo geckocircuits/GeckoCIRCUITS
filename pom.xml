@@ -30,6 +30,8 @@
      <junit.version>5.11.3</junit.version>
      <log4j2.version>2.24.3</log4j2.version>
      <graalvm.version>24.1.1</graalvm.version>
+     <batik.version>1.19</batik.version>
+     <mockito.version>5.23.0</mockito.version>
   </properties>
 
   <dependencies>
@@ -101,17 +103,39 @@
     <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-svggen</artifactId>
-        <version>1.7</version>
+        <version>${batik.version}</version>
     </dependency>
     <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-dom</artifactId>
-        <version>1.7</version>
+        <version>${batik.version}</version>
     </dependency>
     <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-transcoder</artifactId>
-        <version>1.7</version>
+        <version>${batik.version}</version>
+    </dependency>
+    <!-- Apache FOP for SVG-to-PDF transcoding (PDFTranscoder) -->
+    <!-- Previously bundled transitively with Batik 1.7; now requires explicit dependency -->
+    <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>fop</artifactId>
+        <version>2.11</version>
+        <exclusions>
+            <!-- Exclude FOP's transitive Batik to avoid version conflicts -->
+            <exclusion>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>batik-anim</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>batik-bridge</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.apache.xmlgraphics</groupId>
+                <artifactId>batik-extension</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.netbeans.external</groupId>
@@ -132,7 +156,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>4.11.0</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

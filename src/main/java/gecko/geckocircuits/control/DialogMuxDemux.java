@@ -13,14 +13,16 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores control block reference for port configuration")
 public class DialogMuxDemux extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogMuxDemux.class);
+
 
     private final RegelBlock _regelBlock;
 
@@ -33,11 +35,11 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         jTextFieldIdString.setText(regelBlock.getStringID());
         _regelBlock = regelBlock;
 
-        if (_regelBlock instanceof ReglerMUX) {
+        if (_regelBlock instanceof ControlMUX) {
             jSpinnerPortNumber.setValue(regelBlock.XIN.size());
         }
 
-        if (_regelBlock instanceof ReglerDemux) {
+        if (_regelBlock instanceof ControlDemux) {
             jSpinnerPortNumber.setValue(regelBlock.YOUT.size());
         }
     }
@@ -151,26 +153,26 @@ public class DialogMuxDemux extends javax.swing.JDialog {
             try {
                 _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
             } catch (NameAlreadyExistsException ex) {
-                Logger.getLogger(DialogMuxDemux.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Name already exists when changing control block name", ex);
             }
         }
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped
 
     private void jSpinnerPortNumberStateChanged(javax.swing.event.ChangeEvent evt) {//NOPMD//GEN-FIRST:event_jSpinnerPortNumberStateChanged
-        if (_regelBlock instanceof ReglerToEXTERNAL) {
-            ((ReglerToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlToEXTERNAL) {
+            ((ControlToEXTERNAL) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if (_regelBlock instanceof ReglerFromEXTERNAL) {
-            ((ReglerFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if (_regelBlock instanceof ControlFromEXTERNAL) {
+            ((ControlFromEXTERNAL) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if(_regelBlock instanceof ReglerMUX) {
-            ((ReglerMUX) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if(_regelBlock instanceof ControlMUX) {
+            ((ControlMUX) _regelBlock).setInputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
-        if(_regelBlock instanceof ReglerDemux) {
-            ((ReglerDemux) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
+        if(_regelBlock instanceof ControlDemux) {
+            ((ControlDemux) _regelBlock).setOutputTerminalNumber((Integer) jSpinnerPortNumber.getValue());
         }
 
 
@@ -182,7 +184,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         try {
             _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
         } catch (NameAlreadyExistsException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Name already exists when changing control block name", ex);
         }
     }//GEN-LAST:event_jTextFieldIdStringActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

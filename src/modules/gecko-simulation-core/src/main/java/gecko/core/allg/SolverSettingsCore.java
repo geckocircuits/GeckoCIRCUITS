@@ -17,7 +17,7 @@ package gecko.core.allg;
  * GUI-free solver configuration for headless simulation.
  * This class provides simulation parameters without any GUI dependencies.
  *
- * Used by HeadlessSimulationEngine and SimulationsKern when running
+ * Used by HeadlessSimulationEngine and SimulationKernel when running
  * in headless mode (REST API, CLI, batch processing).
  */
 public final class SolverSettingsCore {

@@ -14,13 +14,15 @@
 package gecko.geckocircuits.datacontainer;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.newscope.AbstractTimeSerie;
+import gecko.geckocircuits.newscope.AbstractTimeSeries;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.newscope.MemoryContainer;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -37,6 +39,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "IS2_INCONSISTENT_SYNC"},
         justification = "Data junk stores time series reference for compression operations; _dataSoftRef sync inconsistency is acceptable - occasional race condition doesn't affect correctness")
 public final class DataJunkCompressable implements DataJunk {
+    private static final Logger LOGGER = LogManager.getLogger(DataJunkCompressable.class);
+
 
     public static void setMemoryPrecision() {
         final String lossyCompression = GeckoSim.applicationProps.getProperty("LOSSY_COMPRESSION");
@@ -71,7 +75,7 @@ public final class DataJunkCompressable implements DataJunk {
 //    private static int _compCounter = 1;
 //    private static double _compSum = 0;
     private static final int MORDER_DIFF = 2;
-    private final AbstractTimeSerie _timeSerie;
+    private final AbstractTimeSeries _timeSerie;
     private final int _rows;
     private int _memInBytes = 0;
     /**
@@ -88,7 +92,7 @@ public final class DataJunkCompressable implements DataJunk {
     private final MemoryContainer _container;
 
     public DataJunkCompressable(final MemoryContainer container, final int startIndex, final int rows, final int columns,
-            final AbstractTimeSerie timeSeries) {
+            final AbstractTimeSeries timeSeries) {
         // the data array is not completely initialized. This will happen later,
         // when data is inserted
         _container = container;
@@ -134,7 +138,7 @@ public final class DataJunkCompressable implements DataJunk {
         try {
             return _avgData[row][index - _startIndex];
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to get integral value for row " + row + " at index " + index, ex);
         }
         return 0;
     }

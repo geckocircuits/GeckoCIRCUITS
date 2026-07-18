@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.newscope;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.core.datacontainer.HiLoData;
 import java.awt.geom.Point2D;
 
@@ -20,7 +22,10 @@ import java.awt.geom.Point2D;
  * Provides basic functions to facilitate access to external signals.
  * @author JF
  */
+@SuppressWarnings("this-escape")
 public class ExternalSignal extends AbstractScopeSignal{
+    private static final Logger LOGGER = LogManager.getLogger(ExternalSignal.class);
+
   private String _signalName = ""; // The name of the external signal.
   private double[] _signalTimes = {}; // The array holding the time values for the external signal.
   private double[] _signalValues = {}; // the array holding the data values for the external signal.
@@ -124,7 +129,7 @@ public class ExternalSignal extends AbstractScopeSignal{
    */
   public final void setData(final double[] times, final double[] values){
     if(times == null || values == null || times.length != values.length){
-      System.err.println("Error: Invalid params provided to setData in " + this.toString() + "!");
+      LOGGER.error("Error: Invalid params provided to setData in " + this.toString() + "!");
     }else{
       this._signalTimes = times.clone();
       this._signalValues = values.clone();
@@ -175,7 +180,7 @@ public class ExternalSignal extends AbstractScopeSignal{
         start = startTime;
         stop = stopTime;
       }
-      step = ((double)(this.getTime(this.size() - 1) - this.getTime(0))) / this.size();
+      step = (this.getTime(this.size() - 1) - this.getTime(0)) / this.size();
       firstIndex = (int)((start - this.getTime(0)) / step);
       if(firstIndex < 0){
         firstIndex = 0;

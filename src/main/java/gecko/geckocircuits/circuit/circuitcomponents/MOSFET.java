@@ -14,7 +14,7 @@
 package gecko.geckocircuits.circuit.circuitcomponents;
 
 import gecko.GeckoSim;
-import gecko.geckocircuits.allg.UserParameter;
+import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.CircuitTypeInfo;
