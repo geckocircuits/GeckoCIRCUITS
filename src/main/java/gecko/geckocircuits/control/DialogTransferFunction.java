@@ -18,6 +18,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.circuit.Enabled;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
@@ -33,6 +35,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressWarnings({"PMD.TooManyFields", "PMD.TooManyMethods", "PMD.CyclomaticComplexity"})
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Dialog stores transfer function and control references for configuration")
 public final class DialogTransferFunction extends javax.swing.JFrame {
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogTransferFunction.class);
 
     private final DefaultListModel<ComplexPrinter> _nomModel = new DefaultListModel<ComplexPrinter>();
     private final DefaultListModel<ComplexPrinter> _deNomModel = new DefaultListModel<ComplexPrinter>();
@@ -759,7 +763,7 @@ public final class DialogTransferFunction extends javax.swing.JFrame {
         try {
             _controlTF.setNewNameCheckedUndoable(jTextFieldName.getText());
         } catch (NameAlreadyExistsException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Name already exists when changing transfer function block name", ex);
         }
 
     }//GEN-LAST:event_jTextFieldNameKeyReleased

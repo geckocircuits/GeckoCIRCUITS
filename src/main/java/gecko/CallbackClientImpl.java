@@ -40,7 +40,8 @@ public final class CallbackClientImpl extends UnicastRemoteObject implements Cal
         InetAddress addr = null;
         try {
             addr = InetAddress.getLocalHost();
-        } catch (java.net.UnknownHostException ex) {LogManager.getLogger(CallbackClientImpl.class).error("Exception occurred", ex);
+        } catch (java.net.UnknownHostException ex) {
+            LOGGER.error("Could not determine local host address for callback client", ex);
         }
 
         if(addr == null) {

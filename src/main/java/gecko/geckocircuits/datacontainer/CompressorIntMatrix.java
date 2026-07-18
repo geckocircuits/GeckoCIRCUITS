@@ -93,7 +93,8 @@ public class CompressorIntMatrix {
                 int localDecompressed = decompresser.inflate(result, bytesDecompressed, bytesToDecompress);
                 bytesToDecompress -= localDecompressed;
                 bytesDecompressed += localDecompressed;
-            } catch (DataFormatException ex) {LogManager.getLogger(CompressorIntMatrix.class).error("Exception occurred", ex);
+            } catch (DataFormatException ex) {
+                LOGGER.error("Failed to decompress data block", ex);
             }
         }
 

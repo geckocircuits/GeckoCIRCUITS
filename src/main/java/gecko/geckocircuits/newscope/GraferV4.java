@@ -345,7 +345,8 @@ public final class GraferV4 extends JPanel {
                         _loadAndDraw = false;
                     }
                     Thread.sleep(_sleepMillis);
-                } catch (InterruptedException ex) {LogManager.getLogger(GraferV4.class).error("Exception occurred", ex);
+                } catch (InterruptedException ex) {
+                    LOGGER.error("Diagram refresh thread interrupted", ex);
                 }
             }
         }

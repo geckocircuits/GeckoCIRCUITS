@@ -87,7 +87,7 @@ public class GeckoJavaCompiler {
 
             // Check for null methods before invocation (replaces catching NullPointerException)
             if (_setGecko == null || _run_script == null) {
-                LOGGER.info("Error: Could not invoke external Java method!");
+                LOGGER.error("Could not invoke external Java method!");
                 _compileStatus = COMPILESTATUS.COMPILE_ERROR;
                 return false;
             }
@@ -97,14 +97,13 @@ public class GeckoJavaCompiler {
             _run_script.invoke(null);
             //------------
         } catch (InvocationTargetException ex) {
-            //showMsg("Exception in main: " + ex.getTargetException());
-            ex.getTargetException().printStackTrace();  // Exception in the main method that we just tried to run
+            LOGGER.error("Exception invoking external Java script method", ex.getTargetException());
             return false;
         } catch (IllegalAccessException ex) {
-            LOGGER.error(ex.toString());
+            LOGGER.error("Illegal access invoking external Java script method", ex);
             return false;
         } catch (IOException ex) {
-            LOGGER.error("IO error during compilation: " + ex.toString());
+            LOGGER.error("IO error during compilation", ex);
             _compileStatus = COMPILESTATUS.COMPILE_ERROR;
             return false;
         }
@@ -199,7 +198,8 @@ public class GeckoJavaCompiler {
             appendSourcLine("// ****************** end of code segment **********************");
             appendSourcLine("    }");
             appendSourcLine("}");
-        } catch (IOException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
+        } catch (IOException ex) {
+            LOGGER.error("Failed to assemble Java source code", ex);
         }
     }
 
@@ -309,10 +309,11 @@ public class GeckoJavaCompiler {
                     //---------
                     _run_script = clazz.getMethod("run_script", partypes);
                     //---------
-                } catch (NoSuchMethodException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
-                    LOGGER.error("could not set extern Java code method (_run_script)!");
+                } catch (NoSuchMethodException ex) {
+                    LOGGER.error("could not set extern Java code method (_run_script)!", ex);
                     _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-                } catch (SecurityException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
+                } catch (SecurityException ex) {
+                    LOGGER.error("Security error accessing run_script method", ex);
                 }
                 Class<?>[] partypes2 = new Class<?>[1];
                 partypes2[0] = gecko.getClass();
@@ -320,15 +321,17 @@ public class GeckoJavaCompiler {
                     //---------
                     _setGecko = clazz.getMethod("_setGecko", partypes2);
                     //---------
-                } catch (NoSuchMethodException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
-                    LOGGER.error("could not set extern Java code method (_setGecko)!");
+                } catch (NoSuchMethodException ex) {
+                    LOGGER.error("could not set extern Java code method (_setGecko)!", ex);
                     _compileStatus = COMPILESTATUS.COMPILE_ERROR;
-                } catch (SecurityException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
+                } catch (SecurityException ex) {
+                    LOGGER.error("Security error accessing _setGecko method", ex);
                 }
                 //------------------
             }
             } // end try-with-resources
-        } catch (IllegalArgumentException | SecurityException | ClassNotFoundException ex) {LogManager.getLogger(GeckoJavaCompiler.class).error("Exception occurred", ex);
+        } catch (IllegalArgumentException | SecurityException | ClassNotFoundException ex) {
+            LOGGER.error("Failed to compile external Java code", ex);
         }
     }
 

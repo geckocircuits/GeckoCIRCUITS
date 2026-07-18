@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.GlobalFilePathes;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -21,6 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 
 abstract class PreviewDialog extends JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(PreviewDialog.class);
+
     final NumberFormat nf = NumberFormat.getNumberInstance();
 
     protected PreviewDialog(final JDialog parent) {
@@ -31,7 +35,7 @@ abstract class PreviewDialog extends JDialog {
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to set dialog icon image", ex);
         }
         getContentPane().add(createComponent());
         pack();

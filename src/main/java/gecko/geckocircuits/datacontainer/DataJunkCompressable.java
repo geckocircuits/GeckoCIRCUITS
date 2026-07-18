@@ -21,6 +21,8 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -37,6 +39,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "IS2_INCONSISTENT_SYNC"},
         justification = "Data junk stores time series reference for compression operations; _dataSoftRef sync inconsistency is acceptable - occasional race condition doesn't affect correctness")
 public final class DataJunkCompressable implements DataJunk {
+    private static final Logger LOGGER = LogManager.getLogger(DataJunkCompressable.class);
+
 
     public static void setMemoryPrecision() {
         final String lossyCompression = GeckoSim.applicationProps.getProperty("LOSSY_COMPRESSION");
@@ -134,7 +138,7 @@ public final class DataJunkCompressable implements DataJunk {
         try {
             return _avgData[row][index - _startIndex];
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to get integral value for row " + row + " at index " + index, ex);
         }
         return 0;
     }

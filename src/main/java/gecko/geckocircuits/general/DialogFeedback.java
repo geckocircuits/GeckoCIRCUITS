@@ -18,12 +18,15 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class DialogFeedback extends javax.swing.JDialog {
 
+    private static final Logger LOGGER = LogManager.getLogger(DialogFeedback.class);
     private static final String BUGZILLA_URL = "www.bugs.gecko-simulations.org";
 
     public DialogFeedback(final JFrame parentFrame) {
@@ -33,7 +36,7 @@ public class DialogFeedback extends javax.swing.JDialog {
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to load dialog icon image", ex);
         }
         this.setTitle("Gecko-Simulations Bug-Reporting / Feedback");
         initComponents();

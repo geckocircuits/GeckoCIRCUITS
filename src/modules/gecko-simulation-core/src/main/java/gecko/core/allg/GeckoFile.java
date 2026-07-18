@@ -163,7 +163,8 @@ public final class GeckoFile {
             _absolutePath = _file.getCanonicalPath();
         } catch (Exception e) {
             final String errorMessage = e.toString() + "GeckoFile constructor: could not get canonical "
-                    + "path of specified file. Using getAbsolutePath instead";LogManager.getLogger(GeckoFile.class).error(errorMessage);
+                    + "path of specified file. Using getAbsolutePath instead";
+            LOGGER.error(errorMessage);
             _absolutePath = _file.getAbsolutePath();
         }
 
@@ -381,7 +382,8 @@ public final class GeckoFile {
                 offset += numRead;
             }
         } catch (Exception e) {
-            final String errorMessage = "GeckoFile read in file contents: cannot find file. " + e.toString();LogManager.getLogger(GeckoFile.class).error(errorMessage);
+            final String errorMessage = "GeckoFile read in file contents: cannot find file. " + e.toString();
+            LOGGER.error(errorMessage);
         }
 
         return fileContents;
@@ -698,7 +700,8 @@ public final class GeckoFile {
         InputStream getInputStream() {
             try {
                 return new FileInputStream(_file);
-            } catch (FileNotFoundException ex) {LogManager.getLogger(GeckoFile.class).error("Exception occurred", ex);
+            } catch (FileNotFoundException ex) {
+                LOGGER.error("Failed to open input stream for file: " + _file.getAbsolutePath(), ex);
             }
             return null;
         }

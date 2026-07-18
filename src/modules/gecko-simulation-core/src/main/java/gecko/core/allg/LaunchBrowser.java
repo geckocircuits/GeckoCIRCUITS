@@ -14,6 +14,8 @@
 package gecko.core.allg;
 
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Cross-platform browser launcher utility.
@@ -24,6 +26,8 @@ import java.io.IOException;
  * @since Core Module Extraction Sprint
  */
 public final class LaunchBrowser {
+    private static final Logger LOGGER = LogManager.getLogger(LaunchBrowser.class);
+
 
     private LaunchBrowser() {
         // pure utility class!
@@ -39,7 +43,7 @@ public final class LaunchBrowser {
                 new ProcessBuilder("firefox", fileUrl).start();
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            LOGGER.error("Failed to launch browser for URL: " + fileUrl, ioe);
         }
     }
 

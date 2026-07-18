@@ -13,11 +13,15 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.circuit.CircuitLabel;
 import javax.swing.JLabel;
 
 class ControlTerminalDialog extends DialogElementCONTROL<ControlTERMINAL> {
+
+    private static final Logger LOGGER = LogManager.getLogger(ControlTerminalDialog.class);
 
     private FormatJTextField terminalLabel;
 
@@ -41,7 +45,7 @@ class ControlTerminalDialog extends DialogElementCONTROL<ControlTERMINAL> {
             label.setLabelFromUserDialog(terminalLabel.getText());
             this.closeWindow();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to set terminal label", e);
         }
     }
 }

@@ -14,6 +14,8 @@
 package gecko.geckocircuits.control;
 import gecko.core.circuit.TokenMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
 import gecko.geckocircuits.datacontainer.AbstractDataContainer;
@@ -33,6 +35,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Exposes data container for external EMI analysis and visualization")
 public final class ControlCISPR16 extends RegelBlock implements SpecialNameVisible,
         Operationable {
+    private static final Logger LOGGER = LogManager.getLogger(ControlCISPR16.class);
     private static final long serialVersionUID = 1L;
 
     public static final ControlTypeInfo tinfo = new ControlTypeInfo(ControlCISPR16.class, "CISPR16", I18nKeys.EMI_TEST_RECEIVER);
@@ -59,7 +62,7 @@ public final class ControlCISPR16 extends RegelBlock implements SpecialNameVisib
         try {
             _testReceiverCISPR16 = new TestReceiverWindow(this);
         } catch(Throwable ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to initialize CISPR16 test receiver window", ex);
         }
 
     }
@@ -178,7 +181,7 @@ public final class ControlCISPR16 extends RegelBlock implements SpecialNameVisib
             try {
             _testReceiverNew = new TestReceiverCalculation(_zvDatenRam, _settings);
             } catch (Throwable error) {
-                error.printStackTrace();
+                LOGGER.error("Failed to initialize test receiver calculation", error);
             }
         }
     }

@@ -52,8 +52,7 @@ public final class ControlTypeInfo extends AbstractTypeInfo {
         try {
             return _typeClass.getDeclaredConstructor().newInstance();
         } catch (Throwable ex) {
-            LOGGER.error("error: " + _typeClass);
-            ex.printStackTrace();LogManager.getLogger(SpecialType.class).error("Exception occurred", ex);
+            LOGGER.error("Failed to instantiate control block: " + _typeClass, ex);
         }
         return null;
 

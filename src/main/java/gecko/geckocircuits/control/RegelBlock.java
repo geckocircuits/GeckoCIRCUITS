@@ -14,6 +14,8 @@
 package gecko.geckocircuits.control;
 import gecko.core.circuit.TokenMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.*;
 import gecko.geckocircuits.circuit.*;
 import gecko.geckocircuits.control.calculators.AbstractControlCalculatable;
@@ -35,6 +37,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Public calculator field for simulation access to control block calculators")
 public abstract class RegelBlock extends AbstractBlockInterface implements Serializable {
+
+    private static final Logger LOGGER = LogManager.getLogger(RegelBlock.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -109,7 +113,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to set input terminal number to " + noInputs, ex);
         }
     }
 
@@ -124,7 +128,7 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to set output terminal number to " + noOutputs, ex);
         }
     }
 
@@ -405,7 +409,6 @@ public abstract class RegelBlock extends AbstractBlockInterface implements Seria
         try {
             _calculator.setInputSignal(inputIndex, outputBlock._calculator, outputIndex);
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new RuntimeException("Error in control netlist: The output signal of control block\n"
                     + outputBlock.getStringID() + ", no. " + outputIndex + " " +
                     outputBlock.YOUT.get(outputIndex).getLabelObject().getLabelString()

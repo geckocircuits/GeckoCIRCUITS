@@ -102,7 +102,8 @@ public class Paradiso {
                 n, values, ai, aj, idum, nrhs,
                 paradiso.iparm, msglvl, ddum, ddum, error);
 
-        if (error != 0) {LogManager.getLogger(Paradiso.class).error("\nERROR during symbolic factorization: " + error);
+        if (error != 0) {
+            LOGGER.error("during symbolic factorization: " + error);
         }
 
         //System.out.println("\nReordering completed ... ");
@@ -117,7 +118,8 @@ public class Paradiso {
                 n, values, ai, aj, idum, nrhs,
                 paradiso.iparm, msglvl, ddum, ddum, error);
 
-        if (error != 0) {LogManager.getLogger(Paradiso.class).error("ERROR during numerical factorization: " + error);
+        if (error != 0) {
+            LOGGER.error("during numerical factorization: " + error);
         }
         //long facstop = System.currentTimeMillis();
         //System.out.println("factorization time: " + (facstop - facstart)/1000.0);
@@ -147,7 +149,8 @@ public class Paradiso {
                 paradiso.iparm, msglvl, rhs, x, error);
 
 
-        if (error != 0) {LogManager.getLogger(Paradiso.class).error("\nERROR during solution: " + error);
+        if (error != 0) {
+            LOGGER.error("during solution: " + error);
         }
 
         /* -------------------------------------------------------------------- */

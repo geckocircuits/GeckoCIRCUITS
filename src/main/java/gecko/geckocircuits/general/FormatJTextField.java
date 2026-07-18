@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.newscope.LineSettable;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -26,6 +28,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "Text field stores line settable reference for display formatting")
 public class FormatJTextField extends JTextField {
 
+    private static final Logger LOGGER = LogManager.getLogger(FormatJTextField.class);
     private static final long serialVersionUID = 1L;
 
     public static final double IS_VARIABLE = -1e95;  // GeckoOPTIMIZER
@@ -128,7 +131,7 @@ public class FormatJTextField extends JTextField {
             } catch (Exception e2) {
                 _numberOK = false;
                 this.setForeground(Color.red);
-                e2.printStackTrace();
+                LOGGER.error("Failed to parse numeric value from field: " + zValue, e2);
                 RuntimeException re = new RuntimeException(e2.getMessage(), e2);
                 re.addSuppressed(e);
                 throw re;

@@ -87,7 +87,7 @@ public class LKMatrices {
             this.setzeAnfangsbedingungen(getAnfangsbedVomDialogfenster, solverType);  // pALT and iALT are set, e.g. u(0) at C or i(0) at L
         } catch (RuntimeException ex) {
             // Calculate difference in days
-            ex.printStackTrace();
+            LOGGER.error("Error during circuit initialization", ex);
             throw new RuntimeException("The following error occured at the circuit initialization:\n"
                     + ex.getMessage()
                     + "\nPlease check your circuit model for nonphysical conditions.", ex);

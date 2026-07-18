@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.general.GlobalColors;
 import gecko.geckocircuits.circuit.*;
@@ -26,6 +28,8 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogCircuitComponent<T> {
+    private static final Logger LOGGER = LogManager.getLogger(DialogElementCONTROL.class);
+
     JPanel jpM = new JPanel();
 
     public DialogElementCONTROL(final T element) {
@@ -42,8 +46,7 @@ public abstract class DialogElementCONTROL<T extends RegelBlock> extends DialogC
         try {
         con.add(jPanelName, BorderLayout.NORTH);
         } catch (Exception ex) {
-            // sometimes, I git an XException here... don't know the reason.
-            ex.printStackTrace();
+            LOGGER.error("Failed to add jPanelName to content pane", ex);
         }
         jpM.setLayout(new BorderLayout());
         jpM.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),

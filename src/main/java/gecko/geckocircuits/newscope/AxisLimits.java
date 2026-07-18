@@ -17,12 +17,17 @@ import gecko.core.datacontainer.HiLoData;
 import gecko.geckocircuits.general.ProjectData;
 import gecko.core.circuit.TokenMap;
 import java.util.Stack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author andy
  */
 final class AxisLimits {
+
+    private static final Logger LOGGER = LogManager.getLogger(AxisLimits.class);
+
 
     /**
      * this are the global values that actually determine the current axis view
@@ -178,7 +183,7 @@ final class AxisLimits {
         try {
             assert newGlobAutoScale.isValidNumber() : newGlobAutoScale;
         } catch (AssertionError err) {
-            err.printStackTrace();
+            LOGGER.error("Invalid auto-scale value: " + newGlobAutoScale, err);
         }
 
         if (_isCommonZero) {

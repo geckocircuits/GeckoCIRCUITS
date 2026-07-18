@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.general.GlobalFilePathes;
 import gecko.geckocircuits.circuit.NameAlreadyExistsException;
-import gecko.geckocircuits.control.javablock.CodeWindowModern;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
@@ -139,7 +138,8 @@ public class NativeCDialog extends GeckoDialog {
                     try {
                         _regNCObj.setNewNameChecked(_selectedLibFile.getFile().getName());
                     }
-                    catch (NameAlreadyExistsException exc) {LogManager.getLogger(CodeWindowModern.class).error("Exception occurred", exc);
+                    catch (NameAlreadyExistsException exc) {
+                        LOGGER.error("Native library name already in use: " + _selectedLibFile.getFile().getName(), exc);
                         JOptionPane.showMessageDialog(null, "Seems like the selected Native Library is already used by another block!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -188,7 +188,7 @@ public class NativeCDialog extends GeckoDialog {
                                         _selectedLibFile.setFile((String) _fileList.get(0));
                                         jListLibFiles.setSelectedIndex(0);
                                     } catch (Exception exc) {
-                                        exc.printStackTrace();
+                                        LOGGER.error("Failed to set selected library file", exc);
                                         JOptionPane.showMessageDialog(null, exc.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                                     }
                                 }

@@ -25,6 +25,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -34,6 +36,8 @@ import javax.swing.border.TitledBorder;
 public final class JPanelDialogRange extends JPanel {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(JPanelDialogRange.class);
 
     private final JRadioButton jRadButScopeRange, jRadButtDefRange, jrb3;
     private final FormatJTextField _rngSc1, _rngSc2, _rngDf1, _rngDf2, _rngSl1, _rngSl2;  // Angaben Zeitbereiche
@@ -61,7 +65,7 @@ public final class JPanelDialogRange extends JPanel {
                 _xDef1 = _rngDf1.getNumberFromField();
                 notifyActionListener();
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Invalid number format for range start value", ex);
             }
         }
     };
@@ -95,7 +99,7 @@ public final class JPanelDialogRange extends JPanel {
                 _xDef2 = _rngDf2.getNumberFromField();
                 notifyActionListener();
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Invalid number format for range stop value", ex);
             }
         }
     };

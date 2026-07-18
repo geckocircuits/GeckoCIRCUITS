@@ -313,9 +313,9 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
                 _xy[1][i1] = Double.parseDouble(tokenizer.nextToken());      // value
             }
         } catch (IOException ex) {
-            ex.printStackTrace();LogManager.getLogger(ControlSignalSource.class).error(ex.getMessage(), ex);
+            LOGGER.error("Failed to read external data file for " + getStringID(), ex);
         } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+            LOGGER.error("External data file not formatted properly in " + getStringID(), nfe);
             final String errorMessage = "External data file not formatted properly in " + getStringID() + "\n" + nfe.getMessage();
             final String errorTitle = getStringID() + ": ERROR - Number format exception";
             JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
@@ -379,7 +379,7 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
                         + getStringID() + ":\n" + e.getMessage();
                 final String errorTitle = getStringID() + ": ERROR - File not found!";
                 JOptionPane.showMessageDialog(null, errorMessage, errorTitle, JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
+                LOGGER.error("External data file missing in signal source " + getStringID(), e);
             }
         }
     }
@@ -500,7 +500,8 @@ public class ControlSignalSource extends RegelBlock implements ControlInputTwoTe
                     _datnamXY = (String) parameterValue;
                     MainWindow._fileManager.addFile(_externalDataFile);
                     return true;
-                } catch (FileNotFoundException ex) {LogManager.getLogger(ControlSignalSource.class).error("Exception occurred", ex);
+                } catch (FileNotFoundException ex) {
+                    LOGGER.error("File not found for signal source " + getStringID(), ex);
                     throw new RuntimeException("File not found! " + ex, ex);
                 }
             }

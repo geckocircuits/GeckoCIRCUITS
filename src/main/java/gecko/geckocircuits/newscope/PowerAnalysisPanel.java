@@ -30,6 +30,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -41,6 +43,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class PowerAnalysisPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(PowerAnalysisPanel.class);
 
     private final JComboBox<String>[] _comboU = new JComboBox[3];
     private final JComboBox<String>[] _comboI = new JComboBox[3];
@@ -257,7 +261,7 @@ public final class PowerAnalysisPanel extends JPanel {
 
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to calculate power analysis values", ex);
             }
         }
     }

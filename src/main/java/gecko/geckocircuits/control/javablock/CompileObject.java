@@ -107,13 +107,15 @@ public final class CompileObject extends AbstractCompileObject {
                 _compileStatus = CompileStatus.COMPILE_ERROR;
                 _compilerWriter.append("Compile status: ERROR");
             }
-        } catch (IllegalArgumentException | SecurityException ex) {LogManager.getLogger(ControlJavaFunction.class).error("Exception occurred", ex);
+        } catch (IllegalArgumentException | SecurityException ex) {
+            LOGGER.error("Exception during compilation task setup", ex);
         } finally {
             // Close the file manager
             if (fileManagerHolder[0] != null) {
                 try {
                     fileManagerHolder[0].close();
-                } catch (IOException ex) {LogManager.getLogger(CompileObject.class).error("Failed to close file manager", ex);
+                } catch (IOException ex) {
+                    LOGGER.error("Failed to close file manager", ex);
                 }
             }
         }
@@ -166,17 +168,23 @@ public final class CompileObject extends AbstractCompileObject {
     private JavaCompiler findCompiler() {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
-        if (compiler != null) {LogManager.getLogger(CompileObject.class).info("Java Compiler found: " + compiler.getClass().getName());
-        } else {LogManager.getLogger(CompileObject.class).error("Java Compiler not found via ToolProvider, trying fallback...");
+        if (compiler != null) {
+            LOGGER.info("Java Compiler found: " + compiler.getClass().getName());
+        } else {
+            LOGGER.error("Java Compiler not found via ToolProvider, trying fallback...");
 
             // this fixes the java 1.7 compilation problem
             try {
                 try {
-                    compiler = (JavaCompiler) Class.forName("com.sun.tools.javac.api.JavacTool").newInstance();LogManager.getLogger(CompileObject.class).info("Java Compiler found via fallback: " + compiler.getClass().getName());
-                } catch (InstantiationException ex) {LogManager.getLogger(ControlJavaFunction.class).error("InstantiationException in fallback compiler", ex);
-                } catch (IllegalAccessException ex) {LogManager.getLogger(ControlJavaFunction.class).error("IllegalAccessException in fallback compiler", ex);
+                    compiler = (JavaCompiler) Class.forName("com.sun.tools.javac.api.JavacTool").newInstance();
+                    LOGGER.info("Java Compiler found via fallback: " + compiler.getClass().getName());
+                } catch (InstantiationException ex) {
+                    LOGGER.error("InstantiationException in fallback compiler", ex);
+                } catch (IllegalAccessException ex) {
+                    LOGGER.error("IllegalAccessException in fallback compiler", ex);
                 }
-            } catch (ClassNotFoundException ex) {LogManager.getLogger(ControlJavaFunction.class).error("ClassNotFoundException in fallback compiler", ex);
+            } catch (ClassNotFoundException ex) {
+                LOGGER.error("ClassNotFoundException in fallback compiler", ex);
             }
 
             if (compiler == null) {

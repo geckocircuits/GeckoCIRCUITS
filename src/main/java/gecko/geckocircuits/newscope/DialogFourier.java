@@ -37,6 +37,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import java.net.URL;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"this-escape", "serial"})
@@ -45,6 +47,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class DialogFourier extends JDialog {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogFourier.class);
 
     //-------------
     private AbstractDataContainer worksheet;
@@ -233,9 +237,9 @@ public class DialogFourier extends JDialog {
                                     "Memory error!",
                                     JOptionPane.ERROR_MESSAGE);
                         } catch (Error e0) {
-                            e0.printStackTrace();
+                            LOGGER.error("Error during Fourier transformation", e0);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            LOGGER.error("Exception during Fourier transformation", e);
                             jbCALC.setEnabled(true);
                         }
                     }

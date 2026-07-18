@@ -205,7 +205,6 @@ public final class ControlNativeC extends RegelBlock implements VariableTerminal
                 JOptionPane.showMessageDialog(null, errorStr, "Error", JOptionPane.ERROR_MESSAGE);
                 } catch (Exception ex) {
                     severeErrorOccured = true;
-                    ex.printStackTrace();
                     LOGGER.error(ex.getMessage());
                     final StackTraceElement[] ste = ex.getStackTrace();
                     if (ste.length > 0) {

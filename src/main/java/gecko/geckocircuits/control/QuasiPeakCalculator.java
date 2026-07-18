@@ -13,12 +13,16 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.newscope.Cispr16Fft;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE",
         justification = "Calculation result class with public fields for direct access to computed values")
 public final class QuasiPeakCalculator {
+
+    private static final Logger LOGGER = LogManager.getLogger(QuasiPeakCalculator.class);
 
     private static final double A_LOWER_LIMIT = 9000;
     private static final double B_LOWER_LIMIT = 150000;
@@ -108,7 +112,7 @@ public final class QuasiPeakCalculator {
             }
             // Note: System.gc() removed - explicit GC calls are discouraged as the JVM manages memory automatically
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to compute quasi-peak values", ex);
         }
         _fourierTransform = null;
     }

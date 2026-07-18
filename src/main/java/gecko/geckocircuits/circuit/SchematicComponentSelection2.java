@@ -330,7 +330,8 @@ public class SchematicComponentSelection2 extends JTabbedPane {
                     //robot.mousePress(InputEvent.BUTTON1_MASK);
 
 
-                } catch (AWTException ex) {LogManager.getLogger(SchematicComponentSelection2.class).error("Exception occurred", ex);
+                } catch (AWTException ex) {
+                    LOGGER.error("Failed to release mouse via Robot", ex);
                 }
             }
         }

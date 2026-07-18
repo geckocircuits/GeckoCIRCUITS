@@ -14,6 +14,8 @@
 
 package gecko.geckocircuits.nativec;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -24,6 +26,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED", "DM_GC"},
         justification = "ClassLoader creation and explicit System.gc() call are intentional to load and unload native C code")
 public class NativeCBlock {
+    private static final Logger LOGGER = LogManager.getLogger(NativeCBlock.class);
+
     NativeCClassLoader _customCClassLoader;
     Class _nativeCWrapperClass;
     InterfaceNativeCWrapper _nativeCWrapperObj;
@@ -73,10 +77,7 @@ public class NativeCBlock {
             _nativeCWrapperObj.loadLibrary(name);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            if (e.getCause() != null) {
-                e.getCause().printStackTrace();
-            }
+            LOGGER.error("Failed to load native library: " + name, e);
             return false;
         }
     }
@@ -99,7 +100,7 @@ public class NativeCBlock {
             _xOUTVector = null;
             System.gc();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to unload native libraries", e);
         }
     }
 

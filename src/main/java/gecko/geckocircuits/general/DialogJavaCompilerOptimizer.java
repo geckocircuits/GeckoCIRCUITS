@@ -460,7 +460,8 @@ private void loadCode () {
             geckoJavaCompiler.setStaticVariables(jTextAreaVariables.getText());
             geckoJavaCompiler.doCompilation();
             jTextAreaCompilerMessage.setText(geckoJavaCompiler.getCompilerMessage());
-        } catch (IOException ex) {LogManager.getLogger(DialogJavaCompilerOptimizer.class).error("Exception occurred", ex);
+        } catch (IOException ex) {
+            LOGGER.error("Failed to compile optimizer Java code", ex);
         }
 }
 

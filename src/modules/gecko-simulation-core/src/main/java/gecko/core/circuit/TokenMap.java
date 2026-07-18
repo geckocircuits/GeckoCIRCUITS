@@ -252,8 +252,7 @@ public final class TokenMap {
                         }
                     }
                     } catch (Exception ex) {
-                        LOGGER.error("line token: " + lineToken);
-                        ex.printStackTrace();
+                        LOGGER.error("Failed to parse line token: " + lineToken, ex);
                     }
                 }
                 //System.out.println(lineToken);
@@ -740,8 +739,8 @@ public final class TokenMap {
     }
 
     private static void logErrorString(final String identifier, final Exception exception) {
-        final String messageString = "Could not read data line with identifier " + identifier;LogManager.getLogger(TokenMap.class).warn(messageString);
-        exception.printStackTrace();
+        final String messageString = "Could not read data line with identifier " + identifier;
+        LOGGER.warn(messageString, exception);
     }
 
     public String[] findSubBlock(String startIdentifier, String stopIdentifier) {

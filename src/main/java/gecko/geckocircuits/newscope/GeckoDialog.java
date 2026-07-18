@@ -27,6 +27,8 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -38,6 +40,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class GeckoDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(GeckoDialog.class);
 
 
     private final Component _parent;
@@ -64,7 +68,7 @@ public class GeckoDialog extends JDialog {
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception exception) {
-            exception.printStackTrace();
+            LOGGER.error("Failed to load dialog icon image", exception);
         }
 
         this.setLocationRelativeTo(_parent);

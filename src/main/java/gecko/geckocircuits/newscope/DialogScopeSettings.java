@@ -17,12 +17,15 @@ import gecko.geckocircuits.circuit.NameAlreadyExistsException;
 import gecko.geckocircuits.control.ControlOSZI;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author andreas
  */
 public class DialogScopeSettings extends javax.swing.JDialog {
+    private static final Logger LOGGER = LogManager.getLogger(DialogScopeSettings.class);
     private final ControlOSZI _controlOSZI;
     private final boolean _initDone;
     private final JFrame _parentScopeFrame;
@@ -168,7 +171,7 @@ public class DialogScopeSettings extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "The selected Scope name  \"" + jTextFieldScopeName.getText() +
                     "\" is already used for another component!\n "
                     + "Please select a different name.", "Naming conflict!", JOptionPane.WARNING_MESSAGE);
-                ex.printStackTrace();
+                LOGGER.error("Scope name already exists: " + jTextFieldScopeName.getText(), ex);
             }
 
 

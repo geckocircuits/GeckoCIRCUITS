@@ -13,10 +13,14 @@
  */
 package gecko.geckocircuits.control.calculators;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.control.IsDtChangeSensitive;
 
 public final class DelayCalculator extends AbstractSingleInputSingleOutputCalculator
         implements InitializableAtSimulationStart, IsDtChangeSensitive {
+
+    private static final Logger LOGGER = LogManager.getLogger(DelayCalculator.class);
 
     private double _originalDt;
     private double[] _youtVerzoegert = null;
@@ -46,7 +50,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
             try {
                 youtVerzoegertNew[i] = _youtVerzoegert[(int) (ratio * i)];
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to resample delay buffer at index " + i, ex);
             }
         }
 

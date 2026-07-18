@@ -283,7 +283,8 @@ public final class Axis {
             if (!limits.equals(newLimits) || scaleFactor != scaleFactor2) {
                 try {
                     Thread.sleep(1);
-                } catch (InterruptedException ex) {LogManager.getLogger(Axis.class).error("Exception occurred", ex);
+                } catch (InterruptedException ex) {
+                    LOGGER.error("Thread.sleep interrupted while waiting for axis limits to stabilize", ex);
                 }
                 //System.out.println("correktur. " + scaleFactor + " " + scaleFactor2 + " " + limits + " " + newLimits);
                 double scaleFactor3 = getScaleFactor();

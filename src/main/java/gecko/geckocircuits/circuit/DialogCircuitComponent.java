@@ -20,6 +20,8 @@ import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.newscope.GeckoDialog;
 import gecko.i18n.GuiFabric;
 import gecko.i18n.resources.I18nKeys;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Color;
 import java.awt.Container;
@@ -42,6 +44,8 @@ import javax.swing.JPanel;
         justification = "Abstract dialog class - subclasses handle initialization properly; public fields for subclass access")
 abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> extends GeckoDialog
         implements Schliessable, WindowListener {
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogCircuitComponent.class);
 
     final List<UserParameter<? extends Number>> registeredParameters = new ArrayList<UserParameter<? extends Number>>();
     private static final int TEXT_FIELD_LENGTH = 10;
@@ -168,7 +172,7 @@ abstract public class DialogCircuitComponent<T extends AbstractBlockInterface> e
                 element.setParameter(element.getParameter());
                 closeWindow();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.error("Failed to process dialog input", ex);
             }
         }
     };

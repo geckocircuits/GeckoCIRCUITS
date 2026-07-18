@@ -64,7 +64,8 @@ public final class SourceFileGenerator {
             appendFunctionSourceCode(sourceStringBuilder, source._sourceCode, variableBusWidth._useMatrix.getValue());
             appendClassFooter(sourceStringBuilder);
             return sourceStringBuilder.toString();
-        } catch (IOException ex) {LogManager.getLogger(JavaBlockSource.class).error("Exception occurred", ex);
+        } catch (IOException ex) {
+            LOGGER.error("Failed to generate Java block source code", ex);
         }
         assert false;
         return null;

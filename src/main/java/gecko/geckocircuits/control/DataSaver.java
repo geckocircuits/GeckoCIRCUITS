@@ -127,7 +127,8 @@ public final class DataSaver extends Observable implements Observer {
                     doFullSave(_data);
                     try {
                         _linePrinter.closeStream();
-                    } catch (IOException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
+                    } catch (IOException ex) {
+                        LOGGER.error("Failed to close line printer stream after simulation-end save", ex);
                     }
                     WAIT_COUNTER.decrementAndGet();
                     if (WAIT_COUNTER.get() < 0) {
@@ -140,14 +141,16 @@ public final class DataSaver extends Observable implements Observer {
                         doFullSave(_data);
                         try {
                             Thread.sleep(SLEEP_TIMER);
-                        } catch (InterruptedException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
+                        } catch (InterruptedException ex) {
+                            LOGGER.error("Save loop sleep interrupted", ex);
                         }
                     }
                     // do one final save at simulation end!
                     doFullSave(_data);
                     try {
                         _linePrinter.closeStream();
-                    } catch (IOException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
+                    } catch (IOException ex) {
+                        LOGGER.error("Failed to close line printer stream after continuous save", ex);
                     }
                 }
             } catch (SignalMissingException exc) {
@@ -175,8 +178,10 @@ public final class DataSaver extends Observable implements Observer {
                     _abortSignal = true;
                     Thread.sleep(SLEEP_TIMER);
                 }
-            } catch (InterruptedException ex) {LogManager.getLogger(DataSaver.class).error("Exception occurred", ex);
-            } catch (IOException ex) {LogManager.getLogger(DataSaver.class).warn("Error while closing previous data stream", ex);
+            } catch (InterruptedException ex) {
+                LOGGER.error("Init save interrupted while waiting for previous save to finish", ex);
+            } catch (IOException ex) {
+                LOGGER.warn("Error while closing previous data stream", ex);
             } finally {
                 _linePrinter = null;
             }
@@ -239,12 +244,13 @@ public final class DataSaver extends Observable implements Observer {
                     try {
                         Thread.sleep(1);
                     } catch (InterruptedException ex) {
-                        ex.printStackTrace();
+                        LOGGER.error("Save loop sleep interrupted", ex);
                     }
                 }
             }
             _lastSavedDataIndex = maxIndex;
-        } catch (IOException ex) {LogManager.getLogger(DialogDataExport.class).error("Exception occurred", ex);
+        } catch (IOException ex) {
+            LOGGER.error("Failed to write data line to file", ex);
         }
     }
 

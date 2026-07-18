@@ -93,7 +93,8 @@ public final class DialogDataExport extends javax.swing.JDialog {
         _inFillLists = true;
         try { // somewhere, I have a race condition when a signal is deleted...
             Thread.sleep(100);
-        } catch (InterruptedException ex) {LogManager.getLogger(DialogDataExport.class).error("Exception occurred", ex);
+        } catch (InterruptedException ex) {
+            LOGGER.error("fillLists sleep interrupted", ex);
         }
         final AbstractDataContainer container = _containers.get(0);
         if (container == null) {

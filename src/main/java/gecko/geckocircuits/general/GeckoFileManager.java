@@ -84,7 +84,7 @@ public final class GeckoFileManager {
                 _allAvailableFiles.remove(getFile(fileHash));
             }
         } catch (Exception ex) {
-            LOGGER.error("GeckoFile not found: " + ex.getMessage());
+            LOGGER.error("GeckoFile not found for hash: " + fileHash, ex);
         }
     }
 

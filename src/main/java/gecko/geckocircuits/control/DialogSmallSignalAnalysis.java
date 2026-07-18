@@ -103,8 +103,7 @@ public class DialogSmallSignalAnalysis extends DialogElementCONTROL<ControlSmall
 
             con.add(namePanel2, BorderLayout.NORTH);
         } catch (Exception ex) {
-            // sometimes, I git an XException here... don't know the reason.
-            ex.printStackTrace();
+            LOGGER.error("Failed to initialize small signal analysis dialog GUI", ex);
         }
 
         _bodePlot = new BodePlot2();

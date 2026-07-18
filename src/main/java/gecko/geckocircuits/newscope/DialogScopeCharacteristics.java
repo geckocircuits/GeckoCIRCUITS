@@ -27,6 +27,8 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressWarnings({"this-escape", "serial"})
@@ -34,6 +36,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class DialogScopeCharacteristics extends GeckoDialog {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogScopeCharacteristics.class);
 
     private GridBagConstraints _gridBagConst = new GridBagConstraints();
     private final TechFormat _cf = new TechFormat();
@@ -98,7 +102,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                     java.awt.Image equ1 = new ImageIcon(pngUrl).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exc) {
-                    exc.printStackTrace();
+                    LOGGER.error("Failed to load characteristics equation image", exc);
                 }
             }
         };
@@ -127,7 +131,7 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                     java.awt.Image equ1 = new ImageIcon(pngUrl).getImage();
                     graphics.drawImage(equ1, 0, 0, null);
                 } catch (Exception exception) {
-                    exception.printStackTrace();
+                    LOGGER.error("Failed to load power analysis equation image", exception);
                 }
             }
         };
@@ -261,12 +265,12 @@ public class DialogScopeCharacteristics extends GeckoDialog {
                 _jTextFieldStatus.setText("Calculation OK");
 
             } catch (IndexOutOfBoundsException ex) {
-                ex.printStackTrace();
+                LOGGER.error("Index out of bounds when calculating characteristics", ex);
                 _jTextFieldStatus.setForeground(Color.red);
                 _jTextFieldStatus.setText(ex.getMessage());
 
             } catch (Exception exc) {
-                exc.printStackTrace();
+                LOGGER.error("Failed to calculate scope characteristics", exc);
                 _jTextFieldStatus.setForeground(Color.red);
                 _jTextFieldStatus.setText("Data-Error");
             } finally {

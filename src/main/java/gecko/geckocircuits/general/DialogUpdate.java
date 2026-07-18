@@ -46,7 +46,8 @@ public final class DialogUpdate extends javax.swing.JFrame {
             public void run() {
                 try {
                     Thread.sleep(10000);
-                } catch (InterruptedException ex) {LogManager.getLogger(DialogUpdate.class).error("Exception occurred", ex);
+                } catch (InterruptedException ex) {
+                    LOGGER.error("Update check thread interrupted", ex);
                 }
 
                 doUpdateCheck(PRO_URL);
@@ -103,7 +104,8 @@ public final class DialogUpdate extends javax.swing.JFrame {
             final Date rDate = _dFormat.parse(DialogAbout.RELEASE_DATE);
             jLabelCurrentDate.setText(_showFormat.format(rDate));
 
-        } catch (ParseException ex) {LogManager.getLogger(DialogUpdate.class).error("Exception occurred", ex);
+        } catch (ParseException ex) {
+            LOGGER.error("Failed to parse release date: " + DialogAbout.RELEASE_DATE, ex);
         }
 
     }
@@ -386,7 +388,8 @@ public final class DialogUpdate extends javax.swing.JFrame {
                 }
             }
 
-        } catch (IOException | URISyntaxException ex) {LogManager.getLogger(DialogUpdate.class).error("Exception occurred", ex);
+        } catch (IOException | URISyntaxException ex) {
+            LOGGER.error("Failed to download update", ex);
             jButtonGetUpdateOS.setText("Download failed!");
         } catch (Throwable error) {
             JOptionPane.showMessageDialog(this,

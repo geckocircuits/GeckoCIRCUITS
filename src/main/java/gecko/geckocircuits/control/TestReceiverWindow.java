@@ -946,10 +946,9 @@ public final class TestReceiverWindow extends JFrame {
                                 JOptionPane.ERROR_MESSAGE);
                         _abortCalculation = true;
                         abortCalculation();
-                        err.printStackTrace();
+                        LOGGER.error("Out of memory during EMI test receiver calculation", err);
                     } catch (Throwable error) {
-                        LOGGER.error("error: " + error.getMessage());
-                        error.printStackTrace();
+                        LOGGER.error("Error during EMI test receiver calculation: " + error.getMessage(), error);
                     }
                 }
                 _dataContainer.insertValuesAtEnd(data, frequency);

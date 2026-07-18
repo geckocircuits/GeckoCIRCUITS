@@ -73,7 +73,7 @@ final class SliderContainer{
       initYSliderValue();
     }
     if(_ySliderValues.size() != _grafer.getDataContainer().getRowLength()){
-      LOGGER.info("ERROR");
+      LOGGER.error("Slider Y value size mismatch with data container row length");
     }
     if(_activeSlider.equals(_redSlider)){
       return getSliderValues(curveID).getYValue1();
@@ -112,7 +112,7 @@ final class SliderContainer{
       return new SliderValues(0, 0, 0, 0);
       }
     }catch(Exception ex){
-      ex.printStackTrace();
+      LOGGER.error("Failed to get slider values for curveID " + curveID, ex);
       return new SliderValues(0, 0, 0, 0);
     }
   }

@@ -53,7 +53,8 @@ public final class GeckoCustomRemote extends AbstractGeckoCustom implements Geck
                 if (lastClient != null) {
                     lastClient.printErrorMessage(message);
                 }
-            } catch (RemoteException ex) {LogManager.getLogger(GeckoCustomRemote.class).error("Exception occurred", ex);
+            } catch (RemoteException ex) {
+                LOGGER.error("Failed to send error message to remote client", ex);
             }
         }
     }

@@ -36,6 +36,8 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -48,6 +50,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class ScopeFrame extends javax.swing.JFrame{
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = LogManager.getLogger(ScopeFrame.class);
   private GraferV4 _grafer;
   private ControlOSZI _regelBlockOSZI;
   /**
@@ -153,7 +156,7 @@ public final class ScopeFrame extends javax.swing.JFrame{
       URL gifUrl = new URL(picsUrl, "gecko.gif");
       this.setIconImage(new ImageIcon(gifUrl).getImage());
     }catch(Exception e){
-      e.printStackTrace();
+      LOGGER.error("Failed to load scope frame icon image", e);
     }
 
     this.addComponentListener(
@@ -509,7 +512,7 @@ private void jMenuItemContinueActionPerformed(java.awt.event.ActionEvent evt) {/
   try{
         GeckoSim._win.continueCalculationWithPossibleErrorMessage();
   }catch(RuntimeException re){
-    re.printStackTrace();
+    LOGGER.error("Failed to continue calculation", re);
   }
 }//GEN-LAST:event_jMenuItemContinueActionPerformed
 

@@ -485,7 +485,8 @@ private void jButtonNextMaxActionPerformed(java.awt.event.ActionEvent evt) {//NO
             _sliderContainer.goToExtrema(getIterationDirection(), ExtremumType.MAXIMUM, _grafer.get(0));
         }
         _grafer.get(0)._xSliderDrawer.setDisplayRanges(_sliderContainer.getSliderXRange());
-    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
+    } catch (NoCurveSelectedException ex) {
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextMaxActionPerformed
 
@@ -520,21 +521,24 @@ private void jButtonNextMinActionPerformed(java.awt.event.ActionEvent evt) {//NO
         } else {
             _sliderContainer.goToExtrema(getIterationDirection(), ExtremumType.MINIMUM, _grafer.get(0));
         }
-    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
+    } catch (NoCurveSelectedException ex) {
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextMinActionPerformed
 
 private void jButtonNextZeroActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonNextZeroActionPerformed
     try {
         _sliderContainer.goToZeroOrEqual(getIterationDirection(), true, _grafer.get(0));
-    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
+    } catch (NoCurveSelectedException ex) {
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextZeroActionPerformed
 
 private void jButtonNextEqualActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonNextEqualActionPerformed
     try {
         _sliderContainer.goToZeroOrEqual(getIterationDirection(), false, _grafer.get(0));
-    } catch (NoCurveSelectedException ex) {LogManager.getLogger(NewScope.class).warn(ex.getMessage());
+    } catch (NoCurveSelectedException ex) {
+        LOGGER.warn(ex.getMessage());
     }
 }//GEN-LAST:event_jButtonNextEqualActionPerformed
 

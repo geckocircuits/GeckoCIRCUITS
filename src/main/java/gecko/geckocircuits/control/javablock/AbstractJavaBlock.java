@@ -104,7 +104,8 @@ public abstract class AbstractJavaBlock {
 
         try {
             doCompilationIfRequired();
-        } catch (IOException ex) {LogManager.getLogger(ControlJavaFunction.class).error("IOException during compilation: " + ex.getMessage(), ex);
+        } catch (IOException ex) {
+            LOGGER.error("IOException during compilation: " + ex.getMessage(), ex);
         }
     }
 
@@ -142,7 +143,8 @@ public abstract class AbstractJavaBlock {
             if (_compileObject.getCompileStatus() == CompileStatus.NOT_COMPILED) {
                 doCompilationIfRequired();
             }
-        } catch (Exception ex) {LogManager.getLogger(ControlJavaFunction.class).error("could not find class.", ex);
+        } catch (Exception ex) {
+            LOGGER.error("Could not find class during export", ex);
         }
 
         _javaBlockSource.exportIndividualCONTROL(ascii);
@@ -166,9 +168,8 @@ public abstract class AbstractJavaBlock {
             oOutStream.close();
             final byte[] outBytes = baos.toByteArray();
             ProjectData.appendAsString(ascii.append("\nclassMapBytes"), outBytes);
-        } catch (IOException ex) {LogManager.getLogger(ControlJavaFunction.class).error("IOException while serializing class map: " + ex.getMessage(), ex);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            LOGGER.error("IOException while serializing class map: " + ex.getMessage(), ex);
         }
 
     }
@@ -187,9 +188,8 @@ public abstract class AbstractJavaBlock {
             final ObjectInputStream oInStream = new ObjectInputStream(bais);
             final Map<String, CompiledClassContainer> classMap = (Map<String, CompiledClassContainer>) oInStream.readObject();
             _classNameFileMap = classMap;
-        } catch (IOException ex) {LogManager.getLogger(ControlJavaFunction.class).error("IOException while deserializing class map: " + ex.getMessage(), ex);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IOException | ClassNotFoundException ex) {
+            LOGGER.error("Exception while deserializing class map: " + ex.getMessage(), ex);
         }
 
         int compileOrdinal = CompileStatus.NOT_COMPILED.ordinal();

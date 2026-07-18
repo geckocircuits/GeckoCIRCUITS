@@ -44,7 +44,8 @@ public class GeckoSimulink {
         }
         try {
             GeckoSim._win.openFile(sFileName);
-        } catch (FileNotFoundException ex) {LogManager.getLogger(GeckoSimulink.class).error("Exception occurred", ex);
+        } catch (FileNotFoundException ex) {
+            LOGGER.error("Failed to open Simulink coupling file: " + sFileName, ex);
         }
         return "returnValue";
     }

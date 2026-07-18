@@ -156,8 +156,8 @@ public final class Cispr16Fft {
                 return;
             }
         } catch (NoClassDefFoundError error) {
-            LOGGER.error("Error: could not find JTransforms class library!\n"
-                    + "Continue with built-in FFT algorithm.");
+            LOGGER.error("Could not find JTransforms class library!\n"
+                    + "Continue with built-in FFT algorithm.", error);
 
         }
 

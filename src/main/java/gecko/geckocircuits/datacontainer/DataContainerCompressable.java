@@ -106,7 +106,8 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
     public boolean isInvalidNumbers(final int row) {
         try { // first enshure that all data ranges are read:
             getAbsoluteMinMaxValue(row);
-        } catch (ArithmeticException ex) {LogManager.getLogger(DataContainerCompressable.class).warn(ex.getMessage());
+        } catch (ArithmeticException ex) {
+            LOGGER.warn(ex.getMessage());
         }
         // then return the invalid number result!
         return _containsInvalidNumbers[row];
@@ -299,7 +300,7 @@ public final class DataContainerCompressable extends AbstractDataContainer imple
                 _memoryContainer = null;
             }
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to calculate min/max values when pausing container", ex);
         }
         setChanged();
         notifyObservers();

@@ -163,14 +163,14 @@ public class CompressedData {
             return fileContent;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to read data from file: " + path, e);
         } finally {
             try {
                 if (fip != null) {
                     fip.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to close file input stream", e);
             }
         }
         return new byte[0];

@@ -196,7 +196,8 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
             for (int i = 0; i < iconFiles.length; i++) {
                 URL iconUrl = DialogFourierDiagram.class.getResource("/gecko/geckocircuits/general/" + iconFiles[i]);
                 iconON[i] = new ImageIcon(iconUrl);
-                if (iconON[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {LogManager.getLogger(DialogFourierDiagram.class).warn("Failed to load icon: " + iconFiles[i]);
+                if (iconON[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
+                    LOGGER.warn("Failed to load icon: " + iconFiles[i]);
                 }
             }
 
@@ -207,10 +208,12 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
             for (int i = 0; i < iconFilesOFF.length; i++) {
                 URL iconUrl = DialogFourierDiagram.class.getResource("/gecko/geckocircuits/general/" + iconFilesOFF[i]);
                 iconOFF[i] = new ImageIcon(iconUrl);
-                if (iconOFF[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {LogManager.getLogger(DialogFourierDiagram.class).warn("Failed to load icon: " + iconFilesOFF[i]);
+                if (iconOFF[i].getImageLoadStatus() != java.awt.MediaTracker.COMPLETE) {
+                    LOGGER.warn("Failed to load icon: " + iconFilesOFF[i]);
                 }
             }
-        } catch (Exception e) {LogManager.getLogger(DialogFourierDiagram.class).warn(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage());
         }
         //
         mouseButtons = new JButton[iconOFF.length];
@@ -237,7 +240,8 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
                 case 4:
                     mouseButtons[i1].setToolTipText("set logarithmic y-axis");
                     break;
-                default:LogManager.getLogger(DialogFourierDiagram.class).warn("Error: 49ugnw3grjgtfzj");
+                default:
+                    LOGGER.error("Unexpected mouse button index: 49ugnw3grjgtfzj");
                     break;
             }
             //--------------------
@@ -302,7 +306,8 @@ public class DialogFourierDiagram extends JDialog implements ComponentListener {
                 }
 
                 break;
-            default:LogManager.getLogger(DialogFourierDiagram.class).warn("Error: 98n3gweggtq5t");
+            default:
+                LOGGER.error("Unexpected mouse mode case: 98n3gweggtq5t");
                 break;
         }
         for (int i1 = 1; i1 < _worksheet.getRowLength()+1; i1++) {

@@ -67,7 +67,6 @@ public final class BlockOrderOptimizer3 {
                     iterateIntoNegativeDirection(node.getAllDirectInputs(), node.getPriority() - 1);
                 } catch (LoopDetectionException ex) {
                     ex.printLoopMessage();
-                    //LogManager.getLogger(BlockOrderOptimizer3.class).error("Exception occurred", ex);
                 }
             }
         }
@@ -86,7 +85,6 @@ public final class BlockOrderOptimizer3 {
                     iterateIntoNegativeDirection(node.getAllDirectInputs(), node.getPriority() - 1);
                 } catch (LoopDetectionException ex) {
                     ex.printLoopMessage();
-                    //LogManager.getLogger(BlockOrderOptimizer3.class).error("Exception occurred", ex);
                 }
             }
         }

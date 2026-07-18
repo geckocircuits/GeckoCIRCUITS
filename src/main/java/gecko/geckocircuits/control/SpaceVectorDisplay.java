@@ -175,7 +175,8 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
-        } catch (Exception ex) {LogManager.getLogger(SpaceVectorDisplay.class).warn("Failed to load icon image", ex);
+        } catch (Exception ex) {
+            LOGGER.warn("Failed to load icon image", ex);
         }
         initComponents();
 
@@ -530,7 +531,8 @@ public final class SpaceVectorDisplay extends javax.swing.JFrame {
         if (pauseValue >= 1) {
             try {
                 Thread.sleep(pauseValue / 1000, pauseValue % 1000 );
-            } catch (InterruptedException ex) {LogManager.getLogger(SpaceVectorDisplay.class).error("Exception occurred", ex);
+            } catch (InterruptedException ex) {
+                LOGGER.error("Space vector display pause sleep interrupted", ex);
             }
         }
 

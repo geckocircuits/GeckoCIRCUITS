@@ -296,7 +296,6 @@ public final class ControlJavaFunction extends RegelBlock implements VariableTer
 
                 // Exception in the main method that we just tried to run
                 //showMsg("Exception in main: " + ex.getTargetException());
-                //ex.getTargetException().printStackTrace();
             } catch (Exception ex) {
                 LOGGER.error(ex.getMessage());
                 final StackTraceElement[] ste = ex.getStackTrace();

@@ -65,7 +65,7 @@ public final class DialogFindInModel extends javax.swing.JDialog {
                 jTextField.setText(foundString);
                 _se._visibleCircuitSheet.findString(foundString, jCheckBoxIgnore.isSelected(), !jCheckBoxExact.isSelected());
                 } catch (Exception ex) {
-                    LOGGER.error("could not find component!");
+                    LOGGER.error("could not find component!", ex);
                 }
             }
         });

@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JPanel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -39,6 +41,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public abstract class AbstractDiagram extends JPanel {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOGGER = LogManager.getLogger(AbstractDiagram.class);
 
     public final DiagramSettings _diagramSettings;
     protected Axis _xAxis = new Axis(Axis.Direction.X, false, this);
@@ -407,7 +411,7 @@ public abstract class AbstractDiagram extends JPanel {
                 try {
                     curve._curvePainter.loadRequiredData(container, forceLoad);
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    LOGGER.error("Failed to load required data for curve", ex);
                 }
             }
         }

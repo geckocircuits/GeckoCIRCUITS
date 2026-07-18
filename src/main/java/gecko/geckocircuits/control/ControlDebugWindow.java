@@ -159,7 +159,8 @@ public class ControlDebugWindow extends GeckoDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {LogManager.getLogger(ControlDebugWindow.class).error("Exception occurred", ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            LOGGER.error("Failed to set Nimbus look and feel", ex);
         }
         //</editor-fold>
 

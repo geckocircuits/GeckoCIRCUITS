@@ -83,12 +83,17 @@ public class JavaBlockMatrix extends AbstractJavaBlock {
             try {
                 _compiledInstance = (ControlCalculatableMatrix) clazz.newInstance();
 
-            } catch (NoClassDefFoundError err) {LogManager.getLogger(ControlJavaFunction.class).error("NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
-            } catch (InstantiationException ex) {LogManager.getLogger(ControlJavaFunction.class).error("InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
-            } catch (IllegalAccessException ex) {LogManager.getLogger(ControlJavaFunction.class).error("IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
-            } catch (SecurityException ex) {LogManager.getLogger(ControlJavaFunction.class).error("SecurityException while creating Java block instance: " + ex.getMessage(), ex);
+            } catch (NoClassDefFoundError err) {
+                LOGGER.error("NoClassDefFoundError while loading Java block: " + err.getMessage(), err);
+            } catch (InstantiationException ex) {
+                LOGGER.error("InstantiationException while creating Java block instance: " + ex.getMessage(), ex);
+            } catch (IllegalAccessException ex) {
+                LOGGER.error("IllegalAccessException while creating Java block instance: " + ex.getMessage(), ex);
+            } catch (SecurityException ex) {
+                LOGGER.error("SecurityException while creating Java block instance: " + ex.getMessage(), ex);
             }
-        } catch (ClassNotFoundException ex) {LogManager.getLogger(ControlJavaFunction.class).error("ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
+        } catch (ClassNotFoundException ex) {
+            LOGGER.error("ClassNotFoundException while loading Java block class: " + ex.getMessage(), ex);
         }
     }
 

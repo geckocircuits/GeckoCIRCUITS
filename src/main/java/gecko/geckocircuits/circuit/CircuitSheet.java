@@ -195,7 +195,7 @@ public class CircuitSheet extends JPanel {
             } catch (ConcurrentModificationException ex) {
                 // ignored: concurrent paint during component insertion, repaint will follow
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LOGGER.error("Error painting circuit sheet", ex);
             }
 
 

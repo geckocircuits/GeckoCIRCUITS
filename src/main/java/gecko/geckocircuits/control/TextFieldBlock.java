@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.AbstractSpecialBlock;
 import gecko.geckocircuits.circuit.CircuitSheet;
@@ -31,6 +33,8 @@ import java.util.Collections;
 import java.util.List;
 
 public final class TextFieldBlock extends AbstractSpecialBlock implements Operationable {
+
+    private static final Logger LOGGER = LogManager.getLogger(TextFieldBlock.class);
 
     public static final ControlTypeInfo tInfo = new ControlTypeInfo(TextFieldBlock.class, "TEXT", I18nKeys.TEXT_FIELD);
 
@@ -193,7 +197,7 @@ public final class TextFieldBlock extends AbstractSpecialBlock implements Operat
             }
             graphics.setColor(origColor);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to paint text field block", ex);
         }
     }
     //CHECKSTYLE:ON

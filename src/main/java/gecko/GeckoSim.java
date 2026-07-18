@@ -172,7 +172,7 @@ public class GeckoSim {
                 remoteLoading = false;
                 return;//System.exit(12);
             } else {
-                LOGGER.info("ERROR: Could not start GeckoCIRCUITS.");
+                LOGGER.error("Could not start GeckoCIRCUITS.");
                 remoteLoaded = false;
                 remoteLoading = false;
                 return;//System.exit(12);
@@ -192,7 +192,7 @@ public class GeckoSim {
                 mmfLoading = false;
                 return;//System.exit(12);
             } else {
-                LOGGER.info("ERROR: Could not start GeckoCIRCUITS.");
+                LOGGER.error("Could not start GeckoCIRCUITS.");
                 mmfLoaded = false;
                 mmfLoading = false;
                 return;//System.exit(12);
@@ -222,7 +222,7 @@ public class GeckoSim {
                  BufferedReader bufferedReader = new BufferedReader(reader)) {
                 _win.openFile(bufferedReader);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Failed to open branded version file", e);
             }
 
 
@@ -252,7 +252,7 @@ public class GeckoSim {
                                 }
                                 GeckoRemoteRegistry.enableRemotePort();
                             } catch (Throwable err) {
-                                err.printStackTrace();
+                                LOGGER.error("Failed to set up remote access port", err);
                                 System.exit(4);
                             }
 
@@ -276,7 +276,7 @@ public class GeckoSim {
                                     System.exit(4);
                                 }
                             } catch (Throwable err) {
-                                err.printStackTrace();
+                                LOGGER.error("Failed to set up memory-mapped file access", err);
                                 System.exit(4);
                             }
                         }
@@ -332,7 +332,7 @@ public class GeckoSim {
                     awt_wmgr.set(null, metacity_wm.get(null));
                 }
             } catch (Exception x) {
-                x.printStackTrace();
+                LOGGER.error("Failed to set window manager", x);
             }
         }
 
@@ -398,7 +398,7 @@ public class GeckoSim {
                         File appDataDir = findOrCreateAppDataDirectory();
                         APPLICATION_PROPERTY_FILE = appDataDir.getAbsolutePath() + "/GeckoProperties.prp";
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        LOGGER.error("Failed to locate or create app data directory", ex);
                     }
 
                     File existsText = new File(APPLICATION_PROPERTY_FILE);
@@ -408,12 +408,14 @@ public class GeckoSim {
                         }
                     }
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    LOGGER.error("Failed to load application properties from user directory", ex);
                 }
             }
 
-        } catch (FileNotFoundException e) {LogManager.getLogger(GeckoSim.class).error("Could not find file: " + e.getMessage());
-        } catch (IOException ex) {LogManager.getLogger(GeckoSim.class).error("Exception occurred", ex);
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Could not find default properties file: " + e.getMessage());
+        } catch (IOException ex) {
+            LOGGER.error("Failed to load application properties", ex);
         }
 
     }
@@ -427,7 +429,8 @@ public class GeckoSim {
             GlobalFilePathes.RECENT_CIRCUITS_3 = applicationProps.getProperty("RECENT_CIRCUITS_3");
             GlobalFilePathes.RECENT_CIRCUITS_4 = applicationProps.getProperty("RECENT_CIRCUITS_4");
 
-        } catch (Exception e) {LogManager.getLogger(GeckoSim.class).warn("Failed to load recent circuit paths from properties", e);
+        } catch (Exception e) {
+            LOGGER.warn("Failed to load recent circuit paths from properties", e);
         }
     }
 
@@ -532,13 +535,15 @@ public class GeckoSim {
             }
 
 
-            File file = new File(APPLICATION_PROPERTY_FILE);LogManager.getLogger(GeckoSim.class).debug("Saving system properties: " + file.getAbsolutePath());
+            File file = new File(APPLICATION_PROPERTY_FILE);
+            LOGGER.debug("Saving system properties: " + file.getAbsolutePath());
             try (FileOutputStream out = new FileOutputStream(file)) {
                 applicationProps.store(out, "--- GeckoCIRCUITS Property File ---");
             }
-        } catch (FileNotFoundException fnfe) {LogManager.getLogger(GeckoSim.class).warn("Could not write property file. Perhaps we do not have file write permissions.", "");
+        } catch (FileNotFoundException fnfe) {
+            LOGGER.warn("Could not write property file. Perhaps we do not have file write permissions.", fnfe);
         } catch (IOException ex) {
-            ex.printStackTrace();LogManager.getLogger(GeckoSim.class).error("Exception occurred", ex);
+            LOGGER.error("Failed to save application properties", ex);
         }
     }
 
@@ -550,7 +555,7 @@ public class GeckoSim {
                 final File geckoAppData = new File(dataFolder + "/.GeckoCIRCUITS");
                 if (!geckoAppData.exists()) {
                     if (!geckoAppData.mkdir()) {
-                        LOGGER.error("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
+                        LOGGER.warn("Could not create directory: " + geckoAppData.getAbsolutePath());
                     }
                 }
                 if (geckoAppData.exists()) {
@@ -564,7 +569,7 @@ public class GeckoSim {
             final File geckoAppData = new File(dataFolder + "/.GeckoCIRCUITS");
             if (!geckoAppData.exists()) {
                 if (!geckoAppData.mkdir()) {
-                    LOGGER.error("Warning: Could not create directory: " + geckoAppData.getAbsolutePath());
+                    LOGGER.warn("Could not create directory: " + geckoAppData.getAbsolutePath());
                 }
             }
             if (geckoAppData.exists()) {
@@ -621,7 +626,8 @@ public class GeckoSim {
     private static void loadFileSwingThreadSave(final String absolutePath) {
         try {
             _win.openFile(absolutePath);
-        } catch (FileNotFoundException ex) {LogManager.getLogger(GeckoSim.class).error("Exception occurred", ex);
+        } catch (FileNotFoundException ex) {
+            LOGGER.error("Failed to open file: " + absolutePath, ex);
         }
     }
 

@@ -251,8 +251,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             } catch (NameAlreadyExistsException ex1) {
                 try {
                     final String oldName = getStringID();
-                    setNewNameChecked(IDStringDialog.findUnusedName(oldName));LogManager.getLogger(AbstractBlockInterface.class).error("Exception occurred", ex1);
-                } catch (NameAlreadyExistsException ex2) {LogManager.getLogger(AbstractBlockInterface.class).error("Exception occurred", ex2);
+                    setNewNameChecked(IDStringDialog.findUnusedName(oldName));
+                } catch (NameAlreadyExistsException ex2) {
+                    LOGGER.error("Failed to assign unused name during import", ex2);
                 }
             }
             LOGGER.info(ex.getMessage() + " renamed to: " + getStringID());

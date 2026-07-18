@@ -111,7 +111,8 @@ public class DialogModule extends GeckoDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {LogManager.getLogger(DialogModule.class).error("Exception occurred", ex);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            LOGGER.error("Failed to set Nimbus look and feel", ex);
         }
         //</editor-fold>
 

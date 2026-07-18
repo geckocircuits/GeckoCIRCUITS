@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoSim;
 import gecko.geckocircuits.general.FormatJTextField;
 import gecko.geckocircuits.general.GlobalFilePathes;
@@ -29,6 +31,8 @@ import java.net.URL;
 import javax.swing.*;
 
 public final class DialogLabelEingeben extends JDialog {
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogLabelEingeben.class);
 
     private final Connection _connector;
     private final FormatJTextField _textField = new FormatJTextField();
@@ -47,7 +51,7 @@ public final class DialogLabelEingeben extends JDialog {
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to set dialog icon image", e);
         }
 
         _clickedTerminal = terminal;

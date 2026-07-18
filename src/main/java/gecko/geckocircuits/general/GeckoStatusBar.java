@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoCustomRemote;
 import gecko.GeckoRemoteRegistry;
 import gecko.GeckoSim;
@@ -32,6 +34,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class GeckoStatusBar extends JPanel {
+
+    private static final Logger LOGGER = LogManager.getLogger(GeckoStatusBar.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -82,7 +86,7 @@ public class GeckoStatusBar extends JPanel {
 
                     repaint();
                 } catch (Throwable error) {
-                    error.printStackTrace();
+                    LOGGER.error("Error updating status bar remote access indicator", error);
                 }
             }
         };

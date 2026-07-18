@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.general;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.GeckoCustomMMF;
 import gecko.GeckoCustomRemote;
 import gecko.GeckoRemoteRegistry;
@@ -27,6 +29,8 @@ import javax.swing.JOptionPane;
  * @author Andrija
  */
 public final class DialogRemotePort extends javax.swing.JDialog {
+
+    private static final Logger LOGGER = LogManager.getLogger(DialogRemotePort.class);
 
     private String[] _localIPs;
     private String _externalIP;
@@ -542,7 +546,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error with remote access", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            LOGGER.error("Failed to process remote access user input", ex);
         }
     }
 
@@ -651,7 +655,7 @@ public final class DialogRemotePort extends javax.swing.JDialog {
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error with memory-mapped access", JOptionPane.ERROR_MESSAGE);
-            ex.printStackTrace();
+            LOGGER.error("Failed to process memory-mapped file user input", ex);
         }
     }
 

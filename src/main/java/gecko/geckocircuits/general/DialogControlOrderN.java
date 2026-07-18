@@ -245,13 +245,9 @@ public class DialogControlOrderN extends javax.swing.JDialog implements DragGest
 //                }
 //            }
 //        } catch (ClassNotFoundException ex) {
-//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        } catch (InstantiationException ex) {
-//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        } catch (IllegalAccessException ex) {
-//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//LogManager.getLogger(DialogControlOrderN.class).error("Exception occurred", ex);
 //        }
 //</editor-fold>
 //        /* Create and display the dialog */

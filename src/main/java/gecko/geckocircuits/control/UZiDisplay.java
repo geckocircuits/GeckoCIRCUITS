@@ -466,7 +466,8 @@ public final class UZiDisplay extends GeckoDialog {
         if (pauseValue >= 1) {
             try {
                 Thread.sleep(pauseValue / 1000, pauseValue % 1000);
-            } catch (InterruptedException ex) {LogManager.getLogger(SpaceVectorDisplay.class).error("Exception occurred", ex);
+            } catch (InterruptedException ex) {
+                LOGGER.error("U-Z*i display pause sleep interrupted", ex);
             }
         }
 

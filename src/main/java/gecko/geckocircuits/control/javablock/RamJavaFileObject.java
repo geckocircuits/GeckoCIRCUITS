@@ -59,7 +59,8 @@ class RamJavaFileObject extends SimpleJavaFileObject {
     public static URI toURI(final String name) {
         try {
             return new URI(name);
-        } catch (URISyntaxException ex) {LogManager.getLogger(RamJavaFileObject.class).error("Exception occurred", ex);
+        } catch (URISyntaxException ex) {
+            LOGGER.error("Invalid URI syntax: " + name, ex);
         }
         return null;
     }

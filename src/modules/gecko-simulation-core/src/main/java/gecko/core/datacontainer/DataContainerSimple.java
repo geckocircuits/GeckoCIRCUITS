@@ -107,7 +107,7 @@ public class DataContainerSimple extends AbstractDataContainer implements DataCo
             HiLoData returnValue = _abMinMaxValues[row];
             return returnValue;
         } catch (ArrayIndexOutOfBoundsException ex) {
-            LOGGER.info("ArrayIndexOutOfBoundsException!! At index : " + row + ", _abMinMaxValues = " + _abMinMaxValues.length);
+            LOGGER.error("ArrayIndexOutOfBoundsException at index: " + row + ", _abMinMaxValues = " + _abMinMaxValues.length, ex);
         }
         return _abMinMaxValues[0];
     }

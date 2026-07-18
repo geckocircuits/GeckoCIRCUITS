@@ -107,7 +107,8 @@ public final class IDStringDialog {
                 deleteIDString();
                 try {
                     setNewNameChecked(oldName);
-                } catch (NameAlreadyExistsException ex) {LogManager.getLogger(IDStringDialog.class).error("Exception occurred", ex);
+                } catch (NameAlreadyExistsException ex) {
+                    LOGGER.error("Failed to restore old name during undo", ex);
                 }
                 notifyListeners();
             }
@@ -122,7 +123,8 @@ public final class IDStringDialog {
                 deleteIDString();
                 try {
                     setNewNameChecked(newName);
-                } catch (NameAlreadyExistsException ex) {LogManager.getLogger(IDStringDialog.class).error("Exception occurred", ex);
+                } catch (NameAlreadyExistsException ex) {
+                    LOGGER.error("Failed to restore new name during redo", ex);
                 }
                 notifyListeners();
             }
@@ -283,7 +285,8 @@ public final class IDStringDialog {
         } catch (NameAlreadyExistsException ex) {
             try {
                 setNewNameChecked(this + "_" + rand.nextInt());
-            } catch (NameAlreadyExistsException ex1) {LogManager.getLogger(AbstractBlockInterface.class).error("Exception occurred", ex1);
+            } catch (NameAlreadyExistsException ex1) {
+                LOGGER.error("Failed to assign random string ID", ex1);
             }
         }
     }

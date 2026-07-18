@@ -222,7 +222,8 @@ public class DialogExternal extends javax.swing.JDialog {
         if (this.isVisible()) {
             try {
                 _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
-            } catch (NameAlreadyExistsException ex) {LogManager.getLogger(DialogExternal.class).error("Exception occurred", ex);
+            } catch (NameAlreadyExistsException ex) {
+                LOGGER.error("Name already exists when changing control block name", ex);
             }
         }
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped
@@ -277,7 +278,7 @@ public class DialogExternal extends javax.swing.JDialog {
         try {
             _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
         } catch (NameAlreadyExistsException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Name already exists when changing control block name", ex);
         }
 
 

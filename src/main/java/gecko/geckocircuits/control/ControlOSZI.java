@@ -14,6 +14,8 @@
 package gecko.geckocircuits.control;
 import gecko.core.circuit.TokenMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import gecko.geckocircuits.general.ProjectData;
 import gecko.geckocircuits.general.UserParameter;
 import gecko.geckocircuits.circuit.*;
@@ -45,6 +47,7 @@ import java.util.Stack;
         justification = "Scope block exposes data container for efficient simulation data access; transient fields are repopulated during component initialization; exception in setInputTerminalNumber is safely ignored during init")
 public final class ControlOSZI extends RegelBlock implements VariableTerminalNumber,
         SpecialNameVisible {
+    private static final Logger LOGGER = LogManager.getLogger(ControlOSZI.class);
     private static final long serialVersionUID = 1L;
 
     private static final int TERM_POS_X = -2;
@@ -227,7 +230,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
                 ((DataContainerScopeWrapper) _zvDatenRAM).deregisterObserver();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to dispose scope frame", e);
         }
         super.deleteActionIndividual();
     }
@@ -364,7 +367,7 @@ public final class ControlOSZI extends RegelBlock implements VariableTerminalNum
             _scopeFrame.exportIndividualCONTROL(appendLater);
             appendLater.append("\n<\\ScopeWindowSettings>\n");
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            LOGGER.error("Failed to export scope ASCII data", ex);
         }
         ascii.append(appendLater);
     }

@@ -13,6 +13,8 @@
  */
 package gecko.geckocircuits.control;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -25,6 +27,8 @@ import javax.swing.JList;
 import javax.swing.TransferHandler;
 
 public final class ReportingListTransferHandler extends TransferHandler {
+
+    private static final Logger LOGGER = LogManager.getLogger(ReportingListTransferHandler.class);
 
     private DataFlavor _locArrayLstFlvr;
     private final DataFlavor _serArrayLstFlvr;
@@ -39,7 +43,7 @@ public final class ReportingListTransferHandler extends TransferHandler {
         try {
             _locArrayLstFlvr = new DataFlavor(_locArrayListType);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to initialize local ArrayList data flavor", e);
         }
         _serArrayLstFlvr = new DataFlavor(List.class, "ArrayList");
     }

@@ -112,7 +112,8 @@ import java.util.Set;
             warningsString.append(notSinkConnected.getElementControl().getStringID());
             warningsString.append(' ');
         }
-        warningsString.append('\n');LogManager.getLogger(StartFromSinkOrderer.class).warn(warningsString.toString());
+        warningsString.append('\n');
+        LOGGER.warn(warningsString.toString());
     }
 
     void addNodesToNextList(final ControlOrderNode node) {

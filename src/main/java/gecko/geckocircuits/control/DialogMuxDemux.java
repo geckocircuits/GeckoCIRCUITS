@@ -152,7 +152,8 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         if (this.isVisible()) {
             try {
                 _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
-            } catch (NameAlreadyExistsException ex) {LogManager.getLogger(DialogMuxDemux.class).error("Exception occurred", ex);
+            } catch (NameAlreadyExistsException ex) {
+                LOGGER.error("Name already exists when changing control block name", ex);
             }
         }
     }//GEN-LAST:event_jTextFieldIdStringKeyTyped
@@ -183,7 +184,7 @@ public class DialogMuxDemux extends javax.swing.JDialog {
         try {
             _regelBlock.setNewNameChecked(jTextFieldIdString.getText());
         } catch (NameAlreadyExistsException ex) {
-            ex.printStackTrace();
+            LOGGER.error("Name already exists when changing control block name", ex);
         }
     }//GEN-LAST:event_jTextFieldIdStringActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

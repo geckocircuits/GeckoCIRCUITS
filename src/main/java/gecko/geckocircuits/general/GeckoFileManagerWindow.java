@@ -120,7 +120,7 @@ public class GeckoFileManagerWindow extends JDialog {
             URL url = new URL(GlobalFilePathes.PFAD_PICS_URL, "gecko.gif");
             this.setIconImage(new ImageIcon(url).getImage());
         } catch (Exception ex) {
-            LOGGER.error("could not load image icon!");
+            LOGGER.error("could not load image icon!", ex);
         }
 
         jLabelFileType.setText("*" + _fileExtension);
@@ -624,7 +624,7 @@ public class GeckoFileManagerWindow extends JDialog {
                 selectedFile.setStorageType(StorageType.INTERNAL);
             } catch (FileNotFoundException e) {
                 //this exception is not thrown in this case
-                LOGGER.error(e.getMessage());
+                LOGGER.error("Could not set storage type to INTERNAL for new file", e);
             }
         }
         jListSelectedFilesToAdd.repaint();
@@ -651,7 +651,7 @@ public class GeckoFileManagerWindow extends JDialog {
                 selectedFile.setStorageType(StorageType.INTERNAL);
             } catch (FileNotFoundException e) {
                 //this exception is not thrown in this case
-                LOGGER.error(e.getMessage());
+                LOGGER.error("Could not set storage type to INTERNAL for existing file", e);
             }
         }
         jListAvailableFiles.repaint();

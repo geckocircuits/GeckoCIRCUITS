@@ -87,8 +87,7 @@ public final class LossCurvePlotPanel extends SimpleGraferPanel {
                 }
             }
             } catch (Exception ex) {
-                LOGGER.error(curve + " " + curve.data );
-                ex.printStackTrace();
+                LOGGER.error("Failed to insert loss curve data: " + curve + " " + curve.data, ex);
             }
         }
 

@@ -373,7 +373,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             try {
                 toRename.getIDStringDialog().setNewNameChecked(newName);
                 updateComponentCouplings(oldName, newName);
-            } catch (NameAlreadyExistsException ex) {LogManager.getLogger(SchematicEditor2.class).error("Exception occurred", ex);
+            } catch (NameAlreadyExistsException ex) {
+                LOGGER.error("Failed to rename component during import", ex);
             }
         }
 
@@ -1516,7 +1517,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         _visibleCircuitSheet.requestFocusInWindow();  // damit koennen KeyEvents in MainWindow() abgearbeitet werden
         try {
             Thread.sleep(10);
-        } catch (InterruptedException ex) {LogManager.getLogger(SchematicEditor2.class).error("Exception occurred", ex);
+        } catch (InterruptedException ex) {
+            LOGGER.error("Sleep interrupted while requesting focus", ex);
         }
 
         testCreateNewComponent();
@@ -1761,7 +1763,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             clipBoard.setContents(tr1, null);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to export elements to clipboard", e);
         }
         _mouseMoveMode = MouseMoveMode.NONE;
         _visibleCircuitSheet.repaint();
@@ -1809,7 +1811,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
             this.readSelectedElementsFromASCIIString(asciiReadFromClipBoard.toString().split("\n"));
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to import elements from clipboard", e);
         }
 
     }
@@ -1876,7 +1878,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                 } catch (NameAlreadyExistsException ex) {
                     try {
                         block.setNewNameChecked(IDStringDialog.findUnusedName(originalName));
-                    } catch (NameAlreadyExistsException ex1) {LogManager.getLogger(SchematicEditor2.class).error("Exception occurred", ex1);
+                    } catch (NameAlreadyExistsException ex1) {
+                        LOGGER.error("Failed to assign imported element name", ex1);
                     }
                 }
             }

@@ -241,12 +241,14 @@ public final class DialogMakeExternal extends javax.swing.JDialog {
         try {
             output = new BufferedOutputStream(new FileOutputStream(writeFile));
             output.write(_contents);
-        } catch (IOException ex) {LogManager.getLogger(DialogMakeExternal.class).error("Exception occurred", ex);
+        } catch (IOException ex) {
+            LOGGER.error("Failed to write external file: " + writeFile, ex);
         } finally {
             if (output != null) {
                 try {
                     output.close();
-                } catch (IOException ex) {LogManager.getLogger(DialogMakeExternal.class).error("Exception occurred", ex);
+                } catch (IOException ex) {
+                    LOGGER.error("Failed to close output stream for: " + writeFile, ex);
                 }
             }
         }

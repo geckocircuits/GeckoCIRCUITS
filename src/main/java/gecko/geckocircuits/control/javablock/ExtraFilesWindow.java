@@ -63,7 +63,8 @@ public final class ExtraFilesWindow extends javax.swing.JDialog {
             // Fix for Java 21: use URL constructor instead of URI.toURL()
             URL gifUrl = new URL(picsUrl, "gecko.gif");
             this.setIconImage(new ImageIcon(gifUrl).getImage());
-        } catch (Exception ex) {LogManager.getLogger(ExtraFilesWindow.class).info("could not load image icon!");
+        } catch (Exception ex) {
+            LOGGER.warn("Could not load image icon", ex);
         }
 
         _geckoFileable = geckoFileable;
