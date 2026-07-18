@@ -32,6 +32,7 @@ release/
 # Claude Code workspace files
 .claude/
 .agents/
+CLAUDE.md
 
 # IDE files
 .classpath
