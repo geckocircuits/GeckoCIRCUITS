@@ -69,6 +69,19 @@ class ControlReadinessTest {
     }
 
     @Test
+    void sharedVoltageMeasurementAliasRemainsExecutable() {
+        var model = resistorCircuit();
+        model.addControlComponent(control(1, "VOLT.1", new double[0], new String[0], new String[]{"shared"}, "1", "0"));
+        model.addControlComponent(control(1, "VOLT.2", new double[0], new String[0], new String[]{"shared"}, "1", "0"));
+        model.addControlComponent(control(5, "scope", new double[0], new String[]{"shared"}, new String[0]));
+
+        var result = assertInstanceOf(PreparationResult.Ready.class, prepare(model));
+        assertTrue(result.report().readyForHeadless());
+        assertFalse(result.report().diagnostics().stream().anyMatch(d -> d.code().equals("AMBIGUOUS_CONTROL_SIGNAL")),
+                result.report().toString());
+    }
+
+    @Test
     void unsupportedProducerPortCannotBeUsedAsARealSignal() {
         var model = resistorCircuit();
         model.addControlComponent(control(3, "constant", new double[]{1}, new String[0], new String[]{"first", "extra"}));

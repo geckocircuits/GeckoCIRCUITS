@@ -299,6 +299,9 @@ public class MatrixSolver {
         // Adding a large conductance to ground forces p[0] ≈ 0.
         wireReference = netlist.usesWireReference();
         if (!wireReference) a[0][0] += GROUND_CONDUCTANCE;
+        // Desktop LKMatrices pins each galvanically isolated group the same way: 1 S at its lowest node.
+        // No current leaves an isolated group, so the stamp only fixes its reference potential.
+        for (int node : isolatedGroupReferences(netlist)) a[node][node] += 1.0;
 
         double alpha = solverType == SolverType.SOLVER_BE ? 1
                 : solverType == SolverType.SOLVER_TRZ ? 2 : 1.5;
@@ -742,5 +745,26 @@ public class MatrixSolver {
             System.arraycopy(a[row], 1, reduced[row - 1], 0, matrixSize - 1);
         }
         return new Matrix(reduced);
+    }
+
+    /** Lowest node of every conductively connected node group that does not contain node 0. */
+    static int[] isolatedGroupReferences(INetList netlist) {
+        int[] parent = new int[netlist.getNodeMax() + 1];
+        for (int node = 0; node < parent.length; node++) parent[node] = node;
+        for (int element = 0; element < netlist.getElementCount(); element++) {
+            CircuitTypCore type = netlist.getType(element);
+            // An ideal current source adds no voltage constraint or conductance between its nodes.
+            if (type == CircuitTypCore.LK_I || type == CircuitTypCore.TH_FLOW) continue;
+            int x = root(parent, netlist.getNodeX(element)), y = root(parent, netlist.getNodeY(element));
+            // Keep the lower node as root, so each root is its group's lowest node.
+            if (x < y) parent[y] = x; else parent[x] = y;
+        }
+        return java.util.stream.IntStream.range(1, parent.length)
+                .filter(node -> root(parent, node) == node && root(parent, 0) != node).toArray();
+    }
+
+    private static int root(int[] parent, int node) {
+        while (parent[node] != node) node = parent[node] = parent[parent[node]];
+        return node;
     }
 }

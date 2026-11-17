@@ -118,6 +118,13 @@ public class GeckoSim {
             }
         }
 
+        // Tests run in this JVM rather than in the remote client process. The
+        // deprecated GeckoExternal.openFile API changes the global mode to
+        // REMOTE, so later test fixtures must still initialize the local GUI.
+        if (_isTestingMode && (operatingmode == OperatingMode.REMOTE || operatingmode == OperatingMode.MMF)) {
+            operatingmode = OperatingMode.EXTERNAL;
+        }
+
         // Skip GUI initialization for non-GUI modes
         if (operatingmode != OperatingMode.REMOTE && operatingmode != OperatingMode.MMF
                 && operatingmode != OperatingMode.HEADLESS) {
@@ -207,6 +214,11 @@ public class GeckoSim {
         _geckoSim = new GeckoSim();
 
         _geckoSim.initialisiere();
+        if (_isTestingMode) {
+            // Tests dispose and recreate the desktop in one JVM. Do not leave
+            // GeckoExternal bound to a SimulationAccess from the old window.
+            GeckoExternal.external = null;
+        }
         if (!MainWindow.IS_BRANDED) {
             SystemOutputRedirect.init();
         }

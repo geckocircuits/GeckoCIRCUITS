@@ -2,6 +2,7 @@ package gecko.core.simulation;
 
 import gecko.core.preparation.ExecutionOptions;
 import gecko.core.preparation.PreparedCircuit;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -120,6 +121,9 @@ public final class SessionHost implements AutoCloseable {
 
     /** Returns detached signal names in sample order. */
     public String[] signalNames() { return session.signalNames(); }
+
+    /** Returns detached SCOPE channel aliases and their sample-row indexes. */
+    public List<ScopeDataExtractor.ScopeChannel> scopeChannels() { return session.scopeChannels(); }
 
     /** Drains samples in order. Use one consumer because concurrent consumers split the sequence. */
     public int drainSamples(Consumer<SimulationSession.Sample> sink) {

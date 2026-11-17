@@ -291,9 +291,11 @@ public final class CircuitConfiguration {
             }
             if (isSource(component)) {
                 double mode = component.data().getNumericParameters()[0];
-                if (mode != 0 && mode != 1 && mode != 401 && mode != 402) {
+                // Signal control reaches LK voltage and current sources only (ControlCalculatorFactory source mappings).
+                boolean signal = (mode == 2 || mode == 400) && List.of(4, 5).contains(component.data().getType());
+                if (mode != 0 && mode != 1 && mode != 401 && mode != 402 && !signal) {
                     diagnostics.add(new Diagnostic("UNSUPPORTED_SOURCE_MODE", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
-                            "The headless engine requires an independent DC or sinusoidal source", component.domain(),
+                            "The headless engine requires a DC, sinusoidal or signal-controlled source", component.domain(),
                             component.data().getName(), component.data().getName() + ".sourceType", component.data().getSourceLocation()));
                 }
             }

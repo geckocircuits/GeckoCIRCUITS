@@ -15,6 +15,7 @@ package gecko.systemtests;
 
 import gecko.GeckoExternal;
 import gecko.GeckoSim;
+import gecko.geckocircuits.allg.MainWindow;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.preparation.CircuitPreparation;
 import gecko.core.preparation.Diagnostic;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Reports desktop and core signal names without requiring equal names or row order. */
 @Tag("regression")
@@ -49,13 +51,28 @@ public class SignalOrderProbeTest {
     private static final int POLL_INTERVAL_MS = 200;
 
     private Path tempDir;
+    private String previousBackend;
+    private double previousDuration;
+    private double previousDt;
 
     @BeforeAll
     void initGeckoSim() throws Exception {
+        previousBackend = System.getProperty("gecko.backend");
+        System.setProperty("gecko.backend", "legacy");
         GeckoSim._isTestingMode = true;
         GeckoSim.main(new String[]{});
         // Wait for full initialization
         Thread.sleep(2000);
+        previousDuration = MainWindow._solverSettings._tDURATION.getValue();
+        previousDt = MainWindow._solverSettings.dt.getValue();
+    }
+
+    @AfterAll
+    void restoreBackend() {
+        if (previousBackend == null) System.clearProperty("gecko.backend");
+        else System.setProperty("gecko.backend", previousBackend);
+        MainWindow._solverSettings._tDURATION.setValueWithoutUndo(previousDuration);
+        MainWindow._solverSettings.dt.setValueWithoutUndo(previousDt);
     }
 
     @BeforeEach
@@ -98,10 +115,15 @@ public class SignalOrderProbeTest {
                 tempDir.resolve(circuitName + ".golden.csv"));
         double[] simParams = Objects.requireNonNull(GoldenReferenceHelper.readSimulationParams(goldenCsv),
                 "Golden CSV missing tEnd/dt metadata for " + circuitName);
-        double tEnd = simParams[0];
+        double dt = simParams[1];
+        assertTrue(dt > 0, "Golden CSV must include a positive dt for " + circuitName);
+        // Run two steps because this probe checks signal names, not waveform characteristics.
+        double tEnd = Math.min(simParams[0], 2 * dt);
 
         GeckoExternal.openFile(ipesFile.toAbsolutePath().toString());
         Thread.sleep(500);
+        MainWindow._solverSettings._tDURATION.setValueWithoutUndo(tEnd);
+        MainWindow._solverSettings.dt.setValueWithoutUndo(dt);
 
         GeckoExternal.runSimulation();
 

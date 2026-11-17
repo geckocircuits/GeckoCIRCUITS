@@ -12,3 +12,4 @@
 | 2026-11-09 | [ADR-0008: Controlled source compatibility](ADR-0008-controlled-source-compatibility.md) |
 | 2026-11-12 | [ADR-0010: Pull-based frontend and single-owner session](ADR-0010-pull-based-frontend-single-owner-session.md) |
 | 2026-11-13 | [ADR-0011: Numerical reference compatibility](ADR-0011-numerical-reference-compatibility.md) |
+| 2026-11-17 | [ADR-0012: Isolated electrical groups](ADR-0012-isolated-electrical-groups.md) |

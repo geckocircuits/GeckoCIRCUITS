@@ -245,7 +245,7 @@ final class CircuitReadiness {
                     diagnostics.add(new Diagnostic("MISSING_CONTROL_INPUT", Diagnostic.Category.REFERENCES,
                             Diagnostic.Severity.WARNING, "An unconnected CONTROL input uses zero.", "CONTROL",
                             component.getName(), component.getName() + ".input[" + port + "]", component.getSourceLocation()));
-                } else if (producerCount > 1) {
+                } else if (producerCount > 1 && !sharedMeasurementSignal(group, model, controlTopology)) {
                     diagnostics.add(control("AMBIGUOUS_CONTROL_SIGNAL", Diagnostic.Category.REFERENCES, component,
                             "The CONTROL input group identifies more than one signal producer."));
                 }
@@ -272,6 +272,13 @@ final class CircuitReadiness {
                 }
             }
         }
+    }
+
+    private static boolean sharedMeasurementSignal(CircuitTopology.Group group, CircuitModel model,
+            CircuitTopology topology) {
+        return group.producerTerminals().stream().allMatch(terminal -> model.getControlComponents().stream()
+                .filter(candidate -> topology.identity(candidate).equals(terminal.component()))
+                .anyMatch(candidate -> candidate.getType() == 1 || candidate.getType() == 2));
     }
 
     private static boolean hasUsedPortAfter(String[] labels, int count) {

@@ -14,6 +14,7 @@
 package gecko.core.simulation;
 
 import gecko.core.circuit.ControlTypCore;
+import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.circuit.netlist.CircuitNetlist;
 import gecko.core.circuit.netlist.NetlistBuilder;
 import gecko.core.control.calculators.*;
@@ -142,7 +143,9 @@ public class ControlCalculatorFactory {
     private BuildResult build(List<CircuitModel.ComponentData> controlComponents, double timeStep, CircuitModel model,
             CircuitNetlist electricalNetlist) {
         if (controlComponents == null || controlComponents.isEmpty()) {
-            return new BuildResult(ControlNetlist.createEmpty(), new ControlBlockMapping());
+            var mapping = new ControlBlockMapping();
+            addSourceMappings(model, null, Map.of(), mapping);
+            return new BuildResult(ControlNetlist.createEmpty(), mapping);
         }
 
         ControlBlockMapping mapping = new ControlBlockMapping();
@@ -180,12 +183,17 @@ public class ControlCalculatorFactory {
             }
         }
 
+        addSourceMappings(model, topology, outputMap, mapping);
+
         // Step 3: Wire input ports through the same canonical signal groups.
         for (CalculatorEntry entry : entries) {
             String[] xLabels = entry.component.getTerminalXLabels();
             for (int inputPort = 0; inputPort < xLabels.length; inputPort++) {
                 String label = xLabels[inputPort];
                 var group = topology.group(entry.component, CircuitTopology.Side.INPUT, inputPort);
+                if (group == null && entry.component.getType() == 22) {
+                    group = topology.externalOutputGroup(entry.component, inputPort);
+                }
                 if (group != null && outputMap.containsKey(group.id())) {
                     SignalPort source = outputMap.get(group.id());
                     try {
@@ -340,6 +348,29 @@ public class ControlCalculatorFactory {
             return Integer.parseInt(label.trim());
         } catch (NumberFormatException e) {
             return 0; // ground for unrecognized labels
+        }
+    }
+
+    /**
+     * Signal-controlled LK sources read the CONTROL signal named by their first parameter string on their own sheet
+     * (desktop SimulationsKern.definiereInteraktion_SignalgesteuerteQuelle_Regler). No such signal holds zero,
+     * as does a circuit without CONTROL, where the desktop has zeroed the saved value.
+     */
+    private static void addSourceMappings(CircuitModel model, CircuitTopology topology,
+            Map<Integer, SignalPort> outputMap, ControlBlockMapping mapping) {
+        if (model == null) return;
+        for (CircuitModel.ComponentData source : model.getCircuitComponents()) {
+            double[] numeric = source.getNumericParameters();
+            boolean signalMode = numeric.length > 0 && (numeric[0] == 400 || numeric[0] == 2);
+            if (!signalMode || (source.getType() != CircuitTypCore.LK_U.getTypeNumber()
+                    && source.getType() != CircuitTypCore.LK_I.getTypeNumber())) continue;
+            String[] names = source.getParameterStrings();
+            String signal = names.length > 0 && names[0] != null ? names[0].trim() : "";
+            long sheet = source.getSavedBlock() == null ? 0 : source.getSavedBlock().parentSheetIdentifier();
+            var group = topology == null || signal.isEmpty() ? null : topology.labelGroup("CONTROL", sheet, signal);
+            SignalPort producer = group == null ? null : outputMap.get(group.id());
+            mapping.addSourceMapping(producer == null ? null : producer.calculator,
+                    producer == null ? 0 : producer.portIndex, source.getName());
         }
     }
 

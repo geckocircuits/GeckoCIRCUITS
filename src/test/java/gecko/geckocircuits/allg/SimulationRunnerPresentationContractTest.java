@@ -82,6 +82,7 @@ class SimulationRunnerPresentationContractTest {
     private List<Window> previousWindows;
     private List<Window> ownedWindows = List.of();
     private Properties previousProperties;
+    private String previousBackend;
     private boolean previousBranded;
     private boolean previousTesting;
     private String previousFilename;
@@ -105,6 +106,8 @@ class SimulationRunnerPresentationContractTest {
     void openDesktopFixture() throws Exception {
         assumeFalse(GraphicsEnvironment.isHeadless(), "Desktop presentation requires a display");
         previousWindows = Arrays.asList(Window.getWindows());
+        previousBackend = System.getProperty("gecko.backend");
+        System.setProperty("gecko.backend", "legacy");
         previousProperties = GeckoSim.applicationProps;
         previousBranded = MainWindow.IS_BRANDED;
         previousTesting = GeckoSim._isTestingMode;
@@ -202,6 +205,8 @@ class SimulationRunnerPresentationContractTest {
 
     private void restoreDesktopState() {
         GeckoSim.applicationProps = previousProperties;
+        if (previousBackend == null) System.clearProperty("gecko.backend");
+        else System.setProperty("gecko.backend", previousBackend);
         MainWindow.IS_BRANDED = previousBranded;
         GeckoSim._isTestingMode = previousTesting;
         GlobalFilePathes.DATNAM = previousFilename;

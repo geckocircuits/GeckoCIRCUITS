@@ -69,8 +69,17 @@ class ThyristorBridgeCaptureParityTest {
         var editorResult = new CircuitPreparation().prepare(editorSnapshot, PreparationRequest.defaults());
         assertInstanceOf(PreparationResult.Ready.class, editorResult);
 
-        GeckoExternal.runSimulation();
-        LegacySeries legacy = captureLegacy(NetzlisteCONTROL.globalData);
+        String previousBackend = System.getProperty("gecko.backend");
+        LegacySeries legacy;
+        try {
+            // This assertion compares editor-captured core output with the old desktop reference.
+            System.setProperty("gecko.backend", "legacy");
+            GeckoExternal.runSimulation();
+            legacy = captureLegacy(NetzlisteCONTROL.globalData);
+        } finally {
+            if (previousBackend == null) System.clearProperty("gecko.backend");
+            else System.setProperty("gecko.backend", previousBackend);
+        }
 
         double[] window = GoldenReferenceHelper.readSimulationParams(goldenPath);
         assertNotNull(window, "Golden file must identify the simulation duration");

@@ -337,9 +337,10 @@ public class NetlistBuilder {
             }
         }
 
-        validateGroundConnectivity(components, nodeX, nodeY);
-
         boolean wireReference = !legacyLabelOnly && !connectionOrder.isEmpty();
+        // Wired models use the desktop reference (ADR-0011): the first wire potential is the datum and
+        // MatrixSolver pins every other isolated group, so they need no ground node. Label-only models do.
+        if (!wireReference) validateGroundConnectivity(components, nodeX, nodeY);
         int[] order = new int[nodeCount];
         java.util.Arrays.setAll(order, node -> node);
         if (wireReference) {

@@ -128,10 +128,17 @@ class CoordinateWireContractTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "NIX_NIX_NIX", "return"})
-    void absentGroundIsRejectedInsteadOfInventingAReference(String ground) throws Exception {
+    void absentGroundUsesTheDesktopWireReference(String ground) throws Exception {
         CircuitModel model = parse(divider(502, false, false).replace("label 0\n", "label " + ground + "\n"));
-        var error = assertThrows(IllegalArgumentException.class, () -> NetlistBuilder.buildFromCircuitModel(model));
-        assertTrue(error.getMessage().contains("ground"), error.getMessage());
+        CircuitNetlist netlist = NetlistBuilder.buildFromCircuitModel(model);
+        assertNotEquals(0, netlist.getNumericalNodeOrder().length, "a wired model keeps the desktop reference");
+        MatrixSolver solver = new MatrixSolver(SolverType.SOLVER_BE);
+        solver.initializeMatrices(netlist.getNodeMax(), netlist.getVoltageSourceMax(), netlist.getElementCount());
+        solver.buildMatrixA(netlist, 0.001, 0, false);
+        solver.buildVectorB(netlist, 0.001, 0, false);
+        solver.solve();
+        int lower = netlist.getElementIndexByName("R2");
+        assertEquals(4, solver.getP()[netlist.getNodeX(lower)] - solver.getP()[netlist.getNodeY(lower)], 1e-9);
     }
 
     @ParameterizedTest

@@ -2,11 +2,13 @@ package gecko.systemtests;
 
 import gecko.GeckoExternal;
 import gecko.GeckoSim;
-import gecko.core.preparation.CircuitPreparation;
-import gecko.core.preparation.PreparationRequest;
-import gecko.core.preparation.PreparationResult;
+import gecko.core.preparation.ExecutionOptions;
+import gecko.core.simulation.SessionHost;
+import gecko.geckocircuits.allg.DesktopSimulationController;
 import gecko.geckocircuits.allg.MainWindow;
-import gecko.geckocircuits.circuit.EditorCircuitCapture;
+import gecko.geckocircuits.circuit.NetListContainer;
+import gecko.geckocircuits.control.NetzlisteCONTROL;
+import gecko.geckocircuits.control.ReglerSaveData;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
@@ -23,7 +25,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -33,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Inventories editor-captured readiness. This predicts routing without starting a simulation. */
+/** Inventories the desktop controller's route for every corpus circuit without starting a simulation. */
 @Tag("regression")
 public class BackendCorpusProbeTest {
     private static final Set<String> READY_EDUCATION = Set.of(
@@ -41,15 +42,10 @@ public class BackendCorpusProbeTest {
             "boostPFC", "boostPFC_currentControl", "2phaseDiodeBridge_AC-Inductor",
             "2phaseDiodeBridge_DC-Inductor", "thyristor_RL_single", "thyristor_RL_2phBridge",
             "thyristor_RL_3phBridge", "thyristor_freeWheelingDiode", "thyristor_interface_trafo",
-            "thyristor_Jakopovic");
-    private static final Map<String, Set<String>> FALLBACK_EDUCATION = Map.of(
-            "singlePhase_PWM_converter", Set.of("UNSUPPORTED_SOURCE_MODE", "UNCONNECTED_GROUND",
-                    "MISSING_CONTROL_INPUT"),
-            "diode_RL_singlePH_trafo", Set.of("UNCONNECTED_GROUND"),
-            "thyristor_RL_singlePh_trafo", Set.of("UNCONNECTED_GROUND"),
-            "thyristor_RL_3ph_trafo", Set.of("UNCONNECTED_GROUND"),
-            "thyristor_commutation_3ph_trafo", Set.of("UNCONNECTED_GROUND"),
-            "thyristor_lossOfCommutation", Set.of("UNCONNECTED_GROUND"));
+            "thyristor_Jakopovic", "diode_RL_singlePH_trafo", "thyristor_RL_singlePh_trafo",
+            "thyristor_RL_3ph_trafo", "thyristor_commutation_3ph_trafo", "thyristor_lossOfCommutation",
+            "singlePhase_PWM_converter");
+    private static final Map<String, Set<String>> FALLBACK_EDUCATION = Map.of();
     private static void startApplication() throws Exception {
         GeckoSim._isTestingMode = true;
         GeckoSim.applicationProps = new Properties();
@@ -64,7 +60,7 @@ public class BackendCorpusProbeTest {
 
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
-    void inventoriesPredictedReadinessRoutesForTheWholeCorpus() throws Exception {
+    void inventoriesControllerRoutesForTheWholeCorpus() throws Exception {
         String classPath = System.getProperty("surefire.test.class.path",
                 System.getProperty("java.class.path"));
         Process worker = new ProcessBuilder(
@@ -97,7 +93,7 @@ public class BackendCorpusProbeTest {
             int exit = 0;
             try {
                 startApplication();
-                inventoryPredictedRoutes();
+                inventoryRoutes();
             } catch (Throwable failure) {
                 failure.printStackTrace();
                 exit = 1;
@@ -106,14 +102,13 @@ public class BackendCorpusProbeTest {
         }
     }
 
-    private static void inventoryPredictedRoutes() throws Exception {
+    private static void inventoryRoutes() throws Exception {
         Path root = Path.of("").toAbsolutePath().normalize();
         List<Path> files = corpusFiles(root);
         assertFalse(files.isEmpty(), "The corpus must contain circuit files");
         int core = 0, fallback = 0, captureErrors = 0, education = 0;
-        var preparation = new CircuitPreparation();
-        System.out.println("CORPUS | Predicted readiness routes use the same editor capture and preparation as auto routing.");
-        System.out.println("CORPUS | This does not call a controller route API or verify presentation signal mapping.");
+        System.out.println("CORPUS | Routes come from DesktopSimulationController.route plus the GUI start path's"
+                + " presentation signal map check.");
         for (Path file : files) {
             String relative = root.relativize(file).toString().replace('\\', '/');
             boolean isEducation = relative.startsWith("src/test/resources/ipes/education/");
@@ -121,31 +116,20 @@ public class BackendCorpusProbeTest {
             System.out.println("CORPUS_OPEN | " + relative);
             try {
                 openCircuit(file);
-                var scripts = MainWindow._scripter;
-                var snapshot = new EditorCircuitCapture().capture(MainWindow._se._circuitSheet.getAllElements(),
-                        MainWindow._solverSettings, MainWindow.optimizerParameterData, MainWindow._fileManager,
-                        new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
-                                scripts.getDeclarationCode(), scripts.getExtraFilesHashes()), file.toString());
-                var result = preparation.prepare(snapshot, PreparationRequest.defaults());
-                Set<String> codes = result.report().diagnostics().stream().map(diagnostic -> diagnostic.code())
-                        .collect(Collectors.toCollection(TreeSet::new));
-                var reasons = new TreeSet<>(codes);
-                if (MainWindow._solverSettings._T_pre.getValue() > 0) reasons.add("PRECALC");
-                if (MainWindow._solverSettings._tPAUSE.getValue() >= 0) reasons.add("PAUSE_TIME");
-                boolean policyFallback = MainWindow._solverSettings._T_pre.getValue() > 0
-                        || MainWindow._solverSettings._tPAUSE.getValue() >= 0;
-                boolean predictedCore = result instanceof PreparationResult.Ready && !policyFallback;
-                if (predictedCore) core++; else fallback++;
-                System.out.println("CORPUS | " + relative + " | predicted "
-                        + (predictedCore ? "core" : "fallback") + " | " + String.join(",", reasons));
+                var route = DesktopSimulationController.route(MainWindow._se, MainWindow._solverSettings);
+                String reason = route.core() ? signalMapGap(route) : route.fallback();
+                boolean routesToCore = reason == null;
+                if (routesToCore) core++; else fallback++;
+                System.out.println("CORPUS | " + relative + " | "
+                        + (routesToCore ? "core | " : "fallback | " + reason));
                 if (isEducation) {
                     education++;
                     if (READY_EDUCATION.contains(name)) {
-                        assertTrue(predictedCore, relative + ": " + reasons);
+                        assertTrue(routesToCore, relative + ": " + reason);
                     } else {
                         assertTrue(FALLBACK_EDUCATION.containsKey(name), "Unknown education circuit: " + name);
-                        assertFalse(predictedCore, relative);
-                        assertEquals(FALLBACK_EDUCATION.get(name), reasons, relative);
+                        assertFalse(routesToCore, relative);
+                        assertEquals(FALLBACK_EDUCATION.get(name), Set.of(reason.split(",")), relative);
                     }
                 }
             } catch (Exception failure) {
@@ -157,8 +141,27 @@ public class BackendCorpusProbeTest {
             }
         }
         assertEquals(21, education, "All education circuits must be inventoried");
-        System.out.printf("CORPUS_SUMMARY | files=%d | predicted core=%d | predicted fallback=%d | unsupported capture=%d%n",
+        System.out.printf("CORPUS_SUMMARY | files=%d | core=%d | fallback=%d | unsupported capture=%d%n",
                 files.size(), core, fallback, captureErrors);
+    }
+
+    /** Applies the GUI start path's presentation signal map check to a core route, then releases it. */
+    private static String signalMapGap(DesktopSimulationController.Route route) throws Exception {
+        try (var host = SessionHost.open(route.ready().execution(), ExecutionOptions.defaults())) {
+            var netlist = NetListContainer.fabricStartSimulation(MainWindow._se, null);
+            try {
+                String missing = DesktopSimulationController.unmappedSignal(
+                        DesktopSimulationController.coreRows(host, false),
+                        new int[NetzlisteCONTROL.globalData.getRowLength()]);
+                return missing == null ? null : "SIGNAL_MAP:" + missing;
+            } finally {
+                SwingUtilities.invokeAndWait(() -> {
+                    for (var block : netlist._nlControl._orderedControlBlocks) {
+                        if (block instanceof ReglerSaveData exporter) exporter.cancelSimulationExport();
+                    }
+                });
+            }
+        }
     }
 
     private static List<Path> corpusFiles(Path root) throws Exception {

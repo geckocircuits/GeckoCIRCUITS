@@ -52,12 +52,14 @@ public final class CircuitTopology {
 
     private record Alias(String domain, long sheet, String label) { }
     private record Port(TerminalIdentity id, String domain, long sheet, String label, boolean producer,
-                        CircuitModel.TerminalData geometry) { }
+                        CircuitModel.TerminalData geometry, boolean externalInput, int componentOrder) { }
     private record Position(String domain, long sheet, int x, int y) { }
     private record Wire(CircuitModel.ConnectionData data, String domain, long sheet) { }
     private final Map<CircuitModel.ComponentData, ComponentIdentity> identities;
     private final Map<TerminalIdentity, Integer> terminalGroups;
+    private final Map<TerminalIdentity, Integer> externalOutputGroups;
     private final Map<Integer, Group> groups;
+    private final Map<Alias, Integer> labelGroups;
     private final List<ComponentIdentity> activeComponents;
     private final List<ComponentIdentity> structuralComponents;
     private final Set<CircuitModel.ConnectionData> activeConnections;
@@ -67,14 +69,17 @@ public final class CircuitTopology {
     private final List<Integer> connectionGroupOrder;
 
     private CircuitTopology(Map<CircuitModel.ComponentData, ComponentIdentity> identities,
-            Map<TerminalIdentity, Integer> terminalGroups, Map<Integer, Group> groups,
+            Map<TerminalIdentity, Integer> terminalGroups, Map<TerminalIdentity, Integer> externalOutputGroups,
+            Map<Integer, Group> groups, Map<Alias, Integer> labelGroups,
             List<ComponentIdentity> activeComponents, List<ComponentIdentity> structuralComponents, List<Wire> wires,
             List<String> physicalConnectionIssues, List<Integer> connectionGroupOrder) {
+        this.labelGroups = Map.copyOf(labelGroups);
         this.connectionGroupOrder = List.copyOf(connectionGroupOrder);
         this.hiddenComponents = List.of();
         this.physicalConnectionIssues = List.copyOf(physicalConnectionIssues);
         this.identities = Map.copyOf(identities);
         this.terminalGroups = Map.copyOf(terminalGroups);
+        this.externalOutputGroups = Map.copyOf(externalOutputGroups);
         this.groups = Map.copyOf(groups);
         this.activeComponents = List.copyOf(activeComponents);
         this.structuralComponents = List.copyOf(structuralComponents);
@@ -134,7 +139,7 @@ public final class CircuitTopology {
         int[] parent = new int[ports.size() + wires.size()];
         for (int i = 0; i < parent.length; i++) parent[i] = i;
         var aliases = new LinkedHashMap<Alias, Integer>();
-        var positions = new LinkedHashMap<Position, Integer>();
+        var positions = new LinkedHashMap<Position, List<Integer>>();
         for (int i = 0; i < ports.size(); i++) {
             Port port = ports.get(i);
             if (!port.label().isEmpty()) {
@@ -143,8 +148,30 @@ public final class CircuitTopology {
             }
             var geometry = port.geometry();
             if (geometry != null && geometry.geometric()) {
-                Integer previous = positions.putIfAbsent(new Position(port.domain(), port.sheet(), geometry.x(), geometry.y()), i);
-                if (previous != null) union(parent, i, previous);
+                positions.computeIfAbsent(new Position(port.domain(), port.sheet(), geometry.x(), geometry.y()),
+                        key -> new ArrayList<>()).add(i);
+            }
+        }
+        for (var colocated : positions.values()) {
+            var ordinaryTerminals = colocated.stream().filter(index -> !ports.get(index).externalInput()).toList();
+            if (ordinaryTerminals.size() > 1) {
+                int first = ordinaryTerminals.getFirst();
+                for (int index = 1; index < ordinaryTerminals.size(); index++) {
+                    union(parent, first, ordinaryTerminals.get(index));
+                }
+            }
+            var labelledRoots = new LinkedHashMap<Integer, Integer>();
+            for (int terminal : colocated) {
+                if (!ports.get(terminal).label().isEmpty()) labelledRoots.putIfAbsent(find(parent, terminal), terminal);
+            }
+            if (labelledRoots.size() == 1) {
+                int labelledTerminal = labelledRoots.values().iterator().next();
+                for (int terminal : colocated) {
+                    if (ports.get(terminal).label().isEmpty()) union(parent, labelledTerminal, terminal);
+                }
+            } else if (labelledRoots.isEmpty() && !ordinaryTerminals.isEmpty()) {
+                // Unlabelled abutting terminals share one potential, like desktop geometricOnSamePotential.
+                for (int terminal : colocated) union(parent, ordinaryTerminals.getFirst(), terminal);
             }
         }
         var pointsToWires = new LinkedHashMap<Position, List<Integer>>();
@@ -159,8 +186,7 @@ public final class CircuitTopology {
             for (int[] point : wire.data().getPoints()) {
                 var position = new Position(wire.domain(), wire.sheet(), point[0], point[1]);
                 pointsToWires.computeIfAbsent(position, key -> new ArrayList<>()).add(node);
-                Integer terminal = positions.get(position);
-                if (terminal != null) union(parent, node, terminal);
+                for (int terminal : positions.getOrDefault(position, List.of())) union(parent, node, terminal);
             }
         }
         // Interior wire crossings join only at a wire endpoint or a component terminal.
@@ -204,6 +230,7 @@ public final class CircuitTopology {
             roots.computeIfAbsent(find(parent, i), key -> new ArrayList<>()).add(ports.get(i));
         }
         var groups = new LinkedHashMap<Integer, Group>();
+        var rootGroups = new LinkedHashMap<Integer, Integer>();
         var terminalGroups = new LinkedHashMap<TerminalIdentity, Integer>();
         var physicalConnectionIssues = new ArrayList<String>();
         for (var entry : roots.entrySet()) {
@@ -233,6 +260,7 @@ public final class CircuitTopology {
                     members.stream().map(Port::id).toList(),
                     members.stream().filter(Port::producer).map(Port::id).toList());
             groups.put(id, group);
+            rootGroups.put(entry.getKey(), id);
             members.forEach(port -> terminalGroups.put(port.id(), id));
         }
         var connectionOrder = new java.util.LinkedHashSet<Integer>();
@@ -241,7 +269,74 @@ public final class CircuitTopology {
             var members = roots.get(root);
             if (members != null) connectionOrder.add(terminalGroups.get(members.getFirst().id()));
         }
-        return new CircuitTopology(identities, terminalGroups, groups, active, structural, wires,
+        var externalPortsByPosition = new LinkedHashMap<Position, List<Port>>();
+        for (var port : ports) {
+            var geometry = port.geometry();
+            if (port.externalInput() && geometry != null && geometry.geometric()) {
+                externalPortsByPosition.computeIfAbsent(new Position(port.domain(), port.sheet(), geometry.x(), geometry.y()),
+                        key -> new ArrayList<>()).add(port);
+            }
+        }
+        for (var colocated : externalPortsByPosition.values()) {
+            if (colocated.size() < 2) continue;
+            var ordered = colocated.stream().sorted(java.util.Comparator.comparingInt(Port::componentOrder)
+                    .thenComparingInt(port -> port.id().port())).toList();
+            Port firstExternal = ordered.stream().filter(port -> {
+                Integer group = terminalGroups.get(port.id());
+                return group != null && !groups.get(group).producerTerminals().isEmpty();
+            }).findFirst().orElse(ordered.getFirst());
+            Integer firstExternalGroup = terminalGroups.get(firstExternal.id());
+            if (firstExternalGroup == null) continue;
+            for (var external : ordered) {
+                if (!external.id().equals(firstExternal.id())) terminalGroups.put(external.id(), firstExternalGroup);
+            }
+        }
+        var updatedGroups = new LinkedHashMap<Integer, Group>();
+        for (var entry : groups.entrySet()) {
+            int groupId = entry.getKey();
+            var members = new java.util.LinkedHashSet<TerminalIdentity>();
+            for (var terminal : entry.getValue().terminals()) {
+                if (java.util.Objects.equals(terminalGroups.get(terminal), groupId)) members.add(terminal);
+            }
+            terminalGroups.forEach((terminal, assignedGroup) -> {
+                if (assignedGroup == groupId) members.add(terminal);
+            });
+            updatedGroups.put(groupId, new Group(entry.getValue().id(), entry.getValue().domain(),
+                    entry.getValue().canonicalLabel(), new ArrayList<>(members), entry.getValue().producerTerminals()));
+        }
+        var paddedExternalTerminals = new HashSet<TerminalIdentity>();
+        var externalOutputGroups = new LinkedHashMap<TerminalIdentity, Integer>();
+        for (var component : model.getControlComponents()) {
+            if (component.getType() != 22) continue;
+            Object savedWidth = component.getParameters().get("activeInputWidth");
+            if (!(savedWidth instanceof Number number)) continue;
+            int activeWidth = Math.min(component.getTerminalXLabels().length,
+                    Math.max(0, number.intValue()));
+            for (int port = activeWidth; port < component.getTerminalXLabels().length; port++) {
+                var terminal = new TerminalIdentity(identities.get(component), Side.INPUT, port);
+                paddedExternalTerminals.add(terminal);
+                Integer group = terminalGroups.get(terminal);
+                if (group != null) externalOutputGroups.put(terminal, group);
+            }
+        }
+        var publicTerminalGroups = new LinkedHashMap<TerminalIdentity, Integer>(terminalGroups);
+        paddedExternalTerminals.forEach(publicTerminalGroups::remove);
+        var publicGroups = new LinkedHashMap<Integer, Group>();
+        for (var entry : updatedGroups.entrySet()) {
+            var members = entry.getValue().terminals().stream()
+                    .filter(terminal -> !paddedExternalTerminals.contains(terminal)).toList();
+            var producers = entry.getValue().producerTerminals().stream()
+                    .filter(terminal -> !paddedExternalTerminals.contains(terminal)).toList();
+            publicGroups.put(entry.getKey(), new Group(entry.getValue().id(), entry.getValue().domain(),
+                    entry.getValue().canonicalLabel(), members, producers));
+        }
+        var labelGroups = new LinkedHashMap<Alias, Integer>();
+        aliases.forEach((alias, index) -> {
+            Integer group = rootGroups.get(find(parent, index));
+            if (group != null) labelGroups.put(alias, group);
+        });
+        return new CircuitTopology(identities, publicTerminalGroups, externalOutputGroups, publicGroups, labelGroups, active,
+                structural, wires,
                 physicalConnectionIssues, new ArrayList<>(connectionOrder));
     }
 
@@ -250,7 +345,9 @@ public final class CircuitTopology {
         this.identities = source.identities;
         this.connectionGroupOrder = source.connectionGroupOrder;
         this.terminalGroups = Map.copyOf(terminalGroups);
+        this.externalOutputGroups = source.externalOutputGroups;
         this.groups = Map.copyOf(groups);
+        this.labelGroups = source.labelGroups;
         this.activeComponents = List.copyOf(activeComponents);
         this.structuralComponents = source.structuralComponents;
         this.activeConnections = source.activeConnections;
@@ -348,6 +445,15 @@ public final class CircuitTopology {
     /** @return the immutable groups indexed by their identifiers */
     public Map<Integer, Group> groups() { return groups; }
 
+    /**
+     * Finds the group a label names on one sheet, as the desktop resolves signal names per sheet.
+     * @return the group, or null when the label is not used on that sheet
+     */
+    public Group labelGroup(String domain, long sheet, String label) {
+        Integer id = labelGroups.get(new Alias(domain, sheet, normalizeLabel(label)));
+        return id == null ? null : groups.get(id);
+    }
+
     /** @return terminal groups in saved wire order, before unwired terminal groups */
     public List<Group> connectionGroupOrder() {
         return connectionGroupOrder.stream().map(groups::get).filter(java.util.Objects::nonNull).toList();
@@ -383,6 +489,19 @@ public final class CircuitTopology {
      */
     public Group group(CircuitModel.ComponentData component, Side side, int port) {
         Integer group = terminalGroups.get(new TerminalIdentity(identities.get(component), side, port));
+        return group == null ? null : groups.get(group);
+    }
+
+    /**
+     * Finds the external output channel group for a padded TO_EXTERNAL input.
+     * Padded channels remain absent from ordinary circuit topology while retaining
+     * their captured external-channel wiring.
+     * @param component the TO_EXTERNAL component from the resolved source model
+     * @param port the saved zero-based input port index
+     * @return its group, or null if the padded channel has no resolved group
+     */
+    public Group externalOutputGroup(CircuitModel.ComponentData component, int port) {
+        Integer group = externalOutputGroups.get(new TerminalIdentity(identities.get(component), Side.INPUT, port));
         return group == null ? null : groups.get(group);
     }
 
@@ -435,7 +554,9 @@ public final class CircuitTopology {
                         geometry = new CircuitModel.TerminalData(terminalDomain, terminalSheet, side, port, x, y, true);
                     }
                     ports.add(new Port(new TerminalIdentity(identity, side, port), geometry == null ? terminalDomain : geometry.domain(),
-                            geometry == null ? terminalSheet : geometry.sheetIdentifier(), normalizeLabel(labels[port]), producer, geometry));
+                            geometry == null ? terminalSheet : geometry.sheetIdentifier(), normalizeLabel(labels[port]), producer,
+                            geometry, component.getType() == 22 && side == Side.INPUT,
+                            component.getSourceOrdinal() < 0 ? ordinal : component.getSourceOrdinal()));
                 }
             }
         }
@@ -480,7 +601,10 @@ public final class CircuitTopology {
             String[] labels = component.getTerminalXLabels();
             Object savedWidth = component.getParameters().get("activeInputWidth");
             if (savedWidth instanceof Number number) {
-                return Arrays.copyOf(labels, Math.min(labels.length, Math.max(0, number.intValue())));
+                int activeWidth = Math.min(labels.length, Math.max(0, number.intValue()));
+                boolean hasPaddedGeometry = component.getTerminalData().stream().anyMatch(terminal ->
+                        terminal.side() == Side.INPUT && terminal.port() >= activeWidth && terminal.geometric());
+                if (!hasPaddedGeometry) return Arrays.copyOf(labels, activeWidth);
             }
         }
         String token = side == Side.INPUT ? "labelAnfangsKnoten[]" : "labelEndKnoten[]";

@@ -22,21 +22,13 @@ import javax.swing.SwingUtilities;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BackendPropertyProbeTest {
-    private static final Map<String, Set<String>> CAPTURE_FALLBACKS = Map.ofEntries(
-            Map.entry("singlePhase_PWM_converter", Set.of("UNSUPPORTED_SOURCE_MODE", "UNCONNECTED_GROUND",
-                    "MISSING_CONTROL_INPUT")),
-            Map.entry("diode_RL_singlePH_trafo", Set.of("UNCONNECTED_GROUND")),
-            Map.entry("thyristor_RL_singlePh_trafo", Set.of("UNCONNECTED_GROUND")),
-            Map.entry("thyristor_RL_3ph_trafo", Set.of("UNCONNECTED_GROUND")),
-            Map.entry("thyristor_commutation_3ph_trafo", Set.of("UNCONNECTED_GROUND")),
-            Map.entry("thyristor_lossOfCommutation", Set.of("UNCONNECTED_GROUND")));
-    private static final Set<String> PARSER_ONLY_MISSING_INPUT = Set.of("thyristor_RL_singlePh_trafo",
-            "thyristor_RL_3ph_trafo", "thyristor_commutation_3ph_trafo", "thyristor_lossOfCommutation");
+    /** Editor-capture fallbacks expected under AUTO: none, every education circuit routes to core. */
+    private static final Map<String, Set<String>> CAPTURE_FALLBACKS = Map.of();
 
     @Test
     void surefireReceivesBackendProperty() {
-        assertEquals(System.getProperty("gecko.backend.expected", "legacy"),
-                System.getProperty("gecko.backend", "legacy"));
+        assertEquals(System.getProperty("gecko.backend.expected", "auto"),
+                System.getProperty("gecko.backend", "auto"));
     }
 
     @Test
@@ -73,10 +65,11 @@ class BackendPropertyProbeTest {
             assertNull(GeckoSim._win._simRunner.simKern, "Core starts must not create a legacy numerical kernel");
             assertTrue(GeckoExternal.getSimulationTime() > 0);
             assertEquals(ContainerStatus.PAUSED, NetzlisteCONTROL.globalData.getContainerStatus());
-            GeckoExternal.openFile(java.nio.file.Path.of("src/test/resources/ipes/education/singlePhase_PWM_converter.ipes")
+            GeckoExternal.openFile(java.nio.file.Path.of(
+                    "src/modules/gecko-simulation-core/src/test/resources/ipes/coupled_rectifier.ipes")
                     .toAbsolutePath().toString());
             RuntimeException failure = assertThrows(RuntimeException.class, GeckoExternal::runSimulation);
-            assertTrue(failure.toString().contains("UNSUPPORTED_SOURCE_MODE"), failure::toString);
+            assertTrue(failure.toString().contains("UNSUPPORTED_CONTROL_COMPONENT"), failure::toString);
         } finally {
             restore("gecko.backend", previous);
             SwingUtilities.invokeAndWait(() -> {
@@ -110,15 +103,13 @@ class BackendPropertyProbeTest {
                     rejected++;
                     assertFalse(captured instanceof PreparationResult.Ready, circuit);
                     assertEquals(CAPTURE_FALLBACKS.get(circuit), actual, circuit);
-                    var expectedParser = new java.util.HashSet<>(actual);
-                    if (PARSER_ONLY_MISSING_INPUT.contains(circuit)) expectedParser.add("MISSING_CONTROL_INPUT");
-                    assertEquals(expectedParser, codes(parsed), circuit);
+                    assertEquals(actual, codes(parsed), circuit);
                 } else {
                     assertInstanceOf(PreparationResult.Ready.class, captured, circuit);
                     assertInstanceOf(PreparationResult.Ready.class, parsed, circuit);
                 }
             }
-            assertEquals(6, rejected);
+            assertEquals(CAPTURE_FALLBACKS.size(), rejected);
         } finally { closeWindows(); }
     }
 
@@ -160,7 +151,7 @@ class BackendPropertyProbeTest {
 
     @Test
     @Tag("regression")
-    void autoLogsExactlyTheVerifiedEditorCaptureFallbacks() throws Exception {
+    void defaultAutoLogsExactlyTheVerifiedEditorCaptureFallbacks() throws Exception {
         String previous = System.getProperty("gecko.backend");
         var logger = java.util.logging.Logger.getLogger("gecko.backend.fallback");
         var previousLevel = logger.getLevel();
@@ -178,7 +169,7 @@ class BackendPropertyProbeTest {
         logger.addHandler(handler);
         logger.setLevel(java.util.logging.Level.INFO);
         try {
-            System.setProperty("gecko.backend", "auto");
+            System.clearProperty("gecko.backend");
             for (String circuit : SignalOrderProbeTest.circuitFiles().toList()) {
                 int before = messages.size();
                 GeckoExternal.openFile(circuitPath(circuit).toString());
@@ -195,7 +186,7 @@ class BackendPropertyProbeTest {
                     assertNull(GeckoSim._win._simRunner.simKern, circuit);
                 }
             }
-            assertEquals(6, messages.size());
+            assertEquals(CAPTURE_FALLBACKS.size(), messages.size());
         } finally {
             logger.removeHandler(handler);
             logger.setLevel(previousLevel);

@@ -321,6 +321,9 @@ public final class TokenMap {
     public boolean readDataLine(final String identifier, final boolean targetObject) {
         try {
             final Integer lineNumber = _map.get(identifier);
+            if (lineNumber == null) {
+                return targetObject;
+            }
             final String ascii = asciiLines[lineNumber];
             final StringTokenizer stk = new StringTokenizer(ascii, " ");
             stk.nextToken();  // 1.Eintrag ist ID-String --> wird uebersprungen

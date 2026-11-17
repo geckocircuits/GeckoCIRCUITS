@@ -110,7 +110,9 @@ public final class SimulationSession implements AutoCloseable {
                     constructedSignalNames, "time [s]");
             constructedRecording.setContainerStatus(ContainerStatus.PAUSED);
             Status constructedStatus = statusFor(State.READY, 0, 0, 0, duration, dt);
-            ElectricalTimeStep constructedElectrical = constructedNetlist != null && constructedNetlist.getElementCount() > 0
+            boolean hasElectrical = constructedNetlist != null && constructedNetlist.getElementCount() > 0;
+            if (hasElectrical) constructedControl.seedSources(constructedNetlist);
+            ElectricalTimeStep constructedElectrical = hasElectrical
                     ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType()) : null;
             netlist = constructedNetlist;
             control = constructedControl;

@@ -345,7 +345,38 @@ public final class SimulationRunner {
 
     public void external_init(double end) {
         SolverSettings settings = MainWindow._solverSettings;
+        controller.reset();
+        try {
+            if (controller.initializeExternal(settings, end)) {
+                execution = null;
+                simKern = null;
+                return;
+            }
+        } catch (Exception error) {
+            throw new IllegalStateException("Could not initialize core external simulation", error);
+        }
         initializeScript(settings, end, settings.dt.getValue(), false);
+    }
+
+    public void external_step(double time) {
+        if (controller.hasCoreExecution()) {
+            try {
+                controller.externalStep(time);
+            } catch (Exception error) {
+                throw new IllegalStateException("Could not advance core external simulation", error);
+            }
+        } else {
+            simKern.external_step(time);
+        }
+    }
+
+    public double external_getdt() {
+        return controller.hasCoreExecution() ? controller.externalStepWidth() : simKern.getdt();
+    }
+
+    public void external_end() {
+        if (controller.hasCoreExecution()) controller.endAsync();
+        else simKern.external_end();
     }
 
     private void initializeScript(SolverSettings settings, double end, double dt, boolean usePreCalculation) {

@@ -45,6 +45,24 @@ A run that starts at zero therefore reaches the mode 399 exception.
 Unifying both startup behaviors would change the first voltage sample and capacitor history.
 This separation retains the desktop timing quirk.
 
+## Signal-controlled sources
+
+Decision date: 2026-11-17.
+
+An LK voltage or current source in raw mode 400 (or 2) takes its value from the CONTROL signal named by its first parameter string.
+The backend keeps the desktop order from `SimulationsKern`.
+When the session is built, the source takes the CONTROL output as constructed, before CONTROL initialization
+and before the initial-condition solve.
+After each electrical solve, the source takes the previous CONTROL outputs before VOLT and AMP probes publish
+the new measurements and before CONTROL advances.
+The electrical solve at step k+1 therefore uses the CONTROL output of step k-1, including a probe measurement.
+The signal name resolves on the source's own sheet.
+A source without a matching signal, or in a circuit without CONTROL, holds zero, as in the desktop.
+
+Reading the output computed in the same step would remove one step of delay and differ from desktop timing.
+With the desktop order, `singlePhase_PWM_converter` matches its unchanged golden reference within 1% on the core backend.
+Signal control is admitted for LK voltage and current sources only; other source types keep `UNSUPPORTED_SOURCE_MODE`.
+
 ## References
 
 - [Desktop matrix equations and current reporting](../../src/main/java/gecko/geckocircuits/circuit/LKMatrices.java)

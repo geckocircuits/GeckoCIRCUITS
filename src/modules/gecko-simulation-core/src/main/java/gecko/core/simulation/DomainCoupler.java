@@ -278,6 +278,20 @@ public class DomainCoupler {
      * The resistance is applied at the start of the next time step by
      * {@link #applyGateSignals(CircuitNetlist)}.
      */
+    /**
+     * Writes each signal-controlled source value (parameter 1) from its CONTROL output,
+     * as desktop {@code SimulationsKern.setControlledSourcesFromControlValue}.
+     */
+    void transferControlToSources(CircuitNetlist circuitNetlist) {
+        if (controlBlockMapping == null || circuitNetlist == null) return;
+        for (var source : controlBlockMapping.getSourceMappings()) {
+            int index = circuitNetlist.getElementIndexByName(source.sourceName());
+            if (index < 0) continue;
+            circuitNetlist.getParameter(index)[1] = source.producer() == null
+                    ? 0 : source.producer()._outputSignal[source.output()][0];
+        }
+    }
+
     void transferGateSignalsToLk(CircuitNetlist circuitNetlist) {
         if (controlBlockMapping == null || circuitNetlist == null) {
             return;

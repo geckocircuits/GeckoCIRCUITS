@@ -167,6 +167,15 @@ final class ControlRuntime implements AutoCloseable {
         return hasScope() ? scopeExtractor.getChannels() : List.of();
     }
 
+    /**
+     * Sets signal-controlled sources from the current CONTROL outputs.
+     * The desktop does this once before CONTROL initialization and before the initial-condition solve.
+     */
+    void seedSources(CircuitNetlist circuitNetlist) {
+        requireOpen();
+        domainCoupler.transferControlToSources(circuitNetlist);
+    }
+
     void applyPendingGates(CircuitNetlist circuitNetlist) {
         requireOpen();
         domainCoupler.applyGateSignals(circuitNetlist);
@@ -177,6 +186,9 @@ final class ControlRuntime implements AutoCloseable {
         stateVersion++;
         activeSegment = true;
         try {
+            // Desktop dataTransferLK_Control order: sources take the previous CONTROL outputs,
+            // including probe outputs, before the probes publish this step's measurements.
+            domainCoupler.transferControlToSources(circuitNetlist);
             domainCoupler.transferLkToControlProbes(circuitNetlist);
             if (controlNetlist.hasCalculators()) controlNetlist.executeTimeStep(dt, time);
             domainCoupler.transferGateSignalsToLk(circuitNetlist);

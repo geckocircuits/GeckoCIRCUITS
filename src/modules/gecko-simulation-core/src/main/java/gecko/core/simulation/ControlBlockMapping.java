@@ -69,6 +69,21 @@ public class ControlBlockMapping {
         return Collections.unmodifiableList(gateMappings);
     }
 
+    // --- Signal-controlled LK sources ---
+
+    /** A signal-controlled source and the CONTROL output that drives it; a null producer holds the source at zero. */
+    public record SourceMapping(AbstractControlCalculatable producer, int output, String sourceName) { }
+
+    private final List<SourceMapping> sourceMappings = new ArrayList<>();
+
+    public void addSourceMapping(AbstractControlCalculatable producer, int output, String sourceName) {
+        sourceMappings.add(new SourceMapping(producer, output, sourceName));
+    }
+
+    public List<SourceMapping> getSourceMappings() {
+        return Collections.unmodifiableList(sourceMappings);
+    }
+
     // --- SCOPE ---
 
     public void setScopeInfo(AbstractControlCalculatable scopeCalculator, String[] signalNames) {

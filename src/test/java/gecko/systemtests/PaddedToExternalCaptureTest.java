@@ -63,11 +63,11 @@ class PaddedToExternalCaptureTest {
                 new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
                         scripts.getDeclarationCode(), scripts.getExtraFilesHashes()), fixture.toString()).toModel();
 
-        assertToExternalShape(parsed);
-        assertToExternalShape(captured);
+        assertToExternalShape(parsed, false);
+        assertToExternalShape(captured, true);
     }
 
-    private static void assertToExternalShape(CircuitModel model) {
+    private static void assertToExternalShape(CircuitModel model, boolean expectCapturedAliases) {
         var component = model.getControlComponents().stream()
                 .filter(candidate -> candidate.getType() == 22 && candidate.getName().equals("ToEXT.4"))
                 .findFirst().orElseThrow();
@@ -83,6 +83,10 @@ class PaddedToExternalCaptureTest {
         }
         for (int port = 3; port < 28; port++) {
             assertNull(topology.group(component, CircuitTopology.Side.INPUT, port), "inactive input " + port);
+        }
+        if (expectCapturedAliases) {
+            assertNotNull(topology.externalOutputGroup(component, 3),
+                    "captured padded channel aliases must remain available to external output routing");
         }
     }
 }

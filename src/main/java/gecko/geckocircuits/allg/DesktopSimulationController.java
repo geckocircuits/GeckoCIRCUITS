@@ -13,10 +13,13 @@ import gecko.geckocircuits.circuit.SolverSettings;
 import gecko.geckocircuits.control.NetzlisteCONTROL;
 import gecko.geckocircuits.control.ReglerOSZI;
 import gecko.geckocircuits.control.ReglerSaveData;
+import gecko.geckocircuits.control.ReglerFromEXTERNAL;
+import gecko.geckocircuits.control.ReglerToEXTERNAL;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
 import java.io.File;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -33,6 +36,7 @@ public final class DesktopSimulationController {
     public enum Backend { LEGACY, CORE, AUTO }
 
     private static final Logger FALLBACK = Logger.getLogger("gecko.backend.fallback");
+    private static final Logger EXTERNAL = Logger.getLogger("gecko.backend.external");
     private final MainWindow window;
     private final SchematicEditor2 editor;
     private final Supplier<NetListContainer> preparePresentation;
@@ -48,14 +52,17 @@ public final class DesktopSimulationController {
         private final Consumer<ContainerStatus> origin;
         private final LegacySimulationFrontend presentation;
         private final int[] rows;
+        private final double dt;
+        private boolean warnedExternalTime;
 
         private CoreScriptExecution(SessionHost host, NetListContainer netlist, Consumer<ContainerStatus> origin,
-                LegacySimulationFrontend presentation, int[] rows) {
+                LegacySimulationFrontend presentation, int[] rows, double dt) {
             this.host = host;
             this.netlist = netlist;
             this.origin = origin;
             this.presentation = presentation;
             this.rows = rows;
+            this.dt = dt;
         }
     }
 
@@ -110,48 +117,30 @@ public final class DesktopSimulationController {
 
     /** Initializes a script-owned core session without advancing its first step. */
     boolean initializeScript(SolverSettings settings, double dt, double end) throws Exception {
-        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "legacy")
+        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "auto")
                 .trim().toUpperCase(Locale.ROOT));
         if (backend == Backend.LEGACY) return false;
-        String source = MainWindow.getOpenFileName();
-        String circuit = new File(source).getName().replaceFirst("\\.ipes$", "");
-        if (settings._T_pre.getValue() > 0) return fallback(backend, circuit, "PRECALC");
-        if (settings._tPAUSE.getValue() >= 0) return fallback(backend, circuit, "PAUSE_TIME");
-
-        var scripts = MainWindow._scripter;
-        var sources = new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
-                scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
-        var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
-                MainWindow.optimizerParameterData, MainWindow._fileManager, sources, source);
-        var preparation = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
-        if (!(preparation instanceof PreparationResult.Ready ready)) {
-            String codes = preparation.report().diagnostics().stream().map(diagnostic -> diagnostic.code().toString())
-                    .distinct().collect(Collectors.joining(","));
-            return fallback(backend, circuit, codes);
-        }
+        Route route = route(editor, settings);
+        String circuit = route.circuit();
+        if (!route.core()) return fallback(backend, circuit, route.fallback());
         if (SwingUtilities.isEventDispatchThread()) {
             throw new IllegalStateException("Script simulation initialization must run outside the Swing event thread");
         }
 
-        SessionHost host = SessionHost.open(ready.execution(), ExecutionOptions.defaults());
+        SessionHost host = SessionHost.open(route.ready().execution(), ExecutionOptions.defaults());
         NetListContainer netlist = null;
         boolean published = false;
         try {
             netlist = preparePresentation.get();
             Consumer<ContainerStatus> origin = NetzlisteCONTROL.globalData.captureStatusUpdater();
-            String[] names = host.signalNames();
             int[] rows = new int[NetzlisteCONTROL.globalData.getRowLength()];
-            for (int row = 0; row < rows.length; row++) {
-                rows[row] = Arrays.asList(names).indexOf(NetzlisteCONTROL.globalData.getSignalName(row));
-                if (rows[row] < 0) {
-                    return fallback(backend, circuit, "SIGNAL_MAP:" + NetzlisteCONTROL.globalData.getSignalName(row));
-                }
-            }
+            String missingSignal = unmappedSignal(coreRows(host, true), rows);
+            if (missingSignal != null) return fallback(backend, circuit, "SIGNAL_MAP:" + missingSignal);
             netlist._nlControl.doMemorInits(dt);
             LegacySimulationFrontend presentation = new LegacySimulationFrontend(() -> true);
             presentation.prepare(netlist, () -> true, true).run();
             setScopeBoundaries(netlist, 0, end);
-            CoreScriptExecution execution = new CoreScriptExecution(host, netlist, origin, presentation, rows);
+            CoreScriptExecution execution = new CoreScriptExecution(host, netlist, origin, presentation, rows, dt);
             scriptExecution = execution;
             currentHost = host;
             coreExecution = true;
@@ -165,6 +154,62 @@ public final class DesktopSimulationController {
                 if (netlist != null) cancelExporters(netlist);
             }
         }
+    }
+
+    /** Prepares external execution with the requested end time and no pre-calculation. */
+    boolean initializeExternal(SolverSettings settings, double end) throws Exception {
+        SolverSettings externalSettings = new SolverSettings();
+        externalSettings.dt.setValueWithoutUndo(settings.dt.getValue());
+        externalSettings._tDURATION.setValueWithoutUndo(end);
+        externalSettings._tPAUSE.setValueWithoutUndo(settings._tPAUSE.getValue());
+        externalSettings.SOLVER_TYPE.setValueWithoutUndo(settings.SOLVER_TYPE.getValue());
+        return initializeScript(externalSettings, settings.dt.getValue(), end);
+    }
+
+    double externalStepWidth() {
+        CoreScriptExecution execution = scriptExecution;
+        if (execution == null) throw new IllegalStateException("No core external simulation is active");
+        return execution.dt;
+    }
+
+    void externalStep(double time) throws Exception {
+        requireOffEventThread();
+        CoreScriptExecution execution = scriptExecution;
+        if (execution == null) throw new IllegalStateException("No core external simulation is active");
+        SessionHost host = execution.host;
+        if (!execution.warnedExternalTime && Math.abs(time - host.status().nextTime()) > execution.dt / 2) {
+            execution.warnedExternalTime = true;
+            EXTERNAL.warning("External time differs from the core fixed-step grid. The core retains its configured step width.");
+        }
+        if (ReglerFromEXTERNAL.fromExternals.size() != host.externalInputPorts()
+                || ReglerToEXTERNAL.toExternals.size() != host.externalOutputPorts()) {
+            throw new IllegalStateException("External port counts do not match the core session");
+        }
+        double[][] inputs = new double[host.externalInputPorts()][];
+        for (int port = 0; port < inputs.length; port++) {
+            inputs[port] = ((ReglerFromEXTERNAL) ReglerFromEXTERNAL.fromExternals.get(port)).dataVector;
+            if (inputs[port] == null || inputs[port].length != host.externalInputWidth(port)) {
+                throw new IllegalStateException("External input width does not match at port " + port);
+            }
+        }
+        for (int port = 0; port < host.externalOutputPorts(); port++) {
+            double[] target = ((ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(port)).dataVector;
+            if (target == null || target.length != host.externalOutputWidth(port)) {
+                throw new IllegalStateException("External output width does not match at port " + port);
+            }
+        }
+        double[][] outputs = await(host.stepExternal(inputs));
+        if (outputs.length != host.externalOutputPorts()) {
+            throw new IllegalStateException("Core external output port count does not match");
+        }
+        for (int port = 0; port < outputs.length; port++) {
+            double[] target = ((ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(port)).dataVector;
+            if (outputs[port] == null || outputs[port].length != target.length) {
+                throw new IllegalStateException("Core external output width does not match at port " + port);
+            }
+            System.arraycopy(outputs[port], 0, target, 0, target.length);
+        }
+        drainScriptSamples(execution);
     }
 
     void scriptStep(double dt, double end) throws Exception {
@@ -260,28 +305,14 @@ public final class DesktopSimulationController {
 
     /** Returns false when GUI execution must use the legacy backend. */
     boolean startAsync(SolverSettings settings) throws Exception {
-        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "legacy")
+        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "auto")
                 .trim().toUpperCase(Locale.ROOT));
         if (backend == Backend.LEGACY) return false;
+        Route route = route(editor, settings);
+        String circuit = route.circuit();
+        if (!route.core()) return fallback(backend, circuit, route.fallback());
 
-        String source = MainWindow.getOpenFileName();
-        String circuit = new File(source).getName().replaceFirst("\\.ipes$", "");
-        if (settings._T_pre.getValue() > 0) return fallback(backend, circuit, "PRECALC");
-        if (settings._tPAUSE.getValue() >= 0) return fallback(backend, circuit, "PAUSE_TIME");
-
-        var scripts = MainWindow._scripter;
-        var sources = new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
-                scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
-        var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
-                MainWindow.optimizerParameterData, MainWindow._fileManager, sources, source);
-        var preparation = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
-        if (!(preparation instanceof PreparationResult.Ready ready)) {
-            String codes = preparation.report().diagnostics().stream().map(diagnostic -> diagnostic.code().toString())
-                    .distinct().collect(Collectors.joining(","));
-            return fallback(backend, circuit, codes);
-        }
-
-        SessionHost host = SessionHost.open(ready.execution(), ExecutionOptions.defaults());
+        SessionHost host = SessionHost.open(route.ready().execution(), ExecutionOptions.defaults());
         NetListContainer netlist = null;
         LegacySimulationFrontend presentation = null;
         Consumer<ContainerStatus> origin = null;
@@ -290,16 +321,8 @@ public final class DesktopSimulationController {
         try {
             netlist = preparePresentation.get();
             origin = NetzlisteCONTROL.globalData.captureStatusUpdater();
-            String[] names = host.signalNames();
             int[] rows = new int[NetzlisteCONTROL.globalData.getRowLength()];
-            String missingSignal = null;
-            for (int row = 0; row < rows.length; row++) {
-                rows[row] = Arrays.asList(names).indexOf(NetzlisteCONTROL.globalData.getSignalName(row));
-                if (rows[row] < 0) {
-                    missingSignal = NetzlisteCONTROL.globalData.getSignalName(row);
-                    break;
-                }
-            }
+            String missingSignal = unmappedSignal(coreRows(host, false), rows);
             if (missingSignal != null) {
                 cancelExporters(netlist);
                 host.close();
@@ -516,44 +539,22 @@ public final class DesktopSimulationController {
 
     /** Returns false when the caller must use the existing legacy start path. */
     boolean start(SolverSettings settings) throws Exception {
-        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "legacy")
+        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "auto")
                 .trim().toUpperCase(Locale.ROOT));
         if (backend == Backend.LEGACY) return false;
-        String source = MainWindow.getOpenFileName();
-        String circuit = new File(source).getName().replaceFirst("\\.ipes$", "");
-        if (settings._T_pre.getValue() > 0) return fallback(backend, circuit, "PRECALC");
-        if (settings._tPAUSE.getValue() >= 0) return fallback(backend, circuit, "PAUSE_TIME");
-
-        var scripts = MainWindow._scripter;
-        var sources = new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
-                scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
-        var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
-                MainWindow.optimizerParameterData, MainWindow._fileManager, sources, source);
-        var preparation = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
-        if (!(preparation instanceof PreparationResult.Ready ready)) {
-            String codes = preparation.report().diagnostics().stream().map(diagnostic -> diagnostic.code().toString())
-                    .distinct().collect(Collectors.joining(","));
-            return fallback(backend, circuit, codes);
-        }
+        Route route = route(editor, settings);
+        String circuit = route.circuit();
+        if (!route.core()) return fallback(backend, circuit, route.fallback());
         if (SwingUtilities.isEventDispatchThread()) {
             throw new IllegalStateException("Run synchronous core calculations outside the Swing event thread");
         }
 
-        try (var host = SessionHost.open(ready.execution(), ExecutionOptions.defaults())) {
+        try (var host = SessionHost.open(route.ready().execution(), ExecutionOptions.defaults())) {
             var netlist = preparePresentation.get();
             var origin = NetzlisteCONTROL.globalData.captureStatusUpdater();
             var presentation = new LegacySimulationFrontend(() -> true);
-            String[] names = host.signalNames();
             int[] rows = new int[NetzlisteCONTROL.globalData.getRowLength()];
-            String missingSignal = null;
-            for (int row = 0; row < rows.length; row++) {
-                String name = NetzlisteCONTROL.globalData.getSignalName(row);
-                rows[row] = Arrays.asList(names).indexOf(name);
-                if (rows[row] < 0) {
-                    missingSignal = name;
-                    break;
-                }
-            }
+            String missingSignal = unmappedSignal(coreRows(host, false), rows);
             if (missingSignal != null && backend == Backend.AUTO) {
                 // Retire unused preparation resources before the legacy factory creates their replacements.
                 LegacySimulationFrontend.onEventThread(() -> {
@@ -628,6 +629,52 @@ public final class DesktopSimulationController {
                 }
             }
         }
+    }
+
+    /** A desktop routing decision: {@code ready} for core, otherwise the legacy fallback reason. */
+    public record Route(String circuit, PreparationResult.Ready ready, String fallback) {
+        public boolean core() { return ready != null; }
+    }
+
+    /**
+     * Decides from solver policy and the editor's prepared circuit whether a start can use core. Starts nothing;
+     * a core route still needs {@link #unmappedSignal} to find no gap in the presentation signal map.
+     */
+    public static Route route(SchematicEditor2 editor, SolverSettings settings) throws Exception {
+        String source = MainWindow.getOpenFileName();
+        String circuit = new File(source).getName().replaceFirst("\\.ipes$", "");
+        if (settings._T_pre.getValue() > 0) return new Route(circuit, null, "PRECALC");
+        if (settings._tPAUSE.getValue() >= 0) return new Route(circuit, null, "PAUSE_TIME");
+        var scripts = MainWindow._scripter;
+        var sources = new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
+                scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
+        var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
+                MainWindow.optimizerParameterData, MainWindow._fileManager, sources, source);
+        var preparation = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
+        if (preparation instanceof PreparationResult.Ready ready) return new Route(circuit, ready, null);
+        return new Route(circuit, null, preparation.report().diagnostics().stream()
+                .map(diagnostic -> diagnostic.code().toString()).distinct().collect(Collectors.joining(",")));
+    }
+
+    /** Core sample rows by signal name: the first core row wins; script runs also accept scope channel names. */
+    public static Map<String, Integer> coreRows(SessionHost host, boolean withScopeChannels) {
+        Map<String, Integer> rowBySignal = new HashMap<>();
+        String[] names = host.signalNames();
+        for (int row = 0; row < names.length; row++) rowBySignal.putIfAbsent(names[row], row);
+        if (withScopeChannels) {
+            for (var channel : host.scopeChannels()) rowBySignal.putIfAbsent(channel.signalName(), channel.row());
+        }
+        return rowBySignal;
+    }
+
+    /** Fills each presentation row's core row; returns the first presentation signal core lacks, or null. */
+    public static String unmappedSignal(Map<String, Integer> coreRows, int[] rows) {
+        for (int row = 0; row < rows.length; row++) {
+            String name = NetzlisteCONTROL.globalData.getSignalName(row);
+            rows[row] = coreRows.getOrDefault(name, -1);
+            if (rows[row] < 0) return name;
+        }
+        return null;
     }
 
     private static boolean fallback(Backend backend, String circuit, String reason) {
