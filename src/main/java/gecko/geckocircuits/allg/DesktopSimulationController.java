@@ -54,6 +54,7 @@ public final class DesktopSimulationController {
         private final int[] rows;
         private final double dt;
         private boolean warnedExternalTime;
+        private boolean warnedPastEnd;
 
         private CoreScriptExecution(SessionHost host, NetListContainer netlist, Consumer<ContainerStatus> origin,
                 LegacySimulationFrontend presentation, int[] rows, double dt) {
@@ -196,6 +197,17 @@ public final class DesktopSimulationController {
             double[] target = ((ReglerToEXTERNAL) ReglerToEXTERNAL.toExternals.get(port)).dataVector;
             if (target == null || target.length != host.externalOutputWidth(port)) {
                 throw new IllegalStateException("External output width does not match at port " + port);
+            }
+        }
+        SimulationSession.Status status = host.status();
+        if (status.state() == SimulationSession.State.COMPLETED) {
+            // Legacy external_step has no end limit (SimulationsKern.external_step). Doubling the end amortizes
+            // extend(), which copies the recording on every call.
+            double end = Math.max(status.nextTime(), status.endTime() + Math.max(status.endTime(), status.stepWidth()));
+            await(host.extend(end, status.stepWidth()));
+            if (!execution.warnedPastEnd) {
+                execution.warnedPastEnd = true;
+                EXTERNAL.info("External stepping continues past the configured end time.");
             }
         }
         double[][] outputs = await(host.stepExternal(inputs));

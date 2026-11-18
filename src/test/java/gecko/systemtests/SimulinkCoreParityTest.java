@@ -68,66 +68,81 @@ class SimulinkCoreParityTest {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void externalStepsMatchLegacyOnEveryOutput() throws Exception {
+        assertBackendsMatch(SAMPLES + 1);
+    }
+
+    @Test
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    void externalStepsPastTheConfiguredEndMatchLegacy() throws Exception {
+        // Legacy external_step has no end limit, so 750 of the 1000 steps fall past the configured end.
+        assertBackendsMatch(SAMPLES / 4);
+    }
+
+    private static void assertBackendsMatch(int initEndSteps) throws Exception {
         String previousBackend = System.getProperty("gecko.backend");
-        double[][][] legacy = null;
-        double[][][] core = null;
+        double[][][] legacy;
+        double[][][] core;
         try {
-            for (String backend : new String[]{"legacy", "core"}) {
-                System.setProperty("gecko.backend", backend);
-                GeckoSimulink facade = new GeckoSimulink();
-                openFixture();
-                if (backend.equals("core")) {
-                    var scripts = MainWindow._scripter;
-                    var snapshot = new EditorCircuitCapture().capture(MainWindow._se._circuitSheet.getAllElements(),
-                            MainWindow._solverSettings, MainWindow.optimizerParameterData, MainWindow._fileManager,
-                            new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
-                                    scripts.getDeclarationCode(), scripts.getExtraFilesHashes()),
-                            "resources/tutorials/7xx_scripting_automation/703_simulink_cosimulation/vr1_simulink.ipes");
-                    var readiness = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
-                    assertInstanceOf(PreparationResult.Ready.class, readiness,
-                            () -> "Simulink fixture must be core-ready: " + readiness.report().diagnostics());
-                }
-                double dt = MainWindow._solverSettings.dt.getValue();
-                boolean initialized = false;
-                try {
-                    facade.external_init((SAMPLES + 1) * dt);
-                    initialized = true;
-                    assertEquals(dt, facade.external_getdt());
-                    if (backend.equals("core")) {
-                        assertNotNull(GeckoSim._win._simRunner.getCoreStatus(), "core must own a core session");
-                        assertEquals(0, GeckoSim._win._simRunner.getCoreStatus().nextTime(), dt / 1000);
-                        assertNull(GeckoSim._win._simRunner.simKern);
-                    } else {
-                        assertNull(GeckoSim._win._simRunner.getCoreStatus());
-                    }
-                    assertTrue(facade.getNumInputPorts() > 0);
-                    assertTrue(facade.getNumOutputPorts() > 0);
-                    double[][][] outputs = new double[SAMPLES][facade.getNumOutputPorts()][];
-                    long started = System.nanoTime();
-                    for (int k = 0; k < SAMPLES; k++) {
-                        facade.external_setScalarInputValue(Math.sin(k * dt), 0);
-                        facade.external_step(k * dt);
-                        for (int port = 0; port < outputs[k].length; port++) {
-                            outputs[k][port] = facade.external_getValues(port).clone();
-                            assertEquals(facade.external_getTerminalNumber_TO_EXTERNAL(port), outputs[k][port].length);
-                        }
-                    }
-                    long elapsed = System.nanoTime() - started;
-                    System.out.printf("SIMULINK %s: %d steps, %.3f ms, %.3f us/step%n",
-                            backend, SAMPLES, elapsed / 1e6, elapsed / 1e3 / SAMPLES);
-                    if (backend.equals("legacy")) legacy = outputs;
-                    else core = outputs;
-                } finally {
-                    if (initialized) facade.external_end();
-                    GeckoSim._win._simRunner.endSimulation();
-                }
-            }
+            legacy = runExternal("legacy", initEndSteps);
+            core = runExternal("core", initEndSteps);
         } finally {
             if (previousBackend == null) System.clearProperty("gecko.backend");
             else System.setProperty("gecko.backend", previousBackend);
         }
-        assertNotNull(legacy);
-        assertNotNull(core);
+        assertSameOutputs(legacy, core);
+    }
+
+    private static double[][][] runExternal(String backend, int initEndSteps) throws Exception {
+        System.setProperty("gecko.backend", backend);
+        GeckoSimulink facade = new GeckoSimulink();
+        openFixture();
+        if (backend.equals("core")) {
+            var scripts = MainWindow._scripter;
+            var snapshot = new EditorCircuitCapture().capture(MainWindow._se._circuitSheet.getAllElements(),
+                    MainWindow._solverSettings, MainWindow.optimizerParameterData, MainWindow._fileManager,
+                    new EditorCircuitCapture.ScriptSources(scripts.getScriptCode(), scripts.getImportCode(),
+                            scripts.getDeclarationCode(), scripts.getExtraFilesHashes()),
+                    "resources/tutorials/7xx_scripting_automation/703_simulink_cosimulation/vr1_simulink.ipes");
+            var readiness = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
+            assertInstanceOf(PreparationResult.Ready.class, readiness,
+                    () -> "Simulink fixture must be core-ready: " + readiness.report().diagnostics());
+        }
+        double dt = MainWindow._solverSettings.dt.getValue();
+        boolean initialized = false;
+        try {
+            facade.external_init(initEndSteps * dt);
+            initialized = true;
+            assertEquals(dt, facade.external_getdt());
+            if (backend.equals("core")) {
+                assertNotNull(GeckoSim._win._simRunner.getCoreStatus(), "core must own a core session");
+                assertEquals(0, GeckoSim._win._simRunner.getCoreStatus().nextTime(), dt / 1000);
+                assertNull(GeckoSim._win._simRunner.simKern);
+            } else {
+                assertNull(GeckoSim._win._simRunner.getCoreStatus());
+            }
+            assertTrue(facade.getNumInputPorts() > 0);
+            assertTrue(facade.getNumOutputPorts() > 0);
+            double[][][] outputs = new double[SAMPLES][facade.getNumOutputPorts()][];
+            long started = System.nanoTime();
+            for (int k = 0; k < SAMPLES; k++) {
+                facade.external_setScalarInputValue(Math.sin(k * dt), 0);
+                facade.external_step(k * dt);
+                for (int port = 0; port < outputs[k].length; port++) {
+                    outputs[k][port] = facade.external_getValues(port).clone();
+                    assertEquals(facade.external_getTerminalNumber_TO_EXTERNAL(port), outputs[k][port].length);
+                }
+            }
+            long elapsed = System.nanoTime() - started;
+            System.out.printf("SIMULINK %s: %d steps, %.3f ms, %.3f us/step%n",
+                    backend, SAMPLES, elapsed / 1e6, elapsed / 1e3 / SAMPLES);
+            return outputs;
+        } finally {
+            if (initialized) facade.external_end();
+            GeckoSim._win._simRunner.endSimulation();
+        }
+    }
+
+    private static void assertSameOutputs(double[][][] legacy, double[][][] core) {
         for (int k = 0; k < SAMPLES; k++) {
             assertEquals(legacy[k].length, core[k].length);
             for (int port = 0; port < legacy[k].length; port++) {
