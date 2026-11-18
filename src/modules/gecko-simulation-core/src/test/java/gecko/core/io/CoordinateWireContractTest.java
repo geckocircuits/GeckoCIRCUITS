@@ -141,6 +141,32 @@ class CoordinateWireContractTest {
         assertEquals(4, solver.getP()[netlist.getNodeX(lower)] - solver.getP()[netlist.getNodeY(lower)], 1e-9);
     }
 
+    // A 1-ohm island between labels isl/isl2 with no conductive path to the divider.
+    private static final String ISLAND = component(1, "Risland", 100, 100, 503, "isl", "isl2", "1");
+
+    @Test
+    void currentSourceIsNotAReferenceForAnIsland() throws Exception {
+        CircuitModel model = parse(divider(502, false, false) + ISLAND
+                + component(5, "I1", 200, 200, 503, "out", "isl", "401 1"));
+        var error = assertThrows(TopologyValidationException.class, () -> NetlistBuilder.buildFromCircuitModel(model));
+        assertEquals("UNCONNECTED_GROUND", error.code());
+        assertTrue(error.getMessage().contains("'I1'"), error.getMessage());
+    }
+
+    @Test
+    void isolatedIslandWithoutCurrentSourceStaysAccepted() throws Exception {
+        CircuitNetlist netlist = NetlistBuilder.buildFromCircuitModel(parse(divider(502, false, false) + ISLAND));
+        MatrixSolver solver = new MatrixSolver(SolverType.SOLVER_BE);
+        solver.initializeMatrices(netlist.getNodeMax(), netlist.getVoltageSourceMax(), netlist.getElementCount());
+        solver.buildMatrixA(netlist, 0.001, 0, false);
+        solver.buildVectorB(netlist, 0.001, 0, false);
+        solver.solve();
+        int lower = netlist.getElementIndexByName("R2");
+        assertEquals(4, solver.getP()[netlist.getNodeX(lower)] - solver.getP()[netlist.getNodeY(lower)], 1e-9);
+        int island = netlist.getElementIndexByName("Risland");
+        assertEquals(0, solver.getP()[netlist.getNodeX(island)] - solver.getP()[netlist.getNodeY(island)], 1e-9);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {" 0 ", "\t0\t", "gnd", "GND", " gNd "})
     void whitespaceAroundWireGroundDoesNotCreateAnotherNode(String label) throws Exception {

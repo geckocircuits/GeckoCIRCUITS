@@ -341,6 +341,7 @@ public class NetlistBuilder {
         // Wired models use the desktop reference (ADR-0011): the first wire potential is the datum and
         // MatrixSolver pins every other isolated group, so they need no ground node. Label-only models do.
         if (!wireReference) validateGroundConnectivity(components, nodeX, nodeY);
+        else rejectCurrentSourceBridges(components, types, nodeX, nodeY, nodeCount);
         int[] order = new int[nodeCount];
         java.util.Arrays.setAll(order, node -> node);
         if (wireReference) {
@@ -449,6 +450,34 @@ public class NetlistBuilder {
                         + "' is not connected to ground (node 0)");
             }
         }
+    }
+
+    /**
+     * MatrixSolver pins every group that current sources do not join (ADR-0012). A current source between two such
+     * groups would drive its current through a pin, so reject it like the desktop, whose matrix is singular for it.
+     */
+    private static void rejectCurrentSourceBridges(List<CircuitModel.ComponentData> components,
+            CircuitTypCore[] types, int[] nodeX, int[] nodeY, int nodeCount) {
+        int[] parent = new int[nodeCount];
+        for (int node = 0; node < nodeCount; node++) parent[node] = node;
+        for (int element = 0; element < types.length; element++) {
+            if (types[element] == CircuitTypCore.LK_I || types[element] == CircuitTypCore.TH_FLOW) continue;
+            parent[root(parent, nodeX[element])] = root(parent, nodeY[element]);
+        }
+        for (int element = 0; element < types.length; element++) {
+            if ((types[element] == CircuitTypCore.LK_I || types[element] == CircuitTypCore.TH_FLOW)
+                    && root(parent, nodeX[element]) != root(parent, nodeY[element])) {
+                String name = components.get(element).getName();
+                throw new TopologyValidationException("UNCONNECTED_GROUND", name, "Current source '" + name
+                        + "' is the only connection between two electrical groups; its current would flow through"
+                        + " the reference stamp");
+            }
+        }
+    }
+
+    private static int root(int[] parent, int node) {
+        while (parent[node] != node) node = parent[node] = parent[parent[node]];
+        return node;
     }
 
     private static String resolveParameterKey(int type) {

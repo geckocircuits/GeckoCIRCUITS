@@ -15,7 +15,9 @@ Under this rule they prepare as Ready and match their unchanged legacy goldens w
 
 Label-only circuits have no desktop wire order, so they keep the `UNCONNECTED_GROUND` admission diagnostic.
 Their existing INVALID contracts stay unchanged: a floating island, a missing ground, and nodes driven only by current sources.
-Ideal current sources still do not connect a group, because they add no conductance.
+Ideal current sources do not connect a group, because they add no conductance.
+A wired circuit in which a current source is the only connection between two groups is rejected as `UNCONNECTED_GROUND`.
+Its current would flow through the reference stamp, and the desktop matrix is singular for it.
 
 Accepting islands only when they have a magnetic coupling to a grounded group was rejected.
 The transformer examples have no ground at all, so that rule does not admit them.
