@@ -90,4 +90,12 @@ class ListPaginationTest {
         mvc.perform(get("/api/v1/circuits?size=1&sort=createdAt,desc"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.circuits[0].circuitId").value("id-024"));
     }
+
+    @Test void createdAtSortComparesInstantsWithDifferentFractionalPrecision() throws Exception {
+        when(circuits.getAllCircuits()).thenReturn(new CircuitListResponse(List.of(
+                new CircuitListResponse.CircuitSummary("whole", "a.ipes", 1, "2026-11-23T12:00:00Z"),
+                new CircuitListResponse.CircuitSummary("fractional", "b.ipes", 1, "2026-11-23T12:00:00.1Z")), 2));
+        mvc.perform(get("/api/v1/circuits?sort=createdAt,asc"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.circuits[0].circuitId").value("whole"));
+    }
 }

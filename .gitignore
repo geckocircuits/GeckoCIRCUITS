@@ -70,3 +70,7 @@ resources/validation_report.json
 
 # Local implementation and test plans
 /docs/superpowers/plans/
+# Reproducible OpenAPI client outputs. Keep generation scripts and smoke tests.
+/clients/python/
+/clients/java/
+/clients/typescript/

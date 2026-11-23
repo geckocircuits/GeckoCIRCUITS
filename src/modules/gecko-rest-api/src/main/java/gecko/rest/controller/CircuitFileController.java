@@ -292,7 +292,8 @@ public class CircuitFileController {
                 java.util.Comparator.comparing(CircuitListResponse.CircuitSummary::circuitId);
         var selected = pagination.select(response.circuits(), java.util.Map.of(
                 "id", byId,
-                "createdAt", java.util.Comparator.comparing(CircuitListResponse.CircuitSummary::loadedAt,
+                "createdAt", java.util.Comparator.comparing(
+                        (CircuitListResponse.CircuitSummary item) -> item.loadedAt() == null ? null : java.time.Instant.parse(item.loadedAt()),
                         java.util.Comparator.nullsFirst(java.util.Comparator.naturalOrder())).thenComparing(byId)));
         return ResponseEntity.ok(new CircuitListResponse(selected, response.total(),
                 pagination.metadata(response.circuits().size())));

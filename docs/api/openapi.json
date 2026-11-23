@@ -1,0 +1,2889 @@
+{
+  "components": {
+    "schemas": {
+      "BatchJobStatus": {
+        "description": "Batch job status summary",
+        "properties": {
+          "batchId": {
+            "description": "Batch identifier",
+            "type": "string"
+          },
+          "completed": {
+            "description": "Number completed successfully",
+            "format": "int32",
+            "type": "integer"
+          },
+          "done": {
+            "description": "True when all simulations have finished (COMPLETED or FAILED)",
+            "type": "boolean"
+          },
+          "failed": {
+            "description": "Number failed",
+            "format": "int32",
+            "type": "integer"
+          },
+          "failedIds": {
+            "description": "IDs of simulations that failed, if any",
+            "items": {
+              "description": "IDs of simulations that failed, if any",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "overallProgress": {
+            "description": "Overall progress 0-100",
+            "format": "double",
+            "type": "number"
+          },
+          "pending": {
+            "description": "Number pending",
+            "format": "int32",
+            "type": "integer"
+          },
+          "running": {
+            "description": "Number currently running",
+            "format": "int32",
+            "type": "integer"
+          },
+          "simulationStatuses": {
+            "additionalProperties": {
+              "description": "Per-simulation status: simulationId -> status string",
+              "type": "string"
+            },
+            "description": "Per-simulation status: simulationId -> status string",
+            "type": "object"
+          },
+          "submittedAt": {
+            "description": "Batch submission time",
+            "format": "date-time",
+            "type": "string"
+          },
+          "total": {
+            "description": "Total simulations in batch",
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "BatchSimulationRequest": {
+        "description": "Batch simulation request with parameter variations",
+        "properties": {
+          "circuitFile": {
+            "description": "Circuit file path (.ipes)",
+            "example": "circuit.ipes",
+            "type": "string"
+          },
+          "circuitId": {
+            "type": "string"
+          },
+          "linearSweep": {
+            "$ref": "#/components/schemas/LinearSweep"
+          },
+          "logSweep": {
+            "$ref": "#/components/schemas/LogSweep"
+          },
+          "maxConcurrent": {
+            "default": 4,
+            "description": "Maximum concurrent simulations per batch; zero uses the default of four",
+            "example": 4,
+            "format": "int32",
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameterSets": {
+            "description": "Explicit list of parameter sets (each entry = one simulation)",
+            "items": {
+              "additionalProperties": {
+                "description": "Explicit list of parameter sets (each entry = one simulation)",
+                "format": "double",
+                "type": "number"
+              },
+              "description": "Explicit list of parameter sets (each entry = one simulation)",
+              "type": "object"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array"
+          },
+          "simulationSettings": {
+            "$ref": "#/components/schemas/SimulationSettings"
+          }
+        },
+        "required": [
+          "maxConcurrent"
+        ]
+      },
+      "BatchSimulationResponse": {
+        "description": "Response for a batch simulation submission",
+        "properties": {
+          "batchId": {
+            "description": "Unique batch identifier",
+            "type": "string"
+          },
+          "maxConcurrent": {
+            "description": "Maximum concurrent simulations",
+            "format": "int32",
+            "type": "integer"
+          },
+          "message": {
+            "description": "Status message",
+            "type": "string"
+          },
+          "simulationIds": {
+            "description": "IDs of submitted simulations",
+            "items": {
+              "description": "IDs of submitted simulations",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "submittedAt": {
+            "description": "Batch submission time",
+            "format": "date-time",
+            "type": "string"
+          },
+          "totalSimulations": {
+            "description": "Total number of simulations in the batch",
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "CharacteristicsResponse": {
+        "description": "Signal characteristic metrics",
+        "properties": {
+          "average": {
+            "description": "Average (DC) value",
+            "example": 0.0,
+            "format": "double",
+            "type": "number"
+          },
+          "klirr": {
+            "description": "Klirr (distortion factor)",
+            "example": 0.05,
+            "format": "double",
+            "type": "number"
+          },
+          "max": {
+            "description": "Maximum value",
+            "example": 1.0,
+            "format": "double",
+            "type": "number"
+          },
+          "min": {
+            "description": "Minimum value",
+            "example": -1.0,
+            "format": "double",
+            "type": "number"
+          },
+          "peakToPeak": {
+            "description": "Peak-to-peak amplitude",
+            "example": 2.0,
+            "format": "double",
+            "type": "number"
+          },
+          "ripple": {
+            "description": "Ripple factor",
+            "example": 0.01,
+            "format": "double",
+            "type": "number"
+          },
+          "rms": {
+            "description": "Root Mean Square value",
+            "example": 0.707,
+            "format": "double",
+            "type": "number"
+          },
+          "sampleCount": {
+            "description": "Number of samples analysed",
+            "format": "int32",
+            "type": "integer"
+          },
+          "shapeFactor": {
+            "description": "Shape factor (RMS / rectified average)",
+            "example": 1.11,
+            "format": "double",
+            "type": "number"
+          },
+          "signalName": {
+            "description": "Signal name (if derived from simulation)",
+            "type": "string"
+          },
+          "thd": {
+            "description": "Total Harmonic Distortion [%]",
+            "example": 5.2,
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "CircuitCloneRequest": {
+        "description": "Request to clone a circuit with optional parameter overrides",
+        "properties": {
+          "overrides": {
+            "additionalProperties": {
+              "description": "Parameter overrides in dot-notation format (ComponentName.parameterKey -> value)",
+              "format": "double",
+              "type": "number"
+            },
+            "description": "Parameter overrides in dot-notation format (ComponentName.parameterKey -> value)",
+            "example": {
+              "R1.resistance": 50.0
+            },
+            "type": "object"
+          }
+        }
+      },
+      "CircuitInfo": {
+        "description": "Detailed circuit information",
+        "properties": {
+          "circuitId": {
+            "description": "Circuit identifier",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string"
+          },
+          "componentCounts": {
+            "$ref": "#/components/schemas/ComponentCounts"
+          },
+          "displaySettings": {
+            "$ref": "#/components/schemas/DisplaySettings"
+          },
+          "fileVersion": {
+            "description": "Circuit file format version",
+            "example": 124,
+            "format": "int32",
+            "type": "integer"
+          },
+          "filename": {
+            "description": "Original filename",
+            "example": "buck_converter.ipes",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "simulationParameters": {
+            "$ref": "#/components/schemas/SimulationParameters"
+          }
+        }
+      },
+      "CircuitListResponse": {
+        "description": "List of loaded circuits",
+        "properties": {
+          "circuits": {
+            "description": "List of circuit summaries",
+            "items": {
+              "$ref": "#/components/schemas/CircuitSummary"
+            },
+            "type": "array"
+          },
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
+          },
+          "total": {
+            "description": "Total number of loaded circuits",
+            "example": 5,
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "CircuitLoadRequest": {
+        "description": "Request for loading a circuit file from base64 content",
+        "properties": {
+          "content": {
+            "description": "Base64 encoded .ipes file content",
+            "example": "H4sIAAAAAAAA...",
+            "type": "string"
+          },
+          "filename": {
+            "description": "Original filename",
+            "example": "buck_converter.ipes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "filename"
+        ]
+      },
+      "CircuitLoadResponse": {
+        "description": "Response after loading a circuit file",
+        "properties": {
+          "circuitId": {
+            "description": "Unique circuit identifier",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "type": "string"
+          },
+          "componentCount": {
+            "description": "Number of components in circuit",
+            "example": 15,
+            "format": "int32",
+            "type": "integer"
+          },
+          "errorMessage": {
+            "description": "Error message if status is 'failed'",
+            "type": "string"
+          },
+          "filename": {
+            "description": "Original filename",
+            "example": "buck_converter.ipes",
+            "type": "string"
+          },
+          "status": {
+            "description": "Load status",
+            "example": "loaded",
+            "type": "string"
+          }
+        }
+      },
+      "CircuitParameterUpdate": {
+        "description": "Partial update of circuit simulation parameters",
+        "properties": {
+          "simulationDuration": {
+            "description": "Simulation duration in seconds",
+            "example": 0.05,
+            "format": "double",
+            "type": "number"
+          },
+          "solverType": {
+            "description": "Solver type: backward-euler, trapezoidal, gear-shichman",
+            "example": "trapezoidal",
+            "type": "string"
+          },
+          "timeStep": {
+            "description": "Time step in seconds",
+            "example": 5e-07,
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "CircuitSummary": {
+        "description": "Circuit summary",
+        "properties": {
+          "circuitId": {
+            "description": "Circuit identifier",
+            "type": "string"
+          },
+          "componentCount": {
+            "description": "Total component count",
+            "format": "int32",
+            "type": "integer"
+          },
+          "filename": {
+            "description": "Original filename",
+            "type": "string"
+          },
+          "loadedAt": {
+            "description": "Time when circuit was loaded (ISO 8601)",
+            "example": "2026-02-16T10:30:00Z",
+            "type": "string"
+          }
+        }
+      },
+      "ComponentCounts": {
+        "description": "Component counts by domain",
+        "properties": {
+          "circuit": {
+            "description": "Number of circuit (LK) components",
+            "example": 15,
+            "format": "int32",
+            "type": "integer"
+          },
+          "connections": {
+            "description": "Number of connections/wires",
+            "example": 42,
+            "format": "int32",
+            "type": "integer"
+          },
+          "control": {
+            "description": "Number of control components",
+            "example": 20,
+            "format": "int32",
+            "type": "integer"
+          },
+          "thermal": {
+            "description": "Number of thermal components",
+            "example": 5,
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "ComponentInfo": {
+        "description": "Circuit component information",
+        "properties": {
+          "configurationFields": {
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationField"
+            },
+            "type": "array"
+          },
+          "domain": {
+            "description": "Simulation domain",
+            "enum": [
+              "circuit",
+              "control",
+              "thermal"
+            ],
+            "example": "circuit",
+            "type": "string"
+          },
+          "name": {
+            "description": "Component name/label",
+            "example": "R1",
+            "type": "string"
+          },
+          "orientation": {
+            "description": "Component orientation (0, 90, 180, 270)",
+            "example": 0,
+            "format": "int32",
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "description": "Component parameters (e.g., resistance, capacitance)",
+              "example": {
+                "resistance": 10.0,
+                "temperature": 25.0
+              },
+              "type": "object"
+            },
+            "description": "Component parameters (e.g., resistance, capacitance)",
+            "example": {
+              "resistance": 10.0,
+              "temperature": 25.0
+            },
+            "type": "object"
+          },
+          "position": {
+            "description": "X-Y position in schematic",
+            "example": [
+              100,
+              200
+            ],
+            "items": {
+              "description": "X-Y position in schematic",
+              "format": "int32",
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "type": {
+            "description": "Component type identifier",
+            "example": 1,
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "ComponentListResponse": {
+        "description": "Response containing circuit components",
+        "properties": {
+          "circuitId": {
+            "description": "Circuit identifier",
+            "type": "string"
+          },
+          "components": {
+            "description": "List of all components in the circuit",
+            "items": {
+              "$ref": "#/components/schemas/ComponentInfo"
+            },
+            "type": "array"
+          }
+        }
+      },
+      "ConductionLossRequest": {
+        "description": "Request for calculating conduction losses",
+        "properties": {
+          "current": {
+            "description": "Conduction current [A]",
+            "example": 10.0,
+            "format": "double",
+            "type": "number"
+          },
+          "onResistance": {
+            "description": "On-state resistance [\u03a9]",
+            "example": 0.05,
+            "format": "double",
+            "type": "number"
+          },
+          "thresholdVoltage": {
+            "description": "Threshold voltage [V]",
+            "example": 0.7,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "current",
+          "onResistance",
+          "thresholdVoltage"
+        ]
+      },
+      "ConfigurationField": {
+        "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "component": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "indexedName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "DetailedLossRequest": {
+        "description": "Request for detailed loss calculation with temperature-dependent curves",
+        "properties": {
+          "conductionCurves": {
+            "description": "Conduction loss curves (multiple temperature points)",
+            "items": {
+              "$ref": "#/components/schemas/LossCurveData"
+            },
+            "type": "array"
+          },
+          "current": {
+            "description": "Operating current [A]",
+            "example": 10.0,
+            "format": "double",
+            "type": "number"
+          },
+          "switchingCurves": {
+            "description": "Switching loss curves (multiple temperature points)",
+            "items": {
+              "$ref": "#/components/schemas/LossCurveData"
+            },
+            "type": "array"
+          },
+          "temperature": {
+            "description": "Junction temperature [\u00b0C]",
+            "example": 125.0,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "conductionCurves",
+          "current",
+          "switchingCurves",
+          "temperature"
+        ]
+      },
+      "Diagnostic": {
+        "properties": {
+          "category": {
+            "enum": [
+              "PARSING",
+              "CONFIGURATION",
+              "OVERRIDES",
+              "REFERENCES",
+              "TOPOLOGY",
+              "CAPABILITY"
+            ],
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "component": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "parameterPath": {
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "ERROR",
+              "WARNING"
+            ],
+            "type": "string"
+          },
+          "sourceLocation": {
+            "type": "string"
+          }
+        }
+      },
+      "DisplaySettings": {
+        "description": "Display settings",
+        "properties": {
+          "fontSize": {
+            "description": "Font size",
+            "example": 12,
+            "format": "int32",
+            "type": "integer"
+          },
+          "windowHeight": {
+            "description": "Window height in pixels",
+            "example": 900,
+            "format": "int32",
+            "type": "integer"
+          },
+          "windowWidth": {
+            "description": "Window width in pixels",
+            "example": 1400,
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "FourierResponse": {
+        "description": "Fourier harmonic analysis result",
+        "properties": {
+          "anCoefficients": {
+            "description": "Cosine coefficients An per harmonic (0=DC, 1=fundamental, 2=2nd, ...)",
+            "items": {
+              "description": "Cosine coefficients An per harmonic (0=DC, 1=fundamental, 2=2nd, ...)",
+              "format": "double",
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "baseFrequency": {
+            "description": "Base frequency [Hz]",
+            "example": 50.0,
+            "format": "double",
+            "type": "number"
+          },
+          "bnCoefficients": {
+            "description": "Sine coefficients Bn per harmonic",
+            "items": {
+              "description": "Sine coefficients Bn per harmonic",
+              "format": "double",
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "cnAmplitudes": {
+            "description": "Amplitude Cn = sqrt(An^2 + Bn^2) per harmonic",
+            "items": {
+              "description": "Amplitude Cn = sqrt(An^2 + Bn^2) per harmonic",
+              "format": "double",
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "dcComponent": {
+            "description": "DC component (harmonic 0 amplitude)",
+            "example": 0.5,
+            "format": "double",
+            "type": "number"
+          },
+          "fundamentalAmplitude": {
+            "description": "Fundamental amplitude (harmonic 1 Cn)",
+            "example": 1.0,
+            "format": "double",
+            "type": "number"
+          },
+          "fundamentalPhaseDegrees": {
+            "description": "Fundamental phase in degrees",
+            "example": 0.0,
+            "format": "double",
+            "type": "number"
+          },
+          "harmonics": {
+            "description": "Number of harmonics computed",
+            "example": 10,
+            "format": "int32",
+            "type": "integer"
+          },
+          "jnPhases": {
+            "description": "Phase Jn = atan2(Bn, An) in radians per harmonic",
+            "items": {
+              "description": "Phase Jn = atan2(Bn, An) in radians per harmonic",
+              "format": "double",
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "signalName": {
+            "description": "Signal name (if derived from simulation)",
+            "type": "string"
+          }
+        }
+      },
+      "LinearSweep": {
+        "description": "Linear parameter sweep",
+        "properties": {
+          "endValue": {
+            "description": "End value",
+            "example": 100.0,
+            "format": "double",
+            "type": "number"
+          },
+          "fixedParameters": {
+            "additionalProperties": {
+              "description": "Additional fixed parameters for all sweep runs",
+              "format": "double",
+              "type": "number"
+            },
+            "description": "Additional fixed parameters for all sweep runs",
+            "type": "object"
+          },
+          "parameterPath": {
+            "description": "Parameter name",
+            "example": "R1.resistance",
+            "type": "string"
+          },
+          "points": {
+            "description": "Number of points",
+            "example": 10,
+            "format": "int32",
+            "maximum": 1000,
+            "minimum": 2,
+            "type": "integer"
+          },
+          "startValue": {
+            "description": "Start value",
+            "example": 1.0,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "parameterPath"
+        ]
+      },
+      "LogSweep": {
+        "description": "Logarithmic parameter sweep",
+        "properties": {
+          "endValue": {
+            "description": "End value (must be > 0)",
+            "example": 0.001,
+            "format": "double",
+            "type": "number"
+          },
+          "fixedParameters": {
+            "additionalProperties": {
+              "description": "Additional fixed parameters for all sweep runs",
+              "format": "double",
+              "type": "number"
+            },
+            "description": "Additional fixed parameters for all sweep runs",
+            "type": "object"
+          },
+          "parameterPath": {
+            "description": "Parameter name",
+            "example": "C1.capacitance",
+            "type": "string"
+          },
+          "points": {
+            "description": "Number of points",
+            "example": 10,
+            "format": "int32",
+            "maximum": 1000,
+            "minimum": 2,
+            "type": "integer"
+          },
+          "startValue": {
+            "description": "Start value (must be > 0)",
+            "example": 1e-09,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "parameterPath"
+        ]
+      },
+      "LossCurveData": {
+        "description": "Loss curve measured at specific temperature",
+        "properties": {
+          "blockingVoltage": {
+            "description": "Blocking voltage for switching curves [V]",
+            "example": 600.0,
+            "format": "double",
+            "type": "number"
+          },
+          "data": {
+            "description": "Curve data: rows are [current/voltage], [energy/voltage], [energy/voltage] for switching or [voltage], [current] for conduction",
+            "example": [
+              [
+                0,
+                10,
+                20
+              ],
+              [
+                0,
+                0.001,
+                0.002
+              ]
+            ],
+            "items": {
+              "description": "Curve data: rows are [current/voltage], [energy/voltage], [energy/voltage] for switching or [voltage], [current] for conduction",
+              "example": [
+                [
+                  0,
+                  10,
+                  20
+                ],
+                [
+                  0,
+                  0.001,
+                  0.002
+                ]
+              ],
+              "items": {
+                "description": "Curve data: rows are [current/voltage], [energy/voltage], [energy/voltage] for switching or [voltage], [current] for conduction",
+                "format": "double",
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "temperature": {
+            "description": "Junction temperature [\u00b0C]",
+            "example": 25.0,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "temperature"
+        ]
+      },
+      "LossResponse": {
+        "description": "Loss calculation result",
+        "properties": {
+          "conductionLoss": {
+            "description": "Conduction power loss [W]",
+            "example": 10.0,
+            "format": "double",
+            "type": "number"
+          },
+          "method": {
+            "description": "Calculation method used",
+            "example": "detailed_interpolation",
+            "type": "string"
+          },
+          "switchingLoss": {
+            "description": "Switching power loss [W]",
+            "example": 2.5,
+            "format": "double",
+            "type": "number"
+          },
+          "totalLoss": {
+            "description": "Total power loss [W]",
+            "example": 12.5,
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "Metadata": {
+        "description": "File metadata",
+        "properties": {
+          "creationDate": {
+            "description": "Creation date",
+            "example": "2026-02-15",
+            "type": "string"
+          },
+          "uniqueFileId": {
+            "description": "Unique file identifier",
+            "example": 12345,
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "PageMetadata": {
+        "description": "Pagination metadata",
+        "properties": {
+          "number": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "size": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "totalElements": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "totalPages": {
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "ProgressDetails": {
+        "properties": {
+          "currentStep": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "currentTime": {
+            "format": "double",
+            "type": "number"
+          },
+          "endTime": {
+            "format": "double",
+            "type": "number"
+          },
+          "estimatedRemainingMs": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "mainSimProgress": {
+            "format": "double",
+            "type": "number"
+          },
+          "preCalcProgress": {
+            "format": "double",
+            "type": "number"
+          },
+          "totalSteps": {
+            "format": "int32",
+            "type": "integer"
+          }
+        }
+      },
+      "RefreshRequest": {
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "SignalAnalysisRequest": {
+        "description": "Signal analysis request",
+        "properties": {
+          "data": {
+            "description": "Raw signal data array",
+            "example": [
+              0.0,
+              1.0,
+              0.0,
+              -1.0
+            ],
+            "items": {
+              "description": "Raw signal data array",
+              "format": "double",
+              "type": "number"
+            },
+            "maxItems": 1000000,
+            "minItems": 2,
+            "type": "array"
+          },
+          "endTime": {
+            "description": "Stored-signal window end in seconds (defaults to the last recorded timestamp)",
+            "example": 0.02,
+            "format": "double",
+            "type": "number"
+          },
+          "sampleRate": {
+            "description": "Sample rate in Hz (required for raw data, ignored for stored signals)",
+            "example": 1000000.0,
+            "format": "double",
+            "type": "number"
+          },
+          "signalName": {
+            "description": "Signal name for server-side lookup",
+            "example": "V_out",
+            "type": "string"
+          },
+          "simulationId": {
+            "description": "Simulation ID for server-side signal lookup",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "type": "string"
+          },
+          "startTime": {
+            "description": "Stored-signal window start in seconds (defaults to the first recorded timestamp)",
+            "example": 0.0,
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "SimulationParameters": {
+        "description": "Simulation parameters",
+        "properties": {
+          "endTime": {
+            "description": "Simulation end time [s]",
+            "example": 0.02,
+            "format": "double",
+            "type": "number"
+          },
+          "preSimulationTime": {
+            "description": "Pre-calculation time [s]",
+            "example": 0.0,
+            "format": "double",
+            "type": "number"
+          },
+          "preSimulationTimeStep": {
+            "description": "Pre-calculation step width [s]",
+            "example": 1e-07,
+            "format": "double",
+            "type": "number"
+          },
+          "solverType": {
+            "description": "Solver type",
+            "enum": [
+              "backward-euler",
+              "trapezoidal",
+              "gear-shichman"
+            ],
+            "example": "backward-euler",
+            "type": "string"
+          },
+          "timeStep": {
+            "description": "Time step [s]",
+            "example": 1e-06,
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "SimulationRequest": {
+        "properties": {
+          "circuitFile": {
+            "type": "string"
+          },
+          "circuitId": {
+            "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "format": "double",
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "simulationTime": {
+            "format": "double",
+            "type": "number"
+          },
+          "solverType": {
+            "type": "string"
+          },
+          "timeStep": {
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "SimulationResponse": {
+        "properties": {
+          "endTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "executionTimeMs": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "progressDetails": {
+            "$ref": "#/components/schemas/ProgressDetails"
+          },
+          "results": {
+            "additionalProperties": {
+              "items": {
+                "format": "double",
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "object"
+          },
+          "simulationId": {
+            "type": "string"
+          },
+          "startTime": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "PENDING",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "SimulationSettings": {
+        "description": "Shared simulation settings for all runs in the batch",
+        "properties": {
+          "simulationTime": {
+            "description": "Simulation duration [s]",
+            "example": 0.02,
+            "format": "double",
+            "type": "number"
+          },
+          "solverType": {
+            "description": "Solver type",
+            "enum": [
+              "backward-euler",
+              "trapezoidal",
+              "gear-shichman"
+            ],
+            "example": "backward-euler",
+            "type": "string"
+          },
+          "timeStep": {
+            "description": "Time step [s]",
+            "example": 1e-06,
+            "format": "double",
+            "type": "number"
+          }
+        }
+      },
+      "SseEmitter": {
+        "properties": {
+          "timeout": {
+            "format": "int64",
+            "type": "integer"
+          }
+        }
+      },
+      "SwitchingLossRequest": {
+        "description": "Request for calculating switching losses",
+        "properties": {
+          "current": {
+            "description": "Switching current [A]",
+            "example": 10.0,
+            "format": "double",
+            "type": "number"
+          },
+          "referenceVoltage": {
+            "description": "Reference voltage [V]",
+            "example": 600.0,
+            "format": "double",
+            "type": "number"
+          },
+          "temperature": {
+            "description": "Junction temperature [\u00b0C]",
+            "example": 125.0,
+            "format": "double",
+            "type": "number"
+          },
+          "turnOffEnergy": {
+            "description": "Turn-off energy at reference [J]",
+            "example": 0.0015,
+            "format": "double",
+            "type": "number"
+          },
+          "turnOnEnergy": {
+            "description": "Turn-on energy at reference [J]",
+            "example": 0.001,
+            "format": "double",
+            "type": "number"
+          },
+          "voltage": {
+            "description": "Blocking voltage [V]",
+            "example": 600.0,
+            "format": "double",
+            "type": "number"
+          }
+        },
+        "required": [
+          "current",
+          "referenceVoltage",
+          "temperature",
+          "turnOffEnergy",
+          "turnOnEnergy",
+          "voltage"
+        ]
+      },
+      "TokenPair": {
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "expiresIn": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationResponse": {
+        "description": "Circuit validation result",
+        "properties": {
+          "diagnostics": {
+            "items": {
+              "$ref": "#/components/schemas/Diagnostic"
+            },
+            "type": "array"
+          },
+          "errors": {
+            "description": "Validation errors (critical issues)",
+            "items": {
+              "description": "Validation errors (critical issues)",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "outcome": {
+            "enum": [
+              "READY",
+              "INVALID",
+              "UNSUPPORTED"
+            ],
+            "type": "string"
+          },
+          "readyForHeadless": {
+            "type": "boolean"
+          },
+          "valid": {
+            "description": "Whether the circuit is valid",
+            "example": true,
+            "type": "boolean"
+          },
+          "warnings": {
+            "description": "Validation warnings (non-critical issues)",
+            "items": {
+              "description": "Validation warnings (non-critical issues)",
+              "type": "string"
+            },
+            "type": "array"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKey": {
+        "in": "header",
+        "name": "X-API-Key",
+        "type": "apiKey"
+      },
+      "BearerAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/docs": {
+      "get": {
+        "description": "Get links to API documentation",
+        "operationId": "docs",
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Documentation endpoints"
+          }
+        },
+        "summary": "Documentation links",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "description": "Check API health status",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "example": {
+                    "status": "UP",
+                    "version": "1.0.0"
+                  }
+                }
+              }
+            },
+            "description": "API is healthy"
+          }
+        },
+        "security": [],
+        "summary": "Health check",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/info": {
+      "get": {
+        "description": "Get API metadata and version info",
+        "operationId": "info",
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "API information"
+          }
+        },
+        "summary": "API information",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/api/v1/analysis/characteristics": {
+      "post": {
+        "description": "Calculate AVG, RMS, THD, MIN, MAX, RIPPLE, KLIRR, SHAPE for a signal",
+        "operationId": "computeCharacteristics",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignalAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharacteristicsResponse"
+                }
+              }
+            },
+            "description": "Characteristics computed successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharacteristicsResponse"
+                }
+              }
+            },
+            "description": "Invalid request or insufficient data"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharacteristicsResponse"
+                }
+              }
+            },
+            "description": "Simulation or signal not found"
+          },
+          "500": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CharacteristicsResponse"
+                }
+              }
+            },
+            "description": "Calculation error or out of memory"
+          }
+        },
+        "summary": "Compute signal characteristics",
+        "tags": [
+          "Signal Analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/fourier": {
+      "post": {
+        "description": "Compute An, Bn, Cn, Jn coefficients for N harmonics",
+        "operationId": "computeFourier",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "harmonics",
+            "required": false,
+            "schema": {
+              "default": 10,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignalAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FourierResponse"
+                }
+              }
+            },
+            "description": "Fourier analysis completed"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FourierResponse"
+                }
+              }
+            },
+            "description": "Invalid request, time range, or harmonic count"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FourierResponse"
+                }
+              }
+            },
+            "description": "Simulation or signal not found"
+          },
+          "500": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FourierResponse"
+                }
+              }
+            },
+            "description": "Calculation error or out of memory"
+          }
+        },
+        "summary": "Fourier harmonic decomposition",
+        "tags": [
+          "Signal Analysis"
+        ]
+      }
+    },
+    "/api/v1/analysis/rms": {
+      "post": {
+        "description": "Quick RMS calculation for a signal",
+        "operationId": "computeRms",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignalAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "format": "double",
+                  "type": "number"
+                }
+              }
+            },
+            "description": "RMS computed"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "format": "double",
+                  "type": "number"
+                }
+              }
+            },
+            "description": "Invalid request or insufficient data"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "format": "double",
+                  "type": "number"
+                }
+              }
+            },
+            "description": "Simulation or signal not found"
+          }
+        },
+        "summary": "Compute RMS value",
+        "tags": [
+          "Signal Analysis"
+        ]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "refresh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "Exchange a refresh token for a new token pair",
+        "tags": [
+          "auth-controller"
+        ]
+      }
+    },
+    "/api/v1/auth/token": {
+      "post": {
+        "operationId": "token",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-API-Key",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenPair"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": []
+          }
+        ],
+        "summary": "Issue an access token and refresh token for an API key",
+        "tags": [
+          "auth-controller"
+        ]
+      }
+    },
+    "/api/v1/circuits": {
+      "get": {
+        "description": "Get a list of all circuits currently loaded in memory.",
+        "operationId": "getAllCircuits",
+        "parameters": [
+          {
+            "description": "Zero-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size, capped at 100",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Sort: id or createdAt, followed by asc or desc",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "id,asc",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitListResponse"
+                }
+              }
+            },
+            "description": "Circuit list retrieved"
+          }
+        },
+        "summary": "List all circuits",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/parse": {
+      "post": {
+        "description": "Load a circuit from base64 encoded .ipes file content. Useful for programmatic access without file upload.",
+        "operationId": "loadCircuitFromFile_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CircuitLoadRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "properties": {
+                  "file": {
+                    "description": "Circuit file (.ipes)",
+                    "format": "binary",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitLoadResponse"
+                }
+              }
+            },
+            "description": "Circuit loaded successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitLoadResponse"
+                }
+              }
+            },
+            "description": "Invalid base64 encoding or parsing error"
+          }
+        },
+        "summary": "Load circuit from base64 content",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}": {
+      "delete": {
+        "description": "Remove circuit from memory. Useful for cleanup after processing.",
+        "operationId": "deleteCircuit",
+        "parameters": [
+          {
+            "description": "Circuit ID",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Circuit deleted successfully"
+          },
+          "404": {
+            "description": "Circuit not found"
+          }
+        },
+        "summary": "Delete circuit",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}/clone": {
+      "post": {
+        "description": "Creates a copy of the circuit with optional parameter overrides. Overrides use dot-notation format (ComponentName.parameterKey).",
+        "operationId": "cloneCircuit",
+        "parameters": [
+          {
+            "description": "Source circuit ID",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CircuitCloneRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitLoadResponse"
+                }
+              }
+            },
+            "description": "Circuit cloned successfully"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitLoadResponse"
+                }
+              }
+            },
+            "description": "Source circuit not found"
+          },
+          "500": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitLoadResponse"
+                }
+              }
+            },
+            "description": "Failed to clone circuit"
+          }
+        },
+        "summary": "Clone a circuit",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}/components": {
+      "get": {
+        "description": "Retrieve all components in the circuit with their parameters.",
+        "operationId": "getComponents",
+        "parameters": [
+          {
+            "description": "Circuit ID",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComponentListResponse"
+                }
+              }
+            },
+            "description": "Component list retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComponentListResponse"
+                }
+              }
+            },
+            "description": "Circuit not found"
+          }
+        },
+        "summary": "Get circuit components",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}/info": {
+      "get": {
+        "description": "Retrieve detailed information about a loaded circuit including components, connections, and simulation parameters.",
+        "operationId": "getCircuitInfo",
+        "parameters": [
+          {
+            "description": "Circuit ID from load response",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitInfo"
+                }
+              }
+            },
+            "description": "Circuit info retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitInfo"
+                }
+              }
+            },
+            "description": "Circuit not found"
+          }
+        },
+        "summary": "Get circuit information",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}/parameters": {
+      "put": {
+        "description": "Updates simulation parameters of a loaded circuit in-memory. Only provided fields are updated; null values are ignored.",
+        "operationId": "updateCircuitParameters",
+        "parameters": [
+          {
+            "description": "Circuit ID",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CircuitParameterUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitInfo"
+                }
+              }
+            },
+            "description": "Parameters updated"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitInfo"
+                }
+              }
+            },
+            "description": "Circuit not found"
+          },
+          "500": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CircuitInfo"
+                }
+              }
+            },
+            "description": "Failed to update parameters"
+          }
+        },
+        "summary": "Update circuit parameters",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}/raw": {
+      "get": {
+        "description": "Retrieve the raw (decompressed) .ipes file content for debugging.",
+        "operationId": "getRawCircuit",
+        "parameters": [
+          {
+            "description": "Circuit ID",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {}
+            },
+            "description": "Raw content retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Circuit not found"
+          }
+        },
+        "summary": "Get raw circuit content",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/circuits/{circuitId}/validate": {
+      "get": {
+        "description": "Check circuit structure for errors and warnings.",
+        "operationId": "validateCircuit",
+        "parameters": [
+          {
+            "description": "Circuit ID",
+            "in": "path",
+            "name": "circuitId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            },
+            "description": "Validation completed"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            },
+            "description": "Circuit not found"
+          }
+        },
+        "summary": "Validate circuit",
+        "tags": [
+          "Circuit Files"
+        ]
+      }
+    },
+    "/api/v1/loss/conduction": {
+      "post": {
+        "description": "Calculate semiconductor conduction losses using resistance + threshold voltage model. Formula: P = I * (Vth + I * Ron). Returns continuous power [W].",
+        "operationId": "calculateConductionLoss",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConductionLossRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossResponse"
+                }
+              }
+            },
+            "description": "Loss calculated successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          }
+        },
+        "summary": "Calculate conduction losses",
+        "tags": [
+          "Loss Calculation"
+        ]
+      }
+    },
+    "/api/v1/loss/detailed": {
+      "post": {
+        "description": "Calculate losses using temperature-dependent curve interpolation from manufacturer datasheets. Provide switching and conduction curves at multiple temperatures for accurate interpolation. Uses DetailedLossLookupTable with bilinear interpolation.",
+        "operationId": "calculateDetailedLoss",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetailedLossRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossResponse"
+                }
+              }
+            },
+            "description": "Loss calculated successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters (missing curves, invalid data format)"
+          }
+        },
+        "summary": "Calculate detailed losses with interpolation",
+        "tags": [
+          "Loss Calculation"
+        ]
+      }
+    },
+    "/api/v1/loss/switching": {
+      "post": {
+        "description": "Calculate semiconductor switching losses using simple voltage/energy scaling. Returns switching energy per event [J]. Multiply by frequency for average power [W].",
+        "operationId": "calculateSwitchingLoss",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchingLossRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossResponse"
+                }
+              }
+            },
+            "description": "Loss calculated successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LossResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          }
+        },
+        "summary": "Calculate switching losses",
+        "tags": [
+          "Loss Calculation"
+        ]
+      }
+    },
+    "/api/v1/simulations": {
+      "get": {
+        "description": "List all simulations with optional status filter",
+        "operationId": "listSimulations",
+        "parameters": [
+          {
+            "description": "Filter by status",
+            "example": "COMPLETED",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Zero-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size, capped at 100",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Sort: id or createdAt, followed by asc or desc",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "id,asc",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {},
+                  "type": "object"
+                }
+              }
+            },
+            "description": "List of simulations"
+          }
+        },
+        "summary": "List simulations",
+        "tags": [
+          "Simulations"
+        ]
+      },
+      "post": {
+        "description": "Submit a new circuit simulation job",
+        "operationId": "submitSimulation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Simulation submitted successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          }
+        },
+        "summary": "Submit simulation",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/batch": {
+      "post": {
+        "description": "Submit multiple simulations with parameter variations (explicit sets, linear sweep, or log sweep)",
+        "operationId": "submitBatch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchSimulationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchSimulationResponse"
+                }
+              }
+            },
+            "description": "Batch submitted successfully"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchSimulationResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          }
+        },
+        "summary": "Submit a batch of simulations",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/batch/{batchId}": {
+      "delete": {
+        "operationId": "cancelBatch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "batchId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Batch cancelled"
+          },
+          "404": {
+            "description": "Batch not found"
+          }
+        },
+        "summary": "Cancel all simulations in a batch",
+        "tags": [
+          "Simulations"
+        ]
+      },
+      "get": {
+        "description": "Returns status summary for all simulations in a batch",
+        "operationId": "getBatchStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "batchId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchJobStatus"
+                }
+              }
+            },
+            "description": "Batch status retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchJobStatus"
+                }
+              }
+            },
+            "description": "Batch not found"
+          }
+        },
+        "summary": "Get batch job status",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}": {
+      "delete": {
+        "description": "Cancel a pending or running simulation",
+        "operationId": "cancelSimulation",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Simulation cancelled"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Simulation not found"
+          },
+          "409": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Simulation already completed"
+          }
+        },
+        "summary": "Cancel simulation",
+        "tags": [
+          "Simulations"
+        ]
+      },
+      "get": {
+        "description": "Retrieve status and results of a simulation",
+        "operationId": "getSimulation",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Simulation found"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResponse"
+                }
+              }
+            },
+            "description": "Simulation not found"
+          }
+        },
+        "summary": "Get simulation",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}/export": {
+      "post": {
+        "description": "Export simulation results in CSV format",
+        "operationId": "exportResults",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Export format",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "csv",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "CSV export generated"
+          },
+          "400": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Invalid export format"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Simulation not found"
+          },
+          "425": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Simulation not yet complete"
+          }
+        },
+        "summary": "Export results",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}/progress": {
+      "get": {
+        "description": "Get progress percentage for a running simulation",
+        "operationId": "getSimulationProgress",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {},
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Progress retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {},
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Simulation not found"
+          }
+        },
+        "summary": "Get simulation progress",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}/results": {
+      "get": {
+        "description": "Retrieve all signal data from a completed simulation",
+        "operationId": "getSimulationResults",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {
+                    "items": {
+                      "format": "double",
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Results retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {
+                    "items": {
+                      "format": "double",
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Simulation not found"
+          },
+          "425": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {
+                    "items": {
+                      "format": "double",
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Simulation not yet complete"
+          }
+        },
+        "summary": "Get simulation results",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}/results/{signalName}": {
+      "get": {
+        "description": "Retrieve specific signal data from a simulation",
+        "operationId": "getSignalData",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Signal name",
+            "in": "path",
+            "name": "signalName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {},
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Signal data retrieved"
+          },
+          "404": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {},
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Simulation or signal not found"
+          },
+          "425": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {},
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Simulation not yet complete"
+          }
+        },
+        "summary": "Get signal data",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}/stream": {
+      "get": {
+        "description": "Real-time Server-Sent Events stream. Events: 'progress', 'status', 'complete', 'error'",
+        "operationId": "streamProgress",
+        "parameters": [
+          {
+            "description": "Simulation ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000",
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "SSE connection timeout in milliseconds",
+            "in": "query",
+            "name": "timeoutMs",
+            "required": false,
+            "schema": {
+              "default": 300000,
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseEmitter"
+                }
+              }
+            },
+            "description": "SSE stream established"
+          },
+          "404": {
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/SseEmitter"
+                }
+              }
+            },
+            "description": "Simulation not found"
+          }
+        },
+        "summary": "Stream simulation progress",
+        "tags": [
+          "Simulations"
+        ]
+      }
+    },
+    "/api/v1/simulations/{simulationId}/ws-info": {
+      "get": {
+        "description": "Returns the STOMP topic destination to subscribe to for real-time updates",
+        "operationId": "getWebSocketInfo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "simulationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get WebSocket subscription info",
+        "tags": [
+          "Simulation WebSocket"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKey": []
+    },
+    {
+      "BearerAuth": []
+    }
+  ],
+  "servers": [
+    {
+      "description": "Generated server url",
+      "url": "http://localhost:8080/gecko"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Circuit file loading and parsing endpoints",
+      "name": "Circuit Files"
+    },
+    {
+      "description": "FFT, characteristics, and harmonic analysis of simulation signals",
+      "name": "Signal Analysis"
+    },
+    {
+      "description": "Circuit simulation endpoints",
+      "name": "Simulations"
+    },
+    {
+      "description": "WebSocket subscription information for real-time streaming",
+      "name": "Simulation WebSocket"
+    },
+    {
+      "description": "Health check and API information endpoints",
+      "name": "Health"
+    },
+    {
+      "description": "Semiconductor power loss calculation endpoints",
+      "name": "Loss Calculation"
+    }
+  ]
+}
