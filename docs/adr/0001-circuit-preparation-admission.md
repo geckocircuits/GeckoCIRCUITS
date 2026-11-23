@@ -44,7 +44,7 @@ Separate readiness diagnostics keep inspection available without claiming that u
 The core preparation module must remain independent of the REST circuit store.
 Uploaded filenames identify provenance and must not replace captured circuit data during execution.
 Stored-model updates and snapshot capture require a consistent operation across all model fields.
-The [preparation interface](ADR-0002-circuit-preparation-interface.md) defines the module contract and executable-coverage obligations.
+The [preparation interface](0002-circuit-preparation-interface.md) defines the module contract and executable-coverage obligations.
 These decisions authorize the design contract. They do not authorize production implementation or publication.
 
 ## References

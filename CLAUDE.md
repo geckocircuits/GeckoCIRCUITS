@@ -15,11 +15,11 @@
 
 | Branch | Package | Description | CI gates |
 |--------|---------|-------------|----------|
-| [geckocircuits/main](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main) | `ch.technokrat.gecko` | Upstream stable v2.02 baseline. Reference-quality codebase. Contributions via PR only. | Compile + 162 unit tests + 21 regression |
+| [geckocircuits/main](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main) | `ch.technokrat.gecko` | Upstream stable v2.02 baseline. Reference-quality codebase. Contributions via PR only. | Compile + unit tests + 21 regression |
 | [geckocircuits/dev](https://github.com/geckocircuits/GeckoCIRCUITS/tree/dev) | `ch.technokrat.gecko` | Upstream hotfix/maintenance branch. PRs to main only after CI passes. | Compile + unit tests |
 | [geckocircuits/main_gecko2026](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main_gecko2026) | `gecko` | Mirror of `tinix84/main`. Experimental branch for community contributions. **Never merged to upstream main.** | Compile + all modules + 21 regression tests + static analysis |
 | [tinix84/main](https://github.com/tinix84/GeckoCIRCUITS/tree/main) | `gecko` | Fork stable branch. All releases up to v3.0.0. Code has passed regression testing. | Compile + all modules + 21 regression tests |
-| [tinix84/dev](https://github.com/tinix84/GeckoCIRCUITS/tree/dev) | `gecko` | Fork development branch. Active development, fixes, features. | Compile + 5,373 unit tests + 21 regression tests |
+| [tinix84/dev](https://github.com/tinix84/GeckoCIRCUITS/tree/dev) | `gecko` | Fork development branch. Active development, fixes, features. | Compile + unit tests + 21 regression tests |
 
 ### Merge Flow
 
@@ -52,14 +52,6 @@ geckocircuits/dev ──PR──> geckocircuits/main
 |--------|-----|---------|
 | [geckocircuits/main_gecko2026_old](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main_gecko2026_old) | `fde75701` | Backup of original `main_gecko2026` (`ch.technokrat.gecko` package, pre-restructure) |
 
-### PR History
-
-| PR | Repo | Status | Description |
-|----|------|--------|-------------|
-| [#36](https://github.com/tinix84/GeckoCIRCUITS/pull/36) | tinix84 | Merged | dev → main: regression framework + bug #48/#49 fixes |
-| [#49](https://github.com/geckocircuits/GeckoCIRCUITS/pull/49) | geckocircuits | Merged → dev | Swing thread safety + daemon thread + phase normalization |
-| [#50](https://github.com/geckocircuits/GeckoCIRCUITS/pull/50) | geckocircuits | Merged | dev → main: PR #49 + regression framework (ch.technokrat.gecko) |
-
 ## Build & Test
 ```bash
 mvn clean package assembly:single        # Build main JAR with dependencies
@@ -80,12 +72,16 @@ mvn -f pom-reactor.xml test -pl src/modules/gecko-rest-api
 - Regenerate golden refs: run on a machine with desktop (v2.02 GUI doesn't start under WSL2/Xvfb)
 
 ## Key Documents
-- [PRD](docs/prd.md) — requirements, sprint status, release history
-- [Architecture](docs/architecture.md) — module structure, GUI-free boundary
-- [Roadmap](docs/roadmap.md) — future releases, GitHub issues, release process
+Each kind of statement has one owner (`~/.claude/doc-authority-map.md`):
+- [CONTEXT.md](CONTEXT.md): what domain terms mean
+- [ADRs](docs/adr/README.md): why a decision was made (indexed in the Decision Log below)
+- [PRD](docs/prd.md): what the product must do
+- [Architecture](docs/architecture.md): where things live (pointers only)
+- [Releasing](docs/releasing.md): how to cut a release
+- [GitHub issues and milestones](https://github.com/tinix84/GeckoCIRCUITS/milestones): scope, status, and plans
 
-## Sprint Plans
-Convention: `docs/sprints/sprint-*.md`
+Never record counts, status, or progress in tracked docs. Measure them, or put them in an issue.
+Step-by-step plans are temporary: keep them in the gitignored `docs/superpowers/plans/`.
 
 ## Skills
 Central pool at `/home/tinix/claude_wsl/agents_pool/`:
@@ -103,11 +99,9 @@ python -m src.cli run sw-arch .  # Run architecture analysis
 - Multi-module: main (pom.xml) + simulation-core + rest-api (pom-reactor.xml)
 - .form files: edit with NetBeans GUI Designer only
 - .ipes files: gzip-compressed circuit files
-- Tests: 7,434 total (5,373 main + 1,837 core + 224 API) + 21 regression
-- Core module: 216 source classes, 80 test files
-- Static analysis: SpotBugs 0 bugs; PMD 636 and Checkstyle 4,431 violations (measured 2026-11-23, targets in #64/#65)
+- Static-analysis targets: #64 (PMD), #65 (Checkstyle)
 - Docs site: https://tinix84.github.io/GeckoCIRCUITS/
-- REST API v3.0.0: 32 endpoints, Spring Boot 3.2.1, Docker-ready
+- REST API contract: served at `/api-docs`, with a snapshot in `docs/api/openapi.json`
 - `CorePackageValidationTest` enforces zero GUI imports in gecko-simulation-core
 
 ## Python Environment
@@ -122,14 +116,16 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 
 | Date | Decision |
 |---|---|
-| 2026-11-04 | [ADR-0001: Circuit preparation admission contract](docs/adr/ADR-0001-circuit-preparation-admission.md) |
-| 2026-11-04 | [ADR-0002: Circuit preparation interface](docs/adr/ADR-0002-circuit-preparation-interface.md) |
-| 2026-11-07 | [ADR-0003: CONTROL dependency ordering](docs/adr/ADR-0003-control-dependency-ordering.md) |
-| 2026-11-07 | [ADR-0004: Recorded signal analysis](docs/adr/ADR-0004-recorded-signal-analysis.md) |
-| 2026-11-08 | [ADR-0005: Shared CONTROL delay history](docs/adr/ADR-0005-shared-control-delay-history.md) |
-| 2026-11-09 | [ADR-0006: Scoped simulation retrieval](docs/adr/ADR-0006-scoped-simulation-retrieval.md) |
-| 2026-11-09 | [ADR-0007: Local simulation session](docs/adr/ADR-0007-local-simulation-session.md) |
-| 2026-11-09 | [ADR-0008: Controlled source compatibility](docs/adr/ADR-0008-controlled-source-compatibility.md) |
-| 2026-11-12 | [ADR-0010: Pull-based frontend and single-owner session](docs/adr/ADR-0010-pull-based-frontend-single-owner-session.md) |
-| 2026-11-13 | [ADR-0011: Numerical reference compatibility](docs/adr/ADR-0011-numerical-reference-compatibility.md) |
-| 2026-11-17 | [ADR-0012: Isolated electrical groups](docs/adr/ADR-0012-isolated-electrical-groups.md) |
+| 2026-11-04 | [ADR-0001: Circuit preparation admission contract](docs/adr/0001-circuit-preparation-admission.md) |
+| 2026-11-04 | [ADR-0002: Circuit preparation interface](docs/adr/0002-circuit-preparation-interface.md) |
+| 2026-11-07 | [ADR-0003: CONTROL dependency ordering](docs/adr/0003-control-dependency-ordering.md) |
+| 2026-11-07 | [ADR-0004: Recorded signal analysis](docs/adr/0004-recorded-signal-analysis.md) |
+| 2026-11-08 | [ADR-0005: Shared CONTROL delay history](docs/adr/0005-shared-control-delay-history.md) |
+| 2026-11-09 | [ADR-0006: Scoped simulation retrieval](docs/adr/0006-scoped-simulation-retrieval.md) |
+| 2026-11-09 | [ADR-0007: Local simulation session](docs/adr/0007-local-simulation-session.md) |
+| 2026-11-09 | [ADR-0008: Controlled source compatibility](docs/adr/0008-controlled-source-compatibility.md) |
+| 2026-11-12 | [ADR-0010: Pull-based frontend and single-owner session](docs/adr/0010-pull-based-frontend-single-owner-session.md) |
+| 2026-11-13 | [ADR-0011: Numerical reference compatibility](docs/adr/0011-numerical-reference-compatibility.md) |
+| 2026-11-17 | [ADR-0012: Isolated electrical groups](docs/adr/0012-isolated-electrical-groups.md) |
+| 2026-02-12 | [ADR-0013: GUI-free simulation core](docs/adr/0013-gui-free-simulation-core.md) |
+| 2026-02-05 | [ADR-0014: Java solver with optional native sparse backend](docs/adr/0014-java-solver-with-optional-native-sparse.md) |

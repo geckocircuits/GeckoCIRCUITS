@@ -7,7 +7,7 @@ Date: 2026-11-04
 One deep core module owns effective circuit configuration and Headless readiness.
 The REST adapter resolves source identity and captures input before job admission.
 The engine consumes an immutable Prepared circuit and creates independent state for each run.
-This interface implements the compatibility and ownership decisions in [ADR-0001](ADR-0001-circuit-preparation-admission.md).
+This interface implements the compatibility and ownership decisions in [ADR-0001](0001-circuit-preparation-admission.md).
 
 ## Core interface
 
@@ -258,7 +258,7 @@ That shares mutable state across validation, repeated runs, or Batch children.
 ## References
 
 - [Domain language](../../CONTEXT.md)
-- [Admission contract](ADR-0001-circuit-preparation-admission.md)
+- [Admission contract](0001-circuit-preparation-admission.md)
 - [Core parser](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/io/CircuitFileParser.java)
 - [Parameter overrides](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/io/ParameterOverrideApplicator.java)
 - [Netlist construction](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/circuit/netlist/NetlistBuilder.java)

@@ -4,7 +4,7 @@ Date: 2026-11-12
 
 ## Context
 
-The [local simulation session decision](ADR-0007-local-simulation-session.md) requires one backend for desktop and REST.
+The [local simulation session decision](0007-local-simulation-session.md) requires one backend for desktop and REST.
 A first attempt shared the legacy desktop kernel and added locks, execution tickets, readiness futures and queued callback admission.
 That kernel calls scope widgets, menus and export progress synchronously while it owns simulation state.
 Those callbacks can request lifecycle changes, so each added lock produced another lock cycle.

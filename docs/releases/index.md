@@ -99,17 +99,9 @@ The latest stable release is **v2.17.0** (released February 2026).
 
 ---
 
-## Future Roadmap
+## What's Next
 
-See the [Roadmap Page](../roadmap.md) for upcoming releases and features.
-
-### Upcoming Milestones
-
-- **v2.18.0 - v2.2x** (Q2-Q3 2026): Incremental REST API features
-- **v3.0.0** (Q3 2026): 🚀 Complete REST API Platform - **MARKETING WOW**
-- **v3.1.0** (Q4 2026): Web UI Launch (React + TypeScript)
-- **v3.2.0** (Q1 2027): Cloud Deployment (Kubernetes)
-- **v4.0.0** (Q2 2027): Machine Learning Integration
+Planned work is tracked in the [GitHub milestones](https://github.com/tinix84/GeckoCIRCUITS/milestones).
 
 ---
 

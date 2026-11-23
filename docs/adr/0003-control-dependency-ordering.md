@@ -47,7 +47,7 @@ Coverage gates protect the factory, netlist, and delay calculator.
 
 ## References
 
-- [Preparation interface](ADR-0002-circuit-preparation-interface.md)
+- [Preparation interface](0002-circuit-preparation-interface.md)
 - [CONTROL factory](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/ControlCalculatorFactory.java)
 - [Ordered netlist](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/ControlNetlist.java)
 - [Delay calculator](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/control/calculators/DelayCalculator.java)

@@ -224,8 +224,6 @@ nav:
     - v2.11.0 - Core Module: releases/2110.md
     - v2.10.0 - Ground Zero: releases/2100.md
 
-  - Roadmap: roadmap.md
-
   - API Reference:
     - api/index.md
     - Core Module:

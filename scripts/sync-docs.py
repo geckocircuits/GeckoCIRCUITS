@@ -133,8 +133,6 @@ def convert_links(content: str, source_path: Path, destination_path: Path | None
             target = candidate / 'index.md' if candidate.is_dir() else candidate
         if not target.is_file():
             return match.group(0)
-        if target.name == 'wip.md' and fragment.endswith('index.md'):
-            fragment = ''
         relative = Path(os.path.relpath(target, destination_path.parent)).as_posix()
         return f'[{label}]({urlunsplit(("", "", relative, parts.query, fragment))})'
 
