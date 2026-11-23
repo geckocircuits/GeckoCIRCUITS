@@ -12,8 +12,14 @@ public record CircuitListResponse(
     List<CircuitSummary> circuits,
 
     @Schema(description = "Total number of loaded circuits", example = "5")
-    int total
+    int total,
+
+    @Schema(description = "Pagination metadata")
+    gecko.rest.model.PageMetadata page
 ) {
+    public CircuitListResponse(List<CircuitSummary> circuits, int total) {
+        this(circuits, total, null);
+    }
     /**
      * Summary information about a loaded circuit.
      */

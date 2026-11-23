@@ -97,6 +97,13 @@ public class GlobalExceptionHandler {
     /**
      * Handle general exceptions.
      */
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidQuery(
+            org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex, WebRequest request) {
+        return handleResponseStatusException(new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "Invalid query parameter: " + ex.getName()), request);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGlobalException(
             Exception ex,

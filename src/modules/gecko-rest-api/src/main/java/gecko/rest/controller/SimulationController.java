@@ -224,8 +224,13 @@ public class SimulationController {
     @ApiResponse(responseCode = "200", description = "List of simulations")
     public ResponseEntity<Map<String, Object>> listSimulations(
             @Parameter(description = "Filter by status", example = "COMPLETED")
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) String status,
+            @Parameter(description = "Zero-based page number") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size, capped at 100") @RequestParam(defaultValue = "20") int size,
+            @Parameter(description = "Sort: id or createdAt, followed by asc or desc")
+            @RequestParam(defaultValue = "id,asc") String sort) {
 
+        ListPage pagination = new ListPage(page, size, sort);
         Map<String, Object> response = new HashMap<>();
         Map<String, SimulationResponse> allSimulations = simulationService.getAllSimulations();
         Map<String, SimulationResponse> filtered = new HashMap<>();
@@ -242,7 +247,15 @@ public class SimulationController {
 
         response.put("total", allSimulations.size());
         response.put("count", filtered.size());
-        response.put("simulations", filtered);
+        Comparator<SimulationResponse> byId = Comparator.comparing(SimulationResponse::getSimulationId);
+        List<SimulationResponse> selected = pagination.select(new ArrayList<>(filtered.values()), Map.of(
+                "id", byId,
+                "createdAt", Comparator.comparing(SimulationResponse::getStartTime,
+                        Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(byId)));
+        Map<String, SimulationResponse> items = new java.util.LinkedHashMap<>();
+        selected.forEach(item -> items.put(item.getSimulationId(), item));
+        response.put("simulations", items);
+        response.put("page", pagination.metadata(filtered.size()));
         response.put("statistics", simulationService.getStatistics());
         return ResponseEntity.ok(response);
     }
