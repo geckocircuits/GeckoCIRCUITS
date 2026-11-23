@@ -12,7 +12,7 @@ mvn spotbugs:check
 mkdocs build --strict
 ```
 
-Set `app.version` in `src/modules/gecko-rest-api/src/main/resources/application.properties` (reported by `/api/health`), and add `docs/releases/XYZ0.md` with its `mkdocs.yml` nav entry. The packages take their version from the tag; the `pom.xml` versions are not used for releases. Document breaking changes in the release notes.
+Set `app.version` in `src/modules/gecko-rest-api/src/main/resources/application.properties` (reported by `/api/health`), and add `docs/releases/XYZ0.md` with its `mkdocs.yml` nav entry. The GitHub release is named after the tag, but the package files still carry the `pom.xml` version (`GeckoCIRCUITS-1.0-*.zip`). Document breaking changes in the release notes.
 
 ## Tag
 
@@ -24,7 +24,7 @@ git push origin vX.Y.Z
 A `v*` tag triggers two workflows:
 
 - `.github/workflows/release.yml` builds the platform packages and creates the GitHub release.
-- `.github/workflows/sync-to-upstream.yml` mirrors `main` to `geckocircuits/main_gecko2026`.
+- `.github/workflows/sync-to-upstream.yml` opens a PR from `main` to `geckocircuits/main_gecko2026`. It needs the `UPSTREAM_PAT` repository secret: a token that can open PRs on the upstream repository.
 
 ## After
 
