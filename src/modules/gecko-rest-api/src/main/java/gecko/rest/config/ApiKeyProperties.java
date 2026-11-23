@@ -24,6 +24,16 @@ public class ApiKeyProperties {
 
     /** Whether API key authentication is enforced. Default true. Set false to disable for testing. */
     private boolean authEnabled = true;
+    private java.util.Map<String, Role> roles = new java.util.HashMap<>();
+    private Role defaultRole = Role.ADMIN;
+
+    public enum Role { ADMIN, USER, READONLY }
+
+    public java.util.Map<String, Role> getRoles() { return roles; }
+    public void setRoles(java.util.Map<String, Role> value) { roles = value; }
+    public Role getDefaultRole() { return defaultRole; }
+    public void setDefaultRole(Role value) { defaultRole = value; }
+    public Role roleFor(String keyId) { return roles.getOrDefault(keyId, defaultRole); }
 
     public Set<String> getKeys() {
         return keys;

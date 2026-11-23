@@ -122,6 +122,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(
+            org.springframework.security.access.AccessDeniedException ex, WebRequest request) {
+        return handleResponseStatusException(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                "Your role does not permit this operation."), request);
+    }
+
     /**
      * Handle 404 errors.
      */

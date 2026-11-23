@@ -50,7 +50,7 @@ public final class ApiKeyStompInterceptor implements ChannelInterceptor {
                 }
             } else {
                 if (!properties.isValidKey(key)) throw new AccessDeniedException("Valid X-API-Key CONNECT header required");
-                accessor.setUser(ApiIdentity.forKey(key));
+                accessor.setUser(ApiIdentity.forKey(key, properties));
             }
             accessor.removeNativeHeader(ApiKeyAuthFilter.API_KEY_HEADER);
             accessor.removeNativeHeader("Authorization");

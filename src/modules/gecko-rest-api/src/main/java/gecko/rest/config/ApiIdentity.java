@@ -21,6 +21,13 @@ public final class ApiIdentity {
     }
 
     static UsernamePasswordAuthenticationToken forKey(String key) {
-        return UsernamePasswordAuthenticationToken.authenticated(key == null ? "open" : keyId(key), null, List.of());
+        return forKey(key, new ApiKeyProperties());
+    }
+
+    static UsernamePasswordAuthenticationToken forKey(String key, ApiKeyProperties properties) {
+        String subject = key == null ? "open" : keyId(key);
+        var role = !properties.isAuthEnabled() ? ApiKeyProperties.Role.ADMIN : properties.roleFor(subject);
+        return UsernamePasswordAuthenticationToken.authenticated(subject, null,
+                List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role.name())));
     }
 }

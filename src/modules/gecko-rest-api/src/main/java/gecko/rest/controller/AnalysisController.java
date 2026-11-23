@@ -41,6 +41,7 @@ public class AnalysisController {
      * @param request Analysis request with raw data or simulation signal reference
      * @return CharacteristicsResponse with computed metrics
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/characteristics")
     @Operation(
         summary = "Compute signal characteristics",
@@ -82,6 +83,7 @@ public class AnalysisController {
      * @param harmonics Number of harmonics to compute (0-based, default 10)
      * @return FourierResponse with An, Bn, Cn, Jn coefficients
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/fourier")
     @Operation(
         summary = "Fourier harmonic decomposition",
@@ -122,6 +124,7 @@ public class AnalysisController {
      * @param request Analysis request with raw data or simulation signal reference
      * @return RMS value as a double
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/rms")
     @Operation(
         summary = "Compute RMS value",

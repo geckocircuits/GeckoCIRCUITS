@@ -30,7 +30,8 @@ public class AuthController {
             security = @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "ApiKey"))
     public ResponseEntity<JwtService.TokenPair> token(@RequestHeader(value = "X-API-Key", required = false) String key) {
         if (key == null || !keys.getKeys().contains(key)) throw unauthorized();
-        return pair(ApiIdentity.keyId(key), List.of());
+        String subject = ApiIdentity.keyId(key);
+        return pair(subject, List.of(keys.roleFor(subject).name()));
     }
 
     @PostMapping("/refresh")
@@ -41,7 +42,7 @@ public class AuthController {
             if (keys.getKeys().stream().noneMatch(key -> ApiIdentity.keyId(key).equals(jwt.getSubject()))) {
                 throw unauthorized();
             }
-            return pair(jwt.getSubject(), jwt.getClaimAsStringList("roles"));
+            return pair(jwt.getSubject(), List.of(keys.roleFor(jwt.getSubject()).name()));
         } catch (JwtException invalid) {
             throw unauthorized();
         }

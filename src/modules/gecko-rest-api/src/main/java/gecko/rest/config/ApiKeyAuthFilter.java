@@ -63,6 +63,9 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
         // If auth is disabled, pass through
         if (!apiKeyProperties.isAuthEnabled()) {
+            var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(ApiIdentity.forKey(null, apiKeyProperties));
+            org.springframework.security.core.context.SecurityContextHolder.setContext(context);
             filterChain.doFilter(request, response);
             return;
         }
@@ -89,7 +92,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         String providedKey = request.getHeader(API_KEY_HEADER);
         if (apiKeyProperties.isValidKey(providedKey)) {
             var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(ApiIdentity.forKey(providedKey));
+            context.setAuthentication(ApiIdentity.forKey(providedKey, apiKeyProperties));
             org.springframework.security.core.context.SecurityContextHolder.setContext(context);
             filterChain.doFilter(request, response);
         } else {

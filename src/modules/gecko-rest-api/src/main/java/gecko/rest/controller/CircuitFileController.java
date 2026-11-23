@@ -36,6 +36,7 @@ public class CircuitFileController {
     /**
      * Load circuit from multipart file upload.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "/parse", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
         summary = "Load circuit from file upload",
@@ -69,6 +70,7 @@ public class CircuitFileController {
     /**
      * Load circuit from base64 encoded content.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "/parse", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Load circuit from base64 content",
@@ -104,6 +106,7 @@ public class CircuitFileController {
     /**
      * Get detailed circuit information.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{circuitId}/info")
     @Operation(
         summary = "Get circuit information",
@@ -136,6 +139,7 @@ public class CircuitFileController {
     /**
      * Get component list for a circuit.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{circuitId}/components")
     @Operation(
         summary = "Get circuit components",
@@ -167,6 +171,7 @@ public class CircuitFileController {
     /**
      * Validate circuit structure.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{circuitId}/validate")
     @Operation(
         summary = "Validate circuit",
@@ -198,6 +203,7 @@ public class CircuitFileController {
     /**
      * Get raw circuit file content.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{circuitId}/raw")
     @Operation(
         summary = "Get raw circuit content",
@@ -231,6 +237,7 @@ public class CircuitFileController {
     /**
      * Delete circuit from memory.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{circuitId}")
     @Operation(
         summary = "Delete circuit",
@@ -261,6 +268,7 @@ public class CircuitFileController {
     /**
      * List all loaded circuits.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping
     @Operation(
         summary = "List all circuits",
@@ -293,6 +301,7 @@ public class CircuitFileController {
     /**
      * Clone an existing circuit with optional parameter overrides.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/{circuitId}/clone")
     @Operation(
         summary = "Clone a circuit",
@@ -327,6 +336,7 @@ public class CircuitFileController {
     /**
      * Update circuit simulation parameters.
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/{circuitId}/parameters")
     @Operation(
         summary = "Update circuit parameters",

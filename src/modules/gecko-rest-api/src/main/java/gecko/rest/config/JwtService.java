@@ -73,7 +73,16 @@ public class JwtService {
 
     public UsernamePasswordAuthenticationToken authenticate(String token) {
         Jwt jwt = decode(token, "access");
-        return UsernamePasswordAuthenticationToken.authenticated(jwt.getSubject(), null, List.of());
+        List<String> roles = jwt.getClaimAsStringList("roles");
+        try {
+            var authorities = roles == null ? List.<org.springframework.security.core.GrantedAuthority>of()
+                    : roles.stream().map(ApiKeyProperties.Role::valueOf)
+                    .map(role -> (org.springframework.security.core.GrantedAuthority)
+                            new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role.name())).toList();
+            return UsernamePasswordAuthenticationToken.authenticated(jwt.getSubject(), null, authorities);
+        } catch (IllegalArgumentException invalidRole) {
+            throw new BadJwtException("Token roles are invalid.");
+        }
     }
 
     private void requireEnabled() {
