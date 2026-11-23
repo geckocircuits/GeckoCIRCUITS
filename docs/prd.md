@@ -149,7 +149,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 
 **Testing:** Golden traces [#62], application tests [#63]
 
-**Quality Targets:** PMD <400 [#64], Checkstyle <2,000 [#65], coverage 40% [#66]
+**Quality Targets:** PMD <400 [#64], Checkstyle <2,000 [#65], core coverage floor [#66]
 
 **Long-term vision:** Educational platform [#10], industry partnerships [#11], research collaboration [#12]
 
@@ -227,7 +227,7 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - Application test classes with per-step comparison ([#63](https://github.com/tinix84/GeckoCIRCUITS/issues/63))
 - PMD violations < 400 ([#64](https://github.com/tinix84/GeckoCIRCUITS/issues/64))
 - Checkstyle violations < 2,000 ([#65](https://github.com/tinix84/GeckoCIRCUITS/issues/65))
-- Core module coverage ≥ 40% ([#66](https://github.com/tinix84/GeckoCIRCUITS/issues/66))
+- Core coverage floor enforced in the build ([#66](https://github.com/tinix84/GeckoCIRCUITS/issues/66))
 
 ### Solver Engine Improvements ([#56](https://github.com/tinix84/GeckoCIRCUITS/issues/56))
 - DC Operating Point Analysis ([#57](https://github.com/tinix84/GeckoCIRCUITS/issues/57)) — HIGH priority
@@ -254,8 +254,8 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 - `CorePackageValidationTest`: Zero GUI imports in core module
 - `mkdocs build --strict`: Zero broken links in documentation
 - SpotBugs: 0 bugs enforced (204 inline `@SuppressFBWarnings` annotations)
-- PMD: Custom ruleset (`pmd-ruleset.xml`), **496 remaining violations** ✅ **<500 TARGET ACHIEVED** (down 86% from original 3,443)
-- Checkstyle: Project-tuned config (`checkstyle.xml`), 4,632 remaining violations
+- PMD: Custom ruleset (`pmd-ruleset.xml`), 636 violations as of 2026-11-23 (reached 496 in v2.12.0, down from 3,443; has since regressed, see [#64](https://github.com/tinix84/GeckoCIRCUITS/issues/64))
+- Checkstyle: Project-tuned config (`checkstyle.xml`), 4,431 violations as of 2026-11-23
 
 ### Success Metrics
 
@@ -272,8 +272,8 @@ GeckoCIRCUITS is an open-source, Java 21 circuit simulator for power electronics
 | Docs site pages | 82+ | 100+ |
 | Broken links | 0 | 0 |
 | SpotBugs bugs | 0 | 0 |
-| PMD violations | **496** ✅ | <400 ([#64](https://github.com/tinix84/GeckoCIRCUITS/issues/64)) |
-| Checkstyle violations | 4,632 | <2,000 ([#65](https://github.com/tinix84/GeckoCIRCUITS/issues/65)) |
+| PMD violations | 636 (2026-11-23) | <400 ([#64](https://github.com/tinix84/GeckoCIRCUITS/issues/64)) |
+| Checkstyle violations | 4,431 (2026-11-23) | <2,000 ([#65](https://github.com/tinix84/GeckoCIRCUITS/issues/65)) |
 
 ## 8. Content Inventory
 

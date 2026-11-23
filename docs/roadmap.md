@@ -117,9 +117,9 @@ gantt
 
 | Issue | Target | Current |
 |-------|--------|---------|
-| [#64](https://github.com/tinix84/GeckoCIRCUITS/issues/64) | PMD violations < 400 | 496 |
-| [#65](https://github.com/tinix84/GeckoCIRCUITS/issues/65) | Checkstyle violations < 2,000 | 4,632 |
-| [#66](https://github.com/tinix84/GeckoCIRCUITS/issues/66) | Core module coverage ≥ 40% | 30%+ |
+| [#64](https://github.com/tinix84/GeckoCIRCUITS/issues/64) | PMD violations < 400 | 636 (2026-11-23) |
+| [#65](https://github.com/tinix84/GeckoCIRCUITS/issues/65) | Checkstyle violations < 2,000 | 4,431 (2026-11-23) |
+| [#66](https://github.com/tinix84/GeckoCIRCUITS/issues/66) | Core coverage floor enforced (85% instr / 78% branch) | 87.5% / 81.1% (2026-11-23) |
 
 **Testing:**
 

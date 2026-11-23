@@ -105,7 +105,7 @@ python -m src.cli run sw-arch .  # Run architecture analysis
 - .ipes files: gzip-compressed circuit files
 - Tests: 7,434 total (5,373 main + 1,837 core + 224 API) + 21 regression
 - Core module: 216 source classes, 80 test files
-- Static analysis: SpotBugs 0 bugs, PMD <500 violations (496 current)
+- Static analysis: SpotBugs 0 bugs; PMD 636 and Checkstyle 4,431 violations (measured 2026-11-23, targets in #64/#65)
 - Docs site: https://tinix84.github.io/GeckoCIRCUITS/
 - REST API v3.0.0: 32 endpoints, Spring Boot 3.2.1, Docker-ready
 - `CorePackageValidationTest` enforces zero GUI imports in gecko-simulation-core
