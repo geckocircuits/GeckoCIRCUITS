@@ -51,10 +51,12 @@ public class SimulationsKern implements ISimulationEngine {
     private volatile SimulationTraceLogger _traceLogger;
 
     /** Sets the optional logger before simulation starts. */
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP2", justification = "The engine writes to the caller-owned trace logger")
     public void setTraceLogger(SimulationTraceLogger logger) {
         _traceLogger = logger;
     }
 
+    @SuppressFBWarnings(value = "EI_EXPOSE_REP", justification = "Callers share the same trace logger instance")
     public SimulationTraceLogger getTraceLogger() {
         return _traceLogger;
     }

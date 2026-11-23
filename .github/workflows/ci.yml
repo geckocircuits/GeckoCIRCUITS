@@ -25,6 +25,9 @@ jobs:
           mvn -f pom-reactor.xml clean install -DskipTests --no-transfer-progress
           mvn package assembly:single -DskipTests --no-transfer-progress
 
+      - name: SpotBugs (zero bugs)
+        run: mvn spotbugs:check --no-transfer-progress
+
       - name: Install test dependencies
         run: |
           sudo apt-get update -qq

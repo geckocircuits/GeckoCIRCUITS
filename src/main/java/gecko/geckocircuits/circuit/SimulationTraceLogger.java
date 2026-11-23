@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.circuit;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 
 import java.io.*;
@@ -39,6 +40,8 @@ import java.nio.file.StandardOpenOption;
  *
  * @author Trace logging for golden reference generation
  */
+@SuppressFBWarnings(value = "CT_CONSTRUCTOR_THROW",
+        justification = "No finalizer; constructor fails only when the trace file cannot be opened, and tests subclass it")
 public class SimulationTraceLogger implements Closeable {
 
     private final PrintWriter writer;
