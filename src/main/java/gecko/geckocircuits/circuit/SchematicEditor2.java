@@ -31,6 +31,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.*;
@@ -38,6 +40,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.undo.UndoableEdit;
 import gecko.modelviewcontrol.AbstractUndoGenericModel;
@@ -56,6 +60,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     static boolean zustandGeaendert = false;  // MS_PKGPROTECT: only used within package - zeigt an, ob 'QuitWithoutSaving' aktiviert werden muss
     //
     private static final double CLICK_RADIUS_RELATIVE = 0.5;  // [0...1]
+    private static final int[] ZOOM_LEVELS = {10, 12, 14, 16, 18};
+    private final MouseWheelListener _wheelListener = SchematicEditor2::handleMouseWheel;
     // Ansicht: verschiedene Varianten -->
     public static final ElementDisplayProperties _lkDisplayMode = new ElementDisplayProperties();
     public static final ElementDisplayProperties _thermDisplayMode = new ElementDisplayProperties();
@@ -128,6 +134,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         }
         _visibleCircuitSheet.removeMouseListener(this);
         _visibleCircuitSheet.removeMouseMotionListener(this);
+        _visibleCircuitSheet.removeMouseWheelListener(_wheelListener);
         _visibleCircuitSheet.removeKeyListener(win.keyAdapter);
 
         _visibleCircuitSheet = newCircuitSheet;
@@ -139,6 +146,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         MainWindow.seScroll.setViewportView(centerPanel);
         _visibleCircuitSheet.addMouseListener(this);
         _visibleCircuitSheet.addMouseMotionListener(this);
+        _visibleCircuitSheet.addMouseWheelListener(_wheelListener);
         _visibleCircuitSheet.addKeyListener(win.keyAdapter);
         MainWindow.seScroll.revalidate();
 
@@ -633,6 +641,36 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         _circuitSheet.setDoubleBuffered(true);
         setSingleton(this);
 
+    }
+
+    static int nextZoomLevel(final int current, final int wheelRotation) {
+        if (wheelRotation == 0) {
+            return current;
+        }
+        int index = Arrays.binarySearch(ZOOM_LEVELS, current);
+        if (index < 0) {
+            index = -index - 1;
+            if (wheelRotation < 0) {
+                index--;
+            }
+        }
+        final long nextIndex = (long) index - wheelRotation;
+        return ZOOM_LEVELS[(int) Math.max(0, Math.min(ZOOM_LEVELS.length - 1, nextIndex))];
+    }
+
+    static void handleMouseWheel(final MouseWheelEvent event) {
+        if (event.isControlDown()) {
+            AbstractCircuitSheetComponent.dpixValue.setValue(
+                    nextZoomLevel(AbstractCircuitSheetComponent.dpix, event.getWheelRotation()));
+            event.consume();
+        } else {
+            final JScrollPane scrollPane = (JScrollPane) SwingUtilities.getAncestorOfClass(
+                    JScrollPane.class, event.getComponent());
+            if (scrollPane != null) {
+                scrollPane.dispatchEvent(SwingUtilities.convertMouseEvent(
+                        event.getComponent(), event, scrollPane));
+            }
+        }
     }
 
     private static void initializeDefaultScaling() {
