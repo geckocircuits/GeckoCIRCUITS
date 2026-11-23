@@ -18,7 +18,8 @@ class ApiKeyStompInterceptorTest {
     void configure() {
         properties = new ApiKeyProperties();
         properties.setKeys("valid-key");
-        interceptor = new ApiKeyStompInterceptor(properties);
+        interceptor = new ApiKeyStompInterceptor(properties,
+                (id, owner) -> id.equals("owned") && owner.equals(ApiIdentity.keyId("valid-key")));
     }
 
     private Message<byte[]> message(StompHeaderAccessor accessor) {
@@ -48,7 +49,19 @@ class ApiKeyStompInterceptorTest {
         assertNull(headers.getFirstNativeHeader("X-API-Key"));
         StompHeaderAccessor subscription = StompHeaderAccessor.create(StompCommand.SUBSCRIBE);
         subscription.setUser(headers.getUser());
+        subscription.setDestination("/topic/simulations/owned");
         assertDoesNotThrow(() -> interceptor.preSend(message(subscription), null));
+    }
+
+    @Test
+    void foreignUnknownAndWildcardTopicsAreDenied() {
+        for (String destination : new String[]{"/topic/simulations/other", "/topic/simulations/*",
+                "/topic/**", "/topic/simulations/owned/extra"}) {
+            StompHeaderAccessor subscription = StompHeaderAccessor.create(StompCommand.SUBSCRIBE);
+            subscription.setUser(ApiIdentity.forKey("valid-key"));
+            subscription.setDestination(destination);
+            assertThrows(AccessDeniedException.class, () -> interceptor.preSend(message(subscription), null));
+        }
     }
 
     @Test
@@ -58,6 +71,14 @@ class ApiKeyStompInterceptorTest {
             headers.setNativeHeader("user", "forged-user");
             assertThrows(AccessDeniedException.class, () -> interceptor.preSend(message(headers), null));
         }
+    }
+
+    @Test
+    void authenticatedClientsCannotPublishBrokerProgress() {
+        StompHeaderAccessor headers = StompHeaderAccessor.create(StompCommand.SEND);
+        headers.setUser(ApiIdentity.forKey("valid-key"));
+        headers.setDestination("/topic/simulations/owned");
+        assertThrows(AccessDeniedException.class, () -> interceptor.preSend(message(headers), null));
     }
 
     @Test

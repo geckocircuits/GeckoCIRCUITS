@@ -31,14 +31,18 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final ApiKeyProperties apiKeyProperties;
+    private final org.springframework.beans.factory.ObjectProvider<gecko.rest.service.SimulationService> simulations;
 
-    public WebSocketConfig(ApiKeyProperties apiKeyProperties) {
+    public WebSocketConfig(ApiKeyProperties apiKeyProperties,
+            org.springframework.beans.factory.ObjectProvider<gecko.rest.service.SimulationService> simulations) {
         this.apiKeyProperties = apiKeyProperties;
+        this.simulations = simulations;
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ApiKeyStompInterceptor(apiKeyProperties));
+        registration.interceptors(new ApiKeyStompInterceptor(apiKeyProperties,
+                (id, owner) -> simulations.getObject().isOwnedBy(id, owner)));
     }
 
     @Override

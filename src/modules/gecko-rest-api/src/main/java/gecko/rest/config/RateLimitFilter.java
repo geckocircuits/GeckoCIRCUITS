@@ -5,12 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.time.Clock;
 import java.util.HashMap;
-import java.util.HexFormat;
 import java.util.Map;
 import java.util.Set;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -38,7 +34,7 @@ public final class RateLimitFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String key = request.getHeader(ApiKeyAuthFilter.API_KEY_HEADER);
-        String client = key == null || key.isBlank() ? "ip:" + request.getRemoteAddr() : "key:" + keyId(key);
+        String client = key == null || key.isBlank() ? "ip:" + request.getRemoteAddr() : "key:" + ApiIdentity.keyId(key);
         String path = ApiKeyAuthFilter.requestPath(request);
         boolean submission = request.getMethod().equals("POST")
                 && (path.equals("/api/v1/simulations") || path.equals("/api/v1/simulations/batch"));
@@ -74,15 +70,6 @@ public final class RateLimitFilter extends OncePerRequestFilter {
                 : generalLimit - budget.general;
         long reset = (window + 1) * 60;
         return new Decision(allowed, limit, Math.max(remaining, 0), reset, Math.max(reset - now, 1));
-    }
-
-    static String keyId(String key) {
-        try {
-            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
-                    .digest(key.getBytes(StandardCharsets.UTF_8)));
-        } catch (NoSuchAlgorithmException error) {
-            throw new IllegalStateException("SHA-256 is unavailable.", error);
-        }
     }
 
     private static final class Budget {

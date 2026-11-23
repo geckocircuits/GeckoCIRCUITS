@@ -162,9 +162,17 @@ public class SimulationService {
     }
 
     private SimulationJob createJob(PreparedCircuit circuit, BatchJob batch) {
-        SimulationJob job = new SimulationJob(circuit, batch, deliveryExecutor);
+        var principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        SimulationJob job = new SimulationJob(circuit, batch, deliveryExecutor,
+                principal == null || !principal.isAuthenticated() ? null : principal.getName());
         jobs.put(job.response.getSimulationId(), job);
         return job;
+    }
+
+    /** Checks the immutable owner captured before publication of a single or batch job. */
+    public boolean isOwnedBy(String simulationId, String owner) {
+        SimulationJob job = jobs.get(simulationId);
+        return job != null && owner != null && owner.equals(job.owner);
     }
 
     private boolean dispatch(SimulationJob job) {
@@ -764,6 +772,7 @@ public class SimulationService {
     }
 
     private static final class SimulationJob {
+        private final String owner;
         private final PreparedCircuit circuit;
         private final ExecutionOptions options = ExecutionOptions.defaults();
         private final BatchJob batch;
@@ -773,7 +782,8 @@ public class SimulationService {
         private boolean terminalPublished;
         private final ProgressMailbox mailbox;
 
-        private SimulationJob(PreparedCircuit circuit, BatchJob batch, Executor deliveryExecutor) {
+        private SimulationJob(PreparedCircuit circuit, BatchJob batch, Executor deliveryExecutor, String owner) {
+            this.owner = owner;
             mailbox = new ProgressMailbox(deliveryExecutor);
             this.circuit = circuit;
             this.batch = batch;

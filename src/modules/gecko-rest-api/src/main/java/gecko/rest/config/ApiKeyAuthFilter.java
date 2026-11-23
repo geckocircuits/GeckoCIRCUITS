@@ -64,6 +64,9 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         // Validate API key
         String providedKey = request.getHeader(API_KEY_HEADER);
         if (apiKeyProperties.isValidKey(providedKey)) {
+            var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(ApiIdentity.forKey(providedKey));
+            org.springframework.security.core.context.SecurityContextHolder.setContext(context);
             filterChain.doFilter(request, response);
         } else {
             log.debug("Rejected request to {} - invalid or missing API key", path);
