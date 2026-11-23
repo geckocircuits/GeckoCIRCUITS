@@ -36,9 +36,15 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     );
 
     private final ApiKeyProperties apiKeyProperties;
+    private final JwtService tokens;
 
     public ApiKeyAuthFilter(ApiKeyProperties apiKeyProperties) {
+        this(apiKeyProperties, null);
+    }
+
+    public ApiKeyAuthFilter(ApiKeyProperties apiKeyProperties, JwtService tokens) {
         this.apiKeyProperties = apiKeyProperties;
+        this.tokens = tokens;
     }
 
     @Override
@@ -50,7 +56,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         String path = requestPath(request);
 
         // Allow public paths
-        if (isPublicPath(path)) {
+        if (isPublicPath(path) || path.equals("/api/v1/auth/refresh")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -62,6 +68,24 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
         }
 
         // Validate API key
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null) {
+            try {
+                if (tokens == null || !authorization.regionMatches(true, 0, "Bearer ", 0, 7)) {
+                    throw new org.springframework.security.oauth2.jwt.BadJwtException("A bearer token is required.");
+                }
+                var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+                context.setAuthentication(tokens.authenticate(authorization.substring(7)));
+                org.springframework.security.core.context.SecurityContextHolder.setContext(context);
+                filterChain.doFilter(request, response);
+                return;
+            } catch (org.springframework.security.oauth2.jwt.JwtException invalid) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"A valid access token is required.\"}");
+                return;
+            }
+        }
         String providedKey = request.getHeader(API_KEY_HEADER);
         if (apiKeyProperties.isValidKey(providedKey)) {
             var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();

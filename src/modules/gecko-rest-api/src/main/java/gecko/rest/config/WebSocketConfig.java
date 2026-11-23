@@ -32,17 +32,19 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final ApiKeyProperties apiKeyProperties;
     private final org.springframework.beans.factory.ObjectProvider<gecko.rest.service.SimulationService> simulations;
+    private final JwtService tokens;
 
     public WebSocketConfig(ApiKeyProperties apiKeyProperties,
-            org.springframework.beans.factory.ObjectProvider<gecko.rest.service.SimulationService> simulations) {
+            org.springframework.beans.factory.ObjectProvider<gecko.rest.service.SimulationService> simulations, JwtService tokens) {
         this.apiKeyProperties = apiKeyProperties;
         this.simulations = simulations;
+        this.tokens = tokens;
     }
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new ApiKeyStompInterceptor(apiKeyProperties,
-                (id, owner) -> simulations.getObject().isOwnedBy(id, owner)));
+                (id, owner) -> simulations.getObject().isOwnedBy(id, owner), tokens));
     }
 
     @Override

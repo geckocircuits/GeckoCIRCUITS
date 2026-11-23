@@ -39,6 +39,10 @@
         </dependency>
 
         <!-- Spring Boot Validation -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
 
         <!-- Spring Boot WebSocket -->
         <dependency>
