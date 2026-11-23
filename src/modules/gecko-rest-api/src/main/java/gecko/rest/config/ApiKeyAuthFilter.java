@@ -24,6 +24,8 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(ApiKeyAuthFilter.class);
 
     private static final Set<String> PUBLIC_PATH_PREFIXES = Set.of(
+            "/api/health",
+            "/api-docs",
             "/actuator/health",
             "/api/v1/health",
             "/swagger-ui",
@@ -45,7 +47,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getServletPath();
+        String path = requestPath(request);
 
         // Allow public paths
         if (isPublicPath(path)) {
@@ -78,5 +80,10 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             }
         }
         return false;
+    }
+
+    static String requestPath(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.isEmpty() ? request.getRequestURI().substring(request.getContextPath().length()) : path;
     }
 }

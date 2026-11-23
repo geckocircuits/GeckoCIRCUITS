@@ -3,6 +3,8 @@ package gecko.rest.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import java.time.Clock;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -33,7 +35,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public Clock apiClock() { return Clock.systemUTC(); }
+
+    @Bean
+    public RateLimitFilter rateLimitFilter(RateLimitProperties properties, Clock clock) {
+        return new RateLimitFilter(properties, clock);
+    }
+
+    @Bean
+    public FilterRegistrationBean<RateLimitFilter> rateLimitRegistration(RateLimitFilter filter) {
+        FilterRegistrationBean<RateLimitFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean<ApiKeyAuthFilter> apiKeyRegistration(ApiKeyAuthFilter filter) {
+        FilterRegistrationBean<ApiKeyAuthFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, RateLimitFilter rateLimitFilter) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session ->
@@ -50,7 +74,8 @@ public class SecurityConfig {
                 ).permitAll()
                 .anyRequest().permitAll()  // Our ApiKeyAuthFilter handles actual auth
             )
-            .addFilterBefore(apiKeyAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(apiKeyAuthFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(rateLimitFilter, ApiKeyAuthFilter.class);
 
         return http.build();
     }
