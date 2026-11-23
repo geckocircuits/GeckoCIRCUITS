@@ -12,7 +12,7 @@ mvn spotbugs:check
 mkdocs build --strict
 ```
 
-Update the version in the `pom.xml` files, and document breaking changes in the tag message.
+Set `app.version` in `src/modules/gecko-rest-api/src/main/resources/application.properties` (reported by `/api/health`), and add `docs/releases/XYZ0.md` with its `mkdocs.yml` nav entry. The packages take their version from the tag; the `pom.xml` versions are not used for releases. Document breaking changes in the release notes.
 
 ## Tag
 

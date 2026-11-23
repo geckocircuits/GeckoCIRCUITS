@@ -6,14 +6,32 @@ Complete history of GeckoCIRCUITS releases with download links, release notes, a
 
 ## Current Release
 
-The latest stable release is **v2.17.0** (released February 2026).
+The latest stable release is **v3.1.0**.
 
-[Download v2.17.0](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v2.17.0){ .md-button .md-button--primary }
-[View Release Notes](./2170.md){ .md-button }
+[Download v3.1.0](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v3.1.0){ .md-button .md-button--primary }
+[View Release Notes](./3100.md){ .md-button }
 
 ---
 
 ## Version History
+
+### v3.x Series - REST API Platform
+
+#### [v3.1.0](./3100.md) - REST API Hardening
+
+[Release Notes](./3100.md){ .md-button }
+[Download](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v3.1.0){ .md-button }
+
+---
+
+#### [v3.0.0](./3000.md) - Complete REST API Platform
+
+**Released:** 2026-02-18
+
+[Release Notes](./3000.md){ .md-button }
+[Download](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v3.0.0){ .md-button }
+
+---
 
 ### v2.x Series - Modern Development
 

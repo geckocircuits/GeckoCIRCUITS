@@ -18,7 +18,7 @@
 | [geckocircuits/main](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main) | `ch.technokrat.gecko` | Upstream stable v2.02 baseline. Reference-quality codebase. Contributions via PR only. | Compile + unit tests + 21 regression |
 | [geckocircuits/dev](https://github.com/geckocircuits/GeckoCIRCUITS/tree/dev) | `ch.technokrat.gecko` | Upstream hotfix/maintenance branch. PRs to main only after CI passes. | Compile + unit tests |
 | [geckocircuits/main_gecko2026](https://github.com/geckocircuits/GeckoCIRCUITS/tree/main_gecko2026) | `gecko` | Mirror of `tinix84/main`. Experimental branch for community contributions. **Never merged to upstream main.** | Compile + all modules + 21 regression tests + static analysis |
-| [tinix84/main](https://github.com/tinix84/GeckoCIRCUITS/tree/main) | `gecko` | Fork stable branch. All releases up to v3.0.0. Code has passed regression testing. | Compile + all modules + 21 regression tests |
+| [tinix84/main](https://github.com/tinix84/GeckoCIRCUITS/tree/main) | `gecko` | Fork stable branch. Releases are tagged here. Code has passed regression testing. | Compile + all modules + 21 regression tests |
 | [tinix84/dev](https://github.com/tinix84/GeckoCIRCUITS/tree/dev) | `gecko` | Fork development branch. Active development, fixes, features. | Compile + unit tests + 21 regression tests |
 
 ### Merge Flow
