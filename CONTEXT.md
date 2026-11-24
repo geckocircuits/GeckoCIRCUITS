@@ -124,3 +124,7 @@ _Avoid_: Thermal circuit, heat model
 **Loss source**:
 A heat-flow source in the thermal network whose value is the power loss of one coupled electrical component.
 _Avoid_: Pv chip, heat source
+
+**CONTROL subsystem**:
+The CONTROL blocks of one sheet path and of its nested sheets that have no sample period of their own. Blocks outside every configured subsystem use the global sample period.
+_Avoid_: Task, rate group, sheet

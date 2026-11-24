@@ -39,10 +39,13 @@ final class ControlRuntime implements AutoCloseable {
     private final List<FromExternalCalculator> externalInputs;
     private final List<ToExternalCalculator> externalOutputs;
     private static final double SAMPLE_TOLERANCE = 1e-9;
-    private final double samplePeriod;
+    /** The sample period of each CONTROL group on the absolute clock. Group 0 is the default at the global period. */
+    private final double[] periods;
+    private final long[] nextSampleIndex;
+    private final boolean[] outputsPublishedLastStep;
+    private final boolean[] sampledNow;
+    private final double[] groupSteps;
     private double dt;
-    private long nextSampleIndex;
-    private boolean outputsPublishedLastStep = true;
     private long stateVersion;
     private Runnable pendingInitialization;
     private boolean initialized;
@@ -55,7 +58,14 @@ final class ControlRuntime implements AutoCloseable {
         }
         requireValidSamplePeriod(samplePeriod);
         this.dt = dt;
-        this.samplePeriod = samplePeriod;
+        double[] configured = build.groupPeriods();
+        periods = configured == null ? new double[]{samplePeriod} : configured;
+        for (double period : periods) requireValidSamplePeriod(period);
+        nextSampleIndex = new long[periods.length];
+        outputsPublishedLastStep = new boolean[periods.length];
+        java.util.Arrays.fill(outputsPublishedLastStep, true);
+        sampledNow = new boolean[periods.length];
+        groupSteps = new double[periods.length];
         controlNetlist = build.getControlNetlist();
         var unique = Collections.newSetFromMap(new IdentityHashMap<AbstractControlCalculatable, Boolean>());
         var collected = new ArrayList<AbstractControlCalculatable>();
@@ -76,8 +86,18 @@ final class ControlRuntime implements AutoCloseable {
      * the sample instants never accumulate error. CONTROL cannot tick faster than the electrical step,
      * so a period at or below the step runs every step with the electrical step.
      */
-    private double controlStep(double electricalStep) {
-        return Math.max(samplePeriod, electricalStep);
+    private double controlStep(int group, double electricalStep) {
+        return Math.max(periods[group], electricalStep);
+    }
+
+    private double[] controlSteps(double electricalStep) {
+        double[] steps = new double[periods.length];
+        for (int group = 0; group < steps.length; group++) steps[group] = controlStep(group, electricalStep);
+        return steps;
+    }
+
+    private int groupOf(AbstractControlCalculatable calculator) {
+        return controlNetlist.groupOf(calculator);
     }
 
     private static void requireValidSamplePeriod(double samplePeriod) {
@@ -118,6 +138,21 @@ final class ControlRuntime implements AutoCloseable {
                 thermalNetlist), dt, samplePeriod);
     }
 
+    /**
+     * As above, with a sample period for each named CONTROL subsystem sheet path. A block takes the period of its
+     * nearest configured sheet and otherwise the global period. An empty map takes the single-clock path.
+     *
+     * @throws IllegalArgumentException if a path or period cannot execute for this circuit
+     */
+    static ControlRuntime fromDeferred(CircuitModel model, double dt, CircuitNetlist electricalNetlist,
+            double samplePeriod, CircuitNetlist thermalNetlist, java.util.Map<String, Double> subsystemPeriods) {
+        requireValidSamplePeriod(samplePeriod);
+        var spec = new ControlSubsystems.Spec(samplePeriod, subsystemPeriods);
+        if (!spec.grouped()) return fromDeferred(model, dt, electricalNetlist, samplePeriod, thermalNetlist);
+        return new ControlRuntime(new ControlCalculatorFactory().buildCircuit(model, dt, electricalNetlist,
+                thermalNetlist, spec), dt, samplePeriod);
+    }
+
     /** Takes ownership of the supplied calculators and their closeable resources. */
     static ControlRuntime fromDeferred(ControlCalculatorFactory.BuildResult build, double dt) {
         return new ControlRuntime(build, dt, 0);
@@ -132,7 +167,7 @@ final class ControlRuntime implements AutoCloseable {
         try {
             Runnable initialization = pendingInitialization;
             pendingInitialization = null;
-            if (initialization == null) controlNetlist.initializeAtSimulationStart(controlStep(dt));
+            if (initialization == null) controlNetlist.prepareInitialization(controlSteps(dt)).run();
             else initialization.run();
             initialized = true;
         } catch (RuntimeException | Error failure) {
@@ -160,9 +195,20 @@ final class ControlRuntime implements AutoCloseable {
         if (!Double.isFinite(newDt) || newDt <= 0) {
             throw new IllegalArgumentException("Time step must be finite and positive.");
         }
-        Runnable staged = beforeStart ? controlNetlist.prepareInitialization(controlStep(newDt))
-                : samplePeriod > 0 && controlStep(newDt) == controlStep(dt) ? () -> { }
-                : controlNetlist.prepareTimeStepChange(controlStep(newDt));
+        double[] newSteps = controlSteps(newDt);
+        Runnable staged;
+        if (beforeStart) {
+            staged = controlNetlist.prepareInitialization(newSteps);
+        } else {
+            // A sampled group whose controller step does not change keeps its history. Others restage.
+            boolean[] restage = new boolean[periods.length];
+            boolean any = false;
+            for (int group = 0; group < restage.length; group++) {
+                restage[group] = !(periods[group] > 0 && newSteps[group] == controlStep(group, dt));
+                any |= restage[group];
+            }
+            staged = any ? controlNetlist.prepareTimeStepChange(newSteps, restage) : () -> { };
+        }
         return new Runnable() {
             private boolean used;
 
@@ -226,9 +272,16 @@ final class ControlRuntime implements AutoCloseable {
         domainCoupler.transferControlToThermalSources(thermal);
     }
 
+    /**
+     * A gate applies the value it published at its own sample, not its live input, in two cases. The gate belongs to
+     * a configured subsystem. Or subsystems are configured and the default group has a positive period, so a faster
+     * producer cannot reach the switch between two samples of the default group. Otherwise the gate reads its live
+     * input: without configured subsystems as with a single global period, and in a default group with period zero.
+     */
     void applyPendingGates(CircuitNetlist circuitNetlist) {
         requireOpen();
-        domainCoupler.applyGateSignals(circuitNetlist);
+        boolean defaultGroupSampled = periods.length > 1 && periods[0] > 0;
+        domainCoupler.applyGateSignals(circuitNetlist, calculator -> groupOf(calculator) != 0 || defaultGroupSampled);
     }
 
     void advanceAfterElectricalStep(CircuitNetlist circuitNetlist, double time) {
@@ -245,32 +298,46 @@ final class ControlRuntime implements AutoCloseable {
             // including probe outputs, before the probes publish this step's measurements.
             // A sampled CONTROL publishes to sources and gates only after a sample, so live probe
             // outputs wired straight to them cannot leak between samples.
-            if (samplePeriod <= 0 || outputsPublishedLastStep) {
-                domainCoupler.transferControlToSources(circuitNetlist);
-                domainCoupler.transferControlToThermalSources(thermal);
-            }
+            // Each group publishes by its own clock: a source after a sample of its producer's group,
+            // a gate at a sample of its own group.
+            domainCoupler.transferControlToSources(circuitNetlist, this::producerPublished);
+            domainCoupler.transferControlToThermalSources(thermal, this::producerPublished);
             domainCoupler.transferLkToControlProbes(circuitNetlist);
             domainCoupler.transferThermalToControlProbes(thermal);
-            boolean sampled = !controlNetlist.hasCalculators() || executeDueSample(time);
-            outputsPublishedLastStep = sampled;
-            if (samplePeriod <= 0 || sampled) domainCoupler.transferGateSignalsToLk(circuitNetlist);
+            if (controlNetlist.hasCalculators()) executeDueGroups(time);
+            else java.util.Arrays.fill(sampledNow, true);
+            System.arraycopy(sampledNow, 0, outputsPublishedLastStep, 0, periods.length);
+            domainCoupler.transferGateSignalsToLk(circuitNetlist, gate -> periods[groupOf(gate)] <= 0 || sampledNow[groupOf(gate)]);
         } catch (RuntimeException | Error failure) {
             closeAfterFailure(failure);
             throw failure;
         }
     }
 
-    /** Runs CONTROL every step, or only when a sample is due. Due times are exactly k*Ts, so they do not drift. */
-    private boolean executeDueSample(double time) {
-        if (samplePeriod <= 0) {
-            controlNetlist.executeTimeStep(dt, time);
-            return true;
+    private boolean producerPublished(AbstractControlCalculatable producer) {
+        int group = groupOf(producer);
+        return periods[group] <= 0 || outputsPublishedLastStep[group];
+    }
+
+    /**
+     * Runs each group every step, or only when a sample of that group is due. Due times are exactly k*Ts of the group,
+     * so they do not drift. All due groups run in one pass of the global dependency order.
+     */
+    private void executeDueGroups(double time) {
+        boolean any = false;
+        for (int group = 0; group < periods.length; group++) {
+            double period = periods[group];
+            groupSteps[group] = controlStep(group, dt);
+            if (period <= 0) {
+                sampledNow[group] = true;
+            } else {
+                double slack = SAMPLE_TOLERANCE * Math.min(dt, period);
+                sampledNow[group] = time >= nextSampleIndex[group] * period - slack;
+                if (sampledNow[group]) nextSampleIndex[group] = (long) Math.floor((time + slack) / period) + 1;
+            }
+            any |= sampledNow[group];
         }
-        double slack = SAMPLE_TOLERANCE * Math.min(dt, samplePeriod);
-        if (time < nextSampleIndex * samplePeriod - slack) return false;
-        controlNetlist.executeTimeStep(controlStep(dt), time);
-        nextSampleIndex = (long) Math.floor((time + slack) / samplePeriod) + 1;
-        return true;
+        if (any) controlNetlist.executeDue(groupSteps, sampledNow, time);
     }
 
     /**
@@ -283,6 +350,7 @@ final class ControlRuntime implements AutoCloseable {
      */
     void exportPeriodicState(CircuitNetlist circuitNetlist, double time, PeriodicStateMonitor.Sink sink) {
         domainCoupler.exportHeldSources(circuitNetlist, sink);
+        if (periods.length > 1) domainCoupler.exportHeldGates(sink);
         for (int index = 0; index < owners.size(); index++) {
             var owner = owners.get(index);
             String name = owner.getClass().getSimpleName() + "#" + index;
@@ -295,10 +363,11 @@ final class ControlRuntime implements AutoCloseable {
                 source.exportState(sink);
             }
         }
-        if (samplePeriod > 0) {
-            sink.group(PeriodicStateMonitor.Unit.TIME, "sample phase");
-            sink.value(nextSampleIndex * samplePeriod - time);
-            sink.flag(outputsPublishedLastStep);
+        for (int group = 0; group < periods.length; group++) {
+            if (periods[group] <= 0) continue;
+            sink.group(PeriodicStateMonitor.Unit.TIME, group == 0 ? "sample phase" : "sample phase of CONTROL group " + group);
+            sink.value(nextSampleIndex[group] * periods[group] - time);
+            sink.flag(outputsPublishedLastStep[group]);
         }
     }
 

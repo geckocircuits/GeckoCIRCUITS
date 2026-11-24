@@ -7,6 +7,7 @@ import gecko.core.allg.SolverSettingsCore;
 import gecko.core.allg.SolverType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -70,7 +71,9 @@ public final class SimulationTiming {
         if (mainCapacity > 0 && (long) mainCapacity + warmupCapacity > MAXIMUM_STEPS) {
             issues.add(new SettingIssue("duration", "Combined simulation step count is too large."));
         }
-        issues.addAll(periodicSteadyStateIssues(settings.getPeriodicSteadyState(), step, duration, preTime, samplePeriod));
+        issues.addAll(ControlSubsystems.keyIssues(settings.getControlSubsystemPeriods()));
+        issues.addAll(periodicSteadyStateIssues(settings.getPeriodicSteadyState(), step, duration, preTime, samplePeriod,
+                settings.getControlSubsystemPeriods()));
         issues.addAll(adaptiveStepIssues(settings.getAdaptiveStep(), settings.getSolverType(), step, preTime, preStep));
         return List.copyOf(issues);
     }
@@ -126,6 +129,12 @@ public final class SimulationTiming {
      */
     public static List<SettingIssue> periodicSteadyStateCircuitIssues(gecko.core.io.CircuitModel model, double step,
             double samplePeriod, PeriodicSteadyStateSettings pss) {
+        return periodicSteadyStateCircuitIssues(model, step, samplePeriod, Map.of(), pss);
+    }
+
+    /** As above, with the sample period of each CONTROL subsystem sheet path. */
+    public static List<SettingIssue> periodicSteadyStateCircuitIssues(gecko.core.io.CircuitModel model, double step,
+            double samplePeriod, Map<String, Double> subsystemPeriods, PeriodicSteadyStateSettings pss) {
         if (pss == null || !positive(pss.period()) || !positive(step) || !Double.isFinite(samplePeriod) || samplePeriod < 0) {
             return List.of();
         }
@@ -142,8 +151,10 @@ public final class SimulationTiming {
         ControlRuntime runtime = null;
         try {
             var netlist = gecko.core.circuit.netlist.NetlistBuilder.buildFromCircuitModel(model);
+            // The thermal netlist resolves TEMP and FLOW probes. Without it they would fail before the check runs.
             runtime = ControlRuntime.fromDeferred(model, step, netlist, samplePeriod,
-                    thermalNetlist == null || thermalNetlist.getElementCount() == 0 ? null : thermalNetlist);
+                    thermalNetlist == null || thermalNetlist.getElementCount() == 0 ? null : thermalNetlist,
+                    subsystemPeriods);
             return PeriodicSteadyStateValidation.circuitIssues(pss.period(), netlist, runtime.calculators(), thermal);
         } catch (RuntimeException unassembled) {
             // A thermal circuit is rejected whatever else fails to assemble.
@@ -151,6 +162,39 @@ public final class SimulationTiming {
         } finally {
             if (runtime != null) runtime.close();
         }
+    }
+
+    /**
+     * Checks the per-subsystem CONTROL periods against the execution model, before any session exists.
+     * Each path must name one sheet that holds a CONTROL block, and the wired blocks must have no instantaneous
+     * dependency cycle at the controller step of each group. A model that cannot be assembled for another reason
+     * has no cycle finding here, because preparation reports its own findings.
+     *
+     * @param model the execution model
+     * @param step the main electrical step in seconds
+     * @param samplePeriod the global CONTROL sample period
+     * @param subsystemPeriods the sample period by sheet path
+     * @return one issue per violation, each with its parameter path. Empty for an empty map.
+     */
+    public static List<SettingIssue> controlSubsystemIssues(gecko.core.io.CircuitModel model, double step,
+            double samplePeriod, Map<String, Double> subsystemPeriods) {
+        var spec = new ControlSubsystems.Spec(samplePeriod, subsystemPeriods);
+        if (!spec.grouped()) return List.of();
+        var plan = ControlSubsystems.plan(model, spec);
+        if (!plan.issues().isEmpty()) return plan.issues();
+        if (!positive(step)) return List.of();
+        try {
+            var netlist = gecko.core.circuit.netlist.NetlistBuilder.buildFromCircuitModel(model);
+            // Only an active thermal network counts, like the runtime.
+            var thermalNetlist = gecko.core.circuit.netlist.NetlistBuilder.buildThermalFromCircuitModel(model);
+            new ControlCalculatorFactory().buildCircuit(model, step, netlist,
+                    thermalNetlist.getElementCount() == 0 ? null : thermalNetlist, spec);
+        } catch (ControlCalculatorFactory.DependencyCycleException cycle) {
+            return List.of(new SettingIssue(ControlSubsystems.PATH, cycle.getMessage()));
+        } catch (RuntimeException unassembled) {
+            return List.of();
+        }
+        return List.of();
     }
 
     /**
@@ -166,6 +210,16 @@ public final class SimulationTiming {
      */
     public static List<SettingIssue> periodicSteadyStateIssues(PeriodicSteadyStateSettings pss, double step,
             double duration, double preTime, double samplePeriod) {
+        return periodicSteadyStateIssues(pss, step, duration, preTime, samplePeriod, Map.of());
+    }
+
+    /**
+     * As above, and the period must also be a whole multiple of every positive CONTROL subsystem period.
+     *
+     * @param subsystemPeriods the sample period by CONTROL subsystem sheet path
+     */
+    public static List<SettingIssue> periodicSteadyStateIssues(PeriodicSteadyStateSettings pss, double step,
+            double duration, double preTime, double samplePeriod, Map<String, Double> subsystemPeriods) {
         var issues = new ArrayList<SettingIssue>();
         if (pss == null) return issues;
         double period = pss.period();
@@ -193,6 +247,15 @@ public final class SimulationTiming {
             double ratio = period / samplePeriod;
             if (Math.rint(ratio) < 1 || Math.abs(ratio - Math.rint(ratio)) > WHOLE_STEP * ratio) {
                 issues.add(new SettingIssue("periodicSteadyState.period", "Period must be a whole multiple of the CONTROL sample period."));
+            }
+        }
+        for (var entry : subsystemPeriods.entrySet()) {
+            Double value = entry.getValue();
+            if (!periodValid || value == null || !positive(value)) continue;
+            double ratio = period / value;
+            if (Math.rint(ratio) < 1 || Math.abs(ratio - Math.rint(ratio)) > WHOLE_STEP * ratio) {
+                issues.add(new SettingIssue("periodicSteadyState.period", "Period must be a whole multiple of the CONTROL sample period of '"
+                        + entry.getKey() + "'."));
             }
         }
         return issues;

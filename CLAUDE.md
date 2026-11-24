@@ -137,3 +137,4 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 | 2026-11-24 | [ADR-0021: Order the enabled LU like the dense reference or like EJML](docs/adr/0021-sparse-numerical-compatibility.md) |
 | 2026-11-24 | [ADR-0022: Native ASC hierarchy and scalar bindings](docs/adr/0022-native-asc-hierarchy.md) |
 | 2026-11-24 | [ADR-0023: Run the thermal network in the core once per grid step](docs/adr/0023-core-thermal-network.md) |
+| 2026-11-24 | [ADR-0024: Run CONTROL subsystems on their own sample clocks](docs/adr/0024-control-subsystem-sample-clocks.md) |

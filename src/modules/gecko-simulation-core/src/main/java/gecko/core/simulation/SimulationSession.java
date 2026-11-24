@@ -132,7 +132,8 @@ public final class SimulationSession implements AutoCloseable {
             ThermalNetwork constructedThermal = ThermalNetwork.build(model, constructedNetlist, settings.getSolverType());
             if (constructedControl == null) {
                 constructedControl = ControlRuntime.fromDeferred(model, dt, constructedNetlist,
-                        settings.getControlSamplePeriod(), constructedThermal == null ? null : constructedThermal.netlist());
+                        settings.getControlSamplePeriod(), constructedThermal == null ? null : constructedThermal.netlist(),
+                        settings.getControlSubsystemPeriods());
             }
             if (periodic) {
                 var issues = PeriodicSteadyStateValidation.circuitIssues(search.period(), constructedNetlist,
