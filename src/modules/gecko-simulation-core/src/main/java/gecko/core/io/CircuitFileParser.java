@@ -815,7 +815,7 @@ public class CircuitFileParser {
             }
 
             String arrayPart = line.substring(arrayStart + 3).trim();
-            if (arrayPart.equals("null")) {
+            if (arrayPart.equals("null") || arrayPart.isEmpty()) {
                 return result;
             }
 
