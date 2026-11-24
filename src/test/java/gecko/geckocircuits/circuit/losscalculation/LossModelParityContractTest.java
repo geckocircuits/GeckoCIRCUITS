@@ -12,6 +12,7 @@ import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterfa
 import gecko.geckocircuits.circuit.circuitcomponents.SemiconductorLossCalculatable;
 import java.nio.file.Path;
 import javax.swing.SwingUtilities;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * The core loss model equals the legacy loss calculators bit for bit. The saved circuit is the NPC converter, whose
  * SIMPLE and DETAILED models come from its embedded loss files.
  */
+@Tag("regression")
 class LossModelParityContractTest {
     private static final double DT = 2e-6;
     // Current, voltage and temperature of each step. They contain turn-on and turn-off edges, sub-threshold currents,

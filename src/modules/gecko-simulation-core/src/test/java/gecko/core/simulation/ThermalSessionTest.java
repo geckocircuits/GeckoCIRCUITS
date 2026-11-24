@@ -99,14 +99,36 @@ class ThermalSessionTest {
     }
 
     @Test
-    void theConductionPartOfALossSourceIsReadableAndNeverExceedsTheTotal() throws Exception {
-        var prepared = ready(ThermalFixture.model(), SolverOverrides.none());
+    void conductionAndSwitchingProbesSumToTheTotalOfTheSameLossSource() throws Exception {
+        // Give the switch real switching energies so that all three parts are nonzero.
+        String text = ThermalFixture.buckText().replace("idStringDialog S.1\n",
+                "idStringDialog S.1\n<Verluste>\nverlustTyp 1\nkON 3.0E-5\nkOFF 1.5E-5\nuSWnorm 48.0\n<" + (char) 92 + "Verluste>\n");
+        String probes = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID)
+                + ThermalFixture.control(17, "FLOW.T", 6201, "", "PT", "/Pv.1/NIX_NIX_NIX/0",
+                        "coupledReferenceID[] 5001 \nlosscomp " + gecko.core.circuit.losscalculation.LossComponent.TOTAL.getSaveString() + "\n")
+                + ThermalFixture.control(17, "FLOW.C", 6202, "", "PC", "/Pv.1/NIX_NIX_NIX/0",
+                        "coupledReferenceID[] 5001 \nlosscomp " + gecko.core.circuit.losscalculation.LossComponent.CONDUCTION.getSaveString() + "\n")
+                + ThermalFixture.control(17, "FLOW.W", 6203, "", "PW", "/Pv.1/NIX_NIX_NIX/0",
+                        "coupledReferenceID[] 5001 \nlosscomp " + gecko.core.circuit.losscalculation.LossComponent.SWITCHING.getSaveString() + "\n")
+                + ThermalFixture.control(5, "SCOPE.L", 6204, "/PT/PC/PW", "", "/NIX_NIX_NIX", "");
+        var model = new gecko.core.io.CircuitFileParser().parse(new java.io.BufferedReader(new java.io.StringReader(text + "\n" + probes)), "losscomp.ipes");
+        var prepared = ready(model, SolverOverrides.none());
         var result = new HeadlessSimulationEngine().runSimulation(prepared.execution(), ExecutionOptions.defaults(), () -> false);
         assertTrue(result.isSuccess(), result.getErrorMessage());
-        float[] conduction = result.getSignalData(ThermalFixture.row(result.getSignalNames(), "PD"));
-        float max = 0;
-        for (float value : conduction) max = Math.max(max, value);
-        assertTrue(max > 0, "the diode conducts");
+        float[] total = result.getSignalData(ThermalFixture.row(result.getSignalNames(), "PT"));
+        float[] conduction = result.getSignalData(ThermalFixture.row(result.getSignalNames(), "PC"));
+        float[] switching = result.getSignalData(ThermalFixture.row(result.getSignalNames(), "PW"));
+        float[] temperature = result.getSignalData(ThermalFixture.row(result.getSignalNames(), "TjS"));
+        double maxConduction = 0, maxSwitching = 0, maxTemperature = 0;
+        for (int step = 0; step < total.length; step++) {
+            assertEquals(total[step], conduction[step] + switching[step], Math.max(1e-6, Math.abs(total[step]) * 1e-5), "step " + step);
+            maxConduction = Math.max(maxConduction, conduction[step]);
+            maxSwitching = Math.max(maxSwitching, switching[step]);
+            maxTemperature = Math.max(maxTemperature, temperature[step]);
+        }
+        assertTrue(maxConduction > 0, "the switch conducts");
+        assertTrue(maxSwitching > 0, "the switch turns on or off");
+        assertTrue(maxTemperature > 0, "the junction heats");
     }
 
     @Test
