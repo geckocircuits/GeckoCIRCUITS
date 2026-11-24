@@ -17,6 +17,7 @@ import gecko.core.allg.SolverType;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.circuit.netlist.CircuitNetlist;
 import gecko.core.circuit.netlist.INetList;
+import gecko.core.preparation.SolverFeatures;
 import gecko.core.simulation.solver.ComponentCurrentCalculator;
 import gecko.core.simulation.solver.MatrixSolver;
 import gecko.core.simulation.solver.InitialConditionSolver;
@@ -74,7 +75,11 @@ final class ElectricalTimeStep {
     }
 
     ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, boolean zeroCrossing) {
-        this.zeroCrossing = zeroCrossing;
+        this(netlist, solverType, new SolverFeatures(0, zeroCrossing));
+    }
+
+    ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, SolverFeatures features) {
+        this.zeroCrossing = features.zeroCrossing();
         this.netlist = netlist;
         nodeOrder = netlist.getNumericalNodeOrder();
         numericalNetlist = nodeOrder.length == 0 ? netlist : new NumericalNetlist(netlist, nodeOrder);
@@ -84,7 +89,9 @@ final class ElectricalTimeStep {
         computedCurrents = new double[netlist.getElementCount()];
         matrixInputs = new double[netlist.getElementCount()][4];
         publicPotentials = new double[matrixSolver.getMatrixSize()];
-        new InitialConditionSolver(solverType).setDialogInitialConditions(matrixSolver, numericalNetlist);
+        InitialConditionSolver initialConditions = new InitialConditionSolver(solverType);
+        if (features.dcOperatingPoint()) initialConditions.setDcOperatingPoint(matrixSolver, numericalNetlist);
+        else initialConditions.setDialogInitialConditions(matrixSolver, numericalNetlist);
         int[] diodes = new int[netlist.getElementCount()];
         int[] sources = new int[netlist.getElementCount()];
         int diodeCount = 0;

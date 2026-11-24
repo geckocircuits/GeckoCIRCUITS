@@ -14,12 +14,17 @@ import gecko.core.allg.SolverSettingsCore;
  *        An electrical step longer than Ts runs CONTROL at every step with that longer step.
  * @param zeroCrossing locates diode, thyristor and IGBT conduction changes inside a step by splitting the
  *        electrical interval. CONTROL and recordings stay on the fixed grid. Gear-Shichman rejects it.
+ * @param dcOperatingPoint seeds the first electrical step from a solved DC operating point instead of the
+ *        configured initial states.
  */
-public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing) {
-    private static final SolverFeatures NONE = new SolverFeatures(0, false);
+public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint) {
+    private static final SolverFeatures NONE = new SolverFeatures(0, false, false);
 
     /** @param controlSamplePeriod CONTROL sample period with every other feature off */
-    public SolverFeatures(double controlSamplePeriod) { this(controlSamplePeriod, false); }
+    public SolverFeatures(double controlSamplePeriod) { this(controlSamplePeriod, false, false); }
+
+    /** CONTROL sample period and event location, with DC start off. */
+    public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing) { this(controlSamplePeriod, zeroCrossing, false); }
 
     /** @return every feature off */
     public static SolverFeatures none() { return NONE; }
@@ -29,6 +34,7 @@ public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing) {
 
     /** Writes the feature values into execution settings. */
     SolverSettingsCore applyTo(SolverSettingsCore settings) {
-        return settings.withControlSamplePeriod(controlSamplePeriod).withZeroCrossing(zeroCrossing);
+        return settings.withControlSamplePeriod(controlSamplePeriod).withZeroCrossing(zeroCrossing)
+                .withDcOperatingPoint(dcOperatingPoint);
     }
 }

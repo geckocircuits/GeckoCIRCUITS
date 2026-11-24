@@ -35,6 +35,7 @@ public final class SolverSettingsCore {
     private double pauseTime;          // optional pause time (-1 means no pause)
     private double controlSamplePeriod; // CONTROL sample period Ts in seconds; 0 runs CONTROL every step
     private boolean zeroCrossing;      // locate diode-family switching inside a step; off by default
+    private boolean dcOperatingPoint;  // seed the first step from a solved DC operating point; off by default
 
     // State tracking
     private boolean inPreCalculationMode;
@@ -114,7 +115,20 @@ public final class SolverSettingsCore {
         return this;
     }
 
+    /**
+     * Seeds the first electrical step from the circuit's DC operating point. Off by default.
+     * Capacitors open, inductors short, sources take their t=0 value, switches keep their initial gate state.
+     */
+    public SolverSettingsCore withDcOperatingPoint(boolean enabled) {
+        this.dcOperatingPoint = enabled;
+        return this;
+    }
+
     // Getters
+
+    public boolean isDcOperatingPoint() {
+        return dcOperatingPoint;
+    }
 
     public boolean isZeroCrossing() {
         return zeroCrossing;
@@ -184,6 +198,7 @@ public final class SolverSettingsCore {
         copy.pauseTime = this.pauseTime;
         copy.controlSamplePeriod = this.controlSamplePeriod;
         copy.zeroCrossing = this.zeroCrossing;
+        copy.dcOperatingPoint = this.dcOperatingPoint;
         copy.inPreCalculationMode = this.inPreCalculationMode;
         return copy;
     }

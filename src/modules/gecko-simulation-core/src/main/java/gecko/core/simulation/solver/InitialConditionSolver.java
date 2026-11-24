@@ -199,6 +199,184 @@ public class InitialConditionSolver {
         seedHistories(matrixSolver, potentials, currents);
     }
 
+    /**
+     * Solves the DC operating point and seeds every integration history with it.
+     * Capacitors are open, inductors (coupled or not) are shorts, sources take their t=0 value, and switches keep
+     * the state their parameters hold now. Diode-family states are the bias-consistent set found here; a stored conducting thyristor stays latched unless reverse biased.
+     * The netlist, including its configured initial states, is not modified.
+     *
+     * @param matrixSolver the runtime solver whose histories are seeded
+     * @param netlist the circuit in the node order of the runtime solver
+     * @throws IllegalArgumentException if the circuit holds an element the DC solve does not support
+     * @throws IllegalStateException if the DC point is not unique or the diode states do not converge
+     */
+    public void setDcOperatingPoint(MatrixSolver matrixSolver, INetList netlist) {
+        validateState(matrixSolver, netlist);
+        int count = netlist.getElementCount();
+        int nodeMax = netlist.getNodeMax();
+        CircuitTypCore[] types = new CircuitTypCore[count];
+        int[] x = new int[count], y = new int[count], sources = new int[count];
+        double[][] parameters = new double[count][];
+        int sourceCount = netlist.getVoltageSourceMax();
+        for (int i = 0; i < count; i++) {
+            CircuitTypCore original = netlist.getType(i);
+            types[i] = original;
+            x[i] = netlist.getNodeX(i);
+            y[i] = netlist.getNodeY(i);
+            parameters[i] = netlist.getParameter(i).clone();
+            sources[i] = -1;
+            requireDcSupport(original, parameters[i], i);
+            switch (original) {
+                case LK_C -> {
+                    // Open: a zero current source keeps the element and its index.
+                    types[i] = CircuitTypCore.LK_I;
+                    parameters[i] = dcSource(0);
+                }
+                case LK_L, LK_LKOP2 -> {
+                    // Short: a zero voltage source carries the branch current as its auxiliary unknown.
+                    types[i] = CircuitTypCore.LK_U;
+                    parameters[i] = dcSource(0);
+                    // A winding keeps its auxiliary number so no auxiliary row stays empty.
+                    int own = original == CircuitTypCore.LK_LKOP2 ? netlist.getVoltageSourceNumber(i) : 0;
+                    sources[i] = own > 0 ? own : ++sourceCount;
+                }
+                case LK_U -> {
+                    sources[i] = netlist.getVoltageSourceNumber(i);
+                    if (sources[i] < 1) {
+                        throw new IllegalArgumentException("Voltage source " + i + " has no auxiliary number");
+                    }
+                }
+                // A diode or IGBT starts blocking. A thyristor keeps its stored state, because its latch outlives the gate.
+                case LK_D, LK_IGBT -> parameters[i][0] = parameters[i][3];
+                default -> { }
+            }
+        }
+        requireCapacitorsBetweenOneGroup(netlist);
+
+        CircuitNetlist dcNetwork = new CircuitNetlist();
+        dcNetwork.initNetlist(types, x, y, sources, parameters, nodeMax, sourceCount, count);
+        dcNetwork.setWireReference(netlist.usesWireReference());
+        MatrixSolver dcSolver = new MatrixSolver(SolverType.SOLVER_BE);
+        dcSolver.initializeMatrices(nodeMax, sourceCount, count);
+        solveDiodeConsistent(dcSolver, dcNetwork);
+
+        double[] currents = new double[count];
+        new ComponentCurrentCalculator().calculateComponentCurrents(dcSolver, dcNetwork, currents, 0, 1, 0, true);
+        double[] potentials = new double[matrixSolver.getMatrixSize()];
+        System.arraycopy(dcSolver.getP(), 0, potentials, 0, nodeMax + 1);
+        for (int i = 0; i < count; i++) {
+            if (!Double.isFinite(currents[i])) {
+                throw new IllegalStateException("Nonfinite DC current for element " + i);
+            }
+            int source = netlist.getVoltageSourceNumber(i);
+            if (source > 0 && (types[i] == CircuitTypCore.LK_U)) {
+                potentials[nodeMax + source] = currents[i];
+            }
+        }
+        seedHistories(matrixSolver, potentials, currents);
+    }
+
+    private static double[] dcSource(double value) {
+        double[] source = new double[13];
+        source[0] = SourceType.QUELLE_DC_NEW;
+        source[1] = value;
+        return source;
+    }
+
+    private static void requireDcSupport(CircuitTypCore type, double[] values, int element) {
+        switch (type) {
+            case LK_R, LK_C, LK_L, LK_LKOP2, LK_S, LK_MOSFET, LK_M, LK_TERMINAL, LK_GLOBAL_TERMINAL -> { }
+            case LK_D -> requireLength(values, 4, element);
+            case LK_THYR, LK_IGBT -> requireLength(values, 9, element);
+            case LK_U, LK_I -> {
+                int kind = (int) values[0];
+                if (kind != SourceType.QUELLE_DC_NEW && kind != SourceType.QUELLE_DC
+                        && kind != SourceType.QUELLE_SIN_NEW && kind != SourceType.QUELLE_SIN
+                        && kind != SourceType.QUELLE_SIGNALGESTEUERT_NEW
+                        && kind != SourceType.QUELLE_SIGNALGESTEUERT) {
+                    throw new IllegalArgumentException("DC operating point does not support the controlled "
+                            + "source type " + kind + " of element " + element);
+                }
+            }
+            default -> throw new IllegalArgumentException("DC operating point does not support element type "
+                    + type + " (element " + element + ")");
+        }
+    }
+
+    private static void requireLength(double[] values, int length, int element) {
+        if (values.length < length) {
+            throw new IllegalArgumentException("Element " + element + " has too few parameters for a DC solve");
+        }
+    }
+
+    /** A capacitor between two conductive groups leaves their relative potential to charge, not to the DC solve. */
+    private static void requireCapacitorsBetweenOneGroup(INetList netlist) {
+        int[] components = new int[netlist.getNodeMax() + 1];
+        Arrays.setAll(components, node -> node);
+        for (int i = 0; i < netlist.getElementCount(); i++) {
+            CircuitTypCore type = netlist.getType(i);
+            if (type == CircuitTypCore.LK_C || type == CircuitTypCore.LK_I) {
+                continue;
+            }
+            components[componentRoot(components, netlist.getNodeY(i))] = componentRoot(components, netlist.getNodeX(i));
+        }
+        for (int i = 0; i < netlist.getElementCount(); i++) {
+            if (netlist.getType(i) == CircuitTypCore.LK_C
+                    && componentRoot(components, netlist.getNodeX(i)) != componentRoot(components, netlist.getNodeY(i))) {
+                throw new IllegalStateException("DC operating point is undetermined: capacitor " + i
+                        + " is the only connection between two node groups");
+            }
+        }
+    }
+
+    /** Flips the most inconsistent diode-family element until every state matches its bias. */
+    private static void solveDiodeConsistent(MatrixSolver solver, CircuitNetlist network) {
+        int diodes = 0;
+        for (int i = 0; i < network.getElementCount(); i++) {
+            diodes += isDiodeFamily(network.getType(i)) ? 1 : 0;
+        }
+        for (int iteration = 0; iteration <= 10 * diodes + 10; iteration++) {
+            solver.buildMatrixA(network, 1, 0, false);
+            solver.buildVectorB(network, 1, 0, false);
+            try {
+                solver.solve();
+            } catch (RuntimeException failure) {
+                throw new IllegalStateException("DC operating point has no unique solution "
+                        + "(floating node, source loop or inductor loop): " + failure.getMessage(), failure);
+            }
+            double[] p = solver.getP();
+            int worst = -1;
+            double worstViolation = 0;
+            for (int i = 0; i < network.getElementCount(); i++) {
+                CircuitTypCore type = network.getType(i);
+                if (!isDiodeFamily(type)) {
+                    continue;
+                }
+                double[] values = network.getParameter(i);
+                double voltage = p[network.getNodeX(i)] - p[network.getNodeY(i)];
+                boolean gated = type == CircuitTypCore.LK_D || values[8] >= 0.5;
+                // The thresholds of the transient diode iteration: a thyristor stays latched, an IGBT does not.
+                double violation = values[0] < 10000
+                        ? (type == CircuitTypCore.LK_IGBT && !gated ? Double.MAX_VALUE : Math.max(0, values[1] - voltage))
+                        : (gated ? Math.max(0, voltage - values[1]) : 0);
+                if (violation > worstViolation) {
+                    worstViolation = violation;
+                    worst = i;
+                }
+            }
+            if (worst < 0) {
+                return;
+            }
+            double[] values = network.getParameter(worst);
+            values[0] = values[0] < 10000 ? values[3] : values[2];
+        }
+        throw new IllegalStateException("DC operating point diode states did not converge");
+    }
+
+    private static boolean isDiodeFamily(CircuitTypCore type) {
+        return type == CircuitTypCore.LK_D || type == CircuitTypCore.LK_THYR || type == CircuitTypCore.LK_IGBT;
+    }
+
     private static boolean hasInductorCutset(INetList netlist) {
         int[] components = new int[netlist.getNodeMax() + 1];
         Arrays.setAll(components, node -> node);

@@ -8,6 +8,7 @@ import gecko.core.datacontainer.DataContainerGlobal;
 import gecko.core.io.CircuitModel;
 import gecko.core.preparation.ExecutionOptions;
 import gecko.core.preparation.PreparedCircuit;
+import gecko.core.preparation.SolverFeatures;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -115,8 +116,15 @@ public final class SimulationSession implements AutoCloseable {
             Status constructedStatus = statusFor(State.READY, 0, 0, 0, duration, dt);
             boolean hasElectrical = constructedNetlist != null && constructedNetlist.getElementCount() > 0;
             if (hasElectrical) constructedControl.seedSources(constructedNetlist);
+            if (hasElectrical && settings.isDcOperatingPoint()) {
+                // The DC solve needs the gates the first step will use. Initializing CONTROL here is the same
+                // call the first step makes, so the default order is unchanged when the feature is off.
+                constructedControl.initializeAtSimulationStart();
+                constructedControl.applyPendingGates(constructedNetlist);
+            }
             ElectricalTimeStep constructedElectrical = hasElectrical
-                    ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(), settings.isZeroCrossing()) : null;
+                    ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(),
+                            new SolverFeatures(0, settings.isZeroCrossing(), settings.isDcOperatingPoint())) : null;
             netlist = constructedNetlist;
             control = constructedControl;
             signalNames = constructedSignalNames;

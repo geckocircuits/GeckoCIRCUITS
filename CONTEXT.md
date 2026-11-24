@@ -21,6 +21,10 @@ _Avoid_: Extra recorded row, CONTROL step
 A diode, thyristor or IGBT conduction change with a time inside a Grid step.
 _Avoid_: Gate edge, CONTROL threshold crossing
 
+**DC operating point**:
+The electrical state with every capacitor open, every inductor shorted, sources at their t=0 value and switches in their initial gate state. An opt-in start state that replaces the configured initial states.
+_Avoid_: Steady state, periodic steady state, startup transient
+
 **CONTROL runtime**:
 The assembled control calculation chain for one simulation run, including its electrical probes, gate signals, and SCOPE inputs.
 _Avoid_: Control service, individual calculator
