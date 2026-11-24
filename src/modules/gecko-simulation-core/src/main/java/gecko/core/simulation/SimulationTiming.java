@@ -38,6 +38,10 @@ public final class SimulationTiming {
         double preStep = settings.getPreCalculationStepWidth();
         if (!positive(step)) issues.add(new SettingIssue("timeStep", STEP_MESSAGE));
         if (!positive(duration)) issues.add(new SettingIssue("duration", DURATION_MESSAGE));
+        double samplePeriod = settings.getControlSamplePeriod();
+        if (!Double.isFinite(samplePeriod) || samplePeriod < 0) {
+            issues.add(new SettingIssue("controlSamplePeriod", "CONTROL sample period must be finite and non-negative."));
+        }
         if (settings.getSolverType() == null) issues.add(new SettingIssue("solver", "A solver type is required."));
         int mainCapacity = capacityIssue(step, duration, "duration", issues);
         int warmupCapacity = 0;

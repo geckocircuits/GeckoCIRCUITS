@@ -99,7 +99,8 @@ public final class SimulationSession implements AutoCloseable {
         try {
             CircuitNetlist constructedNetlist = NetlistBuilder.buildFromCircuitModel(model);
             if (constructedControl == null) {
-                constructedControl = ControlRuntime.fromDeferred(model, dt, constructedNetlist);
+                constructedControl = ControlRuntime.fromDeferred(model, dt, constructedNetlist,
+                        settings.getControlSamplePeriod());
             }
             // Validate the main grid now. Stage its live histories again after warmup.
             if (phase == Phase.WARMUP && mainStep != dt) constructedControl.prepareTimeStepChange(mainStep);

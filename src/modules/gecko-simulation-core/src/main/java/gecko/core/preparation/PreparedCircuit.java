@@ -6,7 +6,11 @@ import gecko.core.io.CircuitModel;
 /** Fixed configuration with no live solver or CONTROL state. */
 public final class PreparedCircuit {
     private final CircuitSnapshot circuit;
-    PreparedCircuit(CircuitSnapshot circuit) { this.circuit = circuit; }
+    private final SolverFeatures features;
+    PreparedCircuit(CircuitSnapshot circuit, SolverFeatures features) {
+        this.circuit = circuit;
+        this.features = features;
+    }
     /**
      * Creates a detached model for one execution.
      * Each run must create its own netlist, solver histories, and CONTROL state from this model.
@@ -22,8 +26,9 @@ public final class PreparedCircuit {
      */
     public SolverSettingsCore solverSettings() {
         var model = circuit.toModel();
-        return new SolverSettingsCore(model.getSolverType(), model.getTimeStep(), model.getSimulationDuration())
+        return features.applyTo(new SolverSettingsCore(model.getSolverType(), model.getTimeStep(),
+                model.getSimulationDuration())
                 .withPreCalculation(model.getPreSimulationTime(), model.getPreSimulationTimeStep())
-                .withPauseTime(model.getPauseTime());
+                .withPauseTime(model.getPauseTime()));
     }
 }
