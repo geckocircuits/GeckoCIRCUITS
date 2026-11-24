@@ -18,11 +18,7 @@ class ThermalProbeAdmissionTest {
 
     private static ReadinessReport report(CircuitModel model) {
         var preparation = new CircuitPreparation();
-        return switch (preparation.prepare(preparation.capture(model), PreparationRequest.defaults())) {
-            case PreparationResult.Ready r -> r.report();
-            case PreparationResult.Inspectable i -> i.report();
-            case PreparationResult.Rejected r -> r.report();
-        };
+        return preparation.prepare(preparation.capture(model), PreparationRequest.defaults()).report();
     }
 
     private static void assertFallsBackForTheProbes(ReadinessReport report) {
@@ -102,11 +98,7 @@ class ThermalProbeAdmissionTest {
         var preparation = new CircuitPreparation();
         var result = preparation.prepare(preparation.capture(model), new PreparationRequest(
                 new SolverOverrides(null, null, null, new SolverFeatures(0, false, false, search, null)), Map.of()));
-        return switch (result) {
-            case PreparationResult.Ready r -> r.report();
-            case PreparationResult.Inspectable i -> i.report();
-            case PreparationResult.Rejected r -> r.report();
-        };
+        return result.report();
     }
 
     @Test

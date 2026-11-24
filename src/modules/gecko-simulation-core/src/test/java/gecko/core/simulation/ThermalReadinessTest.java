@@ -21,11 +21,7 @@ class ThermalReadinessTest {
 
     private static ReadinessReport report(CircuitModel model) {
         var preparation = new CircuitPreparation();
-        return switch (preparation.prepare(preparation.capture(model), PreparationRequest.defaults())) {
-            case PreparationResult.Ready r -> r.report();
-            case PreparationResult.Inspectable i -> i.report();
-            case PreparationResult.Rejected r -> r.report();
-        };
+        return preparation.prepare(preparation.capture(model), PreparationRequest.defaults()).report();
     }
 
     private static Diagnostic find(ReadinessReport report, String code) {
@@ -68,13 +64,15 @@ class ThermalReadinessTest {
                 ThermalFixture.thermalBlocks(123456789L, ThermalFixture.DIODE_ID))), "UNSUPPORTED_LOSS_COMPONENT").category());
         // A capacitor has no loss model in the core.
         find(report(withBlocks(ThermalFixture.thermalBlocks(-944661538L, ThermalFixture.DIODE_ID))), "UNSUPPORTED_LOSS_COMPONENT");
-        // Two components with the same saved identifier make the reference ambiguous. Names never decide.
-        var ambiguous = ThermalFixture.model(ThermalFixture.thermalBlocks(ThermalFixture.DIODE_ID, ThermalFixture.DIODE_ID));
+        // The switch gets the diode's identifier, so two electrical components share it. Both loss sources point at it.
+        // The reference is ambiguous and names never decide, so both sources fall back.
         String text = ThermalFixture.buckText().replace("uniqueObjectIdentifier -1014213050", "uniqueObjectIdentifier -1779394816");
         var twin = new CircuitFileParser().parse(new java.io.BufferedReader(new java.io.StringReader(
                 text + "\n" + ThermalFixture.thermalBlocks(ThermalFixture.DIODE_ID, ThermalFixture.DIODE_ID))), "twin.ipes");
-        assertNotNull(ambiguous);
-        find(report(twin), "UNSUPPORTED_LOSS_COMPONENT");
+        var twinReport = report(twin);
+        var reported = twinReport.diagnostics().stream().filter(item -> item.code().equals("UNSUPPORTED_LOSS_COMPONENT"))
+                .map(Diagnostic::component).collect(java.util.stream.Collectors.toSet());
+        assertEquals(java.util.Set.of("Pv.1", "Pv.2"), reported, twinReport.diagnostics().toString());
     }
 
     @Test
@@ -98,7 +96,7 @@ class ThermalReadinessTest {
                 + ThermalFixture.control(17, "FLOW.T", 6101, "", "PT", "/Tsrc/NIX_NIX_NIX/0", "coupledReferenceID[] 5070 \n");
         var unsupported = find(report(withBlocks(flowOnTemperatureSource)), "UNSUPPORTED_CONTROL_COMPONENT");
         assertEquals(Diagnostic.Category.CAPABILITY, unsupported.category());
-        // A reference that two thermal components share does not resolve either.
+        // A FLOW probe on a thermal resistor resolves by the unique identifier of that resistor, so it raises no probe error.
         String repeated = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID)
                 + ThermalFixture.control(17, "FLOW.R", 6102, "", "PR", "/Rth.S/NIX_NIX_NIX/0", "coupledReferenceID[] 5010 \n");
         assertTrue(report(withBlocks(repeated)).diagnostics().stream().noneMatch(item -> item.code().equals("INVALID_THERMAL_PROBE")));
@@ -148,12 +146,11 @@ class ThermalReadinessTest {
         model.addThermalComponent(thermal);
         var preparation = new CircuitPreparation();
         // The transient gate still wins for a hierarchy document.
-        var transient_ = new CircuitModel();
         var saved = new CircuitFileParser().parse(new ByteArrayInputStream(new CircuitFileWriter().write(nativeHierarchy())), "n.ipes");
         saved.setAcSettings(null);
-        assertEquals("UNSUPPORTED_TRANSIENT_LAW", find(preparation.prepare(preparation.capture(saved),
-                PreparationRequest.defaults()).report(), "UNSUPPORTED_TRANSIENT_LAW").code());
-        assertNotNull(transient_);
+        var gate = find(preparation.prepare(preparation.capture(saved), PreparationRequest.defaults()).report(),
+                "UNSUPPORTED_TRANSIENT_LAW");
+        assertEquals(Diagnostic.Category.CAPABILITY, gate.category());
         // AC reports the thermal rejection on the hierarchy branch too.
         assertEquals("THERMAL", find(report(model), "UNSUPPORTED_DOMAIN").domain());
     }

@@ -63,11 +63,7 @@ class ThermalControlCouplingTest {
     }
 
     private static ReadinessReport report(PreparationResult result) {
-        return switch (result) {
-            case PreparationResult.Ready r -> r.report();
-            case PreparationResult.Inspectable i -> i.report();
-            case PreparationResult.Rejected r -> r.report();
-        };
+        return result.report();
     }
 
     @Test

@@ -13,12 +13,7 @@ class ThermalSessionTest {
     private static PreparationResult.Ready ready(CircuitModel model, SolverOverrides overrides) {
         var preparation = new CircuitPreparation();
         var result = preparation.prepare(preparation.capture(model), new PreparationRequest(overrides, Map.of()));
-        var report = switch (result) {
-            case PreparationResult.Ready r -> r.report();
-            case PreparationResult.Inspectable i -> i.report();
-            case PreparationResult.Rejected r -> r.report();
-        };
-        assertInstanceOf(PreparationResult.Ready.class, result, report.diagnostics().toString());
+        assertInstanceOf(PreparationResult.Ready.class, result, result.report().diagnostics().toString());
         return (PreparationResult.Ready) result;
     }
 
@@ -54,7 +49,6 @@ class ThermalSessionTest {
             assertTrue(maxLoss > 0, "the switch dissipates");
             assertTrue(peak > 0, "the junction heats");
             assertEquals(0, t[0], 0, "no heat has entered at the first step");
-            assertTrue(p[0] > 0 || p[1] > 0 || maxLoss > 0);
             assertEquals(400, session.thermalSolves());
         }
     }
