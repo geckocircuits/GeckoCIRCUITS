@@ -108,10 +108,14 @@ final class ControlRuntime implements AutoCloseable {
      */
     static ControlRuntime fromDeferred(CircuitModel model, double dt, CircuitNetlist electricalNetlist,
             double samplePeriod) {
+        return fromDeferred(model, dt, electricalNetlist, samplePeriod, null);
+    }
+    static ControlRuntime fromDeferred(CircuitModel model, double dt, CircuitNetlist electricalNetlist,
+            double samplePeriod, CircuitNetlist thermalNetlist) {
         requireValidSamplePeriod(samplePeriod);
         double planningStep = Math.max(samplePeriod, dt);
-        return new ControlRuntime(new ControlCalculatorFactory().buildCircuit(model, planningStep, electricalNetlist),
-                dt, samplePeriod);
+        return new ControlRuntime(new ControlCalculatorFactory().buildCircuit(model, planningStep, electricalNetlist,
+                thermalNetlist), dt, samplePeriod);
     }
 
     /** Takes ownership of the supplied calculators and their closeable resources. */
@@ -217,12 +221,22 @@ final class ControlRuntime implements AutoCloseable {
         domainCoupler.transferControlToSources(circuitNetlist);
     }
 
+    void seedThermalSources(ThermalNetwork thermal) {
+        requireOpen();
+        domainCoupler.transferControlToThermalSources(thermal);
+    }
+
     void applyPendingGates(CircuitNetlist circuitNetlist) {
         requireOpen();
         domainCoupler.applyGateSignals(circuitNetlist);
     }
 
     void advanceAfterElectricalStep(CircuitNetlist circuitNetlist, double time) {
+        advanceAfterElectricalStep(circuitNetlist, null, time);
+    }
+
+    /** As above, with the thermal network that solved after the electrical step. Null runs the electrical path alone. */
+    void advanceAfterElectricalStep(CircuitNetlist circuitNetlist, ThermalNetwork thermal, double time) {
         initializeAtSimulationStart();
         stateVersion++;
         activeSegment = true;
@@ -231,8 +245,12 @@ final class ControlRuntime implements AutoCloseable {
             // including probe outputs, before the probes publish this step's measurements.
             // A sampled CONTROL publishes to sources and gates only after a sample, so live probe
             // outputs wired straight to them cannot leak between samples.
-            if (samplePeriod <= 0 || outputsPublishedLastStep) domainCoupler.transferControlToSources(circuitNetlist);
+            if (samplePeriod <= 0 || outputsPublishedLastStep) {
+                domainCoupler.transferControlToSources(circuitNetlist);
+                domainCoupler.transferControlToThermalSources(thermal);
+            }
             domainCoupler.transferLkToControlProbes(circuitNetlist);
+            domainCoupler.transferThermalToControlProbes(thermal);
             boolean sampled = !controlNetlist.hasCalculators() || executeDueSample(time);
             outputsPublishedLastStep = sampled;
             if (samplePeriod <= 0 || sampled) domainCoupler.transferGateSignalsToLk(circuitNetlist);

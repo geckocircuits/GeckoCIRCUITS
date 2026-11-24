@@ -35,10 +35,7 @@ class ParserUnsupportedImportTest {
         assertArrayEquals(new String[]{"hot"}, thermal.getTerminalXLabels());
         assertEquals("true", thermal.getImportTokens().get("nonlinear"));
         assertTrue(thermal.isParsedInput());
-        ImportIssue issue = model.getImportIssues().getFirst();
-        assertEquals("UNSUPPORTED_DOMAIN", issue.code());
-        assertEquals("THERMAL", issue.domain());
-        assertEquals("Heat.1", issue.component());
-        assertTrue(issue.unsupported());
+        // The parser only reads the block. Readiness decides which thermal types the core can run (ADR-0023).
+        assertTrue(model.getImportIssues().isEmpty(), model.getImportIssues().toString());
     }
 }

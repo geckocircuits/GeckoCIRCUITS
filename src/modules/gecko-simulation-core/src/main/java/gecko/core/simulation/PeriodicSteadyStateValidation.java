@@ -32,7 +32,23 @@ final class PeriodicSteadyStateValidation {
      */
     static List<SimulationTiming.SettingIssue> circuitIssues(double period, CircuitNetlist netlist,
             List<AbstractControlCalculatable> calculators) {
+        return circuitIssues(period, netlist, calculators, false);
+    }
+
+    /**
+     * As above, and rejects a circuit with a THERMAL network. Its time constant spans many thousand periods, so the
+     * period-drift test cannot accept in a practical run time (ADR-0023).
+     *
+     * @param thermal true when the circuit has an active thermal element
+     */
+    static List<SimulationTiming.SettingIssue> circuitIssues(double period, CircuitNetlist netlist,
+            List<AbstractControlCalculatable> calculators, boolean thermal) {
         var issues = new ArrayList<SimulationTiming.SettingIssue>();
+        if (thermal) {
+            issues.add(new SimulationTiming.SettingIssue("periodicSteadyState",
+                    "The periodic steady-state search does not support a THERMAL network: its time constant spans"
+                            + " many periods, so its state cannot converge in a practical run time."));
+        }
         if (netlist != null) {
             for (int element = 0; element < netlist.getElementCount(); element++) {
                 CircuitTypCore type = netlist.getType(element);

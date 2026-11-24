@@ -617,9 +617,6 @@ public class CircuitFileParser {
                             component.getImportTokens().get("uniqueObjectIdentifier")));
                 }
                 model.addThermalComponent(component);
-                model.getImportIssues().add(new ImportIssue("UNSUPPORTED_DOMAIN", "THERMAL", name,
-                        "Saved thermal elements cannot run in the headless engine.",
-                        component.getSourceLocation(), true));
             } catch (RuntimeException error) {
                 addComponentIssue(model, block, "THERMAL", "The component block is invalid: " + error.getMessage());
             }

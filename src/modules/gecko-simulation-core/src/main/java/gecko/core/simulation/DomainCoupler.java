@@ -279,6 +279,46 @@ public class DomainCoupler {
      * {@link #applyGateSignals(CircuitNetlist)}.
      */
     /**
+     * Writes TEMP probes as the thermal potential difference and FLOW probes as the heat flow of this step.
+     * The thermal node potentials are differences, so no node counts as ground here.
+     */
+    void transferThermalToControlProbes(ThermalNetwork thermal) {
+        if (controlBlockMapping == null || thermal == null) return;
+        CircuitNetlist netlist = thermal.netlist();
+        double[] potentials = netlist.getLastNodeVoltagesRef();
+        double[] currents = netlist.getLastComponentCurrentsRef();
+        for (var probe : controlBlockMapping.getThermalTemperatureProbes()) {
+            probe.calculator()._outputSignal[0][0] = potentials[probe.nodeA()] - potentials[probe.nodeB()];
+        }
+        for (var probe : controlBlockMapping.getThermalFlowProbes()) {
+            double value;
+            if (probe.lossSource()) {
+                var loss = thermal.loss(probe.elementName());
+                value = loss == null ? 0 : switch (probe.part()) {
+                    case CONDUCTION -> loss.conduction();
+                    case SWITCHING -> loss.switching();
+                    default -> loss.total();
+                };
+            } else {
+                int index = netlist.getElementIndexByName(probe.elementName());
+                value = index >= 0 && index < currents.length ? currents[index] : 0;
+            }
+            probe.calculator()._outputSignal[0][0] = value;
+        }
+    }
+
+    /** Writes each signal-controlled thermal source value (parameter 1) from its CONTROL output. */
+    void transferControlToThermalSources(ThermalNetwork thermal) {
+        if (controlBlockMapping == null || thermal == null) return;
+        for (var source : controlBlockMapping.getThermalSourceMappings()) {
+            int index = thermal.netlist().getElementIndexByName(source.sourceName());
+            if (index < 0) continue;
+            thermal.netlist().getParameter(index)[1] = source.producer() == null
+                    ? 0 : source.producer()._outputSignal[source.output()][0];
+        }
+    }
+
+    /**
      * Writes each signal-controlled source value (parameter 1) from its CONTROL output,
      * as desktop {@code SimulationsKern.setControlledSourcesFromControlValue}.
      */

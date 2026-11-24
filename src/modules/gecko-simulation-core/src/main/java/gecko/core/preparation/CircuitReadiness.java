@@ -11,8 +11,10 @@ import gecko.core.circuit.netlist.NetlistBuilder;
 import gecko.core.circuit.netlist.TopologyValidationException;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitTopology;
+import gecko.core.circuit.SourceType;
 import gecko.core.io.ImportIssue;
 import gecko.core.simulation.ControlCalculatorFactory;
+import gecko.core.simulation.ThermalLossSources;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,21 +25,21 @@ final class CircuitReadiness {
     static List<Diagnostic> check(CircuitModel model, List<Diagnostic> configurationDiagnostics) {
         List<Diagnostic> diagnostics = new ArrayList<>();
         appendImportDiagnostics(model, diagnostics);
-        for (var component : model.getThermalComponents()) {
-            if (diagnostics.stream().noneMatch(d -> d.code().equals("UNSUPPORTED_DOMAIN")
-                    && "THERMAL".equals(d.domain()) && component.getName().equals(d.component()))) {
-                diagnostics.add(new Diagnostic("UNSUPPORTED_DOMAIN", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
-                        "Saved thermal elements cannot run in the headless engine.", "THERMAL", component.getName(),
-                        null, component.getSourceLocation()));
-            }
-        }
         checkComponentModes(model, diagnostics);
         CircuitNetlist topology = checkTopology(model, diagnostics);
+        CircuitNetlist thermalNetlist = checkThermal(model, diagnostics);
         checkControl(model, topology, diagnostics);
         if (configurationDiagnostics.stream().noneMatch(item -> "CONTROL".equals(item.domain()) && item.severity() == Diagnostic.Severity.ERROR)
                 && diagnostics.stream().noneMatch(item -> "CONTROL".equals(item.domain()) && item.severity() == Diagnostic.Severity.ERROR)) {
             try {
-                new ControlCalculatorFactory().buildCircuit(model, model.getTimeStep(), topology);
+                new ControlCalculatorFactory().buildCircuit(model, model.getTimeStep(), topology, thermalNetlist);
+            } catch (ControlCalculatorFactory.ThermalProbeException probe) {
+                boolean missing = probe.code().equals("INVALID_THERMAL_PROBE");
+                if (!missing || thermalNetlist != null) {
+                    diagnostics.add(new Diagnostic(probe.code(), missing ? Diagnostic.Category.REFERENCES
+                            : Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR, probe.getMessage(), "CONTROL",
+                            probe.component(), null, null));
+                }
             } catch (ControlCalculatorFactory.DependencyCycleException cycle) {
                 diagnostics.add(new Diagnostic("CONTROL_DEPENDENCY_CYCLE", Diagnostic.Category.REFERENCES,
                         Diagnostic.Severity.ERROR, cycle.getMessage(), "CONTROL", null, null, null));
@@ -112,6 +114,68 @@ final class CircuitReadiness {
                 "The configured field is unsupported by the headless engine.", "LK", component.getName(),
                 component.getName() + "." + field, component.getSourceLocation()));
     }
+    /**
+     * Reports every thermal element that the core cannot run. The desktop keeps the legacy kernel for those.
+     *
+     * @return the thermal netlist, or null when the circuit has none or it cannot be built
+     */
+    private static CircuitNetlist checkThermal(CircuitModel model, List<Diagnostic> diagnostics) {
+        boolean runnable = true;
+        Set<Integer> supported = Set.of(41, 44, 45, 46, 47, 48, 49, 50);
+        Set<Integer> sourceModes = Set.of(SourceType.QUELLE_DC, SourceType.QUELLE_DC_NEW, SourceType.QUELLE_SIGNALGESTEUERT,
+                SourceType.QUELLE_SIGNALGESTEUERT_NEW, SourceType.QUELLE_SIN, SourceType.QUELLE_SIN_NEW);
+        for (var component : model.getThermalComponents()) {
+            int type = component.getType();
+            if (!supported.contains(type)) {
+                runnable = false;
+                diagnostics.add(thermal("UNSUPPORTED_THERMAL_COMPONENT", Diagnostic.Category.CAPABILITY, component, null,
+                        "The headless engine does not support this THERMAL component type."));
+            } else if (type == 47) {
+                for (String token : List.of("nonlinear", "isNonlinear", "useNonlinearChar")) {
+                    if (savedValue(component, token, -1) > 0.5) {
+                        runnable = false;
+                        diagnostics.add(thermal("UNSUPPORTED_PARAMETER", Diagnostic.Category.CAPABILITY, component,
+                                component.getName() + "." + token, "The configured field is unsupported by the headless engine."));
+                    }
+                }
+            } else if (type == 44 || type == 45) {
+                double[] values = component.getNumericParameters();
+                if (values.length > 0 && !(Double.isFinite(values[0]) && values[0] == Math.rint(values[0])
+                        && sourceModes.contains((int) values[0]))) {
+                    runnable = false;
+                    diagnostics.add(thermal("UNSUPPORTED_PARAMETER", Diagnostic.Category.CAPABILITY, component,
+                            component.getName() + ".sourceType", "This thermal source mode is unsupported by the headless engine."));
+                }
+            } else if (type == 41) {
+                var resolution = ThermalLossSources.resolve(model, component);
+                if (resolution.spec() == null) {
+                    runnable = false;
+                    diagnostics.add(thermal(resolution.code(), Diagnostic.Category.CAPABILITY, component, null, resolution.message()));
+                }
+            }
+        }
+        if (!runnable || model.getThermalComponents().stream().allMatch(component -> component.getType() == 49
+                || component.getType() == 50)) {
+            return null;
+        }
+        try {
+            return NetlistBuilder.buildThermalFromCircuitModel(model);
+        } catch (TopologyValidationException error) {
+            diagnostics.add(new Diagnostic(error.code(), Diagnostic.Category.TOPOLOGY, Diagnostic.Severity.ERROR,
+                    error.getMessage(), "THERMAL", error.component(), null, model.getFilePath()));
+        } catch (IllegalArgumentException error) {
+            diagnostics.add(new Diagnostic("INVALID_TOPOLOGY", Diagnostic.Category.TOPOLOGY, Diagnostic.Severity.ERROR,
+                    error.getMessage(), "THERMAL", null, null, model.getFilePath()));
+        }
+        return null;
+    }
+
+    private static Diagnostic thermal(String code, Diagnostic.Category category, CircuitModel.ComponentData component,
+            String path, String message) {
+        return new Diagnostic(code, category, Diagnostic.Severity.ERROR, message, "THERMAL", component.getName(), path,
+                component.getSourceLocation());
+    }
+
     private static CircuitNetlist checkTopology(CircuitModel model, List<Diagnostic> diagnostics) {
         var registry = StamperRegistry.createDefault();
         var topology = new CircuitSnapshot(model).toModel();

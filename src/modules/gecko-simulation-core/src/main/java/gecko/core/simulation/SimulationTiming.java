@@ -128,13 +128,18 @@ public final class SimulationTiming {
         if (pss == null || !positive(pss.period()) || !positive(step) || !Double.isFinite(samplePeriod) || samplePeriod < 0) {
             return List.of();
         }
+        boolean thermal = model.getThermalComponents().stream().anyMatch(component -> component.getType() != 49
+                && component.getType() != 50);
         ControlRuntime runtime = null;
         try {
             var netlist = gecko.core.circuit.netlist.NetlistBuilder.buildFromCircuitModel(model);
-            runtime = ControlRuntime.fromDeferred(model, step, netlist, samplePeriod);
-            return PeriodicSteadyStateValidation.circuitIssues(pss.period(), netlist, runtime.calculators());
+            // The thermal netlist resolves TEMP and FLOW probes. Without it they would fail before the check runs.
+            var thermalNetlist = thermal ? gecko.core.circuit.netlist.NetlistBuilder.buildThermalFromCircuitModel(model) : null;
+            runtime = ControlRuntime.fromDeferred(model, step, netlist, samplePeriod, thermalNetlist);
+            return PeriodicSteadyStateValidation.circuitIssues(pss.period(), netlist, runtime.calculators(), thermal);
         } catch (RuntimeException unassembled) {
-            return List.of();
+            // A thermal circuit is rejected whatever else fails to assemble.
+            return thermal ? PeriodicSteadyStateValidation.circuitIssues(pss.period(), null, List.of(), true) : List.of();
         } finally {
             if (runtime != null) runtime.close();
         }
