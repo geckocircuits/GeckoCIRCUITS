@@ -7,12 +7,10 @@ Audience: maintainers of `gecko-simulation-core` and reviewers of desktop backen
 
 ## Context
 
-Issue [#95](https://github.com/tinix84/GeckoCIRCUITS/issues/95) asks the core to run saved thermal circuits. The junction temperature must stay within 1 % of the legacy kernel.
-Thermal circuits ran on the legacy kernel, because the core rejected their elements ([ADR-0010](0010-pull-based-frontend-single-owner-session.md) decision 7).
-The legacy kernel stamps thermal elements as aliases of R, C, I and U in a second matrix (`LKMatrices`) [C, High].
-It solves that matrix after the electrical step and before CONTROL (`SimulationsKern.simulateOneTimeStep`) [C, High].
-A loss source computes its heat from the current and voltage of this step. It uses the junction temperature of the previous thermal step [C, High].
-The next thermal step stamps that heat (`ThermPvChip.doCalculation`).
+Issue [#95](https://github.com/tinix84/GeckoCIRCUITS/issues/95) asks the core to run a circuit with a thermal network. The junction temperature must stay within 1 % of the legacy kernel.
+Until now the core rejected thermal elements, so these circuits ran on the legacy kernel ([ADR-0010](0010-pull-based-frontend-single-owner-session.md) decision 7).
+The legacy kernel solves a second thermal matrix after the electrical step and before CONTROL (`SimulationsKern.simulateOneTimeStep`) [C, High].
+A loss source heats the next thermal step, not the current one (`ThermPvChip.doCalculation`) [C, High].
 The core adds electrical sub-steps ([ADR-0016](0016-zero-crossing-event-location.md), [ADR-0018](0018-adaptive-electrical-step.md)). The legacy kernel has none.
 
 ## Options
@@ -26,8 +24,10 @@ The core adds electrical sub-steps ([ADR-0016](0016-zero-crossing-event-location
 
 ## Decision and rationale
 
-The thermal netlist uses the native `TH_RTH`, `TH_AMBIENT`, `TH_CTH`, `TH_FLOW` and `TH_TEMP` stamps, like `LKMatrices` [C, High].
-A loss source expands to a signal-controlled heat source and a 10 kΩ resistor from the thermal zero, like `ThermPvChip` [C, High].
+The legacy kernel stamps thermal elements as aliases of R, C, I and U (`LKMatrices`) [C, High].
+The thermal netlist uses the native `TH_RTH`, `TH_AMBIENT`, `TH_CTH`, `TH_FLOW` and `TH_TEMP` stamps for the same elements.
+A loss source expands to a signal-controlled heat flow and a 10 kΩ resistor from the thermal zero, like `ThermPvChip` [C, High].
+It computes its heat from the current and voltage of this step. It uses the junction temperature of the previous thermal step [C, High].
 All thermal-zero terminals form one node.
 Thermal uses the circuit solver type, the dense LU and the saved initial conditions. This holds also when the electrical network starts from its DC operating point.
 
@@ -47,7 +47,7 @@ A step change rebuilds the thermal matrix, like the legacy continuation [C, High
 Loss sources port the legacy SIMPLE, DETAILED and resistor algorithms. This includes the initial history of -1 and the current threshold of 0.01 A.
 A contract test compares them with the legacy classes.
 
-Readiness accepts the thermal circuits that the core can execute.
+Readiness accepts a circuit with a thermal network that the core can execute.
 For the rest it reports a capability diagnostic. The desktop then runs the legacy kernel.
 These cases fall back:
 
@@ -63,7 +63,7 @@ The search exports and compares only electrical and CONTROL state. It has no the
 
 ## Consequences
 
-- Thermal circuits that pass readiness run in the core on desktop, REST and scripts [C, High].
+- Circuits with a thermal network that pass readiness run in the core on desktop, REST and scripts [C, High].
 - With event location or the adaptive step on, losses sample the grid, not the sub-steps. The electrical results still improve [C, Medium].
 - Heat lags the electrical step by one grid step, as in legacy [C, High].
 - Upgrades: per-sub-step loss integration, a shared legacy and core loss class, MOSFET loss coupling with its anti-parallel diode, periodic steady state with a slow thermal state [E, Low].
