@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.DoubleUnaryOperator;
 import java.util.regex.Pattern;
 
 /** Imports the documented SPICE element subset and retains unsupported source evidence. */
@@ -158,7 +159,7 @@ public final class SpiceImporter {
         return model;
     }
 
-    private static void addScope(CircuitModel model, Map<String, String> nodes) {
+    static void addScope(CircuitModel model, Map<String, String> nodes) {
         var used = new HashSet<String>();
         for (var data : model.getCircuitComponents()) {
             used.addAll(List.of(data.getTerminalXLabels()));
@@ -199,7 +200,7 @@ public final class SpiceImporter {
         model.addConnection(new ConnectionData("LK", new int[][]{{x, y + 2}, {x + 2, y + 2}}, data.getTerminalYLabels()[0]));
     }
 
-    private static void source(ComponentData data, String spec, CircuitModel model, Map<String, String> parameters) {
+    static void source(ComponentData data, String spec, CircuitModel model, Map<String, String> parameters) {
         String upper = spec.toUpperCase(Locale.ROOT).trim();
         double[] saved = new double[21];
         saved[0] = 401;
@@ -231,33 +232,57 @@ public final class SpiceImporter {
             double delay = args.length > 3 ? args[3] : 0, damping = args.length > 4 ? args[4] : 0;
             double phase = args.length > 5 ? args[5] * Math.PI / 180 : 0;
             if (args[2] < 0 || delay < 0 || damping < 0) throw new IllegalArgumentException("The SIN timing is invalid.");
-            var samples = new TreeMap<Double, Double>();
-            double steps = Math.ceil(model.getSimulationDuration() / model.getTimeStep()) + 2;
-            if (steps > 2000000) throw new IllegalArgumentException("The SIN table exceeds two million samples.");
-            for (int i = 0; i < steps; i++) {
-                double time = i * model.getTimeStep();
+            importedWaveform(model, data, sampleWaveform(model, time -> {
                 double elapsed = Math.max(0, time - delay);
-                samples.put(time, args[0] + args[1] * Math.exp(-damping * elapsed) * Math.sin(2 * Math.PI * args[2] * elapsed + phase));
-            }
-            importedWaveform(model, data, samples);
+                return args[0] + args[1] * Math.exp(-damping * elapsed) * Math.sin(2 * Math.PI * args[2] * elapsed + phase);
+            }));
             saved[0] = 400;
         } else {
             String value = keyword(spec).equals("dc") ? spec.substring(2).trim() : spec.trim();
             saved[1] = value(value, parameters);
         }
+        sourceSettings(data, saved);
+    }
+
+    static void controlledSource(ComponentData data, String signal) {
+        double[] saved = new double[21];
+        saved[0] = 400;
+        sourceSettings(data, saved);
+        data.setParameterStrings(new String[]{signal, "", "0"});
+    }
+
+    private static void sourceSettings(ComponentData data, double[] saved) {
         data.setNumericParameters(saved);
         data.getImportTokens().put("sourceType", Integer.toString((int) saved[0]));
         data.getImportTokens().put("amplitude", "0.0");
         data.getImportTokens().put("phaseDegrees", "0.0");
     }
 
+    static TreeMap<Double, Double> sampleWaveform(CircuitModel model, DoubleUnaryOperator valueAt) {
+        var samples = new TreeMap<Double, Double>();
+        double steps = Math.ceil(model.getSimulationDuration() / model.getTimeStep()) + 2;
+        if (steps > 2000000) throw new IllegalArgumentException("The waveform table exceeds two million samples.");
+        for (int i = 0; i < steps; i++) {
+            double time = i * model.getTimeStep();
+            samples.put(time, valueAt.applyAsDouble(time));
+        }
+        return samples;
+    }
+
     private static void importedWaveform(CircuitModel model, ComponentData target, TreeMap<Double, Double> samples) {
+        var signal = new ComponentData(4, "SIGNAL." + target.getName(),
+                8 + model.getControlComponents().size() % 6 * 10, 0, 503);
+        addWaveform(model, signal, samples);
+        target.setParameterStrings(new String[]{signal.getTerminalYLabels()[0], "", "0"});
+    }
+
+    static void addWaveform(CircuitModel model, ComponentData signal, TreeMap<Double, Double> samples) {
         if (samples.entrySet().stream().anyMatch(point -> !Double.isFinite(point.getKey()) || !Double.isFinite(point.getValue()))) {
             throw new IllegalArgumentException("The source waveform contains a nonfinite time or value.");
         }
         var text = new StringBuilder();
         samples.forEach((time, value) -> text.append(time).append(' ').append(value).append('\n'));
-        var signal = control(model, 4, "SIGNAL." + target.getName(), new double[]{406, 0, 0, 0, 0, 0.5, 0, 0}, new String[0]);
+        addControl(model, signal, new double[]{406, 0, 0, 0, 0, 0.5, 0, 0}, new String[0]);
         long id = 200000L + model.getControlComponents().size();
         long resource = 300000L + model.getResources().size();
         String filename = "waveform-" + resource + ".txt";
@@ -267,7 +292,6 @@ public final class SpiceImporter {
         signal.getImportTokens().put("version170", "1");
         model.getResources().put(resource, new CircuitResource(resource, filename, filename,
                 text.toString().getBytes(StandardCharsets.UTF_8), List.of(id)));
-        target.setParameterStrings(new String[]{signal.getTerminalYLabels()[0], "", "0"});
     }
 
     private static void voltageSwitch(ComponentData data, String tail, CircuitModel model,
@@ -301,15 +325,20 @@ public final class SpiceImporter {
         data.setParameterStrings(new String[]{gate.getName(), "", "0"});
     }
 
-    private static ComponentData control(CircuitModel model, int type, String name, double[] parameters, String[] inputs) {
+    static ComponentData control(CircuitModel model, int type, String name, double[] parameters, String[] inputs) {
         int index = model.getControlComponents().size();
         var data = new ComponentData(type, name, 8 + index % 6 * 10, 0, 503);
+        addControl(model, data, parameters, inputs);
+        return data;
+    }
+
+    static void addControl(CircuitModel model, ComponentData data, double[] parameters, String[] inputs) {
+        int index = model.getControlComponents().size();
         data.setNumericParameters(parameters);
         data.setTerminalXLabels(inputs);
         data.setTerminalYLabels(new String[]{"control_" + index});
         data.setParameterStrings(new String[]{"", "", "0"});
         model.addControlComponent(data);
-        return data;
     }
 
     private static boolean firstElement(String[] fields, Map<String, String> parameters, Map<String, String> definitions) {

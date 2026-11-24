@@ -1,0 +1,79 @@
+Plecs {
+  Name "RC step response"
+  Version "4.3"
+  StartTime "0"
+  StopTime "0.007"
+  MaxStep "1e-6"
+  Schematic {
+    Component {
+      Type PulseGenerator
+      Name "Step drive"
+      Position [22, 55]
+      Direction right
+      Flipped off
+      Parameter { Variable "Hi" Value "6" }
+      Parameter { Variable "Lo" Value "0" }
+      Parameter { Variable "f" Value "10" }
+      Parameter { Variable "DutyCycle" Value "0.3" }
+      Parameter { Variable "Delay" Value "1e-4" }
+      Parameter { Variable "DataType" Value "10" }
+    }
+    Component {
+      Type VoltageSource
+      Name "Input"
+      Position [80, 55]
+      Direction down
+      Flipped on
+      Parameter { Variable "DiscretizationBehavior" Value "2" }
+      Parameter { Variable "StateSpaceInlining" Value "1" }
+    }
+    Component {
+      Type Resistor
+      Name "Series"
+      Position [147, 24]
+      Direction left
+      Flipped off
+      Parameter { Variable "R" Value "1000" }
+    }
+    Component {
+      Type Capacitor
+      Name "Filter"
+      Position [215, 55]
+      Direction down
+      Flipped on
+      Parameter { Variable "C" Value "1e-6" }
+      Parameter { Variable "v_init" Value "0" }
+    }
+    Connection {
+      Type Signal
+      SrcComponent "Step drive"
+      SrcTerminal 1
+      DstComponent "Input"
+      DstTerminal 3
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Input"
+      SrcTerminal 1
+      Points [80, 24]
+      DstComponent "Series"
+      DstTerminal 1
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Series"
+      SrcTerminal 2
+      Points [215, 24]
+      DstComponent "Filter"
+      DstTerminal 1
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Filter"
+      SrcTerminal 2
+      Points [215, 94; 80, 94]
+      DstComponent "Input"
+      DstTerminal 2
+    }
+  }
+}
