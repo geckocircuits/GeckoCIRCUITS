@@ -260,7 +260,7 @@ public class HeadlessSimulationEngine {
                 }
             }
             currentTime = session.status().segmentSteps() == 0 ? 0 : session.status().time();
-            return SimulationResult.builder()
+            var success = SimulationResult.builder()
                     .status(SimulationResult.Status.SUCCESS)
                     .dataContainer(session.currentSegmentRecording())
                     .executionTimeMs(System.currentTimeMillis() - startTime)
@@ -270,8 +270,16 @@ public class HeadlessSimulationEngine {
                     .metadata("dt", dt)
                     .metadata("scopeChannels", session.scopeChannels())
                     .metadata("circuitFile", config.getCircuitFilePath())
-                    .metadata("parameterOverrides", config.getParameterOverrides().size())
-                    .build();
+                    .metadata("parameterOverrides", config.getParameterOverrides().size());
+            if (settings.isZeroCrossing()) {
+                var report = session.eventLocationReport();
+                success.metadata("zeroCrossingLocated", report.located())
+                        .metadata("zeroCrossingUnlocated", report.unlocated())
+                        .metadata("zeroCrossingFirstUnlocatedTime", report.firstUnlocatedTime())
+                        .metadata("zeroCrossingRetained", report.retained())
+                        .metadata("zeroCrossingDropped", report.dropped());
+            }
+            return success.build();
         }
     }
 

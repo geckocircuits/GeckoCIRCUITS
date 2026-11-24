@@ -63,7 +63,7 @@ public final class SimulationConfig {
         return new SolverOverrides(solverTypeExplicit ? solverSettings.getSolverType() : null,
                 stepWidthExplicit ? solverSettings.getStepWidth() : null,
                 durationExplicit ? solverSettings.getSimulationDuration() : null,
-                new SolverFeatures(solverSettings.getControlSamplePeriod()));
+                new SolverFeatures(solverSettings.getControlSamplePeriod(), solverSettings.isZeroCrossing()));
     }
     /** Uses file defaults only for settings the caller did not supply. */
     SolverSettingsCore resolveSolverSettings(CircuitModel model) {
@@ -195,6 +195,18 @@ public final class SimulationConfig {
          */
         public Builder controlSamplePeriod(double period) {
             this.solverSettings.withControlSamplePeriod(period);
+            return this;
+        }
+
+        /**
+         * Locates diode, thyristor and IGBT switching inside each electrical step. Off by default.
+         * CONTROL and recordings stay on the fixed grid. Gear-Shichman is rejected when this is on.
+         *
+         * @param enabled true to split steps at located switching times
+         * @return this builder
+         */
+        public Builder zeroCrossing(boolean enabled) {
+            this.solverSettings.withZeroCrossing(enabled);
             return this;
         }
 

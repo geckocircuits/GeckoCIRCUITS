@@ -60,6 +60,7 @@ public final class SimulationSession implements AutoCloseable {
     private static final int MAX_OBSERVATION_SAMPLES = 10000;
     private final CircuitNetlist netlist;
     private final ElectricalTimeStep electrical;
+    private final boolean zeroCrossing;
     private final ControlRuntime control;
     private final ExecutionOptions options;
     private final String[] signalNames;
@@ -86,6 +87,7 @@ public final class SimulationSession implements AutoCloseable {
         SimulationTiming.validateSettings(settings);
         double dt = settings.getStepWidth();
         double duration = settings.getSimulationDuration();
+        zeroCrossing = settings.isZeroCrossing();
         mainStep = dt;
         mainDuration = duration;
         double preTime = settings.getPreCalculationTime();
@@ -114,7 +116,7 @@ public final class SimulationSession implements AutoCloseable {
             boolean hasElectrical = constructedNetlist != null && constructedNetlist.getElementCount() > 0;
             if (hasElectrical) constructedControl.seedSources(constructedNetlist);
             ElectricalTimeStep constructedElectrical = hasElectrical
-                    ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType()) : null;
+                    ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(), settings.isZeroCrossing()) : null;
             netlist = constructedNetlist;
             control = constructedControl;
             signalNames = constructedSignalNames;
@@ -197,9 +199,11 @@ public final class SimulationSession implements AutoCloseable {
                 if (netlist != null) netlist.setSimulationTime(time);
                 if (electrical != null) {
                     control.applyPendingGates(netlist);
-                    electrical.advance(before.stepWidth(), time, listener == null ? null :
+                    HeadlessSimulationEngine.StepTraceListener capture = listener == null ? null :
                             (t, volts, currents, circuit) -> trace[0] = new Trace(t, volts.clone(), currents.clone(),
-                                    circuit.detachedSnapshot()));
+                                    circuit.detachedSnapshot());
+                    if (zeroCrossing) electrical.advanceInterval(before.stepWidth(), time, capture);
+                    else electrical.advance(before.stepWidth(), time, capture);
                 }
                 control.advanceAfterElectricalStep(netlist, time);
                 float[] values = new float[signalNames.length];
@@ -464,6 +468,38 @@ public final class SimulationSession implements AutoCloseable {
             }
             return new Observation(firstIndex, times, values);
         } finally { leaveOperation(); }
+    }
+
+    /**
+     * Returns at most 10000 located switching events, oldest first. The log is empty when zero-crossing
+     * location is off. Its signal index is the circuit element index.
+     *
+     * @param firstIndex the nonnegative index of the first event
+     * @param count the number of events, from zero through 10000
+     * @return a detached window, empty when the first index exceeds the log
+     * @throws IllegalArgumentException if an index or count is invalid
+     * @throws IllegalStateException if an operation is active or the call is reentrant
+     */
+    public List<ZeroCrossingEvent> zeroCrossingEvents(int firstIndex, int count) {
+        if (firstIndex < 0 || count < 0 || count > MAX_OBSERVATION_SAMPLES) {
+            throw new IllegalArgumentException("Event indices must be non-negative. Count must not exceed 10000.");
+        }
+        enterOperation(true);
+        try { return electrical == null ? List.of() : electrical.events(firstIndex, count); }
+        finally { leaveOperation(); }
+    }
+
+    /**
+     * Reports located, unlocated and dropped switching events. A nonzero unlocated or dropped count means
+     * the event log is incomplete.
+     *
+     * @return the counts, all zero when location is off
+     * @throws IllegalStateException if an operation is active or the call is reentrant
+     */
+    public EventLocationReport eventLocationReport() {
+        enterOperation(true);
+        try { return electrical == null ? EventLocationReport.empty() : electrical.eventReport(); }
+        finally { leaveOperation(); }
     }
 
     /**

@@ -1,7 +1,9 @@
 package gecko.core.preparation;
 
+import gecko.core.allg.SolverType;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.ImportIssue;
+import gecko.core.simulation.SimulationTiming;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +66,9 @@ public final class CircuitPreparation {
         }
         if (!settings.features().valid()) {
             diagnostics.add(invalidSetting("controlSamplePeriod", "CONTROL sample period must be finite and non-negative"));
+        }
+        if (settings.features().zeroCrossing() && model.getSolverType() == SolverType.SOLVER_GS) {
+            diagnostics.add(invalidSetting("zeroCrossing", SimulationTiming.GS_ZERO_CROSSING_MESSAGE));
         }
         model.getImportIssues().removeIf(issue -> issue.code().equals("INVALID_SETTING")
                 && switch (issue.parameterPath() == null ? "" : issue.parameterPath()) {

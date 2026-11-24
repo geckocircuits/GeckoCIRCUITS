@@ -5,8 +5,21 @@ This context defines electrical simulation, control signals, and tracked simulat
 ## Language
 
 **Electrical time step**:
-One simulation interval with converged electrical values and one committed history update.
+The electrical solution of one interval, with converged values and a history update.
+A Grid step holds one Electrical time step, or several Electrical sub-steps when events are located.
 _Avoid_: Solver iteration, CONTROL step
+
+**Grid step**:
+One interval of the fixed simulation time grid. It publishes results, probe values and one recorded row once, at its grid time.
+_Avoid_: Sub-step, solver iteration
+
+**Electrical sub-step**:
+A part of a Grid step that ends at a Located event or at the grid time. It commits one electrical history update.
+_Avoid_: Extra recorded row, CONTROL step
+
+**Located event**:
+A diode, thyristor or IGBT conduction change with a time inside a Grid step.
+_Avoid_: Gate edge, CONTROL threshold crossing
 
 **CONTROL runtime**:
 The assembled control calculation chain for one simulation run, including its electrical probes, gate signals, and SCOPE inputs.

@@ -34,6 +34,7 @@ public final class SolverSettingsCore {
     private double simulationDuration; // total simulation time
     private double pauseTime;          // optional pause time (-1 means no pause)
     private double controlSamplePeriod; // CONTROL sample period Ts in seconds; 0 runs CONTROL every step
+    private boolean zeroCrossing;      // locate diode-family switching inside a step; off by default
 
     // State tracking
     private boolean inPreCalculationMode;
@@ -104,7 +105,20 @@ public final class SolverSettingsCore {
         return this;
     }
 
+    /**
+     * Locates diode-family switching events inside each electrical step. Off by default.
+     * Gear-Shichman is rejected when a simulation starts while this is on.
+     */
+    public SolverSettingsCore withZeroCrossing(boolean enabled) {
+        this.zeroCrossing = enabled;
+        return this;
+    }
+
     // Getters
+
+    public boolean isZeroCrossing() {
+        return zeroCrossing;
+    }
 
     public double getControlSamplePeriod() {
         return controlSamplePeriod;
@@ -169,6 +183,7 @@ public final class SolverSettingsCore {
         copy.simulationDuration = this.simulationDuration;
         copy.pauseTime = this.pauseTime;
         copy.controlSamplePeriod = this.controlSamplePeriod;
+        copy.zeroCrossing = this.zeroCrossing;
         copy.inPreCalculationMode = this.inPreCalculationMode;
         return copy;
     }
