@@ -662,7 +662,7 @@ public final class DesktopSimulationController {
                 scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
         var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
                 MainWindow.optimizerParameterData, MainWindow._fileManager, sources, source,
-                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues());
+                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues(), editor.getHierarchy());
         var preparation = new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
         if (preparation instanceof PreparationResult.Ready ready) return new Route(circuit, ready, null);
         return new Route(circuit, null, preparation.report().diagnostics().stream()

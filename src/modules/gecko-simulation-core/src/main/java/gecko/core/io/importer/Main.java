@@ -17,8 +17,11 @@ public final class Main {
 
     /** Returns zero for a complete import, two for a partial import, or one for an input/output error. */
     public static int run(String[] args, PrintStream output, PrintStream errors) {
-        if (args.length != 2 && !(args.length == 4 && args[2].equals("--symbols") && args[0].toLowerCase(Locale.ROOT).endsWith(".asc"))) {
-            errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes> [--symbols <stock-symbol-directory>]");
+        boolean ascOptions = args.length >= 4 && args.length % 2 == 0 && args[2].equals("--symbols")
+                && args[0].toLowerCase(Locale.ROOT).endsWith(".asc");
+        if (args.length != 2 && !ascOptions) {
+            errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
+                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]...]");
             return 1;
         }
         try {
@@ -28,8 +31,13 @@ public final class Main {
             CircuitModel model;
             if (lowerName.endsWith(".asc")) {
                 var importer = new LtspiceImporter();
+                var sourceRoots = new java.util.ArrayList<Path>();
+                for (int i = 4; i < args.length; i += 2) {
+                    if (!args[i].equals("--source-root")) throw new IllegalArgumentException("Unknown import option " + args[i]);
+                    sourceRoots.add(Path.of(args[i + 1]));
+                }
                 model = args.length == 2 ? importer.convert(input)
-                        : importer.convert(input, Path.of(args[3]));
+                        : importer.convert(input, Path.of(args[3]), sourceRoots);
             } else {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
                 model = lowerName.endsWith(".plecs")

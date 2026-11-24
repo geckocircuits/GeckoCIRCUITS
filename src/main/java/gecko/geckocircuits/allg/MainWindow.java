@@ -39,7 +39,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -61,6 +65,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.ProgressMonitor;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -113,6 +118,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public static final JScrollPane seScroll = new JScrollPane();
     //-------------------------
     private int uniqueFileID = 0;
+    private final AtomicLong documentGeneration = new AtomicLong();
     public static SimulationAccess _scripter = null;
     public static final SolverSettings _solverSettings = new SolverSettings();
     private JMenuItem _mItemScriptingTool;
@@ -836,117 +842,131 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void saveFileAs() {
-        if (speicherVorgangLaeuft) {
-            return;
-        }
+        saveDocument(true);
+    }
+
+    public void saveFile() {
+        saveDocument(false);
+    }
+
+    private boolean saveDocument(boolean askForPath) {
+        if (speicherVorgangLaeuft) return false;
         speicherVorgangLaeuft = true;
-        //
-
-        GeckoFileChooser dialog = GeckoFileChooser.createSaveFileChooser(".ipes", "Circuit Simulation Files (*.ipes)", this, new File(GlobalFilePathes.DATNAM));
-
-        if (dialog.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
+        try {
+            boolean rebaseResources = askForPath || aktuellerDateiName.equals(UNTITLED);
+            File target = new File(GlobalFilePathes.DATNAM);
+            if (rebaseResources) {
+                var chooser = GeckoFileChooser.createSaveFileChooser(".ipes", "Circuit Simulation Files (*.ipes)",
+                        this, askForPath ? target : null);
+                if (chooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) return false;
+                target = chooser.getFileWithCheckedEnding();
+            }
+            if (target.getName().contains("autoBackup")) {
+                int response = JOptionPane.showConfirmDialog(this,
+                        "Overwrite this backup file?", "Save circuit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (response != JOptionPane.YES_OPTION) return false;
+            }
+            saveDocumentTo(target, rebaseResources);
+            return true;
+        } catch (Exception error) {
+            JOptionPane.showMessageDialog(this, error.getMessage(), "Save circuit", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } finally {
             speicherVorgangLaeuft = false;
-            return;
         }
-        GlobalFilePathes.DATNAM = dialog.getFileWithCheckedEnding().getAbsolutePath();
-        aktuellerDateiName = GlobalFilePathes.DATNAM;
+    }
 
-        generateNewFileId();
-        _fileManager.recomputeRelativePaths(aktuellerDateiName);
-        rawSaveFile(new File(aktuellerDateiName));
+    void saveDocumentTo(File target, boolean rebaseResources) throws Exception {
+        saveDocumentTo(target, rebaseResources, Files::newOutputStream);
+    }
 
-        speicherVorgangLaeuft = false;
-        _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
-
-        this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
-        this.aktualisierePropertiesRECENT(aktuellerDateiName);
+    void saveDocumentTo(File target, boolean rebaseResources, OpenProjectOutput open) throws Exception {
+        if (!SwingUtilities.isEventDispatchThread()) throw new IllegalStateException("Save the document on the editor thread.");
+        String path = target.getAbsolutePath();
+        int fileId = FILE_ID_RANDOM.nextInt();
+        String snapshot = exportProject(fileId, path, rebaseResources);
+        writeProjectAtomically(target.toPath(), snapshot, open);
+        if (rebaseResources) _fileManager.recomputeRelativePaths(path);
+        uniqueFileID = fileId;
+        GlobalFilePathes.DATNAM = path;
+        aktuellerDateiName = path;
+        documentGeneration.incrementAndGet();
+        _se.resetModelModified();
+        setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
+        aktualisierePropertiesRECENT(aktuellerDateiName);
     }
 
     public void rawSaveFile(File file) {
-
         try {
-            ProjectData datLK = new ProjectData(
-                    getSize(),
-                    optimizerParameterData,
-                    uniqueFileID, _scripter, _fileManager, _se, _solverSettings);
-            //------------
-            // Plain-Test variant in ASCII -->
-            // BufferedWriter out= new BufferedWriter(new FileWriter(GlobalFilePathes.DATNAM));
-            //
-            // Compressed data stream --> reduced and unreadable file -->
-            // DeflaterOutputStream out1= new DeflaterOutputStream(new FileOutputStream(new File(GlobalFilePathes.DATNAM)));
-            try (FileOutputStream fileOut = new FileOutputStream(file);
-                 GZIPOutputStream out1 = new GZIPOutputStream(fileOut);
-                 OutputStreamWriter streamWriter = new OutputStreamWriter(out1, java.nio.charset.StandardCharsets.UTF_8);
-                 BufferedWriter out = new BufferedWriter(streamWriter)) {
-                //
-                out.write(datLK.exportASCII());
-                out.flush();
-            }
-            checkWrittenFileSize(file);
-            //------------
-            //
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            checkWrittenFileSize(file);
+            String project = captureOnEditorThread(() -> exportProject(uniqueFileID, GlobalFilePathes.DATNAM, false));
+            writeProjectAtomically(file.toPath(), project, Files::newOutputStream);
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Circuit save was interrupted.", error);
+        } catch (Exception error) {
+            throw new IllegalStateException("Cannot save the circuit. " + error.getMessage(), error);
         }
     }
 
+    @FunctionalInterface
+    interface OpenProjectOutput {
+        OutputStream open(Path staged) throws java.io.IOException;
+    }
 
-
-    public void saveFile() {
-        boolean reworkRelativePaths = false;
-        //----------------
-        if (speicherVorgangLaeuft) {
-            return;
-        }
-        speicherVorgangLaeuft = true;
-        //----
-        // if no file name has been selected yet -->
-        if (aktuellerDateiName.equals(UNTITLED)) {
-            GeckoFileChooser fileChooser = GeckoFileChooser.createSaveFileChooser(".ipes", "Circuit Simulation Files (*.ipes)", this, null);
-
-            if (fileChooser.getUserResult() == GeckoFileChooser.FileChooserResult.CANCEL) {
-                speicherVorgangLaeuft = false;
-                return;
-            }
-            GlobalFilePathes.DATNAM = fileChooser.getFileWithCheckedEnding().getAbsolutePath();
-            reworkRelativePaths = true;
-        }
-        //----------
+    private static void writeProjectAtomically(Path file, String project, OpenProjectOutput open)
+            throws java.io.IOException {
+        var target = file.toAbsolutePath();
+        Path directory = target.getParent();
+        if (directory == null) throw new IOException("A circuit save requires a file name: " + target);
+        var staged = Files.createTempFile(directory, ".gecko-save-", ".partial");
         try {
-            aktuellerDateiName = GlobalFilePathes.DATNAM;
-            generateNewFileId();
-            if (aktuellerDateiName.contains("autoBackup")) {
-                int response = JOptionPane.showConfirmDialog(null, "Caution: you try to overwrite your auto-backup file. \nYou should rename your filename to prevent data-loss!\n Do you want to continue anyway?", "Warning!",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if (response == JOptionPane.NO_OPTION) {
-                    speicherVorgangLaeuft = false;
-                    return;
-                } else if (response == JOptionPane.CLOSED_OPTION) {
-                    speicherVorgangLaeuft = false;
-                    return;
-
-                }
+            try (OutputStream fileOut = open.open(staged);
+                 GZIPOutputStream gzip = new GZIPOutputStream(fileOut);
+                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(gzip,
+                         java.nio.charset.StandardCharsets.UTF_8))) {
+                out.write(project);
             }
-            if (reworkRelativePaths) {
-                _fileManager.recomputeRelativePaths(aktuellerDateiName);
+            try (var fileIn = Files.newInputStream(staged);
+                 var input = new GZIPInputStream(fileIn)) {
+                input.transferTo(OutputStream.nullOutputStream());
             }
-            rawSaveFile(new File(aktuellerDateiName));
-            //------------
-            speicherVorgangLaeuft = false;
-            _se.resetModelModified();  // this prevents the 'QuitWithoutSaving' dialog from being invoked even though the file has already been saved
-            //
-        } catch (Exception e) {
-            speicherVorgangLaeuft = false;
-            System.out.println(e + " peorkkkg");
+            Files.move(staged, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (java.io.IOException failure) {
+            throw new java.io.IOException("Cannot save " + target + ". Staged output: " + staged
+                    + ". " + failure.getMessage(), failure);
         }
-        this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
-        this.aktualisierePropertiesRECENT(aktuellerDateiName);
+    }
+
+    private boolean canLeaveDocument(String title, String message) {
+        if (!_se.getZustandGeaendert()) return true;
+        int answer = JOptionPane.showConfirmDialog(this, message, title, JOptionPane.YES_NO_CANCEL_OPTION);
+        return answer == JOptionPane.NO_OPTION || (answer == JOptionPane.YES_OPTION && saveDocument(false));
+    }
+
+    private static final String SAVE_CHANGES = "The content of the file has changed.\nDo you want to save the changes?\n";
+
+    private static <T> T captureOnEditorThread(java.util.concurrent.Callable<T> action) throws Exception {
+        if (SwingUtilities.isEventDispatchThread()) return action.call();
+        var capture = new java.util.concurrent.FutureTask<>(action);
+        try {
+            SwingUtilities.invokeAndWait(capture);
+            return capture.get();
+        } catch (InterruptedException error) {
+            capture.cancel(false);
+            throw error;
+        } catch (java.util.concurrent.ExecutionException error) {
+            if (error.getCause() instanceof Exception cause) throw cause;
+            throw error;
+        }
+    }
+
+    private String exportProject(int fileId, String modelPath, boolean rebaseResources) {
+        return new ProjectData(getSize(), optimizerParameterData, fileId,
+                _scripter, _fileManager, _se, _solverSettings).exportASCII(modelPath, rebaseResources);
     }
 
     public void createNewFile() {
+        documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();
         optimizerParameterData.clear();
         aktuellerDateiName = UNTITLED;
@@ -1000,6 +1020,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void openFile(BufferedReader in) throws IOException {
+        documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();
         _se.resetCircuitSheetsForNewFile();
         Vector<String> datVec = new Vector<>();
@@ -1045,6 +1066,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void openFile(String dateiName) throws FileNotFoundException {
+        documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();
         _se.resetCircuitSheetsForNewFile();
         GlobalFilePathes.DATNAM = dateiName;
@@ -1116,54 +1138,15 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         try {
             //========================================================================
             if (befehl.equals("New")) {
-                _se.setConnectorTestMode(false);
-                // 'createNewFile()' is optionally called from the dialog
-                if (_se.getZustandGeaendert()) {
-
-                    int returnOption = JOptionPane.showConfirmDialog(
-                            this,
-                            "The content of the file has changed.\nDo you want to save the changes?\n",
-                            "Warning: Create new file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    switch (returnOption) {
-                        case 0:
-                            saveFile();
-                        case 1: // just exit, without saving
-                            createNewFile();
-                            break;
-                        case 2: // cancel option
-                            break;
-                        default:
-                            assert false;
-                    }
-                } else {
-                    this.createNewFile();
+                if (canLeaveDocument("Warning: Create new file", SAVE_CHANGES)) {
+                    _se.setConnectorTestMode(false);
+                    createNewFile();
                 }
             } else if (befehl.equals("Open")) {
-                _se.setConnectorTestMode(false);
-                if (_se.getZustandGeaendert()) {
-                    int returnOption = JOptionPane.showConfirmDialog(
-                            this,
-                            "The content of the file has changed.\nDo you want to save the changes?\n",
-                            "Warning: Open new file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    switch (returnOption) {
-                        case 0:
-                            saveFile();
-                        case 1: // just exit, without saving
-                            this.openFileDialog();
-                            this.setAnsicht();
-                            break;
-                        case 2: // cancel option
-                            break;
-                        default:
-                            assert false;
-                    }
-                } else {
-                    this.openFileDialog();
-                    this.setAnsicht();
+                if (canLeaveDocument("Warning: Open new file", SAVE_CHANGES)) {
+                    _se.setConnectorTestMode(false);
+                    openFileDialog();
+                    setAnsicht();
                 }
             } else if (befehl.equals("Save")) {
                 this.saveFile();
@@ -1182,119 +1165,19 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             } else if (befehl.equals("Exit")) {
                 this.schliesseProgramm();
                 //--------------------------------------------
-            } else if (befehl.equals("RECENT_1")) {
-                _se.setConnectorTestMode(false);
-                if (GlobalFilePathes.RECENT_CIRCUITS_1.equals("")) {
-                    return;
+            } else if (befehl.equals("RECENT_1") || befehl.equals("RECENT_2")
+                    || befehl.equals("RECENT_3") || befehl.equals("RECENT_4")) {
+                String target = switch (befehl) {
+                    case "RECENT_1" -> GlobalFilePathes.RECENT_CIRCUITS_1;
+                    case "RECENT_2" -> GlobalFilePathes.RECENT_CIRCUITS_2;
+                    case "RECENT_3" -> GlobalFilePathes.RECENT_CIRCUITS_3;
+                    default -> GlobalFilePathes.RECENT_CIRCUITS_4;
+                };
+                if (!target.isEmpty() && canLeaveDocument("Warning: Open new file", SAVE_CHANGES)) {
+                    _se.setConnectorTestMode(false);
+                    openFile(target);
+                    setAnsicht();
                 }
-                if (_se.getZustandGeaendert()) {
-                    int returnOption = JOptionPane.showConfirmDialog(
-                            this,
-                            "The content of the file has changed.\nDo you want to save the changes?\n",
-                            "Warning: Open new file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    switch (returnOption) {
-                        case 0:
-                            saveFile();
-                        case 1: // just exit, without saving
-                            loadFileFromList_withoutSaving(1);
-                            this.setAnsicht();
-                            break;
-                        case 2: // cancel option
-                            break;
-                        default:
-                            assert false;
-                    }
-                } else {
-                    this.openFile(GlobalFilePathes.RECENT_CIRCUITS_1);
-                    this.setAnsicht();
-                }
-            } else if (befehl.equals("RECENT_2")) {
-                _se.setConnectorTestMode(false);
-                if (GlobalFilePathes.RECENT_CIRCUITS_2.equals("")) {
-                    return;
-                }
-                if (_se.getZustandGeaendert()) {
-                    int returnOption = JOptionPane.showConfirmDialog(
-                            this,
-                            "The content of the file has changed.\nDo you want to save the changes?\n",
-                            "Warning: Open new file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    switch (returnOption) {
-                        case 0:
-                            saveFile();
-                        case 1: // just exit, without saving
-                            loadFileFromList_withoutSaving(2);
-                            this.setAnsicht();
-                            break;
-                        case 2: // cancel option
-                            break;
-                        default:
-                            assert false;
-                    }
-                } else {
-                    this.openFile(GlobalFilePathes.RECENT_CIRCUITS_2);
-                    this.setAnsicht();
-                }
-            } else if (befehl.equals("RECENT_3")) {
-                _se.setConnectorTestMode(false);
-                if (GlobalFilePathes.RECENT_CIRCUITS_3.equals("")) {
-                    return;
-                }
-                if (_se.getZustandGeaendert()) {
-                    int returnOption = JOptionPane.showConfirmDialog(
-                            this,
-                            "The content of the file has changed.\nDo you want to save the changes?\n",
-                            "Warning: Open new file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    switch (returnOption) {
-                        case 0:
-                            saveFile();
-                        case 1: // just exit, without saving
-                            loadFileFromList_withoutSaving(3);
-                            this.setAnsicht();
-                            break;
-                        case 2: // cancel option
-                            break;
-                        default:
-                            assert false;
-                    }
-                } else {
-                    this.openFile(GlobalFilePathes.RECENT_CIRCUITS_3);
-                    this.setAnsicht();
-                }
-            } else if (befehl.equals("RECENT_4")) {
-                _se.setConnectorTestMode(false);
-                if (GlobalFilePathes.RECENT_CIRCUITS_4.equals("")) {
-                    return;
-                }
-                if (_se.getZustandGeaendert()) {
-                    int returnOption = JOptionPane.showConfirmDialog(
-                            this,
-                            "The content of the file has changed.\nDo you want to save the changes?\n",
-                            "Warning: Open new file",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-
-                    switch (returnOption) {
-                        case 0:
-                            saveFile();
-                        case 1: // just exit, without saving
-                            loadFileFromList_withoutSaving(4);
-                            this.setAnsicht();
-                            break;
-                        case 2: // cancel option
-                            break;
-                        default:
-                            assert false;
-                    }
-                } else {
-                    this.openFile(GlobalFilePathes.RECENT_CIRCUITS_4);
-                    this.setAnsicht();
-                }
-                //========================================================================
             } else if (befehl.equals("Move Elements")) {
                 _se.verschiebeAllesImBearbeitungsModus();
             } else if (befehl.equals("Copy Elements")) {
@@ -1667,6 +1550,10 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         JMenuItem acSettings = new JMenuItem("AC analysis settings…");
         acSettings.addActionListener(event -> gecko.geckocircuits.circuit.AcEditorDialogs.editSettings(this, _se));
         simMenu.add(acSettings);
+        JMenuItem hierarchyParameters = new JMenuItem("ASC hierarchy parameters…");
+        hierarchyParameters.addActionListener(event ->
+                gecko.geckocircuits.circuit.AcEditorDialogs.editHierarchyParameters(this, _se));
+        simMenu.add(hierarchyParameters);
         mItemParameter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         simMenu.add(mItemRun);
         mItemRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
@@ -1764,36 +1651,12 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             return;
         }
 
-        if (!IS_BRANDED) {
+        boolean dirty = _se.getZustandGeaendert();
+        if (canLeaveDocument("Warning: Exit GeckoCIRCUITS without saving!",
+                "The model has changed since last save to the model\nfile. Do you like to save your model "
+                + "to the file:\n" + aktuellerDateiName + "\nbefore exiting GeckoCIRCUITS?")) {
             GeckoSim.saveProperties();
-        }
-        if (_se.getZustandGeaendert()) {
-            int returnOption = JOptionPane.showConfirmDialog(
-                    this,
-                    "The model has changed since last save to the model\nfile. Do you like to save your model "
-                    + "to the file:\n" + aktuellerDateiName + "\nbefore exiting GeckoCIRCUITS?",
-                    "Warning: Exit GeckoCIRCUITS without saving!",
-                    JOptionPane.YES_NO_CANCEL_OPTION);
-
-            switch (returnOption) {
-                case 0:
-                    saveFile();
-                    /* falls through */
-                case 1: // just exit, without saving
-                    if (GeckoSim.operatingmode == OperatingMode.STANDALONE) {
-                        exitApplication();
-                    }
-                    if (GeckoSim.operatingmode == OperatingMode.SIMULINK || GeckoSim.operatingmode == OperatingMode.EXTERNAL) {
-                        dispose();
-                    }
-                    break;
-                case 2: // cancel option
-                    break;
-                default:
-                    assert false;
-            }
-        } else {
-            exitApplication();
+            if (!dirty || GeckoSim.operatingmode == OperatingMode.STANDALONE) exitApplication();
         }
     }
 
@@ -1882,24 +1745,6 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
     }
 
-    // check if written file is bigger than a given
-    // threshold. If not, print a warning message.
-    private void checkWrittenFileSize(File file) {
-        long size = file.length();
-
-        if (size < 200) {
-            String jarPath = GetJarPath.getJarPath();
-            JOptionPane.showMessageDialog(this,
-                    "GeckoCIRCUITS had a problem to save the model file:"
-                    + "\n" + file.getAbsolutePath()
-                    + "File size on disk is " + size + " Bytes. Please check your\n"
-                    + "model and consider to open the auto-backup file: \n"
-                    + jarPath + getAutoBackupFileName(),
-                    "Warning",
-                    JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
     private static final Random FILE_ID_RANDOM = new Random();
 
     private void generateNewFileId() {
@@ -1966,7 +1811,14 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public static void importComponentsFromFile(final String fileName, final String importIntoSubCircuitName) throws FileNotFoundException {
-        ProjectData daten = loadProjectDataFromFile(fileName, false, null);
+        if (_se.getHierarchy() != null) {
+            throw new IllegalArgumentException("Open the imported hierarchy as a separate circuit document.");
+        }
+        if (!new File(fileName).exists()) throw new FileNotFoundException(fileName);
+        String[] lines = getLinesArrayFromIpesFile(fileName);
+        ProjectData.requireComponentImport(lines);
+        ProjectData daten = new ProjectData(lines, false, null, fileName);
+        _se.requireComponentMergeSupported(daten);
         daten.shiftComponentReferences();
         _se.importProjectComponents(daten, importIntoSubCircuitName);
         _se.initAdditionalFiles(daten._allSheetComponents);
@@ -2001,11 +1853,26 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
 
         @Override
         public void run() {
-            if (_se.getZustandGeaendert()) {
-                rawSaveFile(new File(getAutoBackupFileName()));
+            try {
+                backUpDocument(new File(getAutoBackupFileName()));
+            } catch (InterruptedException error) {
+                Thread.currentThread().interrupt();
+            } catch (Exception error) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.WARNING, "Cannot save the circuit backup.", error);
             }
 
         }
+    }
+
+    void backUpDocument(File target) throws Exception {
+        backUpDocument(target, Files::newOutputStream);
+    }
+
+    void backUpDocument(File target, OpenProjectOutput open) throws Exception {
+        long requested = documentGeneration.get();
+        String snapshot = captureOnEditorThread(() -> requested == documentGeneration.get() && _se.getZustandGeaendert()
+                ? exportProject(uniqueFileID, GlobalFilePathes.DATNAM, false) : null);
+        if (snapshot != null) writeProjectAtomically(target.toPath(), snapshot, open);
     }
 
     public static String getTextMenuItemRECENT(String txt, int txtSpace) {

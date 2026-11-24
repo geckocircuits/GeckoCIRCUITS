@@ -4,6 +4,9 @@ import gecko.core.allg.GeckoFile;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.io.AcProvenance;
 import gecko.core.io.CircuitFileParser;
+import gecko.core.io.CircuitHierarchy;
+import gecko.core.io.HierarchyIndex;
+import gecko.core.io.HierarchyMetadataCodec;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitResource;
 import gecko.core.io.CircuitResourceFailure;
@@ -57,6 +60,14 @@ public final class EditorCircuitCapture {
             SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
             ScriptSources scripts, String sourceName, AcDocumentSettings acSettings, AcProvenance provenance,
             List<ImportIssue> conversionIssues) throws IOException, CircuitFileParser.CircuitParseException {
+        return capture(elements, settings, optimizer, files, scripts, sourceName, acSettings, provenance, conversionIssues, null);
+    }
+
+    public CircuitSnapshot capture(Iterable<? extends AbstractCircuitSheetComponent> elements,
+            SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
+            ScriptSources scripts, String sourceName, AcDocumentSettings acSettings, AcProvenance provenance,
+            List<ImportIssue> conversionIssues, CircuitHierarchy hierarchy)
+            throws IOException, CircuitFileParser.CircuitParseException {
         var ascii = new StringBuffer();
         var blocks = new ArrayList<AbstractBlockInterface>();
         for (var element : elements) {
@@ -78,10 +89,12 @@ public final class EditorCircuitCapture {
         ascii.append("\nT_pre ").append(settings._T_pre.getValue());
         ascii.append("\ndt_pre ").append(settings._dt_pre.getValue());
         ascii.append("\nsolverType ").append(settings.SOLVER_TYPE.getValue().getOldGeckoIndex());
+        appendHierarchy(ascii, hierarchy);
         var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), sourceName);
         conversionIssues.forEach(model::addConversionIssue);
         model.setAcSettings(acSettings);
         model.setAcProvenance(provenance);
+        model.setHierarchy(hierarchy);
         for (var file : files._allAvailableFiles) captureResource(model, file);
         var ordinals = new HashMap<String, Integer>();
         for (var block : blocks) {
@@ -100,6 +113,28 @@ public final class EditorCircuitCapture {
             captureTerminals(component, block.YOUT, CircuitTopology.Side.OUTPUT);
         }
         return new CircuitPreparation().capture(model);
+    }
+
+    static HierarchyIndex inspectHierarchy(Iterable<? extends AbstractCircuitSheetComponent> elements,
+                                           CircuitHierarchy hierarchy) {
+        var ascii = new StringBuffer();
+        for (var element : elements) {
+            ascii.append('\n').append(element.getExportImportCharacters()).append('\n');
+            element.exportASCII(ascii);
+        }
+        appendHierarchy(ascii, hierarchy);
+        try {
+            var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), "editor");
+            model.setHierarchy(hierarchy);
+            return new HierarchyIndex(model);
+        } catch (IOException | CircuitFileParser.CircuitParseException error) {
+            throw new IllegalArgumentException(error.getMessage(), error);
+        }
+    }
+
+    private static void appendHierarchy(StringBuffer ascii, CircuitHierarchy hierarchy) {
+        if (hierarchy != null) ascii.append('\n').append(HierarchyMetadataCodec.DOCUMENT).append(' ')
+                .append(HierarchyMetadataCodec.encode(hierarchy));
     }
 
     private static void captureTerminals(CircuitModel.ComponentData component, List<AbstractTerminal> terminals,

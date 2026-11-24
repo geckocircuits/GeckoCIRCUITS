@@ -80,6 +80,7 @@ public final class CircuitSnapshot {
     private static CircuitModel copy(CircuitModel source) {
         var target = new CircuitModel();
         target.setAcSettings(source.getAcSettings());
+        target.setHierarchy(source.getHierarchy());
         target.setAcProvenance(source.getAcProvenance());
         target.setSimulationDuration(source.getSimulationDuration());
         target.setTimeStep(source.getTimeStep());

@@ -48,11 +48,14 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
     private List<Point> _trimmedCoords = new ArrayList<Point>();
 
     public Verbindung(final ConnectorType connectorType, final CircuitSheet parentSheet) {
-        super();
-        _connectorType = connectorType;
+        this(connectorType);
         if(! (this instanceof VerbindungShortConnector)) {
             setParentCircuitSheet(parentSheet);
         }
+    }
+
+    private Verbindung(ConnectorType connectorType) {
+        _connectorType = connectorType;
     }
 
     @Override
@@ -94,6 +97,12 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         return _label.getLabelString();
     }
 
+    public final boolean setSharedProperties(String label, Enabled enabled) {
+        if (getHierarchyMember() == null) return false;
+        SchematicEditor2.Singleton.hierarchyEdits.editWireProperties(this, label, enabled);
+        return true;
+    }
+
     public final void setzeStartKnoten(final Point clickPoint) {
         _inMoveMode = true;
         _connectorPoints.clear();
@@ -118,7 +127,11 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
 
     @Override
     public final void absetzenElement() {
-        if(_isInitialized) {
+        if (_isInitialized && getHierarchyMember() != null && !_pointsBeforeMove.equals(_connectorPoints)) {
+            SchematicEditor2.Singleton.hierarchyEdits.moveWire(this, List.copyOf(_pointsBeforeMove), List.copyOf(_connectorPoints));
+            return;
+        }
+        if (_isInitialized && !_pointsBeforeMove.equals(_connectorPoints)) {
             MoveVerbindungUndoAction undoAction = new MoveVerbindungUndoAction(_pointsBeforeMove, _connectorPoints);
             AbstractUndoGenericModel.undoManager.addEdit(undoAction);
         }
@@ -126,6 +139,22 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
         _pointsBeforeMove.addAll(_connectorPoints);
         setModus(ComponentState.FINISHED);
         _isInitialized = true;
+    }
+
+    final void initializeHierarchyPoints(List<Point> points) {
+        _connectorPoints.clear();
+        _connectorPoints.addAll(points);
+        _pointsBeforeMove.clear();
+        _pointsBeforeMove.addAll(points);
+        _trimmedCoords.clear();
+        trimCoordinates();
+        setModus(ComponentState.FINISHED);
+        _isInitialized = true;
+    }
+
+    final void setHierarchyPointsWithUndo(List<Point> from, List<Point> to) {
+        AbstractUndoGenericModel.undoManager.addEdit(new MoveVerbindungUndoAction(from, to));
+        initializeHierarchyPoints(to);
     }
 
     @Override
@@ -282,13 +311,19 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
 
     @Override
     public final Verbindung copyFabric(final long shiftValue) {
-        final Verbindung vNeu = new Verbindung(this._connectorType, this.getParentCircuitSheet());
-        for (Point point : _connectorPoints) {
-            vNeu._connectorPoints.add(point);
-        }
-        vNeu._pointsBeforeMove.addAll(_connectorPoints);
+        final Verbindung vNeu = copyShape();
+        vNeu._isInitialized = false;
         vNeu.getIdentifier().createNewIdentifier(getUniqueObjectIdentifier() + shiftValue);
+        vNeu.setParentCircuitSheet(getParentCircuitSheet());
         return vNeu;
+    }
+
+    final Verbindung copyShape() {
+        var copy = new Verbindung(_connectorType);
+        copy.initializeHierarchyPoints(_connectorPoints);
+        copy.setLabel(getLabel());
+        copy._isEnabled.setValueWithoutUndo(isCircuitEnabled());
+        return copy;
     }
 
     // zum Speichern im ASCII-Format (anstatt als Object-Stream) -->
@@ -452,10 +487,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
 
         @Override
         public void undo() {
-            _connectorPoints.clear();
-            _connectorPoints.addAll(_oldPositions);
-            _pointsBeforeMove.clear();
-            _pointsBeforeMove.addAll(_oldPositions);
+            initializeHierarchyPoints(_oldPositions);
         }
 
         @Override
@@ -465,10 +497,7 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
 
         @Override
         public void redo() throws CannotRedoException {
-            _connectorPoints.clear();
-            _connectorPoints.addAll(_newPositions);
-            _pointsBeforeMove.clear();
-            _pointsBeforeMove.addAll(_newPositions);
+            initializeHierarchyPoints(_newPositions);
         }
 
         @Override

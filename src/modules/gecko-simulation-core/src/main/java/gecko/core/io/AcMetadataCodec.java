@@ -47,8 +47,10 @@ public final class AcMetadataCodec {
                 component.spiceOrders().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(","))));
         switch (component.law()) {
             case AcComponent.Passive law -> fields.addAll(List.of("PASSIVE", law.expression()));
+            case AcComponent.Inductance law -> fields.addAll(List.of("INDUCTANCE", law.expression(), law.seriesResistance()));
             case AcComponent.Voltage law -> fields.addAll(List.of("VOLTAGE", law.dc(), law.waveform(),
                     law.magnitude(), law.phaseDegrees()));
+            case AcComponent.Current law -> fields.addAll(List.of("CURRENT", law.dc(), law.magnitude(), law.phaseDegrees()));
             case AcComponent.Controlled law -> fields.addAll(List.of(law.laplace() ? "LAPLACE" : "GAIN", law.expression()));
         }
         fields.addAll(component.aliases());
@@ -58,12 +60,19 @@ public final class AcMetadataCodec {
     public static AcComponent decodeComponent(String text) {
         String[] fields = decode(text);
         require(fields.length >= 5 && (fields[1].equals("1") || fields[1].equals("0")));
-        int aliasIndex = fields[3].equals("VOLTAGE") ? 8 : 5;
+        int aliasIndex = switch (fields[3]) {
+            case "VOLTAGE" -> 8;
+            case "CURRENT" -> 7;
+            case "INDUCTANCE" -> 6;
+            default -> 5;
+        };
         require(fields.length >= aliasIndex);
         List<Integer> orders = java.util.Arrays.stream(fields[2].split(",", -1)).map(Integer::valueOf).toList();
         AcComponent.Law law = switch (fields[3]) {
             case "PASSIVE" -> new AcComponent.Passive(fields[4]);
+            case "INDUCTANCE" -> new AcComponent.Inductance(fields[4], fields[5]);
             case "VOLTAGE" -> new AcComponent.Voltage(fields[4], fields[5], fields[6], fields[7]);
+            case "CURRENT" -> new AcComponent.Current(fields[4], fields[5], fields[6]);
             case "GAIN", "LAPLACE" -> new AcComponent.Controlled(fields[4], fields[3].equals("LAPLACE"));
             default -> throw new IllegalArgumentException("Unsupported IPES component law: " + fields[3]);
         };
@@ -92,10 +101,18 @@ public final class AcMetadataCodec {
     /** Derives compatibility values from the active law and current document parameters. */
     public static double[] compatibilityValues(AcComponent component, double[] saved, AcDocumentSettings settings) {
         Map<String, String> parameters = settings == null ? Map.of() : settings.parameterMap();
+        return compatibilityValues(component, saved, parameters);
+    }
+
+    public static double[] compatibilityValues(AcComponent component, double[] saved, Map<String, String> parameters) {
         double[] values = saved.clone();
         switch (component.law()) {
             case AcComponent.Passive law -> values[0] = SpiceValue.evaluate(law.expression(), parameters);
+            case AcComponent.Inductance law -> {
+                values[0] = SpiceValue.evaluate(law.expression(), parameters);
+            }
             case AcComponent.Voltage law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
+            case AcComponent.Current law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Controlled law -> {
                 if (!law.laplace()) values[0] = SpiceValue.evaluate(law.expression(), parameters);
             }
@@ -103,7 +120,7 @@ public final class AcMetadataCodec {
         return values;
     }
 
-    private static String encode(List<String> fields) {
+    static String encode(List<String> fields) {
         var encoded = new StringBuilder(VERSION);
         for (String field : fields) {
             encoded.append('.').append(Base64.getUrlEncoder().withoutPadding()
@@ -112,7 +129,7 @@ public final class AcMetadataCodec {
         return encoded.toString();
     }
 
-    private static String[] decode(String text) {
+    static String[] decode(String text) {
         String[] tokens = text.split("\\.", -1);
         require(tokens[0].equals(VERSION));
         String[] fields = new String[tokens.length - 1];

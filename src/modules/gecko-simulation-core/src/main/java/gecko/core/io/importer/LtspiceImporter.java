@@ -5,6 +5,9 @@ import gecko.core.io.CircuitModel.ComponentData;
 import gecko.core.io.CircuitModel.ConnectionData;
 import gecko.core.io.CircuitTopology;
 import gecko.core.io.CircuitTopology.Side;
+import gecko.core.io.CircuitHierarchy;
+import gecko.core.io.HierarchyMetadataCodec;
+import gecko.core.io.SavedCircuitBlock;
 import gecko.core.io.ImportIssue;
 import gecko.core.io.ArtifactDigest;
 import gecko.core.io.BuildIdentity;
@@ -21,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -123,6 +127,9 @@ public final class LtspiceImporter {
     }
 
     private record Layout(Grid grid, Map<ComponentData, Point> centers, List<ConnectionData> connections, String conflict) { }
+    private record Pin(String name, int order, Point position) { }
+    private record Call(Symbol symbol, Path schematic, List<Pin> pins) { }
+    private record SheetImport(CircuitModel model, Grid grid, List<Call> calls, List<Flag> flags) { }
 
     private static final Set<String> DRAWING_RECORDS = Set.of(
             "VERSION", "SHEET", "WINDOW", "LINE", "RECTANGLE", "CIRCLE", "ARC", "IOPIN", "DATAFLAG");
@@ -141,19 +148,33 @@ public final class LtspiceImporter {
 
     /** Verifies the stock symbol definition of each supported AC component. */
     public CircuitModel convert(Path path, Path symbols) throws IOException {
+        return convert(path, symbols, List.of());
+    }
+
+    /** Imports an ASC hierarchy using explicit search roots for its source dependencies. */
+    public CircuitModel convert(Path path, Path symbols, List<Path> sourceRoots) throws IOException {
         var build = BuildIdentity.current();
         byte[] source = Files.readAllBytes(path);
-        CircuitModel model = convert(decode(source), path.toString());
+        var dependencies = new LinkedHashMap<String, String>();
+        String text = decode(source);
+        CircuitModel model;
+        if (sourceRoots.isEmpty()) {
+            model = convert(text, path.toString());
+        } else {
+            var state = new HierarchyImport(sourceRoots, dependencies);
+            model = state.convert(path, text);
+        }
         if (model.getAcSettings() == null) throw new IllegalArgumentException("Stock-symbol verification requires an AC schematic.");
         var names = Map.of(SpicePorts.RES, "res.asy", SpicePorts.CAP, "cap.asy",
-                SpicePorts.VOLTAGE, "voltage.asy", SpicePorts.E, "e.asy");
-        var dependencies = new LinkedHashMap<String, String>();
+                SpicePorts.VOLTAGE, "voltage.asy", SpicePorts.E, "e.asy",
+                SpicePorts.IND, "ind.asy", SpicePorts.CURRENT, "current.asy");
         for (var component : model.getCircuitComponents()) {
             var descriptor = SpicePorts.find("LK", component.getType());
-            String name = names.get(descriptor);
+            String name = descriptor == null ? null : names.get(descriptor);
             if (name == null || dependencies.containsKey(name)) continue;
-            byte[] symbol = Files.readAllBytes(symbols.resolve(name));
-            checkSymbol(decode(symbol), descriptor);
+            Path symbolPath = symbols.resolve(name);
+            byte[] symbol = Files.readAllBytes(symbolPath);
+            checkSymbol(decode(symbol), descriptor, symbolPath);
             dependencies.put(name, ArtifactDigest.sha256(symbol));
         }
         model.setAcProvenance(new AcProvenance(ArtifactDigest.sha256(source), build.revision(), build.dirty(),
@@ -161,10 +182,13 @@ public final class LtspiceImporter {
         return model;
     }
 
-    private static void checkSymbol(String text, SpicePorts descriptor) {
+    private static void checkSymbol(String text, SpicePorts descriptor, Path path) {
         var order = new HashMap<Integer, SpicePorts.Point>();
         SpicePorts.Point pin = null;
+        int lineNumber = 0;
         for (String line : text.split("\\R")) {
+            lineNumber++;
+            checkSymbolAttribute(line, path, lineNumber, Character.toString(descriptor.designator()), true);
             String[] fields = line.strip().split("\\s+");
             if (fields.length >= 3 && fields[0].equals("PIN")) {
                 pin = new SpicePorts.Point(Integer.parseInt(fields[1]), Integer.parseInt(fields[2]));
@@ -189,6 +213,10 @@ public final class LtspiceImporter {
      * @return the converted circuit and its import issues
      */
     public CircuitModel convert(String source, String sourceName) {
+        return convertSheet(source, sourceName, null, null, false).model();
+    }
+
+    private SheetImport convertSheet(String source, String sourceName, Path path, HierarchyImport hierarchy, boolean child) {
         if (source.isBlank() || source.indexOf('\0') >= 0) {
             throw new IllegalArgumentException("Require a nonempty LTspice schematic.");
         }
@@ -198,6 +226,20 @@ public final class LtspiceImporter {
         var flags = new ArrayList<Flag>();
         var directives = new ArrayList<Line>();
         parse(source, sourceName, symbols, wires, flags, directives, issues);
+        List<Call> calls = hierarchy == null ? List.of() : hierarchy.resolveCalls(path, symbols, sourceName, issues);
+        if (hierarchy != null && (child || !calls.isEmpty())) {
+            var namesAtPoint = new HashMap<Point, String>();
+            for (Flag flag : flags) {
+                String name = flag.label().toLowerCase(Locale.ROOT);
+                if (name.startsWith("$g_")) {
+                    throw new IllegalArgumentException("Unsupported non-ground global " + flag.label() + " in " + sourceName);
+                }
+                String existing = namesAtPoint.putIfAbsent(flag.point(), name);
+                if (existing != null && !existing.equals(name)) {
+                    throw new IllegalArgumentException("Conflicting FLAG labels at " + flag.point() + " in " + sourceName);
+                }
+            }
+        }
         List<PlacedSymbol> placed = placeSymbols(symbols, sourceName, issues);
         var markers = new LinkedHashMap<Point, ComponentData>();
         var topologyInput = new CircuitModel();
@@ -212,6 +254,9 @@ public final class LtspiceImporter {
         for (PlacedSymbol symbol : placed) {
             for (Point pin : symbol.pins) markerAt(markers, topologyInput, pin);
         }
+        var anchors = new ArrayList<>(calls.stream().flatMap(call -> call.pins().stream()).map(Pin::position).toList());
+        if (hierarchy != null && (child || !calls.isEmpty())) flags.forEach(flag -> anchors.add(flag.point()));
+        anchors.forEach(anchor -> markerAt(markers, topologyInput, anchor));
         for (Wire wire : wires) {
             markerAt(markers, topologyInput, wire.start);
             markerAt(markers, topologyInput, wire.end);
@@ -237,12 +282,19 @@ public final class LtspiceImporter {
             statements.add(new Line(symbol.symbol.line, name + " " + nodes + " " + value(symbol.symbol)));
         }
         for (Line directive : directives) {
-            statements.add(normalizeDirective(directive, sourceName, issues));
+            String name = directive.text().split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
+            if (hierarchy != null && (name.equals(".model") || child && !name.equals(".param"))) {
+                issue(issues, "UNSUPPORTED_HIERARCHY_DIRECTIVE", name,
+                        "This directive is unsupported in an ASC hierarchy.", sourceName, directive.number());
+            } else {
+                statements.add(normalizeDirective(directive, sourceName, issues));
+            }
         }
+        if (child) statements.add(new Line(0, ".ac dec 1 1 10"));
         var model = new SpiceImporter().convert(sourceName, source.hashCode(), statements, nodeLabels, placements);
         issues.forEach(model::addConversionIssue);
         boolean ac = model.getAcSettings() != null;
-        Layout layout = planLayout(grid, model, symbolByName, wireVertices, nodeKeys, nodeLabels, ac ? flags : null);
+        Layout layout = planLayout(grid, model, symbolByName, wireVertices, nodeKeys, nodeLabels, ac ? flags : null, anchors);
         layout.centers.forEach((component, center) -> {
             component.getPosition()[0] = center.x;
             component.getPosition()[1] = center.y;
@@ -255,14 +307,14 @@ public final class LtspiceImporter {
         for (int i = 0; i < model.getControlComponents().size(); i++) {
             model.getControlComponents().get(i).getPosition()[1] = Math.addExact(bottom, 12 + i / 6 * 12);
         }
-        return model;
+        return new SheetImport(model, layout.grid(), calls, flags);
     }
 
     private static Layout planLayout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
                                      List<List<Point>> wireVertices, Map<Point, String> nodeKeys, Map<String, String> nodeLabels,
-                                     List<Flag> flags) {
+                                     List<Flag> flags, List<Point> anchors) {
         Layout original = flags == null ? layout(grid, model, symbols, wireVertices, nodeKeys, nodeLabels)
-                : acLayout(grid, model, symbols, wireVertices, nodeKeys, flags);
+                : acLayout(grid, model, symbols, wireVertices, nodeKeys, flags, anchors);
         Layout candidate = original;
         // At this scale, a native terminal cannot reach a distinct source point
         // or a terminal from a distinct center.
@@ -270,7 +322,7 @@ public final class LtspiceImporter {
             try {
                 Grid finer = candidate.grid.refine();
                 candidate = flags == null ? layout(finer, model, symbols, wireVertices, nodeKeys, nodeLabels)
-                        : acLayout(finer, model, symbols, wireVertices, nodeKeys, flags);
+                        : acLayout(finer, model, symbols, wireVertices, nodeKeys, flags, anchors);
             } catch (ArithmeticException error) {
                 break;
             }
@@ -281,10 +333,13 @@ public final class LtspiceImporter {
     private record Witness(ComponentData marker, String sourceGroup) { }
 
     private static Layout acLayout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
-                                   List<List<Point>> wireVertices, Map<Point, String> nodeKeys, List<Flag> flags) {
+                                   List<List<Point>> wireVertices, Map<Point, String> nodeKeys, List<Flag> flags, List<Point> anchors) {
         var drawing = new CircuitModel();
         var centers = new LinkedHashMap<ComponentData, Point>();
         var witnesses = new ArrayList<Witness>();
+        for (var anchor : anchors) {
+            witnesses.add(new Witness(addMarker(drawing, grid.position(anchor), ""), nodeKeys.get(anchor)));
+        }
         var flagLabels = new LinkedHashMap<Point, String>();
         var flagSpelling = new HashMap<String, String>();
         for (var flag : flags) {
@@ -572,6 +627,289 @@ public final class LtspiceImporter {
 
     private static Point point(String[] fields, int start) {
         return new Point(Integer.parseInt(fields[start]), Integer.parseInt(fields[start + 1]));
+    }
+
+    private final class HierarchyImport {
+        private final List<Path> sourceRoots;
+        private final Map<String, String> dependencies;
+        private final Map<Path, String> dependencyKeys = new HashMap<>();
+        private final Map<String, CircuitHierarchy.Definition> definitions = new LinkedHashMap<>();
+        private final Set<Path> active = new HashSet<>();
+        private long nextIdentifier = 1_000_000;
+
+        HierarchyImport(List<Path> sourceRoots, Map<String, String> dependencies) {
+            this.sourceRoots = List.copyOf(sourceRoots);
+            this.dependencies = dependencies;
+        }
+
+        CircuitModel convert(Path path, String source) throws IOException {
+            Path root = path.toRealPath();
+            active.add(root);
+            var sheet = convertSheet(source, path.toString(), root, this, false);
+            CircuitModel document = sheet.model();
+            if (!sheet.calls().isEmpty() && document.getAcSettings() == null) {
+                throw new IllegalArgumentException("Select a root AC analysis in " + path);
+            }
+            for (var call : sheet.calls()) appendCall(document, sheet, call, 0, List.of());
+            if (!definitions.isEmpty()) document.setHierarchy(new CircuitHierarchy(List.copyOf(definitions.values())));
+            return document;
+        }
+
+        List<Call> resolveCalls(Path path, List<Symbol> symbols, String sourceName, List<ImportIssue> issues) {
+            var calls = new ArrayList<Call>();
+            var names = new HashSet<String>();
+            for (var symbol : List.copyOf(symbols)) {
+                boolean primitive;
+                try {
+                    SpicePorts.valueOf(symbol.kind().toUpperCase(Locale.ROOT));
+                    primitive = true;
+                } catch (IllegalArgumentException error) {
+                    primitive = false;
+                }
+                if (!names.add(symbol.name().toLowerCase(Locale.ROOT))) {
+                    issue(issues, "DUPLICATE_INSTANCE", symbol.name(), "Require a unique instance name.", sourceName, symbol.line());
+                }
+                if (primitive) continue;
+                symbols.remove(symbol);
+                try {
+                    if (!symbol.attributes().containsKey("instname")
+                            || symbol.attributes().containsKey("spicemodel") || symbol.attributes().containsKey("modelfile")
+                            || !symbol.attributes().getOrDefault("prefix", "X").equalsIgnoreCase("X")) {
+                        throw new IllegalArgumentException("Require a native ASC block call.");
+                    }
+                    Path asy = resolveDependency(path, symbol.kind(), ".asy");
+                    Path asc = resolveDependency(path, symbol.kind(), ".asc");
+                    if (!asy.getParent().equals(asc.getParent())) {
+                        throw new IllegalArgumentException("Require the child ASC and ASY in the same directory.");
+                    }
+                    byte[] raw = Files.readAllBytes(asy);
+                    recordDependency(asy, symbol.kind() + ".asy", raw);
+                    var orientation = Orientation.valueOf(symbol.rotation().toUpperCase(Locale.ROOT));
+                    var pins = readPins(decode(raw), asy).stream().map(pin -> new Pin(pin.name(), pin.order(),
+                            orientation.place(symbol.origin(), pin.position()))).toList();
+                    calls.add(new Call(symbol, asc, pins));
+                } catch (IOException | IllegalArgumentException | ArithmeticException error) {
+                    issue(issues, "INVALID_HIERARCHY_CALL", symbol.name(), error.getMessage(), sourceName, symbol.line());
+                }
+            }
+            return calls;
+        }
+
+        private Path resolveDependency(Path caller, String literal, String extension) throws IOException {
+            String normalized = literal.replace((char) 92, '/');
+            String[] segments = (normalized + extension).split("/+");
+            if (normalized.startsWith("/") || Arrays.stream(segments)
+                    .anyMatch(segment -> segment.equals(".") || segment.equals("..") || segment.contains(":"))) {
+                throw new IllegalArgumentException("Require a relative ASC symbol path: " + literal);
+            }
+            var matches = new java.util.LinkedHashSet<Path>();
+            var roots = new ArrayList<>(sourceRoots);
+            roots.add(caller.getParent());
+            for (var root : roots) {
+                Path cursor = root;
+                for (String segment : segments) {
+                    if (!Files.isDirectory(cursor)) { cursor = null; break; }
+                    try (var entries = Files.list(cursor)) {
+                        var named = entries.filter(entry -> entry.getFileName().toString().equalsIgnoreCase(segment)).toList();
+                        if (named.size() > 1) throw new IllegalArgumentException("Ambiguous source path segment: " + segment);
+                        cursor = named.isEmpty() ? null : named.getFirst();
+                    }
+                    if (cursor == null) break;
+                }
+                if (cursor != null && Files.isRegularFile(cursor)) matches.add(cursor.toRealPath());
+            }
+            if (matches.size() != 1) throw new IllegalArgumentException("Require one source match for " + literal + extension);
+            return matches.getFirst();
+        }
+
+        private void appendCall(CircuitModel document, SheetImport parent, Call call, long parentId, List<String> parentPath)
+                throws IOException {
+            var path = new ArrayList<>(parentPath);
+            path.add(call.symbol().name());
+            String context = call.schematic() + " " + path;
+            if (!active.add(call.schematic())) {
+                throw new IllegalArgumentException("Recursive ASC definition at " + context
+                        + " called from " + parent.model().getFilePath() + ":" + call.symbol().line());
+            }
+            try {
+                byte[] childSource = Files.readAllBytes(call.schematic());
+                recordDependency(call.schematic(), call.symbol().kind() + ".asc", childSource);
+                var child = convertSheet(decode(childSource), context, call.schematic(), this, true);
+                child.model().getConversionIssues().forEach(document::addConversionIssue);
+                String definitionId = call.schematic().toString();
+                var formals = call.pins().stream().map(pin -> new CircuitHierarchy.Formal(pin.order(), pin.name(),
+                        "formal:" + pin.name().toLowerCase(Locale.ROOT))).toList();
+                var definition = new CircuitHierarchy.Definition(definitionId, call.schematic().toString(), formals,
+                        child.model().getAcSettings().parameters());
+                var existing = definitions.putIfAbsent(definitionId, definition);
+                if (existing != null && !existing.equals(definition)) {
+                    throw new IllegalArgumentException("Conflicting ASC interfaces in " + context);
+                }
+                String attributes = value(call.symbol());
+                var occurrence = new CircuitHierarchy.Occurrence(definitionId, call.symbol().name(),
+                        SpiceImporter.parameterAssignments(attributes));
+                long id = nextIdentifier++;
+                var placedPins = call.pins().stream().map(Pin::position).map(parent.grid()::position).toList();
+                int minX = placedPins.stream().mapToInt(Point::x).min().orElseThrow();
+                int maxX = placedPins.stream().mapToInt(Point::x).max().orElseThrow();
+                int minY = placedPins.stream().mapToInt(Point::y).min().orElseThrow();
+                int maxY = placedPins.stream().mapToInt(Point::y).max().orElseThrow();
+                int x = minX + 1, y = minY - 1;
+                var block = new ComponentData(27, occurrence.instance(), x, y, 503);
+                var blockTokens = new LinkedHashMap<String, String>();
+                blockTokens.put(HierarchyMetadataCodec.OCCURRENCE, HierarchyMetadataCodec.encode(occurrence));
+                blockTokens.put("blockSizeX", Integer.toString(Math.max(2, maxX - minX - 1)));
+                blockTokens.put("blockSizeY", Integer.toString(Math.max(2, maxY - minY + 1)));
+                blockTokens.put("worksheetSizeX", Integer.toString(sheetExtent(child, 0)));
+                blockTokens.put("worksheetSizeY", Integer.toString(sheetExtent(child, 1)));
+                if (parentId != 0) member(blockTokens, "call:" + occurrence.instance().toLowerCase(Locale.ROOT));
+                block.setSavedBlock(saved("ElementSPECIAL", id, parentId, blockTokens));
+                document.getSpecialComponents().add(block);
+
+                for (var component : child.model().getCircuitComponents()) {
+                    component.getImportTokens().remove("uniqueObjectIdentifier");
+                    var tokens = new LinkedHashMap<String, String>();
+                    member(tokens, "component:" + component.getName().toLowerCase(Locale.ROOT));
+                    component.setSavedBlock(saved("ElementLK", nextIdentifier++, id, tokens));
+                    document.addCircuitComponent(component);
+                }
+                int wireNumber = 0;
+                for (var wire : child.model().getConnections()) {
+                    var tokens = new LinkedHashMap<String, String>();
+                    member(tokens, "wire:" + ++wireNumber);
+                    wire.setSavedBlock(saved("Verbindung", nextIdentifier++, id, tokens));
+                    document.addConnection(wire);
+                }
+                for (int i = 0; i < formals.size(); i++) {
+                    var formal = formals.get(i);
+                    var flag = child.flags().stream().filter(item -> item.label().equalsIgnoreCase(formal.name()))
+                            .findFirst().orElseThrow(() -> new IllegalArgumentException(
+                                    "Missing named FLAG " + formal.name() + " in " + context));
+                    if (child.flags().stream().anyMatch(item -> item.point().equals(flag.point())
+                            && !item.label().equalsIgnoreCase(flag.label()))) {
+                        throw new IllegalArgumentException("Conflicting FLAG labels at formal " + formal.name() + " in " + context);
+                    }
+                    var childPin = child.grid().position(flag.point());
+                    var parentPin = placedPins.get(i);
+                    var terminal = new ComponentData(29, formal.name(), childPin.x(), childPin.y(), 503);
+                    terminal.setTerminalXLabels(new String[]{""});
+                    terminal.setTerminalYLabels(new String[]{""});
+                    var tokens = new LinkedHashMap<String, String>();
+                    member(tokens, formal.boundaryMemberKey());
+                    tokens.put(HierarchyMetadataCodec.BOUNDARY_LOCATION,
+                            HierarchyMetadataCodec.encodeBoundaryLocation(parentPin.x() - x, parentPin.y() - y));
+                    tokens.put("terminalLocation", Integer.toString(parentPin.x() == minX ? 1 : parentPin.x() == maxX
+                            ? 2 : parentPin.y() == minY ? 0 : 3));
+                    terminal.setSavedBlock(saved("ElementLK", nextIdentifier++, id, tokens));
+                    document.addCircuitComponent(terminal);
+                }
+                for (var nested : child.calls()) appendCall(document, child, nested, id, path);
+            } finally {
+                active.remove(call.schematic());
+            }
+        }
+
+        private void recordDependency(Path resolved, String literal, byte[] content) throws IOException {
+            String key = resolved.toString();
+            for (int i = 0; i < sourceRoots.size(); i++) {
+                Path root = sourceRoots.get(i).toRealPath();
+                if (!resolved.startsWith(root)) continue;
+                String relative = root.relativize(resolved).toString().replace((char) 92, '/');
+                String spelled = literal.replace((char) 92, '/').replaceAll("/+", "/");
+                if (relative.equalsIgnoreCase(spelled)) relative = literal;
+                key = (sourceRoots.size() > 1 ? "source-root-" + (i + 1) + "/" : "") + relative;
+                break;
+            }
+            String existing = dependencyKeys.putIfAbsent(resolved, key);
+            if (existing != null) key = existing;
+            String hash = ArtifactDigest.sha256(content);
+            String previous = dependencies.putIfAbsent(key, hash);
+            if (previous != null && !previous.equals(hash)) {
+                throw new IllegalArgumentException("Conflicting source dependency " + key);
+            }
+        }
+
+        private int sheetExtent(SheetImport child, int axis) {
+            var points = new ArrayList<int[]>();
+            child.model().getCircuitComponents().forEach(component -> points.add(component.getPosition()));
+            child.model().getConnections().forEach(wire -> points.addAll(Arrays.asList(wire.getPoints())));
+            child.flags().forEach(flag -> points.add(child.grid().position(flag.point()).coordinates()));
+            child.calls().forEach(call -> call.pins().forEach(pin -> points.add(child.grid().position(pin.position()).coordinates())));
+            return points.stream().mapToInt(point -> point[axis]).max().orElse(40) + 16;
+        }
+
+        private SavedCircuitBlock saved(String tag, long id, long parent, Map<String, String> tokens) {
+            tokens.put("uniqueObjectIdentifier", Long.toString(id));
+            tokens.put("parentSheetIdentifier", Long.toString(parent));
+            return SavedCircuitBlock.parse(tag, tokens.entrySet().stream()
+                    .map(entry -> entry.getKey() + " " + entry.getValue()).toArray(String[]::new));
+        }
+
+        private void member(Map<String, String> tokens, String key) {
+            tokens.put(HierarchyMetadataCodec.MEMBER, HierarchyMetadataCodec.encode(new CircuitHierarchy.Member(key)));
+        }
+    }
+
+    private static List<Pin> readPins(String source, Path path) {
+        var pins = new ArrayList<Pin>();
+        Point point = null;
+        String name = null;
+        Integer order = null;
+        boolean block = false;
+        int lineNo = 0;
+        try {
+            for (String line : source.split("\\R")) {
+                lineNo++;
+                checkSymbolAttribute(line, path, lineNo, "X", false);
+                String[] fields = line.strip().split("\\s+", 3);
+                if (fields[0].equalsIgnoreCase("SymbolType") && fields.length == 2) {
+                    block = fields[1].equalsIgnoreCase("BLOCK");
+                } else if (fields[0].equalsIgnoreCase("PIN")) {
+                    if (point != null) pins.add(requirePin(point, name, order));
+                    point = point(line.strip().split("\\s+"), 1);
+                    order = null;
+                    name = null;
+                } else if (fields[0].equalsIgnoreCase("PINATTR") && fields.length == 3) {
+                    if (fields[1].equalsIgnoreCase("PinName")) {
+                        if (name != null || point == null) throw new IllegalArgumentException("Duplicate or misplaced PinName.");
+                        name = fields[2];
+                    }
+                    if (fields[1].equalsIgnoreCase("SpiceOrder")) {
+                        if (order != null || point == null) throw new IllegalArgumentException("Duplicate or misplaced SpiceOrder.");
+                        order = Integer.parseInt(fields[2]);
+                    }
+                }
+            }
+            if (point != null) pins.add(requirePin(point, name, order));
+            pins.sort(Comparator.comparingInt(Pin::order));
+            var names = new HashSet<String>();
+            var positions = new HashSet<Point>();
+            for (int i = 0; i < pins.size(); i++) {
+                var pin = pins.get(i);
+                if (pin.order() != i + 1 || !names.add(pin.name().toLowerCase(Locale.ROOT))) {
+                    throw new IllegalArgumentException("Require unique contiguous SpiceOrder and unique PinName.");
+                }
+                if (!positions.add(pin.position())) throw new IllegalArgumentException("Duplicate ASY pin position.");
+            }
+            if (!block || pins.isEmpty()) throw new IllegalArgumentException("Require an ASY block with formal pins.");
+            return List.copyOf(pins);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
+            throw new IllegalArgumentException(path + ":" + lineNo + " " + error.getMessage(), error);
+        }
+    }
+
+    private static Pin requirePin(Point point, String name, Integer order) {
+        if (name == null || order == null) throw new IllegalArgumentException("Require PinName and SpiceOrder on each pin.");
+        return new Pin(name, order, point);
+    }
+
+    private static void checkSymbolAttribute(String line, Path path, int lineNumber, String prefix, boolean stock) {
+        String[] fields = line.strip().split("\\s+", 3);
+        if (!fields[0].equalsIgnoreCase("SYMATTR")) return;
+        if (fields.length == 3 && (fields[1].equalsIgnoreCase("Description")
+                || fields[1].equalsIgnoreCase("Prefix") && fields[2].equalsIgnoreCase(prefix)
+                || stock && fields[1].equalsIgnoreCase("Value") && fields[2].equalsIgnoreCase(prefix))) return;
+        throw new IllegalArgumentException(path + ":" + lineNumber + " Unsupported ASY electrical attribute " + line.strip());
     }
 
     private static void requireLength(String[] fields, int expected) {

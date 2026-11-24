@@ -147,7 +147,12 @@ public final class SpiceImporter {
                         if (v <= 0) throw new IllegalArgumentException("Require a positive passive component value.");
                         double[] values = new double[type == 1 ? 3 : type == 2 ? 5 : 11];
                         values[0] = v;
-                        if (args.length > 1) {
+                        if (ac && kind == 'L') {
+                            if (args.length != 2 || !args[1].toLowerCase(Locale.ROOT).startsWith("rser=")) {
+                                throw new IllegalArgumentException("Require explicit series resistance on an AC inductor.");
+                            }
+                            law = new AcComponent.Inductance(args[0], args[1].substring(5));
+                        } else if (args.length > 1) {
                             if (args.length > 2 || kind == 'R' || !args[1].toLowerCase(Locale.ROOT).startsWith("ic=")) {
                                 throw new IllegalArgumentException("Unsupported passive component attributes.");
                             }
@@ -157,10 +162,14 @@ public final class SpiceImporter {
                         if (ac && (kind == 'R' || kind == 'C')) law = new AcComponent.Passive(args[0]);
                     }
                     case 'V', 'I' -> {
-                        if (ac && kind == 'V') {
+                        if (ac) {
                             var voltage = acVoltage(fields[3]);
                             source(data, voltage.dc(), model, parameters);
-                            law = voltage;
+                            if (kind == 'I' && !voltage.waveform().isEmpty()) {
+                                throw new IllegalArgumentException("Unsupported transient AC current source waveform.");
+                            }
+                            law = kind == 'V' ? voltage : new AcComponent.Current(voltage.dc(),
+                                    voltage.magnitude(), voltage.phaseDegrees());
                         } else {
                             source(data, fields[3], model, parameters);
                         }
@@ -269,6 +278,21 @@ public final class SpiceImporter {
             }
         }
         return new AcComponent.Voltage(dc == null ? "0" : dc, waveform, magnitude == null ? "0" : magnitude, phase);
+    }
+
+    static List<ParameterDefinition> parameterAssignments(String text) {
+        var assignments = new ArrayList<ParameterDefinition>();
+        var matcher = ASSIGNMENT.matcher(text);
+        int offset = 0;
+        while (matcher.find()) {
+            if (!text.substring(offset, matcher.start()).isBlank()) {
+                throw new IllegalArgumentException("Require scalar parameter assignments.");
+            }
+            assignments.add(new ParameterDefinition(matcher.group(1), matcher.group(2)));
+            offset = matcher.end();
+        }
+        if (!text.substring(offset).isBlank()) throw new IllegalArgumentException("Require scalar parameter assignments.");
+        return List.copyOf(assignments);
     }
 
     private static boolean waveform(String token) {

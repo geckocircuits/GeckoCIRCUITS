@@ -58,12 +58,37 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
     private final ModelMVC<Optional<AcDocumentSettings>> acSettings = new ModelMVC<>(Optional.empty(), "AC analysis");
     private AcProvenance acProvenance;
+    private final ModelMVC<Optional<gecko.core.io.CircuitHierarchy>> hierarchy =
+            new ModelMVC<>(Optional.empty(), "ASC definitions");
+    final HierarchyEditCoordinator hierarchyEdits = new HierarchyEditCoordinator(this);
     private static final ImportIssue INCOMPLETE_ATTACHMENT = new ImportIssue(
             "PROJECT_ATTACHMENT_INCOMPLETE", null, null, "Project component attachment is incomplete.", null, true);
     private volatile List<ImportIssue> conversionIssues = List.of();
 
     public AcDocumentSettings getAcSettings() { return acSettings.getValue().orElse(null); }
     public AcProvenance getAcProvenance() { return acProvenance; }
+    public gecko.core.io.CircuitHierarchy getHierarchy() { return hierarchy.getValue().orElse(null); }
+
+    static void requireEditThread() {
+        if (!SwingUtilities.isEventDispatchThread()) throw new IllegalStateException("Edit the hierarchy on the editor thread.");
+    }
+
+    void retainFailedHierarchyEdit() {
+        var findings = new ArrayList<>(conversionIssues);
+        findings.add(new ImportIssue("HIERARCHY_EDIT_INCOMPLETE", null, null,
+                "Reopen the circuit before analysis. A hierarchy edit did not finish.", null, true));
+        conversionIssues = List.copyOf(findings);
+        setDirtyFlag();
+    }
+
+    public gecko.core.io.HierarchyIndex inspectHierarchy() {
+        return EditorCircuitCapture.inspectHierarchy(_circuitSheet.getAllElements(), getHierarchy());
+    }
+
+    void setHierarchy(gecko.core.io.CircuitHierarchy value) {
+        hierarchy.setValue(Optional.of(value));
+        setDirtyFlag();
+    }
 
     public List<ImportIssue> getConversionIssues() {
         return List.copyOf(conversionIssues);
@@ -565,6 +590,12 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         AbstractComponentTyp newType = _sea._typElement;
         _sea._typElement = null;
         AbstractBlockInterface newElement = AbstractTypeInfo.fabricNew(newType.getTypeInfo());
+        if (_visibleCircuitSheet instanceof SubCircuitSheet child && child._subBlock.getHierarchyCall() != null
+                && (newElement == null || newElement.getAcComponentOrLiteral() == null)) {
+            JOptionPane.showMessageDialog(win, "Add a supported AC component to this definition.", "ASC edit",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (newElement != null) {
             _elementsJustInitialized = true;
             _createComponentAction = new CreateComponentUndoAction(Arrays.asList(newElement));
@@ -780,6 +811,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         CircuitSheet.clearFindNodes();
         CircuitSheet.clearShowNodes();
         acSettings.setValueWithoutUndo(Optional.empty());
+        hierarchy.setValueWithoutUndo(Optional.empty());
         acProvenance = null;
         conversionIssues = List.of();
     }
@@ -896,22 +928,36 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void importProjectComponents(ProjectData project, String parent) {
+        requireComponentMergeSupported(project);
         var combined = new LinkedHashSet<>(conversionIssues);
         combined.addAll(project.getConversionIssues());
         attachProject(project, parent, List.copyOf(combined), false);
     }
 
+    public void requireComponentMergeSupported(ProjectData project) {
+        if (getHierarchy() != null || project.getHierarchy() != null || project._allSheetComponents.stream().anyMatch(element ->
+                element.getHierarchyMember() != null || element instanceof SubcircuitBlock block && block.getHierarchyCall() != null)) {
+            throw new IllegalArgumentException("Open the imported hierarchy as a separate circuit document.");
+        }
+    }
+
     private void attachProject(ProjectData daten, String insertIntoSubCircuitName, List<ImportIssue> findings,
             boolean replaceAcMetadata) {
+        if (!replaceAcMetadata) requireComponentMergeSupported(daten);
         var pending = new LinkedHashSet<>(findings);
         pending.add(INCOMPLETE_ATTACHMENT);
         conversionIssues = List.copyOf(pending);
         if (replaceAcMetadata) {
             acProvenance = daten.getAcProvenance();
             acSettings.setValueWithoutUndo(Optional.ofNullable(daten.getAcSettings()));
+            hierarchy.setValueWithoutUndo(Optional.ofNullable(daten.getHierarchy()));
         }
         for (AbstractCircuitSheetComponent elem : daten._allSheetComponents) {
             elem.findAndSetReferenceToParentSheet(daten.allSubCircuitBlocks, insertIntoSubCircuitName);
+        }
+        if (getHierarchy() != null || daten._allSheetComponents.stream().anyMatch(element ->
+                element.getHierarchyMember() != null || element instanceof SubcircuitBlock block && block.getHierarchyCall() != null)) {
+            inspectHierarchy();
         }
 
         //initAdditionalFiles(daten._allSheetComponents);
@@ -920,6 +966,18 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void toggleEnable(final boolean shortDisableCommand) {
+        if (getHierarchy() != null) {
+            try {
+                hierarchyEdits.toggleEnable(_selectedComponents, shortDisableCommand);
+                registerChangeWithNetlistUpdate();
+                _selectedComponents.clear();
+                _mouseMoveMode = MouseMoveMode.NONE;
+                _visibleCircuitSheet.repaint();
+            } catch (IllegalArgumentException error) {
+                JOptionPane.showMessageDialog(win, error.getMessage(), "ASC edit", JOptionPane.ERROR_MESSAGE);
+            }
+            return;
+        }
         registerChangeWithNetlistUpdate();
         // Element-Gruppe wurden gewaehlt ('innerhalb des Markierungsrechtecks'), aber noch nicht manipuliert (zB. verschoben) -->
         //System.out.println("deselect() --> markierungsRechteckAktiviert");
@@ -1218,23 +1276,33 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         final DoActionOnSelectedComponents action = new DoActionOnSelectedComponents() {
             @Override
             void operation(final AbstractCircuitSheetComponent comp) {
+                if (comp instanceof AbstractBlockInterface block && comp.getHierarchyMember() != null) {
+                    hierarchyEdits.placeSharedMember(block);
+                    return;
+                }
                 if (comp instanceof AbstractBlockInterface) {
                     ((AbstractBlockInterface) comp).setComponentDirectionUndo();
                 }
-                if (_createComponentAction != null) {
-                    AbstractUndoGenericModel.undoManager.addEdit(_createComponentAction);
-                    _createComponentAction = null;
-                    comp.absetzenElement();
-                    _elementsJustInitialized = false;
-                } else {
-                    comp.setPositionWithUndo();
-                }
+                comp.setPositionWithUndo();
 
             }
         };
 
         try {
-            action.execute();
+            if (_createComponentAction == null) {
+                action.execute();
+            } else {
+                var previews = List.copyOf(_selectedComponents);
+                var create = _createComponentAction;
+                _createComponentAction = null;
+                _elementsJustInitialized = false;
+                if (getHierarchy() != null) {
+                    hierarchyEdits.commitAdditions(previews);
+                } else {
+                    AbstractUndoGenericModel.undoManager.addEdit(create);
+                    previews.forEach(AbstractCircuitSheetComponent::absetzenElement);
+                }
+            }
             _sea._typElement = null;
             _selectedComponents.clear();
             _mouseMoveMode = MouseMoveMode.NONE;
@@ -1242,6 +1310,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             _visibleCircuitSheet.repaint();
             this.registerChangeWithNetlistUpdate();
         } catch (Exception ex) {
+            _selectedComponents.clear();
+            _mouseMoveMode = MouseMoveMode.NONE;
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Warning!",
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -1357,10 +1427,14 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         if (_selectedComponents.size() != 1) {
             return;
         }
-        ((Verbindung) _selectedComponents.iterator().next()).setzeEndKnoten(clickPoint.x, clickPoint.y);
+        var sourceWire = (Verbindung) _selectedComponents.iterator().next();
+        sourceWire.setzeEndKnoten(clickPoint.x, clickPoint.y);
         NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.LK_AND_RELUCTANCE), getElementLK());
         NetListLK.fabricExcludingSubcircuits(getConnection(ConnectorType.THERMAL), getElementTHERM());
         NetzlisteAllg.fabricNetzlistComplete(getConnection(ConnectorType.CONTROL), getElementCONTROL());
+        if (sourceWire.getParentCircuitSheet() instanceof SubCircuitSheet child && child._subBlock.getHierarchyCall() != null) {
+            hierarchyEdits.commitAdditions(List.of(sourceWire));
+        }
 
         _mouseMoveMode = MouseMoveMode.NONE;
         _selectedComponents.clear();
@@ -1373,7 +1447,9 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
         final Verbindung verbindungAKTUELL = new Verbindung(ConnectorType.NONE, _visibleCircuitSheet);
         CreateVerbindungUndoAction verbAction = new CreateVerbindungUndoAction(verbindungAKTUELL);
-        AbstractUndoGenericModel.undoManager.addEdit(verbAction);
+        if (!(_visibleCircuitSheet instanceof SubCircuitSheet child && child._subBlock.getHierarchyCall() != null)) {
+            AbstractUndoGenericModel.undoManager.addEdit(verbAction);
+        }
         verbindungAKTUELL.setParentCircuitSheet(_visibleCircuitSheet);
         _selectedComponents.add(verbindungAKTUELL);
         verbindungAKTUELL.setzeStartKnoten(clickPoint);
@@ -1653,6 +1729,17 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             return;
         }
 
+        if (getHierarchy() != null) {
+            try {
+                hierarchyEdits.removeMembers(_selectedComponents);
+                _selectedComponents.clear();
+                _mouseMoveMode = MouseMoveMode.NONE;
+                _visibleCircuitSheet.repaint();
+            } catch (IllegalArgumentException error) {
+                JOptionPane.showMessageDialog(win, error.getMessage(), "ASC edit", JOptionPane.ERROR_MESSAGE);
+            }
+            return;
+        }
         _elementsJustInitialized = false;
         _mouseMoveMode = MouseMoveMode.NONE;
         _singleComponentMouseDrag = false;
@@ -1764,6 +1851,14 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void kopiereAllesImBearbeitungsModus() {
+        if (getHierarchy() != null) {
+            try {
+                hierarchyEdits.requireSupportedCopies(_selectedComponents);
+            } catch (IllegalArgumentException error) {
+                JOptionPane.showMessageDialog(win, error.getMessage(), "ASC edit", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         _elementsJustInitialized = true;
 
         final List<String> vecCopiedLabelsALL = new ArrayList<String>();
@@ -1783,9 +1878,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             _selectedComponents.remove(elem);
             elem.absetzenElement();
 
-            if (elem instanceof AbstractBlockInterface) {
-                exchangeNew.add((AbstractBlockInterface) elementAKTUELL);
-            }
+            exchangeNew.add(elementAKTUELL);
 
             if (elem instanceof ComponentTerminable) {
                 final ComponentTerminable terminable = (ComponentTerminable) elem;

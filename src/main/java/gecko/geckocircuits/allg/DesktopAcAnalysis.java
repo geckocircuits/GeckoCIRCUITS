@@ -49,7 +49,7 @@ final class DesktopAcAnalysis {
                 scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
         var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
                 MainWindow.optimizerParameterData, MainWindow._fileManager, sources, MainWindow.getOpenFileName(),
-                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues());
+                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues(), editor.getHierarchy());
         return new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
     }
 
@@ -159,6 +159,13 @@ final class DesktopAcAnalysis {
                     "V", group.voltageV()));
         }
         for (var current : result.currents()) traces.add(new Trace("I(" + current.instance() + ")", "A", current.currentA()));
+        if (result.hierarchy() != null) {
+            for (var port : result.hierarchy().ports()) {
+                var formal = port.internal();
+                String label = String.join(":", formal.occurrencePath()) + ":" + formal.instance();
+                traces.add(new Trace("Ix(" + label + ")", "A", port.currentIntoChildA()));
+            }
+        }
         var selector = new JComboBox<>(traces.toArray(Trace[]::new));
         var controls = new JPanel(new BorderLayout(8, 0));
         var label = new JLabel("Signal");

@@ -438,11 +438,16 @@ public final class GeckoFile {
      * @param ascii
      */
     public void exportASCII(final StringBuffer ascii) {
+        exportASCII(ascii, null);
+    }
+
+    public void exportASCII(final StringBuffer ascii, String targetModelPath) {
         ascii.append("\n<GeckoFile>");
         //----------------------------------------
         SerializationUtils.appendAsString(ascii.append("\nhashValue"), _hash);
         SerializationUtils.appendAsString(ascii.append("\nabsPath"), _absolutePath);
-        SerializationUtils.appendAsString(ascii.append("\nrelPath"), _relativePath);
+        String path = targetModelPath == null ? _relativePath : getRelativePath(_absolutePath, targetModelPath);
+        SerializationUtils.appendAsString(ascii.append("\nrelPath"), path);
         SerializationUtils.appendAsString(ascii.append("\nfileSep"), _separator);
         SerializationUtils.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
         SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));

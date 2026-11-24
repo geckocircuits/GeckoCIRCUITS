@@ -440,6 +440,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         writeASCII(ascii, owned, values);
     }
 
+    public final void exportScopedAcASCII(StringBuffer ascii, java.util.Map<String, String> scope) {
+        AcComponent owned = getAcComponentOrLiteral();
+        double[] values = owned == null ? parameter : AcMetadataCodec.compatibilityValues(owned, getParameter(), scope);
+        writeASCII(ascii, owned, values);
+    }
+
     final void exportForCapture(StringBuffer ascii, AcDocumentSettings settings) {
         if (settings == null) {
             exportASCII(ascii);
@@ -449,6 +455,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public final AcComponent getAcComponent() { return acComponent.getValue().orElse(null); }
+
+    final void setAcComponentWithoutUndo(AcComponent owned) { acComponent.setValueWithoutUndo(Optional.of(owned)); }
 
     public final AcComponent getAcComponentOrLiteral() {
         var owned = getAcComponent();
@@ -467,6 +475,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public final void setAcLaw(AcComponent.Law law) {
+        var editor = SchematicEditor2.Singleton;
+        if (editor != null && editor.getHierarchy() != null && getHierarchyMember() != null) {
+            editor.hierarchyEdits.setSharedLaw(this, law);
+            return;
+        }
+        setAcLawLocal(law);
+    }
+
+    final void setAcLawLocal(AcComponent.Law law) {
         var current = Objects.requireNonNull(getAcComponentOrLiteral(), "The component has no AC law.");
         if (current.law().getClass() != law.getClass()) throw new IllegalArgumentException("Invalid AC component law.");
         acComponent.setValueWithoutUndo(Optional.of(current));
@@ -513,8 +530,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
         for (UserParameter par : getRegisteredParameters()) {
-            if (owned != null && (owned.law() instanceof AcComponent.Passive && par.getParameterIndex() == 0
-                    || owned.law() instanceof AcComponent.Voltage && par.getParameterIndex() == 1)) continue;
+            if (owned != null && ((owned.law() instanceof AcComponent.Passive || owned.law() instanceof AcComponent.Inductance)
+                    && par.getParameterIndex() == 0 || (owned.law() instanceof AcComponent.Voltage
+                    || owned.law() instanceof AcComponent.Current) && par.getParameterIndex() == 1)) continue;
             par.writeXMLToFile(ascii);
         }
 
@@ -858,8 +876,9 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     private void addAcDisplayParameters(AcComponent owned, AcDocumentSettings settings) {
-        var parameters = settings.parameterMap();
         try {
+            var editor = SchematicEditor2.Singleton;
+            var parameters = editor.getHierarchy() == null ? settings.parameterMap() : editor.hierarchyEdits.scope(this);
             switch (owned.law()) {
                 case AcComponent.Passive law -> {
                     boolean resistance = getTypeEnum().getTypeNumber() == SpicePorts.RES.type();
@@ -877,6 +896,16 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                         double dc = SpiceValue.evaluate(law.dc(), parameters);
                         _textInfo.addParameter("DC " + AC_VALUE_FORMAT.formatENG(dc, 4) + " V");
                     }
+                }
+                case AcComponent.Inductance law -> {
+                    _textInfo.addParameter("L = " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.expression(), parameters), 4)
+                            + " H");
+                    _textInfo.addParameter("Rser = " + AC_VALUE_FORMAT.formatENG(
+                            SpiceValue.evaluate(law.seriesResistance(), parameters), 4) + " Ω");
+                }
+                case AcComponent.Current law -> {
+                    _textInfo.addParameter("AC " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.magnitude(), parameters), 4)
+                            + " A ∠ " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.phaseDegrees(), parameters), 4) + "°");
                 }
                 case AcComponent.Controlled law -> {
                     if (!law.laplace()) {

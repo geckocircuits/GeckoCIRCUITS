@@ -1,0 +1,4 @@
+PIN 16 16 NONE 0
+PINATTR SpiceOrder 1
+PIN 16 96 NONE 0
+PINATTR SpiceOrder 2

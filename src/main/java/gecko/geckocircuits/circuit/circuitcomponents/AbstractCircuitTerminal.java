@@ -32,6 +32,9 @@ import java.util.List;
 public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterface implements SubCircuitTerminable {
 
     private final TerminalToWrap _wrapped = new TerminalToWrap(this);
+    private gecko.core.io.SpicePorts.Point importedBlockOffset;
+
+    public final gecko.core.io.SpicePorts.Point importedBlockOffset() { return importedBlockOffset; }
 
     public AbstractCircuitTerminal() {
         super();
@@ -98,12 +101,21 @@ public abstract class AbstractCircuitTerminal extends AbstractCircuitBlockInterf
     protected void importIndividual(final TokenMap tokenMap) {
         super.importIndividual(tokenMap);
         _wrapped.importIndividual(tokenMap);
+        String token = gecko.core.io.HierarchyMetadataCodec.BOUNDARY_LOCATION;
+        if (tokenMap.containsToken(token)) {
+            importedBlockOffset = gecko.core.io.HierarchyMetadataCodec.decodeBoundaryLocation(tokenMap.readDataLine(token, ""));
+        }
     }
 
     @Override
     protected void exportAsciiIndividual(final StringBuffer ascii) {
         super.exportAsciiIndividual(ascii);
         _wrapped.exportAsciiIndividual(ascii);
+        if (importedBlockOffset != null) {
+            ascii.append('\n').append(gecko.core.io.HierarchyMetadataCodec.BOUNDARY_LOCATION).append(' ')
+                    .append(gecko.core.io.HierarchyMetadataCodec.encodeBoundaryLocation(
+                            importedBlockOffset.x(), importedBlockOffset.y()));
+        }
     }
 
     @Override

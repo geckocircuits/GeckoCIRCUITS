@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Window;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -70,7 +71,9 @@ public final class AcEditorDialogs {
     public static Window componentDialog(AbstractBlockInterface block) {
         var current = block.getAcComponentOrLiteral();
         var settings = SchematicEditor2.Singleton.getAcSettings();
-        Map<String, String> parameters = settings == null ? Map.of() : settings.parameterMap();
+        var editor = SchematicEditor2.Singleton;
+        Map<String, String> parameters = editor.getHierarchy() != null ? editor.hierarchyEdits.scope(block)
+                : settings == null ? Map.of() : settings.parameterMap();
         var fields = new JPanel(new GridLayout(0, 2, 8, 4));
         java.util.function.Supplier<AcComponent.Law> updatedLaw;
         switch (current.law()) {
@@ -99,6 +102,30 @@ public final class AcEditorDialogs {
                     SpiceValue.evaluate(phase.getText(), parameters);
                     return new AcComponent.Voltage(dc.getText().strip(), waveform.getText().strip(),
                             magnitude.getText().strip(), phase.getText().strip());
+                };
+            }
+            case AcComponent.Inductance law -> {
+                var inductance = addField(fields, "Inductance (H)", law.expression());
+                var resistance = addField(fields, "Series resistance (Ω)", law.seriesResistance());
+                updatedLaw = () -> {
+                    if (SpiceValue.evaluate(inductance.getText(), parameters) <= 0
+                            || SpiceValue.evaluate(resistance.getText(), parameters) <= 0) {
+                        throw new IllegalArgumentException("Require positive inductance and series resistance.");
+                    }
+                    return new AcComponent.Inductance(inductance.getText().strip(), resistance.getText().strip());
+                };
+            }
+            case AcComponent.Current law -> {
+                var dc = addField(fields, "DC value (A)", law.dc());
+                var magnitude = addField(fields, "AC magnitude (A)", law.magnitude());
+                var phase = addField(fields, "AC phase (degrees)", law.phaseDegrees());
+                updatedLaw = () -> {
+                    SpiceValue.evaluate(dc.getText(), parameters);
+                    if (SpiceValue.evaluate(magnitude.getText(), parameters) < 0) {
+                        throw new IllegalArgumentException("Require a nonnegative AC magnitude.");
+                    }
+                    SpiceValue.evaluate(phase.getText(), parameters);
+                    return new AcComponent.Current(dc.getText().strip(), magnitude.getText().strip(), phase.getText().strip());
                 };
             }
             case AcComponent.Controlled law -> {
@@ -138,6 +165,46 @@ public final class AcEditorDialogs {
         panel.add(caption);
         panel.add(field);
         return field;
+    }
+
+    public static void editHierarchyParameters(Window window, SchematicEditor2 editor) {
+        if (!(editor._visibleCircuitSheet instanceof gecko.geckocircuits.control.SubCircuitSheet child)
+                || child._subBlock.getHierarchyCall() == null) {
+            JOptionPane.showMessageDialog(window, "Open an imported ASC block first.", "ASC parameters",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        var owner = child._subBlock;
+        var call = owner.getHierarchyCall();
+        var definition = editor.getHierarchy().definition(call.definitionId());
+        var defaults = new javax.swing.JTextArea(parameterText(definition.defaults()), 5, 30);
+        var overrides = new javax.swing.JTextArea(parameterText(call.overrides()), 5, 30);
+        var fields = new JPanel(new GridLayout(0, 1, 6, 6));
+        fields.add(new JLabel("Definition defaults"));
+        fields.add(new javax.swing.JScrollPane(defaults));
+        fields.add(new JLabel("Overrides for " + call.instance()));
+        fields.add(new javax.swing.JScrollPane(overrides));
+        while (JOptionPane.showConfirmDialog(window, fields, "ASC parameters", JOptionPane.OK_CANCEL_OPTION)
+                == JOptionPane.OK_OPTION) {
+            try {
+                editor.hierarchyEdits.setParameters(owner, readParameters(defaults.getText()), readParameters(overrides.getText()));
+                return;
+            } catch (IllegalArgumentException error) {
+                JOptionPane.showMessageDialog(window, error.getMessage(), "ASC parameters", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private static String parameterText(List<ParameterDefinition> definitions) {
+        return String.join("\n", definitions.stream().map(definition -> definition.name() + "=" + definition.expression()).toList());
+    }
+
+    private static List<ParameterDefinition> readParameters(String text) {
+        return text.lines().filter(line -> !line.isBlank()).map(line -> {
+            String[] assignment = line.split("=", 2);
+            if (assignment.length != 2) throw new IllegalArgumentException("Enter one parameter assignment per line.");
+            return new ParameterDefinition(assignment[0].strip(), assignment[1].strip());
+        }).toList();
     }
 
     private static String displayScalar(String text, Map<String, String> parameters) {

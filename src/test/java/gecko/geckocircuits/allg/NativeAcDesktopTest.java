@@ -18,12 +18,15 @@ import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ConnectorType;
+import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.circuit.SpecialTyp;
 import gecko.geckocircuits.circuit.Verbindung;
 import gecko.geckocircuits.circuit.circuitcomponents.AcControlledVoltageSource;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
+import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.control.ControlTyp;
 import gecko.geckocircuits.control.ReglerCounter;
+import gecko.geckocircuits.control.Point;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Color;
@@ -67,6 +70,561 @@ class NativeAcDesktopTest {
             R1 output 0 1k
             """;
     private static final int WITNESS = 210;
+
+    @Test
+    void rollsBackSharedEditAndGroupsToggleAndCopyCommands() throws Exception {
+        Path evidence = evidence();
+        Path input = createHierarchyInput(evidence);
+        try {
+            onEdt(() -> {
+                open(input);
+                var first = showOccurrence("X1", "Xleaf");
+                var firstShunt = hierarchyComponent(first, "Rsh");
+                var second = showOccurrence("X2", "Xleaf");
+                var secondShunt = hierarchyComponent(second, "Rsh");
+                var original = firstShunt.getAcComponent();
+                var changed = new AcComponent.Passive("11k");
+                var fault = new java.util.concurrent.atomic.AtomicBoolean();
+                java.awt.event.ActionListener inject = event -> {
+                    if (secondShunt.getAcComponent().law().equals(changed) && fault.compareAndSet(false, true)) {
+                        throw new IllegalArgumentException("Fail the second peer edit.");
+                    }
+                };
+                var undo = gecko.modelviewcontrol.AbstractUndoGenericModel.undoManager;
+                undo.discardAllEdits();
+                var listeners = gecko.modelviewcontrol.AbstractUndoGenericModel.globalEventListeners;
+                listeners.add(inject);
+                try {
+                    assertThrows(IllegalArgumentException.class, () -> firstShunt.setAcLaw(changed));
+                } finally {
+                    listeners.remove(inject);
+                }
+                assertTrue(fault.get());
+                assertEquals(original, firstShunt.getAcComponent());
+                assertEquals(original, secondShunt.getAcComponent());
+                assertFalse(undo.canUndo());
+                assertFalse(MainWindow._se.getZustandGeaendert());
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+
+                showOccurrence("X1", "Xleaf");
+                selectHierarchyMembers(firstShunt);
+                MainWindow._se.toggleEnable(true);
+                assertEquals(gecko.geckocircuits.circuit.Enabled.DISABLED_SHORT, firstShunt.isCircuitEnabled());
+                assertEquals(firstShunt.isCircuitEnabled(), secondShunt.isCircuitEnabled());
+                assertEquals(gecko.geckocircuits.circuit.Enabled.ENABLED, hierarchyComponent(first, "Rseries").isCircuitEnabled());
+                undo.undo();
+                assertFalse(undo.canUndo());
+                assertEquals(gecko.geckocircuits.circuit.Enabled.ENABLED, firstShunt.isCircuitEnabled());
+                assertEquals(firstShunt.isCircuitEnabled(), secondShunt.isCircuitEnabled());
+
+                var wire = first.getLocalSheetComponents().stream().filter(Verbindung.class::isInstance)
+                        .map(Verbindung.class::cast).filter(item -> item.getLabel().equals("N001")).findFirst().orElseThrow();
+                selectHierarchyMembers(wire);
+                MainWindow._se.toggleEnable(false);
+                assertEquals(gecko.geckocircuits.circuit.Enabled.DISABLED, wire.isCircuitEnabled());
+                assertCopies(first, second, wire);
+                undo.undo();
+                assertEquals(gecko.geckocircuits.circuit.Enabled.ENABLED, wire.isCircuitEnabled());
+                assertCopies(first, second, wire, firstShunt);
+                assertCopies(first, second, firstShunt, hierarchyComponent(first, "Csh"));
+                assertFalse(undo.canUndo());
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+                var root = showOccurrence();
+                int originalCount = root.getLocalSheetComponents().size();
+                selectHierarchyMembers(hierarchyComponent(root, "X1"));
+                withDialog("ASC edit", dialog -> { }, null, MainWindow._se::kopiereAllesImBearbeitungsModus);
+                assertEquals(originalCount, root.getLocalSheetComponents().size());
+                assertFalse(undo.canUndo());
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    @Test
+    void preservesTheOpenDocumentWhenSaveAndComponentImportAreRejected() throws Exception {
+        Path evidence = evidence();
+        Path input = createHierarchyInput(evidence);
+        try {
+            onEdt(() -> {
+                var window = open(input);
+                MainWindow._se.setDirtyFlag();
+                String originalPath = MainWindow.getOpenFileName();
+                var embedded = new gecko.core.allg.GeckoFile(evidence.resolve("resource.dat").toFile(),
+                        originalPath, new byte[]{12, 34});
+                MainWindow._fileManager.addFile(embedded);
+                var originalResource = new StringBuffer();
+                embedded.exportASCII(originalResource);
+                var directory = Files.createDirectory(evidence.resolve("directory.ipes"));
+                assertThrows(java.io.IOException.class, () -> window.saveDocumentTo(directory.toFile(), true));
+                assertEquals(originalPath, MainWindow.getOpenFileName());
+                assertTrue(MainWindow._se.getZustandGeaendert());
+                var afterSaveFailure = new StringBuffer();
+                embedded.exportASCII(afterSaveFailure);
+                assertEquals(originalResource.toString(), afterSaveFailure.toString());
+                var originalIssues = MainWindow._se.getConversionIssues();
+                assertThrows(IllegalArgumentException.class, () -> MainWindow.importComponentsFromFile(input.toString(), null));
+                assertEquals(originalIssues, MainWindow._se.getConversionIssues());
+                assertEquals(originalPath, MainWindow.getOpenFileName());
+                assertTrue(MainWindow._se.getZustandGeaendert());
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+
+                var shunt = hierarchyComponent(showOccurrence("X1", "Xleaf"), "Rsh");
+                var position = shunt.getSheetPosition();
+                shunt.setPositionWithoutUndo(position.x + 1, position.y);
+                var invalid = evidence.resolve("invalid.ipes");
+                assertThrows(IllegalArgumentException.class, () -> window.saveDocumentTo(invalid.toFile(), true));
+                assertFalse(Files.exists(invalid));
+                assertEquals(originalPath, MainWindow.getOpenFileName());
+                assertTrue(MainWindow._se.getZustandGeaendert());
+                shunt.setPositionWithoutUndo(position.x, position.y);
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+                verifyObsoleteBackupIsSkipped(evidence, input, window);
+                var flatSource = Files.writeString(evidence.resolve("flat.cir"), SYNTHETIC);
+                var flat = evidence.resolve("flat.ipes");
+                assertEquals(0, Main.run(new String[]{flatSource.toString(), flat.toString()}, System.out, System.err));
+                window.createNewFile();
+                open(flat);
+                var flatResult = solve();
+                String savedPath = GlobalFilePathes.datnamAbsLoadIPES;
+                assertThrows(IllegalArgumentException.class, () -> MainWindow.importComponentsFromFile(input.toString(), null));
+                assertEquals(savedPath, GlobalFilePathes.datnamAbsLoadIPES);
+                assertEquals(flatResult, solve());
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    @Test
+    void preservesSavedModelAndRecoveryAfterPartialWrites() throws Exception {
+        Path evidence = evidence();
+        Path input = createHierarchyInput(evidence);
+        try {
+            onEdt(() -> {
+                var window = open(input);
+                var recovery = evidence.resolve("recovery.ipes");
+                window.rawSaveFile(recovery.toFile());
+                byte[] original = Files.readAllBytes(input);
+                byte[] backup = Files.readAllBytes(recovery);
+                MainWindow._se.setDirtyFlag();
+                var stagedFiles = new ArrayList<Path>();
+                MainWindow.OpenProjectOutput failsAfterHeader = staged -> {
+                    stagedFiles.add(staged);
+                    var destination = Files.newOutputStream(staged);
+                    return new java.io.FilterOutputStream(destination) {
+                        private int remaining = 20;
+
+                        @Override
+                        public void write(int value) throws java.io.IOException {
+                            if (remaining == 0) throw new java.io.IOException("Injected partial output failure.");
+                            out.write(value);
+                            remaining--;
+                        }
+                    };
+                };
+                var error = assertThrows(java.io.IOException.class,
+                        () -> window.saveDocumentTo(input.toFile(), false, failsAfterHeader));
+                assertTrue(error.getMessage().contains("Injected partial output failure."));
+                assertArrayEquals(original, Files.readAllBytes(input));
+                assertEquals(input.toAbsolutePath().normalize(),
+                        Path.of(MainWindow.getOpenFileName()).toAbsolutePath().normalize());
+                assertTrue(MainWindow._se.getZustandGeaendert());
+                error = assertThrows(java.io.IOException.class,
+                        () -> window.backUpDocument(recovery.toFile(), failsAfterHeader));
+                assertTrue(error.getMessage().contains("Injected partial output failure."));
+                assertArrayEquals(backup, Files.readAllBytes(recovery));
+                assertEquals(2, stagedFiles.size());
+                for (Path staged : stagedFiles) {
+                    assertEquals(evidence.toAbsolutePath().normalize(),
+                            staged.getParent().toAbsolutePath().normalize());
+                    assertEquals(20, Files.size(staged), "The fault must leave actual compressed bytes.");
+                }
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+                error = assertThrows(java.io.IOException.class,
+                        () -> window.saveDocumentTo(input.toAbsolutePath().getRoot().toFile(), false));
+                assertTrue(error.getMessage().contains("requires a file name"));
+                assertArrayEquals(original, Files.readAllBytes(input));
+                assertTrue(MainWindow._se.getZustandGeaendert());
+                window.saveDocumentTo(input.toFile(), false);
+                assertFalse(MainWindow._se.getZustandGeaendert());
+                open(input);
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    @Test
+    void keepsTheCurrentDocumentAfterFailedOrCancelledSaveBeforeLeaving() throws Exception {
+        Path evidence = evidence();
+        Path input = createHierarchyInput(evidence);
+        try {
+            onEdt(() -> {
+                var window = open(input);
+                var previousMode = GeckoSim.operatingmode;
+                GeckoSim.operatingmode = OperatingMode.STANDALONE;
+                try {
+                    Path recent = evidence.resolve("recent.ipes");
+                    Path unwritable = Files.createDirectory(evidence.resolve("directory.ipes"));
+                    window.rawSaveFile(recent.toFile());
+                    Path recovery = evidence.resolve("recovery.ipes");
+                    window.rawSaveFile(recovery.toFile());
+                    byte[] backup = Files.readAllBytes(recovery);
+                    byte[] saved = Files.readAllBytes(input);
+                    var commands = List.of("New", "Open", "RECENT_1", "RECENT_2", "RECENT_3", "RECENT_4",
+                            "Exit", "Close window");
+                    GlobalFilePathes.RECENT_CIRCUITS_1 = recent.toString();
+                    GlobalFilePathes.RECENT_CIRCUITS_2 = recent.toString();
+                    GlobalFilePathes.RECENT_CIRCUITS_3 = recent.toString();
+                    GlobalFilePathes.RECENT_CIRCUITS_4 = recent.toString();
+                    GlobalFilePathes.DATNAM = unwritable.toString();
+                    var sheet = MainWindow._se._circuitSheet;
+                    MainWindow._se.setDirtyFlag();
+                    for (String command : commands) {
+                        tryLeaving(window, command, false);
+                        assertTrue(window.isDisplayable());
+                        assertSame(sheet, MainWindow._se._circuitSheet);
+                        assertEquals(input.toAbsolutePath().normalize(),
+                                Path.of(MainWindow.getOpenFileName()).toAbsolutePath().normalize());
+                        assertEquals(unwritable.toString(), GlobalFilePathes.DATNAM);
+                        assertTrue(MainWindow._se.getZustandGeaendert());
+                    }
+                    assertArrayEquals(saved, Files.readAllBytes(input));
+                    assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+
+                    window.createNewFile();
+                    String untitled = MainWindow.getOpenFileName();
+                    String newTarget = GlobalFilePathes.DATNAM;
+                    sheet = MainWindow._se._circuitSheet;
+                    MainWindow._se.setDirtyFlag();
+                    for (String command : commands) {
+                        tryLeaving(window, command, true);
+                        assertTrue(window.isDisplayable());
+                        assertSame(sheet, MainWindow._se._circuitSheet);
+                        assertEquals(untitled, MainWindow.getOpenFileName());
+                        assertEquals(newTarget, GlobalFilePathes.DATNAM);
+                        assertTrue(MainWindow._se.getZustandGeaendert());
+                    }
+                    assertArrayEquals(backup, Files.readAllBytes(recovery));
+                    return null;
+                } finally {
+                    GeckoSim.operatingmode = previousMode;
+                }
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    private static void tryLeaving(MainWindow window, String command, boolean cancelSaveAs) {
+        var seen = new ArrayList<String>();
+        var responder = new Timer(40, event -> {
+            for (Window child : Window.getWindows()) {
+                if (!(child instanceof JDialog dialog) || !dialog.isShowing() || !dialog.isModal()) continue;
+                var panes = descendants(dialog, JOptionPane.class);
+                var choosers = descendants(dialog, javax.swing.JFileChooser.class);
+                if (seen.isEmpty() && !panes.isEmpty()
+                        && panes.getFirst().getOptionType() == JOptionPane.YES_NO_CANCEL_OPTION) {
+                    seen.add("save prompt");
+                    panes.getFirst().setValue(JOptionPane.YES_OPTION);
+                } else if (seen.size() == 1 && !panes.isEmpty() && dialog.getTitle().equals("Save circuit")) {
+                    seen.add("save error");
+                    panes.getFirst().setValue(JOptionPane.OK_OPTION);
+                } else if (seen.size() == 1 && !choosers.isEmpty()
+                        && choosers.getFirst().getDialogType() == javax.swing.JFileChooser.SAVE_DIALOG) {
+                    seen.add("save chooser");
+                    choosers.getFirst().cancelSelection();
+                } else {
+                    seen.add("unexpected " + dialog.getTitle());
+                    dialog.dispose();
+                }
+                return;
+            }
+        });
+        responder.start();
+        try {
+            if (command.equals("Close window")) {
+                window.dispatchEvent(new java.awt.event.WindowEvent(window, java.awt.event.WindowEvent.WINDOW_CLOSING));
+            } else {
+                window.actionPerformed(new java.awt.event.ActionEvent(window, 0, command));
+            }
+        } finally {
+            responder.stop();
+        }
+        assertEquals(List.of("save prompt", cancelSaveAs ? "save chooser" : "save error"), seen, command);
+    }
+
+    private static void verifyObsoleteBackupIsSkipped(Path evidence, Path input, MainWindow window) throws Exception {
+        var backup = evidence.resolve("recovery.ipes");
+        window.rawSaveFile(backup.toFile());
+        byte[] recoverable = Files.readAllBytes(backup);
+        var loop = java.awt.Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop();
+        var queued = new FutureTask<Void>(() -> {
+            try {
+                window.backUpDocument(backup.toFile());
+                return null;
+            } finally {
+                SwingUtilities.invokeLater(loop::exit);
+            }
+        });
+        var thread = Thread.ofPlatform().daemon().start(queued);
+        long expiry = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        while (thread.getState() != Thread.State.WAITING && !queued.isDone() && System.nanoTime() < expiry) {
+            Thread.sleep(5);
+        }
+        assertEquals(Thread.State.WAITING, thread.getState(), "The backup must be queued behind the editor transition.");
+        window.createNewFile();
+        open(input);
+        MainWindow._se.setDirtyFlag();
+        var timer = new Timer(10000, event -> loop.exit());
+        timer.setRepeats(false);
+        timer.start();
+        try {
+            if (!queued.isDone()) loop.enter();
+        } finally {
+            timer.stop();
+        }
+        assertTrue(queued.isDone(), "The obsolete backup request did not finish.");
+        queued.get();
+        assertArrayEquals(recoverable, Files.readAllBytes(backup));
+    }
+
+    private static void assertCopies(CircuitSheet first, CircuitSheet second,
+                                     AbstractCircuitSheetComponent... originals) throws Exception {
+        int before = first.getLocalSheetComponents().size();
+        var previous = new HashSet<>(first.getLocalSheetComponents());
+        selectHierarchyMembers(originals);
+        MainWindow._se.kopiereAllesImBearbeitungsModus();
+        for (var preview : first.getLocalSheetComponents()) {
+            if (!previous.contains(preview)) preview.moveComponent(new Point(0, 25));
+        }
+        var finish = gecko.geckocircuits.circuit.SchematicEditor2.class.getDeclaredMethod("mausAbsetzenMarkierteGruppe");
+        finish.setAccessible(true);
+        var failure = new AtomicReference<String>();
+        var dialogCheck = new Timer(150, event -> {
+            for (var window : Window.getWindows()) {
+                if (!(window instanceof JDialog dialog) || !dialog.isShowing() || !dialog.isModal()) continue;
+                var panes = descendants(dialog, JOptionPane.class);
+                failure.set(panes.isEmpty() ? dialog.getTitle() : String.valueOf(panes.getFirst().getMessage()));
+                dialog.dispose();
+            }
+        });
+        dialogCheck.start();
+        try {
+            finish.invoke(MainWindow._se);
+        } finally {
+            dialogCheck.stop();
+        }
+        assertNull(failure.get(), failure.get());
+        assertEquals(before + originals.length, first.getLocalSheetComponents().size());
+        assertEquals(first.getLocalSheetComponents().size(), second.getLocalSheetComponents().size());
+        for (var created : first.getLocalSheetComponents()) {
+            if (previous.contains(created)) continue;
+            var key = created.getHierarchyMember();
+            assertNotNull(key);
+            assertTrue(previous.stream().noneMatch(old -> key.equals(old.getHierarchyMember())));
+            var peer = second.getLocalSheetComponents().stream().filter(item -> key.equals(item.getHierarchyMember()))
+                    .findFirst().orElseThrow();
+            assertNotEquals(created.getUniqueObjectIdentifier(), peer.getUniqueObjectIdentifier());
+            assertEquals(created.isCircuitEnabled(), peer.isCircuitEnabled());
+            if (created instanceof Verbindung copied) {
+                assertFalse(copied.getLabel().isEmpty());
+                assertEquals(copied.getLabel(), assertInstanceOf(Verbindung.class, peer).getLabel());
+                assertEquals(originals[0].isCircuitEnabled(), copied.isCircuitEnabled());
+            }
+        }
+        MainWindow._se.inspectHierarchy();
+        gecko.modelviewcontrol.AbstractUndoGenericModel.undoManager.undo();
+        assertEquals(before, first.getLocalSheetComponents().size());
+        assertEquals(before, second.getLocalSheetComponents().size());
+        MainWindow._se.inspectHierarchy();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void selectHierarchyMembers(AbstractCircuitSheetComponent... members) throws Exception {
+        var field = gecko.geckocircuits.circuit.SchematicEditor2.class.getDeclaredField("_selectedComponents");
+        field.setAccessible(true);
+        var selection = (Set<AbstractCircuitSheetComponent>) field.get(MainWindow._se);
+        selection.clear();
+        selection.addAll(List.of(members));
+    }
+
+    @Test
+    void editsSharedNativeHierarchyAndCapturesCoherentBackgroundSaves() throws Exception {
+        Path evidence = evidence();
+        Path input = createHierarchyInput(evidence);
+        try {
+            Path repaired = onEdt(() -> editAndSaveHierarchy(evidence, input));
+            var writer = onEdt(() -> startBackgroundSaves(evidence, repaired));
+            writer.get(15, TimeUnit.SECONDS);
+            verifyBackgroundSaves(evidence);
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    private static Path createHierarchyInput(Path evidence) {
+        Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
+                .toAbsolutePath().normalize();
+        Path input = evidence.resolve("nested.ipes");
+        assertEquals(0, Main.run(new String[]{source.resolve("root.asc").toString(), input.toString(),
+                "--symbols", source.toString(), "--source-root", source.toString()}, System.out, System.err));
+        return input;
+    }
+
+    private static Path editAndSaveHierarchy(Path evidence, Path input) throws Exception {
+                open(input);
+                assertHierarchyOutputs(solve(), 1000, 4000, 2000);
+                showOccurrence("X1", "Xleaf");
+                editHierarchyParameters("series=3k\nshunt=3k", "series={caller}");
+                assertHierarchyOutputs(solve(), 1000, 4000, 3000);
+
+                showOccurrence("X1");
+                editHierarchyParameters("caller=3k", "caller=2k");
+                assertHierarchyOutputs(solve(), 2000, 4000, 3000);
+                saveAndReopenHierarchy(evidence.resolve("changed.ipes"));
+                assertHierarchyOutputs(solve(), 2000, 4000, 3000);
+
+                var secondLeaf = showOccurrence("X2", "Xleaf");
+                var shunt = hierarchyComponent(secondLeaf, "Rsh");
+                withDialog("AC component Rsh", dialog -> descendants(dialog, JTextField.class).getFirst().setText("5k"),
+                        null, () -> shunt.doDoubleClickAction(shunt.getSheetPosition()));
+                assertHierarchyOutputs(solve(), 2000, 4000, 5000);
+
+                var firstLeaf = showOccurrence("X1", "Xleaf");
+                var pin = hierarchyComponent(firstLeaf, "Rseries").YOUT.getFirst().getPosition();
+                var wire = firstLeaf.getLocalSheetComponents().stream().filter(Verbindung.class::isInstance)
+                        .map(Verbindung.class::cast).filter(item -> item.getAllPointCoordinates().contains(pin) && item.getLabel().isEmpty())
+                        .min(java.util.Comparator.comparingDouble(item -> item.getStartPoint().distance(item.getEndPoint()))).orElseThrow();
+                var member = wire.getHierarchyMember();
+                moveHierarchyWire(wire, -3);
+                assertHierarchySplit();
+                saveAndReopenHierarchy(evidence.resolve("broken.ipes"));
+                assertHierarchySplit();
+                var peerWire = showOccurrence("X2", "Xleaf").getLocalSheetComponents().stream()
+                        .filter(Verbindung.class::isInstance).map(Verbindung.class::cast)
+                        .filter(item -> member.equals(item.getHierarchyMember())).findFirst().orElseThrow();
+                moveHierarchyWire(peerWire, 3);
+                assertHierarchyOutputs(solve(), 2000, 4000, 5000);
+                Path repaired = evidence.resolve("repaired.ipes");
+                saveAndReopenHierarchy(repaired);
+                assertHierarchyOutputs(solve(), 2000, 4000, 5000);
+                return repaired;
+    }
+
+    private static CircuitSheet showOccurrence(String... path) {
+        var editor = MainWindow._se;
+        CircuitSheet sheet = editor._circuitSheet;
+        editor.setNewVisibleCircuitSheet(sheet);
+        for (String name : path) {
+            var owner = assertInstanceOf(SubcircuitBlock.class, hierarchyComponent(sheet, name));
+            owner.doDoubleClickAction(owner.getSheetPosition());
+            sheet = owner._myCircuitSheet;
+        }
+        assertSame(sheet, editor._visibleCircuitSheet);
+        return sheet;
+    }
+
+    private static AbstractBlockInterface hierarchyComponent(CircuitSheet sheet, String name) {
+        return sheet.getLocalSheetComponents().stream().filter(AbstractBlockInterface.class::isInstance)
+                .map(AbstractBlockInterface.class::cast).filter(block -> block.getStringID().equals(name)).findFirst().orElseThrow();
+    }
+
+    private static void editHierarchyParameters(String defaults, String overrides) throws Exception {
+        var menu = GeckoSim._win.getJMenuBar().getMenu(2).getPopupMenu();
+        var command = descendants(menu, JMenuItem.class).stream()
+                .filter(item -> item.getText().startsWith("ASC hierarchy parameters")).findFirst().orElseThrow();
+        withDialog("ASC parameters", dialog -> {
+            var fields = descendants(dialog, JTextArea.class);
+            assertEquals(2, fields.size());
+            fields.getFirst().setText(defaults);
+            fields.getLast().setText(overrides);
+        }, null, command::doClick);
+    }
+
+    private static void moveHierarchyWire(Verbindung wire, int y) {
+        wire.moveComponent(new Point(0, y));
+        wire.setPositionWithUndo();
+    }
+
+    private static void saveAndReopenHierarchy(Path file) throws Exception {
+        GeckoSim._win.rawSaveFile(file.toFile());
+        assertTrue(Files.isRegularFile(file), file.toString());
+        GeckoSim._win.createNewFile();
+        open(file);
+    }
+
+    private static void assertHierarchyOutputs(AcResult result, double seriesA, double seriesB, double shunt) {
+        assertEquals(12, result.hierarchy().ports().size());
+        for (int i = 0; i < result.frequencyHz().size(); i++) {
+            double omega = 2 * Math.PI * result.frequencyHz().get(i);
+            for (int caller = 1; caller <= 2; caller++) {
+                double series = caller == 1 ? seriesA : seriesB;
+                var expected = new Complex(shunt, 0).divide(new Complex(shunt + series, omega * shunt * series * 1e-8));
+                close(expected, voltage(result, "X" + caller + ":Xleaf:Csh", 1, i));
+            }
+        }
+    }
+
+    private static void assertHierarchySplit() throws Exception {
+        var editor = MainWindow._se;
+        var prepared = DesktopAcAnalysis.prepare(editor, MainWindow._solverSettings);
+        assertFalse(prepared.report().readyForHeadless());
+        assertTrue(prepared.report().diagnostics().stream().anyMatch(issue ->
+                issue.message().contains("'Rseries' has an unconnected output terminal")));
+        var model = new gecko.geckocircuits.circuit.EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(),
+                MainWindow._solverSettings, MainWindow.optimizerParameterData, MainWindow._fileManager,
+                gecko.geckocircuits.circuit.EditorCircuitCapture.ScriptSources.EMPTY, MainWindow.getOpenFileName(),
+                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues(), editor.getHierarchy()).toModel();
+        var graph = CircuitTopology.resolve(model);
+        var hierarchy = new gecko.core.io.HierarchyIndex(model);
+        for (String caller : List.of("X1", "X2")) {
+            var path = List.of(caller, "Xleaf");
+            var resistor = model.getCircuitComponents().stream().filter(component -> component.getName().equals("Rseries")
+                    && hierarchy.path(component.getSavedBlock().parentSheetIdentifier()).equals(path)).findFirst().orElseThrow();
+            var output = hierarchy.boundaries().stream().filter(port -> port.formal().name().equals("OUT")
+                    && hierarchy.path(port.sheet().id()).equals(path)).findFirst().orElseThrow();
+            assertNotEquals(graph.group(resistor, CircuitTopology.Side.OUTPUT, 0).id(),
+                    graph.group(output.terminal(), CircuitTopology.Side.INPUT, 0).id(), caller);
+        }
+    }
+
+    private static FutureTask<Void> startBackgroundSaves(Path evidence, Path current) throws Exception {
+        var started = new java.util.concurrent.CountDownLatch(1);
+        var firstSave = new java.util.concurrent.CountDownLatch(1);
+        var writer = new FutureTask<Void>(() -> {
+            started.countDown();
+            for (int i = 0; i < 8; i++) {
+                GeckoSim._win.rawSaveFile(evidence.resolve("backup-" + i + ".ipes").toFile());
+                firstSave.countDown();
+            }
+            return null;
+        });
+        Thread.ofPlatform().daemon().name("hierarchy-backup-regression").start(writer);
+        assertTrue(started.await(5, TimeUnit.SECONDS));
+        assertFalse(firstSave.await(200, TimeUnit.MILLISECONDS), "The save captured live document state off the editor thread.");
+        for (int i = 0; i < 6; i++) {
+            GeckoSim._win.createNewFile();
+            open(current);
+        }
+        return writer;
+    }
+
+    private static void verifyBackgroundSaves(Path evidence) throws Exception {
+        var reader = new CircuitFileParser();
+        var preparation = new CircuitPreparation();
+        for (int i = 0; i < 8; i++) {
+            var backup = reader.parse(evidence.resolve("backup-" + i + ".ipes").toString());
+            var ready = assertInstanceOf(PreparationResult.Ready.class,
+                    preparation.prepare(preparation.capture(backup), PreparationRequest.defaults()));
+            assertHierarchyOutputs(ready.execution().acPlan().execute(), 2000, 4000, 5000);
+        }
+    }
 
     @Test
     void rejectsTheSamePartialImportsInCoreAndProductionDesktop() throws Exception {

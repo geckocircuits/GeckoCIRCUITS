@@ -1,0 +1,11 @@
+Version 4
+SymbolType BLOCK
+PIN -48 -48 NONE 8
+PINATTR PinName IN
+PINATTR SpiceOrder 2
+PIN -48 48 NONE 8
+PINATTR PinName RET
+PINATTR SpiceOrder 1
+PIN 48 0 NONE 8
+PINATTR PinName OUT
+PINATTR SpiceOrder 3

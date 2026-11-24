@@ -16,9 +16,11 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
         this(instance, law instanceof Controlled ? List.of(1, 2, 3, 4) : List.of(1, 2), aliases, mirrored, law);
     }
 
-    public sealed interface Law permits Passive, Voltage, Controlled { }
+    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled { }
 
     public record Passive(String expression) implements Law { }
+    public record Inductance(String expression, String seriesResistance) implements Law { }
     public record Voltage(String dc, String waveform, String magnitude, String phaseDegrees) implements Law { }
+    public record Current(String dc, String magnitude, String phaseDegrees) implements Law { }
     public record Controlled(String expression, boolean laplace) implements Law { }
 }

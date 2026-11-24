@@ -42,6 +42,11 @@ public final class CircuitTopology {
         public ComponentIdentity controlTarget() { return parent.child(controlTargetRole); }
     }
     public record TerminalIdentity(ComponentIdentity component, Side side, int port) { }
+    public record LocalGroup(long sheetIdentifier, boolean ground, List<TerminalIdentity> terminals) {
+        public LocalGroup { terminals = List.copyOf(terminals); }
+    }
+    public record BoundaryIncidence(HierarchyIndex.Boundary boundary, TerminalIdentity internal,
+                                    TerminalIdentity external, LocalGroup internalGroup, LocalGroup externalGroup) { }
     public record Group(int id, String domain, String canonicalLabel, List<TerminalIdentity> terminals,
                         List<TerminalIdentity> producerTerminals) {
         public Group {
@@ -67,14 +72,19 @@ public final class CircuitTopology {
     private final List<HiddenComponent> hiddenComponents;
     private final List<String> physicalConnectionIssues;
     private final List<Integer> connectionGroupOrder;
+    private final Map<TerminalIdentity, LocalGroup> localGroups;
+    private final List<BoundaryIncidence> boundaryIncidences;
 
     private CircuitTopology(Map<CircuitModel.ComponentData, ComponentIdentity> identities,
             Map<TerminalIdentity, Integer> terminalGroups, Map<TerminalIdentity, Integer> externalOutputGroups,
             Map<Integer, Group> groups, Map<Alias, Integer> labelGroups,
             List<ComponentIdentity> activeComponents, List<ComponentIdentity> structuralComponents, List<Wire> wires,
-            List<String> physicalConnectionIssues, List<Integer> connectionGroupOrder) {
+            List<String> physicalConnectionIssues, List<Integer> connectionGroupOrder,
+            Map<TerminalIdentity, LocalGroup> localGroups, List<BoundaryIncidence> boundaryIncidences) {
         this.labelGroups = Map.copyOf(labelGroups);
         this.connectionGroupOrder = List.copyOf(connectionGroupOrder);
+        this.localGroups = Map.copyOf(localGroups);
+        this.boundaryIncidences = List.copyOf(boundaryIncidences);
         this.hiddenComponents = List.of();
         this.physicalConnectionIssues = List.copyOf(physicalConnectionIssues);
         this.identities = Map.copyOf(identities);
@@ -99,7 +109,10 @@ public final class CircuitTopology {
                 if (component == null) throw new IllegalArgumentException("Circuit component cannot be null");
             }
         }
+        var hierarchy = new HierarchyIndex(model);
         var identities = new IdentityHashMap<CircuitModel.ComponentData, ComponentIdentity>();
+        var importedBoundaries = new IdentityHashMap<CircuitModel.ComponentData, HierarchyIndex.Boundary>();
+        hierarchy.boundaries().forEach(boundary -> importedBoundaries.put(boundary.terminal(), boundary));
         var ports = new ArrayList<Port>();
         var active = new ArrayList<ComponentIdentity>();
         var structural = new ArrayList<ComponentIdentity>();
@@ -128,13 +141,14 @@ public final class CircuitTopology {
         boolean electricalGeometry = wires.stream().anyMatch(wire -> "LK".equals(wire.domain()) || "RELUCTANCE".equals(wire.domain()))
                 && model.getCircuitComponents().stream().anyMatch(component -> twoPort(component.getType())
                     && (missingLabel(component, Side.INPUT) || missingLabel(component, Side.OUTPUT)));
-        addComponents("LK", model.getCircuitComponents(), identities, ports, active, structural, sheets, false, electricalGeometry);
-        addComponents("CONTROL", model.getControlComponents(), identities, ports, active, structural, sheets, false, false);
-        addComponents("THERMAL", model.getThermalComponents(), identities, ports, active, structural, sheets, false, false);
-        addComponents("SPECIAL", model.getSpecialComponents(), identities, ports, active, structural, sheets, false, false);
+        addComponents("LK", model.getCircuitComponents(), identities, ports, active, structural, sheets, false,
+                electricalGeometry, importedBoundaries);
+        addComponents("CONTROL", model.getControlComponents(), identities, ports, active, structural, sheets, false, false, Map.of());
+        addComponents("THERMAL", model.getThermalComponents(), identities, ports, active, structural, sheets, false, false, Map.of());
+        addComponents("SPECIAL", model.getSpecialComponents(), identities, ports, active, structural, sheets, false, false, Map.of());
         for (var block : model.getStructuralComponents()) {
             addComponents(block.domain(), List.of(block.component()), identities, ports, active, structural, sheets, true,
-                    electricalGeometry && block.domain().equals("LK"));
+                    electricalGeometry && block.domain().equals("LK"), Map.of());
         }
         int[] parent = new int[ports.size() + wires.size()];
         for (int i = 0; i < parent.length; i++) parent[i] = i;
@@ -202,7 +216,7 @@ public final class CircuitTopology {
         for (int i = 0; i < ports.size(); i++) portIndices.put(ports.get(i).id(), i);
         var globals = new LinkedHashMap<Alias, Integer>();
         identities.forEach((component, identity) -> {
-            if (boundary(component, identity.domain())) {
+            if (boundary(component, identity.domain()) && !importedBoundaries.containsKey(component)) {
                 Integer input = portIndices.get(new TerminalIdentity(identity, Side.INPUT, 0));
                 Integer output = portIndices.get(new TerminalIdentity(identity, Side.OUTPUT, 0));
                 if (input != null && output != null) union(parent, input, output);
@@ -225,6 +239,41 @@ public final class CircuitTopology {
                 }
             }
         });
+        var localGroups = new LinkedHashMap<TerminalIdentity, LocalGroup>();
+        var incidences = new ArrayList<BoundaryIncidence>();
+        if (model.getHierarchy() != null) {
+            var ground = new java.util.LinkedHashSet<Integer>();
+            aliases.forEach((alias, index) -> {
+                if (alias.domain().equals("LK") && ground(alias.label())) ground.add(find(parent, index));
+            });
+            var members = new LinkedHashMap<Integer, List<Port>>();
+            for (int i = 0; i < ports.size(); i++) {
+                if (ports.get(i).domain().equals("LK")) {
+                    members.computeIfAbsent(find(parent, i), ignored -> new ArrayList<>()).add(ports.get(i));
+                }
+            }
+            members.forEach((root, group) -> {
+                var local = new LocalGroup(group.getFirst().sheet(), ground.contains(root), group.stream().map(Port::id).toList());
+                local.terminals().forEach(terminal -> localGroups.put(terminal, local));
+            });
+            for (var boundary : hierarchy.boundaries()) {
+                var identity = identities.get(boundary.terminal());
+                var in = new TerminalIdentity(identity, Side.INPUT, 0);
+                var out = new TerminalIdentity(identity, Side.OUTPUT, 0);
+                if (!portIndices.containsKey(in) || !portIndices.containsKey(out)) {
+                    throw new IllegalArgumentException("Enable boundary " + boundary.formal().name() + " in "
+                            + hierarchy.path(boundary.sheet().id()));
+                }
+                incidences.add(new BoundaryIncidence(boundary, in, out, localGroups.get(in), localGroups.get(out)));
+            }
+            for (var incidence : incidences) {
+                union(parent, portIndices.get(incidence.internal()), portIndices.get(incidence.external()));
+            }
+            if (!ground.isEmpty()) {
+                int first = ground.getFirst();
+                ground.forEach(root -> union(parent, first, root));
+            }
+        }
         var roots = new LinkedHashMap<Integer, List<Port>>();
         for (int i = 0; i < ports.size(); i++) {
             roots.computeIfAbsent(find(parent, i), key -> new ArrayList<>()).add(ports.get(i));
@@ -337,7 +386,7 @@ public final class CircuitTopology {
         });
         return new CircuitTopology(identities, publicTerminalGroups, externalOutputGroups, publicGroups, labelGroups, active,
                 structural, wires,
-                physicalConnectionIssues, new ArrayList<>(connectionOrder));
+                physicalConnectionIssues, new ArrayList<>(connectionOrder), localGroups, incidences);
     }
 
     private CircuitTopology(CircuitTopology source, Map<TerminalIdentity, Integer> terminalGroups,
@@ -354,6 +403,8 @@ public final class CircuitTopology {
         this.connectionDomains = source.connectionDomains;
         this.hiddenComponents = List.copyOf(children);
         this.physicalConnectionIssues = source.physicalConnectionIssues;
+        this.localGroups = source.localGroups;
+        this.boundaryIncidences = source.boundaryIncidences;
     }
 
     /**
@@ -442,6 +493,8 @@ public final class CircuitTopology {
 
     /** @return the immutable terminal to group identifier mapping */
     public Map<TerminalIdentity, Integer> terminalGroups() { return terminalGroups; }
+    public Map<TerminalIdentity, LocalGroup> localGroups() { return localGroups; }
+    public List<BoundaryIncidence> boundaryIncidences() { return boundaryIncidences; }
     /** @return the immutable groups indexed by their identifiers */
     public Map<Integer, Group> groups() { return groups; }
 
@@ -508,7 +561,8 @@ public final class CircuitTopology {
     private static void addComponents(String domain, List<CircuitModel.ComponentData> components,
             Map<CircuitModel.ComponentData, ComponentIdentity> identities, List<Port> ports,
             List<ComponentIdentity> active, List<ComponentIdentity> structural, Map<Long, SavedCircuitBlock> sheets,
-            boolean structuralOnly, boolean legacyGeometry) {
+            boolean structuralOnly, boolean legacyGeometry,
+            Map<CircuitModel.ComponentData, HierarchyIndex.Boundary> importedBoundaries) {
         for (int ordinal = 0; ordinal < components.size(); ordinal++) {
             var component = components.get(ordinal);
             var saved = component.getSavedBlock();
@@ -518,6 +572,10 @@ public final class CircuitTopology {
             var identity = new ComponentIdentity(domain, identifier, identifier == 0 ? sourceOrdinal : -1);
             identities.put(component, identity);
             if (!parentsEnabled(saved, sheets)) continue;
+            if (domain.equals("SPECIAL") && HierarchyIndex.token(saved, HierarchyMetadataCodec.OCCURRENCE) != null) {
+                structural.add(identity);
+                continue;
+            }
             boolean shorted = physicalShort(component, domain);
             boolean controlShorted = domain.equals("CONTROL") && saved != null && saved.enabledState() == 2;
             if (saved != null && saved.enabledState() != 1 && !shorted && !controlShorted) continue;
@@ -526,8 +584,10 @@ public final class CircuitTopology {
             long sheet = saved == null ? 0 : saved.parentSheetIdentifier();
             var registry = domain.equals("LK") && (component.getAcComponent() != null || component.getType() == SpicePorts.E.type())
                     ? SpicePorts.find(domain, component.getType()) : null;
+            var importedBoundary = importedBoundaries.get(component);
             for (Side side : Side.values()) {
                 String[] labels = portLabels(component, side);
+                if (importedBoundary != null && labels.length == 0) labels = new String[]{""};
                 if (registry != null) {
                     int required = (int) registry.nativePorts().stream().filter(pin -> pin.side() == side).count();
                     if (labels.length < required) labels = Arrays.copyOf(labels, required);
@@ -547,6 +607,18 @@ public final class CircuitTopology {
                         if (candidate.side() == side && candidate.port() == port) { geometry = candidate; break; }
                     }
                     String terminalDomain = terminalDomain(domain, component.getType(), side);
+                    if (geometry == null && importedBoundary != null) {
+                        int[] position = component.getPosition();
+                        int x = position[0], y = position[1];
+                        if (side == Side.OUTPUT) {
+                            var offset = HierarchyMetadataCodec.decodeBoundaryLocation(
+                                    saved.tokens().get(HierarchyMetadataCodec.BOUNDARY_LOCATION));
+                            int[] block = importedBoundary.sheet().owner().getPosition();
+                            x = block[0] + offset.x();
+                            y = block[1] + offset.y();
+                        }
+                        geometry = new CircuitModel.TerminalData(terminalDomain, terminalSheet, side, port, x, y, true);
+                    }
                     if (geometry == null && registry != null) {
                         for (var pin : registry.nativePorts()) {
                             if (pin.side() != side || pin.port() != port) continue;

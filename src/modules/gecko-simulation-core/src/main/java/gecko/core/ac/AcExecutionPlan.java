@@ -2,6 +2,7 @@ package gecko.core.ac;
 
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitTopology;
+import gecko.core.io.HierarchyIndex;
 import gecko.core.io.SpicePorts;
 import gecko.core.io.importer.SpiceValue;
 import gecko.core.math.LUDecomposition;
@@ -28,13 +29,18 @@ public final class AcExecutionPlan {
     private final List<Node> nodes;
     private final List<Branch> branches;
     private final int size;
+    private final AcHierarchyTraces hierarchyTraces;
 
     public AcExecutionPlan(CircuitModel model) {
         var settings = model.getAcSettings();
-        frequencies = settings.sweep().frequencies();
-        Map<String, String> parameters = settings.parameterMap();
-        parameters.values().forEach(expression -> SpiceValue.evaluate(expression, parameters));
+        boolean hierarchical = model.getHierarchy() != null;
+        frequencies = settings.sweep().frequencies(hierarchical);
+        Map<String, String> rootParameters = settings.parameterMap();
+        rootParameters.values().forEach(expression -> SpiceValue.evaluate(expression, rootParameters));
         var topology = CircuitTopology.resolve(model);
+        var hierarchy = new HierarchyIndex(model);
+        var scopes = hierarchy.parameterScopes(rootParameters);
+        hierarchyTraces = hierarchical ? new AcHierarchyTraces(topology, hierarchy) : null;
         topology.validatePhysicalConnections();
         var active = new HashSet<>(topology.activeComponents());
         if (active.stream().anyMatch(identity -> !identity.domain().equals("LK"))) {
@@ -53,21 +59,31 @@ public final class AcExecutionPlan {
         if (groupNodes.values().stream().noneMatch(node -> node.row == -1)) {
             throw new IllegalArgumentException("Connect the AC circuit to ground.");
         }
-        var seen = new HashSet<String>();
+        var seen = new HashSet<List<String>>();
         var prepared = new ArrayList<Branch>();
         int nextCurrent = voltageRows;
         for (var component : model.getCircuitComponents()) {
-            if (!active.contains(topology.identity(component))) continue;
+            var componentIdentity = topology.identity(component);
+            if (!active.contains(componentIdentity)) continue;
+            long sheet = HierarchyIndex.parent(component.getSavedBlock());
+            var path = hierarchy.path(sheet);
+            Map<String, String> parameters = scopes.getOrDefault(sheet, rootParameters);
             SpicePorts type = SpicePorts.find("LK", component.getType());
-            if (type != SpicePorts.RES && type != SpicePorts.CAP && type != SpicePorts.VOLTAGE && type != SpicePorts.E) {
+            if (type != SpicePorts.RES && type != SpicePorts.CAP && type != SpicePorts.IND
+                    && type != SpicePorts.VOLTAGE && type != SpicePorts.CURRENT && type != SpicePorts.E) {
                 throw new IllegalArgumentException("Unsupported AC component: " + component.getName());
             }
             AcComponent owned = component.getAcComponent();
             if (owned == null) owned = legacy(component, type);
-            if (!seen.add(owned.instance().toLowerCase(Locale.ROOT))) {
+            String instance = path.isEmpty() ? owned.instance() : String.join(":", path) + ":" + owned.instance();
+            var identityPath = new ArrayList<>(path);
+            identityPath.add(owned.instance());
+            if (!seen.add(identityPath.stream().map(segment -> segment.toLowerCase(Locale.ROOT)).toList())) {
                 throw new IllegalArgumentException("Duplicate AC instance: " + owned.instance());
             }
             int[] ports = new int[type.ports().size()];
+            var terminalIds = new CircuitTopology.TerminalIdentity[ports.length];
+            String memberKey = HierarchyIndex.key(component.getSavedBlock());
             if (ports.length != owned.spiceOrders().size()) throw wrongLaw(owned);
             for (var port : type.ports()) {
                 var group = topology.group(component, port.side(), port.port());
@@ -75,7 +91,13 @@ public final class AcExecutionPlan {
                 if (node == null) throw new IllegalArgumentException("Missing AC terminal on " + owned.instance());
                 int order = port.order();
                 ports[order - 1] = node.row;
-                node.members.add(new AcResult.Member(owned.instance(), owned.spiceOrders().get(order - 1)));
+                node.members.add(new AcResult.Member(instance, owned.spiceOrders().get(order - 1)));
+                var terminal = new CircuitTopology.TerminalIdentity(componentIdentity, port.side(), port.port());
+                terminalIds[order - 1] = terminal;
+                if (hierarchyTraces != null) {
+                    hierarchyTraces.addPrimitive(terminal, path, memberKey == null ? owned.instance() : memberKey,
+                            owned.instance(), owned.spiceOrders().get(order - 1));
+                }
                 if (owned.aliases().size() >= order && !owned.aliases().get(order - 1).isEmpty()) {
                     node.aliases.add(owned.aliases().get(order - 1));
                 }
@@ -87,7 +109,7 @@ public final class AcExecutionPlan {
                     if (value <= 0) throw new IllegalArgumentException("Require a positive R or C value on " + owned.instance());
                     SpiceValue.Transfer admittance = type == SpicePorts.RES
                             ? s -> new Complex(1 / value, 0) : s -> s.scale(value);
-                    prepared.add(new Branch(owned.instance(), ports[0], ports[1], -1, -1, -1, admittance, null, Complex.ZERO));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, admittance, null, Complex.ZERO));
                 }
                 case AcComponent.Voltage law -> {
                     if (type != SpicePorts.VOLTAGE) throw wrongLaw(owned);
@@ -96,8 +118,27 @@ public final class AcExecutionPlan {
                     double phase = SpiceValue.evaluate(law.phaseDegrees(), parameters);
                     if (magnitude < 0) throw new IllegalArgumentException("Require a nonnegative AC source magnitude.");
                     Complex excitation = Complex.polar(magnitude, Math.toRadians(phase));
-                    prepared.add(new Branch(owned.instance(), ports[0], ports[1], -1, -1,
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
                             nextCurrent++, null, null, excitation));
+                }
+                case AcComponent.Inductance law -> {
+                    if (type != SpicePorts.IND) throw wrongLaw(owned);
+                    double inductance = SpiceValue.evaluate(law.expression(), parameters);
+                    double resistance = SpiceValue.evaluate(law.seriesResistance(), parameters);
+                    if (inductance <= 0 || resistance <= 0) {
+                        throw new IllegalArgumentException("Require positive inductance and series resistance on " + owned.instance());
+                    }
+                    SpiceValue.Transfer admittance = s -> Complex.ONE.divide(s.scale(inductance).add(new Complex(resistance, 0)));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, admittance, null, Complex.ZERO));
+                }
+                case AcComponent.Current law -> {
+                    if (type != SpicePorts.CURRENT) throw wrongLaw(owned);
+                    SpiceValue.evaluate(law.dc(), parameters);
+                    double magnitude = SpiceValue.evaluate(law.magnitude(), parameters);
+                    double phase = SpiceValue.evaluate(law.phaseDegrees(), parameters);
+                    if (magnitude < 0) throw new IllegalArgumentException("Require a nonnegative AC source magnitude.");
+                    Complex excitation = Complex.polar(magnitude, Math.toRadians(phase));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, null, null, excitation));
                 }
                 case AcComponent.Controlled law -> {
                     if (type != SpicePorts.E) throw wrongLaw(owned);
@@ -109,11 +150,13 @@ public final class AcExecutionPlan {
                         double value = SpiceValue.evaluate(law.expression(), parameters);
                         gain = s -> new Complex(value, 0);
                     }
-                    prepared.add(new Branch(owned.instance(), ports[0], ports[1], ports[2], ports[3],
+                    prepared.add(new Branch(instance, ports[0], ports[1], ports[2], ports[3],
                             nextCurrent++, null, gain, Complex.ZERO));
                 }
             }
+            if (hierarchyTraces != null) hierarchyTraces.addBranch(terminalIds[0], terminalIds[1]);
         }
+        if (hierarchyTraces != null) hierarchyTraces.resolve();
         if (prepared.isEmpty()) throw new IllegalArgumentException("Add an AC circuit component.");
         validateGroundPaths(groupNodes.values().stream().toList(), prepared, voltageRows);
         nodes = List.copyOf(groupNodes.values());
@@ -126,6 +169,7 @@ public final class AcExecutionPlan {
         var neighbors = new ArrayList<List<Integer>>(voltageRows + 1);
         for (int i = 0; i <= voltageRows; i++) neighbors.add(new ArrayList<>());
         for (var branch : branches) {
+            if (branch.currentRow < 0 && branch.admittance == null) continue;
             int positive = branch.positive + 1, negative = branch.negative + 1;
             neighbors.get(positive).add(negative);
             neighbors.get(negative).add(positive);
@@ -187,7 +231,8 @@ public final class AcExecutionPlan {
                 for (int i = 0; i < nodes.size(); i++) voltage.get(i).add(at(x, nodes.get(i).row));
                 for (int i = 0; i < branches.size(); i++) {
                     var branch = branches.get(i);
-                    Complex value = branch.currentRow >= 0 ? x[branch.currentRow]
+                    Complex value = branch.currentRow >= 0 ? x[branch.currentRow] : branch.admittance == null
+                            ? branch.excitation
                             : branch.admittance.evaluate(s).multiply(at(x, branch.positive).subtract(at(x, branch.negative)));
                     checkFinite(value);
                     current.get(i).add(value);
@@ -210,7 +255,8 @@ public final class AcExecutionPlan {
         for (int i = 0; i < branches.size(); i++) {
             currents.add(new AcResult.CurrentTrace(branches.get(i).instance, current.get(i)));
         }
-        return new AcResult(Arrays.stream(frequencies).boxed().toList(), voltages, currents, residuals, size);
+        return new AcResult(Arrays.stream(frequencies).boxed().toList(), voltages, currents, residuals, size,
+                hierarchyTraces == null ? null : hierarchyTraces.result(current, frequencies.length));
     }
 
     private static void checkCancellation() {
@@ -225,7 +271,10 @@ public final class AcExecutionPlan {
 
     private static void stamp(Complex[][] a, Complex[] b, Branch branch, Complex s) {
         int p = branch.positive, n = branch.negative, i = branch.currentRow;
-        if (i < 0) {
+        if (i < 0 && branch.admittance == null) {
+            if (p >= 0) b[p] = b[p].subtract(branch.excitation);
+            if (n >= 0) b[n] = b[n].add(branch.excitation);
+        } else if (i < 0) {
             Complex y = branch.admittance.evaluate(s);
             add(a, p, p, y);
             add(a, n, n, y);

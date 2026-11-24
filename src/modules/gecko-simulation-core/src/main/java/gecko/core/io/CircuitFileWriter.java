@@ -32,12 +32,14 @@ public final class CircuitFileWriter {
             throw new IOException("Capture all circuit resources before writing the circuit.");
         }
         var identifiers = identifiers(model);
+        var hierarchy = new HierarchyIndex(model);
+        var scopes = hierarchy.parameterScopes(model.getAcSettings() == null ? Map.of() : model.getAcSettings().parameterMap());
         var text = new StringBuilder();
         int ordinal = 0;
-        for (var data : model.getCircuitComponents()) component(text, model, data, "LK", "e", ++ordinal, identifiers.get(data));
-        for (var data : model.getControlComponents()) component(text, model, data, "CONTROL", "c", ++ordinal, identifiers.get(data));
-        for (var data : model.getThermalComponents()) component(text, model, data, "THERM", "eTH", ++ordinal, identifiers.get(data));
-        for (var data : model.getSpecialComponents()) component(text, model, data, "SPECIAL", "sp", ++ordinal, identifiers.get(data));
+        for (var data : model.getCircuitComponents()) component(text, scopes, data, "LK", "e", ++ordinal, identifiers.get(data));
+        for (var data : model.getControlComponents()) component(text, scopes, data, "CONTROL", "c", ++ordinal, identifiers.get(data));
+        for (var data : model.getThermalComponents()) component(text, scopes, data, "THERM", "eTH", ++ordinal, identifiers.get(data));
+        for (var data : model.getSpecialComponents()) component(text, scopes, data, "SPECIAL", "sp", ++ordinal, identifiers.get(data));
         for (var wire : model.getConnections()) {
             String domain = wire.getType().equals("THERMAL") ? "THERM" : wire.getType();
             text.append("\nverbindung").append(domain).append(" (").append(++ordinal).append(")\n<Verbindung>\n");
@@ -55,6 +57,10 @@ public final class CircuitFileWriter {
         var settings = new TreeMap<>(model.getSavedSettings());
         settings.remove(AcMetadataCodec.SETTINGS);
         settings.remove(AcMetadataCodec.PROVENANCE);
+        settings.remove(HierarchyMetadataCodec.DOCUMENT);
+        if (model.getHierarchy() != null) {
+            settings.put(HierarchyMetadataCodec.DOCUMENT, HierarchyMetadataCodec.encode(model.getHierarchy()));
+        }
         if (model.getAcSettings() != null) {
             settings.put(AcMetadataCodec.SETTINGS, AcMetadataCodec.encode(model.getAcSettings()));
         }
@@ -111,7 +117,7 @@ public final class CircuitFileWriter {
         return bytes.toByteArray();
     }
 
-    private static void component(StringBuilder text, CircuitModel model, CircuitModel.ComponentData data,
+    private static void component(StringBuilder text, Map<Long, Map<String, String>> scopes, CircuitModel.ComponentData data,
             String domain, String marker, int ordinal, long identifier) throws IOException {
         if (!data.isParsedInput() && data.getParameters().keySet().stream().anyMatch(key -> !key.equals("uniqueObjectIdentifier"))) {
             throw new IOException("Set the saved parameter slots and tokens for " + data.getName() + ".");
@@ -128,11 +134,13 @@ public final class CircuitFileWriter {
         tokens.put("x", Integer.toString(data.getPosition()[0]));
         tokens.put("y", Integer.toString(data.getPosition()[1]));
         tokens.put("orientierung", Integer.toString(data.getOrientation() == 0 ? 503 : data.getOrientation()));
-        if (!domain.equals("SPECIAL") || data.getSavedBlock() == null) {
+        if (!domain.equals("SPECIAL") || data.getSavedBlock() == null
+                || tokens.containsKey(HierarchyMetadataCodec.OCCURRENCE)) {
             tokens.put("labelAnfangsKnoten[]", strings(data.getTerminalXLabels()));
             tokens.put("labelEndKnoten[]", strings(data.getTerminalYLabels()));
             double[] values = data.getAcComponent() == null ? data.getNumericParameters()
-                    : AcMetadataCodec.compatibilityValues(data.getAcComponent(), data.getNumericParameters(), model.getAcSettings());
+                    : AcMetadataCodec.compatibilityValues(data.getAcComponent(), data.getNumericParameters(),
+                            scopes.getOrDefault(HierarchyIndex.parent(data.getSavedBlock()), scopes.get(0L)));
             tokens.put("parameter[]", Arrays.stream(values).mapToObj(Double::toString)
                     .collect(Collectors.joining(" ")));
             tokens.put("parameterString[]", strings(data.getParameterStrings()));
@@ -186,8 +194,15 @@ public final class CircuitFileWriter {
     }
 
     private static String worksheetExtent(CircuitModel model, Set<CircuitModel.ComponentData> components, int axis) {
-        int max = 0;
-        for (var data : components) max = Math.max(max, data.getPosition()[axis]);
+        long max = 0;
+        for (var data : components) {
+            long extent = data.getPosition()[axis];
+            if (HierarchyIndex.token(data.getSavedBlock(), HierarchyMetadataCodec.OCCURRENCE) != null) {
+                var size = HierarchyIndex.token(data.getSavedBlock(), axis == 0 ? "blockSizeX" : "blockSizeY");
+                if (size != null) extent += Integer.parseInt(size);
+            }
+            max = Math.max(max, extent);
+        }
         for (var wire : model.getConnections()) {
             for (int[] point : wire.getPoints()) max = Math.max(max, point[axis]);
         }

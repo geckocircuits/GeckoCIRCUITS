@@ -50,30 +50,43 @@ Use the same command with a flat `.asc` schematic.
 java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.io.importer.Main input.asc output.ipes
 ```
 
-Use stock symbols for the supported SPICE elements.
-The importer uses the saved symbol positions, wires, and net labels.
-Review the JSON diagnostic lines for unsupported symbols, symbol overrides, and layout conflicts.
-Hierarchical sheets require manual conversion.
+Use stock symbols for the supported elements. The importer uses the saved symbol positions, wires, and net labels.
+
+### Import an alternating current hierarchy
+
+1. Keep the root `.asc`, child `.asc` sheets, and block `.asy` symbols together.
+2. Convert the root schematic with the stock symbol directory and a source root.
+
+```sh
+java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.io.importer.Main input.asc output.ipes --symbols path/to/stock-symbols --source-root path/to/project
+```
+
+3. Review the exit code and the JSON diagnostic lines.
+4. Open the output file in the desktop application.
+
+Use each additional `--source-root` after `--symbols`. Each child sheet and block symbol must resolve to one file across the caller directory and the source roots. Use a relative symbol path. The `--symbols` option verifies the pin geometry and order of the stock symbols used for the analysis. For a flat AC schematic, use the same option without `--source-root`.
+
+A block symbol defines the formal ports with `PinName` and `SpiceOrder`. Use a matching named flag on the child sheet for each formal port. Put default parameter expressions in the child sheet's `.param` directives. Set parameter overrides on each block occurrence in its caller. The analysis evaluates an override in the caller's scope.
+
+The output stores editable native child sheets. Edits to shared definition members apply to linked occurrences. Each occurrence keeps its own parameter overrides and position.
+
+The importer reports unsupported symbol attributes such as `ModelFile`. Review diagnostics for unresolved symbols, invalid port mappings, or layout conflicts before you use the circuit.
 
 ## Linear alternating current analysis
 
-Use one `.ac dec` sweep in a `.cir` netlist or an `.asc` schematic.
-The sweep specifies points per decade, start frequency, and stop frequency.
-Use resistors, capacitors, independent voltage sources, and voltage-controlled voltage sources.
-The controlled source accepts scalar gain or a Laplace expression.
-Inductors, nonlinear device models, and subcircuits are outside this analysis.
+Use one `.ac dec` sweep in a `.cir` netlist or an `.asc` schematic. The sweep specifies points per decade, start frequency, and stop frequency.
 
-For an AC schematic, add `--symbols` to verify the pin coordinates and order against a stock LTspice symbol directory.
+Use resistors, capacitors, inductors, independent voltage and current sources, and voltage-controlled voltage sources. The controlled source accepts scalar gain or a Laplace expression. Specify an explicit positive `Rser` for each AC inductor. An inductor with this AC law is restricted to AC execution.
 
-```sh
-java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.io.importer.Main input.asc output.ipes --symbols path/to/stock-symbols
-```
-
-Run the saved analysis to write frequencies, complex voltages, and voltage-source currents as JSON.
+Run the saved analysis to write the frequencies and complex results as JSON.
 
 ```sh
 java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.ac.AcMain output.ipes
 ```
+
+Flat circuits use `gecko-ac-result-v1`. Hierarchical circuits use `gecko-ac-result-v2`, which adds member identities, branch currents, and signed currents into child ports. The member identities include the occurrence path, local member key, and original port order.
+
+This analysis is limited to the supported linear device laws and the decade sweep. Nonlinear models and text SPICE subcircuits produce conversion diagnostics. Frequency response analysis based on transient excitation and DC operating-point analysis are outside this command.
 
 ## PLECS Standalone models
 

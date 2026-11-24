@@ -48,6 +48,13 @@ public final class CircuitPreparation {
     public PreparationResult prepare(CircuitSnapshot base, PreparationRequest request) {
         var model = base.toModel();
         if (model.getAcSettings() != null) return prepareAc(base, model, request);
+        if (model.getHierarchy() != null || model.getCircuitComponents().stream().anyMatch(component ->
+                component.getAcComponent() != null && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Inductance)) {
+            return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.UNSUPPORTED,
+                    List.of(new Diagnostic("UNSUPPORTED_TRANSIENT_LAW", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
+                            "Select AC analysis for the imported hierarchy or series resistance law.",
+                            "LK", null, "analysis", model.getFilePath()))));
+        }
         for (var finding : CircuitConfiguration.normalize(model)) {
             var issue = new ImportIssue(finding.code(), finding.domain(), finding.component(), finding.message(),
                     finding.sourceLocation(), false, finding.parameterPath());
@@ -130,7 +137,7 @@ public final class CircuitPreparation {
         var diagnostics = new ArrayList<Diagnostic>();
         AcExecutionPlan plan = null;
         try {
-            model = snapshot.executionModel();
+            if (model.getHierarchy() == null) model = snapshot.executionModel();
             plan = new AcExecutionPlan(model);
         } catch (IllegalArgumentException error) {
             diagnostics.add(new Diagnostic("INVALID_AC", Diagnostic.Category.CONFIGURATION, Diagnostic.Severity.ERROR,

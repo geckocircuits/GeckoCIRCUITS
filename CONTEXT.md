@@ -104,3 +104,15 @@ _Avoid_: Expected output, baseline snapshot
 
 **Trace alias**:
 A display name for a voltage or current trace. It has no electrical effect on the circuit.
+
+**Definition**:
+A circuit body and its formal ports and default parameters. Several occurrences can use one definition.
+
+**Occurrence**:
+One placed use of a definition with its own parameter overrides. An occurrence path identifies its sequence of enclosing block calls.
+
+**Boundary connection**:
+The connection from one ordered block pin on a parent sheet to its formal port on a child sheet.
+
+**Port current**:
+The signed current through one boundary connection. Positive current enters the child sheet through its formal port.

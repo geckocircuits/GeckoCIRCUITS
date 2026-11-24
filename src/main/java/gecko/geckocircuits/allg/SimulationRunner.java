@@ -171,6 +171,10 @@ public final class SimulationRunner {
             acAnalysis.start(_se, settings, createNewSimThread);
             return;
         }
+        if (_se.getHierarchy() != null || _se.getElementLK().stream().anyMatch(block -> block.getAcComponent() != null
+                && block.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Inductance)) {
+            throw new IllegalArgumentException("Select AC analysis for the imported hierarchy or series resistance law.");
+        }
         if (createNewSimThread && controller.startAsync(settings)) {
             execution = null;
             simKern = null;

@@ -85,7 +85,8 @@ public final class AcMain {
         for (int i = 1; i < result.residualEta().size(); i++) {
             if (result.residualEta().get(i) > result.residualEta().get(worst)) worst = i;
         }
-        return "{\"schema\":\"gecko-ac-result-v1\",\"metadata\":" + metadata
+        String schema = result.hierarchy() == null ? "gecko-ac-result-v1" : "gecko-ac-result-v2";
+        return "{\"schema\":" + json(schema) + ",\"metadata\":" + metadata
                 + ",\"frequencyHz\":" + result.frequencyHz()
                 + ",\"groups\":" + array(result.groups(), group -> "{\"id\":" + json(group.id())
                     + ",\"ground\":" + group.ground()
@@ -98,7 +99,33 @@ public final class AcMain {
                 + ",\"complexUnknowns\":" + result.complexUnknowns()
                 + ",\"residualEta\":" + result.residualEta()
                 + ",\"worstResidualFrequencyHz\":" + result.frequencyHz().get(worst)
-                + ",\"worstResidualEta\":" + result.residualEta().get(worst) + "}";
+                + ",\"worstResidualEta\":" + result.residualEta().get(worst)
+                + (result.hierarchy() == null ? "" : ",\"hierarchy\":" + hierarchy(result.hierarchy())) + "}";
+    }
+
+    private static String hierarchy(AcResult.HierarchyResult hierarchy) {
+        return "{\"groups\":" + array(hierarchy.groups(), group -> "{\"voltageTraceId\":" + json(group.voltageTraceId())
+                + ",\"ground\":" + group.ground() + ",\"members\":" + array(group.members(), AcMain::member) + "}")
+                + ",\"localGroups\":" + array(hierarchy.localGroups(), AcMain::localGroup)
+                + ",\"currents\":" + array(hierarchy.currents(), branch -> "{\"positive\":" + member(branch.positive())
+                    + ",\"negative\":" + member(branch.negative())
+                    + ",\"currentA\":" + array(branch.currentA(), AcMain::sample) + "}")
+                + ",\"ports\":" + array(hierarchy.ports(), port -> "{\"external\":" + member(port.external())
+                    + ",\"internal\":" + member(port.internal())
+                    + ",\"externalGroup\":" + localGroup(port.externalGroup())
+                    + ",\"internalGroup\":" + localGroup(port.internalGroup())
+                    + ",\"currentIntoChildA\":" + array(port.currentIntoChildA(), AcMain::sample) + "}") + "}";
+    }
+
+    private static String localGroup(AcResult.LocalGroup group) {
+        return "{\"occurrencePath\":" + array(group.occurrencePath(), value -> json(value)) + ",\"ground\":" + group.ground()
+                + ",\"members\":" + array(group.members(), AcMain::member) + "}";
+    }
+
+    private static String member(AcResult.SourceMember member) {
+        return "{\"occurrencePath\":" + array(member.occurrencePath(), value -> json(value))
+                + ",\"localMemberKey\":" + json(member.localMemberKey()) + ",\"instance\":" + json(member.instance())
+                + ",\"spiceOrder\":" + member.spiceOrder() + ",\"kind\":" + json(member.kind().name()) + "}";
     }
 
     private static <T> String array(List<T> values, Function<T, String> format) {

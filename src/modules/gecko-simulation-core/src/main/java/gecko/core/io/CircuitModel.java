@@ -30,6 +30,10 @@ import java.util.Map;
  */
 public class CircuitModel {
     private AcDocumentSettings acSettings;
+    private CircuitHierarchy hierarchy;
+
+    public CircuitHierarchy getHierarchy() { return hierarchy; }
+    public void setHierarchy(CircuitHierarchy hierarchy) { this.hierarchy = hierarchy; }
     private AcProvenance acProvenance;
 
     public AcDocumentSettings getAcSettings() { return acSettings; }
