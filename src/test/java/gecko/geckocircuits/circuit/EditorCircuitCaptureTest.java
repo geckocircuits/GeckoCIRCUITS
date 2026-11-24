@@ -1,20 +1,84 @@
 package gecko.geckocircuits.circuit;
 
+import gecko.core.allg.GeckoFile;
+import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.allg.GeckoFileManager;
 import gecko.geckocircuits.allg.OptimizerParameterData;
 import gecko.geckocircuits.circuit.circuitcomponents.ResistorCircuit;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.core.io.CircuitTopology;
 import gecko.geckocircuits.control.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Arrays;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EditorCircuitCaptureTest {
+    @Test
+    void capturedEmbeddedResourceRetainsBytesAndOwnerAfterChanges(@TempDir Path directory) throws Exception {
+        Path model = directory.resolve("circuit.ipes");
+        var file = new GeckoFile(directory.resolve("pulse.txt").toFile(), model.toString(), new byte[]{-1, 0, 127});
+        file.setUser(17);
+
+        var snapshot = new EditorCircuitCapture().capture(List.of(), new SolverSettings(),
+                new OptimizerParameterData(), new GeckoFileManager(List.of(file)),
+                EditorCircuitCapture.ScriptSources.EMPTY, model.toString());
+        file.getContentsByte()[0] = 0;
+        file.setUser(22);
+
+        var resource = snapshot.toModel().getResources().get(file.getHashValue());
+        assertEquals("pulse.txt", resource.name());
+        assertEquals(List.of(17L), resource.ownerIds());
+        assertArrayEquals(new byte[]{-1, 0, 127}, resource.bytes());
+        byte[] returnedBytes = resource.bytes();
+        returnedBytes[0] = 0;
+        assertArrayEquals(new byte[]{-1, 0, 127}, resource.bytes());
+    }
+
+    @Test
+    void largeExternalAliasesKeepDistinctOwnersAndReportMissingResources(@TempDir Path directory) throws Exception {
+        Path model = directory.resolve("circuit.ipes");
+        byte[] expected = new byte[8 * 1024 * 1024];
+        Arrays.fill(expected, (byte) -126);
+        expected[expected.length - 1] = 127;
+        Path waveform = Files.write(directory.resolve("waveform.dat"), expected);
+        var first = externalResource(model, waveform, 31, 101);
+        var second = externalResource(model, waveform, 32, 102);
+        Path missingPath = Files.write(directory.resolve("missing.dat"), new byte[]{1});
+        var missing = externalResource(model, missingPath, 33, 103);
+        Files.move(missingPath, directory.resolve("moved.dat"));
+
+        var captured = new EditorCircuitCapture().capture(List.of(), new SolverSettings(),
+                new OptimizerParameterData(), new GeckoFileManager(List.of(first, second, missing)),
+                EditorCircuitCapture.ScriptSources.EMPTY, model.toString()).toModel();
+
+        var firstResource = captured.getResources().get(31L);
+        var secondResource = captured.getResources().get(32L);
+        assertEquals(List.of(101L), firstResource.ownerIds());
+        assertEquals(List.of(102L), secondResource.ownerIds());
+        assertArrayEquals(expected, firstResource.bytes());
+        assertArrayEquals(expected, secondResource.bytes());
+        assertFalse(captured.getResources().containsKey(33L));
+        var failure = captured.getResourceFailures().get(33L);
+        assertNotNull(failure);
+        assertEquals(List.of(103L), failure.ownerIds());
+        assertEquals(missingPath.toString(), failure.provenance());
+    }
+
+    private static GeckoFile externalResource(Path model, Path file, long id, long owner) throws FileNotFoundException {
+        var tokens = new TokenMap(new String[]{"fileSep " + File.separator, "hashValue " + id, "isExternal 1",
+            "absPath " + file, "relPath " + file.getFileName(), "usageList[] /" + owner});
+        return new GeckoFile(tokens, List.of(), model.toString(), null);
+    }
+
     @ParameterizedTest
     @CsvSource({"endpoints,20,20,true", "terminal,15,10,true", "tee,15,20,true", "crossing,15,20,false"})
     void capturedJunctionsMatchDesktopEndpointAndTerminalRules(String kind, int secondX, int secondY,

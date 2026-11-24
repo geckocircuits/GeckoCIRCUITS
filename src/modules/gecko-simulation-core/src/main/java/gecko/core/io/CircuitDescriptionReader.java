@@ -1,16 +1,17 @@
 package gecko.core.io;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import gecko.core.io.CircuitFileParser.CircuitParseException;
+
 /** Retains saved configuration without interpreting extension algorithms. */
 final class CircuitDescriptionReader {
     private CircuitDescriptionReader() { }
 
-    static void retain(CircuitModel model, String[] original, String[] structure) {
+    static void retain(CircuitModel model, String[] original, String[] structure) throws CircuitParseException {
         String[] global = original.clone();
         Set<CircuitModel.ComponentData> assigned = new HashSet<>();
         for (int start = 0; start < structure.length; start++) {
@@ -68,6 +69,7 @@ final class CircuitDescriptionReader {
         // File-manager contents become owned resources, not executable text sections.
         project.orderedSections().stream().filter(section -> !section.tag().equals("GeckoFileManager"))
                 .forEach(model.getSavedSections()::add);
+        ImportIssueCodec.decodeDocument(global).forEach(model::addConversionIssue);
     }
 
     private static int integer(SavedCircuitBlock block, String token) {

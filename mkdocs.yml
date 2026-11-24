@@ -127,6 +127,7 @@ nav:
     - User Interface: getting-started/interface.md
     - First Simulation: getting-started/first-simulation.md
     - Building Circuits: getting-started/building-circuits.md
+    - Circuit Import: circuit-import.md
     - PWM Basics: getting-started/pwm-basics.md
     - Running Simulations: getting-started/running-simulations.md
     - Analysis Tools: getting-started/analysis-tools.md

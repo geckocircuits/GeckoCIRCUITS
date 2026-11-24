@@ -14,6 +14,7 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.GeckoSim;
+import gecko.core.io.ImportIssue;
 import gecko.geckocircuits.allg.AbstractComponentTyp;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.MainWindow;
@@ -51,6 +52,21 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "NM_FIELD_NAMING_CONVENTION"},
         justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference; Singleton name is a widely-used pattern in codebase")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
+    private volatile List<ImportIssue> conversionIssues = List.of();
+
+    public List<ImportIssue> getConversionIssues() {
+        return List.copyOf(conversionIssues);
+    }
+
+    /** Stops a simulation start when the import findings show that conversion is incomplete. */
+    public void requireCompleteConversion() {
+        var issues = conversionIssues;
+        if (issues.isEmpty()) return;
+        String details = issues.stream().map(issue -> issue.code() + " " + issue.message()
+                + (issue.sourceLocation() == null ? "" : " (" + issue.sourceLocation() + ")"))
+                .collect(java.util.stream.Collectors.joining("\n"));
+        throw new IllegalArgumentException("The source conversion is incomplete.\n" + details);
+    }
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
     private SchematicComponentSelection2 _sea;
@@ -747,6 +763,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         AbstractUndoGenericModel.undoManager.discardAllEdits();
         CircuitSheet.clearFindNodes();
         CircuitSheet.clearShowNodes();
+        conversionIssues = List.of();
     }
 
     public NetListLK getNetzliste(final ConnectorType connectorType) {
@@ -857,6 +874,18 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     public void ladeGespeicherteNetzlisteVonProjectData(final ProjectData daten,
             final String insertIntoSubCircuitName) {
+        conversionIssues = daten.getConversionIssues();
+        attachProjectComponents(daten, insertIntoSubCircuitName);
+    }
+
+    public void importProjectComponents(ProjectData project, String parent) {
+        var combined = new LinkedHashSet<>(conversionIssues);
+        combined.addAll(project.getConversionIssues());
+        conversionIssues = List.copyOf(combined);
+        attachProjectComponents(project, parent);
+    }
+
+    private void attachProjectComponents(ProjectData daten, String insertIntoSubCircuitName) {
         for (AbstractCircuitSheetComponent elem : daten._allSheetComponents) {
             elem.findAndSetReferenceToParentSheet(daten.allSubCircuitBlocks, insertIntoSubCircuitName);
         }

@@ -163,6 +163,7 @@ public final class SimulationRunner {
     }
 
     public void startCalculation(boolean createNewSimThread, SolverSettings settings) throws Exception {
+        _se.requireCompleteConversion();
         controller.reset();
         if (createNewSimThread && controller.startAsync(settings)) {
             execution = null;
@@ -220,6 +221,7 @@ public final class SimulationRunner {
     }
 
     public void continueCalculation(boolean createNewSimThread, SolverSettings settings) throws Exception {
+        _se.requireCompleteConversion();
         if (controller.hasAsyncExecution()) {
             controller.continueAsync(settings);
             return;
@@ -297,6 +299,7 @@ public final class SimulationRunner {
     }
 
     public void initSim(double dt, double end) {
+        _se.requireCompleteConversion();
         SolverSettings settings = MainWindow._solverSettings;
         settings._tDURATION.setValueWithoutUndo(end);
         settings.dt.setValueWithoutUndo(dt);
@@ -344,6 +347,7 @@ public final class SimulationRunner {
     }
 
     public void external_init(double end) {
+        _se.requireCompleteConversion();
         SolverSettings settings = MainWindow._solverSettings;
         controller.reset();
         try {

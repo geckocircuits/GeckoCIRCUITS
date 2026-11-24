@@ -99,6 +99,7 @@ public final class CircuitSnapshot {
         target.setScripterDeclarations(source.getScripterDeclarations());
         target.getOptimizerParameters().putAll(source.getOptimizerParameters());
         target.getImportIssues().addAll(source.getImportIssues());
+        source.getConversionIssues().forEach(target::addConversionIssue);
         target.getSavedBlocks().addAll(source.getSavedBlocks());
         target.getSavedSettings().putAll(source.getSavedSettings());
         target.getSavedSections().addAll(source.getSavedSections());

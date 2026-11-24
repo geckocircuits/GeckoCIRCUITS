@@ -1,0 +1,7 @@
+RC low-pass with a delayed pulse
+.param Rload=1k Cload=1u
+V1 in 0 PULSE(0 5 100u 1u 1u 8m 20m)
+R1 in out {Rload}
+C1 out 0 {Cload}
+.tran 1u 6m
+.end

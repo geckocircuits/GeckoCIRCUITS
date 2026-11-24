@@ -76,6 +76,7 @@ public class CircuitModel {
     public Map<Long, CircuitResourceFailure> getResourceFailures() { return resourceFailures; }
 
     private final List<ImportIssue> importIssues = new ArrayList<>();
+    private final List<ImportIssue> conversionIssues = new ArrayList<>();
 
     // Optimizer parameters
     private final Map<String, Double> optimizerParameters = new HashMap<>();
@@ -226,6 +227,17 @@ public class CircuitModel {
 
     public List<ImportIssue> getImportIssues() {
         return importIssues;
+    }
+
+    /** Records a diagnostic from a source format for serialization with the circuit. */
+    public void addConversionIssue(ImportIssue issue) {
+        if (!importIssues.contains(issue)) importIssues.add(issue);
+        if (!conversionIssues.contains(issue)) conversionIssues.add(issue);
+    }
+
+    /** Returns source-format diagnostics. Native parser diagnostics are generated on each read. */
+    public List<ImportIssue> getConversionIssues() {
+        return conversionIssues.stream().filter(importIssues::contains).toList();
     }
 
     public void addCircuitComponent(ComponentData component) {

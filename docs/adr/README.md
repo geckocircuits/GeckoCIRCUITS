@@ -18,3 +18,4 @@
 | 2026-11-24 | [ADR-0016: Locate diode switching inside a step with electrical sub-steps](0016-zero-crossing-event-location.md) |
 | 2026-11-24 | [ADR-0017: Find periodic steady state by brute-force period iteration](0017-periodic-steady-state.md) |
 | 2026-11-24 | [ADR-0018: Adapt the electrical step between fixed CONTROL grid points](0018-adaptive-electrical-step.md) |
+| 2026-11-24 | [ADR-0019: Headless circuit import writer](0019-headless-circuit-import-writer.md) |

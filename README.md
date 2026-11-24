@@ -103,6 +103,8 @@ Full documentation is available at **[tinix84.github.io/GeckoCIRCUITS](https://t
 
 ## Contributing
 
+For command-line circuit conversion, see [Circuit import](docs/circuit-import.md).
+
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 
 ```bash

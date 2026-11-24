@@ -14,6 +14,9 @@
 package gecko.geckocircuits.allg;
 
 import gecko.core.allg.GeckoFile;
+import gecko.core.io.CircuitFileParser.CircuitParseException;
+import gecko.core.io.ImportIssue;
+import gecko.core.io.ImportIssueCodec;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
@@ -39,6 +42,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "readFileVersion is intentionally mutable; constructor stores external references; public fields for file format serialization compatibility; transient fields are repopulated during project load")
 public final class ProjectData implements Serializable {
     private static final long serialVersionUID = 1L;
+    private transient List<ImportIssue> conversionIssues = List.of();
+
+    public List<ImportIssue> getConversionIssues() {
+        return List.copyOf(conversionIssues);
+    }
 
     private static final Random RANDOM = new Random();
 
@@ -86,6 +94,7 @@ public final class ProjectData implements Serializable {
             int uniqueFileId, SimulationAccess scripter, GeckoFileManager fileMgr, SchematicEditor2 se,
             SolverSettings solverSettings) {
         this._allSheetComponents.addAll(se._circuitSheet.getAllElements());
+        this.conversionIssues = se.getConversionIssues();
         this._dt = solverSettings.dt.getValue();
         this._tDURATION = solverSettings._tDURATION.getValue();
         this._T_pre = solverSettings._T_pre.getValue();
@@ -107,6 +116,11 @@ public final class ProjectData implements Serializable {
     }
 
     public ProjectData(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer) {
+        this(ascii, isBackupRead, optimizer, GlobalFilePathes.DATNAM);
+    }
+
+    public ProjectData(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer,
+                       final String modelFileName) {
 //        if(!isBackupRead) {
 //            for(String tmp : ascii) {
 //                System.out.println(tmp);
@@ -114,7 +128,7 @@ public final class ProjectData implements Serializable {
 //        }
         _optimizer = optimizer;
         optimizerParameterData = new OptimizerParameterData();
-        _uniqueFileId = this.importASCII(ascii, isBackupRead);
+        _uniqueFileId = this.importASCII(ascii, isBackupRead, modelFileName);
     }
 
     public String exportASCII() {
@@ -137,6 +151,7 @@ public final class ProjectData implements Serializable {
 
         asc.append("\n");
         _fileManager.exportASCII(asc);
+        asc.append(ImportIssueCodec.encodeSection(conversionIssues));
 //        geckoOpt.exportASCII(asc);
         asc.append("\n\n");
         //------------------
@@ -187,7 +202,7 @@ public final class ProjectData implements Serializable {
         return asc.toString();
     }
 
-    private int importASCII(String[] ascii, final boolean isBackupRead) {
+    private int importASCII(String[] ascii, final boolean isBackupRead, final String modelFileName) {
         final TokenMap tokenMap = new TokenMap(ascii, true);
         //tokenMap.makeBlockTokenMap(ascii, true);
 
@@ -198,6 +213,11 @@ public final class ProjectData implements Serializable {
 
         if (isBackupRead) {
             return uniqueFileId;
+        }
+        try {
+            conversionIssues = ImportIssueCodec.decodeDocument(ascii);
+        } catch (CircuitParseException error) {
+            throw new IllegalArgumentException(error.getMessage(), error);
         }
 
         /**
@@ -427,7 +447,7 @@ public final class ProjectData implements Serializable {
             for (TokenMap fileSubBlock = fileBlock.getBlockTokenMap("<GeckoFile>"); fileSubBlock != null;
                     fileSubBlock = fileBlock.getBlockTokenMap("<GeckoFile>")) {
                 try {
-                    GeckoFile newFile = new GeckoFile(fileSubBlock, _allSheetComponents);
+                    GeckoFile newFile = new GeckoFile(fileSubBlock, _allSheetComponents, modelFileName, null);
                     fileMgrFiles.add(newFile);
                 } catch (FileNotFoundException e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);
