@@ -27,18 +27,24 @@ final class CircuitReadiness {
         appendImportDiagnostics(model, diagnostics);
         checkComponentModes(model, diagnostics);
         CircuitNetlist topology = checkTopology(model, diagnostics);
+        int beforeThermal = diagnostics.size();
         CircuitNetlist thermalNetlist = checkThermal(model, diagnostics);
+        boolean thermalReported = diagnostics.size() > beforeThermal;
         checkControl(model, topology, diagnostics);
         if (configurationDiagnostics.stream().noneMatch(item -> "CONTROL".equals(item.domain()) && item.severity() == Diagnostic.Severity.ERROR)
                 && diagnostics.stream().noneMatch(item -> "CONTROL".equals(item.domain()) && item.severity() == Diagnostic.Severity.ERROR)) {
             try {
                 new ControlCalculatorFactory().buildCircuit(model, model.getTimeStep(), topology, thermalNetlist);
             } catch (ControlCalculatorFactory.ThermalProbeException probe) {
-                boolean missing = probe.code().equals("INVALID_THERMAL_PROBE");
-                if (!missing || thermalNetlist != null) {
+                if (thermalNetlist != null) {
+                    boolean missing = probe.code().equals("INVALID_THERMAL_PROBE");
                     diagnostics.add(new Diagnostic(probe.code(), missing ? Diagnostic.Category.REFERENCES
                             : Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR, probe.getMessage(), "CONTROL",
                             probe.component(), null, null));
+                } else if (!thermalReported) {
+                    // No active thermal network: the legacy kernel keeps running this probe.
+                    diagnostics.add(new Diagnostic("UNSUPPORTED_CONTROL_COMPONENT", Diagnostic.Category.CAPABILITY,
+                            Diagnostic.Severity.ERROR, probe.getMessage(), "CONTROL", probe.component(), null, null));
                 }
             } catch (ControlCalculatorFactory.DependencyCycleException cycle) {
                 diagnostics.add(new Diagnostic("CONTROL_DEPENDENCY_CYCLE", Diagnostic.Category.REFERENCES,
