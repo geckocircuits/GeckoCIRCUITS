@@ -63,6 +63,7 @@ public final class SimulationSession implements AutoCloseable {
     private static final int MAX_OBSERVATION_SAMPLES = 10000;
     private final CircuitNetlist netlist;
     private final ElectricalTimeStep electrical;
+    private final ThermalNetwork thermal;
     private final boolean zeroCrossing;
     private final ControlRuntime control;
     private final ExecutionOptions options;
@@ -162,7 +163,9 @@ public final class SimulationSession implements AutoCloseable {
                     ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(),
                             new SolverFeatures(0, settings.isZeroCrossing(), dcStart, null,
                                     settings.getAdaptiveStep(), settings.getSparseSolver()), uic) : null;
+            ThermalNetwork constructedThermal = ThermalNetwork.build(model, constructedNetlist, settings.getSolverType());
             netlist = constructedNetlist;
+            thermal = constructedThermal;
             control = constructedControl;
             signalNames = constructedSignalNames;
             recording = constructedRecording;
@@ -252,6 +255,7 @@ public final class SimulationSession implements AutoCloseable {
                     else if (zeroCrossing) electrical.advanceInterval(before.stepWidth(), time, capture);
                     else electrical.advance(before.stepWidth(), time, capture);
                 }
+                if (thermal != null) thermal.advance(before.stepWidth(), time, netlist);
                 control.advanceAfterElectricalStep(netlist, time);
                 float[] values = new float[signalNames.length];
                 if (control.hasScope()) values = control.sampleScope();

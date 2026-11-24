@@ -227,6 +227,97 @@ public class NetlistBuilder {
         }
     }
 
+    /** Typical thermal resistance in parallel to a loss source, like the legacy Pv chip. */
+    static final double LOSS_SOURCE_PARALLEL_RESISTANCE = 10000.0;
+
+    /** Suffix of the parallel resistor that a loss source expands to. */
+    public static final String LOSS_SOURCE_RESISTOR_SUFFIX = "#Rth";
+
+    /**
+     * Build the thermal network of a circuit model. A loss source (type 41) expands to a signal-controlled
+     * {@code TH_FLOW} that keeps its name and a 10 kOhm {@code TH_RTH} named {@code <name>#Rth}, both between its
+     * terminals, like the legacy Pv chip. Terminal elements add no stamp.
+     *
+     * @param model circuit model from CircuitFileParser, may be null
+     * @return the thermal netlist, or an empty netlist when the model has no active thermal element
+     * @throws IllegalArgumentException if an active thermal element has an unsupported type or missing topology
+     */
+    public static CircuitNetlist buildThermalFromCircuitModel(CircuitModel model) {
+        if (model == null || model.getThermalComponents().isEmpty()) {
+            return buildEmpty(0, 0, 0);
+        }
+        CircuitTopology topology = CircuitTopology.resolve(model);
+        topology.validatePhysicalConnections();
+        Set<CircuitTopology.ComponentIdentity> active = new HashSet<>(topology.activeComponents());
+        Set<String> names = new HashSet<>();
+        List<CircuitModel.ComponentData> components = new ArrayList<>();
+        List<CircuitTopology.Group[]> groups = new ArrayList<>();
+        for (CircuitModel.ComponentData component : model.getThermalComponents()) {
+            if (component == null || !active.contains(topology.identity(component))) continue;
+            int type = component.getType();
+            if (type == CircuitTypCore.TH_TERMINAL.getTypeNumber()
+                    || type == CircuitTypCore.TH_GLOBAL_TERMINAL.getTypeNumber()) continue;
+            if (component.getName() != null && !component.getName().isEmpty() && !names.add(component.getName())) {
+                throw new IllegalArgumentException("Duplicate thermal component name '" + component.getName() + "'");
+            }
+            var input = topology.group(component, CircuitTopology.Side.INPUT, 0);
+            var output = topology.group(component, CircuitTopology.Side.OUTPUT, 0);
+            if (input == null || output == null) {
+                throw new IllegalArgumentException("Thermal component '" + component.getName() + "' has no terminal topology");
+            }
+            if (type == CircuitTypCore.TH_PvCHIP.getTypeNumber()) {
+                components.add(expansion(component, CircuitTypCore.TH_FLOW, component.getName(),
+                        CircuitSourceType.QUELLE_SIGNALGESTEUERT, 0));
+                components.add(expansion(component, CircuitTypCore.TH_RTH,
+                        component.getName() + LOSS_SOURCE_RESISTOR_SUFFIX, LOSS_SOURCE_PARALLEL_RESISTANCE, 0));
+                groups.add(new CircuitTopology.Group[]{input, output});
+                groups.add(new CircuitTopology.Group[]{input, output});
+                continue;
+            }
+            if (!CircuitTypCore.isValidTypeNumber(type) || !CircuitTypCore.fromTypeNumber(type).isThermal()
+                    || type == CircuitTypCore.TH_MODUL.getTypeNumber()) {
+                throw new IllegalArgumentException("Unsupported thermal component '" + component.getName()
+                        + "' with type " + type);
+            }
+            components.add(component);
+            groups.add(new CircuitTopology.Group[]{input, output});
+        }
+        if (components.isEmpty()) return buildEmpty(0, 0, 0);
+        boolean[][] referenceNodes = new boolean[components.size()][2];
+        for (int i = 0; i < components.size(); i++) {
+            for (int side = 0; side < 2; side++) {
+                var label = groups.get(i)[side].canonicalLabel();
+                referenceNodes[i][side] = label.equals("0") || label.equalsIgnoreCase("gnd");
+            }
+        }
+        boolean hasWires = topology.hasConnections("THERMAL");
+        boolean hasLabels = components.stream().anyMatch(component -> !groupsLabelFree(component));
+        if (!hasWires && !hasLabels) {
+            throw new IllegalArgumentException("Thermal component '" + components.get(0).getName()
+                    + "' has no terminal topology.");
+        }
+        boolean legacyLabelOnly = !hasWires && components.stream().allMatch(component -> component.getTerminalData().isEmpty());
+        return buildFromComponentsWithGroups(components, groups.toArray(new CircuitTopology.Group[0][]), referenceNodes,
+                legacyLabelOnly, topology.connectionGroupOrder());
+    }
+
+    private static boolean groupsLabelFree(CircuitModel.ComponentData component) {
+        return component.getTerminalXLabels().length == 0 && component.getTerminalYLabels().length == 0;
+    }
+
+    private static CircuitModel.ComponentData expansion(CircuitModel.ComponentData source, CircuitTypCore type,
+            String name, double mode, double value) {
+        var copy = new CircuitModel.ComponentData(type.getTypeNumber(), name, source.getPosition()[0],
+                source.getPosition()[1], source.getOrientation());
+        if (type == CircuitTypCore.TH_FLOW) {
+            copy.setParameter("param0", mode);
+            copy.setParameter("param1", value);
+        } else {
+            copy.setParameter("param0", mode);
+        }
+        return copy;
+    }
+
     /**
      * Build netlist from components that have terminal labels (from .ipes file parsing).
      *

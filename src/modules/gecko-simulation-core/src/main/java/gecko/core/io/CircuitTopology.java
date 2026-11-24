@@ -300,10 +300,16 @@ public final class CircuitTopology {
             if (members.size() == 1 && !hasWire && label.isEmpty() && first.geometry() != null
                     && first.geometry().geometric() && active.contains(first.id().component())
                     && (first.id().component().domain().equals("LK") || first.id().component().domain().equals("THERMAL"))) {
-                String name = identities.entrySet().stream().filter(item -> item.getValue().equals(first.id().component()))
-                        .map(item -> java.util.Objects.toString(item.getKey().getName(), "")).findFirst().orElse("");
-                physicalConnectionIssues.add("Component '" + name + "' has an unconnected "
-                        + (first.id().side() == Side.INPUT ? "input" : "output") + " terminal");
+                var owner = identities.entrySet().stream().filter(item -> item.getValue().equals(first.id().component()))
+                        .map(java.util.Map.Entry::getKey).findFirst().orElse(null);
+                // A loss source may leave its output open: its 10 kOhm resistor ties the node to the thermal zero.
+                boolean openLossSource = owner != null && first.id().component().domain().equals("THERMAL")
+                        && owner.getType() == 41;
+                if (!openLossSource) {
+                    String name = owner == null ? "" : java.util.Objects.toString(owner.getName(), "");
+                    physicalConnectionIssues.add("Component '" + name + "' has an unconnected "
+                            + (first.id().side() == Side.INPUT ? "input" : "output") + " terminal");
+                }
             }
             var group = new Group(id, members.getFirst().domain(), label,
                     members.stream().map(Port::id).toList(),
@@ -641,6 +647,15 @@ public final class CircuitTopology {
                         }
                         geometry = new CircuitModel.TerminalData(terminalDomain, terminalSheet, side, port, x, y, true);
                     }
+                    boolean zeroTerminal = domain.equals("THERMAL") && port == 0
+                            && (component.getType() == 41 && side == Side.INPUT || component.getType() == 48 && side == Side.OUTPUT);
+                    if (zeroTerminal && geometry == null) {
+                        geometry = new CircuitModel.TerminalData(terminalDomain, 0, side, port, THERMAL_ZERO, THERMAL_ZERO, true);
+                    } else if (geometry != null && geometry.geometric() && geometry.domain().equals("THERMAL")
+                            && geometry.x() == THERMAL_ZERO && geometry.y() == THERMAL_ZERO && geometry.sheetIdentifier() != 0) {
+                        // Every thermal zero point is one potential across sheets, like the legacy netlist.
+                        geometry = new CircuitModel.TerminalData(geometry.domain(), 0, side, port, THERMAL_ZERO, THERMAL_ZERO, true);
+                    }
                     ports.add(new Port(new TerminalIdentity(identity, side, port), geometry == null ? terminalDomain : geometry.domain(),
                             geometry == null ? terminalSheet : geometry.sheetIdentifier(), normalizeLabel(labels[port]), producer,
                             geometry, component.getType() == 22 && side == Side.INPUT,
@@ -649,6 +664,9 @@ public final class CircuitTopology {
             }
         }
     }
+
+    /** The legacy thermal zero point, which no editor position can reach. */
+    private static final int THERMAL_ZERO = -4711;
 
     private static boolean boundary(CircuitModel.ComponentData component, String domain) {
         return switch (domain) {
