@@ -19,19 +19,24 @@ import java.util.regex.Pattern;
 
 /** Imports the documented SPICE element subset and retains unsupported source evidence. */
 public final class SpiceImporter {
-    private record Line(int number, String text) { }
+    record Line(int number, String text) { }
     private static final Pattern ASSIGNMENT = Pattern.compile("([a-zA-Z_][a-zA-Z_0-9]*)\\s*=\\s*(\\{[^}]*}|[^\\s,=]+)");
 
     public CircuitModel convert(String source, String sourceName) {
+        return convert(sourceName, source.hashCode(), lines(source), new LinkedHashMap<>(), Map.of());
+    }
+
+    CircuitModel convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
+                         Map<String, ComponentData> placements) {
         var model = new CircuitModel();
         model.setFilePath(sourceName);
         model.setFileVersion(202);
-        model.setUniqueFileId(source.hashCode());
+        model.setUniqueFileId(sourceId);
         model.setSimulationDuration(0.01);
         model.setTimeStep(1e-6);
         var parameters = new HashMap<String, String>();
         var definitions = new HashMap<String, String>();
-        List<Line> lines = rootLines(source, model);
+        List<Line> lines = rootLines(statements, model);
         for (var line : lines) {
             String directive = keyword(line.text());
             if (directive.equals(".param")) {
@@ -57,6 +62,9 @@ public final class SpiceImporter {
                     issue(model, line, "UNSUPPORTED_TRANSIENT_OPTION", ".tran", "The transient output start time is unsupported.");
                 }
                 if (args.length > 3 && !args[3].equalsIgnoreCase("uic")) step = value(args[3], parameters);
+                if (args.length > 4 && !args[4].equalsIgnoreCase("uic")) {
+                    issue(model, line, "UNSUPPORTED_TRANSIENT_OPTION", ".tran", "The trailing transient option is unsupported: " + args[4]);
+                }
                 if (Arrays.stream(args).anyMatch(argument -> argument.equalsIgnoreCase("uic"))) {
                     issue(model, line, "UNSUPPORTED_TRANSIENT_OPTION", ".tran", "The UIC transient option is unsupported.");
                 }
@@ -68,8 +76,7 @@ public final class SpiceImporter {
                 issue(model, line, "INVALID_TRANSIENT", "", error.getMessage());
             }
         }
-        var nodes = new LinkedHashMap<String, String>();
-        nodes.put("0", "0");
+        nodes.putIfAbsent("0", "0");
         var names = new HashSet<String>();
         for (var line : lines) {
             String text = line.text();
@@ -80,13 +87,15 @@ public final class SpiceImporter {
                 continue;
             }
             String[] fields = text.split("\\s+", 4);
-            if (line.number() == 1 && !firstElement(fields, parameters, definitions)) continue;
+            ComponentData placement = placements.get(fields[0]);
+            if (placement == null && line.number() == 1 && !firstElement(fields, parameters, definitions)) continue;
             int controlCount = model.getControlComponents().size();
             var resourceIds = new HashSet<>(model.getResources().keySet());
             try {
                 String name = fields[0];
                 if (name.contains("/") || !names.add(name.toLowerCase(Locale.ROOT))) throw new IllegalArgumentException("Require a unique component name without slashes.");
-                char kind = Character.toUpperCase(name.charAt(0));
+                char kind = placement == null ? Character.toUpperCase(name.charAt(0))
+                        : " RLCVIDS".charAt(placement.getType());
                 if ("RLCVIDS".indexOf(kind) < 0) {
                     issue(model, line, "UNSUPPORTED_ELEMENT", name, "Unsupported SPICE element: " + kind);
                     continue;
@@ -94,7 +103,9 @@ public final class SpiceImporter {
                 String positive = node(nodes, fields[1]), negative = node(nodes, fields[2]);
                 int type = switch (kind) { case 'R' -> 1; case 'L' -> 2; case 'C' -> 3; case 'V' -> 4; case 'I' -> 5; case 'D' -> 6; default -> 7; };
                 int index = model.getCircuitComponents().size();
-                ComponentData data = component(type, name, 8 + index % 6 * 10, 6 + index / 6 * 14, positive, negative);
+                ComponentData data = placement == null
+                        ? component(type, name, 8 + index % 6 * 10, 6 + index / 6 * 14, positive, negative) : placement;
+                if (placement != null) initializeTerminals(data, positive, negative);
                 data.getImportTokens().put("uniqueObjectIdentifier", Long.toString(10000L + index));
                 switch (kind) {
                     case 'R', 'L', 'C' -> {
@@ -132,7 +143,7 @@ public final class SpiceImporter {
                     default -> throw new IllegalArgumentException("Unsupported element.");
                 }
                 model.addCircuitComponent(data);
-                terminalWires(model, data);
+                if (placement == null) terminalWires(model, data);
             } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
                 model.getControlComponents().subList(controlCount, model.getControlComponents().size()).clear();
                 model.getResources().keySet().retainAll(resourceIds);
@@ -172,10 +183,14 @@ public final class SpiceImporter {
 
     static ComponentData component(int type, String name, int x, int y, String positive, String negative) {
         var data = new ComponentData(type, name, x, y, 503);
+        initializeTerminals(data, positive, negative);
+        return data;
+    }
+
+    private static void initializeTerminals(ComponentData data, String positive, String negative) {
         data.setTerminalXLabels(new String[]{positive});
         data.setTerminalYLabels(new String[]{negative});
         data.setParameterStrings(new String[]{"", "", "0"});
-        return data;
     }
 
     static void terminalWires(CircuitModel model, ComponentData data) {
@@ -210,7 +225,8 @@ public final class SpiceImporter {
             importedWaveform(model, data, samples);
             saved[0] = 400;
         } else if (upper.startsWith("SIN")) {
-            double[] args = Arrays.stream(arguments(unwrap(spec.substring(3)))).mapToDouble(s -> value(s, parameters)).toArray();
+            int keywordLength = upper.startsWith("SINE") ? 4 : 3;
+            double[] args = Arrays.stream(arguments(unwrap(spec.substring(keywordLength)))).mapToDouble(s -> value(s, parameters)).toArray();
             if (args.length < 3 || args.length > 6) throw new IllegalArgumentException("SIN requires three to six arguments.");
             double delay = args.length > 3 ? args[3] : 0, damping = args.length > 4 ? args[4] : 0;
             double phase = args.length > 5 ? args[5] * Math.PI / 180 : 0;
@@ -302,7 +318,7 @@ public final class SpiceImporter {
         char kind = Character.toUpperCase(fields[0].charAt(0));
         String tail = fields[3].toLowerCase(Locale.ROOT);
         return switch (kind) {
-            case 'R', 'L', 'C', 'V', 'I' -> tail.matches("(?s)^(?:[+\\-0-9.{(]|dc\\s|pulse\\s*\\(|sin\\s*\\().*")
+            case 'R', 'L', 'C', 'V', 'I' -> tail.matches("(?s)^(?:[+\\-0-9.{(]|dc\\s|pulse\\s*\\(|sine?\\s*\\().*")
                     || parameters.containsKey(tail);
             case 'D' -> definitions.containsKey(tail);
             case 'S' -> {
@@ -313,10 +329,10 @@ public final class SpiceImporter {
         };
     }
 
-    private static List<Line> rootLines(String source, CircuitModel model) {
+    private static List<Line> rootLines(List<Line> lines, CircuitModel model) {
         var root = new ArrayList<Line>();
         int depth = 0;
-        for (var line : lines(source)) {
+        for (var line : lines) {
             String token = keyword(line.text());
             if (token.equals(".end")) break;
             if (token.equals(".subckt")) {
@@ -363,7 +379,7 @@ public final class SpiceImporter {
         return result;
     }
 
-    private static String[] arguments(String text) {
+    static String[] arguments(String text) {
         var result = new ArrayList<String>();
         int depth = 0, start = 0;
         for (int i = 0; i <= text.length(); i++) {

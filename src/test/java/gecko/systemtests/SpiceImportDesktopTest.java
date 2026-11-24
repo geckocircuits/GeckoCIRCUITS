@@ -43,29 +43,31 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Opens and runs the imported SPICE fixture on the regression suite's display. */
+/** Opens and runs imported SPICE and LTspice RC fixtures on the regression suite's display. */
 @Tag("regression")
 class SpiceImportDesktopTest {
-    private static final Path SOURCE = Path.of("src/modules/gecko-simulation-core/src/test/resources/importer/rc.cir");
+    private static final Path FIXTURES = Path.of("src/modules/gecko-simulation-core/src/test/resources/importer");
     private static final double STEP = 1e-6;
     private static final double END = 6e-3;
     private static final double FULL_SCALE = 5;
 
-    @Test
-    void opensAndRunsImportedRcWithCoreDesktopBackend() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"rc.cir", "rc.asc"})
+    void opensAndRunsImportedRcWithCoreDesktopBackend(String fixture) throws Exception {
         Path target = Path.of("target").toAbsolutePath();
         Path reports = Files.createDirectories(target.resolve("surefire-reports"));
-        Path evidence = Files.createTempDirectory(reports, "m6-spice-rc-");
+        Path evidence = Files.createTempDirectory(reports, "m6-spice-" + fixture + "-");
         Path appHome = Files.createTempDirectory(target, "m6-spice-rc-home-");
         Path log = evidence.resolve("desktop.log");
         String classPath = System.getProperty("surefire.test.class.path", System.getProperty("java.class.path"));
         var worker = new ProcessBuilder(Path.of(System.getProperty("java.home"), "bin", "java").toString(),
                 "-Duser.home=" + appHome, "-Djava.io.tmpdir=" + appHome, "-Dgecko.backend=core", "-cp", classPath,
-                DesktopRun.class.getName(), evidence.toString())
+                DesktopRun.class.getName(), evidence.toString(), fixture)
                 .redirectErrorStream(true).redirectOutput(log.toFile());
         worker.environment().put("LOCALAPPDATA", appHome.toString());
         Process process = worker.start();
@@ -84,8 +86,9 @@ class SpiceImportDesktopTest {
             try {
                 Path evidence = Path.of(args[0]);
                 Path circuit = evidence.resolve("imported-rc.ipes");
-                assertEquals(0, Main.run(new String[]{SOURCE.toString(), circuit.toString()}, System.out, System.err));
-                openRunAndCapture(circuit, evidence);
+                Path source = FIXTURES.resolve(args[1]);
+                assertEquals(0, Main.run(new String[]{source.toString(), circuit.toString()}, System.out, System.err));
+                openRunAndCapture(circuit, evidence, source);
                 System.exit(0);
             } catch (Throwable error) {
                 error.printStackTrace();
@@ -94,7 +97,9 @@ class SpiceImportDesktopTest {
         }
     }
 
-    private static void openRunAndCapture(Path circuit, Path evidence) throws Exception {
+    private static void openRunAndCapture(Path circuit, Path evidence, Path source) throws Exception {
+        boolean schematic = source.getFileName().toString().endsWith(".asc");
+        List<String> nodes = schematic ? List.of("in", "out") : List.of("N1", "N2");
         var dialogTitle = new AtomicReference<String>();
         Timer dialogMonitor = new Timer(50, event -> {
             for (Window window : Window.getWindows()) {
@@ -112,7 +117,7 @@ class SpiceImportDesktopTest {
                 assertNull(dialogTitle.get(), "Opening the circuit showed a modal dialog");
                 assertTrue(GeckoSim._win.isShowing(), "The desktop window is hidden");
                 assertEquals(circuit.toString(), MainWindow.getOpenFileName());
-                ReglerOSZI importedScope = checkLoadedCircuit();
+                ReglerOSZI importedScope = checkLoadedCircuit(nodes, schematic);
                 GeckoSim._win.initStartWithErrorDialogMessage();
                 assertNull(dialogTitle.get(), "Starting the circuit showed a modal dialog");
                 return importedScope;
@@ -133,7 +138,9 @@ class SpiceImportDesktopTest {
             onEventThread(() -> {
                 assertEquals(ContainerStatus.PAUSED, NetzlisteCONTROL.globalData.getContainerStatus());
                 assertNull(dialogTitle.get(), "The simulation showed a modal dialog");
-                captureEvidence(scope, steps, circuit, evidence);
+                captureEvidence(scope, steps, circuit, evidence, source, nodes);
+                if (schematic) checkSaveAndReopen(evidence, nodes);
+                assertNull(dialogTitle.get(), "Saving or reopening the circuit showed a modal dialog");
                 return null;
             });
         } finally {
@@ -146,29 +153,43 @@ class SpiceImportDesktopTest {
         }
     }
 
-    private static ReglerOSZI checkLoadedCircuit() {
+    private static ReglerOSZI checkLoadedCircuit(List<String> nodes, boolean schematic) {
         var editor = MainWindow._se;
         var electrical = editor.getElementLK().stream().collect(
                 Collectors.toMap(AbstractBlockInterface::getStringID, Function.identity()));
         var control = editor.getElementCONTROL().stream().collect(
                 Collectors.toMap(AbstractBlockInterface::getStringID, Function.identity()));
         assertEquals(Set.of("V1", "R1", "C1"), electrical.keySet());
-        assertEquals(Set.of("SIGNAL.V1", "VOLT.N1", "VOLT.N2", "SCOPE.IMPORT"), control.keySet());
+        String input = nodes.getFirst();
+        String output = nodes.getLast();
+        assertEquals(Set.of("SIGNAL.V1", "VOLT." + input, "VOLT." + output, "SCOPE.IMPORT"), control.keySet());
         var wires = editor.getConnection(ConnectorType.LK_AND_RELUCTANCE).stream().collect(
                 Collectors.groupingBy(Verbindung::getLabel, Collectors.counting()));
-        assertEquals(Map.of("0", 2L, "N1", 2L, "N2", 2L), wires);
+        assertEquals(Set.of("0", input, output), wires.keySet());
         assertTrue(editor.getConnection(ConnectorType.CONTROL).isEmpty());
         assertEquals(STEP, MainWindow._solverSettings.dt.getValue(), 1e-12);
         assertEquals(END, MainWindow._solverSettings._tDURATION.getValue(), 1e-12);
         var worksheet = editor._circuitSheet._worksheetSize;
-        assertEquals(54, worksheet.getSizeX());
-        assertEquals(35, worksheet.getSizeY());
+        if (schematic) {
+            checkPosition(electrical.get("V1"), 6, 11);
+            checkPosition(electrical.get("R1"), 19, 6);
+            checkPosition(electrical.get("C1"), 30, 10);
+            checkTerminals(electrical.get("V1"), input, "0");
+            checkTerminals(electrical.get("R1"), input, output);
+            checkTerminals(electrical.get("C1"), output, "0");
+            assertTrue(electrical.get("R1").XIN.getFirst().getPosition().x
+                    < electrical.get("R1").YOUT.getFirst().getPosition().x);
+        } else {
+            assertEquals(Map.of("0", 2L, "N1", 2L, "N2", 2L), wires);
+            assertEquals(54, worksheet.getSizeX());
+            assertEquals(35, worksheet.getSizeY());
+        }
 
         var source = assertInstanceOf(AbstractCircuitSource.class, electrical.get("V1"));
         var signal = assertInstanceOf(ReglerSignalSource.class, control.get("SIGNAL.V1"));
         assertEquals("control_0", signal.YOUT.getFirst().getLabelObject().getLabelString());
         assertEquals("control_0", source.getPotentialCoupling().getLabels()[0]);
-        for (String node : List.of("N1", "N2")) {
+        for (String node : nodes) {
             var probe = assertInstanceOf(ReglerVOLT.class, control.get("VOLT." + node));
             assertArrayEquals(new String[]{node, "0"}, probe.getPotentialCoupling().getLabels());
         }
@@ -194,11 +215,36 @@ class SpiceImportDesktopTest {
         return scope;
     }
 
-    private static void captureEvidence(ReglerOSZI scope, int steps, Path circuit, Path evidence) throws Exception {
+    private static void checkPosition(AbstractBlockInterface block, int x, int y) {
+        var position = block.getSheetPosition();
+        assertEquals(x, position.x, block.getStringID());
+        assertEquals(y, position.y, block.getStringID());
+    }
+
+    private static void checkTerminals(AbstractBlockInterface block, String input, String output) {
+        assertEquals(input, block.XIN.getFirst().getLabelObject().getLabelString());
+        assertEquals(output, block.YOUT.getFirst().getLabelObject().getLabelString());
+    }
+
+    private static void checkSaveAndReopen(Path evidence, List<String> nodes) throws Exception {
+        byte[] waveform = MainWindow._fileManager._allAvailableFiles.iterator().next().getContentsByteCopy();
+        assertTrue(waveform.length > 0);
+        GeckoSim._win._simRunner.endSimulation();
+        Path saved = evidence.resolve("saved-rc.ipes");
+        GeckoSim._win.rawSaveFile(saved.toFile());
+        assertTrue(Files.isRegularFile(saved), "The desktop did not save the circuit");
+        GeckoSim._win.openFile(saved.toString());
+        assertEquals(saved.toString(), MainWindow.getOpenFileName());
+        checkLoadedCircuit(nodes, true);
+        assertArrayEquals(waveform, MainWindow._fileManager._allAvailableFiles.iterator().next().getContentsByteCopy());
+    }
+
+    private static void captureEvidence(ReglerOSZI scope, int steps, Path circuit, Path evidence,
+                                        Path source, List<String> nodes) throws Exception {
         var data = scope.getZVDatenImRAM();
         assertEquals(2, data.getRowLength());
-        assertEquals("V_N1", data.getSignalName(0));
-        assertEquals("V_N2", data.getSignalName(1));
+        assertEquals("V_" + nodes.getFirst(), data.getSignalName(0));
+        assertEquals("V_" + nodes.getLast(), data.getSignalName(1));
         int last = data.getMaximumTimeIndex(1);
         assertTrue(steps >= 6000, "The RC run must cover six milliseconds");
         assertEquals(steps, last + 1, "SCOPE must record every committed step");
@@ -226,13 +272,10 @@ class SpiceImportDesktopTest {
                 imported_circuit=%s
                 backend=core
                 state=COMPLETED
-                worksheet_grid=54x35
                 electrical=V1,R1,C1
-                electrical_wires=6
-                control=SIGNAL.V1,VOLT.N1,VOLT.N2,SCOPE.IMPORT
                 embedded_waveform_owner=SIGNAL.V1
                 scope=SCOPE.IMPORT
-                channels=V_N1,V_N2
+                channels=%s,%s
                 rendered_traces=2
                 samples=%d
                 step_seconds=%.9f
@@ -241,7 +284,7 @@ class SpiceImportDesktopTest {
                 last_v_out_volts=%.9f
                 max_error_volts=%.9f
                 full_scale_error_limit_volts=0.05
-                """, SOURCE, circuit.getFileName(), steps, STEP, data.getTimeValue(last, 1),
+                """, source, circuit.getFileName(), data.getSignalName(0), data.getSignalName(1), steps, STEP, data.getTimeValue(last, 1),
                 data.getValue(0, last), data.getValue(1, last), maxError));
     }
 
