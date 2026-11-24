@@ -13,8 +13,10 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
 
-public final class MinCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator {
+
+public final class MinCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator implements StatelessCalculation {
 
     @Override
     public void berechneYOUT(final double deltaT) {

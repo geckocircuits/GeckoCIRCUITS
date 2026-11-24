@@ -30,6 +30,17 @@ public class SimulationResponse {
         Long estimatedRemainingMs
     ) {}
 
+    /**
+     * Outcome of a periodic steady-state search.
+     *
+     * @param converged true when the full state repeated within the tolerance
+     * @param periods the number of periods that the search ran
+     * @param residual the largest scaled state change over the last period, null when it is not finite
+     * @param startTime the simulated time in seconds at which the recorded main phase continues
+     */
+    @io.swagger.v3.oas.annotations.media.Schema(name = "SteadyState", description = "Periodic steady-state search outcome")
+    public record SteadyState(boolean converged, int periods, Double residual, double startTime) {}
+
     private String simulationId;
     private volatile SimulationStatus status;
     private volatile Instant startTime;
@@ -37,6 +48,7 @@ public class SimulationResponse {
     private final Map<String, double[]> results;
     private volatile String errorMessage;
     private volatile ProgressDetails progressDetails;
+    private volatile SteadyState steadyState;
 
     // Constructors
     public SimulationResponse() {
@@ -108,6 +120,15 @@ public class SimulationResponse {
 
     public void setProgressDetails(ProgressDetails progressDetails) {
         this.progressDetails = progressDetails;
+    }
+
+    /** @return the periodic steady-state outcome, or null when the search was off or has not finished */
+    public SteadyState getSteadyState() {
+        return steadyState;
+    }
+
+    public void setSteadyState(SteadyState steadyState) {
+        this.steadyState = steadyState;
     }
 
     public void addResult(String signalName, double[] signalData) {

@@ -292,6 +292,16 @@ public class DomainCoupler {
         }
     }
 
+    /** Exports the held CONTROL value of each signal-controlled source. It only reads. */
+    void exportHeldSources(CircuitNetlist circuitNetlist, PeriodicStateMonitor.Sink sink) {
+        sink.group(PeriodicStateMonitor.Unit.CONTROL, "held source value");
+        if (controlBlockMapping == null || circuitNetlist == null) return;
+        for (var source : controlBlockMapping.getSourceMappings()) {
+            int index = circuitNetlist.getElementIndexByName(source.sourceName());
+            if (index >= 0) sink.value(circuitNetlist.getParameter(index)[1]);
+        }
+    }
+
     void transferGateSignalsToLk(CircuitNetlist circuitNetlist) {
         if (controlBlockMapping == null || circuitNetlist == null) {
             return;

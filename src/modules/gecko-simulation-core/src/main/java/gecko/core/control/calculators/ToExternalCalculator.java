@@ -1,7 +1,9 @@
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /** Captures CONTROL inputs for an external consumer. */
-public final class ToExternalCalculator extends AbstractControlCalculatable {
+public final class ToExternalCalculator extends AbstractControlCalculatable implements StatelessCalculation {
     private final double[] values;
 
     public ToExternalCalculator(int width) {

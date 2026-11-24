@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class MinCalculatorMultiInputs extends AbstractControlCalculatable {        
+import gecko.core.control.StatelessCalculation;
+
+public final class MinCalculatorMultiInputs extends AbstractControlCalculatable implements StatelessCalculation {        
         public MinCalculatorMultiInputs(final int inputSize) {
             super(inputSize, 1);
         }

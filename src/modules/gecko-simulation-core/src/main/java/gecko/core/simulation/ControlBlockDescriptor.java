@@ -1,5 +1,6 @@
 package gecko.core.simulation;
 
+import gecko.core.control.StatelessCalculation;
 import gecko.core.control.calculators.*;
 import gecko.core.io.CircuitModel;
 import gecko.core.preparation.CircuitConfiguration;
@@ -137,11 +138,7 @@ public record ControlBlockDescriptor(int type, int inputPorts, int outputPorts, 
         simple(result, 41, LnCalculator::new);
         simple(result, 42, SquareCalculator::new);
         simple(result, 43, SqrtCalculator::new);
-        simple(result, 44, () -> new AbstractControlCalculatable(2, 1) {
-            @Override public void berechneYOUT(double dt) {
-                _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
-            }
-        });
+        simple(result, 44, PowerCalculator::new);
         simple(result, 45, GreaterEqualCalculator::new);
         simple(result, 46, GreaterThanCalculator::new);
         add(result, 47, -1, 1, data -> data.getTerminalXLabels().length == 2 ? new EqualCalculatorTwoInputs()
@@ -285,13 +282,24 @@ public record ControlBlockDescriptor(int type, int inputPorts, int outputPorts, 
     }
 
     private static AbstractControlCalculatable arithmetic(int inputs, boolean multiply) {
-        return new AbstractControlCalculatable(inputs, 1) {
-            @Override public void berechneYOUT(double dt) {
-                double result = multiply ? 1 : 0;
-                for (double[] input : _inputSignal) result = multiply ? result * input[0] : result + input[0];
-                _outputSignal[0][0] = result;
-            }
-        };
+        return new ArithmeticCalculator(inputs, multiply);
+    }
+
+    private static final class PowerCalculator extends AbstractControlCalculatable implements StatelessCalculation {
+        PowerCalculator() { super(2, 1); }
+        @Override public void berechneYOUT(double dt) {
+            _outputSignal[0][0] = Math.pow(_inputSignal[0][0], _inputSignal[1][0]);
+        }
+    }
+
+    private static final class ArithmeticCalculator extends AbstractControlCalculatable implements StatelessCalculation {
+        private final boolean multiply;
+        ArithmeticCalculator(int inputs, boolean multiply) { super(inputs, 1); this.multiply = multiply; }
+        @Override public void berechneYOUT(double dt) {
+            double result = multiply ? 1 : 0;
+            for (double[] input : _inputSignal) result = multiply ? result * input[0] : result + input[0];
+            _outputSignal[0][0] = result;
+        }
     }
 
     /**
@@ -301,6 +309,9 @@ public record ControlBlockDescriptor(int type, int inputPorts, int outputPorts, 
      * @return the description, or null if no assembly exists
      */
     public static ControlBlockDescriptor find(int type) { return DESCRIPTORS.get(type); }
+
+    /** @return every registered description, so a test can classify each calculator for the steady-state search */
+    static java.util.Collection<ControlBlockDescriptor> registered() { return DESCRIPTORS.values(); }
 
     private static int externalWidth(CircuitModel.ComponentData data, int fallback) {
         Object saved = data.getParameters().get("externalWidth");

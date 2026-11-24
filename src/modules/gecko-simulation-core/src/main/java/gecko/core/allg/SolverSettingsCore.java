@@ -36,6 +36,7 @@ public final class SolverSettingsCore {
     private double controlSamplePeriod; // CONTROL sample period Ts in seconds; 0 runs CONTROL every step
     private boolean zeroCrossing;      // locate diode-family switching inside a step; off by default
     private boolean dcOperatingPoint;  // seed the first step from a solved DC operating point; off by default
+    private PeriodicSteadyStateSettings periodicSteadyState; // periodic steady-state search; null means off
 
     // State tracking
     private boolean inPreCalculationMode;
@@ -124,7 +125,22 @@ public final class SolverSettingsCore {
         return this;
     }
 
+    /**
+     * Searches for the periodic steady state before the main phase. Null, the default, turns it off.
+     * The search seeds itself from the DC operating point without changing {@link #isDcOperatingPoint()}.
+     * Validation happens when a simulation starts.
+     */
+    public SolverSettingsCore withPeriodicSteadyState(PeriodicSteadyStateSettings settings) {
+        this.periodicSteadyState = settings;
+        return this;
+    }
+
     // Getters
+
+    /** @return the periodic steady-state settings, or null when the search is off */
+    public PeriodicSteadyStateSettings getPeriodicSteadyState() {
+        return periodicSteadyState;
+    }
 
     public boolean isDcOperatingPoint() {
         return dcOperatingPoint;
@@ -199,6 +215,7 @@ public final class SolverSettingsCore {
         copy.controlSamplePeriod = this.controlSamplePeriod;
         copy.zeroCrossing = this.zeroCrossing;
         copy.dcOperatingPoint = this.dcOperatingPoint;
+        copy.periodicSteadyState = this.periodicSteadyState;
         copy.inPreCalculationMode = this.inPreCalculationMode;
         return copy;
     }

@@ -72,11 +72,17 @@ public class GlobalExceptionHandler {
         response.put("readyForHeadless", false);
         response.put("outcome", ReadinessReport.Outcome.INVALID);
         response.put("diagnostics", fieldErrors.entrySet().stream().map(entry -> new Diagnostic(
-                entry.getKey().equals("simulationTime") || entry.getKey().equals("timeStep") ? "INVALID_SETTING" : "INVALID_REQUEST",
+                isSolverSettingField(entry.getKey()) ? "INVALID_SETTING" : "INVALID_REQUEST",
                 Diagnostic.Category.CONFIGURATION, Diagnostic.Severity.ERROR, entry.getValue(),
                 null, null, entry.getKey(), null)).toList());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    /** Timing settings and the periodic steady-state settings are solver settings, so they report INVALID_SETTING. */
+    private static boolean isSolverSettingField(String field) {
+        return field.equals("simulationTime") || field.equals("timeStep")
+                || field.equals("periodicSteadyState") || field.startsWith("periodicSteadyState.");
     }
 
     /**

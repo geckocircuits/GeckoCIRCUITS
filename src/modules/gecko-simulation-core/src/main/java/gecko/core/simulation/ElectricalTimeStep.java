@@ -422,6 +422,51 @@ final class ElectricalTimeStep {
         if (Double.isNaN(firstUnlocatedTime)) firstUnlocatedTime = time;
     }
 
+    /**
+     * Exports every electrical value that the next step reads, after a committed grid step. It only reads.
+     * Solver histories come first, then capacitor currents, then the discrete states, which compare exactly.
+     * The derived matrix cache, the clock and the event counters are not state and are not exported.
+     */
+    void exportPeriodicState(PeriodicStateMonitor.Sink sink) {
+        double[] potentials = matrixSolver.getPALT();
+        int nodes = Math.min(netlist.getNodeMax() + 1, potentials.length);
+        boolean secondOrder = matrixSolver.getSolverType() == SolverType.SOLVER_GS;
+        exportPotentials(sink, potentials, nodes, "potential history");
+        exportCurrents(sink, matrixSolver.getIALT(), "element current history");
+        if (secondOrder) {
+            exportPotentials(sink, matrixSolver.getPALTALT(), nodes, "potential history two steps back");
+            exportCurrents(sink, matrixSolver.getIALTALT(), "element current history two steps back");
+        }
+        sink.group(PeriodicStateMonitor.Unit.AMPERE, "capacitor current");
+        for (int element = 0; element < netlist.getElementCount(); element++) {
+            double[] parameters = netlist.getParameter(element);
+            if (netlist.getType(element) == CircuitTypCore.LK_C && parameters.length > 10) sink.value(parameters[10]);
+        }
+        sink.group(PeriodicStateMonitor.Unit.DISCRETE, "switch state");
+        for (int element = 0; element < netlist.getElementCount(); element++) {
+            CircuitTypCore type = netlist.getType(element);
+            double[] parameters = netlist.getParameter(element);
+            if (isDiodeFamily(type) || type == CircuitTypCore.LK_S || type == CircuitTypCore.LK_MOSFET) {
+                sink.value(parameters[0]);
+                if (parameters.length > 8) sink.flag(parameters[8] >= 0.5);
+            } else if (type == CircuitTypCore.LK_U && parameters.length > 14) {
+                sink.value(parameters[14]);
+            }
+        }
+    }
+
+    private static void exportPotentials(PeriodicStateMonitor.Sink sink, double[] history, int nodes, String name) {
+        sink.group(PeriodicStateMonitor.Unit.VOLT, "node " + name);
+        for (int index = 0; index < nodes; index++) sink.value(history[index]);
+        sink.group(PeriodicStateMonitor.Unit.AMPERE, "branch current " + name);
+        for (int index = nodes; index < history.length; index++) sink.value(history[index]);
+    }
+
+    private static void exportCurrents(PeriodicStateMonitor.Sink sink, double[] history, String name) {
+        sink.group(PeriodicStateMonitor.Unit.AMPERE, name);
+        for (double value : history) sink.value(value);
+    }
+
     // Package-private seams for the rollback and sub-step contract tests.
 
     /** @return the solver whose histories the contract tests compare */

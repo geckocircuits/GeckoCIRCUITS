@@ -13,11 +13,13 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /**
  * Divide the first input by the second input. Do some error check, e.g. 0/0 should return 0
  * @author andreas
  */
-public final class DivCalculator extends AbstractTwoInputsOneOutputCalculator {
+public final class DivCalculator extends AbstractTwoInputsOneOutputCalculator implements StatelessCalculation {
 
     private static final double LARGE_NUMBER = 1e40;
 

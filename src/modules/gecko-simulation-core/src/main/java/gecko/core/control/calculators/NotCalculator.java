@@ -13,8 +13,10 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
 
-public final class NotCalculator extends AbstractSingleInputSingleOutputCalculator {
+
+public final class NotCalculator extends AbstractSingleInputSingleOutputCalculator implements StatelessCalculation {
 
     @Override
     public void berechneYOUT(final double deltaT) {

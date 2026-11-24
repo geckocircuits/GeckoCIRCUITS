@@ -927,6 +927,35 @@
           }
         }
       },
+      "PeriodicSteadyStateRequest": {
+        "description": "Optional periodic steady-state search. The simulation first runs period by period from the DC operating point until the full state repeats, and records nothing during the search. It then records simulationTime seconds from that state. Off when omitted. The period must be a whole number of time steps. A CONTROL carrier that clamps per step has a simulated period of a whole number of steps, so a 35 kHz carrier at a 1 microsecond step has a period of 30 microseconds, not 28.57. Search steps count toward the step limit. A pre-calculation time cannot combine with the search. Batch requests do not accept this field.",
+        "properties": {
+          "maxPeriods": {
+            "description": "Most periods the search may run, from 3 to 1000000. Defaults to 1000. The job fails with steadyState.converged false when the limit is reached.",
+            "example": 1000,
+            "format": "int32",
+            "maximum": 1000000,
+            "minimum": 3,
+            "type": "integer"
+          },
+          "period": {
+            "description": "Simulated period T in seconds. A whole number of time steps, at least 2, and a whole multiple of the CONTROL sample period if one is set.",
+            "example": 3e-05,
+            "format": "double",
+            "type": "number"
+          },
+          "tolerance": {
+            "description": "Relative state change at which the search stops, above 0 and at most 0.1. Defaults to 1e-4.",
+            "example": 0.0001,
+            "format": "double",
+            "maximum": 0.1,
+            "type": "number"
+          }
+        },
+        "required": [
+          "period"
+        ]
+      },
       "ProgressDetails": {
         "properties": {
           "currentStep": {
@@ -1073,6 +1102,9 @@
             },
             "type": "object"
           },
+          "periodicSteadyState": {
+            "$ref": "#/components/schemas/PeriodicSteadyStateRequest"
+          },
           "simulationTime": {
             "format": "double",
             "type": "number"
@@ -1127,6 +1159,9 @@
               "FAILED"
             ],
             "type": "string"
+          },
+          "steadyState": {
+            "$ref": "#/components/schemas/SteadyState"
           }
         }
       },
@@ -1162,6 +1197,26 @@
           "timeout": {
             "format": "int64",
             "type": "integer"
+          }
+        }
+      },
+      "SteadyState": {
+        "description": "Periodic steady-state search outcome",
+        "properties": {
+          "converged": {
+            "type": "boolean"
+          },
+          "periods": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "residual": {
+            "format": "double",
+            "type": "number"
+          },
+          "startTime": {
+            "format": "double",
+            "type": "number"
           }
         }
       },

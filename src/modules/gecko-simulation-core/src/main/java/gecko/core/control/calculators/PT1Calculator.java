@@ -13,7 +13,10 @@
  */
 package gecko.core.control.calculators;
 
-public final class PT1Calculator extends AbstractPTCalculator implements InitializableAtSimulationStart {
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
+public final class PT1Calculator extends AbstractPTCalculator implements InitializableAtSimulationStart, PeriodicStateSource {
         
         private double _yOld = 0;  // Speicherung des I-Anteils
         private double _xOld = 0;
@@ -38,4 +41,11 @@ public final class PT1Calculator extends AbstractPTCalculator implements Initial
             _xOld = _inputSignal[0][0];
             _yOld = _outputSignal[0][0];
         }        
+    
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(_yOld);
+        sink.value(_xOld);
     }
+}

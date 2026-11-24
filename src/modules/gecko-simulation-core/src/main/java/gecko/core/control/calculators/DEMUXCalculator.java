@@ -13,8 +13,10 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /** Splits one vector signal into ordered scalar outputs. */
-public final class DEMUXCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+public final class DEMUXCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, StatelessCalculation {
     /** @param outputCount the vector width and scalar output count */
     public DEMUXCalculator(int outputCount) {
         super(1, outputCount);

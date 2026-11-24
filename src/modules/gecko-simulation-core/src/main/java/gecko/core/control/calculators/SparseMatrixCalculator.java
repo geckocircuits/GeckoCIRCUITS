@@ -13,11 +13,14 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 /**
  * TODO: this is the biggest mess I have ever seen. Pleas clean anybody up!
  * @author andreas
  */
-public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private static final double NUMERIC_EPSILON = 1e-12;
     private static final double DEFAULT_DUTY_RATIO = 0.5;
@@ -1067,5 +1070,32 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         for (int i = 0; i < values.length; i++) {
             values[i] = sanitizeFinite(values[i], 0.0);
         }
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(fDRaltalt);
+        sink.value(fDRalt);
+        sink.value(tLokal);
+        sink.value(Tp);
+        sink.value(sRp);
+        sink.value(sSp);
+        sink.value(sTp);
+        sink.value(sRm);
+        sink.value(sSm);
+        sink.value(sTm);
+        sink.value(s1);
+        sink.value(s2);
+        sink.value(s3);
+        sink.value(seIN);
+        sink.value(seOUT);
+        sink.value(dIN[0]);
+        sink.value(dIN[1]);
+        sink.value(dOUT[0]);
+        sink.value(dOUT[1]);
+        sink.value(dOUT[2]);
+        sink.value(dOUT[3]);
+        sink.value(dOUT[4]);
+        sink.flag(neuePulsperiodeBeginnt);
     }
 }

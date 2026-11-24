@@ -13,8 +13,11 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
 
-public class PmsmControlCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+
+public class PmsmControlCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, PeriodicStateSource {
 
     // State variables for PI controllers and last values
     double valpha_last = 0;
@@ -153,5 +156,17 @@ public class PmsmControlCalculator extends AbstractControlCalculatable implement
         _outputSignal[5][0] = id_ref;
         _outputSignal[6][0] = iq;
         _outputSignal[7][0] = id;
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(valpha_last);
+        sink.value(vbeta_last);
+        sink.value(int_n_last);
+        sink.value(int_iq_last);
+        sink.value(int_id_last);
+        sink.value(x_n_last);
+        sink.value(x_iq_last);
+        sink.value(x_id_last);
     }
 }

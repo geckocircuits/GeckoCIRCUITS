@@ -182,6 +182,20 @@ public final class DelayHistory {
     }
 
     /**
+     * Emits the history in chronological order, so equal content compares equal whatever the ring cursor.
+     * The order is the samples from oldest to newest, the sample before the oldest, and a flag that tells
+     * whether every slot holds a real sample. The physical array and its cursor are not emitted.
+     *
+     * @param sink receives the values
+     */
+    public void exportChronological(StateSink sink) {
+        requireInitialized();
+        for (int position = 0; position < samples.length; position++) sink.value(sample(position));
+        sink.value(beforeOldest);
+        sink.flag(available >= samples.length);
+    }
+
+    /**
      * Captures one settled input and advances history by one sample.
      *
      * @param input the current input value.

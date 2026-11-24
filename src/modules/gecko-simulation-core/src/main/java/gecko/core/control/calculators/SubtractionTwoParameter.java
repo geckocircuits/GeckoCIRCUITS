@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class SubtractionTwoParameter extends AbstractTwoInputsOneOutputCalculator {
+import gecko.core.control.StatelessCalculation;
+
+public final class SubtractionTwoParameter extends AbstractTwoInputsOneOutputCalculator implements StatelessCalculation {
 
     @Override
     public void berechneYOUT(final double deltaT) {

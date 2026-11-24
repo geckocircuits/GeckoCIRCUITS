@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class RoundCalculator extends AbstractSingleInputSingleOutputCalculator {
+import gecko.core.control.StatelessCalculation;
+
+public final class RoundCalculator extends AbstractSingleInputSingleOutputCalculator implements StatelessCalculation {
 
     @Override
     public void berechneYOUT(final double deltaT) {

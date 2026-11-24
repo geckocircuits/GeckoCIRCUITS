@@ -70,6 +70,11 @@ public final class CircuitPreparation {
         if (settings.features().zeroCrossing() && model.getSolverType() == SolverType.SOLVER_GS) {
             diagnostics.add(invalidSetting("zeroCrossing", SimulationTiming.GS_ZERO_CROSSING_MESSAGE));
         }
+        for (var issue : SimulationTiming.periodicSteadyStateIssues(settings.features().periodicSteadyState(),
+                model.getTimeStep(), model.getSimulationDuration(), model.getPreSimulationTime(),
+                settings.features().controlSamplePeriod())) {
+            diagnostics.add(invalidSetting(issue.parameterPath(), issue.message()));
+        }
         model.getImportIssues().removeIf(issue -> issue.code().equals("INVALID_SETTING")
                 && switch (issue.parameterPath() == null ? "" : issue.parameterPath()) {
                     case "solver" -> settings.solver() != null;
@@ -92,6 +97,13 @@ public final class CircuitPreparation {
             return rejected ? new PreparationResult.Rejected(report) : new PreparationResult.Inspectable(snapshot, report);
         }
         diagnostics.addAll(CircuitConfiguration.validate(execution));
+        if (settings.features().periodicSteadyState() != null && !rejected) {
+            for (var issue : SimulationTiming.periodicSteadyStateCircuitIssues(execution, model.getTimeStep(),
+                    settings.features().controlSamplePeriod(), settings.features().periodicSteadyState())) {
+                diagnostics.add(invalidSetting(issue.parameterPath(), issue.message()));
+                rejected = true;
+            }
+        }
         diagnostics.addAll(CircuitReadiness.check(execution, diagnostics));
         boolean invalid = diagnostics.stream().anyMatch(item -> item.severity() == Diagnostic.Severity.ERROR
                 && item.category() != Diagnostic.Category.CAPABILITY);

@@ -130,3 +130,4 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 | 2026-02-12 | [ADR-0013: GUI-free simulation core](docs/adr/0013-gui-free-simulation-core.md) |
 | 2026-02-05 | [ADR-0014: Java solver with optional native sparse backend](docs/adr/0014-java-solver-with-optional-native-sparse.md) |
 | 2026-11-24 | [ADR-0016: Locate diode switching inside a step with electrical sub-steps](docs/adr/0016-zero-crossing-event-location.md) |
+| 2026-11-24 | [ADR-0017: Find periodic steady state by brute-force period iteration](docs/adr/0017-periodic-steady-state.md) |

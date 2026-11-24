@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class ABCDQCalculator extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class ABCDQCalculator extends AbstractControlCalculatable implements StatelessCalculation {
 
     private static final double SQRT3 = Math.sqrt(3);
     private static final int NR_INPUTS = 4;

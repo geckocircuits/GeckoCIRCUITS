@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class TimeCalculator extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class TimeCalculator extends AbstractControlCalculatable implements StatelessCalculation {
     
     public TimeCalculator() {
         super(0, 1);

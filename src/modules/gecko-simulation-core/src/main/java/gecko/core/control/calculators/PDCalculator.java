@@ -13,7 +13,10 @@
  */
 package gecko.core.control.calculators;
 
-public final class PDCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
+public final class PDCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private double _gain;
     private double _oldValue = 0;
@@ -39,5 +42,10 @@ public final class PDCalculator extends AbstractControlCalculatable implements I
 
     public void setGain(final double gain) {
         _gain = gain;
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(_oldValue);
     }
 }

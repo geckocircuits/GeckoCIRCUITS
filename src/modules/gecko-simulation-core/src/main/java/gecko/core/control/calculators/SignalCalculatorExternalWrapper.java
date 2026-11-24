@@ -13,8 +13,11 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 public final class SignalCalculatorExternalWrapper extends AbstractControlCalculatable
-        implements InitializableAtSimulationStart {
+        implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private static final int NO_INPUTS = 5;
     private final AbstractSignalCalculatorPeriodic _wrapped;
@@ -89,4 +92,10 @@ public final class SignalCalculatorExternalWrapper extends AbstractControlCalcul
     void setDuty(final double duty) {
         _inputSignal[DUTY_INDEX][0] = duty;
     }
+
+    /** @return the calculator that this wrapper modulates */
+    public AbstractSignalCalculatorPeriodic wrapped() { return _wrapped; }
+
+    @Override
+    public void exportState(final StateSink sink) { _wrapped.exportState(sink); }
 }

@@ -13,6 +13,8 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 import gecko.core.control.NotCalculateableMarker;
 
 /**
@@ -26,7 +28,7 @@ import gecko.core.control.NotCalculateableMarker;
  *
  * @author GeckoCIRCUITS Team
  */
-public final class GateCalculator extends AbstractControlCalculatable implements NotCalculateableMarker {
+public final class GateCalculator extends AbstractControlCalculatable implements NotCalculateableMarker, StatelessCalculation {
 
     /**
      * Creates a gate calculator with one input and no outputs.

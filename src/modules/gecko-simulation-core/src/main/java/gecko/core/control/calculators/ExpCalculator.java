@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class ExpCalculator extends AbstractSingleInputSingleOutputCalculator {    
+import gecko.core.control.StatelessCalculation;
+
+public final class ExpCalculator extends AbstractSingleInputSingleOutputCalculator implements StatelessCalculation {    
     private static final double LARGEST_POSSIBLE = 100;
     @Override
     public void berechneYOUT(final double deltaT) {

@@ -13,11 +13,13 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /**
  * Multiple inputs means: more than two signals can tested for the "AND" logic.
  * @author andreas
  */
-public final class AndMultiInputCalculator extends AbstractControlCalculatable {
+public final class AndMultiInputCalculator extends AbstractControlCalculatable implements StatelessCalculation {
 
     public AndMultiInputCalculator(final int inputNumber) {
         super(inputNumber, 1);

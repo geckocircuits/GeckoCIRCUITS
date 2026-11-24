@@ -1,10 +1,12 @@
 package gecko.rest.service;
 
+import gecko.core.allg.PeriodicSteadyStateSettings;
 import gecko.core.allg.SolverType;
 import gecko.core.preparation.*;
 import gecko.core.simulation.HeadlessSimulationEngine;
 import gecko.core.simulation.SimulationProgress;
 import gecko.core.simulation.SimulationResult;
+import gecko.core.simulation.SteadyStateReport;
 import gecko.core.signal.TimedSignal;
 import gecko.rest.config.SimulationJobLimits;
 import gecko.rest.model.BatchJobStatus;
@@ -154,11 +156,26 @@ public class SimulationService {
         }
         PreparationResult result = preparation.prepare(source.snapshot(), new PreparationRequest(
                 new SolverOverrides(request.getSolverType() == null ? null : parseSolverType(request.getSolverType()),
-                        request.getTimeStep(), request.getSimulationTime()),
+                        request.getTimeStep(), request.getSimulationTime(), features(request)),
                 request.getParameters() == null ? Map.of() : request.getParameters()));
         if (result instanceof PreparationResult.Ready ready) return ready.execution();
         throw new CircuitPreparationException(result instanceof PreparationResult.Rejected ? HttpStatus.BAD_REQUEST
                 : HttpStatus.UNPROCESSABLE_ENTITY, result.report());
+    }
+
+    private static SolverFeatures features(SimulationRequest request) {
+        var search = request.getPeriodicSteadyState();
+        if (search == null) return SolverFeatures.none();
+        return new SolverFeatures(0, false, false, new PeriodicSteadyStateSettings(
+                search.getPeriod() == null ? Double.NaN : search.getPeriod(),
+                search.getTolerance() == null ? PeriodicSteadyStateSettings.DEFAULT_TOLERANCE : search.getTolerance(),
+                search.getMaxPeriods() == null ? PeriodicSteadyStateSettings.DEFAULT_MAX_PERIODS : search.getMaxPeriods()));
+    }
+
+    private static SimulationResponse.SteadyState steadyState(SimulationResult result) {
+        if (!(result.getMetadata().get("steadyState") instanceof SteadyStateReport report)) return null;
+        return new SimulationResponse.SteadyState(report.converged(), report.periods(),
+                Double.isFinite(report.residual()) ? report.residual() : null, report.startTime());
     }
 
     private SimulationJob createJob(PreparedCircuit circuit, BatchJob batch) {
@@ -215,6 +232,8 @@ public class SimulationService {
                 boolean committed = result.isSuccess()
                         ? applySuccessfulResult(job.response, result)
                         : applyFailureResult(job.response, result.getErrorMessage());
+                // A cancelled job is already terminal, so its report attaches without changing the status.
+                if (!result.isSuccess() && steadyState(result) != null) job.response.setSteadyState(steadyState(result));
                 if (committed) {
                     publishTerminal(job);
                 }
@@ -264,6 +283,7 @@ public class SimulationService {
             result.setEndTime(source.getEndTime());
             result.setErrorMessage(source.getErrorMessage());
             result.setProgressDetails(source.getProgressDetails());
+            result.setSteadyState(source.getSteadyState());
             if (includeResults) result.setResults(source.getResults());
             return result;
         }
@@ -597,6 +617,7 @@ public class SimulationService {
             }
             response.addResult("time", result.getTimeArray());
             response.setErrorMessage(null);
+            response.setSteadyState(steadyState(result));
             response.setEndTime(Instant.now());
             response.setStatus(SimulationStatus.COMPLETED);
             return true;

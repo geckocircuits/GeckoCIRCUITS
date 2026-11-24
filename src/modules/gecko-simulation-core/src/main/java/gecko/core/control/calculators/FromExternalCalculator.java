@@ -1,8 +1,10 @@
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 
 /** Supplies the latest external values as CONTROL outputs. */
-public final class FromExternalCalculator extends AbstractControlCalculatable {
+public final class FromExternalCalculator extends AbstractControlCalculatable implements StatelessCalculation {
     private final double[] values;
 
     public FromExternalCalculator(int width) {

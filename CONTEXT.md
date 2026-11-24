@@ -25,6 +25,10 @@ _Avoid_: Gate edge, CONTROL threshold crossing
 The electrical state with every capacitor open, every inductor shorted, sources at their t=0 value and switches in their initial gate state. An opt-in start state that replaces the configured initial states.
 _Avoid_: Steady state, periodic steady state, startup transient
 
+**Periodic steady state**:
+The state in which the full state at the end of one period repeats within a tolerance. It covers the electrical histories, switch states, held CONTROL values and the private state of CONTROL blocks, not only the outputs. An opt-in search runs before the main phase.
+_Avoid_: DC operating point, settled output, startup transient
+
 **CONTROL runtime**:
 The assembled control calculation chain for one simulation run, including its electrical probes, gate signals, and SCOPE inputs.
 _Avoid_: Control service, individual calculator

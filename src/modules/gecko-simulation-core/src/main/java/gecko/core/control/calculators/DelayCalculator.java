@@ -13,12 +13,15 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 import gecko.core.control.IsDtChangeSensitive;
 import gecko.core.control.DelayHistory;
 
 /** Adapts shared delay history to this runtime's signal arrays and lifecycle interfaces. */
 public final class DelayCalculator extends AbstractSingleInputSingleOutputCalculator
-        implements InitializableAtSimulationStart, IsDtChangeSensitive {
+        implements InitializableAtSimulationStart, IsDtChangeSensitive, PeriodicStateSource {
     private final DelayHistory history;
 
     /**
@@ -97,4 +100,7 @@ public final class DelayCalculator extends AbstractSingleInputSingleOutputCalcul
 
     @Override
     public Runnable prepareTimeStepChange(double dt) { return prepareStepChange(dt); }
+
+    @Override
+    public void exportState(final StateSink sink) { history.exportChronological(sink); }
 }

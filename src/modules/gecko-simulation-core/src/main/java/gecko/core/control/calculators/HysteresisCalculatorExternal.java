@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class HysteresisCalculatorExternal extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+import gecko.core.control.StatelessCalculation;
+
+public final class HysteresisCalculatorExternal extends AbstractControlCalculatable implements InitializableAtSimulationStart, StatelessCalculation {
 
     public HysteresisCalculatorExternal() {
         super(2, 1);        

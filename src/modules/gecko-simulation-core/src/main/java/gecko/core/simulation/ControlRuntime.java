@@ -14,8 +14,10 @@
 package gecko.core.simulation;
 
 import gecko.core.circuit.netlist.CircuitNetlist;
+import gecko.core.control.PeriodicStateSource;
 import gecko.core.control.calculators.AbstractControlCalculatable;
 import gecko.core.control.calculators.FromExternalCalculator;
+import gecko.core.control.calculators.TimeCalculator;
 import gecko.core.control.calculators.ToExternalCalculator;
 import gecko.core.io.CircuitModel;
 import java.util.ArrayList;
@@ -252,6 +254,38 @@ final class ControlRuntime implements AutoCloseable {
         nextSampleIndex = (long) Math.floor((time + slack) / samplePeriod) + 1;
         return true;
     }
+
+    /**
+     * Exports the held CONTROL values and the private calculator state after a committed step. It only reads.
+     * Absolute time and the time calculator are not state. The sample phase is exported when CONTROL is sampled.
+     *
+     * @param circuitNetlist the electrical netlist whose sources hold CONTROL values
+     * @param time the time of the last committed step
+     * @param sink receives the values
+     */
+    void exportPeriodicState(CircuitNetlist circuitNetlist, double time, PeriodicStateMonitor.Sink sink) {
+        domainCoupler.exportHeldSources(circuitNetlist, sink);
+        for (int index = 0; index < owners.size(); index++) {
+            var owner = owners.get(index);
+            String name = owner.getClass().getSimpleName() + "#" + index;
+            if (!(owner instanceof TimeCalculator)) {
+                sink.group(PeriodicStateMonitor.Unit.CONTROL, "CONTROL output of " + name);
+                for (double[] output : owner._outputSignal) for (double value : output) sink.value(value);
+            }
+            if (owner instanceof PeriodicStateSource source) {
+                sink.group(PeriodicStateMonitor.Unit.CONTROL, "CONTROL state of " + name);
+                source.exportState(sink);
+            }
+        }
+        if (samplePeriod > 0) {
+            sink.group(PeriodicStateMonitor.Unit.TIME, "sample phase");
+            sink.value(nextSampleIndex * samplePeriod - time);
+            sink.flag(outputsPublishedLastStep);
+        }
+    }
+
+    /** @return the assembled calculators, for classification before a search starts */
+    List<AbstractControlCalculatable> calculators() { return owners; }
 
     float[] sampleScope() {
         return hasScope() ? scopeExtractor.extractCurrentValues() : new float[0];

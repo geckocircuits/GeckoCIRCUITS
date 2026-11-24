@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class TanCalculator extends AbstractSingleInputSingleOutputCalculator {    
+import gecko.core.control.StatelessCalculation;
+
+public final class TanCalculator extends AbstractSingleInputSingleOutputCalculator implements StatelessCalculation {    
     private static final double SMALL_NUMBER = 1e-14;
     @Override
     public void berechneYOUT(final double deltaT) {

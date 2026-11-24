@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class DQABCDCalculator extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class DQABCDCalculator extends AbstractControlCalculatable implements StatelessCalculation {
 
     private static final double TWO_THIRD = 0.6666666666666;
     private static final double TWO_PI_THIRD = Math.PI * TWO_THIRD;

@@ -13,7 +13,10 @@
  */
 package gecko.core.control.calculators;
 
-public final class IntegratorCalculation extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
+public final class IntegratorCalculation extends AbstractControlCalculatable implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private double _y1old = 0;  // Storage of Integral part
     private double _xold = 0, _y11 = -1;
@@ -70,5 +73,12 @@ public final class IntegratorCalculation extends AbstractControlCalculatable imp
         _min = min;
         _max = max;
 
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(_y1old);
+        sink.value(_xold);
+        sink.value(_y11);
     }
 }

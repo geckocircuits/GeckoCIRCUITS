@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class NotEqualCalculator extends AbstractTwoInputsOneOutputCalculator {
+import gecko.core.control.StatelessCalculation;
+
+public final class NotEqualCalculator extends AbstractTwoInputsOneOutputCalculator implements StatelessCalculation {
 
     @Override
     public void berechneYOUT(final double deltaT) {

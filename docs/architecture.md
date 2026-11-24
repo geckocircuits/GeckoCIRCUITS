@@ -31,9 +31,10 @@ This page only points to where things are. The code shows how they work, [ADRs](
 |------|------|
 | `io/` | Circuit file parsing, topology and import issues |
 | `preparation/` | Circuit preparation and Headless readiness ([ADR-0001](adr/0001-circuit-preparation-admission.md), [ADR-0002](adr/0002-circuit-preparation-interface.md)) |
-| `simulation/` | Engine, Simulation session, Electrical time step, CONTROL runtime |
+| `simulation/` | Engine, Simulation session, Electrical time step, CONTROL runtime, periodic steady-state monitor ([ADR-0017](adr/0017-periodic-steady-state.md)) |
 | `simulation/solver/` | Matrix solver and initial conditions |
 | `circuit/` | Matrix stampers, netlist, loss calculation |
+| `control/` | Delay history and the periodic state contracts (`PeriodicStateSource`, `StatelessCalculation`) |
 | `control/calculators/` | CONTROL calculators |
 | `signal/` | Signal analysis (characteristics, Fourier) |
 

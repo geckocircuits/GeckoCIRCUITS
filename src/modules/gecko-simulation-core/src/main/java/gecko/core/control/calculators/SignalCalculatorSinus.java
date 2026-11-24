@@ -13,6 +13,7 @@
  */
 package gecko.core.control.calculators;
 
+
 public class SignalCalculatorSinus extends AbstractSignalCalculatorPeriodic {
     
     /**
