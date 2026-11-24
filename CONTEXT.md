@@ -17,6 +17,10 @@ _Avoid_: Sub-step, solver iteration
 A part of a Grid step that ends at a Located event, at the end of an accepted LTE-controlled width, or at the grid time. It commits one electrical history update.
 _Avoid_: Extra recorded row, CONTROL step
 
+**Local truncation error (LTE)**:
+The error one electrical step adds to the solution when it starts from the exact previous state. An adaptive step keeps an estimate of it below a tolerance.
+_Avoid_: Global error, solver residual
+
 **Located event**:
 A diode, thyristor or IGBT conduction change with a time inside a Grid step.
 _Avoid_: Gate edge, CONTROL threshold crossing
@@ -26,7 +30,7 @@ The electrical state with every capacitor open, every inductor shorted, sources 
 _Avoid_: Steady state, periodic steady state, startup transient
 
 **Periodic steady state**:
-The state in which the full state at the end of one period repeats within a tolerance. It covers the electrical histories, switch states, held CONTROL values and the private state of CONTROL blocks, not only the outputs. An opt-in search runs before the main phase.
+The state in which the physical electrical and CONTROL state at the end of one period repeats within a tolerance. It covers the electrical histories, switch states, held CONTROL values and the private state of CONTROL blocks, not only the outputs. It does not cover the numerical state of the step control. An opt-in search runs before the main phase.
 _Avoid_: DC operating point, settled output, startup transient
 
 **CONTROL runtime**:
@@ -75,7 +79,7 @@ A later segment can continue from the last committed state.
 _Avoid_: Session lifetime, new simulation
 
 **Committed step**:
-One completed electrical and CONTROL calculation with its corresponding recorded sample, when logging is enabled.
+One Grid step with its completed electrical and CONTROL calculation and its recorded sample, when logging is enabled. An Electrical sub-step, or a CONTROL value held between samples, is not a Committed step.
 _Avoid_: Partial solve, display update
 
 **Circuit file**:

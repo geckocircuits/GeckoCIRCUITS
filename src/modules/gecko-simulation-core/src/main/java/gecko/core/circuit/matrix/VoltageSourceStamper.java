@@ -58,18 +58,18 @@ public class VoltageSourceStamper implements IMatrixStamper {
     public static final int SOURCE_AC = 1;
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
                              double[] parameter, double dt, SolverType solverType) {
         // nodeZ is the index for the additional current variable
 
         // Voltage equation row: Vx - Vy = Vsource
-        a[nodeZ][nodeX] += 1.0;
-        a[nodeZ][nodeY] -= 1.0;
+        a.add(nodeZ, nodeX, 1.0);
+        a.add(nodeZ, nodeY, -1.0);
 
         // KCL equations: include the source current
         // Current flows from nodeX to nodeY (positive current out of + terminal)
-        a[nodeX][nodeZ] += 1.0;
-        a[nodeY][nodeZ] -= 1.0;
+        a.add(nodeX, nodeZ, 1.0);
+        a.add(nodeY, nodeZ, -1.0);
     }
 
     @Override

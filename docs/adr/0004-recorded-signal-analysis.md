@@ -48,6 +48,6 @@ Read-only analysis does not change retained results.
 
 ## References
 
-- [Timed signal](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/signal/TimedSignal.java)
-- [Analysis service](../../src/modules/gecko-rest-api/src/main/java/gecko/rest/service/AnalysisService.java)
-- [Stored-signal HTTP contracts](../../src/modules/gecko-rest-api/src/test/java/gecko/rest/integration/StoredSignalAnalysisIntegrationTest.java)
+- [Timed signal](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/main/java/gecko/core/signal/TimedSignal.java)
+- [Analysis service](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-rest-api/src/main/java/gecko/rest/service/AnalysisService.java)
+- [Stored-signal HTTP contracts](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-rest-api/src/test/java/gecko/rest/integration/StoredSignalAnalysisIntegrationTest.java)

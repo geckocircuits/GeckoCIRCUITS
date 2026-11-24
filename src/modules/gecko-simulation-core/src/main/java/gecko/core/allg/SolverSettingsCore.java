@@ -38,6 +38,7 @@ public final class SolverSettingsCore {
     private boolean dcOperatingPoint;  // seed the first step from a solved DC operating point; off by default
     private PeriodicSteadyStateSettings periodicSteadyState; // periodic steady-state search; null means off
     private AdaptiveStepSettings adaptiveStep; // adaptive electrical sub-step inside the fixed grid; null means off
+    private SparseSolverSettings sparseSolver; // sparse LU selection, where null means the dense LU
 
     // State tracking
     private boolean inPreCalculationMode;
@@ -145,7 +146,21 @@ public final class SolverSettingsCore {
         return this;
     }
 
+    /**
+     * Chooses the sparse LU for the electrical system. Null, the default, keeps the dense LU with bit-identical results.
+     * See {@link SparseSolverSettings} for the automatic threshold and the explicit overrides.
+     */
+    public SolverSettingsCore withSparseSolver(SparseSolverSettings settings) {
+        this.sparseSolver = settings;
+        return this;
+    }
+
     // Getters
+
+    /** @return the sparse-solver settings, or null when the dense LU is used */
+    public SparseSolverSettings getSparseSolver() {
+        return sparseSolver;
+    }
 
     /** @return the adaptive-step settings, or null when the feature is off */
     public AdaptiveStepSettings getAdaptiveStep() {
@@ -232,6 +247,7 @@ public final class SolverSettingsCore {
         copy.dcOperatingPoint = this.dcOperatingPoint;
         copy.periodicSteadyState = this.periodicSteadyState;
         copy.adaptiveStep = this.adaptiveStep;
+        copy.sparseSolver = this.sparseSolver;
         copy.inPreCalculationMode = this.inPreCalculationMode;
         return copy;
     }

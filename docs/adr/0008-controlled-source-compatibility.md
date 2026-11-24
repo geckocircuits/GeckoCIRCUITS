@@ -65,8 +65,8 @@ Signal control is admitted for LK voltage and current sources only; other source
 
 ## References
 
-- [Desktop matrix equations and current reporting](../../src/main/java/gecko/geckocircuits/circuit/LKMatrices.java)
-- [Desktop controlling element resolution](../../src/main/java/gecko/geckocircuits/circuit/NetListLK.java)
-- [Desktop source parameter representation](../../src/main/java/gecko/geckocircuits/allg/UserParameter.java)
-- [Desktop step timing](../../src/main/java/gecko/geckocircuits/circuit/SimulationsKern.java)
-- [Controlled source compatibility contract](../../src/test/java/gecko/geckocircuits/circuit/ControlledSourceParityContractTest.java)
+- [Desktop matrix equations and current reporting](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/main/java/gecko/geckocircuits/circuit/LKMatrices.java)
+- [Desktop controlling element resolution](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/main/java/gecko/geckocircuits/circuit/NetListLK.java)
+- [Desktop source parameter representation](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/main/java/gecko/geckocircuits/allg/UserParameter.java)
+- [Desktop step timing](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/main/java/gecko/geckocircuits/circuit/SimulationsKern.java)
+- [Controlled source compatibility contract](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/test/java/gecko/geckocircuits/circuit/ControlledSourceParityContractTest.java)

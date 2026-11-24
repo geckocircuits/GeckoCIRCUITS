@@ -3,7 +3,7 @@
 ADR-0016 · Claude Opus 5.5 for tinix84 · 2026-11-24 · Status: Accepted · Version 1.0
 Audience: maintainers who implement or review solver features in `gecko-simulation-core`.
 
-**Decision:** We locate diode-family switching events inside a fixed step by sub-stepping the uncommitted electrical interval to the crossing time. CONTROL and recordings stay on the fixed grid.
+**Decision:** We locate diode-family switching events inside a fixed step by sub-stepping the uncommitted electrical interval to the crossing time, while CONTROL and recordings stay on the fixed grid.
 
 ## Context
 
@@ -49,4 +49,4 @@ The opt-in setting is `zeroCrossing` in `SolverFeatures`. The setting validation
 
 Proposed by Claude Opus 5.5 (design pass for tinix84) on 2026-11-24. Decided by: Codex implementation review under tinix84 task authorization, 2026-11-24. No human approval is claimed.
 
-Links: [ElectricalTimeStep](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/ElectricalTimeStep.java) · [SimulationSession](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/SimulationSession.java) · [ZeroCrossingDetector](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/ZeroCrossingDetector.java) · [ADR-0011](0011-numerical-reference-compatibility.md)
+Links: [ElectricalTimeStep](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/ElectricalTimeStep.java) · [SimulationSession](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/SimulationSession.java) · [ZeroCrossingDetector](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/ZeroCrossingDetector.java) · [ADR-0011](0011-numerical-reference-compatibility.md)

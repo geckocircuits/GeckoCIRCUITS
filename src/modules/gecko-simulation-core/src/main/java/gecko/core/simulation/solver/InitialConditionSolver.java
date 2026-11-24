@@ -42,6 +42,9 @@ import java.util.Arrays;
 public class InitialConditionSolver {
 
     private final SolverType solverType;
+    private MatrixSolver.Backend lastSolverBackend;
+    private long lastSolverStoredCoefficients;
+    private MatrixSolver.SparseFactorization lastSolverFactorization;
 
     /** Threshold for treating inductance as zero */
     private static final double FAST_NULL_L = 1e-10;
@@ -166,7 +169,8 @@ public class InitialConditionSolver {
                         parameters[first][0], parameters[second][0]);
             }
         }
-        MatrixSolver initialSolver = new MatrixSolver(inductorCutset ? solverType : SolverType.SOLVER_BE);
+        MatrixSolver initialSolver = new MatrixSolver(inductorCutset ? solverType : SolverType.SOLVER_BE,
+                matrixSolver.getSparseSettings());
         initialSolver.initializeMatrices(netlist.getNodeMax(), sourceCount, count);
         // A cutset requires the complete LKMatrices 1 ns pre-step, including every dynamic branch and source.
         // Its histories start at zero. Configured inductor currents are restored after the voltage solve.
@@ -175,6 +179,7 @@ public class InitialConditionSolver {
         initialSolver.buildMatrixA(initialNetwork, initialStep, initialTime, false);
         initialSolver.buildVectorB(initialNetwork, initialStep, initialTime, false);
         initialSolver.solve();
+        recordSolver(initialSolver);
         double[] currents = new double[count];
         new ComponentCurrentCalculator().calculateComponentCurrents(
                 initialSolver, initialNetwork, currents, 0, initialStep, initialTime, true);
@@ -256,9 +261,10 @@ public class InitialConditionSolver {
         CircuitNetlist dcNetwork = new CircuitNetlist();
         dcNetwork.initNetlist(types, x, y, sources, parameters, nodeMax, sourceCount, count);
         dcNetwork.setWireReference(netlist.usesWireReference());
-        MatrixSolver dcSolver = new MatrixSolver(SolverType.SOLVER_BE);
+        MatrixSolver dcSolver = new MatrixSolver(SolverType.SOLVER_BE, matrixSolver.getSparseSettings());
         dcSolver.initializeMatrices(nodeMax, sourceCount, count);
         solveDiodeConsistent(dcSolver, dcNetwork);
+        recordSolver(dcSolver);
 
         double[] currents = new double[count];
         new ComponentCurrentCalculator().calculateComponentCurrents(dcSolver, dcNetwork, currents, 0, 1, 0, true);
@@ -327,6 +333,27 @@ public class InitialConditionSolver {
                         + " is the only connection between two node groups");
             }
         }
+    }
+
+    private void recordSolver(MatrixSolver solver) {
+        lastSolverBackend = solver.getBackend();
+        lastSolverStoredCoefficients = solver.getStoredCoefficientCount();
+        lastSolverFactorization = solver.getSparseFactorization();
+    }
+
+    /** @return the backend of the solver that computed the last initial state, or null when none ran */
+    public MatrixSolver.Backend getLastSolverBackend() {
+        return lastSolverBackend;
+    }
+
+    /** @return how that solver factored a sparse matrix, or null when it was dense */
+    public MatrixSolver.SparseFactorization getLastSolverFactorization() {
+        return lastSolverFactorization;
+    }
+
+    /** @return the coefficient slots that solver held after its solve */
+    public long getLastSolverStoredCoefficients() {
+        return lastSolverStoredCoefficients;
     }
 
     /** Flips the most inconsistent diode-family element until every state matches its bias. */

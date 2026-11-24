@@ -15,6 +15,7 @@ package gecko.core.simulation;
 
 import gecko.core.allg.SolverSettingsCore;
 import gecko.core.allg.SolverType;
+import gecko.core.allg.SparseSolverSettings;
 import gecko.core.io.CircuitModel;
 import gecko.core.preparation.SolverFeatures;
 import gecko.core.preparation.SolverOverrides;
@@ -65,7 +66,7 @@ public final class SimulationConfig {
                 durationExplicit ? solverSettings.getSimulationDuration() : null,
                 new SolverFeatures(solverSettings.getControlSamplePeriod(), solverSettings.isZeroCrossing(),
                         solverSettings.isDcOperatingPoint(), solverSettings.getPeriodicSteadyState(),
-                        solverSettings.getAdaptiveStep()));
+                        solverSettings.getAdaptiveStep(), solverSettings.getSparseSolver()));
     }
     /** Uses file defaults only for settings the caller did not supply. */
     SolverSettingsCore resolveSolverSettings(CircuitModel model) {
@@ -247,6 +248,19 @@ public final class SimulationConfig {
          */
         public Builder adaptiveStep(gecko.core.allg.AdaptiveStepSettings settings) {
             this.solverSettings.withAdaptiveStep(settings);
+            return this;
+        }
+
+        /**
+         * Chooses the sparse LU for the electrical system. Off (null) by default, which keeps the dense LU and
+         * bit-identical results. Automatic mode uses the dense LU below {@code thresholdNodes} circuit nodes
+         * (ground excluded) and the sparse LU at or above it. The dense and sparse modes force one solver.
+         *
+         * @param settings the mode and threshold, or null for the dense default
+         * @return this builder
+         */
+        public Builder sparseSolver(SparseSolverSettings settings) {
+            this.solverSettings.withSparseSolver(settings);
             return this;
         }
 

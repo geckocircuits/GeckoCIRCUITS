@@ -52,7 +52,24 @@ public interface IMatrixStamper {
      * @param dt time step size
      * @param solverType the numerical integration method (BE, TRZ, GS)
      */
-    void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ, double[] parameter,
+    default void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ, double[] parameter,
+                      double dt, SolverType solverType) {
+        stampMatrixA(MatrixCoefficients.dense(a), nodeX, nodeY, nodeZ, parameter, dt, solverType);
+    }
+
+    /**
+     * Stamps the component's contribution into any coefficient store, dense or sparse.
+     * Every stamper implements this overload. The {@code double[][]} overload delegates to it.
+     *
+     * @param a the coefficients to add into
+     * @param nodeX first node index
+     * @param nodeY second node index
+     * @param nodeZ auxiliary node index
+     * @param parameter component parameters array
+     * @param dt time step size
+     * @param solverType the numerical integration method
+     */
+    void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ, double[] parameter,
                       double dt, SolverType solverType);
 
     /**

@@ -157,16 +157,16 @@ public class ThyristorStamper implements IStatefulStamper {
     }
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
                              double[] parameter, double dt, SolverType solverType) {
         double resistance = getCurrentResistance(parameter);
         double admittance = 1.0 / resistance;
 
         // Stamp standard two-terminal admittance pattern
-        a[nodeX][nodeX] += admittance;
-        a[nodeY][nodeY] += admittance;
-        a[nodeX][nodeY] -= admittance;
-        a[nodeY][nodeX] -= admittance;
+        a.add(nodeX, nodeX, admittance);
+        a.add(nodeY, nodeY, admittance);
+        a.add(nodeX, nodeY, -admittance);
+        a.add(nodeY, nodeX, -admittance);
     }
 
     @Override

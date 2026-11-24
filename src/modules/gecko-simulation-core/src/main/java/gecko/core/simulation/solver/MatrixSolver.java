@@ -14,9 +14,11 @@
 package gecko.core.simulation.solver;
 
 import gecko.core.allg.SolverType;
+import gecko.core.allg.SparseSolverSettings;
 import gecko.core.circuit.SourceType;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.circuit.matrix.IMatrixStamper;
+import gecko.core.circuit.matrix.MatrixCoefficients;
 import gecko.core.circuit.matrix.StamperRegistry;
 import gecko.core.circuit.netlist.INetList;
 import gecko.core.math.Matrix;
@@ -38,8 +40,18 @@ public class MatrixSolver {
      *  Without this, the KCL equations are linearly dependent and the matrix is singular. */
     private static final double GROUND_CONDUCTANCE = 1e15;
 
+    /** Linear solver behind {@link #solve()}. */
+    public enum Backend { DENSE, SPARSE }
+
     private int matrixSize;           // Matrix order (node count + voltage source count + 1)
-    private double[][] a;            // System matrix A for MNA
+    private double[][] a;            // Dense system matrix A for MNA; null when the sparse backend is selected
+    private final SparseSolverSettings sparseSettings; // null keeps the dense default
+    private SparseSystem sparse;      // sparse coefficients and LU; null when the dense backend is selected
+    private double[] sparseSolution;  // reusable solve result for the sparse backend
+    private MatrixCoefficients coefficients; // write seam over a or sparse
+    private int denseFactorizations;
+    private double[][] permuted;      // node-0-last copy of a for enabled dense pinned solves, null until first used
+    private boolean wrapperReferenceLast; // true when matrixSolverA wraps the permuted copy
     private double[] bVector;         // Right-hand side vector b
     private double[] p;               // Current node potentials
     private double[] pALT;            // Previous time-step node potentials
@@ -61,9 +73,20 @@ public class MatrixSolver {
      * @param solverType the numerical integration method (e.g., Backward Euler, Trapezoidal)
      */
     public MatrixSolver(SolverType solverType) {
+        this(solverType, null);
+    }
+
+    /**
+     * Constructs a MatrixSolver whose linear solver follows the sparse settings.
+     *
+     * @param solverType the numerical integration method
+     * @param sparseSettings which LU to use, or null for the dense default of {@link #MatrixSolver(SolverType)}
+     */
+    public MatrixSolver(SolverType solverType, SparseSolverSettings sparseSettings) {
         if (solverType == null) {
             throw new IllegalArgumentException("Solver type cannot be null");
         }
+        this.sparseSettings = sparseSettings;
         this.solverType = solverType;
         this.matrixSolverA = null;
         this.matrixChanged = true;
@@ -89,8 +112,20 @@ public class MatrixSolver {
         matrixSize = (int) requiredSize;
         wireReference = false;
 
-        // Allocate system matrix A and solution vector b
-        a = new double[matrixSize][matrixSize];
+        // Allocate system matrix A and solution vector b. The sparse backend never allocates an order-by-order array.
+        if (sparseSettings != null && sparseSettings.usesSparse(nodeCount)) {
+            a = null;
+            sparse = new SparseSystem(matrixSize, nodeCount < sparseSettings.thresholdNodes());
+            sparseSolution = new double[matrixSize];
+            coefficients = sparse;
+        } else {
+            a = new double[matrixSize][matrixSize];
+            sparse = null;
+            coefficients = MatrixCoefficients.dense(a);
+        }
+        denseFactorizations = 0;
+        permuted = null;
+        wrapperReferenceLast = false;
         bVector = new double[matrixSize];
 
         // Allocate node potential vectors for multi-step integration methods
@@ -112,8 +147,81 @@ public class MatrixSolver {
         return matrixSize;
     }
 
+    /**
+     * Returns the system matrix. With the dense backend this is the live array: writes change the solver's matrix,
+     * as before. With the sparse backend it is a new dense copy built on each call, so writes to it have no effect
+     * and the call allocates an order-by-order array. Use {@link #addCoefficient} to change coefficients on either
+     * backend. The matrix always keeps its original row order, even when an enabled dense solve factors a node-0-last copy.
+     *
+     * @return the live dense matrix, or a dense snapshot of the sparse coefficients
+     */
     public double[][] getSystemMatrix() {
-        return a;
+        return sparse == null ? a : sparse.toDense();
+    }
+
+    /**
+     * Adds a value to one system-matrix coefficient on either backend. It does not mark the matrix changed;
+     * call {@link #setMatrixChanged()} afterwards, as for a direct array patch.
+     */
+    public void addCoefficient(int row, int col, double value) {
+        coefficients.add(row, col, value);
+    }
+
+    /** @return the linear solver selected by the last {@link #initializeMatrices} */
+    public Backend getBackend() {
+        return sparse == null ? Backend.DENSE : Backend.SPARSE;
+    }
+
+    /** How the sparse backend factors its matrix. */
+    public enum SparseFactorization {
+        /** Repeats the dense LU's arithmetic, for a wire-reference system below the threshold. */
+        LEGACY_ORDER,
+        /** The EJML sparse LU. */
+        EJML
+    }
+
+    /** @return the kind of the last sparse factorization, or null when dense or before the first factorization */
+    public SparseFactorization getSparseFactorization() {
+        if (sparse == null || sparse.factorizations() == 0) return null;
+        return sparse.factoredWithLegacyOrder() ? SparseFactorization.LEGACY_ORDER : SparseFactorization.EJML;
+    }
+
+    /** @return the sparse settings this solver was built with, or null for the dense default */
+    SparseSolverSettings getSparseSettings() {
+        return sparseSettings;
+    }
+
+    /** @return the coefficient slots held: all order-squared entries when dense, the stored entries when sparse */
+    public long getStoredCoefficientCount() {
+        return sparse == null ? (long) matrixSize * matrixSize : sparse.storedCount();
+    }
+
+    /** @return the stored coefficients that are not zero */
+    long getNonzeroCoefficientCount() {
+        if (sparse != null) return sparse.nonzeroCount();
+        long nonzero = 0;
+        for (double[] row : a) for (double value : row) if (value != 0) nonzero++;
+        return nonzero;
+    }
+
+    /** @return nonzeros in the sparse LU factors, the stored coefficients plus fill-in; 0 when dense */
+    long getFactorNonzeroCount() {
+        return sparse == null ? 0 : sparse.factorNonzeros();
+    }
+
+    /**
+     * @return an estimate of the primitive-array bytes of the coefficient storage and its cached solver data, without the
+     *         vectors both backends share. It is neither retained capacity nor total heap. An enabled dense pinned solve
+     *         counts its node-0-last copy once allocated, so 16 n² bytes instead of 8 n².
+     */
+    public long getCoefficientStorageBytes() {
+        if (sparse != null) return sparse.storageBytes();
+        return (permuted == null ? 8L : 16L) * matrixSize * matrixSize;
+    }
+
+    /** @return how many times the LU was computed since {@link #initializeMatrices} */
+    public int getFactorizationCount() {
+        return sparse == null ? denseFactorizations : sparse.factorizations();
     }
 
     public double[] getb() {
@@ -228,7 +336,9 @@ public class MatrixSolver {
         }
 
         // Step 1: Clear matrix A (set all entries to 0)
-        if (a != null) {
+        if (sparse != null) {
+            sparse.clear();
+        } else if (a != null) {
             for (int i = 0; i < matrixSize; i++) {
                 for (int j = 0; j < matrixSize; j++) {
                     a[i][j] = 0.0;
@@ -252,43 +362,43 @@ public class MatrixSolver {
             // Step 3: Get stamper for this component type and stamp matrix A
             IMatrixStamper stamper = registry.getStamper(componentType);
             if (stamper != null) {
-                stamper.stampMatrixA(a, nodeX, nodeY, nodeZ, parameters, dt, solverType);
+                stamper.stampMatrixA(coefficients, nodeX, nodeY, nodeZ, parameters, dt, solverType);
             }
             if (componentType == CircuitTypCore.LK_I && SourceControl.mode(parameters) == 5) {
                 int target = SourceControl.target(netlist, elementIndex);
                 int controlX = netlist.getNodeX(target);
                 int controlY = netlist.getNodeY(target);
                 double gain = parameters[11];
-                a[nodeX][controlX] += gain;
-                a[nodeY][controlY] += gain;
-                a[nodeX][controlY] -= gain;
-                a[nodeY][controlX] -= gain;
+                coefficients.add(nodeX, controlX, gain);
+                coefficients.add(nodeY, controlY, gain);
+                coefficients.add(nodeX, controlY, -gain);
+                coefficients.add(nodeY, controlX, -gain);
             }
             if ((componentType == CircuitTypCore.LK_U || componentType == CircuitTypCore.REL_MMF
                     || componentType == CircuitTypCore.TH_TEMP)
                     && SourceControl.mode(parameters) == 5 && parameters[14] == 0) {
                 int target = SourceControl.target(netlist, elementIndex);
                 double gain = parameters[11];
-                a[nodeZ][netlist.getNodeX(target)] -= gain;
-                a[nodeZ][netlist.getNodeY(target)] += gain;
+                coefficients.add(nodeZ, netlist.getNodeX(target), -gain);
+                coefficients.add(nodeZ, netlist.getNodeY(target), gain);
             }
             if ((componentType == CircuitTypCore.LK_U || componentType == CircuitTypCore.REL_MMF
                     || componentType == CircuitTypCore.TH_TEMP) && SourceControl.mode(parameters) == 3) {
                 int target = SourceControl.target(netlist, elementIndex);
-                a[nodeZ][SourceControl.branch(netlist, target)] -= parameters[11];
+                coefficients.add(nodeZ, SourceControl.branch(netlist, target), -parameters[11]);
             }
             if ((componentType == CircuitTypCore.LK_U || componentType == CircuitTypCore.REL_MMF
                     || componentType == CircuitTypCore.TH_TEMP) && SourceControl.mode(parameters) == 4) {
                 int target = SourceControl.target(netlist, elementIndex);
-                a[nodeZ][SourceControl.branch(netlist, target)] += parameters[11] / dt;
+                coefficients.add(nodeZ, SourceControl.branch(netlist, target), parameters[11] / dt);
             }
             if ((componentType == CircuitTypCore.LK_U || componentType == CircuitTypCore.REL_MMF
                     || componentType == CircuitTypCore.TH_TEMP) && SourceControl.mode(parameters) == 6) {
                 int target = SourceControl.target(netlist, elementIndex);
-                a[nodeZ][nodeX] -= 1.0;
-                a[nodeZ][nodeY] += 1.0;
-                a[nodeZ][nodeZ] += 1.0 / parameters[11];
-                a[nodeZ][SourceControl.branch(netlist, target)] += 1.0;
+                coefficients.add(nodeZ, nodeX, -1.0);
+                coefficients.add(nodeZ, nodeY, 1.0);
+                coefficients.add(nodeZ, nodeZ, 1.0 / parameters[11]);
+                coefficients.add(nodeZ, SourceControl.branch(netlist, target), 1.0);
             }
             // If no stamper is registered, component is skipped (e.g., terminals, unimplemented types)
         }
@@ -298,10 +408,10 @@ public class MatrixSolver {
         // (they sum to zero by Kirchhoff's current law), making the matrix singular.
         // Adding a large conductance to ground forces p[0] ≈ 0.
         wireReference = netlist.usesWireReference();
-        if (!wireReference) a[0][0] += GROUND_CONDUCTANCE;
+        if (!wireReference) coefficients.add(0, 0, GROUND_CONDUCTANCE);
         // Desktop LKMatrices pins each galvanically isolated group the same way: 1 S at its lowest node.
         // No current leaves an isolated group, so the stamp only fixes its reference potential.
-        for (int node : isolatedGroupReferences(netlist)) a[node][node] += 1.0;
+        for (int node : isolatedGroupReferences(netlist)) coefficients.add(node, node, 1.0);
 
         double alpha = solverType == SolverType.SOLVER_BE ? 1
                 : solverType == SolverType.SOLVER_TRZ ? 2 : 1.5;
@@ -309,8 +419,8 @@ public class MatrixSolver {
             int first = netlist.getNodeMax() + netlist.getVoltageSourceNumber(coupling.getInductor1Index());
             int second = netlist.getNodeMax() + netlist.getVoltageSourceNumber(coupling.getInductor2Index());
             double weight = alpha * coupling.getMutualInductance() / dt;
-            a[first][second] -= weight;
-            a[second][first] -= weight;
+            coefficients.add(first, second, -weight);
+            coefficients.add(second, first, -weight);
         }
 
         // Mark matrix as changed so LU decomposition will be recalculated
@@ -355,14 +465,14 @@ public class MatrixSolver {
             }
 
             if (oldState == 0) {
-                a[branch][controlX] += gain;
-                a[branch][controlY] -= gain;
+                coefficients.add(branch, controlX, gain);
+                coefficients.add(branch, controlY, -gain);
             } else {
                 bVector[branch] -= oldState < 0 ? parameters[12] : parameters[13];
             }
             if (newState == 0) {
-                a[branch][controlX] -= gain;
-                a[branch][controlY] += gain;
+                coefficients.add(branch, controlX, -gain);
+                coefficients.add(branch, controlY, gain);
             } else {
                 bVector[branch] += newState < 0 ? parameters[12] : parameters[13];
             }
@@ -674,9 +784,13 @@ public class MatrixSolver {
      */
     public void solve() {
         // Validate that matrices are initialized
-        if (a == null || bVector == null) {
+        if ((a == null && sparse == null) || bVector == null) {
             throw new IllegalStateException(
                     "Matrices not initialized. Call initializeMatrices() first.");
+        }
+        if (sparse != null) {
+            solveSparse();
+            return;
         }
 
         for (int row = 0; row < matrixSize; row++) {
@@ -695,14 +809,27 @@ public class MatrixSolver {
             }
         }
 
+        // Enabled dense solves of a pinned system factor the same equations with node 0 ordered last (ADR-0021).
+        // Null settings keep the legacy order, and every other branch below is unchanged.
+        boolean referenceLast = sparseSettings != null && !wireReference;
+
         // Step 1: Create or update Matrix wrapper for A (only if matrix changed)
         if (matrixSolverA == null) {
             // First time: create Matrix wrapper from a[][]
             matrixSolverA = solveMatrix();
+            denseFactorizations++;
         } else if (matrixChanged) {
+            denseFactorizations++;
             // Matrix changed: reset cached LU decomposition and update wrapper
             if (wireReference) matrixSolverA = solveMatrix();
-            else matrixSolverA.resetLUDecomp();
+            else if (referenceLast) {
+                if (wrapperReferenceLast) {
+                    fillPermuted();
+                    matrixSolverA.resetLUDecomp();
+                } else {
+                    matrixSolverA = solveMatrix();
+                }
+            } else matrixSolverA.resetLUDecomp();
             // The underlying a[][] is already modified by buildMatrixA(),
             // so Matrix wrapper points to updated data
         }
@@ -711,8 +838,14 @@ public class MatrixSolver {
         int offset = wireReference ? 1 : 0;
         int size = matrixSize - offset;
         double[][] bArray = new double[size][1];
-        for (int i = 0; i < size; i++) {
-            bArray[i][0] = bVector[i + offset];
+        if (referenceLast) {
+            for (int i = 0; i < size; i++) {
+                bArray[referencePosition(i)][0] = bVector[i];
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                bArray[i][0] = bVector[i + offset];
+            }
         }
         Matrix bMatrix = new Matrix(bArray);
 
@@ -725,19 +858,78 @@ public class MatrixSolver {
         double[][] x = xMatrix.getArray();
         for (int i = 0; i < size; i++) {
             if (!Double.isFinite(x[i][0])) {
-                throw new IllegalStateException("Nonfinite solution at row " + i);
+                // An enabled dense pinned solve holds node 0 last, so report the original row. Nothing is published yet.
+                int row = referenceLast ? (i == size - 1 ? 0 : i + 1) : i;
+                throw new IllegalStateException("Nonfinite solution at row " + row);
             }
         }
         if (wireReference) p[0] = 0;
-        for (int i = 0; i < size; i++) {
-            p[i + offset] = x[i][0];
+        if (referenceLast) {
+            for (int i = 0; i < size; i++) {
+                p[i] = x[referencePosition(i)][0];
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                p[i + offset] = x[i][0];
+            }
         }
 
         // Mark that matrix is no longer changed (until next buildMatrixA or explicit flag)
         matrixChanged = false;
     }
 
+    /**
+     * Sparse solve. The LU is kept until a stored coefficient differs from the factored one, so event trials,
+     * diode and source-limit patches, and a new step width refactor, while an identical rebuild reuses the factors.
+     * A sparse failure is thrown, and this path never falls back to the dense LU.
+     */
+    private void solveSparse() {
+        for (int row = 0; row < matrixSize; row++) {
+            if (!Double.isFinite(bVector[row])) {
+                throw new IllegalStateException("Nonfinite right-hand side at row " + row);
+            }
+        }
+        if (matrixChanged) {
+            int bad = sparse.firstNonfiniteRow();
+            if (bad >= 0) {
+                throw new IllegalStateException("Nonfinite system matrix at row " + bad);
+            }
+        }
+        int offset = wireReference ? 1 : 0;
+        double[] x = sparseSolution;
+        sparse.solve(bVector, x, matrixChanged, offset);
+        for (int i = offset; i < matrixSize; i++) {
+            if (!Double.isFinite(x[i])) {
+                throw new IllegalStateException("Nonfinite solution at row " + (i - offset));
+            }
+        }
+        if (wireReference) p[0] = 0;
+        System.arraycopy(x, offset, p, offset, matrixSize - offset);
+        matrixChanged = false;
+    }
+
+    /** Position of an original index when node 0 is ordered last, the map SparseSystem uses for the complete matrix. */
+    private int referencePosition(int index) {
+        return index == 0 ? matrixSize - 1 : index - 1;
+    }
+
+    /** Copies a into the retained node-0-last buffer, which it allocates on first use. */
+    private void fillPermuted() {
+        if (permuted == null) permuted = new double[matrixSize][matrixSize];
+        for (int row = 0; row < matrixSize; row++) {
+            double[] source = a[row];
+            double[] target = permuted[referencePosition(row)];
+            for (int col = 0; col < matrixSize; col++) target[referencePosition(col)] = source[col];
+        }
+    }
+
     private Matrix solveMatrix() {
+        if (!wireReference && sparseSettings != null) {
+            fillPermuted();
+            wrapperReferenceLast = true;
+            return new Matrix(permuted, matrixSize, matrixSize);
+        }
+        wrapperReferenceLast = false;
         if (!wireReference) return new Matrix(a, matrixSize, matrixSize);
         // Desktop excludes its reference row and column from LU decomposition.
         double[][] reduced = new double[matrixSize - 1][matrixSize - 1];

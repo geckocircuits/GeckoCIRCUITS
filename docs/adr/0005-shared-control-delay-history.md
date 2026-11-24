@@ -50,7 +50,7 @@ This decision does not add serialized DELAY support to the headless factory.
 
 ## References
 
-- [Shared history](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/control/DelayHistory.java)
-- [Paired desktop/core contracts](../../src/test/java/gecko/geckocircuits/control/calculators/DelayParityContractTest.java)
-- [Core lifecycle contracts](../../src/modules/gecko-simulation-core/src/test/java/gecko/core/control/DelayHistoryLifecycleContractTest.java)
+- [Shared history](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/main/java/gecko/core/control/DelayHistory.java)
+- [Paired desktop/core contracts](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/test/java/gecko/geckocircuits/control/calculators/DelayParityContractTest.java)
+- [Core lifecycle contracts](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/test/java/gecko/core/control/DelayHistoryLifecycleContractTest.java)
 - [CONTROL ordering](0003-control-dependency-ordering.md)

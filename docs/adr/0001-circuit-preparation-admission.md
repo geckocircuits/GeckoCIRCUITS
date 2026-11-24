@@ -49,8 +49,8 @@ These decisions authorize the design contract. They do not authorize production 
 
 ## References
 
-- [Domain language](../../CONTEXT.md)
+- [Domain language](https://github.com/tinix84/GeckoCIRCUITS/blob/main/CONTEXT.md)
 - [Documented cloned-ID workflow](../releases/2200.md)
-- [Current circuit store](../../src/modules/gecko-rest-api/src/main/java/gecko/rest/service/CircuitFileService.java)
-- [Current job admission](../../src/modules/gecko-rest-api/src/main/java/gecko/rest/service/SimulationService.java)
-- [Settings precedence](../../src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/SimulationConfig.java)
+- [Current circuit store](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-rest-api/src/main/java/gecko/rest/service/CircuitFileService.java)
+- [Current job admission](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-rest-api/src/main/java/gecko/rest/service/SimulationService.java)
+- [Settings precedence](https://github.com/tinix84/GeckoCIRCUITS/blob/main/src/modules/gecko-simulation-core/src/main/java/gecko/core/simulation/SimulationConfig.java)

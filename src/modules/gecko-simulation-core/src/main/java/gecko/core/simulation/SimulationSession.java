@@ -154,7 +154,7 @@ public final class SimulationSession implements AutoCloseable {
             ElectricalTimeStep constructedElectrical = hasElectrical
                     ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(),
                             new SolverFeatures(0, settings.isZeroCrossing(), dcStart, null,
-                                    settings.getAdaptiveStep())) : null;
+                                    settings.getAdaptiveStep(), settings.getSparseSolver())) : null;
             netlist = constructedNetlist;
             control = constructedControl;
             signalNames = constructedSignalNames;
@@ -584,6 +584,18 @@ public final class SimulationSession implements AutoCloseable {
     public AdaptiveStepReport adaptiveStepReport() {
         enterOperation(true);
         try { return electrical == null ? AdaptiveStepReport.empty() : electrical.adaptiveReport(); }
+        finally { leaveOperation(); }
+    }
+
+    /**
+     * Reports which linear solver the electrical network runs on, read from the live solvers.
+     *
+     * @return the solver report, or null when the circuit has no electrical network
+     * @throws IllegalStateException if an operation is active or the call is reentrant
+     */
+    public LinearSolverReport linearSolverReport() {
+        enterOperation(true);
+        try { return electrical == null ? null : electrical.linearSolverReport(); }
         finally { leaveOperation(); }
     }
 

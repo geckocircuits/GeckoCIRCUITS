@@ -3,7 +3,7 @@
 ADR-0017 · Claude Opus 5.5 for tinix84 · 2026-11-24 · Status: Accepted · Version 1.1
 Audience: maintainers who implement or review solver features in `gecko-simulation-core` and the REST API.
 
-**Decision:** We find the periodic steady state (PSS) with a brute-force period search before the main phase, seeded from the DC operating point. The convergence test uses the full periodic state.
+**Decision:** We find the periodic steady state (PSS) with a brute-force period search before the main phase, seeded from the DC operating point and tested on the full periodic state.
 
 ## Context
 

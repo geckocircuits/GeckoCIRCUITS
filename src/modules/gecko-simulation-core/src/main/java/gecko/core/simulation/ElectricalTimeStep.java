@@ -82,6 +82,9 @@ final class ElectricalTimeStep {
     private static final double LANDING_TOLERANCE = 1e-9;
     private final AdaptiveStepSettings adaptive;
     private final MatrixSolver companionSolver;
+    private final MatrixSolver.Backend initializationBackend;
+    private final long initializationStoredCoefficients;
+    private final MatrixSolver.SparseFactorization initializationFactorization;
     private final int[] discontinuityElements;
     private final double[] discontinuityValues;
     private final double[] committedMargin;
@@ -128,7 +131,7 @@ final class ElectricalTimeStep {
         this.netlist = netlist;
         nodeOrder = netlist.getNumericalNodeOrder();
         numericalNetlist = nodeOrder.length == 0 ? netlist : new NumericalNetlist(netlist, nodeOrder);
-        matrixSolver = new MatrixSolver(solverType);
+        matrixSolver = new MatrixSolver(solverType, features.sparseSolver());
         matrixSolver.initializeMatrices(netlist.getNodeMax(), netlist.getVoltageSourceMax(),
                 netlist.getElementCount());
         computedCurrents = new double[netlist.getElementCount()];
@@ -137,6 +140,9 @@ final class ElectricalTimeStep {
         InitialConditionSolver initialConditions = new InitialConditionSolver(solverType);
         if (features.dcOperatingPoint()) initialConditions.setDcOperatingPoint(matrixSolver, numericalNetlist);
         else initialConditions.setDialogInitialConditions(matrixSolver, numericalNetlist);
+        initializationBackend = initialConditions.getLastSolverBackend();
+        initializationStoredCoefficients = initialConditions.getLastSolverStoredCoefficients();
+        initializationFactorization = initialConditions.getLastSolverFactorization();
         int[] diodes = new int[netlist.getElementCount()];
         int[] sources = new int[netlist.getElementCount()];
         int diodeCount = 0;
@@ -164,7 +170,8 @@ final class ElectricalTimeStep {
             discontinuityValues = new double[0];
             committedMargin = previousMargin = null;
         } else {
-            companionSolver = new MatrixSolver(solverType == SolverType.SOLVER_BE ? SolverType.SOLVER_TRZ : SolverType.SOLVER_BE);
+            companionSolver = new MatrixSolver(solverType == SolverType.SOLVER_BE ? SolverType.SOLVER_TRZ : SolverType.SOLVER_BE,
+                    features.sparseSolver());
             companionSolver.initializeMatrices(netlist.getNodeMax(), netlist.getVoltageSourceMax(), netlist.getElementCount());
             int[] watched = new int[netlist.getElementCount()];
             int watchedCount = 0;
@@ -877,6 +884,17 @@ final class ElectricalTimeStep {
         return false;
     }
 
+    /** @return the solvers this session actually runs on */
+    LinearSolverReport linearSolverReport() {
+        return new LinearSolverReport(matrixSolver.getBackend(), matrixSolver.getMatrixSize(),
+                matrixSolver.getStoredCoefficientCount(), matrixSolver.getCoefficientStorageBytes(),
+                matrixSolver.getFactorizationCount(),
+                companionSolver == null ? null : companionSolver.getBackend(),
+                companionSolver == null ? 0 : companionSolver.getStoredCoefficientCount(),
+                initializationBackend, initializationStoredCoefficients, matrixSolver.getSparseFactorization(),
+                companionSolver == null ? null : companionSolver.getSparseFactorization(), initializationFactorization);
+    }
+
     /** @return the constant-memory statistics, with the event counts of the location feature */
     AdaptiveStepReport adaptiveReport() {
         if (adaptive == null) return AdaptiveStepReport.empty();
@@ -1019,7 +1037,6 @@ final class ElectricalTimeStep {
         boolean changed = true;
 
         double[] p = matrixSolver.getP();
-        double[][] a = matrixSolver.getSystemMatrix();
         double[] bVector = matrixSolver.getb();
 
         while (changed) {
@@ -1055,10 +1072,10 @@ final class ElectricalTimeStep {
                     double bNEW = type == CircuitTypCore.LK_D ? uf / params[0] : 0;
 
                     // Incremental patch A matrix
-                    a[x][x] += (-aOLD + aNEW);
-                    a[y][y] += (-aOLD + aNEW);
-                    a[x][y] += (aOLD - aNEW);
-                    a[y][x] += (aOLD - aNEW);
+                    matrixSolver.addCoefficient(x, x, (-aOLD + aNEW));
+                    matrixSolver.addCoefficient(y, y, (-aOLD + aNEW));
+                    matrixSolver.addCoefficient(x, y, (aOLD - aNEW));
+                    matrixSolver.addCoefficient(y, x, (aOLD - aNEW));
                     // Incremental patch b vector
                     bVector[x] += (-bOLD + bNEW);
                     bVector[y] += (bOLD - bNEW);
@@ -1080,10 +1097,10 @@ final class ElectricalTimeStep {
                     double bNEW = uf / params[0];
 
                     // Incremental patch A matrix
-                    a[x][x] += (-aOLD + aNEW);
-                    a[y][y] += (-aOLD + aNEW);
-                    a[x][y] += (aOLD - aNEW);
-                    a[y][x] += (aOLD - aNEW);
+                    matrixSolver.addCoefficient(x, x, (-aOLD + aNEW));
+                    matrixSolver.addCoefficient(y, y, (-aOLD + aNEW));
+                    matrixSolver.addCoefficient(x, y, (aOLD - aNEW));
+                    matrixSolver.addCoefficient(y, x, (aOLD - aNEW));
                     // Incremental patch b vector
                     bVector[x] += (-bOLD + bNEW);
                     bVector[y] += (bOLD - bNEW);

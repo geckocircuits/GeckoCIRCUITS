@@ -18,7 +18,7 @@ import gecko.core.allg.SolverType;
 /** A winding uses an auxiliary current and a flux constraint, rather than a parallel conductance. */
 public final class CoupledInductorStamper extends InductorStamper {
     @Override
-    public void stampMatrixA(double[][] a, int x, int y, int z,
+    public void stampMatrixA(MatrixCoefficients a, int x, int y, int z,
                              double[] parameters, double dt, SolverType method) {
         double inductance = windingInductance(parameters, dt);
         double alpha = switch (method) {
@@ -26,11 +26,11 @@ public final class CoupledInductorStamper extends InductorStamper {
             case SOLVER_TRZ -> 2;
             case SOLVER_GS -> 1.5;
         };
-        a[x][z] += 1;
-        a[y][z] -= 1;
-        a[z][x] += 1;
-        a[z][y] -= 1;
-        a[z][z] -= alpha * inductance / dt;
+        a.add(x, z, 1);
+        a.add(y, z, -1);
+        a.add(z, x, 1);
+        a.add(z, y, -1);
+        a.add(z, z, -(alpha * inductance / dt));
         if (parameters.length > 10) {
             parameters[10] = inductance;
         }

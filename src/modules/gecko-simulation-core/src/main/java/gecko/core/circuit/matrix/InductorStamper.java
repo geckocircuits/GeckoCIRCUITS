@@ -55,15 +55,15 @@ public class InductorStamper implements IMatrixStamper {
     private static final int PREV_VOLTAGE = 1;
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
                              double[] parameter, double dt, SolverType solverType) {
         double conductance = getAdmittanceWeight(parameter[PARAM_INDUCTANCE], dt, solverType);
 
         // Stamp the standard two-terminal conductance pattern
-        a[nodeX][nodeX] += conductance;
-        a[nodeY][nodeY] += conductance;
-        a[nodeX][nodeY] -= conductance;
-        a[nodeY][nodeX] -= conductance;
+        a.add(nodeX, nodeX, conductance);
+        a.add(nodeY, nodeY, conductance);
+        a.add(nodeX, nodeY, -conductance);
+        a.add(nodeY, nodeX, -conductance);
     }
 
     @Override

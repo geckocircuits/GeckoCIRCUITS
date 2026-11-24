@@ -299,6 +299,9 @@ public class HeadlessSimulationEngine {
                         .metadata("zeroCrossingDropped", report.dropped());
             }
             if (settings.getAdaptiveStep() != null) success.metadata("adaptiveStep", session.adaptiveStepReport());
+            if (settings.getSparseSolver() != null && session.linearSolverReport() != null) {
+                success.metadata("linearSolver", session.linearSolverReport());
+            }
             return success.build();
         }
     }
