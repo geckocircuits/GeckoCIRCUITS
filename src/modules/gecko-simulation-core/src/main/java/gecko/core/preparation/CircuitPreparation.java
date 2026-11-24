@@ -75,6 +75,10 @@ public final class CircuitPreparation {
                 settings.features().controlSamplePeriod())) {
             diagnostics.add(invalidSetting(issue.parameterPath(), issue.message()));
         }
+        for (var issue : SimulationTiming.adaptiveStepIssues(settings.features().adaptiveStep(), model.getSolverType(),
+                model.getTimeStep(), model.getPreSimulationTime(), model.getPreSimulationTimeStep())) {
+            diagnostics.add(invalidSetting(issue.parameterPath(), issue.message()));
+        }
         model.getImportIssues().removeIf(issue -> issue.code().equals("INVALID_SETTING")
                 && switch (issue.parameterPath() == null ? "" : issue.parameterPath()) {
                     case "solver" -> settings.solver() != null;

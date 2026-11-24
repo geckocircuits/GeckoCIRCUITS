@@ -1,5 +1,6 @@
 package gecko.core.preparation;
 
+import gecko.core.allg.AdaptiveStepSettings;
 import gecko.core.allg.PeriodicSteadyStateSettings;
 import gecko.core.allg.SolverSettingsCore;
 
@@ -19,21 +20,29 @@ import gecko.core.allg.SolverSettingsCore;
  *        configured initial states.
  * @param periodicSteadyState searches for the periodic steady state before the main phase. Null is off.
  *        The search turns on the DC operating point start for its own session only.
+ * @param adaptiveStep adapts the electrical sub-step between the fixed grid points. Null is off. It turns on
+ *        zero-crossing location. CONTROL and recordings stay on the grid.
  */
 public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint,
-        PeriodicSteadyStateSettings periodicSteadyState) {
-    private static final SolverFeatures NONE = new SolverFeatures(0, false, false, null);
+        PeriodicSteadyStateSettings periodicSteadyState, AdaptiveStepSettings adaptiveStep) {
+    private static final SolverFeatures NONE = new SolverFeatures(0, false, false, null, null);
 
     /** @param controlSamplePeriod CONTROL sample period with every other feature off */
-    public SolverFeatures(double controlSamplePeriod) { this(controlSamplePeriod, false, false, null); }
+    public SolverFeatures(double controlSamplePeriod) { this(controlSamplePeriod, false, false, null, null); }
 
     /** CONTROL sample period, event location and DC start, with the steady-state search off. */
     public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint) {
-        this(controlSamplePeriod, zeroCrossing, dcOperatingPoint, null);
+        this(controlSamplePeriod, zeroCrossing, dcOperatingPoint, null, null);
+    }
+
+    /** Every feature except the adaptive step. */
+    public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint,
+            PeriodicSteadyStateSettings periodicSteadyState) {
+        this(controlSamplePeriod, zeroCrossing, dcOperatingPoint, periodicSteadyState, null);
     }
 
     /** CONTROL sample period and event location, with DC start off. */
-    public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing) { this(controlSamplePeriod, zeroCrossing, false, null); }
+    public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing) { this(controlSamplePeriod, zeroCrossing, false, null, null); }
 
     /** @return every feature off */
     public static SolverFeatures none() { return NONE; }
@@ -44,6 +53,7 @@ public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, b
     /** Writes the feature values into execution settings. */
     SolverSettingsCore applyTo(SolverSettingsCore settings) {
         return settings.withControlSamplePeriod(controlSamplePeriod).withZeroCrossing(zeroCrossing)
-                .withDcOperatingPoint(dcOperatingPoint).withPeriodicSteadyState(periodicSteadyState);
+                .withDcOperatingPoint(dcOperatingPoint).withPeriodicSteadyState(periodicSteadyState)
+                .withAdaptiveStep(adaptiveStep);
     }
 }

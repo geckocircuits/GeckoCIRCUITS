@@ -95,7 +95,7 @@ public final class SimulationSession implements AutoCloseable {
         SimulationTiming.validateSettings(settings);
         double dt = settings.getStepWidth();
         double duration = settings.getSimulationDuration();
-        zeroCrossing = settings.isZeroCrossing();
+        zeroCrossing = settings.isZeroCrossing() || settings.getAdaptiveStep() != null;
         PeriodicSteadyStateSettings search = settings.getPeriodicSteadyState();
         // The search seeds itself from the DC operating point. The caller's settings stay as given.
         boolean dcStart = settings.isDcOperatingPoint() || search != null;
@@ -153,7 +153,8 @@ public final class SimulationSession implements AutoCloseable {
             }
             ElectricalTimeStep constructedElectrical = hasElectrical
                     ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(),
-                            new SolverFeatures(0, settings.isZeroCrossing(), dcStart)) : null;
+                            new SolverFeatures(0, settings.isZeroCrossing(), dcStart, null,
+                                    settings.getAdaptiveStep())) : null;
             netlist = constructedNetlist;
             control = constructedControl;
             signalNames = constructedSignalNames;
@@ -570,12 +571,33 @@ public final class SimulationSession implements AutoCloseable {
         finally { leaveOperation(); }
     }
 
+    /** @return true when events are located, whether requested directly or implied by the adaptive step */
+    boolean locatesEvents() { return zeroCrossing; }
+
+    /**
+     * Reports the adaptive electrical step: committed, rejected and forced sub-steps, the shortest and longest
+     * sub-step, and the located and unlocated diode events.
+     *
+     * @return the statistics, all zero when the adaptive step is off
+     * @throws IllegalStateException if an operation is active or the call is reentrant
+     */
+    public AdaptiveStepReport adaptiveStepReport() {
+        enterOperation(true);
+        try { return electrical == null ? AdaptiveStepReport.empty() : electrical.adaptiveReport(); }
+        finally { leaveOperation(); }
+    }
+
     /**
      * Returns signal names in recording row order.
      *
      * @return a detached array whose changes cannot affect the session
      */
     public String[] signalNames() { return signalNames.clone(); }
+
+    /** Streams every accepted electrical sub-step to a test. It does nothing without an electrical circuit. */
+    void setSubStepListenerForTest(ElectricalTimeStep.SubStepListener listener) {
+        if (electrical != null) electrical.setSubStepListenerForTest(listener);
+    }
 
     List<ScopeDataExtractor.ScopeChannel> scopeChannels() { return control.getScopeChannels(); }
     DataContainerGlobal recording() { return recording; }

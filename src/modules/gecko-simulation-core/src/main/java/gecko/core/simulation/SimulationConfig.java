@@ -64,7 +64,8 @@ public final class SimulationConfig {
                 stepWidthExplicit ? solverSettings.getStepWidth() : null,
                 durationExplicit ? solverSettings.getSimulationDuration() : null,
                 new SolverFeatures(solverSettings.getControlSamplePeriod(), solverSettings.isZeroCrossing(),
-                        solverSettings.isDcOperatingPoint(), solverSettings.getPeriodicSteadyState()));
+                        solverSettings.isDcOperatingPoint(), solverSettings.getPeriodicSteadyState(),
+                        solverSettings.getAdaptiveStep()));
     }
     /** Uses file defaults only for settings the caller did not supply. */
     SolverSettingsCore resolveSolverSettings(CircuitModel model) {
@@ -234,6 +235,18 @@ public final class SimulationConfig {
          */
         public Builder periodicSteadyState(gecko.core.allg.PeriodicSteadyStateSettings settings) {
             this.solverSettings.withPeriodicSteadyState(settings);
+            return this;
+        }
+
+        /**
+         * Adapts the electrical sub-step between the fixed grid points. Off (null) by default.
+         * CONTROL, recordings and the grid stay unchanged, and location of diode switching turns on.
+         *
+         * @param settings the tolerance and step clamps, or null for off
+         * @return this builder
+         */
+        public Builder adaptiveStep(gecko.core.allg.AdaptiveStepSettings settings) {
+            this.solverSettings.withAdaptiveStep(settings);
             return this;
         }
 

@@ -1,5 +1,6 @@
 package gecko.core.simulation;
 
+import gecko.core.allg.AdaptiveStepSettings;
 import gecko.core.allg.PeriodicSteadyStateSettings;
 import gecko.core.allg.SolverSettingsCore;
 import gecko.core.allg.SolverType;
@@ -16,6 +17,8 @@ public final class SimulationTiming {
     private static final int MAXIMUM_STEPS = Integer.MAX_VALUE - 2;
     private static final String STEP_MESSAGE = "Step width must be finite and positive.";
     private static final String DURATION_MESSAGE = "Simulation duration must be finite and positive.";
+    /** The reason the adaptive step rejects the Gear-Shichman solver, shared by settings validation and the solver. */
+    static final String GS_ADAPTIVE_MESSAGE = "The adaptive step does not support the Gear-Shichman solver.";
 
     private SimulationTiming() { }
 
@@ -67,7 +70,46 @@ public final class SimulationTiming {
             issues.add(new SettingIssue("duration", "Combined simulation step count is too large."));
         }
         issues.addAll(periodicSteadyStateIssues(settings.getPeriodicSteadyState(), step, duration, preTime, samplePeriod));
+        issues.addAll(adaptiveStepIssues(settings.getAdaptiveStep(), settings.getSolverType(), step, preTime, preStep));
         return List.copyOf(issues);
+    }
+
+    /**
+     * Checks the adaptive-step settings against the grid steps, before any allocation.
+     * An explicit clamp must be finite and positive, the smallest step cannot exceed the largest, and the
+     * largest cannot exceed the main grid step or, when a warmup exists, the warmup grid step.
+     *
+     * @param adaptive the settings, or null for off
+     * @param solver the solver type, which cannot be Gear-Shichman
+     * @param step the main grid step in seconds
+     * @param preTime the pre-calculation time, zero or negative for none
+     * @param preStep the warmup grid step in seconds
+     * @return one issue per violation, each with its parameter path
+     */
+    public static List<SettingIssue> adaptiveStepIssues(AdaptiveStepSettings adaptive, SolverType solver, double step,
+            double preTime, double preStep) {
+        var issues = new ArrayList<SettingIssue>();
+        if (adaptive == null) return issues;
+        if (solver == SolverType.SOLVER_GS) issues.add(new SettingIssue("adaptiveStep", GS_ADAPTIVE_MESSAGE));
+        if (!(adaptive.tolerance() > 0 && adaptive.tolerance() <= AdaptiveStepSettings.MAX_TOLERANCE)) {
+            issues.add(new SettingIssue("adaptiveStep.tolerance", "Tolerance must be above 0 and at most 0.1."));
+        }
+        boolean minValid = Double.isNaN(adaptive.minStep()) || positive(adaptive.minStep());
+        boolean maxValid = Double.isNaN(adaptive.maxStep()) || positive(adaptive.maxStep());
+        if (!minValid) issues.add(new SettingIssue("adaptiveStep.minStep", "Smallest step must be finite and positive."));
+        if (!maxValid) issues.add(new SettingIssue("adaptiveStep.maxStep", "Largest step must be finite and positive."));
+        if (!positive(step)) return issues;
+        if (minValid && maxValid && adaptive.resolvedMinStep(step) > adaptive.resolvedMaxStep(step)) {
+            issues.add(new SettingIssue("adaptiveStep.minStep", "Smallest step must not exceed the largest step."));
+        }
+        if (maxValid && !Double.isNaN(adaptive.maxStep())) {
+            if (adaptive.maxStep() > step) {
+                issues.add(new SettingIssue("adaptiveStep.maxStep", "Largest step must not exceed the main step."));
+            } else if (preTime > 0 && positive(preStep) && adaptive.maxStep() > preStep) {
+                issues.add(new SettingIssue("adaptiveStep.maxStep", "Largest step must not exceed the warmup step."));
+            }
+        }
+        return issues;
     }
 
     /**

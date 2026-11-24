@@ -37,6 +37,7 @@ public final class SolverSettingsCore {
     private boolean zeroCrossing;      // locate diode-family switching inside a step; off by default
     private boolean dcOperatingPoint;  // seed the first step from a solved DC operating point; off by default
     private PeriodicSteadyStateSettings periodicSteadyState; // periodic steady-state search; null means off
+    private AdaptiveStepSettings adaptiveStep; // adaptive electrical sub-step inside the fixed grid; null means off
 
     // State tracking
     private boolean inPreCalculationMode;
@@ -135,7 +136,21 @@ public final class SolverSettingsCore {
         return this;
     }
 
+    /**
+     * Adapts the electrical sub-step between the fixed grid points from a local-error estimate. Null, the default,
+     * turns it off. A non-null value also turns on zero-crossing location. Validation happens when a simulation starts.
+     */
+    public SolverSettingsCore withAdaptiveStep(AdaptiveStepSettings settings) {
+        this.adaptiveStep = settings;
+        return this;
+    }
+
     // Getters
+
+    /** @return the adaptive-step settings, or null when the feature is off */
+    public AdaptiveStepSettings getAdaptiveStep() {
+        return adaptiveStep;
+    }
 
     /** @return the periodic steady-state settings, or null when the search is off */
     public PeriodicSteadyStateSettings getPeriodicSteadyState() {
@@ -216,6 +231,7 @@ public final class SolverSettingsCore {
         copy.zeroCrossing = this.zeroCrossing;
         copy.dcOperatingPoint = this.dcOperatingPoint;
         copy.periodicSteadyState = this.periodicSteadyState;
+        copy.adaptiveStep = this.adaptiveStep;
         copy.inPreCalculationMode = this.inPreCalculationMode;
         return copy;
     }
