@@ -42,6 +42,39 @@ Use a time step that keeps this delay below the required physical tolerance.
 Subcircuits, unsupported directives, and exponential diode behavior produce conversion diagnostics.
 The importer uses the native piecewise-linear diode model.
 
+## LTspice schematics
+
+Use the same command with a flat `.asc` schematic.
+
+```sh
+java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.io.importer.Main input.asc output.ipes
+```
+
+Use stock symbols for the supported SPICE elements.
+The importer uses the saved symbol positions, wires, and net labels.
+Review the JSON diagnostic lines for unsupported symbols, symbol overrides, and layout conflicts.
+Hierarchical sheets require manual conversion.
+
+## Linear alternating current analysis
+
+Use one `.ac dec` sweep in a `.cir` netlist or an `.asc` schematic.
+The sweep specifies points per decade, start frequency, and stop frequency.
+Use resistors, capacitors, independent voltage sources, and voltage-controlled voltage sources.
+The controlled source accepts scalar gain or a Laplace expression.
+Inductors, nonlinear device models, and subcircuits are outside this analysis.
+
+For an AC schematic, add `--symbols` to verify the pin coordinates and order against a stock LTspice symbol directory.
+
+```sh
+java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.io.importer.Main input.asc output.ipes --symbols path/to/stock-symbols
+```
+
+Run the saved analysis to write frequencies, complex voltages, and voltage-source currents as JSON.
+
+```sh
+java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.ac.AcMain output.ipes
+```
+
 ## PLECS Standalone models
 
 Use the same command with a text `.plecs` input file.

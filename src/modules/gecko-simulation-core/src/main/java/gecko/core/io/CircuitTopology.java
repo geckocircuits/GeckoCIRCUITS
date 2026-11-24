@@ -524,8 +524,14 @@ public final class CircuitTopology {
             boolean topologyOnly = structuralOnly || shorted || boundary(component, domain) || global(component, domain);
             (topologyOnly ? structural : active).add(identity);
             long sheet = saved == null ? 0 : saved.parentSheetIdentifier();
+            var registry = domain.equals("LK") && (component.getAcComponent() != null || component.getType() == SpicePorts.E.type())
+                    ? SpicePorts.find(domain, component.getType()) : null;
             for (Side side : Side.values()) {
                 String[] labels = portLabels(component, side);
+                if (registry != null) {
+                    int required = (int) registry.nativePorts().stream().filter(pin -> pin.side() == side).count();
+                    if (labels.length < required) labels = Arrays.copyOf(labels, required);
+                }
                 if (labels.length == 0 && (domain.equals("LK") || domain.equals("THERMAL")) && twoPort(component.getType())) {
                     labels = new String[]{""};
                 }
@@ -541,6 +547,16 @@ public final class CircuitTopology {
                         if (candidate.side() == side && candidate.port() == port) { geometry = candidate; break; }
                     }
                     String terminalDomain = terminalDomain(domain, component.getType(), side);
+                    if (geometry == null && registry != null) {
+                        for (var pin : registry.nativePorts()) {
+                            if (pin.side() != side || pin.port() != port) continue;
+                            boolean mirror = component.getAcComponent() != null && component.getAcComponent().mirrored();
+                            var offset = pin.nativeOffset(component.getOrientation(), mirror);
+                            geometry = new CircuitModel.TerminalData(terminalDomain, terminalSheet, side, port,
+                                    component.getPosition()[0] + offset.x(), component.getPosition()[1] + offset.y(), true);
+                            break;
+                        }
+                    }
                     if (geometry == null && legacyGeometry && twoPort(component.getType()) && port == 0) {
                         int distance = side == Side.INPUT ? -2 : 2;
                         int x = component.getPosition()[0];

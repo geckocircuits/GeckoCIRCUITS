@@ -100,7 +100,8 @@ public enum CircuitTypCore {
     LK_MOTOR_PERM(51), // Permanent magnet motor
 
     // Non-linear reluctance
-    NONLIN_REL(52);    // Non-linear reluctance
+    NONLIN_REL(52),    // Non-linear reluctance
+    LK_VCVS(53);
 
     private final int typeNumber;
 

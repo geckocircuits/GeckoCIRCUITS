@@ -1,6 +1,7 @@
 package gecko.core.preparation;
 
 import gecko.core.allg.SolverType;
+import gecko.core.ac.AcExecutionPlan;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.ImportIssue;
 import gecko.core.simulation.SimulationTiming;
@@ -46,6 +47,7 @@ public final class CircuitPreparation {
      */
     public PreparationResult prepare(CircuitSnapshot base, PreparationRequest request) {
         var model = base.toModel();
+        if (model.getAcSettings() != null) return prepareAc(base, model, request);
         for (var finding : CircuitConfiguration.normalize(model)) {
             var issue = new ImportIssue(finding.code(), finding.domain(), finding.component(), finding.message(),
                     finding.sourceLocation(), false, finding.parameterPath());
@@ -118,6 +120,31 @@ public final class CircuitPreparation {
         if (rejected) return new PreparationResult.Rejected(report);
         if (!report.readyForHeadless()) return new PreparationResult.Inspectable(snapshot, report);
         return new PreparationResult.Ready(snapshot, new PreparedCircuit(snapshot, settings.features()), report);
+    }
+
+    private PreparationResult prepareAc(CircuitSnapshot snapshot, CircuitModel model, PreparationRequest request) {
+        if (!request.equals(PreparationRequest.defaults())) {
+            return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.INVALID,
+                    List.of(invalidSetting("analysis", "AC does not accept transient settings or numeric overrides."))));
+        }
+        var diagnostics = new ArrayList<Diagnostic>();
+        AcExecutionPlan plan = null;
+        try {
+            model = snapshot.executionModel();
+            plan = new AcExecutionPlan(model);
+        } catch (IllegalArgumentException error) {
+            diagnostics.add(new Diagnostic("INVALID_AC", Diagnostic.Category.CONFIGURATION, Diagnostic.Severity.ERROR,
+                    error.getMessage(), "LK", null, "analysis", model.getFilePath()));
+        }
+        var parserTimingIssues = model.getSavedTransientSettingIssues();
+        var conversionIssues = model.getConversionIssues();
+        model.getImportIssues().removeIf(issue -> parserTimingIssues.contains(issue) && !conversionIssues.contains(issue));
+        CircuitReadiness.appendImportDiagnostics(model, diagnostics);
+        if (diagnostics.stream().anyMatch(diagnostic -> diagnostic.severity() == Diagnostic.Severity.ERROR)) {
+            return new PreparationResult.Inspectable(snapshot, new ReadinessReport(ReadinessReport.Outcome.INVALID, diagnostics));
+        }
+        return new PreparationResult.Ready(snapshot, new PreparedCircuit(snapshot, plan),
+                new ReadinessReport(ReadinessReport.Outcome.READY, diagnostics));
     }
     private static boolean positive(double value) { return Double.isFinite(value) && value > 0; }
     private static Diagnostic invalidSetting(String path, String message) {

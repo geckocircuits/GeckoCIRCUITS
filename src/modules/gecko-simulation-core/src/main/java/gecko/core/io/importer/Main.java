@@ -17,18 +17,24 @@ public final class Main {
 
     /** Returns zero for a complete import, two for a partial import, or one for an input/output error. */
     public static int run(String[] args, PrintStream output, PrintStream errors) {
-        if (args.length != 2) { errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"); return 1; }
+        if (args.length != 2 && !(args.length == 4 && args[2].equals("--symbols") && args[0].toLowerCase(Locale.ROOT).endsWith(".asc"))) {
+            errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes> [--symbols <stock-symbol-directory>]");
+            return 1;
+        }
         try {
             Path input = Path.of(args[0]);
-            String inputName = input.toString().toLowerCase(Locale.ROOT);
+            String inputName = input.toString();
+            String lowerName = inputName.toLowerCase(Locale.ROOT);
             CircuitModel model;
-            if (inputName.endsWith(".asc")) {
-                model = new LtspiceImporter().convert(input);
+            if (lowerName.endsWith(".asc")) {
+                var importer = new LtspiceImporter();
+                model = args.length == 2 ? importer.convert(input)
+                        : importer.convert(input, Path.of(args[3]));
             } else {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
-                model = inputName.endsWith(".plecs")
-                        ? new PlecsImporter().convert(source, input.toString())
-                        : new SpiceImporter().convert(source, input.toString());
+                model = lowerName.endsWith(".plecs")
+                        ? new PlecsImporter().convert(source, inputName)
+                        : new SpiceImporter().convert(source, inputName);
             }
             new CircuitFileWriter().write(model, Path.of(args[1]));
             for (var issue : model.getImportIssues()) output.println("{\"code\":" + json(issue.code())
@@ -42,7 +48,7 @@ public final class Main {
         }
     }
 
-    private static String json(String value) {
+    public static String json(String value) {
         if (value == null) return "null";
         var result = new StringBuilder("\"");
         for (char c : value.toCharArray()) {

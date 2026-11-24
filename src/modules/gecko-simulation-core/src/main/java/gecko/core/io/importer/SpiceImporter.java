@@ -1,10 +1,15 @@
 package gecko.core.io.importer;
 
+import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcDocumentSettings;
+import gecko.core.ac.AcSweep;
+import gecko.core.ac.ParameterDefinition;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitModel.ComponentData;
 import gecko.core.io.CircuitModel.ConnectionData;
 import gecko.core.io.CircuitResource;
 import gecko.core.io.ImportIssue;
+import gecko.core.io.SpicePorts;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +41,8 @@ public final class SpiceImporter {
         model.setSimulationDuration(0.01);
         model.setTimeStep(1e-6);
         var parameters = new HashMap<String, String>();
+        var orderedParameters = new ArrayList<ParameterDefinition>();
+        boolean ac = statements.stream().anyMatch(line -> keyword(line.text()).equals(".ac"));
         var definitions = new HashMap<String, String>();
         List<Line> lines = rootLines(statements, model);
         for (var line : lines) {
@@ -43,6 +50,12 @@ public final class SpiceImporter {
             if (directive.equals(".param")) {
                 if (!assignments(line.text().substring(6), parameters)) {
                     issue(model, line, "MALFORMED_PARAMETER", "", "The parameter assignment is invalid.");
+                }
+                if (ac) {
+                    var assignment = ASSIGNMENT.matcher(line.text().substring(6));
+                    while (assignment.find()) {
+                        orderedParameters.add(new ParameterDefinition(assignment.group(1), assignment.group(2)));
+                    }
                 }
             }
             if (directive.equals(".model")) {
@@ -52,7 +65,22 @@ public final class SpiceImporter {
             }
         }
         for (var line : lines) {
+            if (keyword(line.text()).equals(".ac")) {
+                try {
+                    String[] args = arguments(line.text().substring(3));
+                    if (model.getAcSettings() != null || args.length != 4 || !args[0].equalsIgnoreCase("dec")) {
+                        throw new IllegalArgumentException("Require one .ac dec analysis with density, start, and stop.");
+                    }
+                    model.setAcSettings(new AcDocumentSettings(
+                            new AcSweep(Integer.parseInt(args[1]), value(args[2], parameters), value(args[3], parameters)),
+                            orderedParameters, line.text()));
+                } catch (IllegalArgumentException error) {
+                    issue(model, line, "INVALID_AC", ".ac", error.getMessage());
+                }
+                continue;
+            }
             if (!keyword(line.text()).equals(".tran")) continue;
+            if (ac) issue(model, line, "MULTIPLE_ANALYSES", ".tran", "Select one analysis.");
             try {
                 String[] args = arguments(line.text().substring(5));
                 if (args.length < 2 || args.length > 5) {
@@ -82,7 +110,8 @@ public final class SpiceImporter {
         for (var line : lines) {
             String text = line.text();
             String directive = keyword(text);
-            if (List.of(".param", ".model", ".tran").contains(directive)) continue;
+            if (List.of(".param", ".model", ".tran", ".ac").contains(directive)) continue;
+            if (ac && text.strip().equalsIgnoreCase(".options logparams")) continue;
             if (text.startsWith(".")) {
                 issue(model, line, "UNSUPPORTED_DIRECTIVE", directive, "The analysis or directive is unsupported.");
                 continue;
@@ -95,19 +124,22 @@ public final class SpiceImporter {
             try {
                 String name = fields[0];
                 if (name.contains("/") || !names.add(name.toLowerCase(Locale.ROOT))) throw new IllegalArgumentException("Require a unique component name without slashes.");
-                char kind = placement == null ? Character.toUpperCase(name.charAt(0))
-                        : " RLCVIDS".charAt(placement.getType());
-                if ("RLCVIDS".indexOf(kind) < 0) {
-                    issue(model, line, "UNSUPPORTED_ELEMENT", name, "Unsupported SPICE element: " + kind);
+                SpicePorts descriptor = placement == null ? SpicePorts.find(Character.toUpperCase(name.charAt(0)))
+                        : SpicePorts.find("LK", placement.getType());
+                if (descriptor == null || descriptor == SpicePorts.E && !ac) {
+                    issue(model, line, "UNSUPPORTED_ELEMENT", name, "Unsupported SPICE element: " + name);
                     continue;
                 }
+                char kind = descriptor.designator();
                 String positive = node(nodes, fields[1]), negative = node(nodes, fields[2]);
-                int type = switch (kind) { case 'R' -> 1; case 'L' -> 2; case 'C' -> 3; case 'V' -> 4; case 'I' -> 5; case 'D' -> 6; default -> 7; };
+                int type = descriptor.type();
                 int index = model.getCircuitComponents().size();
                 ComponentData data = placement == null
                         ? component(type, name, 8 + index % 6 * 10, 6 + index / 6 * 14, positive, negative) : placement;
                 if (placement != null) initializeTerminals(data, positive, negative);
                 data.getImportTokens().put("uniqueObjectIdentifier", Long.toString(10000L + index));
+                List<String> aliases = List.of(positive, negative);
+                AcComponent.Law law = null;
                 switch (kind) {
                     case 'R', 'L', 'C' -> {
                         String[] args = arguments(fields[3]);
@@ -122,8 +154,29 @@ public final class SpiceImporter {
                             values[1] = value(args[1].substring(3), parameters);
                         }
                         data.setNumericParameters(values);
+                        if (ac && (kind == 'R' || kind == 'C')) law = new AcComponent.Passive(args[0]);
                     }
-                    case 'V', 'I' -> source(data, fields[3], model, parameters);
+                    case 'V', 'I' -> {
+                        if (ac && kind == 'V') {
+                            var voltage = acVoltage(fields[3]);
+                            source(data, voltage.dc(), model, parameters);
+                            law = voltage;
+                        } else {
+                            source(data, fields[3], model, parameters);
+                        }
+                    }
+                    case 'E' -> {
+                        String[] tail = fields[3].split("\\s+", 3);
+                        if (tail.length != 3) throw new IllegalArgumentException("Require two sensing nodes and a gain.");
+                        String sensePositive = node(nodes, tail[0]), senseNegative = node(nodes, tail[1]);
+                        aliases = List.of(positive, negative, sensePositive, senseNegative);
+                        assignPorts(data, descriptor, aliases);
+                        String expression = tail[2].strip();
+                        boolean laplace = expression.matches("(?is)^laplace\\s*=.*");
+                        if (laplace) expression = expression.substring(expression.indexOf('=') + 1).strip();
+                        law = new AcComponent.Controlled(expression, laplace);
+                        data.setNumericParameters(new double[]{0});
+                    }
                     case 'D' -> {
                         data.setNumericParameters(new double[]{1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1});
                         String definition = definitions.get(fields[3].trim().toLowerCase(Locale.ROOT));
@@ -143,20 +196,83 @@ public final class SpiceImporter {
                     case 'S' -> voltageSwitch(data, fields[3], model, parameters, definitions, nodes);
                     default -> throw new IllegalArgumentException("Unsupported element.");
                 }
+                if (law != null) {
+                    data.setAcComponent(new AcComponent(name, descriptor.ports().stream()
+                            .map(SpicePorts.PortSpec::order).toList(), aliases, false, law));
+                    if (placement != null) {
+                        assignPorts(data, descriptor, aliases.stream().map(alias -> "").toList());
+                    }
+                }
                 model.addCircuitComponent(data);
-                if (placement == null) terminalWires(model, data);
+                if (placement == null) {
+                    if (ac && law != null) acTerminalWires(model, data, descriptor, aliases);
+                    else terminalWires(model, data);
+                }
             } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
                 model.getControlComponents().subList(controlCount, model.getControlComponents().size()).clear();
                 model.getResources().keySet().retainAll(resourceIds);
                 issue(model, line, "MALFORMED_ELEMENT", fields[0], error.getMessage());
             }
         }
-        addScope(model, nodes);
+        if (!ac) addScope(model, nodes);
         int circuitRows = (model.getCircuitComponents().size() + 5) / 6;
         for (int index = 0; index < model.getControlComponents().size(); index++) {
             model.getControlComponents().get(index).getPosition()[1] = 5 + circuitRows * 14 + index / 6 * 12;
         }
         return model;
+    }
+
+    private static void assignPorts(ComponentData component, SpicePorts descriptor, List<String> labels) {
+        String[] inputs = new String[(int) descriptor.nativePorts().stream()
+                .filter(port -> port.side() == gecko.core.io.CircuitTopology.Side.INPUT).count()];
+        String[] outputs = new String[descriptor.nativePorts().size() - inputs.length];
+        for (var port : descriptor.nativePorts()) {
+            var target = port.side() == gecko.core.io.CircuitTopology.Side.INPUT ? inputs : outputs;
+            target[port.port()] = labels.get(port.order() - 1);
+        }
+        component.setTerminalXLabels(inputs);
+        component.setTerminalYLabels(outputs);
+    }
+
+    private static void acTerminalWires(CircuitModel model, ComponentData component, SpicePorts descriptor, List<String> labels) {
+        for (var port : descriptor.nativePorts()) {
+            var offset = port.nativeOffset(component.getOrientation(), false);
+            int x = component.getPosition()[0] + offset.x(), y = component.getPosition()[1] + offset.y();
+            int dx = Integer.signum(offset.x()), dy = dx == 0 ? Integer.signum(offset.y()) : 0;
+            model.addConnection(new ConnectionData("LK", new int[][]{{x, y}, {x + dx, y + dy}}, labels.get(port.order() - 1)));
+        }
+    }
+
+    private static AcComponent.Voltage acVoltage(String spec) {
+        String[] fields = arguments(spec);
+        String dc = null, waveform = "", magnitude = null, phase = "0";
+        for (int i = 0; i < fields.length; i++) {
+            String field = fields[i];
+            if (field.equals("\"\"")) continue;
+            if (field.equalsIgnoreCase("AC")) {
+                if (magnitude != null) throw new IllegalArgumentException("Use one AC source specification.");
+                if (++i >= fields.length) throw new IllegalArgumentException("Require an AC magnitude.");
+                magnitude = fields[i];
+                if (i + 1 < fields.length && !fields[i + 1].equalsIgnoreCase("DC")
+                        && !waveform(fields[i + 1])) phase = fields[++i];
+            } else if (field.equalsIgnoreCase("DC")) {
+                if (dc != null) throw new IllegalArgumentException("Use one DC source specification.");
+                if (++i >= fields.length) throw new IllegalArgumentException("Require a DC value.");
+                dc = fields[i];
+            } else if (waveform(field)) {
+                if (!waveform.isEmpty()) throw new IllegalArgumentException("Use one transient source waveform.");
+                if (!field.contains("(") && i + 1 < fields.length && fields[i + 1].startsWith("(")) field += fields[++i];
+                waveform = field;
+            } else {
+                if (dc != null) throw new IllegalArgumentException("Use one DC source value.");
+                dc = field;
+            }
+        }
+        return new AcComponent.Voltage(dc == null ? "0" : dc, waveform, magnitude == null ? "0" : magnitude, phase);
+    }
+
+    private static boolean waveform(String token) {
+        return token.matches("(?is)^(pulse|sine?)(\\(.*)?");
     }
 
     static void addScope(CircuitModel model, Map<String, String> nodes) {

@@ -14,6 +14,8 @@
 package gecko.core.io;
 
 import gecko.core.allg.SolverType;
+import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcDocumentSettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +29,13 @@ import java.util.Map;
  * <p>This class is designed for headless operation and contains no Swing/AWT dependencies.</p>
  */
 public class CircuitModel {
+    private AcDocumentSettings acSettings;
+    private AcProvenance acProvenance;
+
+    public AcDocumentSettings getAcSettings() { return acSettings; }
+    public void setAcSettings(AcDocumentSettings settings) { acSettings = settings; }
+    public AcProvenance getAcProvenance() { return acProvenance; }
+    public void setAcProvenance(AcProvenance provenance) { acProvenance = provenance; }
     /** Captured grid geometry. Hidden proxy terminals do not have physical junctions. */
     public record TerminalData(String domain, long sheetIdentifier, CircuitTopology.Side side, int port,
                                int x, int y, boolean geometric) { }
@@ -77,6 +86,16 @@ public class CircuitModel {
 
     private final List<ImportIssue> importIssues = new ArrayList<>();
     private final List<ImportIssue> conversionIssues = new ArrayList<>();
+    private final List<ImportIssue> savedTransientSettingIssues = new ArrayList<>();
+
+    public void addSavedTransientSettingIssue(ImportIssue issue) {
+        savedTransientSettingIssues.add(issue);
+        if (!importIssues.contains(issue)) importIssues.add(issue);
+    }
+
+    public List<ImportIssue> getSavedTransientSettingIssues() {
+        return savedTransientSettingIssues.stream().filter(importIssues::contains).toList();
+    }
 
     // Optimizer parameters
     private final Map<String, Double> optimizerParameters = new HashMap<>();
@@ -353,6 +372,10 @@ public class CircuitModel {
      * Represents a circuit component's data.
      */
     public static class ComponentData {
+        private AcComponent acComponent;
+
+        public AcComponent getAcComponent() { return acComponent; }
+        public void setAcComponent(AcComponent component) { acComponent = component; }
         private final int type;
         private final String name;
         private final Map<String, Object> parameters;

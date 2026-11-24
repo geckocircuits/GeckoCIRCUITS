@@ -88,6 +88,7 @@ public enum I18nKeys {
     RESISTOR_R_OHM("Resistor R [Ohm]"),
     RESISTOR_RTH_K_W("Resistor Rth [K/W]"),
     VOLTAGE_SOURCE_U_V("Voltage Source U[V]"),
+    AC_CONTROLLED_VOLTAGE_SOURCE("Controlled Voltage Source (AC)"),
     MMF_AMP_TURNS("MMF [amp-turns]"),
     DEFINED_TEMPERATURE_C("Defined Temperature [°C]"),
     CAPACITOR_C_F("Capacitor C [F]"),

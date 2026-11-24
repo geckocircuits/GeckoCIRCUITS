@@ -13,6 +13,7 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.io.SpicePorts;
 import gecko.geckocircuits.allg.AbstractComponentTyp;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import java.util.HashMap;
@@ -71,7 +72,8 @@ public enum CircuitTyp implements AbstractComponentTyp {
     TH_TERMINAL(49, ThTerminal.TYPE_INFO),
     TH_GLOBAL_TERMINAL(50, ThGlobalTerminal.TYPE_INFO),
     LK_MOTOR_PERM(51, MotorPermanent.TYPE_INFO),
-    NONLIN_REL(52, NonLinearReluctance.TYPE_INFO);
+    NONLIN_REL(52, NonLinearReluctance.TYPE_INFO),
+    LK_VCVS(SpicePorts.E.type(), AcControlledVoltageSource.TYPE_INFO);
 
     private final int _intValue;
     private final AbstractTypeInfo _tInfo;

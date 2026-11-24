@@ -1,6 +1,8 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.core.allg.GeckoFile;
+import gecko.core.ac.AcDocumentSettings;
+import gecko.core.io.AcProvenance;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitResource;
@@ -34,19 +36,35 @@ public final class EditorCircuitCapture {
     public CircuitSnapshot capture(Iterable<? extends AbstractCircuitSheetComponent> elements,
             SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
             ScriptSources scripts, String sourceName) throws IOException, CircuitFileParser.CircuitParseException {
-        return capture(elements, settings, optimizer, files, scripts, sourceName, List.of());
+        return capture(elements, settings, optimizer, files, scripts, sourceName, null, null);
     }
 
     public CircuitSnapshot capture(Iterable<? extends AbstractCircuitSheetComponent> elements,
             SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
             ScriptSources scripts, String sourceName, List<ImportIssue> conversionIssues)
             throws IOException, CircuitFileParser.CircuitParseException {
+        return capture(elements, settings, optimizer, files, scripts, sourceName, null, null, conversionIssues);
+    }
+
+    public CircuitSnapshot capture(Iterable<? extends AbstractCircuitSheetComponent> elements,
+            SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
+            ScriptSources scripts, String sourceName, AcDocumentSettings acSettings, AcProvenance provenance)
+            throws IOException, CircuitFileParser.CircuitParseException {
+        return capture(elements, settings, optimizer, files, scripts, sourceName, acSettings, provenance, List.of());
+    }
+
+    public CircuitSnapshot capture(Iterable<? extends AbstractCircuitSheetComponent> elements,
+            SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
+            ScriptSources scripts, String sourceName, AcDocumentSettings acSettings, AcProvenance provenance,
+            List<ImportIssue> conversionIssues) throws IOException, CircuitFileParser.CircuitParseException {
         var ascii = new StringBuffer();
         var blocks = new ArrayList<AbstractBlockInterface>();
         for (var element : elements) {
             ascii.append('\n').append(element.getExportImportCharacters()).append('\n');
-            element.exportASCII(ascii);
-            if (element instanceof AbstractBlockInterface block) blocks.add(block);
+            if (element instanceof AbstractBlockInterface block) {
+                block.exportForCapture(ascii, acSettings);
+                blocks.add(block);
+            } else element.exportASCII(ascii);
         }
         ProjectData.appendAsString(ascii.append("\noptimizerName"), optimizer.getNameOpt());
         ProjectData.appendAsString(ascii.append("\noptimizerValue"), optimizer.getValueOpt());
@@ -62,6 +80,8 @@ public final class EditorCircuitCapture {
         ascii.append("\nsolverType ").append(settings.SOLVER_TYPE.getValue().getOldGeckoIndex());
         var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), sourceName);
         conversionIssues.forEach(model::addConversionIssue);
+        model.setAcSettings(acSettings);
+        model.setAcProvenance(provenance);
         for (var file : files._allAvailableFiles) captureResource(model, file);
         var ordinals = new HashMap<String, Integer>();
         for (var block : blocks) {

@@ -47,6 +47,7 @@ public final class SimulationRunner {
     private volatile Execution execution;
     private SimulationTraceLogger pendingTraceLogger;
     private final DesktopSimulationController controller;
+    private final DesktopAcAnalysis acAnalysis;
 
     private record PreparationOwner(Object token, SolverSettings settings) { }
     private record Preparation(Object token, Execution previous, SimulationTraceLogger logger) { }
@@ -71,6 +72,7 @@ public final class SimulationRunner {
         _mainwindow = mainwindow;
         _se = schematicEntry;
         controller = new DesktopSimulationController(mainwindow, schematicEntry, prepareCorePresentation);
+        acAnalysis = new DesktopAcAnalysis(mainwindow);
     }
 
     private Preparation beginPreparation(Execution expected, boolean requireCurrent, boolean takeLogger,
@@ -165,6 +167,10 @@ public final class SimulationRunner {
     public void startCalculation(boolean createNewSimThread, SolverSettings settings) throws Exception {
         _se.requireCompleteConversion();
         controller.reset();
+        if (_se.getAcSettings() != null) {
+            acAnalysis.start(_se, settings, createNewSimThread);
+            return;
+        }
         if (createNewSimThread && controller.startAsync(settings)) {
             execution = null;
             simKern = null;
@@ -222,6 +228,7 @@ public final class SimulationRunner {
 
     public void continueCalculation(boolean createNewSimThread, SolverSettings settings) throws Exception {
         _se.requireCompleteConversion();
+        if (_se.getAcSettings() != null) throw new IllegalArgumentException("Start a new AC analysis.");
         if (controller.hasAsyncExecution()) {
             controller.continueAsync(settings);
             return;
@@ -278,6 +285,7 @@ public final class SimulationRunner {
 
     /** Stops the captured execution without pausing a replacement started by its completion callbacks. */
     public void endSimulation() {
+        if (acAnalysis.stop()) return;
         if (controller.endAsync()) return;
         Execution owner = execution;
         if (owner == null || !owner.ticket().endSimulation()) return;
@@ -290,6 +298,7 @@ public final class SimulationRunner {
     }
 
     public void pauseSimulation() {
+        if (acAnalysis.stop()) return;
         if (controller.pauseAsync()) return;
         Execution current = execution;
         if (current != null && current.ticket().pause()) {
@@ -361,6 +370,8 @@ public final class SimulationRunner {
         }
         initializeScript(settings, end, settings.dt.getValue(), false);
     }
+
+    void cancelAcAnalysis() { acAnalysis.invalidate(); }
 
     public void external_step(double time) {
         if (controller.hasCoreExecution()) {

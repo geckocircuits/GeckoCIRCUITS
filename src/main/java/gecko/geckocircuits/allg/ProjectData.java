@@ -14,6 +14,9 @@
 package gecko.geckocircuits.allg;
 
 import gecko.core.allg.GeckoFile;
+import gecko.core.ac.AcDocumentSettings;
+import gecko.core.io.AcMetadataCodec;
+import gecko.core.io.AcProvenance;
 import gecko.core.io.CircuitFileParser.CircuitParseException;
 import gecko.core.io.ImportIssue;
 import gecko.core.io.ImportIssueCodec;
@@ -41,6 +44,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "EI_EXPOSE_REP2", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "SE_TRANSIENT_FIELD_NOT_RESTORED"},
         justification = "readFileVersion is intentionally mutable; constructor stores external references; public fields for file format serialization compatibility; transient fields are repopulated during project load")
 public final class ProjectData implements Serializable {
+    private transient AcDocumentSettings acSettings;
+    private transient AcProvenance acProvenance;
+
+    public AcDocumentSettings getAcSettings() { return acSettings; }
+    public AcProvenance getAcProvenance() { return acProvenance; }
     private static final long serialVersionUID = 1L;
     private transient List<ImportIssue> conversionIssues = List.of();
 
@@ -94,6 +102,8 @@ public final class ProjectData implements Serializable {
             int uniqueFileId, SimulationAccess scripter, GeckoFileManager fileMgr, SchematicEditor2 se,
             SolverSettings solverSettings) {
         this._allSheetComponents.addAll(se._circuitSheet.getAllElements());
+        this.acSettings = se.getAcSettings();
+        this.acProvenance = se.getAcProvenance();
         this.conversionIssues = se.getConversionIssues();
         this._dt = solverSettings.dt.getValue();
         this._tDURATION = solverSettings._tDURATION.getValue();
@@ -138,7 +148,8 @@ public final class ProjectData implements Serializable {
         int elementCounter = 0;
         for (AbstractCircuitSheetComponent elem : _allSheetComponents) {
             asc.append("\n" + elem.getExportImportCharacters() + " (" + elementCounter + ")\n");
-            elem.exportASCII(asc);
+            if (elem instanceof AbstractBlockInterface block) block.exportASCII(asc, acSettings);
+            else elem.exportASCII(asc);
             elementCounter++;
         }
 
@@ -165,6 +176,10 @@ public final class ProjectData implements Serializable {
         asc.append("\nT_pre ").append(_T_pre);
         asc.append("\ndt_pre ").append(_dt_pre);
         asc.append("\nsolverType ").append(solverType);
+        if (acSettings != null) asc.append('\n').append(AcMetadataCodec.SETTINGS).append(' ')
+                .append(AcMetadataCodec.encode(acSettings));
+        if (acProvenance != null) asc.append('\n').append(AcMetadataCodec.PROVENANCE).append(' ')
+                .append(AcMetadataCodec.encode(acProvenance));
         asc.append("\npath ").append(GlobalFilePathes.DATNAM);
         //
         asc.append("\n\ndpix ").append(dpix);
@@ -218,6 +233,12 @@ public final class ProjectData implements Serializable {
             conversionIssues = ImportIssueCodec.decodeDocument(ascii);
         } catch (CircuitParseException error) {
             throw new IllegalArgumentException(error.getMessage(), error);
+        }
+        if (tokenMap.containsToken(AcMetadataCodec.SETTINGS)) {
+            acSettings = AcMetadataCodec.decodeSettings(tokenMap.readDataLine(AcMetadataCodec.SETTINGS, ""));
+        }
+        if (tokenMap.containsToken(AcMetadataCodec.PROVENANCE)) {
+            acProvenance = AcMetadataCodec.decodeProvenance(tokenMap.readDataLine(AcMetadataCodec.PROVENANCE, ""));
         }
 
         /**

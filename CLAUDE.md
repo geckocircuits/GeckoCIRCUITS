@@ -133,3 +133,4 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 | 2026-11-24 | [ADR-0017: Find periodic steady state by brute-force period iteration](docs/adr/0017-periodic-steady-state.md) |
 | 2026-11-24 | [ADR-0018: Adapt the electrical step between fixed CONTROL grid points](docs/adr/0018-adaptive-electrical-step.md) |
 | 2026-11-24 | [ADR-0019: Headless circuit import writer](docs/adr/0019-headless-circuit-import-writer.md) |
+| 2026-11-24 | [ADR-0020: Native linear AC analysis](docs/adr/0020-native-linear-ac-analysis.md) |

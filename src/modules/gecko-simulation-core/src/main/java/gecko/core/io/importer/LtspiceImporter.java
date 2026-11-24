@@ -6,6 +6,11 @@ import gecko.core.io.CircuitModel.ConnectionData;
 import gecko.core.io.CircuitTopology;
 import gecko.core.io.CircuitTopology.Side;
 import gecko.core.io.ImportIssue;
+import gecko.core.io.ArtifactDigest;
+import gecko.core.io.BuildIdentity;
+import gecko.core.io.AcProvenance;
+import gecko.core.io.SpicePorts;
+import gecko.core.ac.AcComponent;
 import gecko.core.io.importer.SpiceImporter.Line;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -50,27 +55,6 @@ public final class LtspiceImporter {
 
     private record Flag(Point point, String label) { }
 
-    // Pin coordinates and order come from the standard LTspice .asy files.
-    private enum SymbolType {
-        RES(1, "R", new Point(16, 16), new Point(16, 96)),
-        IND(2, "L", new Point(16, 16), new Point(16, 96)),
-        CAP(3, "C", new Point(16, 0), new Point(16, 64)),
-        VOLTAGE(4, "V", new Point(0, 16), new Point(0, 96)),
-        CURRENT(5, "I", new Point(0, 0), new Point(0, 80)),
-        DIODE(6, "D", new Point(16, 0), new Point(16, 64)),
-        SW(7, "S", new Point(0, 16), new Point(0, 96), new Point(-48, 80), new Point(-48, 32));
-
-        final int geckoType;
-        final String prefix;
-        final List<Point> pins;
-
-        SymbolType(int geckoType, String prefix, Point... pins) {
-            this.geckoType = geckoType;
-            this.prefix = prefix;
-            this.pins = List.of(pins);
-        }
-    }
-
     private enum Orientation {
         R0, R90, R180, R270, M0, M90, M180, M270;
 
@@ -98,7 +82,7 @@ public final class LtspiceImporter {
         String name() { return attributes.getOrDefault("instname", kind); }
     }
 
-    private record PlacedSymbol(Symbol symbol, SymbolType type, List<Point> pins) {
+    private record PlacedSymbol(Symbol symbol, SpicePorts type, List<Point> pins) {
         Point center(Grid grid) {
             Point first = grid.position(pins.getFirst()), second = grid.position(pins.get(1));
             return new Point(first.x + (second.x - first.x) / 2, first.y + (second.y - first.y) / 2);
@@ -109,8 +93,10 @@ public final class LtspiceImporter {
             int orientation = first.x < second.x ? 502 : first.x > second.x ? 504
                     : first.y < second.y ? 503 : 501;
             Point center = center(grid);
-            return new ComponentData(type.geckoType, symbol.name(), center.x, center.y, orientation);
+            return new ComponentData(type.type(), symbol.name(), center.x, center.y, orientation);
         }
+
+        boolean mirrored() { return symbol.rotation.toUpperCase(Locale.ROOT).startsWith("M"); }
     }
 
     private record Grid(int minX, int minY, int divisor, int multiplier) {
@@ -151,6 +137,49 @@ public final class LtspiceImporter {
      */
     public CircuitModel convert(Path path) throws IOException {
         return convert(decode(Files.readAllBytes(path)), path.toString());
+    }
+
+    /** Verifies the stock symbol definition of each supported AC component. */
+    public CircuitModel convert(Path path, Path symbols) throws IOException {
+        var build = BuildIdentity.current();
+        byte[] source = Files.readAllBytes(path);
+        CircuitModel model = convert(decode(source), path.toString());
+        if (model.getAcSettings() == null) throw new IllegalArgumentException("Stock-symbol verification requires an AC schematic.");
+        var names = Map.of(SpicePorts.RES, "res.asy", SpicePorts.CAP, "cap.asy",
+                SpicePorts.VOLTAGE, "voltage.asy", SpicePorts.E, "e.asy");
+        var dependencies = new LinkedHashMap<String, String>();
+        for (var component : model.getCircuitComponents()) {
+            var descriptor = SpicePorts.find("LK", component.getType());
+            String name = names.get(descriptor);
+            if (name == null || dependencies.containsKey(name)) continue;
+            byte[] symbol = Files.readAllBytes(symbols.resolve(name));
+            checkSymbol(decode(symbol), descriptor);
+            dependencies.put(name, ArtifactDigest.sha256(symbol));
+        }
+        model.setAcProvenance(new AcProvenance(ArtifactDigest.sha256(source), build.revision(), build.dirty(),
+                build.sourceSnapshotSha256(), build.jarSha256(), dependencies));
+        return model;
+    }
+
+    private static void checkSymbol(String text, SpicePorts descriptor) {
+        var order = new HashMap<Integer, SpicePorts.Point>();
+        SpicePorts.Point pin = null;
+        for (String line : text.split("\\R")) {
+            String[] fields = line.strip().split("\\s+");
+            if (fields.length >= 3 && fields[0].equals("PIN")) {
+                pin = new SpicePorts.Point(Integer.parseInt(fields[1]), Integer.parseInt(fields[2]));
+            } else if (fields.length == 3 && fields[0].equals("PINATTR") && fields[1].equals("SpiceOrder")) {
+                int number = Integer.parseInt(fields[2]);
+                if (pin == null || order.putIfAbsent(number, pin) != null) {
+                    throw new IllegalArgumentException("Invalid stock symbol pin order.");
+                }
+                pin = null;
+            }
+        }
+        if (order.size() != descriptor.ports().size() || descriptor.ports().stream()
+                .anyMatch(port -> !port.sourceLocalPoint().equals(order.get(port.order())))) {
+            throw new IllegalArgumentException("The stock symbol pins differ from " + descriptor.name() + ".");
+        }
     }
 
     /**
@@ -212,7 +241,8 @@ public final class LtspiceImporter {
         }
         var model = new SpiceImporter().convert(sourceName, source.hashCode(), statements, nodeLabels, placements);
         issues.forEach(model::addConversionIssue);
-        Layout layout = planLayout(grid, model, symbolByName, wireVertices, nodeKeys, nodeLabels);
+        boolean ac = model.getAcSettings() != null;
+        Layout layout = planLayout(grid, model, symbolByName, wireVertices, nodeKeys, nodeLabels, ac ? flags : null);
         layout.centers.forEach((component, center) -> {
             component.getPosition()[0] = center.x;
             component.getPosition()[1] = center.y;
@@ -229,19 +259,99 @@ public final class LtspiceImporter {
     }
 
     private static Layout planLayout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
-                                     List<List<Point>> wireVertices, Map<Point, String> nodeKeys, Map<String, String> nodeLabels) {
-        Layout original = layout(grid, model, symbols, wireVertices, nodeKeys, nodeLabels);
+                                     List<List<Point>> wireVertices, Map<Point, String> nodeKeys, Map<String, String> nodeLabels,
+                                     List<Flag> flags) {
+        Layout original = flags == null ? layout(grid, model, symbols, wireVertices, nodeKeys, nodeLabels)
+                : acLayout(grid, model, symbols, wireVertices, nodeKeys, flags);
         Layout candidate = original;
         // At this scale, a native terminal cannot reach a distinct source point
         // or a terminal from a distinct center.
         while (candidate.conflict != null && candidate.grid.multiplier < 8) {
             try {
-                candidate = layout(candidate.grid.refine(), model, symbols, wireVertices, nodeKeys, nodeLabels);
+                Grid finer = candidate.grid.refine();
+                candidate = flags == null ? layout(finer, model, symbols, wireVertices, nodeKeys, nodeLabels)
+                        : acLayout(finer, model, symbols, wireVertices, nodeKeys, flags);
             } catch (ArithmeticException error) {
                 break;
             }
         }
         return candidate.conflict == null ? candidate : original;
+    }
+
+    private record Witness(ComponentData marker, String sourceGroup) { }
+
+    private static Layout acLayout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
+                                   List<List<Point>> wireVertices, Map<Point, String> nodeKeys, List<Flag> flags) {
+        var drawing = new CircuitModel();
+        var centers = new LinkedHashMap<ComponentData, Point>();
+        var witnesses = new ArrayList<Witness>();
+        var flagLabels = new LinkedHashMap<Point, String>();
+        var flagSpelling = new HashMap<String, String>();
+        for (var flag : flags) {
+            String label = flag.label.toLowerCase(Locale.ROOT);
+            flagLabels.put(grid.position(flag.point), label.equals("gnd") || label.equals("0") ? "0"
+                    : flagSpelling.computeIfAbsent(label, key -> flag.label));
+        }
+        for (var vertices : wireVertices) {
+            for (int i = 1; i < vertices.size(); i++) {
+                Point a = grid.position(vertices.get(i - 1)), b = grid.position(vertices.get(i));
+                acWire(drawing, flagLabels, a, b);
+            }
+        }
+        for (ComponentData data : model.getCircuitComponents()) {
+            var symbol = symbols.get(data.getName());
+            Point center = symbol.center(grid);
+            centers.put(data, center);
+            var owned = data.getAcComponent();
+            if (owned != null) {
+                data.setAcComponent(new AcComponent(owned.instance(), owned.spiceOrders(), owned.aliases(),
+                        symbol.mirrored(), owned.law()));
+            }
+            for (var port : symbol.type.nativePorts()) {
+                Point sourcePin = symbol.pins.get(port.order() - 1);
+                Point pin = grid.position(sourcePin);
+                var offset = port.nativeOffset(data.getOrientation(), symbol.mirrored());
+                Point nativePin = new Point(center.x + offset.x(), center.y + offset.y());
+                witnesses.add(new Witness(addMarker(drawing, nativePin, ""), nodeKeys.get(sourcePin)));
+                if (nativePin.equals(pin)) continue;
+                // Extend a sense lead out of the component before changing its row.
+                boolean vertical = data.getOrientation() == 501 || data.getOrientation() == 503;
+                Point elbow = vertical == (port.order() >= 3)
+                        ? new Point(pin.x, nativePin.y) : new Point(nativePin.x, pin.y);
+                if (!nativePin.equals(elbow) && !elbow.equals(pin)) {
+                    String label = flagLabels.remove(pin);
+                    drawing.addConnection(label == null ? connection(List.of(nativePin, elbow, pin), "")
+                            : connection(List.of(pin, elbow, nativePin), label));
+                } else {
+                    acWire(drawing, flagLabels, nativePin, pin);
+                }
+            }
+        }
+        // A flag at a bare pin can remain visible on a short local wire.
+        flagLabels.forEach((point, label) -> drawing.addConnection(connection(
+                List.of(point, new Point(point.x, point.y - 1)), label)));
+        var resolved = CircuitTopology.resolve(drawing);
+        var forward = new HashMap<String, Integer>();
+        var reverse = new HashMap<Integer, String>();
+        for (var witness : witnesses) {
+            int id = resolved.group(witness.marker, Side.INPUT, 0).id();
+            Integer previousId = forward.putIfAbsent(witness.sourceGroup, id);
+            String previousGroup = reverse.putIfAbsent(id, witness.sourceGroup);
+            if (previousId != null && previousId != id || previousGroup != null && !previousGroup.equals(witness.sourceGroup)) {
+                return new Layout(grid, centers, drawing.getConnections(), "The native layout changes the source terminal partition.");
+            }
+        }
+        return new Layout(grid, centers, drawing.getConnections(), null);
+    }
+
+    private static void acWire(CircuitModel drawing, Map<Point, String> flags, Point a, Point b) {
+        String label = flags.remove(a);
+        if (label != null) {
+            drawing.addConnection(connection(List.of(a, b), label));
+        } else {
+            label = flags.remove(b);
+            drawing.addConnection(label == null ? connection(List.of(a, b), "") : connection(List.of(b, a), label));
+        }
     }
 
     private static Layout layout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
@@ -258,8 +368,10 @@ public final class LtspiceImporter {
             PlacedSymbol symbol = symbols.get(data.getName());
             Point center = symbol.center(grid);
             centers.put(data, center);
-            addLead(drawing, nets, center, grid.position(symbol.pins.getFirst()), data.getTerminalXLabels()[0]);
-            addLead(drawing, nets, center, grid.position(symbol.pins.get(1)), data.getTerminalYLabels()[0]);
+            for (var port : symbol.type.nativePorts()) {
+                var labels = port.side() == Side.INPUT ? data.getTerminalXLabels() : data.getTerminalYLabels();
+                addLead(drawing, nets, center, grid.position(symbol.pins.get(port.order() - 1)), labels[port.port()]);
+            }
         }
         // Output labels encode source nets. A rendered group must contain only one source net.
         var resolved = CircuitTopology.resolve(drawing);
@@ -368,9 +480,9 @@ public final class LtspiceImporter {
         var result = new ArrayList<PlacedSymbol>();
         var names = new HashSet<String>();
         for (Symbol symbol : symbols) {
-            SymbolType type;
+            SpicePorts type;
             try {
-                type = SymbolType.valueOf(symbol.kind.toUpperCase(Locale.ROOT));
+                type = SpicePorts.valueOf(symbol.kind.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException error) {
                 issue(issues, "UNSUPPORTED_SYMBOL", symbol.name(), "Unsupported LTspice symbol: " + symbol.kind,
                         sourceName, symbol.line);
@@ -382,11 +494,13 @@ public final class LtspiceImporter {
                     throw new IllegalArgumentException("Require an instance name without spaces or special characters.");
                 }
                 Orientation orientation = Orientation.valueOf(symbol.rotation.toUpperCase(Locale.ROOT));
-                List<Point> pins = type.pins.stream().map(pin -> orientation.place(symbol.origin, pin)).toList();
+                List<Point> pins = type.ports().stream().map(SpicePorts.PortSpec::sourceLocalPoint)
+                        .map(pin -> orientation.place(symbol.origin, new Point(pin.x(), pin.y()))).toList();
                 if (!names.add(name.toLowerCase(Locale.ROOT))) throw new IllegalArgumentException("Require a unique instance name.");
                 if (symbol.attributes.containsKey("modelfile")
                         || symbol.attributes.containsKey("spicemodel")
-                        || !type.prefix.equalsIgnoreCase(symbol.attributes.getOrDefault("prefix", type.prefix))) {
+                        || !Character.toString(type.designator()).equalsIgnoreCase(
+                                symbol.attributes.getOrDefault("prefix", Character.toString(type.designator())))) {
                     issue(issues, "UNSUPPORTED_SYMBOL_ATTRIBUTE", name, "The symbol overrides its standard model or prefix.",
                             sourceName, symbol.line);
                     continue;

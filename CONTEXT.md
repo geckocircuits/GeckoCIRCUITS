@@ -97,3 +97,6 @@ _Avoid_: Old solver, GUI engine
 **Golden reference**:
 Results recorded from GeckoCIRCUITS v2.02 for a Circuit file, which current results must match within the agreed tolerance.
 _Avoid_: Expected output, baseline snapshot
+
+**Trace alias**:
+A display name for a voltage or current trace. It has no electrical effect on the circuit.

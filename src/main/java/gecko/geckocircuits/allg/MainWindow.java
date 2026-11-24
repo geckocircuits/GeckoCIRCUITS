@@ -100,6 +100,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     private JMenuItem mItemRECENT_1, mItemRECENT_2, mItemRECENT_3, mItemRECENT_4;
     private JMenuItem mItemUndo, mItemRedo, mItemCopy, mItemMove, mItemDelete, mItemEscape, mItemSelectAll, mItemDisable, mItemDisableShort;
     private JMenuItem mItemParameter, mItemRun, mItemStop, mItemContinue;
+    private String transientPauseLabel;
     //--------------------------------------
     final GeckoStatusBar jtfStatus = new GeckoStatusBar("Ready ...", this);  // Status display of the circuit simulation
     public static final int RECENT_FILE_SPACE = -1;
@@ -946,6 +947,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void createNewFile() {
+        _simRunner.cancelAcAnalysis();
         optimizerParameterData.clear();
         aktuellerDateiName = UNTITLED;
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
@@ -998,6 +1000,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void openFile(BufferedReader in) throws IOException {
+        _simRunner.cancelAcAnalysis();
         _se.resetCircuitSheetsForNewFile();
         Vector<String> datVec = new Vector<>();
         String z = null;
@@ -1042,6 +1045,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void openFile(String dateiName) throws FileNotFoundException {
+        _simRunner.cancelAcAnalysis();
         _se.resetCircuitSheetsForNewFile();
         GlobalFilePathes.DATNAM = dateiName;
         _se.resetCircuitSheetsForNewFile();
@@ -1348,7 +1352,8 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
                 _se.export_allesImBearbeitungsModus();
                 //========================================================================
             } else if (befehl.equals("Parameter")) {
-                openParameterMenu(this);
+                if (_se.getAcSettings() == null) openParameterMenu(this);
+                else gecko.geckocircuits.circuit.AcEditorDialogs.editSettings(this, _se);
             } else if (befehl.equals("Init & Start")) {
                 initStartWithErrorDialogMessage();
             } else if (befehl.equals("Pause")) {
@@ -1596,6 +1601,15 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         _simulationMenuUpdates.update(() -> true, changes.toArray(Runnable[]::new));
     }
 
+    /** An AC analysis can be stopped, but it cannot resume a transient time step. */
+    void setAcAnalysisRunning(boolean running) {
+        if (mItemStop != null) {
+            mItemStop.setText(running ? "Stop AC analysis" : transientPauseLabel);
+            mItemStop.setEnabled(running);
+            mItemContinue.setEnabled(false);
+        }
+    }
+
     private void addStoppedMenuChanges(java.util.List<Runnable> changes, boolean canContinue) {
         if (!IS_BRANDED) {
             changes.add(() -> mItemNew.setEnabled(true));
@@ -1639,6 +1653,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         mItemRun.addActionListener(this);
         mItemRun.setMnemonic(KeyEvent.VK_F1);
         mItemStop = GuiFabric.getJMenuItem(I18nKeys.PAUSE);
+        transientPauseLabel = mItemStop.getText();
         mItemStop.setActionCommand("Pause");
         mItemStop.addActionListener(this);
         mItemStop.setMnemonic(KeyEvent.VK_F3);
@@ -1649,6 +1664,9 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
         mItemContinue.setMnemonic(KeyEvent.VK_F4);
         mItemContinue.setEnabled(false);
         simMenu.add(mItemParameter);
+        JMenuItem acSettings = new JMenuItem("AC analysis settings…");
+        acSettings.addActionListener(event -> gecko.geckocircuits.circuit.AcEditorDialogs.editSettings(this, _se));
+        simMenu.add(acSettings);
         mItemParameter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         simMenu.add(mItemRun);
         mItemRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));

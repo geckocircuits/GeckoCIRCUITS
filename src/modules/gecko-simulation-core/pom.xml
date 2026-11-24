@@ -65,6 +65,51 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>embed-gecko-build-identity</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>run</goal></goals>
+                        <configuration>
+                            <target>
+                                <exec executable="git" dir="${project.basedir}" outputproperty="gecko.source.revision"
+                                      resultproperty="gecko.source.revisionStatus" failonerror="false" failifexecutionfails="false">
+                                    <arg line="rev-parse --verify HEAD"/>
+                                </exec>
+                                <exec executable="git" dir="${project.basedir}" outputproperty="gecko.source.status"
+                                      resultproperty="gecko.source.statusCode" failonerror="false" failifexecutionfails="false">
+                                    <arg line="status --porcelain --untracked-files=normal"/>
+                                </exec>
+                                <property name="gecko.source.revision" value=""/>
+                                <condition property="gecko.source.dirty" value="false" else="true">
+                                    <and>
+                                        <equals arg1="${gecko.source.revisionStatus}" arg2="0"/>
+                                        <equals arg1="${gecko.source.statusCode}" arg2="0"/>
+                                        <equals arg1="${gecko.source.status}" arg2=""/>
+                                    </and>
+                                </condition>
+                                <checksum algorithm="SHA-256" totalproperty="gecko.source.snapshot"
+                                          todir="${project.build.directory}/gecko-source-checksums">
+                                    <fileset dir="${project.basedir}">
+                                        <include name="pom.xml"/>
+                                        <include name="src/main/**"/>
+                                    </fileset>
+                                </checksum>
+                                <mkdir dir="${project.build.outputDirectory}/META-INF"/>
+                                <echo file="${project.build.outputDirectory}/META-INF/gecko-build.properties"
+                                      encoding="UTF-8">revision=${gecko.source.revision}
+dirty=${gecko.source.dirty}
+sourceSnapshotSha256=${gecko.source.snapshot}
+</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -121,6 +121,16 @@ public class CircuitFileParser {
         // Build token map for fast lookup
         String[] simulationLines = inspectSimulationStructure(maskOpaqueContent(lines), model);
         Map<String, Integer> tokenMap = buildTokenMap(simulationLines);
+        try {
+            if (tokenMap.containsKey(AcMetadataCodec.SETTINGS)) {
+                model.setAcSettings(AcMetadataCodec.decodeSettings(savedSettingValue(lines, tokenMap, AcMetadataCodec.SETTINGS)));
+            }
+            if (tokenMap.containsKey(AcMetadataCodec.PROVENANCE)) {
+                model.setAcProvenance(AcMetadataCodec.decodeProvenance(savedSettingValue(lines, tokenMap, AcMetadataCodec.PROVENANCE)));
+            }
+        } catch (IllegalArgumentException error) {
+            throw new CircuitParseException(filePath + ": " + error.getMessage(), error);
+        }
 
         // Parse simulation parameters
         parseSimulationParameters(model, lines, tokenMap);
@@ -376,6 +386,10 @@ public class CircuitFileParser {
                 CircuitModel.ComponentData comp = new CircuitModel.ComponentData(type, name, x, y, orientation);
 
                 retainImportEvidence(comp, elementBlock, params, model);
+                if (elementBlock.containsToken(AcMetadataCodec.COMPONENT)) {
+                    comp.setAcComponent(AcMetadataCodec.decodeComponent(
+                            elementBlock.readDataLine(AcMetadataCodec.COMPONENT, "")));
+                }
 
                 // Store numeric parameters by index
                 for (int i = 0; i < params.length; i++) {
@@ -843,7 +857,7 @@ public class CircuitFileParser {
     }
 
     private void addInvalidSavedSetting(CircuitModel model, Map<String, Integer> tokenMap, String token, String path) {
-        model.getImportIssues().add(new ImportIssue("INVALID_SETTING", null, null,
+        model.addSavedTransientSettingIssue(new ImportIssue("INVALID_SETTING", null, null,
                 "The saved setting is invalid.", model.getFilePath() + ": line " + (tokenMap.get(token) + 1) + " " + token,
                 false, path));
     }

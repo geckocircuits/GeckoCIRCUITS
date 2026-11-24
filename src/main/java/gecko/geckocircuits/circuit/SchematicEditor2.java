@@ -13,6 +13,10 @@
  */
 package gecko.geckocircuits.circuit;
 
+import gecko.core.ac.AcDocumentSettings;
+import gecko.core.io.AcProvenance;
+import gecko.modelviewcontrol.ModelMVC;
+import java.util.Optional;
 import gecko.GeckoSim;
 import gecko.core.io.ImportIssue;
 import gecko.geckocircuits.allg.AbstractComponentTyp;
@@ -52,7 +56,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings(value = {"MS_CANNOT_BE_FINAL", "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", "EI_EXPOSE_REP2", "NM_FIELD_NAMING_CONVENTION"},
         justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference; Singleton name is a widely-used pattern in codebase")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
+    private final ModelMVC<Optional<AcDocumentSettings>> acSettings = new ModelMVC<>(Optional.empty(), "AC analysis");
+    private AcProvenance acProvenance;
+    private static final ImportIssue INCOMPLETE_ATTACHMENT = new ImportIssue(
+            "PROJECT_ATTACHMENT_INCOMPLETE", null, null, "Project component attachment is incomplete.", null, true);
     private volatile List<ImportIssue> conversionIssues = List.of();
+
+    public AcDocumentSettings getAcSettings() { return acSettings.getValue().orElse(null); }
+    public AcProvenance getAcProvenance() { return acProvenance; }
 
     public List<ImportIssue> getConversionIssues() {
         return List.copyOf(conversionIssues);
@@ -66,6 +77,11 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
                 + (issue.sourceLocation() == null ? "" : " (" + issue.sourceLocation() + ")"))
                 .collect(java.util.stream.Collectors.joining("\n"));
         throw new IllegalArgumentException("The source conversion is incomplete.\n" + details);
+    }
+
+    public void setAcSettings(AcDocumentSettings settings) {
+        acSettings.setValue(Optional.ofNullable(settings));
+        setDirtyFlag();
     }
 
     public final CircuitSheet _circuitSheet = new CircuitSheet(this);
@@ -763,6 +779,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         AbstractUndoGenericModel.undoManager.discardAllEdits();
         CircuitSheet.clearFindNodes();
         CircuitSheet.clearShowNodes();
+        acSettings.setValueWithoutUndo(Optional.empty());
+        acProvenance = null;
         conversionIssues = List.of();
     }
 
@@ -874,24 +892,31 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     public void ladeGespeicherteNetzlisteVonProjectData(final ProjectData daten,
             final String insertIntoSubCircuitName) {
-        conversionIssues = daten.getConversionIssues();
-        attachProjectComponents(daten, insertIntoSubCircuitName);
+        attachProject(daten, insertIntoSubCircuitName, daten.getConversionIssues(), insertIntoSubCircuitName == null);
     }
 
     public void importProjectComponents(ProjectData project, String parent) {
         var combined = new LinkedHashSet<>(conversionIssues);
         combined.addAll(project.getConversionIssues());
-        conversionIssues = List.copyOf(combined);
-        attachProjectComponents(project, parent);
+        attachProject(project, parent, List.copyOf(combined), false);
     }
 
-    private void attachProjectComponents(ProjectData daten, String insertIntoSubCircuitName) {
+    private void attachProject(ProjectData daten, String insertIntoSubCircuitName, List<ImportIssue> findings,
+            boolean replaceAcMetadata) {
+        var pending = new LinkedHashSet<>(findings);
+        pending.add(INCOMPLETE_ATTACHMENT);
+        conversionIssues = List.copyOf(pending);
+        if (replaceAcMetadata) {
+            acProvenance = daten.getAcProvenance();
+            acSettings.setValueWithoutUndo(Optional.ofNullable(daten.getAcSettings()));
+        }
         for (AbstractCircuitSheetComponent elem : daten._allSheetComponents) {
             elem.findAndSetReferenceToParentSheet(daten.allSubCircuitBlocks, insertIntoSubCircuitName);
         }
 
         //initAdditionalFiles(daten._allSheetComponents);
         _visibleCircuitSheet.repaint();
+        conversionIssues = findings;
     }
 
     public void toggleEnable(final boolean shortDisableCommand) {

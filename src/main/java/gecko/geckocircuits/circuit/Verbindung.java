@@ -227,7 +227,13 @@ public class Verbindung extends AbstractCircuitSheetComponent implements Compone
 
     @Override
     public void paintComponentForeGround(Graphics2D graphics) {
-        //nothing todo here!
+        var editor = SchematicEditor2.Singleton;
+        if (editor == null || editor.getAcSettings() == null || _connectorType != ConnectorType.LK
+                || _connectorPoints.isEmpty() || getLabel().isEmpty()) return;
+        Point start = getStartPoint();
+        graphics.setFont(SchematicEditor2.circuitFont);
+        graphics.setColor(GlobalColors.farbeFertigVerbindungLK);
+        graphics.drawString(getLabel(), start.x * dpix + 3, start.y * dpix - 4);
     }
 
     @Override

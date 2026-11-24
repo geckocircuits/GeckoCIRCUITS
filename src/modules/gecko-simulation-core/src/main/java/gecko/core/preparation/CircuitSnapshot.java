@@ -79,6 +79,8 @@ public final class CircuitSnapshot {
 
     private static CircuitModel copy(CircuitModel source) {
         var target = new CircuitModel();
+        target.setAcSettings(source.getAcSettings());
+        target.setAcProvenance(source.getAcProvenance());
         target.setSimulationDuration(source.getSimulationDuration());
         target.setTimeStep(source.getTimeStep());
         target.setPreSimulationTime(source.getPreSimulationTime());
@@ -99,6 +101,7 @@ public final class CircuitSnapshot {
         target.setScripterDeclarations(source.getScripterDeclarations());
         target.getOptimizerParameters().putAll(source.getOptimizerParameters());
         target.getImportIssues().addAll(source.getImportIssues());
+        source.getSavedTransientSettingIssues().forEach(target::addSavedTransientSettingIssue);
         source.getConversionIssues().forEach(target::addConversionIssue);
         target.getSavedBlocks().addAll(source.getSavedBlocks());
         target.getSavedSettings().putAll(source.getSavedSettings());
@@ -128,6 +131,7 @@ public final class CircuitSnapshot {
         for (var component : source) {
             int[] position = component.getPosition();
             var copy = new CircuitModel.ComponentData(component.getType(), component.getName(), position[0], position[1], component.getOrientation());
+            copy.setAcComponent(component.getAcComponent());
             component.getParameters().forEach((key, value) -> copy.setParameter(key, copyValue(value)));
             copy.setTerminalXLabels(component.getTerminalXLabels().clone());
             copy.setTerminalYLabels(component.getTerminalYLabels().clone());
