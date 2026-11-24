@@ -36,8 +36,8 @@ final class PeriodicSteadyStateValidation {
     }
 
     /**
-     * As above, and rejects a circuit with a THERMAL network. Its time constant spans many thousand periods, so the
-     * period-drift test cannot accept in a practical run time (ADR-0023).
+     * As above, and rejects a circuit with a THERMAL network, because this search has no thermal state or loss history
+     * (ADR-0023).
      *
      * @param thermal true when the circuit has an active thermal element
      */
@@ -46,8 +46,7 @@ final class PeriodicSteadyStateValidation {
         var issues = new ArrayList<SimulationTiming.SettingIssue>();
         if (thermal) {
             issues.add(new SimulationTiming.SettingIssue("periodicSteadyState",
-                    "The periodic steady-state search does not support a THERMAL network: its time constant spans"
-                            + " many periods, so its state cannot converge in a practical run time."));
+                    "The periodic steady-state search does not support a THERMAL network, which has thermal state and loss histories."));
         }
         if (netlist != null) {
             for (int element = 0; element < netlist.getElementCount(); element++) {
