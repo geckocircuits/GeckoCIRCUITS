@@ -3,15 +3,17 @@
 ADR-0023 · Claude Opus 5.5 for tinix84 · 2026-11-24 · Status: Proposed · Version 1.0
 Audience: maintainers of `gecko-simulation-core` and reviewers of desktop backend routing.
 
-**Decision:** The core solves the saved THERMAL network as a second MNA network with the electrical step code, once per grid step between the electrical commit and CONTROL, with legacy loss algorithms and lags.
+**Decision:** The core solves the saved THERMAL network as a second MNA network. It runs once per grid step, between the electrical commit and CONTROL.
 
 ## Context
 
-Issue [#95](https://github.com/tinix84/GeckoCIRCUITS/issues/95) asks the core to run saved thermal circuits, with a junction temperature within 1 % of the legacy kernel.
-Thermal circuits run on the legacy kernel when the core rejects their elements ([ADR-0010](0010-pull-based-frontend-single-owner-session.md) decision 7).
-The legacy kernel stamps thermal elements as aliases of R, C, I and U in a second matrix and solves it after the electrical step and before CONTROL (`SimulationsKern.simulateOneTimeStep`, `LKMatrices`) [C, High].
-A loss source computes its heat from the coupled component's current and voltage of this step and the junction temperature of the previous thermal step. The next thermal step stamps that heat (`ThermPvChip.doCalculation`) [C, High].
-The core adds electrical sub-steps ([ADR-0016](0016-zero-crossing-event-location.md), [ADR-0018](0018-adaptive-electrical-step.md)) that the legacy kernel does not have.
+Issue [#95](https://github.com/tinix84/GeckoCIRCUITS/issues/95) asks the core to run saved thermal circuits. The junction temperature must stay within 1 % of the legacy kernel.
+Thermal circuits ran on the legacy kernel, because the core rejected their elements ([ADR-0010](0010-pull-based-frontend-single-owner-session.md) decision 7).
+The legacy kernel stamps thermal elements as aliases of R, C, I and U in a second matrix (`LKMatrices`) [C, High].
+It solves that matrix after the electrical step and before CONTROL (`SimulationsKern.simulateOneTimeStep`) [C, High].
+A loss source computes its heat from the current and voltage of this step. It uses the junction temperature of the previous thermal step [C, High].
+The next thermal step stamps that heat (`ThermPvChip.doCalculation`).
+The core adds electrical sub-steps ([ADR-0016](0016-zero-crossing-event-location.md), [ADR-0018](0018-adaptive-electrical-step.md)). The legacy kernel has none.
 
 ## Options
 
@@ -24,18 +26,40 @@ The core adds electrical sub-steps ([ADR-0016](0016-zero-crossing-event-location
 
 ## Decision and rationale
 
-The thermal netlist maps `TH_RTH` and `TH_AMBIENT` to a resistor, `TH_CTH` to a capacitor, `TH_FLOW` to a current source and `TH_TEMP` to a voltage source, like `LKMatrices` [C, High].
-A loss source expands to a signal-controlled heat source and a 10 kΩ resistor from the thermal zero, like `ThermPvChip` [C, High]. All thermal-zero terminals form one node.
-Thermal uses the circuit solver type, the dense LU and the saved initial conditions, also when the electrical network starts from its DC operating point.
+The thermal netlist uses the native `TH_RTH`, `TH_AMBIENT`, `TH_CTH`, `TH_FLOW` and `TH_TEMP` stamps, like `LKMatrices` [C, High].
+A loss source expands to a signal-controlled heat source and a 10 kΩ resistor from the thermal zero, like `ThermPvChip` [C, High].
+All thermal-zero terminals form one node.
+Thermal uses the circuit solver type, the dense LU and the saved initial conditions. This holds also when the electrical network starts from its DC operating point.
 
-Each grid step solves the thermal network once, with the grid step width, after the electrical results publish. It then updates every loss source for the next step. Temperature and heat-flow probes read this step's values before CONTROL runs.
-Electrical sub-steps, trials and rejections stay inside the electrical step, so thermal state changes only at a committed step [C, High].
+Each grid step solves the thermal network once, with the grid step width, after the electrical results publish.
+It then updates every loss source for the next step.
+Electrical sub-steps, trials and rejections stay inside the electrical step. Thermal state changes only at a committed step [C, High].
 A step change rebuilds the thermal matrix, like the legacy continuation [C, High].
 
-Loss sources port the legacy SIMPLE, DETAILED and resistor algorithms unchanged, including the initial history of -1 and the current threshold of 0.01 A. A contract test compares them with the legacy classes.
+`DomainCoupler` mirrors the LK↔CONTROL exchange for THERMAL:
 
-Readiness accepts thermal circuits that the core can execute. It reports a capability diagnostic, and the desktop runs the legacy kernel, for a power module element, a loss source on a MOSFET, a DETAILED model without its loss file, an unresolved loss coupling and unsupported source modes.
-The periodic steady-state search and AC analysis reject thermal elements. The search exports and compares only electrical and CONTROL state, so it has no thermal state or loss history to converge.
+- `transferThermalToControlProbes` writes TEMP and FLOW probe outputs after the thermal solve. This happens before CONTROL runs.
+- Probes stay live: they update at every committed grid step.
+- A TEMP probe reads a node potential difference. A FLOW probe reads a heat flow or one loss component.
+- `transferControlToThermalSources` writes signal-controlled `TH_FLOW` and `TH_TEMP` sources from the previous CONTROL outputs.
+- Only this source publication follows the sample gate of the LK sources.
+
+Loss sources port the legacy SIMPLE, DETAILED and resistor algorithms. This includes the initial history of -1 and the current threshold of 0.01 A.
+A contract test compares them with the legacy classes.
+
+Readiness accepts the thermal circuits that the core can execute.
+For the rest it reports a capability diagnostic. The desktop then runs the legacy kernel.
+These cases fall back:
+
+- a power module element
+- a loss source on a MOSFET
+- a DETAILED model without its loss file
+- an unresolved or ambiguous loss coupling
+- an unsupported source mode
+- a TEMP or FLOW probe in a circuit without an active thermal network
+
+The periodic steady-state search and AC analysis reject thermal elements.
+The search exports and compares only electrical and CONTROL state. It has no thermal state or loss history to converge.
 
 ## Consequences
 
