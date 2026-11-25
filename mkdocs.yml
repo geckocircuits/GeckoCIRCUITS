@@ -132,6 +132,21 @@ nav:
     - Running Simulations: getting-started/running-simulations.md
     - Analysis Tools: getting-started/analysis-tools.md
 
+  - Components:
+    - components/index.md
+    - Resistor: components/resistor.md
+    - Inductor: components/inductor.md
+    - Capacitor: components/capacitor.md
+    - Voltage source: components/voltage-source.md
+    - Current source: components/current-source.md
+    - Diode: components/diode.md
+    - Ideal switch: components/ideal-switch.md
+    - MOSFET: components/mosfet.md
+    - IGBT: components/igbt.md
+    - Thyristor: components/thyristor.md
+    - Ideal transformer: components/transformer.md
+    - PI controller: components/pi-controller.md
+
   - Tutorials:
     - tutorials/index.md
     - DC-DC Converters:
