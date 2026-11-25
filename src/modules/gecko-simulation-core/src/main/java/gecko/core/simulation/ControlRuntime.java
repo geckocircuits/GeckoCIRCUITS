@@ -285,11 +285,11 @@ final class ControlRuntime implements AutoCloseable {
     }
 
     void advanceAfterElectricalStep(CircuitNetlist circuitNetlist, double time) {
-        advanceAfterElectricalStep(circuitNetlist, null, time);
+        advanceAfterElectricalStep(circuitNetlist, null, time, time);
     }
 
-    /** As above, with the thermal network that solved after the electrical step. Null runs the electrical path alone. */
-    void advanceAfterElectricalStep(CircuitNetlist circuitNetlist, ThermalNetwork thermal, double time) {
+    /** Advances CONTROL using the committed grid time for outputs and the compensated time for sample decisions. */
+    void advanceAfterElectricalStep(CircuitNetlist circuitNetlist, ThermalNetwork thermal, double time, double samplingTime) {
         initializeAtSimulationStart();
         stateVersion++;
         activeSegment = true;
@@ -304,7 +304,7 @@ final class ControlRuntime implements AutoCloseable {
             domainCoupler.transferControlToThermalSources(thermal, this::producerPublished);
             domainCoupler.transferLkToControlProbes(circuitNetlist);
             domainCoupler.transferThermalToControlProbes(thermal);
-            if (controlNetlist.hasCalculators()) executeDueGroups(time);
+            if (controlNetlist.hasCalculators()) executeDueGroups(time, samplingTime);
             else java.util.Arrays.fill(sampledNow, true);
             System.arraycopy(sampledNow, 0, outputsPublishedLastStep, 0, periods.length);
             domainCoupler.transferGateSignalsToLk(circuitNetlist, gate -> periods[groupOf(gate)] <= 0 || sampledNow[groupOf(gate)]);
@@ -323,7 +323,7 @@ final class ControlRuntime implements AutoCloseable {
      * Runs each group every step, or only when a sample of that group is due. Due times are exactly k*Ts of the group,
      * so they do not drift. All due groups run in one pass of the global dependency order.
      */
-    private void executeDueGroups(double time) {
+    private void executeDueGroups(double time, double samplingTime) {
         boolean any = false;
         for (int group = 0; group < periods.length; group++) {
             double period = periods[group];
@@ -331,9 +331,12 @@ final class ControlRuntime implements AutoCloseable {
             if (period <= 0) {
                 sampledNow[group] = true;
             } else {
-                double slack = SAMPLE_TOLERANCE * Math.min(dt, period);
-                sampledNow[group] = time >= nextSampleIndex[group] * period - slack;
-                if (sampledNow[group]) nextSampleIndex[group] = (long) Math.floor((time + slack) / period) + 1;
+                double gridWidth = Math.min(dt, period);
+                // Equal grid and sample times can differ by a few ulps. Keep the margin below one grid step.
+                double slack = Math.min(gridWidth / 4, Math.max(SAMPLE_TOLERANCE * gridWidth, 4 * Math.ulp(samplingTime)));
+                double dueThrough = samplingTime + slack;
+                sampledNow[group] = dueThrough >= nextSampleIndex[group] * period;
+                if (sampledNow[group]) nextSampleIndex[group] = (long) Math.floor(dueThrough / period) + 1;
             }
             any |= sampledNow[group];
         }
@@ -345,10 +348,10 @@ final class ControlRuntime implements AutoCloseable {
      * Absolute time and the time calculator are not state. The sample phase is exported when CONTROL is sampled.
      *
      * @param circuitNetlist the electrical netlist whose sources hold CONTROL values
-     * @param time the time of the last committed step
+     * @param samplingTime the compensated time of the last committed step
      * @param sink receives the values
      */
-    void exportPeriodicState(CircuitNetlist circuitNetlist, double time, PeriodicStateMonitor.Sink sink) {
+    void exportPeriodicState(CircuitNetlist circuitNetlist, double samplingTime, PeriodicStateMonitor.Sink sink) {
         domainCoupler.exportHeldSources(circuitNetlist, sink);
         if (periods.length > 1) domainCoupler.exportHeldGates(sink);
         for (int index = 0; index < owners.size(); index++) {
@@ -366,7 +369,7 @@ final class ControlRuntime implements AutoCloseable {
         for (int group = 0; group < periods.length; group++) {
             if (periods[group] <= 0) continue;
             sink.group(PeriodicStateMonitor.Unit.TIME, group == 0 ? "sample phase" : "sample phase of CONTROL group " + group);
-            sink.value(nextSampleIndex[group] * periods[group] - time);
+            sink.value(nextSampleIndex[group] * periods[group] - samplingTime);
             sink.flag(outputsPublishedLastStep[group]);
         }
     }

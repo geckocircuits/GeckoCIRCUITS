@@ -112,6 +112,49 @@ class ControlSubsystemRateTest {
     }
 
     @Test
+    void longRunsSampleTheExpectedGridStepsWithGlobalAndSubsystemClocks() throws Exception {
+        int first = 10_000;
+        int count = 2_000;
+        var global = parse(block(58, "time", 1, 0, "", "", "/clock")
+                + block(5, "scope", 2, 0, "", "/clock", ""));
+        try (var grouped = open(twoClocks(), settings(1e-6, 0.012, 0, Map.of("fast", 10e-6, "slow", 100e-6)));
+                var single = open(global, settings(1e-6, 0.012, 10e-6, Map.of()))) {
+            grouped.run();
+            single.run();
+            for (var session : List.of(grouped, single)) {
+                float[][] rows = session.observe(first, count).values();
+                String[] names = session.signalNames();
+                for (int row = 0; row < names.length; row++) {
+                    long period = names[row].equals("slowclock") ? 100_000 : 10_000;
+                    long[] expected = lastSampleNanos(first + count, 1_000, period);
+                    assertEquals(count, rows[row].length);
+                    for (int index = 0; index < count; index++) {
+                        int step = first + index;
+                        assertEquals(expected[step] * 1e-9, rows[row][index], 1e-9, names[row] + " step " + step);
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    void continuationKeepsThePendingGridPointAndSamplesOnTheNewGrid() throws Exception {
+        var model = parse(block(58, "time", 1, 0, "", "", "/clock")
+                + block(5, "scope", 2, 0, "", "/clock", ""));
+        try (var session = open(model, settings(1e-6, 0.0101545, 10e-6, Map.of()))) {
+            session.run();
+            int first = session.status().committedSteps();
+            assertEquals(10_155, first);
+            session.extend(0.01019, 2e-6);
+            session.run();
+            var observation = session.observe(first, 6);
+            assertEquals(10_155e-6, observation.times()[0], 1e-14);
+            assertArrayEquals(new float[]{0.01015f, 0.01015f, 0.01015f, 0.010161f, 0.010161f, 0.010161f},
+                    observation.values()[0], 1e-9f);
+        }
+    }
+
+    @Test
     void aBlockOutsideEverySubsystemKeepsTheGlobalPeriod() throws Exception {
         var model = parse(twoSheets() + block(58, "rootTime", 5, 0, "", "", "/rootclock")
                 + block(5, "rootScope", 6, 0, "", "/rootclock", "")

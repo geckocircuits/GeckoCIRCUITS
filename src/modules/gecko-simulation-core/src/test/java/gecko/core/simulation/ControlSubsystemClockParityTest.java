@@ -12,9 +12,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
- * Each subsystem group keeps the #61 clock arithmetic. A grouped run exports, for every group, the same sample phase
- * and flag, bit for bit, as a global-only run with that group's period. Any drift of the running time sum that #61
- * already has shows up in both runs alike, so this test observes it and does not hide it.
+ * With the same supplied grid times, a subsystem exports the same sample phase and flag as a global clock of the
+ * same period. The session's grid accuracy has a separate integer-tick oracle in ControlSubsystemRateTest.
  */
 class ControlSubsystemClockParityTest {
     private static final long FAST = 101;

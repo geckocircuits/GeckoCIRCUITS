@@ -29,7 +29,7 @@ A path joins the segments from the root with `/`. A native sheet contributes its
 A block takes the period of its nearest configured enclosing sheet, found by walking sheet identifiers. Otherwise it takes the global period.
 Nested keys are allowed. With `outer` and `outer/inner` configured, a block below `outer/inner` takes the second period.
 Each CONTROL subsystem runs at the first grid step at or after each multiple of its period. It uses the absolute clock and the step `max(period, dt)`. A period of zero runs it at every grid step.
-Each CONTROL subsystem keeps the #61 clock arithmetic, including its summed grid time and its due-sample slack. This ADR adds no clock algorithm.
+The simulation session sums grid intervals with roundoff compensation for sample decisions. A step-width change applies to the interval after the current grid point. CONTROL outputs, electrical calculations, and recordings still use the original time values.
 At a grid step the runtime runs the due blocks in the global dependency order, with the ADR-0003 publication and capture phases. Delays and dependency planning use the step of their own subsystem.
 A block output changes only when its subsystem runs, so faster consumers read a held value.
 A gate publishes at a sample of its own subsystem. A signal-controlled source, electrical or thermal ([ADR-0023](0023-core-thermal-network.md)), publishes after a sample of its producer's subsystem. Probes stay live.
@@ -49,22 +49,21 @@ It rejects these cases at `controlSubsystemPeriods`:
 - a parent sheet chain that is missing or circular
 - an instantaneous cycle at the controller steps
 
-An empty map keeps the single-clock path of #61 unchanged, including its checks.
+An empty map selects the global sample period. The global and subsystem clocks use the same sample decision.
 
 ## Consequences
 
 - Fast and slow loops run in one circuit without extra blocks [C, High].
 - Users must place each loop on its own sheet. No tracked example circuit uses sheets [M, High].
-- Each CONTROL subsystem exports its sample phase and flag with the #61 arithmetic. A test compares them bit for bit with a global run of the same period [C, High].
+- Each CONTROL subsystem exports its sample phase from the compensated clock. A test compares the group phase and flag with the global clock of the same period [C, High].
 - On one flat probe with a global period, an empty map gives the same rows and steady-state report as the #61 baseline [M, High].
-- The roundoff of the summed grid time, inherited from #61, makes samples fire one grid step late after about 10⁴ steps. On the baseline probe at `dt` of 1 µs and a period of 10 µs, the first late sample is at step 10151 [M, High].
+- The original sum made a 10 µs period at a 1 µs step fire one grid step late. A regression test checks both global and subsystem clocks against integer nanosecond ticks from step 10000 onward [C, High].
 - The periodic steady-state search is verified on a decaying circuit that two CONTROL subsystems drive [C, High].
-- Where nothing decays, the phase residual is this drift of a few ulps of time per period, and it does not contract. A pure CONTROL circuit may not converge within `maxPeriods`, and the search promises nothing there [M, Medium].
 - A rate boundary adds no delay at a common sample instant. Algebraic loops across rates stay rejected [C, High].
 - A native sheet cannot hold CONTROL blocks, and a transient run rejects every native hierarchy document. A native path resolves in the plan only [C, High].
 - REST, the desktop and the circuit file do not carry the periods yet [C, High].
 - The #61 global period alone still checks cycles at the electrical step only [C, High].
-- Upgrades: a fix for the inherited clock roundoff, REST fields for the periods, rate-transition delays, and a definition-wide key once native sheets can hold CONTROL [E, Low].
+- Upgrades: REST fields for the periods, rate-transition delays, and a definition-wide key once native sheets can hold CONTROL [E, Low].
 
 ## Status
 
