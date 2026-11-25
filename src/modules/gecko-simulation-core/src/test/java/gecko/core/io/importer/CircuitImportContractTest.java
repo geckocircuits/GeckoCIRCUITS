@@ -1,5 +1,6 @@
 package gecko.core.io.importer;
 
+import gecko.core.ac.Complex;
 import gecko.core.circuit.TokenMap;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 import org.junit.jupiter.api.Test;
@@ -183,6 +185,37 @@ class CircuitImportContractTest {
     @ParameterizedTest @CsvSource({"1k,1000", "1MEG,1000000", "2m,0.002", "3uF,0.000003", "{a*2+1},7", "2**3,8", "-2^2,-4"})
     void scalarParametersAndSpiceSuffixesAreEvaluated(String input, double expected) {
         assertEquals(expected, SpiceValue.evaluate(input, java.util.Map.of("a", "3")), 1e-12);
+    }
+
+    @Test void inverseTangentEvaluatesFiniteScalarArgumentsInRadians() {
+        assertEquals(-Math.PI / 4, SpiceValue.evaluate("atan(-1)", Map.of()), 1e-15);
+        assertEquals(0, SpiceValue.evaluate("atan(0)", Map.of()), 1e-15);
+        assertEquals(Math.PI / 4, SpiceValue.evaluate("ATAN(1)", Map.of()), 1e-15);
+        assertEquals(Math.PI / 2, SpiceValue.evaluate("atan(1e300)", Map.of()), 1e-15);
+
+        var error = assertThrows(IllegalArgumentException.class,
+                () -> SpiceValue.evaluate("atan(1/0)", Map.of()));
+        assertTrue(error.getMessage().contains("nonfinite"), error.getMessage());
+    }
+
+    @Test void filteredPidPoleParameterResolvesInsideLaplaceLaw() {
+        // Pole equation from Tof, "Filtered PID - E sources.asc".
+        var parameters = Map.of(
+                "fc", "10k", "fz1", "3k", "fz2", "3k", "fp2", "50k", "boost", "120",
+                "fp1", "fc/tan((atan(fc/fz1)+atan(fc/fz2)-atan(fc/fp2))-boost*pi/180)",
+                "wp1", "{2*pi*fp1}");
+
+        assertEquals(36574.96293593379, SpiceValue.evaluate("{FP1}", parameters), 1e-8);
+        var pole = SpiceValue.transfer("1/(1+s/{wp1})", parameters);
+        Complex response = pole.evaluate(new Complex(0, 229807.26972969716));
+        assertEquals(0.5, response.real(), 1e-12);
+        assertEquals(-0.5, response.imaginary(), 1e-12);
+    }
+
+    @Test void inverseTangentInLaplaceLawRejectsFrequencyDependentArgument() {
+        var transfer = SpiceValue.transfer("atan(s)", Map.of());
+        var error = assertThrows(IllegalArgumentException.class, () -> transfer.evaluate(new Complex(0, 2)));
+        assertEquals("Unsupported SPICE function: atan", error.getMessage());
     }
 
     @Test void badElementAndCircularParametersDoNotAbortOtherElements() throws Exception {

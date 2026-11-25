@@ -84,6 +84,7 @@ public final class SpiceValue {
                     case "sin" -> Math.sin(x);
                     case "cos" -> Math.cos(x);
                     case "tan" -> Math.tan(x);
+                    case "atan" -> Math.atan(x);
                     case "exp" -> Math.exp(x);
                     case "ln", "log" -> Math.log(x);
                     case "log10" -> Math.log10(x);
