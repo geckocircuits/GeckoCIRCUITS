@@ -7,9 +7,12 @@ import gecko.geckocircuits.circuit.SchematicEditor2;
 import gecko.geckocircuits.control.NetzlisteCONTROL;
 import gecko.geckocircuits.control.ReglerOSZI;
 import gecko.geckocircuits.datacontainer.ContainerStatus;
+import gecko.geckocircuits.newscope.AbstractDiagram;
+import gecko.geckocircuits.newscope.ScopeViewport;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -18,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -176,6 +180,11 @@ final class ImportedDesktopRun {
     }
 
     static void captureScope(ReglerOSZI scope, double start, double end, Path file, boolean checkColors) throws Exception {
+        captureScope(scope, start, end, file, checkColors, () -> null);
+    }
+
+    static void captureScope(ReglerOSZI scope, double start, double end, Path file, boolean checkColors,
+                             Callable<Void> afterPngWritten) throws Exception {
         var frame = scope._scopeFrame;
         frame.setVisible(true);
         frame.validate();
@@ -183,24 +192,68 @@ final class ImportedDesktopRun {
         var diagram = graph.getManager().getDiagrams().getFirst();
         assertSame(scope.getZVDatenImRAM(), graph.getDataContainer());
         assertTrue(diagram.isShowing(), "The SCOPE plot must be visible");
-        graph.setAxisPositions();
-        graph.setSimulationTimeBoundaries(start, end);
-        graph.doZoomAutoFit();
-        var image = writePng(frame._scope, new Rectangle(frame._scope.getSize()), file);
-        if (!checkColors) return;
+        var component = frame._scope;
+        assertTrue(component.isShowing(), "The component to capture must be visible");
+        var bounds = new Rectangle(component.getSize());
+        for (int attempt = 0; attempt < 3; attempt++) {
+            graph.setAxisPositions();
+            graph.setSimulationTimeBoundaries(start, end);
+            graph.doZoomAutoFit();
+            var traces = checkColors ? scopeTraces(diagram) : List.<ScopeTrace>of();
 
-        int left = graph.getXPixFromValue(start) + 2;
-        int top = diagram.getTopOffset() + 1;
-        int width = graph.getXPixFromValue(end) - left - 2;
-        int height = diagram.getHeight() - diagram.getBottomOffset() - top - 1;
-        assertTrue(width > 0 && height > 0, "The SCOPE plot must have a drawable area");
-        var plot = SwingUtilities.convertRectangle(diagram, new Rectangle(left, top, width, height), frame._scope);
-        int[] pixels = image.getRGB(plot.x, plot.y, plot.width, plot.height, null, 0, plot.width);
-        for (var curve : diagram.getCurves()) {
-            Color color = curve.getColor().getJavaColor();
-            double opacity = curve.getTransparency();
-            long tracePixels = Arrays.stream(pixels).filter(pixel -> hasTraceColor(pixel, color, opacity)).limit(20).count();
-            assertEquals(20, tracePixels, "Missing rendered trace for channel " + curve.getValueDataIndex());
+            var image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
+            var graphics = prepareCaptureGraphics(image, bounds);
+            ScopeViewport before;
+            ScopeViewport after;
+            try {
+                before = ScopeViewport.read(diagram, start, end);
+                if (!before.matchesTimeRange(start, end)) continue;
+                component.paint(graphics);
+                after = ScopeViewport.read(diagram, start, end);
+            } finally {
+                graphics.dispose();
+            }
+            // The scope updater can change the axes while the event thread paints.
+            if (!before.equals(after) || (checkColors && !traces.equals(scopeTraces(diagram)))) continue;
+
+            if (!checkColors) {
+                writePng(image, file);
+                return;
+            }
+            assertFalse(traces.isEmpty(), "The SCOPE plot must have traces");
+            int left = before.startPixel() + 2;
+            int top = before.topOffset() + 1;
+            int width = before.endPixel() - left - 2;
+            int height = before.plotBottom() - top - 1;
+            assertTrue(width > 0 && height > 0, "The SCOPE plot must have a drawable area");
+            var plot = SwingUtilities.convertRectangle(diagram, new Rectangle(left, top, width, height), component);
+            var capture = new ScopeCapture(image, plot.x, plot.y, plot.width, plot.height, traces);
+            writePng(image, file);
+            afterPngWritten.call();
+            checkRenderedTraces(capture);
+            return;
+        }
+        fail("The SCOPE viewport did not stabilize for " + start + " to " + end + " s");
+    }
+
+    private static List<ScopeTrace> scopeTraces(AbstractDiagram diagram) {
+        return diagram.getCurves().stream()
+                .map(curve -> new ScopeTrace(curve.getColor().getJavaColor(), curve.getTransparency(),
+                        curve.getValueDataIndex()))
+                .toList();
+    }
+
+    private record ScopeTrace(Color color, double opacity, int channel) { }
+
+    private record ScopeCapture(BufferedImage image, int x, int y, int width, int height, List<ScopeTrace> traces) { }
+
+    private static void checkRenderedTraces(ScopeCapture capture) {
+        int[] pixels = capture.image().getRGB(capture.x(), capture.y(), capture.width(), capture.height(),
+                null, 0, capture.width());
+        for (var trace : capture.traces()) {
+            long tracePixels = Arrays.stream(pixels)
+                    .filter(pixel -> hasTraceColor(pixel, trace.color(), trace.opacity())).limit(20).count();
+            assertEquals(20, tracePixels, "Missing rendered trace for channel " + trace.channel());
         }
     }
 
@@ -215,20 +268,29 @@ final class ImportedDesktopRun {
     private static BufferedImage writePng(Component component, Rectangle bounds, Path file) throws Exception {
         assertTrue(component.isShowing(), "The component to capture must be visible");
         var image = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_RGB);
-        var graphics = image.createGraphics();
+        var graphics = prepareCaptureGraphics(image, bounds);
         try {
-            graphics.setClip(0, 0, image.getWidth(), image.getHeight());
-            graphics.setColor(Color.WHITE);
-            graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
-            graphics.translate(-bounds.x, -bounds.y);
             component.paint(graphics);
         } finally {
             graphics.dispose();
         }
+        writePng(image, file);
+        return image;
+    }
+
+    private static Graphics2D prepareCaptureGraphics(BufferedImage image, Rectangle bounds) {
+        var graphics = image.createGraphics();
+        graphics.setClip(0, 0, image.getWidth(), image.getHeight());
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
+        graphics.translate(-bounds.x, -bounds.y);
+        return graphics;
+    }
+
+    private static void writePng(BufferedImage image, Path file) throws Exception {
         int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
         assertTrue(Arrays.stream(pixels).anyMatch(pixel -> pixel != pixels[0]), "The capture is blank " + file);
         assertTrue(ImageIO.write(image, "png", file.toFile()), "No PNG writer is available");
-        return image;
     }
 
     private static <T> T onEventThread(Callable<T> action) throws Exception {

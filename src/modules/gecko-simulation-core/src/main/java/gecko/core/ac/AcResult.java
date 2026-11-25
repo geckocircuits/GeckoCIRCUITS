@@ -19,21 +19,34 @@ public record AcResult(List<Double> frequencyHz, List<VoltageTrace> groups, List
 
     public record Member(String instance, int spiceOrder) { }
     public record VoltageTrace(String id, boolean ground, List<Member> members, List<String> aliases,
-                               List<Complex> voltageV) {
+                               List<Complex> voltageV, List<SourceMember> physicalMembers, String topologyLabel, String acquiredId) {
+        public VoltageTrace(String id, boolean ground, List<Member> members, List<String> aliases, List<Complex> voltageV) {
+            this(id, ground, members, aliases, voltageV, List.of(), "", id);
+        }
+        public String unit() { return "V"; }
         public VoltageTrace {
             members = List.copyOf(members);
             aliases = List.copyOf(aliases);
             voltageV = List.copyOf(voltageV);
+            physicalMembers = List.copyOf(physicalMembers);
         }
     }
-    public record CurrentTrace(String instance, List<Complex> currentA) {
+    public record CurrentTrace(String instance, List<Complex> currentA, SourceMember positive, SourceMember negative,
+                               String acquiredInstance) {
+        public CurrentTrace(String instance, List<Complex> currentA) { this(instance, currentA, null, null, instance); }
+        public String unit() { return "A"; }
         public CurrentTrace { currentA = List.copyOf(currentA); }
     }
 
     public enum TerminalKind { PRIMITIVE, CHILD_BOUNDARY, PARENT_PIN }
 
     public record SourceMember(List<String> occurrencePath, String localMemberKey, String instance,
-                               int spiceOrder, TerminalKind kind) {
+                               int spiceOrder, TerminalKind kind, Long nativeIdentifier,
+                               String definitionId, String deviceKind) {
+        public SourceMember(List<String> occurrencePath, String localMemberKey, String instance,
+                            int spiceOrder, TerminalKind kind) {
+            this(occurrencePath, localMemberKey, instance, spiceOrder, kind, null, "", "");
+        }
         public SourceMember { occurrencePath = List.copyOf(occurrencePath); }
     }
 

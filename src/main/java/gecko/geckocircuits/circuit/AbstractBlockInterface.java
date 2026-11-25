@@ -476,6 +476,17 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     public final void setAcLaw(AcComponent.Law law) {
         var editor = SchematicEditor2.Singleton;
+        if (law instanceof AcComponent.Inductance inductor) {
+            var current = getAcComponentOrLiteral();
+            if (current == null || !(current.law() instanceof AcComponent.Inductance original)
+                    || original.origin() != inductor.origin()) {
+                throw new IllegalArgumentException("Keep the imported AC inductor origin.");
+            }
+            if (editor == null || editor.getHierarchy() == null || getHierarchyMember() == null) {
+                inductor.evaluate(editor == null || editor.getAcSettings() == null
+                        ? java.util.Map.of() : editor.getAcSettings().parameterMap());
+            }
+        }
         if (editor != null && editor.getHierarchy() != null && getHierarchyMember() != null) {
             editor.hierarchyEdits.setSharedLaw(this, law);
             return;
@@ -898,10 +909,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                     }
                 }
                 case AcComponent.Inductance law -> {
-                    _textInfo.addParameter("L = " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.expression(), parameters), 4)
-                            + " H");
-                    _textInfo.addParameter("Rser = " + AC_VALUE_FORMAT.formatENG(
-                            SpiceValue.evaluate(law.seriesResistance(), parameters), 4) + " Ω");
+                    var value = law.evaluate(parameters);
+                    _textInfo.addParameter("L = " + AC_VALUE_FORMAT.formatENG(value.henries(), 4) + " H");
+                    _textInfo.addParameter("Rser = " + AC_VALUE_FORMAT.formatENG(value.ohms(), 4)
+                            + " Ω (" + value.mode().label() + ")");
                 }
                 case AcComponent.Current law -> {
                     _textInfo.addParameter("AC " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.magnitude(), parameters), 4)

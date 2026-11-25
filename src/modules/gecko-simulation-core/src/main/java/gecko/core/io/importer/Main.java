@@ -1,5 +1,6 @@
 package gecko.core.io.importer;
 
+import gecko.core.ac.AcInputOrigin;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitModel;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public final class Main {
                 && args[0].toLowerCase(Locale.ROOT).endsWith(".asc");
         if (args.length != 2 && !ascOptions) {
             errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
-                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]...]");
+                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]]");
             return 1;
         }
         try {
@@ -32,12 +33,19 @@ public final class Main {
             if (lowerName.endsWith(".asc")) {
                 var importer = new LtspiceImporter();
                 var sourceRoots = new java.util.ArrayList<Path>();
+                AcInputOrigin origin = AcInputOrigin.UNSELECTED_ASC;
                 for (int i = 4; i < args.length; i += 2) {
-                    if (!args[i].equals("--source-root")) throw new IllegalArgumentException("Unknown import option " + args[i]);
-                    sourceRoots.add(Path.of(args[i + 1]));
+                    switch (args[i]) {
+                        case "--source-root" -> sourceRoots.add(Path.of(args[i + 1]));
+                        case "--profile" -> {
+                            if (origin.tested()) throw new IllegalArgumentException("Select one ASC import profile.");
+                            origin = AcInputOrigin.selectProfile(args[i + 1]);
+                        }
+                        default -> throw new IllegalArgumentException("Unknown import option " + args[i]);
+                    }
                 }
                 model = args.length == 2 ? importer.convert(input)
-                        : importer.convert(input, Path.of(args[3]), sourceRoots);
+                        : importer.convert(input, Path.of(args[3]), sourceRoots, origin);
             } else {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
                 model = lowerName.endsWith(".plecs")

@@ -72,11 +72,30 @@ The output stores editable native child sheets. Edits to shared definition membe
 
 The importer reports unsupported symbol attributes such as `ModelFile`. Review diagnostics for unresolved symbols, invalid port mappings, or layout conflicts before you use the circuit.
 
+### Select an LTspice AC profile
+
+Select the profile for an ASC from LTspice 26.1.1 with the Normal solver and 27 °C temperatures.
+
+1. In the desktop, select **File > Import LTspice ASC**.
+2. Select the ASC file and the stock symbol directory.
+3. Select **LTspice 26.1.1, Normal solver, 27 °C**.
+4. Save the imported circuit as an IPES file.
+
+To select the same profile from the command line, use `--profile` after `--symbols`.
+
+```sh
+java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.io.importer.Main input.asc output.ipes --symbols path/to/stock-symbols --profile ltspice-26.1.1-normal-27c-v1
+```
+
+The profile applies to uncoupled linear AC inductors. It uses 0.001 Ω when the ASC omits `Rser`. An explicit expression can evaluate to zero or a positive value. The native file keeps the selected profile and the resistance setting. Open the inductor dialog to see the effective resistance or to select **Use imported default**.
+
+The profile rejects model definitions, coupled or nonlinear devices, simulator options, and inductor attributes such as `Rpar`. A portable CIR or an ASC without a selected profile requires an explicit positive `Rser` for AC execution.
+
 ## Linear alternating current analysis
 
 Use one `.ac dec` sweep in a `.cir` netlist or an `.asc` schematic. The sweep specifies points per decade, start frequency, and stop frequency.
 
-Use resistors, capacitors, inductors, independent voltage and current sources, and voltage-controlled voltage sources. The controlled source accepts scalar gain or a Laplace expression. Specify an explicit positive `Rser` for each AC inductor. An inductor with this AC law is restricted to AC execution.
+Use resistors, capacitors, inductors, independent voltage and current sources, and voltage-controlled voltage sources. The controlled source accepts scalar gain or a Laplace expression. Use these native inductor laws only for AC execution.
 
 Run the saved analysis to write the frequencies and complex results as JSON.
 
@@ -84,7 +103,7 @@ Run the saved analysis to write the frequencies and complex results as JSON.
 java -cp src/modules/gecko-simulation-core/target/gecko-simulation-core-1.0-SNAPSHOT.jar gecko.core.ac.AcMain output.ipes
 ```
 
-Flat circuits use `gecko-ac-result-v1`. Hierarchical circuits use `gecko-ac-result-v2`, which adds member identities, branch currents, and signed currents into child ports. The member identities include the occurrence path, local member key, and original port order.
+Flat circuits use `gecko-ac-result-v1`. Hierarchical circuits use `gecko-ac-result-v2`, which adds member identities, branch currents, and signed currents into child ports. Voltage and current records include units and physical terminal bindings. The bindings include the native component identifier, device kind, occurrence path, and original port order.
 
 This analysis is limited to the supported linear device laws and the decade sweep. Nonlinear models and text SPICE subcircuits produce conversion diagnostics. Frequency response analysis based on transient excitation and DC operating-point analysis are outside this command.
 

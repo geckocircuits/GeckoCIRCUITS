@@ -334,10 +334,7 @@ final class HierarchyEditCoordinator {
     private static void validateLaw(AcComponent.Law law, Map<String, String> scope) {
         switch (law) {
             case AcComponent.Passive passive -> requirePositive(SpiceValue.evaluate(passive.expression(), scope));
-            case AcComponent.Inductance inductor -> {
-                requirePositive(SpiceValue.evaluate(inductor.expression(), scope));
-                requirePositive(SpiceValue.evaluate(inductor.seriesResistance(), scope));
-            }
+            case AcComponent.Inductance inductor -> inductor.evaluate(scope);
             case AcComponent.Voltage voltage -> validateSource(voltage.dc(), voltage.magnitude(), voltage.phaseDegrees(), scope);
             case AcComponent.Current current -> validateSource(current.dc(), current.magnitude(), current.phaseDegrees(), scope);
             case AcComponent.Controlled controlled -> {

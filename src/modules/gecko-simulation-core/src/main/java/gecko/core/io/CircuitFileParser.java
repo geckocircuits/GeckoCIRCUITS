@@ -165,6 +165,7 @@ public class CircuitFileParser {
         HierarchyIndex hierarchy = null;
         try {
             hierarchy = new HierarchyIndex(model);
+            AcOriginMembership.validate(model, hierarchy);
         } catch (IllegalArgumentException error) {
             throw new CircuitParseException(filePath + ": " + error.getMessage(), error);
         }

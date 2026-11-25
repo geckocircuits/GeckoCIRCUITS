@@ -53,7 +53,7 @@ public final class AcMain {
         }
     }
 
-    private static String format(CircuitModel model, AcResult result, String documentSha256, BuildIdentity build) {
+    static String format(CircuitModel model, AcResult result, String documentSha256, BuildIdentity build) {
         var source = model.getAcProvenance();
         var metadata = new StringBuilder("{\"ipesSha256\":").append(json(documentSha256))
                 .append(",\"javaVersion\":").append(json(System.getProperty("java.runtime.version")))
@@ -67,6 +67,10 @@ public final class AcMain {
         if (source != null) {
             metadata.append(",\"sourceSha256\":").append(json(source.sourceSha256()))
                     .append(",\"importSourceDirty\":").append(source.importSourceDirty());
+            if (source.origin().tested()) {
+                metadata.append(",\"originProfile\":").append(json(source.origin().profileId()))
+                        .append(",\"configurationSha256\":").append(json(source.origin().configurationSha256()));
+            }
             if (!source.importRevision().isEmpty()) metadata.append(",\"importRevision\":").append(json(source.importRevision()));
             if (!source.importRuntimeJarSha256().isEmpty()) {
                 metadata.append(",\"importRuntimeJarSha256\":").append(json(source.importRuntimeJarSha256()));
@@ -93,8 +97,15 @@ public final class AcMain {
                     + ",\"members\":" + array(group.members(), member -> "{\"instance\":" + json(member.instance())
                         + ",\"spiceOrder\":" + member.spiceOrder() + "}")
                     + ",\"aliases\":" + array(group.aliases(), alias -> json(alias))
+                    + ",\"unit\":" + json(group.unit())
+                    + ",\"topologyLabel\":" + json(group.topologyLabel())
+                    + ",\"acquiredId\":" + json(group.acquiredId())
+                    + ",\"physicalMembers\":" + array(group.physicalMembers(), AcMain::member)
                     + ",\"voltageV\":" + array(group.voltageV(), AcMain::sample) + "}")
                 + ",\"currents\":" + array(result.currents(), current -> "{\"instance\":" + json(current.instance())
+                    + ",\"unit\":" + json(current.unit())
+                    + ",\"acquiredInstance\":" + json(current.acquiredInstance())
+                    + ",\"positive\":" + member(current.positive()) + ",\"negative\":" + member(current.negative())
                     + ",\"currentA\":" + array(current.currentA(), AcMain::sample) + "}")
                 + ",\"complexUnknowns\":" + result.complexUnknowns()
                 + ",\"residualEta\":" + result.residualEta()
@@ -123,9 +134,12 @@ public final class AcMain {
     }
 
     private static String member(AcResult.SourceMember member) {
+        if (member == null) return "null";
         return "{\"occurrencePath\":" + array(member.occurrencePath(), value -> json(value))
                 + ",\"localMemberKey\":" + json(member.localMemberKey()) + ",\"instance\":" + json(member.instance())
-                + ",\"spiceOrder\":" + member.spiceOrder() + ",\"kind\":" + json(member.kind().name()) + "}";
+                + ",\"spiceOrder\":" + member.spiceOrder() + ",\"kind\":" + json(member.kind().name())
+                + ",\"nativeIdentifier\":" + member.nativeIdentifier() + ",\"definitionId\":" + json(member.definitionId())
+                + ",\"deviceKind\":" + json(member.deviceKind()) + "}";
     }
 
     private static <T> String array(List<T> values, Function<T, String> format) {

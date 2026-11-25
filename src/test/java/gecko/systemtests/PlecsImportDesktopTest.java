@@ -7,14 +7,18 @@ import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.circuitcomponents.IdealSwitch;
 import gecko.geckocircuits.control.ReglerGate;
 import gecko.geckocircuits.control.ReglerOSZI;
+import gecko.geckocircuits.newscope.ScopeViewport;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -28,6 +32,11 @@ class PlecsImportDesktopTest {
         ImportedDesktopRun.launch(fixture, DesktopRun.class);
     }
 
+    @Test
+    void checksPaintedScopeAfterBackgroundViewportReset() throws Exception {
+        ImportedDesktopRun.launch("plecs-buck-viewport-reset", DesktopRun.class);
+    }
+
     public static final class DesktopRun {
         public static void main(String[] args) {
             try {
@@ -39,7 +48,9 @@ class PlecsImportDesktopTest {
             }
         }
 
-        private static void run(String fixture, Path evidence) throws Exception {
+        private static void run(String scenario, Path evidence) throws Exception {
+            boolean resetViewport = scenario.equals("plecs-buck-viewport-reset");
+            String fixture = resetViewport ? "plecs-buck" : scenario;
             boolean buck = fixture.equals("plecs-buck");
             assertTrue(buck || fixture.equals("plecs-rc"), "Unknown fixture " + fixture);
             Path source = Path.of("src/modules/gecko-simulation-core/src/test/resources/importer", fixture + ".plecs");
@@ -59,8 +70,17 @@ class PlecsImportDesktopTest {
                         : checkRc(scope, outputRow, samples);
                 ImportedDesktopRun.captureSchematic(evidence.resolve(fixture + "-schematic.png"));
                 ImportedDesktopRun.captureScope(scope, 0, duration, evidence.resolve(fixture + "-scope.png"), !buck);
-                if (buck) ImportedDesktopRun.captureScope(scope, .0078, .008,
-                        evidence.resolve(fixture + "-pwm-detail.png"), true);
+                if (buck) {
+                    Path detail = evidence.resolve(fixture + "-pwm-detail.png");
+                    if (resetViewport) {
+                        ImportedDesktopRun.captureScope(scope, .0078, .008, detail, true, () -> {
+                            resetViewportOnBackgroundThread(scope, duration);
+                            return null;
+                        });
+                    } else {
+                        ImportedDesktopRun.captureScope(scope, .0078, .008, detail, true);
+                    }
+                }
                 Files.writeString(evidence.resolve("receipt.txt"), String.format(Locale.ROOT, """
                         source=%s
                         circuit=%s
@@ -75,6 +95,19 @@ class PlecsImportDesktopTest {
                         data.getRowLength(), samples, step, measurements));
             });
         }
+    }
+
+    private static void resetViewportOnBackgroundThread(ReglerOSZI scope, double end) throws Exception {
+        var graph = scope._scopeFrame.getGrafer();
+        var reset = new FutureTask<Void>(() -> {
+            graph.setSimulationTimeBoundaries(0, end);
+            return null;
+        });
+        Thread.ofVirtual().name("scope-viewport-reset").start(reset);
+        reset.get(5, TimeUnit.SECONDS);
+        assertTrue(ScopeViewport.read(graph.getManager().getDiagrams().getFirst(), 0, end)
+                .matchesTimeRange(0, end),
+                "The background thread must restore the full time range");
     }
 
     private static ReglerOSZI checkSchematic(boolean buck) {

@@ -1,6 +1,7 @@
 package gecko.core.io;
 
 import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcInputOrigin;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.ac.AcSweep;
 import gecko.core.ac.ParameterDefinition;
@@ -47,7 +48,17 @@ public final class AcMetadataCodec {
                 component.spiceOrders().stream().map(Object::toString).collect(java.util.stream.Collectors.joining(","))));
         switch (component.law()) {
             case AcComponent.Passive law -> fields.addAll(List.of("PASSIVE", law.expression()));
-            case AcComponent.Inductance law -> fields.addAll(List.of("INDUCTANCE", law.expression(), law.seriesResistance()));
+            case AcComponent.Inductance law -> {
+                if (law.origin() == AcInputOrigin.LEGACY) {
+                    var resistance = (AcComponent.ExplicitResistance) law.resistance();
+                    fields.addAll(List.of("INDUCTANCE", law.expression(), resistance.expression()));
+                } else {
+                    boolean explicit = law.resistance() instanceof AcComponent.ExplicitResistance;
+                    fields.addAll(List.of("INDUCTANCE_ORIGIN_V1", law.expression(), law.origin().name(),
+                            law.origin().profileId(), law.origin().configurationSha256(), explicit ? "EXPLICIT" : "DEFAULT",
+                            explicit ? ((AcComponent.ExplicitResistance) law.resistance()).expression() : ""));
+                }
+            }
             case AcComponent.Voltage law -> fields.addAll(List.of("VOLTAGE", law.dc(), law.waveform(),
                     law.magnitude(), law.phaseDegrees()));
             case AcComponent.Current law -> fields.addAll(List.of("CURRENT", law.dc(), law.magnitude(), law.phaseDegrees()));
@@ -64,6 +75,7 @@ public final class AcMetadataCodec {
             case "VOLTAGE" -> 8;
             case "CURRENT" -> 7;
             case "INDUCTANCE" -> 6;
+            case "INDUCTANCE_ORIGIN_V1" -> 10;
             default -> 5;
         };
         require(fields.length >= aliasIndex);
@@ -71,6 +83,20 @@ public final class AcMetadataCodec {
         AcComponent.Law law = switch (fields[3]) {
             case "PASSIVE" -> new AcComponent.Passive(fields[4]);
             case "INDUCTANCE" -> new AcComponent.Inductance(fields[4], fields[5]);
+            case "INDUCTANCE_ORIGIN_V1" -> {
+                require(fields.length == aliasIndex + orders.size());
+                var origin = AcInputOrigin.decode(fields[5], fields[6], fields[7]);
+                require(origin != AcInputOrigin.LEGACY);
+                AcComponent.Resistance resistance = switch (fields[8]) {
+                    case "EXPLICIT" -> new AcComponent.ExplicitResistance(fields[9]);
+                    case "DEFAULT" -> {
+                        require(fields[9].isEmpty());
+                        yield new AcComponent.ImportedDefault();
+                    }
+                    default -> throw new IllegalArgumentException("Unsupported AC resistance setting.");
+                };
+                yield new AcComponent.Inductance(fields[4], resistance, origin);
+            }
             case "VOLTAGE" -> new AcComponent.Voltage(fields[4], fields[5], fields[6], fields[7]);
             case "CURRENT" -> new AcComponent.Current(fields[4], fields[5], fields[6]);
             case "GAIN", "LAPLACE" -> new AcComponent.Controlled(fields[4], fields[3].equals("LAPLACE"));
@@ -83,8 +109,22 @@ public final class AcMetadataCodec {
         var fields = new ArrayList<>(List.of(provenance.sourceSha256(), provenance.importRevision(),
                 provenance.importSourceDirty() ? "1" : "0", provenance.importSourceSnapshotSha256(),
                 provenance.importRuntimeJarSha256()));
+        if (provenance.origin().tested()) {
+            fields.addFirst("ASC_ORIGIN_V1");
+            fields.addAll(List.of(provenance.origin().name(), provenance.origin().profileId(),
+                    provenance.origin().configurationSha256(), Integer.toString(provenance.dependencySha256().size()),
+                    Integer.toString(provenance.definitionSourceSha256().size())));
+        }
         provenance.dependencySha256().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
             fields.add(entry.getKey());
+            fields.add(entry.getValue());
+        });
+        provenance.definitionSourceSha256().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
+            fields.add(entry.getKey());
+            fields.add(entry.getValue());
+        });
+        provenance.memberSha256().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
+            fields.add(entry.getKey().toString());
             fields.add(entry.getValue());
         });
         return encode(fields);
@@ -92,6 +132,27 @@ public final class AcMetadataCodec {
 
     public static AcProvenance decodeProvenance(String text) {
         String[] fields = decode(text);
+        if (fields.length > 0 && fields[0].equals("ASC_ORIGIN_V1")) {
+            require(fields.length >= 11 && fields.length % 2 == 1 && (fields[3].equals("0") || fields[3].equals("1")));
+            var origin = AcInputOrigin.decode(fields[6], fields[7], fields[8]);
+            require(origin.tested());
+            int dependencyCount = Integer.parseInt(fields[9]);
+            int definitionCount = Integer.parseInt(fields[10]);
+            require(dependencyCount >= 0 && definitionCount >= 0
+                    && (long) dependencyCount + definitionCount <= (fields.length - 11) / 2);
+            int definitionStart = 11 + 2 * dependencyCount;
+            int memberStart = definitionStart + 2 * definitionCount;
+            var dependencies = new LinkedHashMap<String, String>();
+            var definitions = new LinkedHashMap<String, String>();
+            var members = new LinkedHashMap<Long, String>();
+            for (int i = 11; i < definitionStart; i += 2) require(dependencies.putIfAbsent(fields[i], fields[i + 1]) == null);
+            for (int i = definitionStart; i < memberStart; i += 2) require(definitions.putIfAbsent(fields[i], fields[i + 1]) == null);
+            for (int i = memberStart; i < fields.length; i += 2) {
+                require(members.putIfAbsent(Long.parseLong(fields[i]), fields[i + 1]) == null);
+            }
+            return new AcProvenance(fields[1], fields[2], fields[3].equals("1"), fields[4], fields[5],
+                    dependencies, origin, definitions, members);
+        }
         require(fields.length >= 5 && fields.length % 2 == 1 && (fields[2].equals("0") || fields[2].equals("1")));
         var dependencies = new LinkedHashMap<String, String>();
         for (int i = 5; i < fields.length; i += 2) require(dependencies.putIfAbsent(fields[i], fields[i + 1]) == null);
@@ -108,9 +169,8 @@ public final class AcMetadataCodec {
         double[] values = saved.clone();
         switch (component.law()) {
             case AcComponent.Passive law -> values[0] = SpiceValue.evaluate(law.expression(), parameters);
-            case AcComponent.Inductance law -> {
-                values[0] = SpiceValue.evaluate(law.expression(), parameters);
-            }
+            case AcComponent.Inductance law -> values[0] = law.origin().tested()
+                    ? law.evaluate(parameters).henries() : SpiceValue.evaluate(law.expression(), parameters);
             case AcComponent.Voltage law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Current law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Controlled law -> {

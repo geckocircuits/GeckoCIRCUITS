@@ -82,7 +82,8 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public gecko.core.io.HierarchyIndex inspectHierarchy() {
-        return EditorCircuitCapture.inspectHierarchy(_circuitSheet.getAllElements(), getHierarchy());
+        return EditorCircuitCapture.inspectHierarchy(_circuitSheet.getAllElements(), getHierarchy(),
+                getAcSettings(), getAcProvenance());
     }
 
     void setHierarchy(gecko.core.io.CircuitHierarchy value) {
@@ -935,6 +936,12 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     }
 
     public void requireComponentMergeSupported(ProjectData project) {
+        if (project.getAcProvenance() != null && project.getAcProvenance().origin().tested()) {
+            throw new IllegalArgumentException("Open the profiled ASC as a separate circuit document.");
+        }
+        for (var element : project._allSheetComponents) {
+            if (element instanceof AbstractBlockInterface block) ProjectData.requireComponentMergeLaw(block.getAcComponent());
+        }
         if (getHierarchy() != null || project.getHierarchy() != null || project._allSheetComponents.stream().anyMatch(element ->
                 element.getHierarchyMember() != null || element instanceof SubcircuitBlock block && block.getHierarchyCall() != null)) {
             throw new IllegalArgumentException("Open the imported hierarchy as a separate circuit document.");

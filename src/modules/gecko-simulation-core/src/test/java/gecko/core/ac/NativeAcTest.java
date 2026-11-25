@@ -14,6 +14,8 @@ import gecko.core.preparation.PreparationRequest;
 import gecko.core.preparation.PreparationResult;
 import gecko.core.preparation.SolverOverrides;
 import java.io.ByteArrayInputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +27,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -42,6 +46,277 @@ class NativeAcTest {
             Cload output 0 2u
             """;
 
+    @TempDir(cleanup = org.junit.jupiter.api.io.CleanupMode.NEVER) Path directory;
+
+    @ParameterizedTest
+    @CsvSource({
+        "1u,  1e-6, omitted, 0.001",
+        "1u,  1e-6, 0,       0",
+        "1u,  1e-6, 1m,      0.001",
+        "1u,  1e-6, 4m,      0.004",
+        "10u, 1e-5, omitted, 0.001",
+        "10u, 1e-5, 0,       0",
+        "10u, 1e-5, 1m,      0.001",
+        "10u, 1e-5, 4m,      0.004"
+    })
+    void solvesProfiledInductorModesWithActualOrientedBindings(String value, double henries,
+                                                              String series, double ohms) throws Exception {
+        var imported = inductorFixture(value, series, false);
+        var model = roundTrip(imported.model());
+        var receipt = imported.receipt();
+        assertEquals(3, receipt.devices().size());
+        assertEquals(4, receipt.wires().size());
+        assertEquals(0, receipt.devices().getLast().pins().getFirst().index());
+        var inductor = model.getCircuitComponents().getLast();
+        var law = assertInstanceOf(AcComponent.Inductance.class, inductor.getAcComponent().law());
+        assertEquals(series.equals("omitted") ? new AcComponent.ImportedDefault()
+                : new AcComponent.ExplicitResistance(series), law.resistance());
+        assertEquals(ohms, law.evaluate(Map.of()).ohms(), 0);
+        for (int octave = 0; octave < 3; octave++) {
+            double hz = Math.scalb(0.0005 / (2 * Math.PI * henries), octave);
+            var settings = model.getAcSettings();
+            model.setAcSettings(new AcDocumentSettings(new AcSweep(1, hz, hz), settings.parameters(), settings.analysisId()));
+            var result = solve(model);
+            assertEquals(List.of(hz), result.frequencyHz());
+            Complex expectedZ = new Complex(ohms, 2 * Math.PI * hz * henries);
+            Complex source = polar(1, 37);
+            Complex expectedCurrent = source.divide(expectedZ.add(new Complex(.001, 0)));
+            Complex actualCurrent = current(result, "Ltest", 0);
+            Complex coil = voltage(result, "Ltest", 1, 0);
+            close(expectedZ, coil.divide(actualCurrent));
+            close(source, voltage(result, "Vdrive", 1, 0));
+            close(expectedCurrent, actualCurrent);
+            close(expectedCurrent, current(result, "Rload", 0));
+            close(expectedCurrent.scale(-1), current(result, "Vdrive", 0));
+            close(expectedZ.multiply(expectedCurrent), coil);
+
+            var branch = result.currents().getLast();
+            assertEquals(receipt.devices().getLast().nativeIdentifier(), branch.positive().nativeIdentifier());
+            assertEquals(branch.positive().nativeIdentifier(), branch.negative().nativeIdentifier());
+            assertEquals(List.of(1, 2), List.of(branch.positive().spiceOrder(), branch.negative().spiceOrder()));
+            assertEquals("A", branch.unit());
+            assertEquals("IND", branch.positive().deviceKind());
+            assertEquals(6, result.groups().stream().mapToInt(group -> group.physicalMembers().size()).sum());
+            assertEquals(1, result.groups().stream().filter(group -> group.ground()
+                    && group.physicalMembers().contains(branch.negative()) && group.unit().equals("V")).count());
+            if (series.equals("omitted")) {
+                setInductorLaw(inductor, law, new AcComponent.ExplicitResistance("0"));
+                var wrong = solve(model);
+                Complex wrongCurrent = current(wrong, "Ltest", 0);
+                Complex wrongZ = voltage(wrong, "Ltest", 1, 0).divide(wrongCurrent);
+                assertTrue(Math.abs(wrongZ.real() - ohms) > 1e-8);
+                assertTrue(wrongCurrent.subtract(expectedCurrent).abs() > 1e-5 * expectedCurrent.abs());
+                setInductorLaw(inductor, law, law.resistance());
+            }
+        }
+    }
+
+    @Test
+    void redirectsCompleteZeroValuedProducersWithoutChangingClaimedTraceLabels() throws Exception {
+        var model = roundTrip(spice("""
+                .ac dec 1 80 80
+                V4 silentA 0 0
+                V5 silentB 0 0
+                """));
+        var plan = new AcExecutionPlan(model);
+        var original = plan.execute();
+        int firstVoltage = traceIndex(original, "V4");
+        int secondVoltage = traceIndex(original, "V5");
+        var swapped = plan.execute(index -> index == firstVoltage ? secondVoltage : index == secondVoltage ? firstVoltage : index,
+                index -> 1 - index);
+        var claimedVoltage = original.groups().get(firstVoltage);
+        var actualVoltage = swapped.groups().get(firstVoltage);
+        assertEquals(claimedVoltage.voltageV(), actualVoltage.voltageV());
+        assertEquals(claimedVoltage.id(), actualVoltage.id());
+        assertEquals(claimedVoltage.members(), actualVoltage.members());
+        assertEquals(original.groups().get(secondVoltage).id(), actualVoltage.acquiredId());
+        assertEquals(original.groups().get(secondVoltage).physicalMembers(), actualVoltage.physicalMembers());
+        assertNotEquals(actualVoltage.id(), actualVoltage.acquiredId());
+
+        var claimedCurrent = original.currents().getFirst();
+        var actualCurrent = swapped.currents().getFirst();
+        assertEquals(claimedCurrent.currentA(), actualCurrent.currentA());
+        assertEquals(claimedCurrent.instance(), actualCurrent.instance());
+        assertEquals("V5", actualCurrent.acquiredInstance());
+        assertEquals(original.currents().getLast().positive(), actualCurrent.positive());
+        assertEquals(original.currents().getLast().negative(), actualCurrent.negative());
+        assertNotEquals(claimedCurrent.positive().nativeIdentifier(), actualCurrent.positive().nativeIdentifier());
+        var formatted = AcMain.format(model, swapped, "0".repeat(64), gecko.core.io.BuildIdentity.current());
+        assertTrue(formatted.contains("\"acquiredId\":\"" + actualVoltage.acquiredId() + "\""));
+        assertTrue(formatted.contains("\"acquiredInstance\":\"V5\""));
+    }
+
+    private static int traceIndex(AcResult result, String instance) {
+        return java.util.stream.IntStream.range(0, result.groups().size())
+                .filter(i -> result.groups().get(i).members().contains(new AcResult.Member(instance, 1)))
+                .findFirst().orElseThrow();
+    }
+
+    @Test
+    void reversesSourceAndInductorPinsWithoutChangingResistance() throws Exception {
+        var model = roundTrip(inductorFixture("1u", "omitted", true).model());
+        var result = solve(model);
+        var expectedZ = new Complex(.001, 2 * Math.PI * 80 * 1e-6);
+        var source = polar(-1, 37);
+        var loop = source.divide(expectedZ.add(new Complex(.001, 0)));
+        close(loop, current(result, "Rload", 0));
+        close(loop, current(result, "Vdrive", 0));
+        close(loop.scale(-1), current(result, "Ltest", 0));
+        close(expectedZ, voltage(result, "Ltest", 1, 0).subtract(voltage(result, "Ltest", 2, 0))
+                .divide(current(result, "Ltest", 0)));
+    }
+
+    @Test
+    void retainsPortablePositiveOnlyPreparationAndRejectsForgedMembership() throws Exception {
+        String circuit = ".ac dec 1 80 80\nVdrive src 0 AC 1 37\nRload src coil 1m\nLtest coil 0 1u";
+        assertFalse(prepare(roundTrip(spice(circuit)), PreparationRequest.defaults()).report().readyForHeadless());
+        assertFalse(prepare(roundTrip(spice(circuit + " Rser=0")), PreparationRequest.defaults()).report().readyForHeadless());
+        assertEquals(3, solve(roundTrip(spice(circuit + " Rser=1m"))).currents().size());
+        assertFalse(new SpiceImporter().convert(circuit, "pretend.asc").getConversionIssues().isEmpty());
+
+        var fixture = inductorFixture("1u", "omitted", false).model();
+        var provenance = fixture.getAcProvenance();
+        fixture.setAcProvenance(null);
+        assertThrows(IllegalArgumentException.class, () -> new CircuitFileWriter().write(fixture));
+        assertFalse(prepare(fixture, PreparationRequest.defaults()).report().readyForHeadless());
+        fixture.setAcProvenance(provenance);
+        var component = fixture.getCircuitComponents().getLast();
+        component.getImportTokens().put("uniqueObjectIdentifier", "10888");
+        assertThrows(IllegalArgumentException.class, () -> new CircuitFileWriter().write(fixture));
+        assertFalse(prepare(fixture, PreparationRequest.defaults()).report().readyForHeadless());
+    }
+
+    private static void setInductorLaw(CircuitModel.ComponentData component, AcComponent.Inductance law,
+                                       AcComponent.Resistance resistance) {
+        var owned = component.getAcComponent();
+        component.setAcComponent(new AcComponent(owned.instance(), owned.spiceOrders(), owned.aliases(),
+                owned.mirrored(), new AcComponent.Inductance(law.expression(), resistance, law.origin())));
+    }
+
+    private LtspiceImporter.ImportResult inductorFixture(String henries, String series, boolean reverse) throws Exception {
+        for (String symbol : List.of("voltage", "res", "ind")) {
+            try (var input = getClass().getResourceAsStream("/ltspice-hierarchy/" + symbol + ".asy")) {
+                Files.copy(java.util.Objects.requireNonNull(input), directory.resolve(symbol + ".asy"));
+            }
+        }
+        Path path = Files.writeString(directory.resolve("inductor.asc"), """
+                Version 4
+                SHEET 1 640 480
+                WIRE 0 16 160 16
+                WIRE 160 96 160 48
+                WIRE 160 48 320 48
+                WIRE 320 48 320 16
+                FLAG 0 96 0
+                FLAG 320 96 0
+                FLAG 0 16 src
+                FLAG 320 16 coil
+                SYMBOL voltage %s
+                SYMATTR InstName Vdrive
+                SYMATTR Value AC 1 37
+                SYMBOL res 144 0 R0
+                SYMATTR InstName Rload
+                SYMATTR Value 1m
+                SYMBOL ind %s
+                SYMATTR InstName Ltest
+                SYMATTR Value %s
+                %s
+                TEXT 32 180 Left 2 !.ac dec 1 80 80
+                """.formatted(reverse ? "0 112 R180" : "0 0 R0", reverse ? "336 112 R180" : "304 0 R0",
+                        henries, series.equals("omitted") ? "" : "SYMATTR SpiceLine Rser=" + series));
+        return new LtspiceImporter().convertWithReceipt(path, directory, List.of(),
+                AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C);
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void solvesLargeSeriesCapacitorCurrentWithNearEqualTerminalVoltages(boolean reversed) throws Exception {
+        double frequency = 50_000;
+        double capacitance = 1000;
+        double resistance = 1000;
+        String pins = reversed ? "out in" : "in out";
+        var result = solve(roundTrip(spice("""
+                Series RC with near-equal capacitor terminal voltages
+                Vdrive in 0 AC 1 37
+                Cseries %s 1000
+                Rload out 0 1000
+                .ac dec 1 50000 50000
+                .end
+                """.formatted(pins))));
+
+        Complex expected = polar(1, 37).divide(new Complex(resistance, -1 / (2 * Math.PI * frequency * capacitance)));
+        Complex capacitor = current(result, "Cseries", 0).scale(reversed ? -1 : 1);
+        Complex resistor = current(result, "Rload", 0);
+        assertEquals(0, capacitor.subtract(resistor).abs(), 1e-14, "KCL at the load");
+        assertEquals(0, current(result, "Vdrive", 0).add(capacitor).abs(), 1e-14, "KCL at the source");
+        assertEquals(0, expected.subtract(capacitor).abs(), expected.abs() * 1e-11);
+        close(expected.scale(resistance), voltage(result, "Rload", 1, 0));
+        assertEquals(4, result.complexUnknowns());
+    }
+
+
+    @Test
+    void solvesLowFrequencyCapacitorsWithGroundAndEqualTerminals() throws Exception {
+        var result = solve(roundTrip(spice("""
+                RC network with three capacitor branches
+                V1 in 0 AC 2m -25
+                Cseries in out 2n
+                Cshunt 0 out 3n
+                Cshort out out 5n
+                Rload out 0 1meg
+                .ac dec 1 20 20
+                .end
+                """)));
+
+        double omega = 2 * Math.PI * 20;
+        Complex shuntAdmittance = new Complex(1e-6, omega * 3e-9);
+        Complex loadImpedance = Complex.ONE.divide(shuntAdmittance);
+        Complex seriesImpedance = new Complex(0, -1 / (omega * 2e-9));
+        Complex expectedCurrent = polar(2e-3, -25).divide(seriesImpedance.add(loadImpedance));
+        Complex expectedVoltage = expectedCurrent.multiply(loadImpedance);
+        Complex series = current(result, "Cseries", 0);
+        Complex shunt = current(result, "Cshunt", 0);
+        Complex resistor = current(result, "Rload", 0);
+        assertEquals(0, expectedCurrent.subtract(series).abs(), 1e-20);
+        assertEquals(0, expectedVoltage.subtract(voltage(result, "Rload", 1, 0)).abs(), 1e-16);
+        assertEquals(0, expectedVoltage.multiply(new Complex(0, -omega * 3e-9)).subtract(shunt).abs(), 1e-20);
+        assertEquals(0, series.add(shunt).subtract(resistor).abs(), 1e-20);
+        assertEquals(0, current(result, "Cshort", 0).abs(), 0);
+        assertEquals(6, result.complexUnknowns());
+    }
+
+    @Test
+    void retainsSubnormalReactanceWhenFrequencyTimesCapacitanceOverflows() {
+        var result = solve(spice(equalNodeCapacitor("1e307", "1000")));
+        assertEquals(0, current(result, "C1", 0).abs(), 0);
+        assertEquals(3, result.complexUnknowns());
+    }
+
+    @Test
+    void retainsFiniteReactanceForSubnormalCapacitance() {
+        var result = solve(spice(equalNodeCapacitor("1e5", "1e-310")));
+        assertEquals(0, current(result, "C1", 0).abs(), 0);
+        assertEquals(3, result.complexUnknowns());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"1e300, 1e100", "1e-200, 1e-200"})
+    void rejectsUnrepresentableCapacitorReactance(String frequency, String capacitance) {
+        var model = spice(equalNodeCapacitor(frequency, capacitance));
+        var failure = assertThrows(IllegalArgumentException.class, () -> new AcExecutionPlan(model).execute());
+        assertTrue(failure.getMessage().contains("capacitor reactance is outside numeric range on C1"), failure::getMessage);
+    }
+
+    private static String equalNodeCapacitor(String frequency, String capacitance) {
+        return """
+                Equal terminal capacitor
+                V1 in 0 AC 0.5
+                C1 in in %s
+                .ac dec 1 %s %s
+                .end
+                """.formatted(capacitance, frequency, frequency);
+    }
+
+
     @Test
     void solvesSignedPhasorsAndCurrentsAfterRoundTrip() throws Exception {
         var model = roundTrip(spice(PHASOR));
@@ -49,7 +324,7 @@ class NativeAcTest {
         model.setSimulationDuration(-1);
         AcResult result = solve(model);
         assertEquals(4, result.frequencyHz().size());
-        assertEquals(6, result.complexUnknowns());
+        assertEquals(7, result.complexUnknowns());
         for (int sample = 0; sample < result.frequencyHz().size(); sample++) {
             double frequency = result.frequencyHz().get(sample);
             Complex vin = polar(2, 37);

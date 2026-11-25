@@ -31,6 +31,30 @@ class NativeAcHierarchyTest {
     private String changedSource;
     private java.util.function.UnaryOperator<String> edit;
 
+    @Test void evaluatesOneProfiledDefinitionInDistinctOccurrenceScopes() throws Exception {
+        change("leaf.asc", source -> source.replace("SYMBOL res 224 64 R0", "SYMBOL ind 224 64 R0")
+                .replace("InstName Rsh\nSYMATTR Value {shunt}",
+                        "InstName Lsh\nSYMATTR Value 1u\nSYMATTR SpiceLine Rser={series-1k}"));
+        fixture();
+        var origin = AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C;
+        var model = roundTrip(new LtspiceImporter().convert(sources.resolve("root.asc"), sources, List.of(sources), origin));
+        assertEquals(2, model.getAcProvenance().memberSha256().size());
+        assertEquals(2, model.getAcProvenance().definitionSourceSha256().size());
+        var result = solve(model);
+        for (int occurrence = 1; occurrence <= 2; occurrence++) {
+            String instance = "X" + occurrence + ":Xleaf:Lsh";
+            Complex impedance = voltage(result, instance, 1, 0).subtract(voltage(result, instance, 2, 0))
+                    .divide(current(result, instance, 0));
+            assertEquals(occurrence == 1 ? 0 : 3000, impedance.real(), 1e-8);
+            assertEquals(2 * Math.PI * result.frequencyHz().getFirst() * 1e-6, impedance.imaginary(), 1e-10);
+        }
+        var settings = model.getAcSettings();
+        model.setAcSettings(new AcDocumentSettings(settings.sweep(),
+                List.of(new ParameterDefinition("first", "990")), settings.analysisId()));
+        var preparation = new CircuitPreparation();
+        assertFalse(preparation.prepare(preparation.capture(model), PreparationRequest.defaults()).report().readyForHeadless());
+    }
+
     @Test void resolvesNestedParametersAndOrderedSignedPortsAfterNativeRoundTrip() throws Exception {
         CircuitModel imported = fixture();
         assertTrue(imported.getConversionIssues().isEmpty(), imported.getConversionIssues().toString());
@@ -264,7 +288,7 @@ class NativeAcHierarchyTest {
 
     private CircuitModel fixture() throws Exception {
         for (String name : List.of("leaf.asc", "leaf.asy", "wrapper.asc", "wrapper.asy", "root.asc",
-                "res.asy", "cap.asy", "voltage.asy")) {
+                "res.asy", "cap.asy", "voltage.asy", "ind.asy")) {
             String text = fixtureText(name);
             Files.writeString(sources.resolve(name), name.equals(changedSource) ? edit.apply(text) : text,
                     java.nio.file.StandardOpenOption.CREATE_NEW);

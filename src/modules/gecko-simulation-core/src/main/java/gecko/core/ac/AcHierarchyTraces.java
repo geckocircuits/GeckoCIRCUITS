@@ -27,9 +27,13 @@ final class AcHierarchyTraces {
         this.hierarchy = hierarchy;
     }
 
-    void addPrimitive(CircuitTopology.TerminalIdentity terminal, List<String> path, String key, String name, int order) {
-        members.put(terminal, new AcResult.SourceMember(path, key, name, order, AcResult.TerminalKind.PRIMITIVE));
+    void addPrimitive(CircuitTopology.TerminalIdentity terminal, AcResult.SourceMember source) {
+        members.put(terminal, source);
     }
+
+    AcResult.SourceMember positive(int branch) { return branches.get(branch).positive(); }
+
+    AcResult.SourceMember negative(int branch) { return branches.get(branch).negative(); }
 
     void addBranch(CircuitTopology.TerminalIdentity positive, CircuitTopology.TerminalIdentity negative) {
         var branch = new Branch(members.get(positive), members.get(negative));
@@ -116,7 +120,7 @@ final class AcHierarchyTraces {
         return immutable;
     }
 
-    private List<AcResult.SourceMember> sourceMembers(List<CircuitTopology.TerminalIdentity> terminals) {
+    List<AcResult.SourceMember> sourceMembers(List<CircuitTopology.TerminalIdentity> terminals) {
         return terminals.stream().map(members::get).filter(java.util.Objects::nonNull).toList();
     }
 }

@@ -1,6 +1,7 @@
 package gecko.core.io.importer;
 
 import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcInputOrigin;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.ac.AcSweep;
 import gecko.core.ac.ParameterDefinition;
@@ -29,11 +30,12 @@ public final class SpiceImporter {
     private static final Pattern ASSIGNMENT = Pattern.compile("([a-zA-Z_][a-zA-Z_0-9]*)\\s*=\\s*(\\{[^}]*}|[^\\s,=]+)");
 
     public CircuitModel convert(String source, String sourceName) {
-        return convert(sourceName, source.hashCode(), lines(source), new LinkedHashMap<>(), Map.of());
+        return convert(sourceName, source.hashCode(), lines(source), new LinkedHashMap<>(), Map.of(),
+                AcInputOrigin.PORTABLE_CIR);
     }
 
     CircuitModel convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
-                         Map<String, ComponentData> placements) {
+                         Map<String, ComponentData> placements, AcInputOrigin origin) {
         var model = new CircuitModel();
         model.setFilePath(sourceName);
         model.setFileVersion(202);
@@ -59,6 +61,8 @@ public final class SpiceImporter {
                 }
             }
             if (directive.equals(".model")) {
+                if (origin.tested()) issue(model, line, "UNSUPPORTED_ASC_PROFILE", directive,
+                        "The selected ASC profile requires linear components without models.");
                 String[] fields = line.text().split("\\s+", 3);
                 if (fields.length == 3) definitions.put(fields[1].toLowerCase(Locale.ROOT), fields[2]);
                 else issue(model, line, "MALFORMED_MODEL", "", "The model definition is incomplete.");
@@ -111,7 +115,7 @@ public final class SpiceImporter {
             String text = line.text();
             String directive = keyword(text);
             if (List.of(".param", ".model", ".tran", ".ac").contains(directive)) continue;
-            if (ac && text.strip().equalsIgnoreCase(".options logparams")) continue;
+            if (ac && !origin.tested() && text.strip().equalsIgnoreCase(".options logparams")) continue;
             if (text.startsWith(".")) {
                 issue(model, line, "UNSUPPORTED_DIRECTIVE", directive, "The analysis or directive is unsupported.");
                 continue;
@@ -131,6 +135,9 @@ public final class SpiceImporter {
                     continue;
                 }
                 char kind = descriptor.designator();
+                if (origin.tested() && "RLCVIE".indexOf(kind) < 0) {
+                    throw new IllegalArgumentException("The selected ASC profile requires a supported linear component.");
+                }
                 String positive = node(nodes, fields[1]), negative = node(nodes, fields[2]);
                 int type = descriptor.type();
                 int index = model.getCircuitComponents().size();
@@ -148,10 +155,7 @@ public final class SpiceImporter {
                         double[] values = new double[type == 1 ? 3 : type == 2 ? 5 : 11];
                         values[0] = v;
                         if (ac && kind == 'L') {
-                            if (args.length != 2 || !args[1].toLowerCase(Locale.ROOT).startsWith("rser=")) {
-                                throw new IllegalArgumentException("Require explicit series resistance on an AC inductor.");
-                            }
-                            law = new AcComponent.Inductance(args[0], args[1].substring(5));
+                            law = acInductance(fields[3], args, origin);
                         } else if (args.length > 1) {
                             if (args.length > 2 || kind == 'R' || !args[1].toLowerCase(Locale.ROOT).startsWith("ic=")) {
                                 throw new IllegalArgumentException("Unsupported passive component attributes.");
@@ -229,6 +233,18 @@ public final class SpiceImporter {
             model.getControlComponents().get(index).getPosition()[1] = 5 + circuitRows * 14 + index / 6 * 12;
         }
         return model;
+    }
+
+    private static AcComponent.Inductance acInductance(String value, String[] args, AcInputOrigin origin) {
+        if (origin.tested() && args.length == 1) {
+            return new AcComponent.Inductance(args[0], new AcComponent.ImportedDefault(), origin);
+        }
+        String attributes = value.strip().substring(args[0].length()).strip();
+        var match = Pattern.compile("(?is)^rser\\s*=\\s*(.+)$").matcher(attributes);
+        if (!match.matches() || arguments(match.group(1)).length != 1 || match.group(1).contains("=")) {
+            throw new IllegalArgumentException("Require one explicit Rser expression and no other inductor attributes.");
+        }
+        return new AcComponent.Inductance(args[0], new AcComponent.ExplicitResistance(match.group(1)), origin);
     }
 
     private static void assignPorts(ComponentData component, SpicePorts descriptor, List<String> labels) {

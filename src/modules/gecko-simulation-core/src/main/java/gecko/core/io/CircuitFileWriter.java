@@ -33,6 +33,7 @@ public final class CircuitFileWriter {
         }
         var identifiers = identifiers(model);
         var hierarchy = new HierarchyIndex(model);
+        AcOriginMembership.validate(model, hierarchy);
         var scopes = hierarchy.parameterScopes(model.getAcSettings() == null ? Map.of() : model.getAcSettings().parameterMap());
         var text = new StringBuilder();
         int ordinal = 0;

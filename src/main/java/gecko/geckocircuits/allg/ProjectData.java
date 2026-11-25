@@ -159,11 +159,25 @@ public final class ProjectData implements Serializable {
     }
 
     private static void requireFlatImportFields(TokenMap tokens) {
+        if (tokens.containsToken(AcMetadataCodec.COMPONENT)) {
+            requireComponentMergeLaw(AcMetadataCodec.decodeComponent(tokens.readDataLine(AcMetadataCodec.COMPONENT, "")));
+        }
+        if (tokens.containsToken(AcMetadataCodec.PROVENANCE) && AcMetadataCodec.decodeProvenance(
+                tokens.readDataLine(AcMetadataCodec.PROVENANCE, "")).origin().tested()) {
+            throw new IllegalArgumentException("Open the profiled ASC as a separate circuit document.");
+        }
         if (tokens.containsToken(gecko.core.io.HierarchyMetadataCodec.DOCUMENT)
                 || tokens.containsToken(gecko.core.io.HierarchyMetadataCodec.MEMBER)
                 || tokens.containsToken(gecko.core.io.HierarchyMetadataCodec.OCCURRENCE)
                 || tokens.containsToken(gecko.core.io.HierarchyMetadataCodec.BOUNDARY_LOCATION)) {
             throw new IllegalArgumentException("Open the imported hierarchy as a separate circuit document.");
+        }
+    }
+
+    public static void requireComponentMergeLaw(gecko.core.ac.AcComponent component) {
+        if (component != null && component.law() instanceof gecko.core.ac.AcComponent.Inductance law
+                && law.origin().tested()) {
+            throw new IllegalArgumentException("Open the profiled ASC as a separate circuit document.");
         }
     }
 

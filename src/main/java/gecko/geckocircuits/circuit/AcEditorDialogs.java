@@ -106,13 +106,32 @@ public final class AcEditorDialogs {
             }
             case AcComponent.Inductance law -> {
                 var inductance = addField(fields, "Inductance (H)", law.expression());
-                var resistance = addField(fields, "Series resistance (Ω)", law.seriesResistance());
+                String expression = law.resistance() instanceof AcComponent.ExplicitResistance explicit
+                        ? explicit.expression() : "";
+                var resistance = addField(fields, "Series resistance (Ω)", expression);
+                var restore = new JCheckBox("Use imported default", law.resistance() instanceof AcComponent.ImportedDefault);
+                if (law.origin().tested()) {
+                    fields.add(restore);
+                    fields.add(new JLabel("0.001 Ω"));
+                    resistance.setEnabled(!restore.isSelected());
+                    restore.addActionListener(event -> resistance.setEnabled(!restore.isSelected()));
+                }
+                var effective = new JLabel();
+                try {
+                    var evaluated = law.evaluate(parameters);
+                    effective.setText(evaluated.ohms() + " Ω (" + evaluated.mode().label() + ")");
+                } catch (IllegalArgumentException error) {
+                    effective.setText("Invalid value");
+                    effective.setToolTipText(error.getMessage());
+                }
+                fields.add(new JLabel("Effective series resistance"));
+                fields.add(effective);
                 updatedLaw = () -> {
-                    if (SpiceValue.evaluate(inductance.getText(), parameters) <= 0
-                            || SpiceValue.evaluate(resistance.getText(), parameters) <= 0) {
-                        throw new IllegalArgumentException("Require positive inductance and series resistance.");
-                    }
-                    return new AcComponent.Inductance(inductance.getText().strip(), resistance.getText().strip());
+                    AcComponent.Resistance chosen = restore.isSelected() ? new AcComponent.ImportedDefault()
+                            : new AcComponent.ExplicitResistance(resistance.getText().strip());
+                    var updated = new AcComponent.Inductance(inductance.getText().strip(), chosen, law.origin());
+                    updated.evaluate(parameters);
+                    return updated;
                 };
             }
             case AcComponent.Current law -> {

@@ -1,5 +1,8 @@
 package gecko.core.io.importer;
 
+import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcInputOrigin;
+import gecko.core.io.AcMetadataCodec;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitModel;
@@ -25,6 +28,93 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LtspiceImporterTest {
     @TempDir Path directory;
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "SYMATTR SpiceLine Rser=0\\nSYMATTR SpiceLine Rser=1m",
+        "SYMATTR SpiceLine Rser=0\\nSYMATTR Value2 Rser=1m",
+        "SYMATTR SpiceLine Rpar=1k",
+        "SYMATTR SpiceLine Cpar=1p",
+        "SYMATTR ModelFile model.lib",
+        "SYMATTR SpiceModel model",
+        "SYMATTR Value2 Flux=I",
+        "TEXT 0 264 Left 2 !.option temp=85",
+        "TEXT 0 264 Left 2 !.options logparams",
+        "TEXT 0 264 Left 2 !.model test IND",
+        "TEXT 0 264 Left 2 !K1 L1 L2 .99",
+        "SYMBOL diode 320 0 R0\\nSYMATTR InstName D1\\nSYMATTR Value D"
+    })
+    void rejectsProfiledInductorsWithUnsupportedElectricalInput(String extra) throws Exception {
+        var input = writeProfileFixture(extra.replace("\\n", "\n"));
+        assertThrows(IllegalArgumentException.class, () -> new LtspiceImporter().convert(input, directory, List.of(),
+                AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C));
+    }
+
+    @Test void rejectsProfileOnPortableOrWrongVersionAndKeepsUnselectedAsc() throws Exception {
+        var input = writeProfileFixture("");
+        var converted = new LtspiceImporter().convert(input, directory);
+        assertFalse(converted.getConversionIssues().isEmpty());
+        assertEquals(AcInputOrigin.UNSELECTED_ASC, converted.getAcProvenance().origin());
+        var portable = Files.writeString(directory.resolve("portable.cir"), ".ac dec 1 80 80\nL1 n 0 1u");
+        var bytes = new ByteArrayOutputStream();
+        try (var output = new PrintStream(bytes)) {
+            Path target = directory.resolve("no-import.ipes");
+            assertEquals(1, Main.run(new String[]{portable.toString(), target.toString(), "--symbols",
+                    directory.toString(), "--profile", AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C.profileId()}, output, output));
+            assertEquals(1, Main.run(new String[]{input.toString(), target.toString(), "--symbols", directory.toString(),
+                    "--profile", "ltspice-26.1.1-normal-27c-v2"}, output, output));
+            assertFalse(Files.exists(target));
+            assertEquals(0, Main.run(new String[]{input.toString(), target.toString(), "--symbols", directory.toString(),
+                    "--profile", AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C.profileId()}, output, output), bytes.toString());
+            assertTrue(new CircuitFileParser().parse(target.toString()).getAcProvenance().origin().tested());
+        }
+    }
+
+    @Test void keepsLegacyAliasOffsetAndRejectsMalformedProfiledRecords() {
+        var origin = AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C;
+        var legacy = new AcComponent("L1", List.of("A", "B", "extra"), false, new AcComponent.Inductance("1u", "4m"));
+        assertEquals(legacy, AcMetadataCodec.decodeComponent(AcMetadataCodec.encode(legacy)));
+        var valid = new AcComponent("L1", List.of("A", "B"), false, new AcComponent.Inductance("1u",
+                new AcComponent.ImportedDefault(), origin));
+        var fields = AcMetadataCodec.encode(valid).split("\\.", -1);
+        for (String[] mutation : List.of(
+                new String[]{"4", "INDUCTANCE_ORIGIN_V2"},
+                new String[]{"7", "unknown-profile"},
+                new String[]{"8", "0".repeat(64)},
+                new String[]{"9", "UNKNOWN"},
+                new String[]{"9", "EXPLICIT"},
+                new String[]{"10", "1m"})) {
+            String[] invalid = fields.clone();
+            invalid[Integer.parseInt(mutation[0])] = java.util.Base64.getUrlEncoder().withoutPadding()
+                    .encodeToString(mutation[1].getBytes(StandardCharsets.UTF_8));
+            assertThrows(IllegalArgumentException.class, () -> AcMetadataCodec.decodeComponent(String.join(".", invalid)));
+        }
+        assertThrows(IllegalArgumentException.class,
+                () -> AcMetadataCodec.decodeComponent(AcMetadataCodec.encode(valid) + "."));
+    }
+
+    private Path writeProfileFixture(String extra) throws Exception {
+        for (String name : List.of("voltage", "ind")) {
+            try (var resource = getClass().getResourceAsStream("/ltspice-hierarchy/" + name + ".asy")) {
+                Files.copy(java.util.Objects.requireNonNull(resource), directory.resolve(name + ".asy"));
+            }
+        }
+        return Files.writeString(directory.resolve("inductor.asc"), """
+                Version 4
+                SHEET 1 640 480
+                WIRE 0 16 160 16
+                FLAG 0 96 0
+                FLAG 160 96 0
+                SYMBOL voltage 0 0 R0
+                SYMATTR InstName V1
+                SYMATTR Value AC 1
+                SYMBOL ind 144 0 R0
+                SYMATTR InstName L1
+                SYMATTR Value 1u
+                %s
+                TEXT 32 180 Left 2 !.ac dec 1 80 80
+                """.formatted(extra));
+    }
 
     @Test void importsTheSameRcWaveformAsTheSpiceNetlistAndKeepsItsLayout() throws Exception {
         var schematic = convert(fixture("rc.asc"));
