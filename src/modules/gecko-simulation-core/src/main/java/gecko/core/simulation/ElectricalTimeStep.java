@@ -1141,6 +1141,9 @@ final class ElectricalTimeStep {
         @Override public int getVoltageSourceNumber(int index) { return source.getVoltageSourceNumber(index); }
         @Override public double getSimulationTime() { return source.getSimulationTime(); }
         @Override public int getControlElementIndex(int index) { return source.getControlElementIndex(index); }
+        @Override public gecko.core.circuit.waveform.PiecewiseLinearWaveform getPwlWaveform(int index) {
+            return source.getPwlWaveform(index);
+        }
         @Override public java.util.List<gecko.core.circuit.netlist.MutualCouplingRegistry.Coupling> getAllCouplings() {
             return source.getAllCouplings();
         }

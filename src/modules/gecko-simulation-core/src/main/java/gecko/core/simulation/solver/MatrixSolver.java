@@ -625,6 +625,10 @@ public class MatrixSolver {
                     double offset;
 
                     switch (sourceType) {
+                        case SourceType.PWL_NEW:
+                        case SourceType.PWL:
+                            bContribution = -netlist.getPwlWaveform(elementIdx).calculate(time, dt);
+                            break;
                         case SourceType.QUELLE_DC_NEW:
                         case SourceType.QUELLE_DC:
                             bContribution = -params[1];
@@ -665,6 +669,10 @@ public class MatrixSolver {
                     int sourceType = (int) params[0];
 
                     switch (sourceType) {
+                        case SourceType.PWL_NEW:
+                        case SourceType.PWL:
+                            bVector[voltageSourceIdx] += netlist.getPwlWaveform(elementIdx).calculate(time, dt);
+                            break;
                         case SourceType.QUELLE_DC_NEW:
                         case SourceType.QUELLE_DC:
                             bVector[voltageSourceIdx] += params[1];

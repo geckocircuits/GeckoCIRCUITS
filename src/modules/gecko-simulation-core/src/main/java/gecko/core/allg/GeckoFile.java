@@ -63,6 +63,8 @@ public final class GeckoFile {
      * model blocks which use this file
      */
     private final Set<Long> _usageList = new LinkedHashSet<Long>();
+    private boolean _numericOwnerIds = true;
+    private boolean _explicitInternalStorage = true;
     private final String _extension;
     private static final int HASH_CONST_BOUND = 10164;
     private static final Random RANDOM = new Random();
@@ -107,6 +109,13 @@ public final class GeckoFile {
      */
     public GeckoFile(File fileName, final String modelFileName, final byte[] contents) throws FileNotFoundException {
         this(fileName, modelFileName, contents, null);
+    }
+
+    public static GeckoFile createEmbeddedPwl(File fileName, String modelFileName, byte[] contents)
+            throws FileNotFoundException {
+        var file = new GeckoFile(fileName, modelFileName, contents);
+        file._sourceOwnedPwl = true;
+        return file;
     }
 
     /**
@@ -204,19 +213,56 @@ public final class GeckoFile {
     /** Reconstructs a resource relative to the circuit file that contains its saved data. */
     public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, final String modelFileName,
                      ExternalStorageConverter converter) throws FileNotFoundException {
+        this(tokenMap, allComponents, modelFileName, converter, false);
+    }
+
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, final String modelFileName,
+                     ExternalStorageConverter converter, boolean pwlResource) throws FileNotFoundException {
+        this(tokenMap, allComponents, modelFileName, converter,
+                pwlResource ? gecko.core.io.SavedPwlResources.embedded(tokenMap.getLines()) : null);
+    }
+
+    private boolean _sourceOwnedPwl;
+
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, final String modelFileName,
+                     ExternalStorageConverter converter, gecko.core.io.SavedPwlResources.Embedded pwl)
+            throws FileNotFoundException {
+        _explicitInternalStorage = tokenMap.containsToken("isExternal")
+                && tokenMap.getLineString("isExternal", "").strip().matches("isExternal\\s+0")
+                && java.util.Arrays.stream(tokenMap.getLines()).map(String::stripLeading)
+                        .filter(row -> row.matches("isExternal(?:\\s.*)?")).count() == 1;
         this._converter = converter != null ? converter : new DefaultExternalStorageConverter();
         final String savedSeparator = tokenMap.readDataLine("fileSep", File.separator);
         _separator = File.separator;
-        _hash = tokenMap.readDataLine("hashValue", -1);
+        _hash = pwl == null ? tokenMap.readDataLine("hashValue", -1L) : pwl.resourceId();
 
 
-        setStorageStrategy(StorageType.fromOrdinal(tokenMap.readDataLine(
-                "isExternal", StorageType.EXTERNAL.ordinal())));
+        setStorageStrategy(pwl == null ? StorageType.fromOrdinal(tokenMap.readDataLine(
+                "isExternal", StorageType.EXTERNAL.ordinal())) : StorageType.INTERNAL);
 
         _absolutePath = tokenMap.readDataLine("absPath", _absolutePath).replace(savedSeparator, _separator);
         _relativePath = tokenMap.readDataLine("relPath", _relativePath).replace(savedSeparator, _separator);
 
+        if (pwl != null) {
+            _explicitInternalStorage = true;
+            _sourceOwnedPwl = true;
+            _numericOwnerIds = true;
+            _usageList.add(pwl.ownerId());
+            _fileContents = pwl.bytes().clone();
+            _extension = ".pwl";
+            _file = new File(_absolutePath);
+            return;
+        }
+
         String[] savedOwners = new String[0];
+        int numericOwnerLines = 0;
+        for (String row : tokenMap.getLines()) {
+            if (row.stripLeading().matches("usageList\\[\\](?:\\s.*)?")) {
+                numericOwnerLines++;
+            }
+        }
+        _numericOwnerIds = numericOwnerLines == 1
+                && tokenMap.getLineString("usageList[]", "").strip().matches("usageList\\[\\]\\s+/?-?[0-9]+");
         if (tokenMap.containsToken("usageList[]")) {
             savedOwners = tokenMap.readDataLine("usageList[]", savedOwners);
         } else {
@@ -226,8 +272,9 @@ public final class GeckoFile {
         for (String name : savedOwners) {
             try {
                 long identifier = Long.parseLong(name.strip());
-                _usageList.add(identifier);
+                _numericOwnerIds &= _usageList.add(identifier);
             } catch (NumberFormatException ex) { // this is due to a version change from 1.61 to 1.62
+                _numericOwnerIds = false;
                 for (Object comp : allComponents) {
                     if (comp instanceof ComponentIdentifiable) {
                         ComponentIdentifiable block = (ComponentIdentifiable) comp;
@@ -396,6 +443,10 @@ public final class GeckoFile {
         return _hash;
     }
 
+    public boolean hasExplicitInternalStorage() {
+        return _explicitInternalStorage && getStorageType() == StorageType.INTERNAL;
+    }
+
     /**
      * function which sets a particular model block as a user of this file
      * CAREFUL - probably should be called along with removeUser when any block
@@ -410,6 +461,10 @@ public final class GeckoFile {
     /** Returns the saved identifiers of the components that use this file. */
     public List<Long> getOwnerIds() {
         return List.copyOf(_usageList);
+    }
+
+    public boolean isSoleNumericOwner(final long ownerId) {
+        return _numericOwnerIds && _usageList.size() == 1 && _usageList.contains(ownerId);
     }
 
     /**
@@ -450,15 +505,20 @@ public final class GeckoFile {
         SerializationUtils.appendAsString(ascii.append("\nrelPath"), path);
         SerializationUtils.appendAsString(ascii.append("\nfileSep"), _separator);
         SerializationUtils.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
-
-        ascii.append("\n<usageList>");
-        for (Long userID : _usageList) {
-            ascii.append('\n');
-            ascii.append(userID);
-            //System.out.println("user: " + user);
+        if (_sourceOwnedPwl) {
+            ascii.append("\nusageList[] ");
+            for (Long userID : _usageList) {
+                ascii.append('/').append(userID);
+            }
+        } else {
+            SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
+            ascii.append("\n<usageList>");
+            for (Long userID : _usageList) {
+                ascii.append('\n');
+                ascii.append(userID);
+            }
+            ascii.append("\n<\\usageList>");
         }
-        ascii.append("\n<\\usageList>");
 
         if (_storageStrategy.getStorageType() == StorageType.INTERNAL) {
             SerializationUtils.appendAsString(ascii.append("\nfileContents[]"), _fileContents);

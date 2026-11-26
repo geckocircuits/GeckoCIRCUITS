@@ -155,14 +155,16 @@ class NativeAcHierarchyTest {
         assertArrayEquals(beforeBytes, new CircuitFileWriter().write(model));
     }
 
-    @Test void cliReportsChildWaveformResourcesWithTheirOccurrencePaths() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"PULSE(0 1 0 1u 1u 1m 2m)", "PWL(0 0 1m 1)"})
+    void cliReportsChildWaveformResourcesWithTheirOccurrencePaths(String waveform) throws Exception {
         change("root.asc", source -> source.replace("Value AC 1", "Value 1")
                 .replace(".ac dec 2 10 100k", ".tran 0 20m 0 100u"));
         change("leaf.asc", source -> source + """
                 SYMBOL voltage 432 64 R0
                 SYMATTR InstName Vchild
-                SYMATTR Value PULSE(0 1 0 1u 1u 1m 2m)
-                """);
+                SYMATTR Value %s
+                """.formatted(waveform));
         fixture();
         var target = sources.resolve("partial.ipes");
         var output = new ByteArrayOutputStream();

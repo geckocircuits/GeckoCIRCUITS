@@ -13,7 +13,9 @@
  */
 package gecko.core.circuit.netlist;
 
+import gecko.core.circuit.CircuitSourceType;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import gecko.core.circuit.matrix.StamperRegistry;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitTopology;
@@ -216,6 +218,7 @@ public class NetlistBuilder {
                             ? 0L : component.getSavedBlock().parentSheetIdentifier()).distinct().count() == 1;
             CircuitNetlist netlist = buildFromComponentsWithGroups(allComponents, terminalGroups, referenceNodes,
                     legacyLabelOnly, topology.connectionGroupOrder());
+            bindElectricalSourceWaveforms(model, netlist, allComponents);
             registerMagneticCouplings(netlist, allComponents, couplingComponents);
             return netlist;
         } else {
@@ -362,6 +365,39 @@ public class NetlistBuilder {
         netlist.setComponentNameToIndex(nameToIndex);
         if (wireReference) netlist.setNumericalNodeOrder(order);
         return netlist;
+    }
+
+    private static void bindElectricalSourceWaveforms(CircuitModel model, CircuitNetlist netlist,
+            List<CircuitModel.ComponentData> components) {
+        Set<Long> assigned = new HashSet<>();
+        for (int i = 0; i < components.size(); i++) {
+            CircuitTypCore type = netlist.getType(i);
+            if (type != CircuitTypCore.LK_U && type != CircuitTypCore.LK_I) continue;
+            var component = components.get(i);
+            try {
+                double mode = netlist.getParameter(i)[0];
+                if (mode != (int) mode) throw new IllegalArgumentException("Invalid electrical source mode " + mode);
+                if (CircuitSourceType.getFromID((int) mode) != CircuitSourceType.PWL) continue;
+                String resourceToken = component.getImportTokens().get(PiecewiseLinearWaveform.RESOURCE_ID_TOKEN);
+                if (resourceToken == null) throw new IllegalArgumentException("Missing PWL resource identifier.");
+                long resourceId = Long.parseLong(resourceToken);
+                var resource = model.getResources().get(resourceId);
+                var failure = model.getResourceFailures().get(resourceId);
+                if (failure != null) throw new IllegalArgumentException(failure.message());
+                if (resourceId == 0 || !resourceToken.equals(Long.toString(resourceId))
+                        || resource == null || resource.id() != resourceId || !assigned.add(resourceId)) {
+                    throw new IllegalArgumentException("Missing or ambiguous PWL resource " + resourceId);
+                }
+                Object owner = component.getParameters().get("uniqueObjectIdentifier");
+                if (!(owner instanceof Long ownerId) || !resource.ownerIds().equals(List.of(ownerId))
+                        || !model.hasUniqueComponentIdentifier(ownerId)) {
+                    throw new IllegalArgumentException("The PWL resource requires the numeric source identifier as its sole owner.");
+                }
+                netlist.setPwlWaveform(i, PiecewiseLinearWaveform.fromBytes(resource.bytes()));
+            } catch (IllegalArgumentException error) {
+                throw new IllegalArgumentException("Source '" + component.getName() + "': " + error.getMessage(), error);
+            }
+        }
     }
 
     private static Object nodeKey(CircuitTopology.Group group, boolean legacyLabelOnly) {

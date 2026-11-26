@@ -37,7 +37,7 @@ import java.util.zip.GZIPInputStream;
  * }</pre>
  */
 public class CircuitFileParser {
-    enum ResourceAccess { SUPPLIED_BYTES_ONLY, LOCAL_FILES }
+    enum ResourceAccess { SUPPLIED_BYTES_ONLY, LOCAL_FILES, HIERARCHY_ONLY }
 
     private static final String NIX = "NIX_NIX_NIX";
     private static final String SEPARATOR_ASCII_STRINGARRAY = "/";
@@ -70,6 +70,12 @@ public class CircuitFileParser {
      */
     public CircuitModel parse(BufferedReader reader, String sourceName) throws IOException, CircuitParseException {
         return parse(reader, sourceName, ResourceAccess.SUPPLIED_BYTES_ONLY);
+    }
+
+    /** Inspects editor geometry before the document resources are assembled. */
+    public HierarchyIndex inspectHierarchy(BufferedReader reader, String sourceName)
+            throws IOException, CircuitParseException {
+        return new HierarchyIndex(parse(reader, sourceName, ResourceAccess.HIERARCHY_ONLY));
     }
 
     private CircuitModel parse(BufferedReader reader, String sourceName, ResourceAccess resourceAccess)
@@ -177,7 +183,13 @@ public class CircuitFileParser {
             throw new CircuitParseException(filePath + ": " + error.getMessage(), error);
         }
         inspectUnrecognizedSimulationBlocks(simulationLines, model, hierarchy);
-        CircuitResourceReader.retain(model, lines, simulationLines, resourceAccess);
+        try {
+            if (resourceAccess != ResourceAccess.HIERARCHY_ONLY) {
+                CircuitResourceReader.retain(model, lines, simulationLines, resourceAccess);
+            }
+        } catch (IllegalArgumentException error) {
+            throw new CircuitParseException(filePath + ": " + error.getMessage(), error);
+        }
 
         // Validate pre-simulation time step
         if (model.getPreSimulationTimeStep() <= 0) {

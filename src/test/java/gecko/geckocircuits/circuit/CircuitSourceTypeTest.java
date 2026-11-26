@@ -26,7 +26,7 @@ public class CircuitSourceTypeTest {
 
     @Test
     public void testEnumValuesExist() {
-        assertEquals(7, CircuitSourceType.values().length);
+        assertEquals(8, CircuitSourceType.values().length);
         assertNotNull(CircuitSourceType.QUELLE_DC);
         assertNotNull(CircuitSourceType.QUELLE_SIN);
         assertNotNull(CircuitSourceType.QUELLE_SIGNALGESTEUERT);
@@ -41,6 +41,7 @@ public class CircuitSourceTypeTest {
         assertEquals(CircuitSourceType.QUELLE_DC, CircuitSourceType.getFromID(401));
         assertEquals(CircuitSourceType.QUELLE_SIN, CircuitSourceType.getFromID(402));
         assertEquals(CircuitSourceType.QUELLE_SIGNALGESTEUERT, CircuitSourceType.getFromID(400));
+        assertEquals(CircuitSourceType.PWL, CircuitSourceType.getFromID(403));
     }
 
     @Test
@@ -48,6 +49,7 @@ public class CircuitSourceTypeTest {
         assertEquals(CircuitSourceType.QUELLE_DC, CircuitSourceType.getFromID(0));
         assertEquals(CircuitSourceType.QUELLE_SIN, CircuitSourceType.getFromID(1));
         assertEquals(CircuitSourceType.QUELLE_SIGNALGESTEUERT, CircuitSourceType.getFromID(2));
+        assertEquals(CircuitSourceType.PWL, CircuitSourceType.getFromID(7));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package gecko.core.preparation;
 
+import gecko.core.circuit.SourceType;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.ImportIssue;
 import gecko.core.simulation.ControlBlockDescriptor;
@@ -46,7 +47,8 @@ public final class CircuitConfiguration {
 
 
     enum Rule {
-        FINITE, NON_NEGATIVE, POSITIVE, BOOLEAN, INTEGER, UNIT_INTERVAL, SIGNED_UNIT_INTERVAL, SOURCE_MODE, SIGNAL_MODE;
+        FINITE, NON_NEGATIVE, POSITIVE, BOOLEAN, INTEGER, UNIT_INTERVAL, SIGNED_UNIT_INTERVAL,
+        SOURCE_MODE, ELECTRICAL_SOURCE_MODE, SIGNAL_MODE;
         boolean accepts(double value) {
             return Double.isFinite(value) && switch (this) {
                 case FINITE -> true;
@@ -57,6 +59,8 @@ public final class CircuitConfiguration {
                 case UNIT_INTERVAL -> value >= 0 && value <= 1;
                 case SIGNED_UNIT_INTERVAL -> value >= -1 && value <= 1;
                 case SOURCE_MODE -> value == Math.rint(value) && (value >= 0 && value <= 6 || value >= 396 && value <= 402);
+                case ELECTRICAL_SOURCE_MODE -> SOURCE_MODE.accepts(value)
+                        || value == SourceType.PWL_NEW || value == SourceType.PWL;
                 case SIGNAL_MODE -> value == Math.rint(value) && (value >= 0 && value <= 4 || value >= 400 && value <= 406);
             };
         }
@@ -70,7 +74,8 @@ public final class CircuitConfiguration {
 
     static List<Field> fields(Component component) {
         if (component.domain().equals("LK")) {
-            return switch (component.data().getType()) {
+            int type = component.data().getType();
+            return switch (type) {
                 case 1, 24, 46 -> List.of(new Field("resistance", 0, Rule.NON_NEGATIVE));
                 case 2, 12 -> List.of(new Field("inductance", 0, component.data().getType() == 12 ? Rule.POSITIVE : Rule.NON_NEGATIVE),
                         new Field("initialCurrent", 1, Rule.FINITE));
@@ -80,7 +85,8 @@ public final class CircuitConfiguration {
                 case 28 -> List.of(new Field("onResistance", 2, Rule.POSITIVE), new Field("offResistance", 3, Rule.POSITIVE));
                 case 7 -> List.of(new Field("onResistance", 1, Rule.POSITIVE), new Field("offResistance", 2, Rule.POSITIVE));
                 case 9 -> List.of(new Field("couplingCoefficient", 0, Rule.SIGNED_UNIT_INTERVAL, "k"));
-                case 4, 5, 26, 44, 45 -> List.of(new Field("sourceType", 0, Rule.SOURCE_MODE), new Field("dcValue", 1, Rule.FINITE),
+                case 4, 5, 26, 44, 45 -> List.of(new Field("sourceType", 0,
+                        type == 4 || type == 5 ? Rule.ELECTRICAL_SOURCE_MODE : Rule.SOURCE_MODE), new Field("dcValue", 1, Rule.FINITE),
                         new Field("frequency", 2, Rule.NON_NEGATIVE), new Field("offset", 3, Rule.FINITE),
                         new Field("phaseDegrees", 4, Rule.FINITE, "phase"), new Field("amplitude", 20, Rule.FINITE));
                 default -> List.of();
@@ -292,10 +298,12 @@ public final class CircuitConfiguration {
             if (isSource(component)) {
                 double mode = component.data().getNumericParameters()[0];
                 // Signal control reaches LK voltage and current sources only (ControlCalculatorFactory source mappings).
-                boolean signal = (mode == 2 || mode == 400) && List.of(4, 5).contains(component.data().getType());
-                if (mode != 0 && mode != 1 && mode != 401 && mode != 402 && !signal) {
+                boolean electrical = List.of(4, 5).contains(component.data().getType());
+                boolean signal = (mode == 2 || mode == 400) && electrical;
+                boolean pwl = (mode == SourceType.PWL_NEW || mode == SourceType.PWL) && electrical;
+                if (mode != 0 && mode != 1 && mode != 401 && mode != 402 && !signal && !pwl) {
                     diagnostics.add(new Diagnostic("UNSUPPORTED_SOURCE_MODE", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
-                            "The headless engine requires a DC, sinusoidal or signal-controlled source", component.domain(),
+                            "The headless engine requires a supported independent or signal-controlled source.", component.domain(),
                             component.data().getName(), component.data().getName() + ".sourceType", component.data().getSourceLocation()));
                 }
             }

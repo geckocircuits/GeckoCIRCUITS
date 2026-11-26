@@ -19,6 +19,7 @@ import gecko.core.preparation.CircuitSnapshot;
 import gecko.geckocircuits.allg.GeckoFileManager;
 import gecko.geckocircuits.allg.OptimizerParameterData;
 import gecko.geckocircuits.allg.ProjectData;
+import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitSource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -81,7 +82,14 @@ public final class EditorCircuitCapture {
             throws IOException, CircuitFileParser.CircuitParseException {
         var ascii = new StringBuffer();
         var blocks = new ArrayList<AbstractBlockInterface>();
+        var pwlResources = new java.util.LinkedHashSet<GeckoFile>();
         for (var element : elements) {
+            if (element instanceof AbstractCircuitSource source && source.hasPwlConfiguration()) {
+                source.validatePwlOwner(elements);
+                source.validatePwlResource(files);
+                files._allAvailableFiles.stream()
+                        .filter(file -> source.referencesPwlResource(file.getHashValue())).forEach(pwlResources::add);
+            }
             ascii.append('\n').append(element.getExportImportCharacters()).append('\n');
             if (element instanceof AbstractBlockInterface block) {
                 block.exportForCapture(ascii, acSettings);
@@ -103,9 +111,16 @@ public final class EditorCircuitCapture {
         appendAc(ascii, acSettings, provenance);
         appendHierarchy(ascii, hierarchy);
         appendRootParameters(ascii, rootParameters);
+        if (!pwlResources.isEmpty()) {
+            ascii.append("\n<GeckoFileManager>");
+            pwlResources.forEach(file -> file.exportASCII(ascii));
+            ascii.append("\n<\\GeckoFileManager>");
+        }
         var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), sourceName);
         conversionIssues.forEach(model::addConversionIssue);
-        for (var file : files._allAvailableFiles) captureResource(model, file);
+        for (var file : files._allAvailableFiles) {
+            if (!pwlResources.contains(file)) captureResource(model, file);
+        }
         var ordinals = new HashMap<String, Integer>();
         for (var block : blocks) {
             String marker = block.getExportImportCharacters().trim();
@@ -137,8 +152,7 @@ public final class EditorCircuitCapture {
         appendHierarchy(ascii, hierarchy);
         appendRootParameters(ascii, rootParameters);
         try {
-            var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), "editor");
-            return new HierarchyIndex(model);
+            return new CircuitFileParser().inspectHierarchy(new BufferedReader(new StringReader(ascii.toString())), "editor");
         } catch (IOException | CircuitFileParser.CircuitParseException error) {
             throw new IllegalArgumentException(error.getMessage(), error);
         }

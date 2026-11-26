@@ -116,10 +116,17 @@ public final class DesktopSimulationController {
 
     boolean hasAsyncExecution() { return asyncExecution != null; }
 
+    void requireExplicitLegacySourceSupport() {
+        if (selectedBackend() == Backend.LEGACY) NetListContainer.requireLegacySourceSupport(editor);
+    }
+
+    private static Backend selectedBackend() {
+        return Backend.valueOf(System.getProperty("gecko.backend", "auto").trim().toUpperCase(Locale.ROOT));
+    }
+
     /** Initializes a script-owned core session without advancing its first step. */
     boolean initializeScript(SolverSettings settings, double dt, double end) throws Exception {
-        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "auto")
-                .trim().toUpperCase(Locale.ROOT));
+        Backend backend = selectedBackend();
         if (backend == Backend.LEGACY) return false;
         Route route = route(editor, settings);
         String circuit = route.circuit();
@@ -317,8 +324,7 @@ public final class DesktopSimulationController {
 
     /** Returns false when GUI execution must use the legacy backend. */
     boolean startAsync(SolverSettings settings) throws Exception {
-        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "auto")
-                .trim().toUpperCase(Locale.ROOT));
+        Backend backend = selectedBackend();
         if (backend == Backend.LEGACY) return false;
         Route route = route(editor, settings);
         String circuit = route.circuit();
@@ -551,8 +557,7 @@ public final class DesktopSimulationController {
 
     /** Returns false when the caller must use the existing legacy start path. */
     boolean start(SolverSettings settings) throws Exception {
-        Backend backend = Backend.valueOf(System.getProperty("gecko.backend", "auto")
-                .trim().toUpperCase(Locale.ROOT));
+        Backend backend = selectedBackend();
         if (backend == Backend.LEGACY) return false;
         Route route = route(editor, settings);
         String circuit = route.circuit();
@@ -691,8 +696,9 @@ public final class DesktopSimulationController {
         return null;
     }
 
-    private static boolean fallback(Backend backend, String circuit, String reason) {
+    private boolean fallback(Backend backend, String circuit, String reason) {
         if (backend == Backend.CORE) throw new IllegalStateException("Core cannot run " + circuit + ": " + reason);
+        NetListContainer.requireLegacySourceSupport(editor);
         FALLBACK.info(circuit + ": " + reason);
         return false;
     }

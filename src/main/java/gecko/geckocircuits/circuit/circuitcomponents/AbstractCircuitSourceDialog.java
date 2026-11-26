@@ -18,6 +18,8 @@ import gecko.geckocircuits.allg.GlobalColors;
 import gecko.geckocircuits.circuit.AbstractBlockInterface;
 import gecko.geckocircuits.circuit.ComponentCoupable;
 import gecko.core.circuit.CircuitSourceType;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
+import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.control.DialogElementCONTROL;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,18 +27,23 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 
 class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource> {
     private static final int SIN_TAB_INDEX = 0;
     private static final int DC_SOURCE_TAB_INDEX = 1;
     private static final int SIGNAL_CTRL_TAB_INDEX = 2;
     private static final int DIRECT_VOLTAGE_TAB_INDEX = 3;
+    private static final int PWL_TAB_INDEX = 4;
 
     private static final int DIALOG_SIZE_X = 100;
     private static final int DIALOG_SIZE_Y = 110;
@@ -49,6 +56,7 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
     private FormatJTextField _offsetField;
     private FormatJTextField _phaseField;
     private FormatJTextField _gainField;
+    private JTable pwlTable;
 
     public AbstractCircuitSourceDialog(final AbstractCircuitSource parent) {
         super(parent);
@@ -167,8 +175,9 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
         puSdir.add(new JScrollPane(jtx5), BorderLayout.CENTER);
         //
         _tabberU.addTab("Dir.Volt.", puSdir);
-
-
+        if (element.getSimulationDomain() == ConnectorType.LK) {
+            _tabberU.addTab("PWL", createPwlPanel());
+        }
 
         JPanel jpMM = new JPanel();
         jpMM.setLayout(new BorderLayout());
@@ -187,10 +196,79 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
             case QUELLE_VOLTAGECONTROLLED_DIRECTLY:
                 _tabberU.setSelectedIndex(DIRECT_VOLTAGE_TAB_INDEX);
                 break;
+            case PWL:
+                _tabberU.setSelectedIndex(PWL_TAB_INDEX);
+                break;
             default:
                 break;
         }
         con.add(jpMM, BorderLayout.CENTER);
+    }
+
+    private JPanel createPwlPanel() {
+        var waveform = element.getEditablePwlWaveform();
+        var model = new DefaultTableModel(
+                new Object[]{"Time [s]", "Value [" + element.getUnitForDomain(ConnectorType.LK) + "]"}, 0);
+        double[] times = waveform.timeKnots();
+        double[] values = waveform.values();
+        for (int i = 0; i < times.length; i++) {
+            model.addRow(new Object[]{times[i], values[i]});
+        }
+        pwlTable = new JTable(model);
+        pwlTable.setPreferredScrollableViewportSize(new Dimension(180, 110));
+        var add = new JButton("Add point");
+        add.addActionListener(event -> {
+            if (!pwlTable.isEditing() || pwlTable.getCellEditor().stopCellEditing()) {
+                model.addRow(new Object[]{"", ""});
+            }
+        });
+        var remove = new JButton("Remove point");
+        remove.addActionListener(event -> {
+            if (pwlTable.isEditing()) {
+                pwlTable.getCellEditor().cancelCellEditing();
+            }
+            int[] rows = pwlTable.getSelectedRows();
+            for (int i = rows.length - 1; i >= 0; i--) {
+                model.removeRow(rows[i]);
+            }
+        });
+        var buttons = new JPanel();
+        buttons.add(add);
+        buttons.add(remove);
+        var panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(pwlTable), BorderLayout.CENTER);
+        panel.add(buttons, BorderLayout.SOUTH);
+        return panel;
+    }
+
+    private PiecewiseLinearWaveform readPwlTable() {
+        if (pwlTable.isEditing() && !pwlTable.getCellEditor().stopCellEditing()) {
+            throw new IllegalArgumentException("Enter a time and value for each point");
+        }
+        double[] times = new double[pwlTable.getRowCount()];
+        double[] values = new double[times.length];
+        try {
+            for (int i = 0; i < times.length; i++) {
+                times[i] = Double.parseDouble(pwlTable.getValueAt(i, 0).toString());
+                values[i] = Double.parseDouble(pwlTable.getValueAt(i, 1).toString());
+            }
+        } catch (NumberFormatException error) {
+            throw new IllegalArgumentException("Enter a numeric time and value for each point", error);
+        }
+        return new PiecewiseLinearWaveform(times, values);
+    }
+
+    @Override
+    protected boolean validateInputIndividual() {
+        if (_tabberU.getSelectedIndex() == PWL_TAB_INDEX) {
+            try {
+                readPwlTable();
+            } catch (IllegalArgumentException error) {
+                JOptionPane.showMessageDialog(this, error.getMessage(), "PWL", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -207,6 +285,10 @@ class AbstractCircuitSourceDialog extends DialogElementLK<AbstractCircuitSource>
                 break;
             case DIRECT_VOLTAGE_TAB_INDEX:
                 element.sourceType.setUserValue(CircuitSourceType.QUELLE_VOLTAGECONTROLLED_DIRECTLY);
+                break;
+            case PWL_TAB_INDEX:
+                element.setPwlWaveform(readPwlTable());
+                element.sourceType.setUserValue(CircuitSourceType.PWL);
                 break;
             default:
                 break;
