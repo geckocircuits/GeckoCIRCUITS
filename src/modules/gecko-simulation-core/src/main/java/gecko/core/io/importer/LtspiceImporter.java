@@ -189,17 +189,20 @@ public final class LtspiceImporter {
         CircuitModel model = rootSheet.model();
         var names = Map.of(SpicePorts.RES, "res.asy", SpicePorts.CAP, "cap.asy",
                 SpicePorts.VOLTAGE, "voltage.asy", SpicePorts.E, "e.asy",
-                SpicePorts.IND, "ind.asy", SpicePorts.CURRENT, "current.asy");
+                SpicePorts.IND, "ind.asy", SpicePorts.CURRENT, "current.asy", SpicePorts.G, "g.asy",
+                SpicePorts.DIODE, "diode.asy");
         var checkedStock = new HashSet<String>();
         for (var component : model.getCircuitComponents()) {
             var descriptor = SpicePorts.find("LK", component.getType());
             String name = descriptor == null ? null : names.get(descriptor);
-            if (descriptor == SpicePorts.DIODE || descriptor == SpicePorts.SW) {
+            boolean idealDiode = component.getAcComponent() != null
+                    && component.getAcComponent().law() instanceof AcComponent.IdealDiode;
+            if (descriptor == SpicePorts.DIODE && !idealDiode || descriptor == SpicePorts.SW) {
                 model.addConversionIssue(new ImportIssue("UNSUPPORTED_STOCK_SYMBOL_VERIFICATION", "LTSPICE",
                         component.getName(), "Stock symbol verification is unsupported for this component.",
                         component.getSourceLocation() == null ? path.toString() : component.getSourceLocation(), true));
             }
-            if (name == null || !checkedStock.add(name)) continue;
+            if (name == null || descriptor == SpicePorts.DIODE && !idealDiode || !checkedStock.add(name)) continue;
             Path symbolPath = symbols.resolve(name);
             byte[] symbol = Files.readAllBytes(symbolPath);
             checkSymbol(decode(symbol), descriptor, symbolPath);
@@ -368,7 +371,10 @@ public final class LtspiceImporter {
         }
         for (Line directive : directives) {
             String name = directive.text().split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
-            if (hierarchy != null && (name.equals(".model") || child && !name.equals(".param"))) {
+            boolean idealModel = name.equals(".model") && (childContext != null ? childContext.ac()
+                    : directives.stream().anyMatch(line -> line.text().toLowerCase(Locale.ROOT).matches("^\\.ac\\s+.*")))
+                    && SpiceImporter.isIdealDiodeModel(directive.text());
+            if (hierarchy != null && !idealModel && (name.equals(".model") || child && !name.equals(".param"))) {
                 issue(issues, "UNSUPPORTED_HIERARCHY_DIRECTIVE", name,
                         "This directive is unsupported in an ASC hierarchy.", sourceName, directive.number());
             } else {

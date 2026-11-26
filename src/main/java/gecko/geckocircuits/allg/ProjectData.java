@@ -164,13 +164,20 @@ public final class ProjectData implements Serializable {
 
     static Map<Long, double[]> preflightRequiredAc(String[] ascii, String modelFileName) {
         var tokens = new TokenMap(ascii, true);
-        if (!tokens.containsToken(AcMetadataCodec.SETTINGS) || !tokens.containsToken(HierarchyMetadataCodec.DOCUMENT)) {
-            return Map.of();
+        if (!tokens.containsToken(AcMetadataCodec.SETTINGS)) return Map.of();
+        boolean validate = false;
+        if (tokens.containsToken(HierarchyMetadataCodec.DOCUMENT)) {
+            var hierarchy = HierarchyMetadataCodec.decodeDocument(tokens.readDataLine(HierarchyMetadataCodec.DOCUMENT, ""));
+            validate = hierarchy.definitions().stream().anyMatch(definition -> !definition.requiredInputs().isEmpty());
         }
-        var hierarchy = HierarchyMetadataCodec.decodeDocument(tokens.readDataLine(HierarchyMetadataCodec.DOCUMENT, ""));
-        if (hierarchy.definitions().stream().noneMatch(definition -> !definition.requiredInputs().isEmpty())) {
-            return Map.of();
+        for (var block = tokens.getSpecialBlockTokenMap("e"); !validate && block != null;
+                block = tokens.getSpecialBlockTokenMap("e")) {
+            validate = block.readDataLine("typ", -1) == gecko.core.io.SpicePorts.DIODE.type()
+                    && block.containsToken(AcMetadataCodec.COMPONENT)
+                    && AcMetadataCodec.decodeComponent(block.readDataLine(AcMetadataCodec.COMPONENT, ""))
+                            .law() instanceof gecko.core.ac.AcComponent.IdealDiode;
         }
+        if (!validate) return Map.of();
         try (var reader = new BufferedReader(new StringReader(String.join("\n", ascii)))) {
             var sourceName = modelFileName == null ? "native circuit" : modelFileName;
             var model = new CircuitFileParser().parse(reader, sourceName);
@@ -530,10 +537,9 @@ public final class ProjectData implements Serializable {
             AbstractBlockInterface newBlock = AbstractTypeInfo.fabricFromFile(CircuitTyp.getFromIntNumber(typ), elementLKMap);
             var values = validatedAcValues.get(newBlock.getUniqueObjectIdentifier());
             var ac = newBlock.getAcComponent();
-            int slot = ac == null ? -1 : AcMetadataCodec.compatibilitySlot(ac.law());
-            if (values != null && slot >= 0) {
+            if (values != null && ac != null) {
                 double[] staged = newBlock.getParameter().clone();
-                staged[slot] = values[slot];
+                for (int slot : AcMetadataCodec.compatibilitySlots(ac.law())) staged[slot] = values[slot];
                 newBlock.setParameterWithoutUnDo(staged);
             }
             _allSheetComponents.add(newBlock);

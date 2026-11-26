@@ -62,6 +62,9 @@ public final class AcMetadataCodec {
             case AcComponent.Voltage law -> fields.addAll(List.of("VOLTAGE", law.dc(), law.waveform(),
                     law.magnitude(), law.phaseDegrees()));
             case AcComponent.Current law -> fields.addAll(List.of("CURRENT", law.dc(), law.magnitude(), law.phaseDegrees()));
+            case AcComponent.IdealDiode law -> fields.addAll(List.of("IDEAL_DIODE_V1", law.modelName(),
+                    law.forwardVoltage(), law.onResistance(), law.offResistance(), law.origin().name()));
+            case AcComponent.Transconductance law -> fields.addAll(List.of("VCCS_V1", law.expression()));
             case AcComponent.Controlled law -> fields.addAll(List.of(law.laplace() ? "LAPLACE" : "GAIN", law.expression()));
         }
         fields.addAll(component.aliases());
@@ -74,6 +77,7 @@ public final class AcMetadataCodec {
         int aliasIndex = switch (fields[3]) {
             case "VOLTAGE" -> 8;
             case "CURRENT" -> 7;
+            case "IDEAL_DIODE_V1" -> 9;
             case "INDUCTANCE" -> 6;
             case "INDUCTANCE_ORIGIN_V1" -> 10;
             default -> 5;
@@ -99,6 +103,9 @@ public final class AcMetadataCodec {
             }
             case "VOLTAGE" -> new AcComponent.Voltage(fields[4], fields[5], fields[6], fields[7]);
             case "CURRENT" -> new AcComponent.Current(fields[4], fields[5], fields[6]);
+            case "IDEAL_DIODE_V1" -> new AcComponent.IdealDiode(fields[4], fields[5], fields[6], fields[7],
+                    AcInputOrigin.valueOf(fields[8]));
+            case "VCCS_V1" -> new AcComponent.Transconductance(fields[4]);
             case "GAIN", "LAPLACE" -> new AcComponent.Controlled(fields[4], fields[3].equals("LAPLACE"));
             default -> throw new IllegalArgumentException("Unsupported IPES component law: " + fields[3]);
         };
@@ -172,6 +179,15 @@ public final class AcMetadataCodec {
             throw new IllegalArgumentException("Require compatibility slot " + slot + " on " + component.instance() + ".");
         }
         switch (component.law()) {
+            case AcComponent.IdealDiode law -> {
+                if (values.length < 4) {
+                    throw new IllegalArgumentException("Require compatibility slots 1 to 3 on " + component.instance() + ".");
+                }
+                var diode = law.evaluate(parameters);
+                values[1] = diode.forwardVoltage();
+                values[2] = diode.onResistance();
+                values[3] = diode.offResistance();
+            }
             case AcComponent.Passive law -> values[slot] = SpiceValue.requirePositivePassive(
                     SpiceValue.evaluate(law.expression(), parameters), component.instance());
             case AcComponent.Inductance law -> values[slot] = law.origin().tested()
@@ -179,6 +195,7 @@ public final class AcMetadataCodec {
                             SpiceValue.evaluate(law.expression(), parameters), component.instance());
             case AcComponent.Voltage law -> values[slot] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Current law -> values[slot] = SpiceValue.evaluate(law.dc(), parameters);
+            case AcComponent.Transconductance law -> values[slot] = SpiceValue.evaluate(law.expression(), parameters);
             case AcComponent.Controlled law -> {
                 if (slot >= 0) values[slot] = SpiceValue.evaluate(law.expression(), parameters);
             }
@@ -191,11 +208,19 @@ public final class AcMetadataCodec {
         return values;
     }
 
-    /** Returns the native slot derived from the law, or -1 if the law has no such slot. */
-    public static int compatibilitySlot(AcComponent.Law law) {
+    /** Returns the native slots derived from the law. */
+    public static List<Integer> compatibilitySlots(AcComponent.Law law) {
+        if (law instanceof AcComponent.IdealDiode) return List.of(1, 2, 3);
+        int slot = compatibilitySlot(law);
+        return slot < 0 ? List.of() : List.of(slot);
+    }
+
+    private static int compatibilitySlot(AcComponent.Law law) {
         return switch (law) {
             case AcComponent.Passive passive -> 0;
             case AcComponent.Inductance inductance -> 0;
+            case AcComponent.Transconductance transconductance -> 0;
+            case AcComponent.IdealDiode diode -> -1;
             case AcComponent.Voltage voltage -> 1;
             case AcComponent.Current current -> 1;
             case AcComponent.Controlled controlled -> controlled.laplace() ? -1 : 0;

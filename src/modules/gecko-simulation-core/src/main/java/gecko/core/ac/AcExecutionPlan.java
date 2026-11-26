@@ -25,7 +25,20 @@ public final class AcExecutionPlan {
     private record Node(CircuitTopology.Group group, int row, List<AcResult.Member> members, TreeSet<String> aliases) { }
     private record Branch(String instance, int positive, int negative, int sensePositive, int senseNegative,
                           int currentRow, SpiceValue.Transfer admittance, double capacitance,
-                          SpiceValue.Transfer gain, Complex excitation) { }
+                          SpiceValue.Transfer gain, Complex excitation, double dc) {
+        Branch withExcitation(double value) {
+            return new Branch(instance, positive, negative, sensePositive, senseNegative, currentRow,
+                    admittance, capacitance, gain, new Complex(value, 0), dc);
+        }
+
+        Branch withConductance(double value) {
+            return new Branch(instance, positive, negative, sensePositive, senseNegative, currentRow,
+                    ignored -> new Complex(value, 0), capacitance, gain, excitation, dc);
+        }
+    }
+
+    public record DiodeOperatingPoint(String instance, boolean forward, double voltageV,
+                                      double currentA, double conductanceS) { }
 
     private final double[] frequencies;
     private final List<Node> nodes;
@@ -33,6 +46,7 @@ public final class AcExecutionPlan {
     private final int size;
     private final AcHierarchyTraces traceBindings;
     private final boolean hierarchical;
+    private final List<DiodeOperatingPoint> diodeOperatingPoints;
 
     public AcExecutionPlan(CircuitModel model) {
         var settings = model.getAcSettings();
@@ -65,6 +79,9 @@ public final class AcExecutionPlan {
         }
         var seen = new HashSet<List<String>>();
         var prepared = new ArrayList<Branch>();
+        var diodes = new LinkedHashMap<Integer, AcComponent.EvaluatedDiode>();
+        var inductors = new HashSet<Integer>();
+        boolean frequencyDependentGain = false;
         int nextCurrent = voltageRows;
         for (var component : model.getCircuitComponents()) {
             var componentIdentity = topology.identity(component);
@@ -74,7 +91,8 @@ public final class AcExecutionPlan {
             Map<String, String> parameters = scopes.getOrDefault(sheet, rootParameters);
             SpicePorts type = SpicePorts.find("LK", component.getType());
             if (type != SpicePorts.RES && type != SpicePorts.CAP && type != SpicePorts.IND
-                    && type != SpicePorts.VOLTAGE && type != SpicePorts.CURRENT && type != SpicePorts.E) {
+                    && type != SpicePorts.VOLTAGE && type != SpicePorts.CURRENT && type != SpicePorts.E && type != SpicePorts.G
+                    && type != SpicePorts.DIODE) {
                 throw new IllegalArgumentException("Unsupported AC component: " + component.getName());
             }
             AcComponent owned = component.getAcComponent();
@@ -115,42 +133,60 @@ public final class AcExecutionPlan {
                             SpiceValue.evaluate(law.expression(), parameters), owned.instance());
                     if (type == SpicePorts.CAP) {
                         prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
-                                nextCurrent++, null, value, null, Complex.ZERO));
+                                nextCurrent++, null, value, null, Complex.ZERO, 0));
                     } else {
                         prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
-                                -1, s -> new Complex(1 / value, 0), 0, null, Complex.ZERO));
+                                -1, s -> new Complex(1 / value, 0), 0, null, Complex.ZERO, 0));
                     }
                 }
                 case AcComponent.Voltage law -> {
                     if (type != SpicePorts.VOLTAGE) throw wrongLaw(owned);
-                    SpiceValue.evaluate(law.dc(), parameters);
+                    double dc = SpiceValue.evaluate(law.dc(), parameters);
                     double magnitude = SpiceValue.evaluate(law.magnitude(), parameters);
                     double phase = SpiceValue.evaluate(law.phaseDegrees(), parameters);
                     if (magnitude < 0) throw new IllegalArgumentException("Require a nonnegative AC source magnitude.");
                     Complex excitation = Complex.polar(magnitude, Math.toRadians(phase));
                     prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
-                            nextCurrent++, null, 0, null, excitation));
+                            nextCurrent++, null, 0, null, excitation, dc));
                 }
                 case AcComponent.Inductance law -> {
                     if (type != SpicePorts.IND) throw wrongLaw(owned);
                     var value = law.evaluate(parameters);
                     SpiceValue.Transfer admittance = s -> Complex.ONE.divide(
                             s.scale(value.henries()).add(new Complex(value.ohms(), 0)));
-                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, admittance, 0, null, Complex.ZERO));
+                    if (value.ohms() == 0) inductors.add(prepared.size());
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, admittance, 0, null, Complex.ZERO, 0));
                 }
                 case AcComponent.Current law -> {
                     if (type != SpicePorts.CURRENT) throw wrongLaw(owned);
-                    SpiceValue.evaluate(law.dc(), parameters);
+                    double dc = SpiceValue.evaluate(law.dc(), parameters);
                     double magnitude = SpiceValue.evaluate(law.magnitude(), parameters);
                     double phase = SpiceValue.evaluate(law.phaseDegrees(), parameters);
                     if (magnitude < 0) throw new IllegalArgumentException("Require a nonnegative AC source magnitude.");
                     Complex excitation = Complex.polar(magnitude, Math.toRadians(phase));
-                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, null, 0, null, excitation));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, -1, null, 0, null, excitation, dc));
+                }
+                case AcComponent.Transconductance law -> {
+                    if (type != SpicePorts.G) throw wrongLaw(owned);
+                    var transconductance = new Complex(SpiceValue.evaluate(law.expression(), parameters), 0);
+                    prepared.add(new Branch(instance, ports[0], ports[1], ports[2], ports[3],
+                            -1, null, 0, ignored -> transconductance, Complex.ZERO, 0));
+                }
+                case AcComponent.IdealDiode law -> {
+                    if (type != SpicePorts.DIODE) throw wrongLaw(owned);
+                    if (law.offResistance().isBlank() && (model.getAcProvenance() == null
+                            || model.getAcProvenance().origin() != law.origin())) {
+                        throw new IllegalArgumentException("Require the selected LTspice Gmin for " + instance + ".");
+                    }
+                    diodes.put(prepared.size(), law.evaluate(parameters));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
+                            -1, null, 0, null, Complex.ZERO, 0));
                 }
                 case AcComponent.Controlled law -> {
                     if (type != SpicePorts.E) throw wrongLaw(owned);
                     SpiceValue.Transfer gain;
                     if (law.laplace()) {
+                        frequencyDependentGain = true;
                         gain = SpiceValue.transfer(law.expression(), parameters);
                         gain.evaluate(new Complex(0, 2 * Math.PI * frequencies[0]));
                     } else {
@@ -158,17 +194,164 @@ public final class AcExecutionPlan {
                         gain = s -> new Complex(value, 0);
                     }
                     prepared.add(new Branch(instance, ports[0], ports[1], ports[2], ports[3],
-                            nextCurrent++, null, 0, gain, Complex.ZERO));
+                            nextCurrent++, null, 0, gain, Complex.ZERO, 0));
                 }
             }
             traceBindings.addBranch(terminalIds[0], terminalIds[1]);
         }
         if (hierarchical) traceBindings.resolve();
         if (prepared.isEmpty()) throw new IllegalArgumentException("Add an AC circuit component.");
-        validateGroundPaths(groupNodes.values().stream().toList(), prepared, voltageRows);
+        if (!diodes.isEmpty() && (!inductors.isEmpty() || frequencyDependentGain)) {
+            throw new IllegalArgumentException("DC diode bias requires static gains and nonzero inductor series resistance.");
+        }
+        diodeOperatingPoints = diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent);
+        // A feedback VCCS can constrain a node without a galvanic path. Use matrix rank for this circuit.
+        if (prepared.stream().noneMatch(branch -> branch.currentRow < 0 && branch.gain != null)) {
+            validateGroundPaths(groupNodes.values().stream().toList(), prepared, voltageRows);
+        }
         nodes = List.copyOf(groupNodes.values());
         branches = List.copyOf(prepared);
         size = nextCurrent;
+    }
+
+    public List<DiodeOperatingPoint> diodeOperatingPoints() { return diodeOperatingPoints; }
+
+    private static List<DiodeOperatingPoint> linearizeDiodes(List<Branch> branches,
+            Map<Integer, AcComponent.EvaluatedDiode> diodes, int size) {
+        if (diodes.size() > 2) {
+            throw new IllegalArgumentException("Use at most two ideal diodes in the bounded AC operating point.");
+        }
+        var indices = List.copyOf(diodes.keySet());
+        List<DiodeOperatingPoint> accepted = null;
+        boolean closeToThreshold = false;
+        for (int mode = 0; mode < 1 << indices.size(); mode++) {
+            Complex[][] matrix = new Complex[size][size];
+            for (var row : matrix) Arrays.fill(row, Complex.ZERO);
+            Complex[] rhs = new Complex[size];
+            Arrays.fill(rhs, Complex.ZERO);
+            for (int i = 0; i < branches.size(); i++) {
+                var branch = branches.get(i);
+                var diode = diodes.get(i);
+                if (diode != null) {
+                    boolean forward = (mode & 1 << indices.indexOf(i)) != 0;
+                    double conductance = diode.conductance(forward);
+                    double offset = forward
+                            ? (diode.conductance(false) - conductance) * diode.forwardVoltage() : 0;
+                    stamp(matrix, rhs, branch.withConductance(conductance), Complex.ZERO, 0);
+                    stampCurrent(rhs, branch.positive, branch.negative, new Complex(offset, 0));
+                } else if (branch.capacitance > 0) {
+                    // A capacitor is open at DC. Its retained current row enforces I = 0.
+                    add(matrix, branch.currentRow, branch.currentRow, Complex.ONE);
+                } else {
+                    stamp(matrix, rhs, branch.withExcitation(branch.dc), Complex.ZERO, 0);
+                }
+            }
+            var bias = solve(matrix, rhs);
+            if (residual(matrix, rhs, bias) > 1e-12) {
+                throw new IllegalArgumentException("The DC diode bias backward residual exceeds 1e-12.");
+            }
+            var defect = rhs.clone();
+            for (int row = 0; row < size; row++) {
+                for (int col = 0; col < size; col++) {
+                    defect[row] = defect[row].subtract(matrix[row][col].multiply(bias[col]));
+                }
+            }
+            var correction = solve(matrix, defect);
+            var candidate = new ArrayList<DiodeOperatingPoint>();
+            boolean consistent = true, near = false;
+            for (int bit = 0; bit < indices.size(); bit++) {
+                int i = indices.get(bit);
+                var branch = branches.get(i);
+                var diode = diodes.get(i);
+                boolean forward = (mode & 1 << bit) != 0;
+                double va = at(bias, branch.positive).real(), vk = at(bias, branch.negative).real();
+                double voltage = va - vk;
+                double threshold = diode.forwardVoltage();
+                double uncertainty = voltageUncertainty(va, vk, threshold)
+                        + 8 * (at(correction, branch.positive).abs() + at(correction, branch.negative).abs());
+                double distance = forward ? voltage - threshold : threshold - voltage;
+                consistent &= distance >= -uncertainty;
+                near |= Math.abs(distance) <= uncertainty;
+                double slope = diode.conductance(forward);
+                double current = forward ? Math.fma(slope, voltage - threshold, diode.conductance(false) * threshold)
+                        : slope * voltage;
+                checkFinite(new Complex(current, 0));
+                candidate.add(new DiodeOperatingPoint(branch.instance, forward, voltage, current, slope));
+            }
+            if (!consistent) continue;
+            if (near) {
+                closeToThreshold = true;
+                continue;
+            }
+            verifyBiasLaws(branches, indices, candidate, bias, correction);
+            if (accepted != null) throw new IllegalArgumentException("The DC diode operating point is ambiguous.");
+            accepted = List.copyOf(candidate);
+        }
+        if (closeToThreshold) throw new IllegalArgumentException("The DC diode bias is at a nonsmooth threshold.");
+        if (accepted == null) throw new IllegalArgumentException("No consistent DC diode operating point.");
+        for (int i = 0; i < indices.size(); i++) {
+            int index = indices.get(i);
+            branches.set(index, branches.get(index).withConductance(accepted.get(i).conductanceS));
+        }
+        return accepted;
+    }
+
+    private static double voltageUncertainty(double a, double b, double reference) {
+        return 128 * Math.ulp(Math.max(1, Math.max(Math.abs(reference), Math.max(Math.abs(a), Math.abs(b)))));
+    }
+
+    private static void verifyBiasLaws(List<Branch> branches, List<Integer> indices,
+            List<DiodeOperatingPoint> diodes, Complex[] bias, Complex[] correction) {
+        double[] sums = new double[bias.length], bounds = new double[bias.length];
+        for (int i = 0; i < branches.size(); i++) {
+            var branch = branches.get(i);
+            int diode = indices.indexOf(i);
+            double vp = at(bias, branch.positive).real(), vn = at(bias, branch.negative).real();
+            double error = voltageUncertainty(vp, vn, branch.dc)
+                    + 8 * (at(correction, branch.positive).abs() + at(correction, branch.negative).abs());
+            double current;
+            if (diode >= 0) {
+                var point = diodes.get(diode);
+                current = point.currentA;
+                error *= point.conductanceS;
+            } else if (branch.capacitance > 0) {
+                current = at(bias, branch.currentRow).real();
+                if (current != 0) throw new IllegalArgumentException("The DC capacitor current is not zero.");
+            } else {
+                current = branchCurrent(bias, Complex.ZERO, branch.withExcitation(branch.dc)).real();
+                if (branch.currentRow >= 0) {
+                    double drive = branch.dc;
+                    if (branch.gain != null) {
+                        drive += branch.gain.evaluate(Complex.ZERO).real()
+                                * (at(bias, branch.sensePositive).real() - at(bias, branch.senseNegative).real());
+                    }
+                    if (Math.abs((vp - vn) - drive) > error) {
+                        throw new IllegalArgumentException("DC voltage equation failed on " + branch.instance + ".");
+                    }
+                    error = 128 * Math.ulp(Math.max(1, Math.abs(current))) + 8 * at(correction, branch.currentRow).abs();
+                } else if (branch.admittance != null) {
+                    error *= branch.admittance.evaluate(Complex.ZERO).abs();
+                } else if (branch.gain != null) {
+                    double cp = at(bias, branch.sensePositive).real(), cn = at(bias, branch.senseNegative).real();
+                    error = branch.gain.evaluate(Complex.ZERO).abs() * (voltageUncertainty(cp, cn, 0)
+                            + 8 * (at(correction, branch.sensePositive).abs() + at(correction, branch.senseNegative).abs()));
+                }
+            }
+            checkFinite(new Complex(current, error));
+            accumulateBiasCurrent(sums, bounds, branch.positive, current, error);
+            accumulateBiasCurrent(sums, bounds, branch.negative, -current, error);
+        }
+        for (int i = 0; i < sums.length; i++) {
+            if (Math.abs(sums[i]) > bounds[i]) {
+                throw new IllegalArgumentException("DC diode bias failed current balance.");
+            }
+        }
+    }
+
+    private static void accumulateBiasCurrent(double[] sums, double[] bounds, int row, double current, double error) {
+        if (row < 0) return;
+        sums[row] += current;
+        bounds[row] += error;
     }
 
     private static void validateGroundPaths(List<Node> nodes, List<Branch> branches, int voltageRows) {
@@ -243,9 +426,7 @@ public final class AcExecutionPlan {
                 for (int i = 0; i < nodes.size(); i++) voltage.get(i).add(at(x, nodes.get(i).row));
                 for (int i = 0; i < branches.size(); i++) {
                     var branch = branches.get(i);
-                    Complex value = branch.currentRow >= 0 ? x[branch.currentRow] : branch.admittance == null
-                            ? branch.excitation
-                            : branch.admittance.evaluate(s).multiply(at(x, branch.positive).subtract(at(x, branch.negative)));
+                    Complex value = branchCurrent(x, s, branch);
                     checkFinite(value);
                     current.get(i).add(value);
                 }
@@ -287,11 +468,25 @@ public final class AcExecutionPlan {
         return samples;
     }
 
+    private static Complex branchCurrent(Complex[] x, Complex s, Branch branch) {
+        if (branch.currentRow >= 0) return x[branch.currentRow];
+        if (branch.gain != null) return branch.gain.evaluate(s).multiply(
+                at(x, branch.sensePositive).subtract(at(x, branch.senseNegative)));
+        if (branch.admittance != null) return branch.admittance.evaluate(s).multiply(
+                at(x, branch.positive).subtract(at(x, branch.negative)));
+        return branch.excitation;
+    }
+
     private static void stamp(Complex[][] a, Complex[] b, Branch branch, Complex s, double frequency) {
         int p = branch.positive, n = branch.negative, i = branch.currentRow;
-        if (i < 0 && branch.admittance == null) {
-            if (p >= 0) b[p] = b[p].subtract(branch.excitation);
-            if (n >= 0) b[n] = b[n].add(branch.excitation);
+        if (i < 0 && branch.gain != null) {
+            Complex gm = branch.gain.evaluate(s);
+            add(a, p, branch.sensePositive, gm);
+            add(a, p, branch.senseNegative, gm.scale(-1));
+            add(a, n, branch.sensePositive, gm.scale(-1));
+            add(a, n, branch.senseNegative, gm);
+        } else if (i < 0 && branch.admittance == null) {
+            stampCurrent(b, p, n, branch.excitation);
         } else if (i < 0) {
             Complex y = branch.admittance.evaluate(s);
             add(a, p, p, y);
@@ -314,6 +509,11 @@ public final class AcExecutionPlan {
             }
             b[i] = branch.excitation;
         }
+    }
+
+    private static void stampCurrent(Complex[] rhs, int positive, int negative, Complex excitation) {
+        if (positive >= 0) rhs[positive] = rhs[positive].subtract(excitation);
+        if (negative >= 0) rhs[negative] = rhs[negative].add(excitation);
     }
 
     private static double capacitiveReactance(double frequency, Branch branch) {

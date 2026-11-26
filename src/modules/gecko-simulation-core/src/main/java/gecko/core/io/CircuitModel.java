@@ -98,15 +98,19 @@ public class CircuitModel {
     }
 
     void materializeRequiredAcValues(HierarchyIndex index) {
-        if (acSettings == null || hierarchy == null
-                || hierarchy.definitions().stream().noneMatch(definition -> !definition.requiredInputs().isEmpty())) {
+        if (acSettings == null) return;
+        boolean required = hierarchy != null
+                && hierarchy.definitions().stream().anyMatch(definition -> !definition.requiredInputs().isEmpty());
+        boolean hasDiode = getCircuitComponents().stream().anyMatch(component -> component.getAcComponent() != null
+                && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode);
+        if (!required && !hasDiode) {
             return;
         }
         var scopes = index.parameterScopes(rootParameterMap());
         var replacements = new HashMap<ComponentData, double[]>();
         for (var component : getCircuitComponents()) {
             var law = component.getAcComponent();
-            if (law == null) continue;
+            if (law == null || !required && !(law.law() instanceof gecko.core.ac.AcComponent.IdealDiode)) continue;
             long sheet = HierarchyIndex.parent(component.getSavedBlock());
             double[] saved = component.getNumericParameters();
             if ("".equals(component.getImportTokens().get("parameter[]"))) {

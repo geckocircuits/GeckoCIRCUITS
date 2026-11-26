@@ -68,10 +68,15 @@ public final class SpiceImporter {
                 }
             }
             if (directive.equals(".model")) {
-                if (origin.tested()) issue(model, line, "UNSUPPORTED_ASC_PROFILE", directive,
-                        "The selected ASC profile requires linear components without models.");
+                if (origin.tested() && !isIdealDiodeModel(line.text())) issue(model, line, "UNSUPPORTED_ASC_PROFILE", directive,
+                        "The selected ASC profile supports only the bounded ideal diode model.");
                 String[] fields = line.text().split("\\s+", 3);
-                if (fields.length == 3) definitions.put(fields[1].toLowerCase(Locale.ROOT), fields[2]);
+                if (fields.length == 3) {
+                    String name = fields[1].toLowerCase(Locale.ROOT);
+                    if (definitions.put(name, fields[2]) != null && (acRequested || child != null && child.ac())) {
+                        issue(model, line, "MALFORMED_MODEL", name, "Declare each AC model once.");
+                    }
+                }
                 else issue(model, line, "MALFORMED_MODEL", "", "The model definition is incomplete.");
             }
         }
@@ -152,12 +157,16 @@ public final class SpiceImporter {
                 if (name.contains("/") || !names.add(name.toLowerCase(Locale.ROOT))) throw new IllegalArgumentException("Require a unique component name without slashes.");
                 SpicePorts descriptor = placement == null ? SpicePorts.find(Character.toUpperCase(name.charAt(0)))
                         : SpicePorts.find("LK", placement.getType());
+                if (descriptor == SpicePorts.G && !ac) {
+                    issue(model, line, "UNSUPPORTED_ELEMENT", name, "Use AC analysis for the voltage-controlled current source.");
+                    continue;
+                }
                 if (descriptor == null || descriptor == SpicePorts.E && !ac) {
                     issue(model, line, "UNSUPPORTED_ELEMENT", name, "Unsupported SPICE element: " + name);
                     continue;
                 }
                 char kind = descriptor.designator();
-                if (origin.tested() && "RLCVIE".indexOf(kind) < 0) {
+                if (origin.tested() && "RLCVIEGD".indexOf(kind) < 0) {
                     throw new IllegalArgumentException("The selected ASC profile requires a supported linear component.");
                 }
                 String positive = node(nodes, fields[1]), negative = node(nodes, fields[2]);
@@ -209,7 +218,7 @@ public final class SpiceImporter {
                             if (data.getNumericParameters()[0] == 401) bindIfScoped(scalarBindings, 1, dcValue(fields[3]));
                         }
                     }
-                    case 'E' -> {
+                    case 'E', 'G' -> {
                         String[] tail = fields[3].split("\\s+", 3);
                         if (tail.length != 3) throw new IllegalArgumentException("Require two sensing nodes and a gain.");
                         String sensePositive = node(nodes, tail[0]), senseNegative = node(nodes, tail[1]);
@@ -218,13 +227,29 @@ public final class SpiceImporter {
                         String expression = tail[2].strip();
                         boolean laplace = expression.matches("(?is)^laplace\\s*=.*");
                         if (laplace) expression = expression.substring(expression.indexOf('=') + 1).strip();
-                        law = new AcComponent.Controlled(expression, laplace);
-                        data.setNumericParameters(new double[]{0});
+                        if (kind == 'G') {
+                            if (laplace) throw new IllegalArgumentException("Require a scalar transconductance.");
+                            law = new AcComponent.Transconductance(expression);
+                            data.setNumericParameters(new double[]{value(expression, parameters)});
+                        } else {
+                            law = new AcComponent.Controlled(expression, laplace);
+                            data.setNumericParameters(new double[]{0});
+                        }
                     }
                     case 'D' -> {
                         data.setNumericParameters(new double[]{1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1});
-                        String definition = definitions.get(fields[3].trim().toLowerCase(Locale.ROOT));
-                        if (definition == null || !modelType(definition).equals("d")) {
+                        String modelName = fields[3].strip();
+                        String definition = definitions.get(modelName.toLowerCase(Locale.ROOT));
+                        if (ac) {
+                            var expressions = idealDiodeExpressions(definition);
+                            var diode = new AcComponent.IdealDiode(modelName, expressions.get("vfwd"),
+                                    expressions.getOrDefault("ron", ""), expressions.getOrDefault("roff", ""), origin);
+                            var evaluated = diode.evaluate(parameters);
+                            data.getNumericParameters()[1] = evaluated.forwardVoltage();
+                            data.getNumericParameters()[2] = evaluated.onResistance();
+                            data.getNumericParameters()[3] = evaluated.offResistance();
+                            law = diode;
+                        } else if (definition == null || !modelType(definition).equals("d")) {
                             issue(model, line, "DIODE_MODEL_APPROXIMATION", name, "The diode uses the native ideal piecewise-linear model.");
                         } else {
                             var args = new HashMap<String, String>();
@@ -576,6 +601,28 @@ public final class SpiceImporter {
 
     private static String keyword(String text) {
         return text.split("\\s+", 2)[0].toLowerCase(Locale.ROOT);
+    }
+
+    static boolean isIdealDiodeModel(String line) {
+        String[] fields = line.split("\\s+", 3);
+        if (fields.length != 3 || !fields[1].matches("[A-Za-z0-9_.$+-]+")) return false;
+        try {
+            idealDiodeExpressions(fields[2]);
+            return true;
+        } catch (IllegalArgumentException error) {
+            return false;
+        }
+    }
+
+    private static Map<String, String> idealDiodeExpressions(String definition) {
+        if (definition == null || !modelType(definition).equals("d")) {
+            throw new IllegalArgumentException("Require a local ideal diode model.");
+        }
+        var parameters = CircuitHierarchy.parameters(parameterAssignments(modelArguments(definition)));
+        if (!parameters.containsKey("vfwd") || !List.of("vfwd", "ron", "roff").containsAll(parameters.keySet())) {
+            throw new IllegalArgumentException("Require an ideal diode model with Vfwd and optional Ron and Roff.");
+        }
+        return parameters;
     }
 
     private static String modelArguments(String definition) {

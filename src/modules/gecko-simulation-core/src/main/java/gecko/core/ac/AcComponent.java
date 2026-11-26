@@ -2,6 +2,7 @@ package gecko.core.ac;
 
 import gecko.core.io.importer.SpiceValue;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,16 +11,20 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
     public AcComponent {
         if (instance.isBlank() || law == null) throw new IllegalArgumentException("Require an instance and its law.");
         spiceOrders = List.copyOf(spiceOrders);
-        var expectedOrders = law instanceof Controlled ? List.of(1, 2, 3, 4) : List.of(1, 2);
+        var expectedOrders = terminalOrders(law);
         if (!spiceOrders.equals(expectedOrders)) throw new IllegalArgumentException("Invalid source terminal order.");
         aliases = List.copyOf(aliases);
     }
 
     public AcComponent(String instance, List<String> aliases, boolean mirrored, Law law) {
-        this(instance, law instanceof Controlled ? List.of(1, 2, 3, 4) : List.of(1, 2), aliases, mirrored, law);
+        this(instance, terminalOrders(law), aliases, mirrored, law);
     }
 
-    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled { }
+    private static List<Integer> terminalOrders(Law law) {
+        return law instanceof Controlled || law instanceof Transconductance ? List.of(1, 2, 3, 4) : List.of(1, 2);
+    }
+
+    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode { }
 
     public record Passive(String expression) implements Law { }
     public record Inductance(String expression, Resistance resistance, AcInputOrigin origin) implements Law {
@@ -69,5 +74,40 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
 
     public record Voltage(String dc, String waveform, String magnitude, String phaseDegrees) implements Law { }
     public record Current(String dc, String magnitude, String phaseDegrees) implements Law { }
+    public record IdealDiode(String modelName, String forwardVoltage, String onResistance, String offResistance,
+                             AcInputOrigin origin) implements Law {
+        public IdealDiode {
+            Objects.requireNonNull(origin);
+            if (!modelName.matches("[A-Za-z0-9_.$+-]+") || forwardVoltage.isBlank()) {
+                throw new IllegalArgumentException("Require an ideal diode model name and forward threshold.");
+            }
+            modelName = modelName.toLowerCase(Locale.ROOT);
+            if (offResistance.isBlank() && !origin.tested()) {
+                throw new IllegalArgumentException("Specify Roff or select the LTspice profile with known Gmin.");
+            }
+        }
+
+        public EvaluatedDiode evaluate(Map<String, String> parameters) {
+            double vfwd = SpiceValue.evaluate(forwardVoltage, parameters);
+            double ron = onResistance.isBlank() ? 1e-3 : SpiceValue.evaluate(onResistance, parameters);
+            double roff = offResistance.isBlank() ? 1e12 : SpiceValue.evaluate(offResistance, parameters);
+            double gon = 1 / ron, goff = 1 / roff;
+            if (vfwd < 0 || ron <= 0 || roff <= ron || !Double.isFinite(gon)
+                    || !(goff > 0) || !Double.isFinite(vfwd * gon)) {
+                throw new IllegalArgumentException("Require finite ideal diode coefficients and 0 < Ron < Roff.");
+            }
+            return new EvaluatedDiode(vfwd, ron, roff);
+        }
+    }
+
+    public record EvaluatedDiode(double forwardVoltage, double onResistance, double offResistance) {
+        double conductance(boolean on) { return 1 / (on ? onResistance : offResistance); }
+    }
+
     public record Controlled(String expression, boolean laplace) implements Law { }
+    public record Transconductance(String expression) implements Law {
+        public Transconductance {
+            if (expression.isBlank()) throw new IllegalArgumentException("Enter a transconductance expression.");
+        }
+    }
 }

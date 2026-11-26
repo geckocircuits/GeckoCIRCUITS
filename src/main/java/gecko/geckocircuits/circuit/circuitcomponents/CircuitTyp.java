@@ -73,7 +73,8 @@ public enum CircuitTyp implements AbstractComponentTyp {
     TH_GLOBAL_TERMINAL(50, ThGlobalTerminal.TYPE_INFO),
     LK_MOTOR_PERM(51, MotorPermanent.TYPE_INFO),
     NONLIN_REL(52, NonLinearReluctance.TYPE_INFO),
-    LK_VCVS(SpicePorts.E.type(), AcControlledVoltageSource.TYPE_INFO);
+    LK_VCVS(SpicePorts.E.type(), AcControlledVoltageSource.TYPE_INFO),
+    LK_VCCS(SpicePorts.G.type(), AcControlledCurrentSource.TYPE_INFO);
 
     private final int _intValue;
     private final AbstractTypeInfo _tInfo;

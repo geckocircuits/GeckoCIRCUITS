@@ -485,6 +485,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             case RES, CAP -> new AcComponent.Passive(Double.toString(values[0]));
             case VOLTAGE -> new AcComponent.Voltage(Double.toString(values[1]), "", "0", "0");
             case E -> new AcComponent.Controlled(Double.toString(values[0]), false);
+            case G -> new AcComponent.Transconductance(Double.toString(values[0]));
             default -> null;
         };
         return law == null ? null : new AcComponent(getStringID(), List.of(), false, law);
@@ -503,7 +504,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                         ? java.util.Map.of() : editor.getAcSettings().parameterMap());
             }
         }
-        if (editor != null && editor.getHierarchy() != null && getHierarchyMember() != null) {
+        if (editor != null && (law instanceof AcComponent.IdealDiode
+                || editor.getHierarchy() != null && getHierarchyMember() != null)) {
             editor.hierarchyEdits.setSharedLaw(this, law);
             return;
         }
@@ -936,6 +938,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                 case AcComponent.Current law -> {
                     _textInfo.addParameter("AC " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.magnitude(), parameters), 4)
                             + " A ∠ " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.phaseDegrees(), parameters), 4) + "°");
+                }
+                case AcComponent.IdealDiode law -> {
+                    var model = law.evaluate(parameters);
+                    _textInfo.addParameter(law.modelName() + " Vfwd = "
+                            + AC_VALUE_FORMAT.formatENG(model.forwardVoltage(), 4) + " V");
+                }
+                case AcComponent.Transconductance law -> {
+                    double gm = SpiceValue.evaluate(law.expression(), parameters);
+                    _textInfo.addParameter("gm = " + AC_VALUE_FORMAT.formatENG(gm, 4) + " S");
                 }
                 case AcComponent.Controlled law -> {
                     if (!law.laplace()) {
