@@ -111,8 +111,8 @@ public final class AcExecutionPlan {
             switch (owned.law()) {
                 case AcComponent.Passive law -> {
                     if (type != SpicePorts.RES && type != SpicePorts.CAP) throw wrongLaw(owned);
-                    double value = SpiceValue.evaluate(law.expression(), parameters);
-                    if (value <= 0) throw new IllegalArgumentException("Require a positive R or C value on " + owned.instance());
+                    double value = SpiceValue.requirePositivePassive(
+                            SpiceValue.evaluate(law.expression(), parameters), owned.instance());
                     if (type == SpicePorts.CAP) {
                         prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
                                 nextCurrent++, null, value, null, Complex.ZERO));

@@ -4,23 +4,30 @@ import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitHierarchy;
 import gecko.core.io.CircuitModel;
+import gecko.core.io.CircuitFileParser.CircuitParseException;
 import gecko.core.io.CircuitTopology;
 import gecko.core.io.HierarchyIndex;
 import gecko.core.io.HierarchyMetadataCodec;
 import gecko.core.io.ImportIssue;
 import gecko.core.io.SavedCircuitBlock;
 import gecko.core.io.importer.LtspiceImporter;
+import gecko.core.io.importer.SpiceValue;
 import gecko.core.preparation.CircuitPreparation;
 import gecko.core.preparation.PreparationRequest;
 import gecko.core.preparation.PreparationResult;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.PrintStream;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -53,6 +60,7 @@ class NativeAcHierarchyTest {
                         TEXT 40 256""")
                 .replace("TEXT 40 272 Left 2 !.ac dec 2 10 100k",
                         analysis.isEmpty() ? "" : "TEXT 40 272 Left 2 !" + analysis));
+        change("leaf.asc", source -> source.replace("series=3k shunt=2k", "shunt=2k"));
         var imported = fixture();
         assertEquals(2000, rootResistor(imported).getNumericParameters()[0]);
         var issues = imported.getConversionIssues();
@@ -90,6 +98,9 @@ class NativeAcHierarchyTest {
             boolean first = index.path(sheet).equals(List.of("X1", "Xleaf"));
             double expected = first ? 2000 : 4000;
             assertEquals(expected, resistor.getNumericParameters()[0]);
+            assertEquals(Map.of(0, "{series}"), resistor.getScalarBindings());
+            assertEquals(List.of("series"), index.sheet(sheet).definition().requiredInputs().stream()
+                    .map(CircuitHierarchy.RequiredInput::name).toList());
             assertEquals(expected, Double.parseDouble(scopes.get(sheet).get("series")));
             assertEquals("{caller}", index.sheet(sheet).call().overrides().getFirst().expression());
             assertEquals(first ? "{base}" : "{next}",
@@ -170,6 +181,179 @@ class NativeAcHierarchyTest {
         assertEquals(2, issues.size(), parsed.getConversionIssues().toString());
         assertTrue(issues.getFirst().sourceLocation().contains("leaf.asc [X1, Xleaf]:"));
         assertTrue(issues.getLast().sourceLocation().contains("leaf.asc [X2, Xleaf]:"));
+    }
+
+    @Test void rebindsRequiredInputsInTheImmediateParentAfterSaveAndRootEdit() throws Exception {
+        var model = fixture(Map.of(
+                "wrapper.asc", text -> text.replace("series={caller}", "SeRiEs={CaLlEr} ShUnT={sErIeS}")
+                        .replace("caller=3k", "caller=3k series={offset} offset=2k"),
+                "leaf.asc", text -> text.replace("series=3k shunt=2k", "caller=9k leafAlias={series}")));
+        assertEquals(List.of(1000.0, 4000.0), seriesSlots(model));
+        var parsed = roundTrip(model);
+        assertEquals(model.getHierarchy(), parsed.getHierarchy());
+        assertEquals(model.getSpecialComponents().stream().map(component -> component.getSavedBlock().tokens()
+                        .get(HierarchyMetadataCodec.OCCURRENCE)).toList(),
+                parsed.getSpecialComponents().stream().map(component -> component.getSavedBlock().tokens()
+                        .get(HierarchyMetadataCodec.OCCURRENCE)).toList());
+        var hierarchy = new HierarchyIndex(parsed);
+        var root = parsed.getAcSettings();
+        var scopes = hierarchy.parameterScopes(root.parameterMap());
+        for (var owner : parsed.getSpecialComponents()) {
+            long id = owner.getSavedBlock().uniqueObjectIdentifier();
+            if (!owner.getName().equals("Xleaf")) continue;
+            assertEquals(hierarchy.path(id).getFirst().equals("X1") ? "1000.0" : "4000.0", scopes.get(id).get("series"));
+            assertEquals("2000.0", scopes.get(id).get("shunt"));
+            assertEquals("{series}", scopes.get(id).get("leafalias"));
+            assertEquals(Double.parseDouble(scopes.get(id).get("series")),
+                    SpiceValue.evaluate("{leafalias}", scopes.get(id)));
+        }
+        var before = solve(parsed);
+        assertEquals(12, before.hierarchy().ports().size());
+        assertNotEquals(voltage(before, "X1:Xleaf:Csh", 1, 0), voltage(before, "X2:Xleaf:Csh", 1, 0));
+        parsed.setAcSettings(new AcDocumentSettings(root.sweep(),
+                List.of(new ParameterDefinition("FIRST", "5k")), root.analysisId()));
+        var rebound = roundTrip(parsed);
+        assertEquals(List.of(5000.0, 4000.0), seriesSlots(rebound));
+        assertTrue(rebound.getCircuitComponents().stream().filter(component -> component.getName().equals("Rseries"))
+                .allMatch(component -> ((AcComponent.Passive) component.getAcComponent().law()).expression().equals("{series}")));
+        var after = solve(rebound);
+        assertNotEquals(voltage(before, "X1:Xleaf:Csh", 1, 0), voltage(after, "X1:Xleaf:Csh", 1, 0));
+        assertEquals(voltage(before, "X2:Xleaf:Csh", 1, 0), voltage(after, "X2:Xleaf:Csh", 1, 0));
+    }
+
+    private static List<Double> seriesSlots(CircuitModel model) {
+        return model.getCircuitComponents().stream().filter(component -> component.getName().equals("Rseries"))
+                .map(component -> component.getNumericParameters()[0]).toList();
+    }
+
+    @Test void checksRequiredOverridesWhenReadingNativeAcData() throws Exception {
+        var model = fixture(Map.of(
+                "leaf.asc", text -> text.replace("series=3k shunt=2k", "shunt=2k") + """
+                        SYMBOL voltage 432 64 R0
+                        SYMATTR InstName Vbias
+                        SYMATTR Value {VLOW}
+                        """,
+                "wrapper.asc", text -> text.replace("series={caller}", "series={caller} Vlow=100m")));
+        var target = model.getSpecialComponents().stream().filter(component -> component.getName().equals("Xleaf"))
+                .findFirst().orElseThrow();
+        String original = target.getSavedBlock().tokens().get(HierarchyMetadataCodec.OCCURRENCE);
+        var call = HierarchyMetadataCodec.decodeOccurrence(original);
+        byte[] bytes = new CircuitFileWriter().write(model);
+        String text;
+        try (var gzip = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
+            text = new String(gzip.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        for (String value : List.of("", "0", "-1")) {
+            var error = assertThrows(CircuitParseException.class,
+                    () -> parseNativeOverride(text, original, call, value, "100m"));
+            assertTrue(error.getMessage().contains(value.isEmpty() ? "Missing required input series" : "positive passive"));
+            assertTrue(error.getMessage().contains("[X1, Xleaf]"));
+        }
+        var parsed = parseNativeOverride(text, original, call, "{caller+2k}", "-1");
+        assertEquals(List.of(3000.0, 4000.0), seriesSlots(parsed));
+        var resistor = parsed.getCircuitComponents().stream().filter(c -> c.getName().equals("Rseries"))
+                .findFirst().orElseThrow();
+        assertEquals(3000.0, resistor.getParameters().get("param0"));
+        assertEquals(3000.0, resistor.getParameters().get("resistance"));
+        var voltage = parsed.getCircuitComponents().stream().filter(c -> c.getName().equals("Vbias"))
+                .findFirst().orElseThrow();
+        assertEquals(401, voltage.getNumericParameters()[0]);
+        assertEquals(-1, voltage.getNumericParameters()[1]);
+        assertEquals(401.0, voltage.getParameters().get("param0"));
+        assertEquals(-1.0, voltage.getParameters().get("param1"));
+        assertEquals(List.of(3000.0, 4000.0), seriesSlots(roundTrip(parsed)));
+
+        assertTruncatedNativeSlot(text, "Vbias", "401", 1);
+        assertTruncatedNativeSlot(text, "Rseries", "null", 0);
+        assertTruncatedNativeSlot(text, "Rseries", "", 0);
+    }
+
+    private static void assertTruncatedNativeSlot(String text, String member, String values, int slot) {
+        int start = text.indexOf("\nidStringDialog " + member + "\n");
+        assertTrue(start >= 0);
+        int parameter = text.indexOf("\nparameter[] ", start);
+        int end = text.indexOf('\n', parameter + 1);
+        assertTrue(parameter > start && end < text.indexOf("<\\ElementLK>", start));
+        String edited = text.substring(0, parameter) + "\nparameter[] " + values + text.substring(end);
+        var error = assertThrows(CircuitParseException.class, () ->
+                new CircuitFileParser().parse(new BufferedReader(new StringReader(edited)), "truncated.ipes"));
+        assertTrue(error.getMessage().contains("Require compatibility slot " + slot + " on " + member));
+        assertTrue(error.getMessage().contains("[X1, Xleaf]"));
+    }
+
+    private static CircuitModel parseNativeOverride(String text, String original, CircuitHierarchy.Occurrence call,
+                                                    String series, String voltage) throws CircuitParseException, java.io.IOException {
+        var overrides = new java.util.ArrayList<ParameterDefinition>();
+        if (!series.isEmpty()) overrides.add(new ParameterDefinition("series", series));
+        overrides.add(new ParameterDefinition("Vlow", voltage));
+        var edit = new CircuitHierarchy.Occurrence(call.definitionId(), call.instance(), overrides);
+        int at = text.indexOf(original);
+        assertTrue(at >= 0);
+        String edited = text.substring(0, at) + HierarchyMetadataCodec.encode(edit) + text.substring(at + original.length());
+        return new CircuitFileParser().parse(new BufferedReader(new StringReader(edited)), "edited.ipes");
+    }
+
+    @Test void requiresFinitePositiveOccurrencePassivesBeforePublishingOrSaving() throws Exception {
+        var model = fixture(Map.of("leaf.asc", text -> text.replace("series=3k shunt=2k", "shunt=2k")));
+        var root = model.getAcSettings();
+        var target = sources.resolve("existing.ipes");
+        var writer = new CircuitFileWriter();
+        writer.write(model, target);
+        byte[] original = Files.readAllBytes(target);
+        for (String invalid : List.of("0", "-1")) {
+            model.setAcSettings(new AcDocumentSettings(root.sweep(),
+                    List.of(new ParameterDefinition("FIRST", invalid)), root.analysisId()));
+            assertTrue(assertThrows(IllegalArgumentException.class, () -> writer.write(model, target))
+                    .getMessage().contains("positive passive"));
+            assertArrayEquals(original, Files.readAllBytes(target));
+            assertEquals(List.of(1000.0, 4000.0), seriesSlots(model));
+        }
+        for (String invalid : List.of("{unknown}", "1e999", "")) {
+            String assignment = invalid.isEmpty() ? "" : "series=" + invalid;
+            Files.writeString(sources.resolve("wrapper.asc"),
+                    fixtureText("wrapper.asc").replace("series={caller}", assignment));
+            assertThrows(IllegalArgumentException.class,
+                    () -> new LtspiceImporter().convert(sources.resolve("root.asc"), sources, List.of(sources)));
+        }
+    }
+
+    @Test void validatesCapacitanceAndUnrelatedDeclaredDefaultsInRequiredInputDefinitions() throws Exception {
+        var model = fixture(Map.of(
+                "leaf.asc", text -> text.replace("series=3k shunt=2k", "shunt=2k")
+                        .replace("SYMATTR Value 10n", "SYMATTR Value {filterCap}"),
+                "wrapper.asc", text -> text.replace("series={caller}", "series={caller} filterCap=10n")));
+        var writer = new CircuitFileWriter();
+        for (String invalid : List.of("0", "-1")) {
+            Files.writeString(sources.resolve("wrapper.asc"),
+                    fixtureText("wrapper.asc").replace("series={caller}", "series={caller} filterCap=" + invalid));
+            var invalidImport = new LtspiceImporter().convert(sources.resolve("root.asc"), sources, List.of(sources));
+            assertTrue(invalidImport.getConversionIssues().stream().anyMatch(issue ->
+                    issue.component().equals("Csh") && issue.message().contains("positive passive component value on Csh")));
+            assertFalse(invalidImport.getCircuitComponents().stream().anyMatch(component -> component.getName().equals("Csh")));
+            for (var component : model.getCircuitComponents()) {
+                if (!component.getName().equals("Csh")) continue;
+                var law = component.getAcComponent();
+                component.setAcComponent(new AcComponent(law.instance(), law.spiceOrders(), law.aliases(),
+                        law.mirrored(), new AcComponent.Passive(invalid)));
+            }
+            assertTrue(assertThrows(IllegalArgumentException.class, () -> writer.write(model))
+                    .getMessage().contains("positive passive component value on Csh"));
+        }
+        Files.writeString(sources.resolve("wrapper.asc"), fixtureText("wrapper.asc"));
+        Files.writeString(sources.resolve("leaf.asc"),
+                fixtureText("leaf.asc").replace("series=3k shunt=2k", "shunt=-1"));
+        var invalidDefault = new LtspiceImporter().convert(sources.resolve("root.asc"), sources, List.of(sources));
+        assertTrue(invalidDefault.getConversionIssues().stream().anyMatch(issue ->
+                issue.component().equals("Rsh") && issue.message().contains("positive passive")));
+        assertFalse(invalidDefault.getCircuitComponents().stream().anyMatch(component -> component.getName().equals("Rsh")));
+
+        Files.writeString(sources.resolve("leaf.asc"),
+                fixtureText("leaf.asc").replace("series=3k shunt=2k", "shunt=2k")
+                        .replace("Value {shunt}", "Value {1+}"));
+        var malformed = new LtspiceImporter().convert(sources.resolve("root.asc"), sources, List.of(sources));
+        assertTrue(malformed.getConversionIssues().stream().anyMatch(issue ->
+                issue.component().equals("Rsh") && issue.code().equals("MALFORMED_ELEMENT")));
+        assertFalse(malformed.getCircuitComponents().stream().anyMatch(component -> component.getName().equals("Rsh")));
     }
 
     @Test void evaluatesOneProfiledDefinitionInDistinctOccurrenceScopes() throws Exception {
@@ -427,10 +611,14 @@ class NativeAcHierarchyTest {
     }
 
     private CircuitModel fixture() throws Exception {
+        return fixture(edits);
+    }
+
+    private CircuitModel fixture(Map<String, java.util.function.UnaryOperator<String>> mutations) throws Exception {
         for (String name : List.of("leaf.asc", "leaf.asy", "wrapper.asc", "wrapper.asy", "root.asc",
                 "res.asy", "cap.asy", "voltage.asy", "ind.asy")) {
             String text = fixtureText(name);
-            Files.writeString(sources.resolve(name), edits.getOrDefault(name, java.util.function.UnaryOperator.identity()).apply(text),
+            Files.writeString(sources.resolve(name), mutations.getOrDefault(name, java.util.function.UnaryOperator.identity()).apply(text),
                     java.nio.file.StandardOpenOption.CREATE_NEW);
         }
         return new LtspiceImporter().convert(sources.resolve("root.asc"), sources, List.of(sources));

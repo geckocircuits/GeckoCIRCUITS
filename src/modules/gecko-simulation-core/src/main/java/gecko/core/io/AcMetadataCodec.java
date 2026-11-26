@@ -167,21 +167,47 @@ public final class AcMetadataCodec {
 
     public static double[] compatibilityValues(AcComponent component, double[] saved, Map<String, String> parameters) {
         double[] values = saved.clone();
+        int slot = compatibilitySlot(component.law());
+        if (slot >= values.length) {
+            throw new IllegalArgumentException("Require compatibility slot " + slot + " on " + component.instance() + ".");
+        }
         switch (component.law()) {
-            case AcComponent.Passive law -> values[0] = SpiceValue.evaluate(law.expression(), parameters);
-            case AcComponent.Inductance law -> values[0] = law.origin().tested()
-                    ? law.evaluate(parameters).henries() : SpiceValue.evaluate(law.expression(), parameters);
-            case AcComponent.Voltage law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
-            case AcComponent.Current law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
+            case AcComponent.Passive law -> values[slot] = SpiceValue.requirePositivePassive(
+                    SpiceValue.evaluate(law.expression(), parameters), component.instance());
+            case AcComponent.Inductance law -> values[slot] = law.origin().tested()
+                    ? law.evaluate(parameters).henries() : SpiceValue.requirePositivePassive(
+                            SpiceValue.evaluate(law.expression(), parameters), component.instance());
+            case AcComponent.Voltage law -> values[slot] = SpiceValue.evaluate(law.dc(), parameters);
+            case AcComponent.Current law -> values[slot] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Controlled law -> {
-                if (!law.laplace()) values[0] = SpiceValue.evaluate(law.expression(), parameters);
+                if (slot >= 0) values[slot] = SpiceValue.evaluate(law.expression(), parameters);
+            }
+        }
+        for (double value : values) {
+            if (!Double.isFinite(value)) {
+                throw new IllegalArgumentException("Require finite compatibility values on " + component.instance() + ".");
             }
         }
         return values;
     }
 
+    /** Returns the native slot derived from the law, or -1 if the law has no such slot. */
+    public static int compatibilitySlot(AcComponent.Law law) {
+        return switch (law) {
+            case AcComponent.Passive passive -> 0;
+            case AcComponent.Inductance inductance -> 0;
+            case AcComponent.Voltage voltage -> 1;
+            case AcComponent.Current current -> 1;
+            case AcComponent.Controlled controlled -> controlled.laplace() ? -1 : 0;
+        };
+    }
+
     static String encode(List<String> fields) {
-        var encoded = new StringBuilder(VERSION);
+        return encode(VERSION, fields);
+    }
+
+    static String encode(String version, List<String> fields) {
+        var encoded = new StringBuilder(version);
         for (String field : fields) {
             encoded.append('.').append(Base64.getUrlEncoder().withoutPadding()
                     .encodeToString(field.getBytes(StandardCharsets.UTF_8)));
@@ -190,8 +216,12 @@ public final class AcMetadataCodec {
     }
 
     static String[] decode(String text) {
+        return decode(VERSION, text);
+    }
+
+    static String[] decode(String version, String text) {
         String[] tokens = text.split("\\.", -1);
-        require(tokens[0].equals(VERSION));
+        require(tokens[0].equals(version));
         String[] fields = new String[tokens.length - 1];
         for (int i = 0; i < fields.length; i++) {
             byte[] bytes = Base64.getUrlDecoder().decode(tokens[i + 1]);

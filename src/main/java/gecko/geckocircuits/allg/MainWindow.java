@@ -1122,12 +1122,15 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     }
 
     public void openFile(String dateiName) throws FileNotFoundException {
+        if (!new File(dateiName).exists()) throw new FileNotFoundException(dateiName);
+        String[] lines = getLinesArrayFromIpesFile(dateiName);
+        var validatedAcValues = ProjectData.preflightRequiredAc(lines, dateiName);
         documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();
         _se.resetCircuitSheetsForNewFile();
         GlobalFilePathes.DATNAM = dateiName;
         _se.resetCircuitSheetsForNewFile();
-        ProjectData daten = loadProjectDataFromFile(dateiName, false, optimizerParameterData);
+        ProjectData daten = new ProjectData(lines, false, optimizerParameterData, dateiName, validatedAcValues);
         daten.updateSolverSettings(_solverSettings);
         _se.ladeGespeicherteNetzlisteVonProjectData(daten, null);
 
@@ -1974,7 +1977,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
             System.out.println("openFile() - GZIP >> " + e);
             e.printStackTrace();
             // new version 'gzipped' -->
-            try (FileInputStream fileIn = new FileInputStream(GlobalFilePathes.DATNAM);
+            try (FileInputStream fileIn = new FileInputStream(dateiName);
                  InflaterInputStream in1 = new InflaterInputStream(fileIn);
                  InputStreamReader streamReader = new InputStreamReader(in1, java.nio.charset.StandardCharsets.UTF_8);
                  BufferedReader in = new BufferedReader(streamReader)) {

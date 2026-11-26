@@ -172,6 +172,7 @@ public class CircuitFileParser {
             hierarchy = new HierarchyIndex(model);
             AcOriginMembership.validate(model, hierarchy);
             model.materializeScalarBindings(hierarchy);
+            model.materializeRequiredAcValues(hierarchy);
         } catch (IllegalArgumentException error) {
             throw new CircuitParseException(filePath + ": " + error.getMessage(), error);
         }

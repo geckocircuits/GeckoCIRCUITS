@@ -5,6 +5,7 @@ import gecko.core.ac.AcInputOrigin;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.ac.AcSweep;
 import gecko.core.ac.ParameterDefinition;
+import gecko.core.io.CircuitHierarchy;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitModel.ComponentData;
 import gecko.core.io.CircuitModel.ConnectionData;
@@ -20,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.TreeMap;
 import java.util.function.DoubleUnaryOperator;
 import java.util.regex.Pattern;
@@ -32,14 +33,18 @@ public final class SpiceImporter {
 
     public CircuitModel convert(String source, String sourceName) {
         return convert(sourceName, source.hashCode(), lines(source), new LinkedHashMap<>(), Map.of(),
-                AcInputOrigin.PORTABLE_CIR, null).model();
+                AcInputOrigin.PORTABLE_CIR, null, List.of()).model();
     }
 
-    record SheetResult(CircuitModel model, List<ParameterDefinition> parameters, Map<String, String> scope) { }
-    record ChildContext(boolean ac, Function<List<ParameterDefinition>, Map<String, String>> bindParameters) { }
+    record SheetResult(CircuitModel model, List<ParameterDefinition> parameters, Map<String, String> scope,
+                       List<CircuitHierarchy.RequiredInput> requiredInputs) { }
+    record ChildContext(boolean ac,
+                        BiFunction<List<ParameterDefinition>, List<CircuitHierarchy.RequiredInput>,
+                                Map<String, String>> bindParameters) { }
 
     SheetResult convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
-                        Map<String, ComponentData> placements, AcInputOrigin origin, ChildContext child) {
+                        Map<String, ComponentData> placements, AcInputOrigin origin, ChildContext child,
+                        List<CircuitHierarchy.RequiredInput> scalarReads) {
         var model = new CircuitModel();
         model.setFilePath(sourceName);
         model.setFileVersion(202);
@@ -112,9 +117,12 @@ public final class SpiceImporter {
             }
         }
         boolean ac = child == null ? model.getAcSettings() != null : child.ac();
-        if (child != null && !ac) {
+        var requiredInputs = scalarReads.stream()
+                .filter(input -> !parameters.containsKey(input.name().toLowerCase(Locale.ROOT))).toList();
+        if (child != null) {
+            var scope = child.bindParameters().apply(List.copyOf(orderedParameters), requiredInputs);
             parameters.clear();
-            parameters.putAll(child.bindParameters().apply(List.copyOf(orderedParameters)));
+            parameters.putAll(scope);
         } else if (child == null && !ac) {
             // Scalar lookup uses the last definition of each name in a non-AC document.
             var effective = new LinkedHashMap<String, ParameterDefinition>();
@@ -165,8 +173,7 @@ public final class SpiceImporter {
                 switch (kind) {
                     case 'R', 'L', 'C' -> {
                         String[] args = arguments(fields[3]);
-                        double v = value(args[0], parameters);
-                        if (v <= 0) throw new IllegalArgumentException("Require a positive passive component value.");
+                        double v = SpiceValue.requirePositivePassive(value(args[0], parameters), name);
                         double[] values = new double[type == 1 ? 3 : type == 2 ? 5 : 11];
                         values[0] = v;
                         if (!ac) bindIfScoped(scalarBindings, 0, args[0]);
@@ -258,7 +265,7 @@ public final class SpiceImporter {
         for (int index = 0; index < model.getControlComponents().size(); index++) {
             model.getControlComponents().get(index).getPosition()[1] = 5 + circuitRows * 14 + index / 6 * 12;
         }
-        return new SheetResult(model, List.copyOf(orderedParameters), Map.copyOf(parameters));
+        return new SheetResult(model, List.copyOf(orderedParameters), Map.copyOf(parameters), requiredInputs);
     }
 
     private static AcComponent.Inductance acInductance(String value, String[] args, AcInputOrigin origin) {

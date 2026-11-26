@@ -1,6 +1,6 @@
 # Keep editable ASC occurrences on native sheets
 
-ADR-0022 · Codex · 2026-11-24 · Clarified 2026-11-26 · Version 1.1
+ADR-0022 · Codex · 2026-11-24 · Clarified 2026-11-26 · Version 1.2
 
 Audience — Core and desktop maintainers
 
@@ -38,6 +38,12 @@ flowchart LR
 Figure 1 — Scope evaluation supplies native values without changing shared definition identity.
 
 Parameter edits validate the proposed scopes and numeric values before committing either change. Shared body validation compares expressions for bound slots and literal values for unbound slots. AC documents retain their existing parameter owner and typed laws.
+
+A definition can also declare required scalar inputs. Discovery uses the `Value` field of a resistor, capacitor, or DC voltage source in an ASC child. The entire field must have the form `{name}`. The name becomes a required input if the child has no declaration for it. The input records the component, attribute, and source line.
+
+Each occurrence supplies an explicit override for each required input. Override expressions use the caller scope. Child defaults use the child scope with those bound values. This prevents accidental capture of a caller name by a child default.
+
+Hierarchy document version 2 stores required inputs with their source evidence. Documents with only defaults use version 1, which remains readable. The parser binds occurrence scopes in a document with required inputs. It evaluates the numeric values before it returns the model. Passive values must be finite and positive.
 
 ## Consequences
 

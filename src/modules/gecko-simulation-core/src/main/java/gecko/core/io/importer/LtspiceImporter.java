@@ -86,7 +86,8 @@ public final class LtspiceImporter {
         }
     }
 
-    private record Symbol(int line, String kind, Point origin, String rotation, Map<String, String> attributes) {
+    private record Symbol(int line, String kind, Point origin, String rotation, Map<String, String> attributes,
+                          Map<String, Integer> attributeLines) {
         String name() { return attributes.getOrDefault("instname", kind); }
     }
 
@@ -135,7 +136,8 @@ public final class LtspiceImporter {
     private record Call(Symbol symbol, Path schematic, List<Pin> pins) { }
     private record SheetImport(CircuitModel model, Grid grid, List<Call> calls, List<Flag> flags,
                                List<Wire> wires, List<PlacedSymbol> primitives,
-                               List<ParameterDefinition> parameters, Map<String, String> scope) { }
+                               List<ParameterDefinition> parameters, Map<String, String> scope,
+                               List<CircuitHierarchy.RequiredInput> requiredInputs) { }
 
     public record ImportResult(CircuitModel model, LtspiceImportReceipt receipt) { }
 
@@ -323,6 +325,7 @@ public final class LtspiceImporter {
             }
         }
         List<PlacedSymbol> placed = placeSymbols(symbols, sourceName, issues, origin);
+        var scalarReads = child ? HierarchyImport.scalarReads(placed, path.toString()) : List.<CircuitHierarchy.RequiredInput>of();
         var markers = new LinkedHashMap<Point, ComponentData>();
         var topologyInput = new CircuitModel();
         var aliases = new LinkedHashMap<String, String>();
@@ -373,7 +376,7 @@ public final class LtspiceImporter {
             }
         }
         var converted = new SpiceImporter().convert(sourceName, source.hashCode(), statements, nodeLabels,
-                placements, origin, childContext);
+                placements, origin, childContext, scalarReads);
         var model = converted.model();
         issues.forEach(model::addConversionIssue);
         boolean ac = model.getAcSettings() != null;
@@ -392,7 +395,8 @@ public final class LtspiceImporter {
         for (int i = 0; i < model.getControlComponents().size(); i++) {
             model.getControlComponents().get(i).getPosition()[1] = Math.addExact(bottom, 12 + i / 6 * 12);
         }
-        return new SheetImport(model, layout.grid(), calls, flags, wires, placed, converted.parameters(), converted.scope());
+        return new SheetImport(model, layout.grid(), calls, flags, wires, placed, converted.parameters(),
+                converted.scope(), converted.requiredInputs());
     }
 
     private static Layout planLayout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
@@ -543,7 +547,7 @@ public final class LtspiceImporter {
                 switch (record) {
                     case "SYMBOL" -> {
                         requireLength(fields, 5);
-                        active = new Symbol(line, fields[1], point(fields, 2), fields[4], new HashMap<>());
+                        active = new Symbol(line, fields[1], point(fields, 2), fields[4], new HashMap<>(), new HashMap<>());
                         symbols.add(active);
                     }
                     case "SYMATTR" -> {
@@ -556,6 +560,7 @@ public final class LtspiceImporter {
                             throw new IllegalArgumentException("Use each inductor attribute once.");
                         }
                         active.attributes.put(key, attribute[2]);
+                        active.attributeLines.put(key, line);
                     }
                     case "WIRE" -> {
                         requireLength(fields, 5);
@@ -726,6 +731,29 @@ public final class LtspiceImporter {
     }
 
     private final class HierarchyImport {
+        private static final java.util.regex.Pattern SCALAR_VALUE =
+                java.util.regex.Pattern.compile("\\{\\s*([A-Za-z_][A-Za-z_0-9]*)\\s*}");
+
+        private static List<CircuitHierarchy.RequiredInput> scalarReads(List<PlacedSymbol> placed, String source) {
+            var spellings = new LinkedHashMap<String, String>();
+            var uses = new LinkedHashMap<String, List<CircuitHierarchy.ScalarUse>>();
+            for (var device : placed) {
+                if (!List.of(SpicePorts.RES, SpicePorts.CAP, SpicePorts.VOLTAGE).contains(device.type())) continue;
+                var symbol = device.symbol();
+                String raw = symbol.attributes().getOrDefault("value", "").strip();
+                var match = SCALAR_VALUE.matcher(raw);
+                if (!match.matches() || !value(symbol).equals(raw)) continue;
+                String spelling = match.group(1);
+                String key = spelling.toLowerCase(Locale.ROOT);
+                if (key.equals("pi")) continue;
+                spellings.putIfAbsent(key, spelling);
+                uses.computeIfAbsent(key, ignored -> new ArrayList<>()).add(new CircuitHierarchy.ScalarUse(
+                        source, symbol.name(), "Value", symbol.attributeLines().get("value")));
+            }
+            return uses.entrySet().stream().map(entry ->
+                    new CircuitHierarchy.RequiredInput(spellings.get(entry.getKey()), entry.getValue())).toList();
+        }
+
         private final List<Path> sourceRoots;
         private final Map<String, String> dependencies;
         private final Map<String, String> definitionSources = new LinkedHashMap<>();
@@ -839,9 +867,9 @@ public final class LtspiceImporter {
                 var occurrence = new CircuitHierarchy.Occurrence(definitionId, call.symbol().name(),
                         SpiceImporter.parameterAssignments(value(call.symbol())));
                 boolean ac = document.getAcSettings() != null;
-                var childContext = new SpiceImporter.ChildContext(ac, parameters -> {
+                var childContext = new SpiceImporter.ChildContext(ac, (parameters, requiredInputs) -> {
                     try {
-                        return new CircuitHierarchy.Definition(definitionId, definitionId, formals, parameters)
+                        return new CircuitHierarchy.Definition(definitionId, definitionId, formals, parameters, requiredInputs)
                                 .bind(callerParameters, occurrence);
                     } catch (IllegalArgumentException error) {
                         throw new IllegalArgumentException(context + " " + error.getMessage(), error);
@@ -853,7 +881,8 @@ public final class LtspiceImporter {
                     document.addConversionIssue(new ImportIssue("UNSUPPORTED_HIERARCHY_CONTROL", "LTSPICE",
                             occurrence.instance(), "Child CONTROL components or resources are unsupported.", context, true));
                 }
-                var definition = new CircuitHierarchy.Definition(definitionId, definitionId, formals, child.parameters());
+                var definition = new CircuitHierarchy.Definition(definitionId, definitionId, formals,
+                        child.parameters(), child.requiredInputs());
                 var existing = definitions.putIfAbsent(definitionId, definition);
                 if (existing != null && !existing.equals(definition)) {
                     throw new IllegalArgumentException("Conflicting ASC interfaces in " + context);

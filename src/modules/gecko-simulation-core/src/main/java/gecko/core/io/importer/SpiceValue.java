@@ -114,7 +114,6 @@ public final class SpiceValue {
         private final Map<String, String> parameters = new LinkedHashMap<>();
         private final Map<String, Complex> values = new LinkedHashMap<>();
         private final Set<String> evaluating = new HashSet<>();
-
         Scope(Map<String, String> source) {
             source.forEach((name, value) -> parameters.put(name.toLowerCase(Locale.ROOT), value));
         }
@@ -151,6 +150,13 @@ public final class SpiceValue {
 
     public static double evaluate(String text, Map<String, String> parameters) {
         return finite(parse(text).evaluate(new Scope(parameters), null, 0), text).real();
+    }
+
+    public static double requirePositivePassive(double value, String member) {
+        if (!Double.isFinite(value) || value <= 0) {
+            throw new IllegalArgumentException("Require a finite positive passive component value on " + member + ".");
+        }
+        return value;
     }
 
     public static Transfer transfer(String text, Map<String, String> parameters) {

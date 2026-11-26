@@ -23,13 +23,24 @@ public record CircuitHierarchy(List<Definition> definitions) {
                 .orElseThrow(() -> new IllegalArgumentException("Unknown definition " + id));
     }
 
-    public record Definition(String id, String source, List<Formal> formals, List<ParameterDefinition> defaults) {
+    public record Definition(String id, String source, List<Formal> formals, List<ParameterDefinition> defaults,
+                             List<RequiredInput> requiredInputs) {
+        public Definition(String id, String source, List<Formal> formals, List<ParameterDefinition> defaults) {
+            this(id, source, formals, defaults, List.of());
+        }
+
         public Definition {
             requireText(id);
             requireText(source);
             formals = List.copyOf(formals);
             defaults = List.copyOf(defaults);
-            parameters(defaults);
+            requiredInputs = List.copyOf(requiredInputs);
+            var scalarNames = new java.util.HashSet<>(parameters(defaults).keySet());
+            for (var input : requiredInputs) {
+                if (!scalarNames.add(input.name().toLowerCase(Locale.ROOT))) {
+                    throw new IllegalArgumentException("Duplicate scalar input " + input.name() + " in " + source);
+                }
+            }
             var names = new java.util.HashSet<String>();
             var keys = new java.util.HashSet<String>();
             for (int i = 0; i < formals.size(); i++) {
@@ -44,15 +55,45 @@ public record CircuitHierarchy(List<Definition> definitions) {
 
         public Map<String, String> bind(Map<String, String> caller, Occurrence occurrence) {
             var scope = parameters(defaults);
+            var explicit = parameters(occurrence.overrides());
+            var allowed = new java.util.HashSet<>(scope.keySet());
+            requiredInputs.forEach(input -> allowed.add(input.name().toLowerCase(Locale.ROOT)));
             for (var override : occurrence.overrides()) {
                 String name = override.name().toLowerCase(Locale.ROOT);
-                if (!scope.containsKey(name)) {
+                if (!allowed.contains(name)) {
                     throw new IllegalArgumentException("Unknown override " + override.name() + " in " + source);
                 }
-                scope.put(name, Double.toString(SpiceValue.evaluate(override.expression(), caller)));
             }
+            for (var input : requiredInputs) {
+                if (!explicit.containsKey(input.name().toLowerCase(Locale.ROOT))) {
+                    var use = input.uses().getFirst();
+                    throw new IllegalArgumentException("Missing required input " + input.name() + " at "
+                            + use.source() + ":" + use.line() + " " + use.member() + " " + use.attribute());
+                }
+            }
+            explicit.replaceAll((name, expression) -> Double.toString(SpiceValue.evaluate(expression, caller)));
+            scope.putAll(explicit);
             scope.values().forEach(expression -> SpiceValue.evaluate(expression, scope));
             return Map.copyOf(scope);
+        }
+    }
+
+    public record RequiredInput(String name, List<ScalarUse> uses) {
+        public RequiredInput {
+            if (name == null || !name.matches("[A-Za-z_][A-Za-z_0-9]*")) {
+                throw new IllegalArgumentException("Require a valid scalar input name.");
+            }
+            uses = List.copyOf(uses);
+            if (uses.isEmpty()) throw new IllegalArgumentException("Require a scalar input source use.");
+        }
+    }
+
+    public record ScalarUse(String source, String member, String attribute, int line) {
+        public ScalarUse {
+            requireText(source);
+            requireText(member);
+            requireText(attribute);
+            if (line < 1) throw new IllegalArgumentException("Require a scalar input source line.");
         }
     }
 

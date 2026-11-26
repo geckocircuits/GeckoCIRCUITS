@@ -96,6 +96,32 @@ public class CircuitModel {
         }
         replacements.forEach(ComponentData::applyBoundValues);
     }
+
+    void materializeRequiredAcValues(HierarchyIndex index) {
+        if (acSettings == null || hierarchy == null
+                || hierarchy.definitions().stream().noneMatch(definition -> !definition.requiredInputs().isEmpty())) {
+            return;
+        }
+        var scopes = index.parameterScopes(rootParameterMap());
+        var replacements = new HashMap<ComponentData, double[]>();
+        for (var component : getCircuitComponents()) {
+            var law = component.getAcComponent();
+            if (law == null) continue;
+            long sheet = HierarchyIndex.parent(component.getSavedBlock());
+            double[] saved = component.getNumericParameters();
+            if ("".equals(component.getImportTokens().get("parameter[]"))) {
+                saved = new double[0];
+            }
+            try {
+                replacements.put(component, AcMetadataCodec.compatibilityValues(
+                        law, saved, scopes.get(sheet)));
+            } catch (IllegalArgumentException error) {
+                throw new IllegalArgumentException(index.path(sheet) + " " + component.getName() + " "
+                        + error.getMessage(), error);
+            }
+        }
+        replacements.forEach(ComponentData::applyAcValues);
+    }
     public AcProvenance getAcProvenance() { return acProvenance; }
     public void setAcProvenance(AcProvenance provenance) { acProvenance = provenance; }
     /** Captured grid geometry. Hidden proxy terminals do not have physical junctions. */
@@ -563,10 +589,21 @@ public class CircuitModel {
         private void applyBoundValues(double[] values) {
             setNumericParameters(values);
             for (var slot : scalarBindings.keySet()) {
-                parameters.computeIfPresent("param" + slot, (key, previous) -> values[slot]);
+                updateParameterCache(slot, values[slot]);
             }
-            if (scalarBindings.containsKey(0)) {
-                parameters.computeIfPresent(CircuitFileParser.resolveParameterKey(type), (key, previous) -> values[0]);
+        }
+
+        private void applyAcValues(double[] values) {
+            setNumericParameters(values);
+            for (int slot = 0; slot < values.length; slot++) {
+                updateParameterCache(slot, values[slot]);
+            }
+        }
+
+        private void updateParameterCache(int slot, double value) {
+            parameters.computeIfPresent("param" + slot, (key, previous) -> value);
+            if (slot == 0) {
+                parameters.computeIfPresent(CircuitFileParser.resolveParameterKey(type), (key, previous) -> value);
             }
         }
 
