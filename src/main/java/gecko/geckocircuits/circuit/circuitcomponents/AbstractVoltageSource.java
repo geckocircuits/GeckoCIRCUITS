@@ -137,7 +137,9 @@ public abstract class AbstractVoltageSource extends AbstractCircuitSource {
 
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return Arrays.asList(new VoltageSourceCalculator(new TimeFunctionConstant(12),this));
+        return Arrays.asList(new VoltageSourceCalculator(isPwlSource()
+                ? requirePwlWaveform()
+                : new TimeFunctionConstant(12), this));
     }
 
 }

@@ -1,7 +1,10 @@
 package gecko.core.io.importer;
 
 import gecko.core.ac.Complex;
+import gecko.core.allg.AdaptiveStepSettings;
 import gecko.core.circuit.TokenMap;
+import gecko.core.circuit.netlist.NetlistBuilder;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitModel;
@@ -10,6 +13,8 @@ import gecko.core.simulation.HeadlessSimulationEngine;
 import gecko.core.simulation.SimulationConfig;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -244,6 +249,134 @@ class CircuitImportContractTest {
         assertEquals(2, Main.run(new String[]{input.toString(), target.toString()}, new PrintStream(diagnostics), System.err));
         assertTrue(diagnostics.toString(StandardCharsets.UTF_8).contains("\"code\":\"UNSUPPORTED_ELEMENT\""));
         assertEquals(2, new CircuitFileParser().parse(target.toString()).getCircuitComponents().size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"V, 1u, false, false", "I, 1u, false, false",
+            "V, 0.5u, true, false", "I, 0.5u, true, false",
+            "V, 1u, false, true", "I, 1u, false, true"})
+    void piecewiseLinearSourceMatchesAnalyticValuesAtPhysicalTimes(String kind, String step,
+            boolean dcOperatingPoint, boolean adaptive) throws Exception {
+        String terminals = kind.equals("V") ? "in 0 " : "0 in ";
+        var model = convert(kind + "drive " + terminals + "pWl (0 -2 {edge + 1u} {top + 1} 8u -1)\n"
+                + ".param edge=3u top=2\nR1 in 0 1\n.tran " + step + " 12u");
+        assertTrue(model.getImportIssues().isEmpty(), model.getImportIssues().toString());
+        assertEquals(1, model.getResources().size());
+        var importedSource = model.getCircuitComponents().getFirst();
+        long ownerId = Long.parseLong(importedSource.getImportTokens().get("uniqueObjectIdentifier"));
+        assertEquals(ownerId, importedSource.getParameters().get("uniqueObjectIdentifier"));
+        assertEquals(List.of(ownerId), model.getResources().values().iterator().next().ownerIds());
+        Path circuit = write(model, kind + "pwl.ipes");
+        var reopened = new CircuitFileParser().parse(circuit.toString());
+        assertEquals(1, reopened.getResources().size());
+        var source = reopened.getCircuitComponents().stream().filter(c -> c.getName().equals(kind + "drive")).findFirst().orElseThrow();
+        long resourceId = Long.parseLong(source.getImportTokens().get(PiecewiseLinearWaveform.RESOURCE_ID_TOKEN));
+        var resource = reopened.getResources().get(resourceId);
+        assertEquals(List.of(source.getParameters().get("uniqueObjectIdentifier")), resource.ownerIds());
+        assertArrayEquals(new double[]{0, 4e-6, 8e-6}, PiecewiseLinearWaveform.fromBytes(resource.bytes()).timeKnots(), 1e-15);
+        var traces = new ArrayList<double[]>();
+        var engine = new HeadlessSimulationEngine();
+        engine.setStepTraceListener((time, volts, amps, netlist) -> {
+            int resistor = netlist.getElementIndexByName("R1");
+            int sourceIndex = netlist.getElementIndexByName(kind + "drive");
+            traces.add(new double[]{time, volts[netlist.getNodeX(resistor)] - volts[netlist.getNodeY(resistor)], amps[sourceIndex]});
+        });
+        var config = SimulationConfig.builder().circuitFile(circuit.toString()).dcOperatingPoint(dcOperatingPoint);
+        if (adaptive) config.adaptiveStep(new AdaptiveStepSettings(1e-3, 1e-9, Double.NaN));
+        var result = engine.runSimulation(config.build());
+        assertTrue(result.isSuccess(), result.getErrorMessage());
+        assertFalse(traces.isEmpty());
+        assertEquals(0, traces.getFirst()[0], 1e-15);
+        assertTrue(traces.stream().anyMatch(trace -> Math.abs(trace[0] - 4e-6) < 1e-15));
+        assertTrue(traces.stream().anyMatch(trace -> Math.abs(trace[0] - 8e-6) < 1e-15));
+        assertTrue(traces.stream().anyMatch(trace -> trace[0] > 8e-6));
+        assertAll(traces.stream().map(trace -> () -> {
+            double time = trace[0];
+            double expected = time <= 4e-6 ? -2 + 5 * time / 4e-6 : time <= 8e-6 ? 3 - 4 * (time - 4e-6) / 4e-6 : -1;
+            assertEquals(expected, trace[1], 1e-8, "time = " + time);
+            if (kind.equals("I")) assertEquals(expected, trace[2], 1e-8, "source current at time = " + time);
+        }));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"missing", "wrong owner", "owner name", "duplicate owner", "wrong kind",
+            "invalid length", "duplicate ID", "duplicate control owner", "duplicate thermal owner",
+            "duplicate special owner"})
+    void rejectsInvalidSavedPwlBindings(String defect) throws Exception {
+        var model = convert("Vdrive in 0 PWL(0 -2 4u 3)\nR1 in 0 1\n.tran 1u 12u");
+        var resource = model.getResources().values().iterator().next();
+        String text;
+        try (var zipped = new GZIPInputStream(new ByteArrayInputStream(new CircuitFileWriter().write(model)))) {
+            text = new String(zipped.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        String owner = "usageList[] /" + resource.ownerIds().getFirst();
+        String start = "<GeckoFile>";
+        String end = "<\\GeckoFile>";
+        text = switch (defect) {
+            case "missing" -> text.replace(PiecewiseLinearWaveform.RESOURCE_ID_TOKEN + " " + resource.id(), "");
+            case "wrong owner" -> text.replace(owner, "usageList[] /99999");
+            case "owner name" -> text.replace(owner, "usageList[] /Vdrive");
+            case "duplicate owner" -> text.replace(owner, owner + "/" + resource.ownerIds().getFirst());
+            case "wrong kind" -> text.replace("fileContents[] 80 87 76 49", "fileContents[] 81 87 76 49");
+            case "invalid length" -> text.replaceFirst("(?m)(fileContents\\[\\][^\\r\\n]*) -?[0-9]+$", "$1");
+            case "duplicate control owner", "duplicate thermal owner", "duplicate special owner" -> text;
+            case "duplicate ID" -> {
+                String block = text.substring(text.indexOf(start), text.indexOf(end)) + end;
+                yield text.replace(block, block + "\n" + block);
+            }
+            default -> throw new AssertionError(defect);
+        };
+        String saved = text;
+        if (!List.of("duplicate control owner", "duplicate thermal owner", "duplicate special owner").contains(defect)) {
+            assertThrows(CircuitFileParser.CircuitParseException.class, () ->
+                    new CircuitFileParser().parse(new BufferedReader(new StringReader(saved)), "pwl.ipes"));
+            return;
+        }
+        var reopened = new CircuitFileParser().parse(new BufferedReader(new StringReader(saved)), "pwl.ipes");
+        if (defect.startsWith("duplicate ") && defect.endsWith(" owner") && !defect.equals("duplicate owner")) {
+            var other = new gecko.core.io.CircuitModel.ComponentData(0, "another label");
+            other.setParameter("uniqueObjectIdentifier", resource.ownerIds().getFirst());
+            switch (defect) {
+                case "duplicate control owner" -> reopened.addControlComponent(other);
+                case "duplicate thermal owner" -> reopened.addThermalComponent(other);
+                case "duplicate special owner" -> reopened.getSpecialComponents().add(other);
+                default -> throw new AssertionError(defect);
+            }
+        }
+        assertThrows(IllegalArgumentException.class, () -> NetlistBuilder.buildFromCircuitModel(reopened));
+    }
+
+    @Test void pwlIsIndependentOfStepSizeAndRollback() {
+        double[] times = {2e-6, 4e-6, 8e-6};
+        double[] values = {-2, 3, -1};
+        var waveform = new PiecewiseLinearWaveform(times, values);
+        times[0] = 0;
+        values[0] = 99;
+        waveform.timeKnots()[0] = 0;
+        waveform.values()[0] = 99;
+        assertEquals(-2, waveform.calculate(0, 1e-6));
+        assertEquals(-1, waveform.calculate(30e-6, 4e-6));
+        assertEquals(3, waveform.calculate(4e-6, 2e-6));
+        waveform.stepBack();
+        assertEquals(0.5, waveform.calculate(3e-6, 0.125e-6), 1e-12);
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"PWL(0 1 1m)", "PWL(0 1 0 2)", "PWL(1m 1 0 2)",
+        "PWL(-1u 1 0 2)", "PWL(0 1 +1m 2)", "PWL(0 1 1m 1e999)", "PWL FILE=pwl.txt",
+        "PWL REPEAT FOREVER (0 1 1m 2) ENDREPEAT", "PWL(0 1 1m 2) TRIGGER V(x)",
+        "PWL(0 1 1m 2) TIME_SCALE_FACTOR=2", "PWL(0 1) PWL(1m 2)"})
+    void rejectsUnsupportedPiecewiseLinearForms(String waveform) {
+        var model = convert("Vdrive in 0 " + waveform + "\nR1 in 0 1\n.tran 1u 1m");
+        assertEquals(1, model.getImportIssues().size(), model.getImportIssues().toString());
+        assertEquals(1, model.getCircuitComponents().size());
+        assertTrue(model.getResources().isEmpty());
+    }
+
+    @ParameterizedTest @ValueSource(strings = {"V", "I"})
+    void rejectsPiecewiseLinearAcSourcesBeforeReadingPhase(String kind) {
+        var model = convert(kind + "1 in 0 AC 1 PWL (0 5 1m 8)\nR1 in 0 1\n.ac dec 10 10 100");
+        assertTrue(model.getImportIssues().stream().anyMatch(issue -> issue.toString().contains("PWL sources are unsupported in AC analysis")));
+        assertTrue(model.getResources().isEmpty());
     }
 
     @ParameterizedTest @ValueSource(strings = {"V", "I"})

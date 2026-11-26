@@ -688,6 +688,7 @@ public class SimulationsKern implements ISimulationEngine {
             double dt, double tSTART, double tAktuell, double tEND, double tPAUSE,
             boolean getAnfangsbedVomDialogfenster,
             NetListContainer nlContainer, boolean recalculateMatrixFromDifferentDt) {
+        NetListContainer.requireLegacySourceSupport(java.util.Arrays.asList(nlContainer._nlLK.elements));
         _simulationStatus = SimulationStatus.RUNNING;
 
         this.dt = dt;

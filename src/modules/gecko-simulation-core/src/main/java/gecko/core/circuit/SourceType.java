@@ -42,4 +42,6 @@ public class SourceType {
 
     public static final int QUELLE_SIN = 402;
     public static final int QUELLE_SIN_NEW = 1;
+    public static final int PWL = 403;
+    public static final int PWL_NEW = 7;
 }

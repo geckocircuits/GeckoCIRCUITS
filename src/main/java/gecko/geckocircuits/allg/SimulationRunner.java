@@ -166,6 +166,7 @@ public final class SimulationRunner {
 
     public void startCalculation(boolean createNewSimThread, SolverSettings settings) throws Exception {
         _se.requireCompleteConversion();
+        if (_se.getAcSettings() == null) controller.requireExplicitLegacySourceSupport();
         controller.reset();
         if (_se.getAcSettings() != null) {
             acAnalysis.start(_se, settings, createNewSimThread);
@@ -185,6 +186,7 @@ public final class SimulationRunner {
             simKern = null;
             return;
         }
+        NetListContainer.requireLegacySourceSupport(_se);
         Execution prepared = prepareExecution(null, false, true, settings, preparation -> prepareStart(preparation, settings));
         if (prepared != null) {
             updatePresentation(prepared, () -> setMenus(prepared, true), prepared.activation());
@@ -237,6 +239,7 @@ public final class SimulationRunner {
             controller.continueAsync(settings);
             return;
         }
+        NetListContainer.requireLegacySourceSupport(_se);
         Execution prepared = prepareExecution(null, false, false, settings, preparation -> prepareContinuation(preparation, settings));
         activateContinuation(prepared, createNewSimThread);
     }
@@ -313,6 +316,7 @@ public final class SimulationRunner {
 
     public void initSim(double dt, double end) {
         _se.requireCompleteConversion();
+        controller.requireExplicitLegacySourceSupport();
         SolverSettings settings = MainWindow._solverSettings;
         settings._tDURATION.setValueWithoutUndo(end);
         settings.dt.setValueWithoutUndo(dt);
@@ -361,6 +365,7 @@ public final class SimulationRunner {
 
     public void external_init(double end) {
         _se.requireCompleteConversion();
+        controller.requireExplicitLegacySourceSupport();
         SolverSettings settings = MainWindow._solverSettings;
         controller.reset();
         try {
@@ -399,6 +404,7 @@ public final class SimulationRunner {
     }
 
     private void initializeScript(SolverSettings settings, double end, double dt, boolean usePreCalculation) {
+        NetListContainer.requireLegacySourceSupport(_se);
         Execution prepared = prepareExecution(null, false, false, settings,
                 preparation -> prepareScript(preparation, settings, end, dt, usePreCalculation));
         if (prepared != null) {

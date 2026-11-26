@@ -1,8 +1,10 @@
 package gecko.core.simulation.solver;
 
 import gecko.core.allg.SolverType;
+import gecko.core.circuit.SourceType;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.circuit.netlist.CircuitNetlist;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,6 +12,46 @@ import org.junit.jupiter.params.provider.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InitialStateContractTest {
+    @ParameterizedTest
+    @CsvSource({"false, 1", "true, 1", "false, 0", "true, 0"})
+    void initializesFromPwlValueAtTimeZero(boolean operatingPoint, double initialCapacitorVoltage) {
+        var netlist = new CircuitNetlist();
+        netlist.initNetlist(new CircuitTypCore[]{CircuitTypCore.LK_U, CircuitTypCore.LK_R, CircuitTypCore.LK_C},
+                new int[]{1, 1, 2}, new int[]{0, 2, 0}, new int[]{1, -1, -1},
+                new double[][]{{SourceType.PWL, 0}, {1, 0, 0}, {1e-6, initialCapacitorVoltage}}, 2, 1, 3);
+        netlist.setPwlWaveform(0, new PiecewiseLinearWaveform(new double[]{1e-6, 2e-6}, new double[]{-2, 3}));
+        var matrix = new MatrixSolver(SolverType.SOLVER_BE);
+        matrix.initializeMatrices(2, 1, 3);
+        var solver = new InitialConditionSolver(SolverType.SOLVER_BE);
+        var snapshot = netlist.detachedSnapshot();
+        if (operatingPoint) {
+            solver.setDcOperatingPoint(matrix, snapshot);
+        } else {
+            solver.setDialogInitialConditions(matrix, snapshot);
+        }
+        assertEquals(-2, matrix.getPALT()[1], 1e-12);
+        assertEquals(operatingPoint ? -2 : initialCapacitorVoltage, matrix.getPALT()[2], 1e-12);
+        assertEquals(SourceType.PWL, snapshot.getParameter(0)[0]);
+    }
+
+    @Test
+    void seedsPwlVoltageAndCurrentInAResistiveNetwork() {
+        var netlist = new CircuitNetlist();
+        netlist.initNetlist(new CircuitTypCore[]{CircuitTypCore.LK_U, CircuitTypCore.LK_R,
+                    CircuitTypCore.LK_I, CircuitTypCore.LK_R},
+                new int[]{1, 1, 2, 2}, new int[]{0, 0, 0, 0}, new int[]{1, -1, -1, -1},
+                new double[][]{{SourceType.PWL, 0}, {1}, {SourceType.PWL_NEW, 0}, {1}}, 2, 1, 4);
+        var waveform = new PiecewiseLinearWaveform(new double[]{0, 2e-6}, new double[]{-2, 3});
+        netlist.setPwlWaveform(0, waveform);
+        netlist.setPwlWaveform(2, waveform);
+        var matrix = new MatrixSolver(SolverType.SOLVER_BE);
+        matrix.initializeMatrices(2, 1, 4);
+        new InitialConditionSolver(SolverType.SOLVER_BE).setDialogInitialConditions(matrix, netlist);
+        assertEquals(-2, matrix.getPALT()[1], 1e-12);
+        assertEquals(2, matrix.getPALT()[2], 1e-12);
+        assertEquals(-2, matrix.getIALT()[2], 1e-12);
+    }
+
     static CircuitNetlist saved(CircuitTypCore type, int x, int y, double[] values) {
         var netlist = new CircuitNetlist();
         netlist.initNetlist(new CircuitTypCore[]{type}, new int[]{x}, new int[]{y},

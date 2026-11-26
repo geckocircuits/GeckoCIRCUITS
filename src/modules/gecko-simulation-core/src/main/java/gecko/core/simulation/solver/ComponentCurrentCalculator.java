@@ -188,6 +188,10 @@ public class ComponentCurrentCalculator {
                 case TH_FLOW: {
                     int sourceType = (int) parameters[0];
                     switch (sourceType) {
+                        case SourceType.PWL_NEW:
+                        case SourceType.PWL:
+                            current = netlist.getPwlWaveform(elementIdx).calculate(time, dt);
+                            break;
                         case SourceType.QUELLE_DC_NEW:
                         case SourceType.QUELLE_DC:
                             current = parameters[1];
