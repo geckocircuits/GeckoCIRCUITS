@@ -201,7 +201,9 @@ public final class AcEditorDialogs {
         var fields = new JPanel(new GridLayout(0, 1, 6, 6));
         fields.add(new JLabel("Definition defaults"));
         fields.add(new javax.swing.JScrollPane(defaults));
-        fields.add(new JLabel("Overrides for " + call.instance()));
+        String required = String.join(", ", definition.requiredInputs().stream()
+                .map(gecko.core.io.CircuitHierarchy.RequiredInput::name).toList());
+        fields.add(new JLabel("Overrides for " + call.instance() + (required.isEmpty() ? "" : " (required " + required + ")")));
         fields.add(new javax.swing.JScrollPane(overrides));
         while (JOptionPane.showConfirmDialog(window, fields, "ASC parameters", JOptionPane.OK_CANCEL_OPTION)
                 == JOptionPane.OK_OPTION) {

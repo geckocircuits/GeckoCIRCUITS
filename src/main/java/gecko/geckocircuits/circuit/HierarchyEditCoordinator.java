@@ -60,7 +60,7 @@ final class HierarchyEditCoordinator {
         var oldDocument = editor.getHierarchy();
         var oldDefinition = oldDocument.definition(existing.definitionId());
         var newDefinition = new CircuitHierarchy.Definition(oldDefinition.id(), oldDefinition.source(),
-                oldDefinition.formals(), defaults);
+                oldDefinition.formals(), defaults, oldDefinition.requiredInputs());
         var newDocument = new CircuitHierarchy(oldDocument.definitions().stream()
                 .map(definition -> definition.id().equals(newDefinition.id()) ? newDefinition : definition).toList());
         var newCall = new CircuitHierarchy.Occurrence(existing.definitionId(), existing.instance(), overrides);

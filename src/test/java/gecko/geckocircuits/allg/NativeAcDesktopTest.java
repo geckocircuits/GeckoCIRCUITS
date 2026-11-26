@@ -472,6 +472,55 @@ class NativeAcDesktopTest {
         }
     }
 
+    @Test
+    void preservesRequiredHierarchyInputsDuringDesktopEditSaveAndReopen() throws Exception {
+        Path evidence = evidence();
+        Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
+                .toAbsolutePath().normalize();
+        Path fixture = Files.createDirectory(evidence.resolve("required-input-source"));
+        for (String name : List.of("root.asc", "wrapper.asc", "wrapper.asy", "leaf.asc", "leaf.asy",
+                "res.asy", "cap.asy", "voltage.asy")) {
+            String text = Files.readString(source.resolve(name));
+            if (name.equals("leaf.asc")) text = text.replace("series=3k shunt=2k", "shunt=2k");
+            Files.writeString(fixture.resolve(name), text, java.nio.file.StandardOpenOption.CREATE_NEW);
+        }
+        Path input = evidence.resolve("required-inputs.ipes");
+        assertEquals(0, Main.run(new String[]{fixture.resolve("root.asc").toString(), input.toString(),
+                "--symbols", fixture.toString(), "--source-root", fixture.toString()}, System.out, System.err));
+        try {
+            onEdt(() -> {
+                open(input);
+                var original = MainWindow._se.getHierarchy();
+                assertEquals(List.of("series"), original.definitions().stream()
+                        .filter(definition -> definition.source().endsWith("leaf.asc")).findFirst().orElseThrow()
+                        .requiredInputs().stream().map(gecko.core.io.CircuitHierarchy.RequiredInput::name).toList());
+                showOccurrence("X1", "Xleaf");
+                editHierarchyParameters("shunt=2k", "SeRiEs={caller+1k}");
+                assertHierarchyOutputs(solve(), 2000, 4000, 2000);
+                var editor = MainWindow._se;
+                var settings = editor.getAcSettings();
+                String previousPath = MainWindow.getOpenFileName();
+                byte[] initialBytes = Files.readAllBytes(input);
+                editor.setAcSettings(new gecko.core.ac.AcDocumentSettings(settings.sweep(),
+                        List.of(new gecko.core.ac.ParameterDefinition("first", "-1k")), settings.analysisId()));
+                boolean modified = editor.getZustandGeaendert();
+                assertTrue(assertThrows(IllegalArgumentException.class,
+                        () -> GeckoSim._win.saveDocumentTo(input.toFile(), true))
+                        .getMessage().contains("positive passive"));
+                org.junit.jupiter.api.Assertions.assertArrayEquals(initialBytes, Files.readAllBytes(input));
+                assertEquals(previousPath, MainWindow.getOpenFileName());
+                assertEquals(modified, editor.getZustandGeaendert());
+                editor.setAcSettings(settings);
+                saveAndReopenHierarchy(evidence.resolve("required-input-edit.ipes"));
+                assertEquals(original, MainWindow._se.getHierarchy());
+                assertHierarchyOutputs(solve(), 2000, 4000, 2000);
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
     private static Path createHierarchyInput(Path evidence) {
         Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
                 .toAbsolutePath().normalize();

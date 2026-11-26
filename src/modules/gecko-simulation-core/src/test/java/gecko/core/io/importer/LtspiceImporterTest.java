@@ -2,12 +2,16 @@ package gecko.core.io.importer;
 
 import gecko.core.ac.AcComponent;
 import gecko.core.ac.AcInputOrigin;
+import gecko.core.ac.ParameterDefinition;
 import gecko.core.io.AcMetadataCodec;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
+import gecko.core.io.CircuitHierarchy;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitTopology;
 import gecko.core.io.CircuitTopology.Side;
+import gecko.core.io.HierarchyIndex;
+import gecko.core.io.HierarchyMetadataCodec;
 import gecko.core.simulation.HeadlessSimulationEngine;
 import gecko.core.simulation.SimulationConfig;
 import java.io.ByteArrayInputStream;
@@ -28,6 +32,110 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LtspiceImporterTest {
     @TempDir Path directory;
+
+    @Test void retainsTheWitnessedBlockInputsAndPinOrderWithoutImportingItsPhysicalModel() throws Exception {
+        for (String name : List.of("res.asy", "cap.asy", "voltage.asy")) {
+            try (var input = java.util.Objects.requireNonNull(getClass().getResourceAsStream("/ltspice-hierarchy/" + name))) {
+                Files.copy(input, directory.resolve(name));
+            }
+        }
+        Files.writeString(directory.resolve("stage.asy"), """
+                Version 4
+                SymbolType BLOCK
+                PIN -64 0 LEFT 8
+                PINATTR PinName -
+                PINATTR SpiceOrder 1
+                PIN -64 32 LEFT 5
+                PINATTR PinName +
+                PINATTR SpiceOrder 2
+                PIN 0 16 NONE 8
+                PINATTR PinName OUT
+                PINATTR SpiceOrder 3
+                """);
+        String child = """
+                Version 4
+                SHEET 1 880 680
+                FLAG 16 16 -
+                FLAG 112 0 +
+                FLAG 192 16 OUT
+                FLAG 16 96 0
+                FLAG 112 64 0
+                FLAG 192 96 0
+                FLAG 288 96 0
+                FLAG 288 16 NodeOnly
+                SYMBOL res 0 0 R0
+                SYMATTR InstName R1
+                SYMATTR Value {ROL}
+                SYMBOL cap 96 0 R0
+                SYMATTR InstName C1
+                SYMATTR Value {COL}
+                SYMBOL voltage 192 0 R0
+                SYMATTR InstName V1
+                SYMATTR Value {VLOW}
+                SYMBOL voltage 288 0 R0
+                SYMATTR InstName V2
+                SYMATTR Value {VHIGH}
+                TEXT 40 256 Left 2 ;{CommentOnly}
+                TEXT 40 272 Left 2 !.model ModelOnly D
+                """;
+        var childPath = Files.writeString(directory.resolve("stage.asc"), child).toRealPath();
+        var root = Files.writeString(directory.resolve("root.asc"), """
+                Version 4
+                SHEET 1 880 680
+                FLAG 64 128 N005
+                FLAG 64 160 N007
+                FLAG 128 144 op
+                SYMBOL stage 128 128 R0
+                SYMATTR InstName X1
+                SYMATTR SpiceLine Vhigh={VHIGH} Vlow={VLOW} Col={COL} Rol={ROL}
+                TEXT 40 256 Left 2 !.param VHIGH=12 VLOW=-12 COL=100p ROL=100k
+                TEXT 40 272 Left 2 !.ac dec 2 10 100
+                """);
+        var model = new LtspiceImporter().convert(root, directory, List.of(directory));
+        var definition = model.getHierarchy().definitions().getFirst();
+        assertEquals(List.of("-", "+", "OUT"), definition.formals().stream().map(CircuitHierarchy.Formal::name).toList());
+        assertTrue(definition.defaults().isEmpty());
+        assertEquals(List.of("ROL", "COL", "VLOW", "VHIGH"),
+                definition.requiredInputs().stream().map(CircuitHierarchy.RequiredInput::name).toList());
+        for (var input : definition.requiredInputs()) {
+            var use = input.uses().getFirst();
+            assertEquals(childPath.toString(), use.source());
+            assertEquals("Value", use.attribute());
+            assertEquals("SYMATTR Value {" + input.name() + "}", child.lines().toList().get(use.line() - 1));
+        }
+        assertEquals(List.of("{ROL}", "{COL}", "{VLOW}", "{VHIGH}"),
+                model.getCircuitComponents().stream().map(CircuitModel.ComponentData::getAcComponent)
+                        .filter(java.util.Objects::nonNull).map(component -> switch (component.law()) {
+                            case AcComponent.Passive law -> law.expression();
+                            case AcComponent.Voltage law -> law.dc();
+                            default -> throw new AssertionError(component);
+                        }).toList());
+        var numeric = model.getCircuitComponents().stream().filter(component -> component.getAcComponent() != null)
+                .map(CircuitModel.ComponentData::getNumericParameters).toList();
+        assertEquals(100_000, numeric.get(0)[0]);
+        assertEquals(100e-12, numeric.get(1)[0], 1e-22);
+        assertEquals(-12, numeric.get(2)[1]);
+        assertEquals(12, numeric.get(3)[1]);
+        assertTrue(numeric.stream().allMatch(values -> java.util.Arrays.stream(values).allMatch(Double::isFinite)));
+        var index = new HierarchyIndex(model);
+        var owner = model.getSpecialComponents().getFirst();
+        var sheet = index.sheet(owner.getSavedBlock().uniqueObjectIdentifier());
+        assertEquals(List.of(new ParameterDefinition("Vhigh", "{VHIGH}"), new ParameterDefinition("Vlow", "{VLOW}"),
+                new ParameterDefinition("Col", "{COL}"), new ParameterDefinition("Rol", "{ROL}")), sheet.call().overrides());
+        for (int pin = 0; pin < 3; pin++) {
+            var boundary = index.boundaries().get(pin);
+            var offset = HierarchyMetadataCodec.decodeBoundaryLocation(boundary.terminal().getSavedBlock().tokens()
+                    .get(HierarchyMetadataCodec.BOUNDARY_LOCATION));
+            int[] position = owner.getPosition();
+            String expectedNode = List.of("N005", "N007", "op").get(pin);
+            assertTrue(model.getConnections().stream().anyMatch(wire ->
+                    HierarchyIndex.parent(wire.getSavedBlock()) == 0 && wire.getLabel().equals(expectedNode)
+                            && java.util.Arrays.stream(wire.getPoints()).anyMatch(point ->
+                                    point[0] == position[0] + offset.x() && point[1] == position[1] + offset.y())),
+                    expectedNode);
+        }
+        assertTrue(model.getConversionIssues().stream().anyMatch(issue -> issue.code().equals("UNSUPPORTED_HIERARCHY_DIRECTIVE")));
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {

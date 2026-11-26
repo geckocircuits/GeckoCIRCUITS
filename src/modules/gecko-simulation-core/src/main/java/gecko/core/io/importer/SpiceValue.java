@@ -110,13 +110,34 @@ public final class SpiceValue {
         return new IllegalArgumentException("Unsupported SPICE function: " + name);
     }
 
+    static final class UnknownScalarParameter extends IllegalArgumentException {
+        final String name;
+
+        UnknownScalarParameter(String name) {
+            super("Unknown scalar parameter: " + name);
+            this.name = name;
+        }
+    }
+
     private static final class Scope {
         private final Map<String, String> parameters = new LinkedHashMap<>();
         private final Map<String, Complex> values = new LinkedHashMap<>();
         private final Set<String> evaluating = new HashSet<>();
+        private final Scope parent;
+        private final Set<String> unbound;
 
         Scope(Map<String, String> source) {
+            this(source, null);
+        }
+
+        Scope(Map<String, String> source, Scope parent) {
+            this(source, parent, Set.of());
+        }
+
+        Scope(Map<String, String> source, Scope parent, Set<String> unbound) {
             source.forEach((name, value) -> parameters.put(name.toLowerCase(Locale.ROOT), value));
+            this.parent = parent;
+            this.unbound = unbound;
         }
 
         Complex parameter(String name, int depth) {
@@ -124,7 +145,8 @@ public final class SpiceValue {
             Complex value = values.get(name);
             if (value != null) return value;
             String expression = parameters.get(name);
-            if (expression == null) throw new IllegalArgumentException("Unknown scalar parameter: " + name);
+            if (expression == null && parent != null && !unbound.contains(name)) return parent.parameter(name, depth);
+            if (expression == null) throw new UnknownScalarParameter(name);
             if (!evaluating.add(name)) throw new IllegalArgumentException("Circular scalar parameter: " + name);
             try {
                 value = finite(parse(expression).evaluate(this, null, depth + 1), expression);
@@ -151,6 +173,28 @@ public final class SpiceValue {
 
     public static double evaluate(String text, Map<String, String> parameters) {
         return finite(parse(text).evaluate(new Scope(parameters), null, 0), text).real();
+    }
+
+    static double evaluateGeometry(String text, Map<String, String> local, Map<String, String> parent,
+                                   Set<String> unbound) {
+        return finite(parse(text).evaluate(new Scope(local, new Scope(parent), unbound), null, 0), text).real();
+    }
+
+    public static double requirePositivePassive(double value, String member) {
+        if (!Double.isFinite(value) || value <= 0) {
+            throw new IllegalArgumentException("Require a finite positive passive component value on " + member + ".");
+        }
+        return value;
+    }
+
+    /** Resolves local scalar bindings in their defining scope. */
+    public static Map<String, String> bindScalars(Map<String, String> local, Map<String, String> parent) {
+        var scope = new Scope(local, new Scope(parent));
+        var bound = new LinkedHashMap<String, String>();
+        for (var name : scope.parameters.keySet()) {
+            bound.put(name, Double.toString(scope.parameter(name, 0).real()));
+        }
+        return Map.copyOf(bound);
     }
 
     public static Transfer transfer(String text, Map<String, String> parameters) {

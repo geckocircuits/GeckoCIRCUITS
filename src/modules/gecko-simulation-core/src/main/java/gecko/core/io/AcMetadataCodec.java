@@ -168,20 +168,31 @@ public final class AcMetadataCodec {
     public static double[] compatibilityValues(AcComponent component, double[] saved, Map<String, String> parameters) {
         double[] values = saved.clone();
         switch (component.law()) {
-            case AcComponent.Passive law -> values[0] = SpiceValue.evaluate(law.expression(), parameters);
+            case AcComponent.Passive law -> values[0] = SpiceValue.requirePositivePassive(
+                    SpiceValue.evaluate(law.expression(), parameters), component.instance());
             case AcComponent.Inductance law -> values[0] = law.origin().tested()
-                    ? law.evaluate(parameters).henries() : SpiceValue.evaluate(law.expression(), parameters);
+                    ? law.evaluate(parameters).henries() : SpiceValue.requirePositivePassive(
+                            SpiceValue.evaluate(law.expression(), parameters), component.instance());
             case AcComponent.Voltage law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Current law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Controlled law -> {
                 if (!law.laplace()) values[0] = SpiceValue.evaluate(law.expression(), parameters);
             }
         }
+        for (double value : values) {
+            if (!Double.isFinite(value)) {
+                throw new IllegalArgumentException("Require finite compatibility values on " + component.instance() + ".");
+            }
+        }
         return values;
     }
 
     static String encode(List<String> fields) {
-        var encoded = new StringBuilder(VERSION);
+        return encode(VERSION, fields);
+    }
+
+    static String encode(String version, List<String> fields) {
+        var encoded = new StringBuilder(version);
         for (String field : fields) {
             encoded.append('.').append(Base64.getUrlEncoder().withoutPadding()
                     .encodeToString(field.getBytes(StandardCharsets.UTF_8)));
@@ -190,8 +201,12 @@ public final class AcMetadataCodec {
     }
 
     static String[] decode(String text) {
+        return decode(VERSION, text);
+    }
+
+    static String[] decode(String version, String text) {
         String[] tokens = text.split("\\.", -1);
-        require(tokens[0].equals(VERSION));
+        require(tokens[0].equals(version));
         String[] fields = new String[tokens.length - 1];
         for (int i = 0; i < fields.length; i++) {
             byte[] bytes = Base64.getUrlDecoder().decode(tokens[i + 1]);

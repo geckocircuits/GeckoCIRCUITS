@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.DoubleUnaryOperator;
 import java.util.regex.Pattern;
@@ -36,6 +37,12 @@ public final class SpiceImporter {
 
     CircuitModel convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
                          Map<String, ComponentData> placements, AcInputOrigin origin) {
+        return convert(sourceName, sourceId, statements, nodes, placements, origin, Map.of(), Map.of());
+    }
+
+    CircuitModel convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
+                         Map<String, ComponentData> placements, AcInputOrigin origin,
+                         Map<String, String> childScalarMembers, Map<String, String> caller) {
         var model = new CircuitModel();
         model.setFilePath(sourceName);
         model.setFileVersion(202);
@@ -110,6 +117,8 @@ public final class SpiceImporter {
             }
         }
         nodes.putIfAbsent("0", "0");
+        var required = new HashSet<>(childScalarMembers.values());
+        required.removeAll(parameters.keySet());
         var names = new HashSet<String>();
         for (var line : lines) {
             String text = line.text();
@@ -147,13 +156,14 @@ public final class SpiceImporter {
                 data.getImportTokens().put("uniqueObjectIdentifier", Long.toString(10000L + index));
                 List<String> aliases = List.of(positive, negative);
                 AcComponent.Law law = null;
+                boolean bindScalar = childScalarMembers.containsKey(name) && !required.isEmpty();
                 switch (kind) {
                     case 'R', 'L', 'C' -> {
                         String[] args = arguments(fields[3]);
-                        double v = value(args[0], parameters);
-                        if (v <= 0) throw new IllegalArgumentException("Require a positive passive component value.");
+                        Double v = bindScalar ? childGeometryScalar(args[0], parameters, caller, required)
+                                : Double.valueOf(value(args[0], parameters));
                         double[] values = new double[type == 1 ? 3 : type == 2 ? 5 : 11];
-                        values[0] = v;
+                        values[0] = v == null ? Double.NaN : SpiceValue.requirePositivePassive(v, name);
                         if (ac && kind == 'L') {
                             law = acInductance(fields[3], args, origin);
                         } else if (args.length > 1) {
@@ -168,7 +178,16 @@ public final class SpiceImporter {
                     case 'V', 'I' -> {
                         if (ac) {
                             var voltage = acVoltage(fields[3]);
-                            source(data, voltage.dc(), model, parameters);
+                            Double dc = bindScalar ? childGeometryScalar(voltage.dc(), parameters, caller, required)
+                                    : null;
+                            if (bindScalar) {
+                                var saved = new double[21];
+                                saved[0] = 401;
+                                saved[1] = dc == null ? Double.NaN : dc;
+                                sourceSettings(data, saved);
+                            } else {
+                                source(data, voltage.dc(), model, parameters);
+                            }
                             if (kind == 'I' && !voltage.waveform().isEmpty()) {
                                 throw new IllegalArgumentException("Unsupported transient AC current source waveform.");
                             }
@@ -233,6 +252,17 @@ public final class SpiceImporter {
             model.getControlComponents().get(index).getPosition()[1] = 5 + circuitRows * 14 + index / 6 * 12;
         }
         return model;
+    }
+
+    // A missing required input is permitted only in the private child geometry.
+    private static Double childGeometryScalar(String expression, Map<String, String> local,
+                                              Map<String, String> caller, Set<String> required) {
+        try {
+            return SpiceValue.evaluateGeometry(expression, local, caller, required);
+        } catch (SpiceValue.UnknownScalarParameter error) {
+            if (!required.contains(error.name)) throw error;
+            return null;
+        }
     }
 
     private static AcComponent.Inductance acInductance(String value, String[] args, AcInputOrigin origin) {

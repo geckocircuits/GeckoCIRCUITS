@@ -10,23 +10,27 @@ public final class HierarchyMetadataCodec {
     public static final String MEMBER = "geckoHierarchyMember";
     public static final String OCCURRENCE = "geckoHierarchyOccurrence";
     public static final String BOUNDARY_LOCATION = "geckoHierarchyBoundaryLocation";
+    private static final String REQUIRED_INPUT_VERSION = "2";
 
     private HierarchyMetadataCodec() { }
 
     public static String encode(CircuitHierarchy document) {
         var fields = new ArrayList<String>();
+        boolean extended = document.definitions().stream().anyMatch(definition -> !definition.requiredInputs().isEmpty());
         for (var definition : document.definitions()) {
             fields.addAll(List.of(definition.id(), definition.source(), Integer.toString(definition.formals().size())));
             for (var formal : definition.formals()) {
                 fields.addAll(List.of(Integer.toString(formal.order()), formal.name(), formal.boundaryMemberKey()));
             }
             appendParameters(fields, definition.defaults());
+            if (extended) appendRequiredInputs(fields, definition.requiredInputs());
         }
-        return AcMetadataCodec.encode(fields);
+        return extended ? AcMetadataCodec.encode(REQUIRED_INPUT_VERSION, fields) : AcMetadataCodec.encode(fields);
     }
 
     public static CircuitHierarchy decodeDocument(String text) {
-        var fields = new Fields(text);
+        boolean extended = text.startsWith(REQUIRED_INPUT_VERSION + ".");
+        var fields = extended ? new Fields(AcMetadataCodec.decode(REQUIRED_INPUT_VERSION, text)) : new Fields(text);
         var definitions = new ArrayList<CircuitHierarchy.Definition>();
         while (fields.remaining() > 0) {
             String id = fields.next(), source = fields.next();
@@ -35,7 +39,9 @@ public final class HierarchyMetadataCodec {
             for (int i = 0; i < count; i++) {
                 formals.add(new CircuitHierarchy.Formal(Integer.parseInt(fields.next()), fields.next(), fields.next()));
             }
-            definitions.add(new CircuitHierarchy.Definition(id, source, formals, fields.parameters()));
+            var defaults = fields.parameters();
+            var required = extended ? fields.requiredInputs() : List.<CircuitHierarchy.RequiredInput>of();
+            definitions.add(new CircuitHierarchy.Definition(id, source, formals, defaults, required));
         }
         return new CircuitHierarchy(definitions);
     }
@@ -80,11 +86,22 @@ public final class HierarchyMetadataCodec {
         for (var parameter : parameters) fields.addAll(List.of(parameter.name(), parameter.expression()));
     }
 
+    private static void appendRequiredInputs(List<String> fields, List<CircuitHierarchy.RequiredInput> required) {
+        fields.add(Integer.toString(required.size()));
+        for (var input : required) {
+            fields.addAll(List.of(input.name(), Integer.toString(input.uses().size())));
+            for (var use : input.uses()) {
+                fields.addAll(List.of(use.source(), use.member(), use.attribute(), Integer.toString(use.line())));
+            }
+        }
+    }
+
     private static final class Fields {
         private final String[] fields;
         private int offset;
 
-        Fields(String encoded) { fields = AcMetadataCodec.decode(encoded); }
+        Fields(String encoded) { this(AcMetadataCodec.decode(encoded)); }
+        Fields(String[] fields) { this.fields = fields; }
         int remaining() { return fields.length - offset; }
 
         String next() {
@@ -102,6 +119,21 @@ public final class HierarchyMetadataCodec {
             int count = count(2);
             var result = new ArrayList<ParameterDefinition>(count);
             for (int i = 0; i < count; i++) result.add(new ParameterDefinition(next(), next()));
+            return result;
+        }
+
+        List<CircuitHierarchy.RequiredInput> requiredInputs() {
+            int count = count(2);
+            var result = new ArrayList<CircuitHierarchy.RequiredInput>(count);
+            for (int i = 0; i < count; i++) {
+                String name = next();
+                int useCount = count(4);
+                var uses = new ArrayList<CircuitHierarchy.ScalarUse>(useCount);
+                for (int j = 0; j < useCount; j++) {
+                    uses.add(new CircuitHierarchy.ScalarUse(next(), next(), next(), Integer.parseInt(next())));
+                }
+                result.add(new CircuitHierarchy.RequiredInput(name, uses));
+            }
             return result;
         }
 

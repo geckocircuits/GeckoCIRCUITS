@@ -13,6 +13,7 @@ import gecko.core.io.ArtifactDigest;
 import gecko.core.io.BuildIdentity;
 import gecko.core.ac.AcInputOrigin;
 import gecko.core.io.AcOriginMembership;
+import gecko.core.io.AcMetadataCodec;
 import gecko.core.io.AcProvenance;
 import gecko.core.io.HierarchyIndex;
 import gecko.core.io.SpicePorts;
@@ -85,7 +86,8 @@ public final class LtspiceImporter {
         }
     }
 
-    private record Symbol(int line, String kind, Point origin, String rotation, Map<String, String> attributes) {
+    private record Symbol(int line, String kind, Point origin, String rotation, Map<String, String> attributes,
+                          Map<String, Integer> attributeLines) {
         String name() { return attributes.getOrDefault("instname", kind); }
     }
 
@@ -133,7 +135,8 @@ public final class LtspiceImporter {
     private record Pin(String name, int order, Point position) { }
     private record Call(Symbol symbol, Path schematic, List<Pin> pins) { }
     private record SheetImport(CircuitModel model, Grid grid, List<Call> calls, List<Flag> flags,
-                               List<Wire> wires, List<PlacedSymbol> primitives) { }
+                               List<Wire> wires, List<PlacedSymbol> primitives,
+                               List<CircuitHierarchy.RequiredInput> requiredInputs) { }
 
     public record ImportResult(CircuitModel model, LtspiceImportReceipt receipt) { }
 
@@ -180,7 +183,7 @@ public final class LtspiceImporter {
         String text = decode(source);
         var state = new HierarchyImport(sourceRoots, dependencies, origin);
         SheetImport rootSheet = sourceRoots.isEmpty()
-                ? convertSheet(text, path.toString(), null, null, false, origin)
+                ? convertSheet(text, path.toString(), null, null, false, origin, Map.of())
                 : state.convert(path, text);
         CircuitModel model = rootSheet.model();
         if (model.getAcSettings() == null) throw new IllegalArgumentException("Stock-symbol verification requires an AC schematic.");
@@ -284,11 +287,11 @@ public final class LtspiceImporter {
      * @return the converted circuit and its import issues
      */
     public CircuitModel convert(String source, String sourceName) {
-        return convertSheet(source, sourceName, null, null, false, AcInputOrigin.UNSELECTED_ASC).model();
+        return convertSheet(source, sourceName, null, null, false, AcInputOrigin.UNSELECTED_ASC, Map.of()).model();
     }
 
     private SheetImport convertSheet(String source, String sourceName, Path path, HierarchyImport hierarchy, boolean child,
-                                     AcInputOrigin origin) {
+                                     AcInputOrigin origin, Map<String, String> caller) {
         if (source.isBlank() || source.indexOf('\0') >= 0) {
             throw new IllegalArgumentException("Require a nonempty LTspice schematic.");
         }
@@ -313,6 +316,7 @@ public final class LtspiceImporter {
             }
         }
         List<PlacedSymbol> placed = placeSymbols(symbols, sourceName, issues, origin);
+        var scalarReads = child ? HierarchyImport.scalarReads(placed, path.toString()) : List.<CircuitHierarchy.RequiredInput>of();
         var markers = new LinkedHashMap<Point, ComponentData>();
         var topologyInput = new CircuitModel();
         var aliases = new LinkedHashMap<String, String>();
@@ -363,7 +367,17 @@ public final class LtspiceImporter {
             }
         }
         if (child) statements.add(new Line(0, ".ac dec 1 1 10"));
-        var model = new SpiceImporter().convert(sourceName, source.hashCode(), statements, nodeLabels, placements, origin);
+        var childScalarMembers = new HashMap<String, String>();
+        for (var input : scalarReads) {
+            for (var use : input.uses()) childScalarMembers.put(use.member(), input.name().toLowerCase(Locale.ROOT));
+        }
+        var model = new SpiceImporter().convert(sourceName, source.hashCode(), statements, nodeLabels, placements, origin,
+                childScalarMembers, caller);
+        if (child && model.getAcSettings() == null) {
+            throw new IllegalArgumentException("Invalid child parameters in " + sourceName + ". " + model.getImportIssues());
+        }
+        var declared = child ? model.getAcSettings().parameterMap() : Map.<String, String>of();
+        var required = scalarReads.stream().filter(input -> !declared.containsKey(input.name().toLowerCase(Locale.ROOT))).toList();
         issues.forEach(model::addConversionIssue);
         boolean ac = model.getAcSettings() != null;
         Layout layout = planLayout(grid, model, symbolByName, wireVertices, nodeKeys, nodeLabels, ac ? flags : null, anchors);
@@ -379,7 +393,7 @@ public final class LtspiceImporter {
         for (int i = 0; i < model.getControlComponents().size(); i++) {
             model.getControlComponents().get(i).getPosition()[1] = Math.addExact(bottom, 12 + i / 6 * 12);
         }
-        return new SheetImport(model, layout.grid(), calls, flags, wires, placed);
+        return new SheetImport(model, layout.grid(), calls, flags, wires, placed, required);
     }
 
     private static Layout planLayout(Grid grid, CircuitModel model, Map<String, PlacedSymbol> symbols,
@@ -530,7 +544,7 @@ public final class LtspiceImporter {
                 switch (record) {
                     case "SYMBOL" -> {
                         requireLength(fields, 5);
-                        active = new Symbol(line, fields[1], point(fields, 2), fields[4], new HashMap<>());
+                        active = new Symbol(line, fields[1], point(fields, 2), fields[4], new HashMap<>(), new HashMap<>());
                         symbols.add(active);
                     }
                     case "SYMATTR" -> {
@@ -543,6 +557,7 @@ public final class LtspiceImporter {
                             throw new IllegalArgumentException("Use each inductor attribute once.");
                         }
                         active.attributes.put(key, attribute[2]);
+                        active.attributeLines.put(key, line);
                     }
                     case "WIRE" -> {
                         requireLength(fields, 5);
@@ -713,6 +728,29 @@ public final class LtspiceImporter {
     }
 
     private final class HierarchyImport {
+        private static final java.util.regex.Pattern SCALAR_VALUE =
+                java.util.regex.Pattern.compile("\\{\\s*([A-Za-z_][A-Za-z_0-9]*)\\s*}");
+
+        private static List<CircuitHierarchy.RequiredInput> scalarReads(List<PlacedSymbol> placed, String source) {
+            var spellings = new LinkedHashMap<String, String>();
+            var uses = new LinkedHashMap<String, List<CircuitHierarchy.ScalarUse>>();
+            for (var device : placed) {
+                if (!List.of(SpicePorts.RES, SpicePorts.CAP, SpicePorts.VOLTAGE).contains(device.type())) continue;
+                var symbol = device.symbol();
+                String raw = symbol.attributes().getOrDefault("value", "").strip();
+                var match = SCALAR_VALUE.matcher(raw);
+                if (!match.matches() || !value(symbol).equals(raw)) continue;
+                String spelling = match.group(1);
+                String key = spelling.toLowerCase(Locale.ROOT);
+                if (key.equals("pi")) continue;
+                spellings.putIfAbsent(key, spelling);
+                uses.computeIfAbsent(key, ignored -> new ArrayList<>()).add(new CircuitHierarchy.ScalarUse(
+                        source, symbol.name(), "Value", symbol.attributeLines().get("value")));
+            }
+            return uses.entrySet().stream().map(entry ->
+                    new CircuitHierarchy.RequiredInput(spellings.get(entry.getKey()), entry.getValue())).toList();
+        }
+
         private final List<Path> sourceRoots;
         private final Map<String, String> dependencies;
         private final Map<String, String> definitionSources = new LinkedHashMap<>();
@@ -731,12 +769,15 @@ public final class LtspiceImporter {
         SheetImport convert(Path path, String source) throws IOException {
             Path root = path.toRealPath();
             active.add(root);
-            var sheet = convertSheet(source, path.toString(), root, this, false, origin);
+            var sheet = convertSheet(source, path.toString(), root, this, false, origin, Map.of());
             CircuitModel document = sheet.model();
             if (!sheet.calls().isEmpty() && document.getAcSettings() == null) {
                 throw new IllegalArgumentException("Select a root AC analysis in " + path);
             }
-            for (var call : sheet.calls()) appendCall(document, sheet, call, 0, List.of());
+            if (!sheet.calls().isEmpty()) {
+                var scope = document.getAcSettings().parameterMap();
+                for (var call : sheet.calls()) appendCall(document, sheet, call, 0, List.of(), scope);
+            }
             if (!definitions.isEmpty()) document.setHierarchy(new CircuitHierarchy(List.copyOf(definitions.values())));
             return sheet;
         }
@@ -808,7 +849,8 @@ public final class LtspiceImporter {
             return matches.getFirst();
         }
 
-        private void appendCall(CircuitModel document, SheetImport parent, Call call, long parentId, List<String> parentPath)
+        private void appendCall(CircuitModel document, SheetImport parent, Call call, long parentId,
+                                List<String> parentPath, Map<String, String> caller)
                 throws IOException {
             var path = new ArrayList<>(parentPath);
             path.add(call.symbol().name());
@@ -820,14 +862,14 @@ public final class LtspiceImporter {
             try {
                 byte[] childSource = Files.readAllBytes(call.schematic());
                 recordDependency(call.schematic(), call.symbol().kind() + ".asc", childSource);
-                var child = convertSheet(decode(childSource), context, call.schematic(), this, true, origin);
+                var child = convertSheet(decode(childSource), context, call.schematic(), this, true, origin, caller);
                 child.model().getConversionIssues().forEach(document::addConversionIssue);
                 String definitionId = call.schematic().toString();
                 definitionSources.putIfAbsent(definitionId, ArtifactDigest.sha256(childSource));
                 var formals = call.pins().stream().map(pin -> new CircuitHierarchy.Formal(pin.order(), pin.name(),
                         "formal:" + pin.name().toLowerCase(Locale.ROOT))).toList();
                 var definition = new CircuitHierarchy.Definition(definitionId, call.schematic().toString(), formals,
-                        child.model().getAcSettings().parameters());
+                        child.model().getAcSettings().parameters(), child.requiredInputs());
                 var existing = definitions.putIfAbsent(definitionId, definition);
                 if (existing != null && !existing.equals(definition)) {
                     throw new IllegalArgumentException("Conflicting ASC interfaces in " + context);
@@ -835,6 +877,7 @@ public final class LtspiceImporter {
                 String attributes = value(call.symbol());
                 var occurrence = new CircuitHierarchy.Occurrence(definitionId, call.symbol().name(),
                         SpiceImporter.parameterAssignments(attributes));
+                var scope = definition.bind(caller, occurrence);
                 long id = nextIdentifier++;
                 var placedPins = call.pins().stream().map(Pin::position).map(parent.grid()::position).toList();
                 int minX = placedPins.stream().mapToInt(Point::x).min().orElseThrow();
@@ -854,6 +897,10 @@ public final class LtspiceImporter {
                 document.getSpecialComponents().add(block);
 
                 for (var component : child.model().getCircuitComponents()) {
+                    if (component.getAcComponent() != null) {
+                        component.setNumericParameters(AcMetadataCodec.compatibilityValues(
+                                component.getAcComponent(), component.getNumericParameters(), scope));
+                    }
                     component.getImportTokens().remove("uniqueObjectIdentifier");
                     var tokens = new LinkedHashMap<String, String>();
                     member(tokens, "component:" + component.getName().toLowerCase(Locale.ROOT));
@@ -890,7 +937,9 @@ public final class LtspiceImporter {
                     terminal.setSavedBlock(saved("ElementLK", nextIdentifier++, id, tokens));
                     document.addCircuitComponent(terminal);
                 }
-                for (var nested : child.calls()) appendCall(document, child, nested, id, path);
+                for (var nested : child.calls()) appendCall(document, child, nested, id, path, scope);
+            } catch (IllegalArgumentException error) {
+                throw new IllegalArgumentException(context + ": " + error.getMessage(), error);
             } finally {
                 active.remove(call.schematic());
             }
