@@ -73,11 +73,8 @@ public record CircuitHierarchy(List<Definition> definitions) {
             }
             explicit.replaceAll((name, expression) -> Double.toString(SpiceValue.evaluate(expression, caller)));
             scope.putAll(explicit);
-            if (requiredInputs.isEmpty()) {
-                scope.values().forEach(expression -> SpiceValue.evaluate(expression, scope));
-                return Map.copyOf(scope);
-            }
-            return SpiceValue.bindScalars(scope, caller);
+            scope.values().forEach(expression -> SpiceValue.evaluate(expression, scope));
+            return Map.copyOf(scope);
         }
     }
 
@@ -122,7 +119,7 @@ public record CircuitHierarchy(List<Definition> definitions) {
         public Member { requireText(key); }
     }
 
-    private static LinkedHashMap<String, String> parameters(List<ParameterDefinition> parameters) {
+    public static LinkedHashMap<String, String> parameters(List<ParameterDefinition> parameters) {
         var map = new LinkedHashMap<String, String>();
         for (var parameter : parameters) {
             if (map.putIfAbsent(parameter.name().toLowerCase(Locale.ROOT), parameter.expression()) != null) {

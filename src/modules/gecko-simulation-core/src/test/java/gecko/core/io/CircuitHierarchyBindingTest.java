@@ -17,14 +17,17 @@ class CircuitHierarchyBindingTest {
                     List.of(new CircuitHierarchy.ScalarUse("leaf.asc", "V1", "Value", 17))));
 
     @Test void resolvesEveryAssignmentInItsParentBeforeBindingChildDefaults() {
-        var definition = definition(parameter("alias", "{VHIGH+ParentAlias}"), parameter("number", "40"));
+        var definition = definition(parameter("alias", "{VHIGH+offset}"), parameter("offset", "1"), parameter("number", "40"));
         var caller = Map.of("VHIGH", "12", "VLOW", "-5", "ParentAlias", "{number}", "number", "1");
-        var call = List.of(parameter("Vhigh", "{VHIGH}"), parameter("Vlow", "{VhIgH+VLOW}"));
-        var expected = Map.of("vhigh", "12.0", "vlow", "7.0", "alias", "13.0", "number", "40.0");
+        var call = List.of(parameter("Vhigh", "{VHIGH}"), parameter("Vlow", "{VhIgH+VLOW+ParentAlias-1}"));
+        var expected = Map.of("vhigh", "12.0", "vlow", "7.0", "alias", "{VHIGH+offset}", "offset", "1", "number", "40");
         assertEquals(expected, definition.bind(caller, occurrence(call)));
         assertEquals(expected, definition.bind(caller, occurrence(call.reversed())));
         assertEquals("13.0", definition.bind(expected,
                 occurrence(List.of(parameter("VHIGH", "{alias}"), parameter("VLOW", "0")))).get("vhigh"));
+        assertTrue(assertThrows(IllegalArgumentException.class, () ->
+                definition(parameter("alias", "{ParentAlias}")).bind(caller, occurrence(call)))
+                .getMessage().contains("Unknown scalar parameter: parentalias"));
     }
 
     @Test void rejectsInvalidCallsWithoutChangingSiblingBindings() {
@@ -68,6 +71,8 @@ class CircuitHierarchyBindingTest {
         String newEncoding = HierarchyMetadataCodec.encode(newDocument);
         assertTrue(newEncoding.startsWith("2."));
         assertEquals(newDocument, HierarchyMetadataCodec.decodeDocument(newEncoding));
+        assertThrows(IllegalArgumentException.class, () ->
+                HierarchyMetadataCodec.decodeDocument(newEncoding.substring(0, newEncoding.lastIndexOf('.'))));
     }
 
     private static CircuitHierarchy.Definition definition(ParameterDefinition... defaults) {

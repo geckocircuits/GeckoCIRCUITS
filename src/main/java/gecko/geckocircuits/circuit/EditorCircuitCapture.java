@@ -2,6 +2,7 @@ package gecko.geckocircuits.circuit;
 
 import gecko.core.allg.GeckoFile;
 import gecko.core.ac.AcDocumentSettings;
+import gecko.core.ac.ParameterDefinition;
 import gecko.core.io.AcProvenance;
 import gecko.core.io.AcMetadataCodec;
 import gecko.core.io.CircuitFileParser;
@@ -69,6 +70,15 @@ public final class EditorCircuitCapture {
             ScriptSources scripts, String sourceName, AcDocumentSettings acSettings, AcProvenance provenance,
             List<ImportIssue> conversionIssues, CircuitHierarchy hierarchy)
             throws IOException, CircuitFileParser.CircuitParseException {
+        return capture(elements, settings, optimizer, files, scripts, sourceName, acSettings, provenance, conversionIssues,
+                hierarchy, List.of());
+    }
+
+    public CircuitSnapshot capture(Iterable<? extends AbstractCircuitSheetComponent> elements,
+            SolverSettings settings, OptimizerParameterData optimizer, GeckoFileManager files,
+            ScriptSources scripts, String sourceName, AcDocumentSettings acSettings, AcProvenance provenance,
+            List<ImportIssue> conversionIssues, CircuitHierarchy hierarchy, List<ParameterDefinition> rootParameters)
+            throws IOException, CircuitFileParser.CircuitParseException {
         var ascii = new StringBuffer();
         var blocks = new ArrayList<AbstractBlockInterface>();
         for (var element : elements) {
@@ -92,6 +102,7 @@ public final class EditorCircuitCapture {
         ascii.append("\nsolverType ").append(settings.SOLVER_TYPE.getValue().getOldGeckoIndex());
         appendAc(ascii, acSettings, provenance);
         appendHierarchy(ascii, hierarchy);
+        appendRootParameters(ascii, rootParameters);
         var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), sourceName);
         conversionIssues.forEach(model::addConversionIssue);
         for (var file : files._allAvailableFiles) captureResource(model, file);
@@ -116,7 +127,7 @@ public final class EditorCircuitCapture {
 
     static HierarchyIndex inspectHierarchy(Iterable<? extends AbstractCircuitSheetComponent> elements,
                                            CircuitHierarchy hierarchy, AcDocumentSettings settings,
-                                           AcProvenance provenance) {
+                                           AcProvenance provenance, List<ParameterDefinition> rootParameters) {
         var ascii = new StringBuffer();
         for (var element : elements) {
             ascii.append('\n').append(element.getExportImportCharacters()).append('\n');
@@ -124,6 +135,7 @@ public final class EditorCircuitCapture {
         }
         appendAc(ascii, settings, provenance);
         appendHierarchy(ascii, hierarchy);
+        appendRootParameters(ascii, rootParameters);
         try {
             var model = new CircuitFileParser().parse(new BufferedReader(new StringReader(ascii.toString())), "editor");
             return new HierarchyIndex(model);
@@ -142,6 +154,11 @@ public final class EditorCircuitCapture {
     private static void appendHierarchy(StringBuffer ascii, CircuitHierarchy hierarchy) {
         if (hierarchy != null) ascii.append('\n').append(HierarchyMetadataCodec.DOCUMENT).append(' ')
                 .append(HierarchyMetadataCodec.encode(hierarchy));
+    }
+
+    private static void appendRootParameters(StringBuffer ascii, List<ParameterDefinition> rootParameters) {
+        if (!rootParameters.isEmpty()) ascii.append('\n').append(HierarchyMetadataCodec.ROOT_PARAMETERS).append(' ')
+                .append(HierarchyMetadataCodec.encodeRootParameters(rootParameters));
     }
 
     private static void captureTerminals(CircuitModel.ComponentData component, List<AbstractTerminal> terminals,

@@ -34,8 +34,7 @@ final class HierarchyEditCoordinator {
             return document.definition(call.definitionId()).bind(
                     scope(owner.getParentCircuitSheet(), document, edited, substitute), call);
         }
-        var root = editor.getAcSettings();
-        return root == null ? Map.of() : root.parameterMap();
+        return editor.rootParameterMap();
     }
 
     void setSharedLaw(AbstractBlockInterface selected, AcComponent.Law law) {
@@ -64,18 +63,26 @@ final class HierarchyEditCoordinator {
         var newDocument = new CircuitHierarchy(oldDocument.definitions().stream()
                 .map(definition -> definition.id().equals(newDefinition.id()) ? newDefinition : definition).toList());
         var newCall = new CircuitHierarchy.Occurrence(existing.definitionId(), existing.instance(), overrides);
+        var scalarValues = new java.util.LinkedHashMap<AbstractBlockInterface, double[]>();
         for (var element : editor._circuitSheet.getAllElements()) {
             if (element instanceof SubcircuitBlock block && block.getHierarchyCall() != null) {
                 scope(block._myCircuitSheet, newDocument, owner, newCall);
             }
-            if (element instanceof AbstractBlockInterface block && block.getAcComponent() != null) {
-                validateLaw(block.getAcComponent().law(), scope(block.getParentCircuitSheet(), newDocument, owner, newCall));
+            if (element instanceof AbstractBlockInterface block) {
+                if (block.getAcComponent() != null) {
+                    validateLaw(block.getAcComponent().law(), scope(block.getParentCircuitSheet(), newDocument, owner, newCall));
+                }
+                if (!block.scalarBindings().isEmpty()) {
+                    scalarValues.put(block, block.scopedScalarValues(
+                            scope(block.getParentCircuitSheet(), newDocument, owner, newCall)));
+                }
             }
         }
         if (newDocument.equals(oldDocument) && newCall.equals(existing)) return;
         group(() -> {
             if (!newDocument.equals(oldDocument)) editor.setHierarchy(newDocument);
             if (!newCall.equals(existing)) owner.setHierarchyCall(newCall);
+            scalarValues.forEach(AbstractBlockInterface::setParameter);
         });
     }
 

@@ -15,8 +15,11 @@ package gecko.geckocircuits.allg;
 
 import gecko.core.allg.GeckoFile;
 import gecko.core.ac.AcDocumentSettings;
+import gecko.core.ac.ParameterDefinition;
+import gecko.core.io.HierarchyMetadataCodec;
 import gecko.core.io.AcMetadataCodec;
 import gecko.core.io.AcProvenance;
+import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileParser.CircuitParseException;
 import gecko.core.io.ImportIssue;
 import gecko.core.io.ImportIssueCodec;
@@ -31,9 +34,12 @@ import gecko.geckocircuits.control.Point;
 import gecko.core.datacontainer.HiLoData;
 import gecko.geckoscript.SimulationAccess;
 import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -45,6 +51,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "readFileVersion is intentionally mutable; constructor stores external references; public fields for file format serialization compatibility; transient fields are repopulated during project load")
 public final class ProjectData implements Serializable {
     private transient AcDocumentSettings acSettings;
+    private transient List<ParameterDefinition> rootParameterDefinitions = List.of();
     private transient gecko.core.io.CircuitHierarchy hierarchy;
     private transient java.util.Map<Long, java.util.Map<String, String>> hierarchyScopes = java.util.Map.of();
 
@@ -52,6 +59,7 @@ public final class ProjectData implements Serializable {
     private transient AcProvenance acProvenance;
 
     public AcDocumentSettings getAcSettings() { return acSettings; }
+    public List<ParameterDefinition> getRootParameterDefinitions() { return List.copyOf(rootParameterDefinitions); }
     public AcProvenance getAcProvenance() { return acProvenance; }
     private static final long serialVersionUID = 1L;
     private transient List<ImportIssue> conversionIssues = List.of();
@@ -107,9 +115,9 @@ public final class ProjectData implements Serializable {
             SolverSettings solverSettings) {
         this._allSheetComponents.addAll(se._circuitSheet.getAllElements());
         this.acSettings = se.getAcSettings();
+        this.rootParameterDefinitions = se.getRootParameterDefinitions();
         this.hierarchy = se.getHierarchy();
-        if (hierarchy != null) this.hierarchyScopes = se.inspectHierarchy().parameterScopes(
-                acSettings == null ? java.util.Map.of() : acSettings.parameterMap());
+        if (hierarchy != null) this.hierarchyScopes = se.inspectHierarchy().parameterScopes(se.rootParameterMap());
         this.acProvenance = se.getAcProvenance();
         this.conversionIssues = se.getConversionIssues();
         this._dt = solverSettings.dt.getValue();
@@ -138,6 +146,12 @@ public final class ProjectData implements Serializable {
 
     public ProjectData(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer,
                        final String modelFileName) {
+        this(ascii, isBackupRead, optimizer, modelFileName,
+                isBackupRead ? Map.of() : preflightRequiredAc(ascii, modelFileName));
+    }
+
+    ProjectData(String[] ascii, final boolean isBackupRead, OptimizerParameterData optimizer,
+                final String modelFileName, Map<Long, double[]> validatedAcValues) {
 //        if(!isBackupRead) {
 //            for(String tmp : ascii) {
 //                System.out.println(tmp);
@@ -145,7 +159,35 @@ public final class ProjectData implements Serializable {
 //        }
         _optimizer = optimizer;
         optimizerParameterData = new OptimizerParameterData();
-        _uniqueFileId = this.importASCII(ascii, isBackupRead, modelFileName);
+        _uniqueFileId = this.importASCII(ascii, isBackupRead, modelFileName, validatedAcValues);
+    }
+
+    static Map<Long, double[]> preflightRequiredAc(String[] ascii, String modelFileName) {
+        var tokens = new TokenMap(ascii, true);
+        if (!tokens.containsToken(AcMetadataCodec.SETTINGS) || !tokens.containsToken(HierarchyMetadataCodec.DOCUMENT)) {
+            return Map.of();
+        }
+        var hierarchy = HierarchyMetadataCodec.decodeDocument(tokens.readDataLine(HierarchyMetadataCodec.DOCUMENT, ""));
+        if (hierarchy.definitions().stream().noneMatch(definition -> !definition.requiredInputs().isEmpty())) {
+            return Map.of();
+        }
+        try (var reader = new BufferedReader(new StringReader(String.join("\n", ascii)))) {
+            var sourceName = modelFileName == null ? "native circuit" : modelFileName;
+            var model = new CircuitFileParser().parse(reader, sourceName);
+            var values = new HashMap<Long, double[]>();
+            for (var component : model.getCircuitComponents()) {
+                if (component.getAcComponent() != null) {
+                    var saved = component.getSavedBlock();
+                    if (saved == null || saved.uniqueObjectIdentifier() == 0 || values.putIfAbsent(
+                            saved.uniqueObjectIdentifier(), component.getNumericParameters()) != null) {
+                        throw new IllegalArgumentException("Require one native identifier for " + component.getName() + ".");
+                    }
+                }
+            }
+            return Map.copyOf(values);
+        } catch (IOException | CircuitParseException error) {
+            throw new IllegalArgumentException(error.getMessage(), error);
+        }
     }
 
     static void requireComponentImport(String[] ascii) {
@@ -159,6 +201,9 @@ public final class ProjectData implements Serializable {
     }
 
     private static void requireFlatImportFields(TokenMap tokens) {
+        if (tokens.containsToken(HierarchyMetadataCodec.SCALAR_BINDINGS)) {
+            throw new IllegalArgumentException("Open the circuit with scalar parameter bindings as a separate document.");
+        }
         if (tokens.containsToken(AcMetadataCodec.COMPONENT)) {
             requireComponentMergeLaw(AcMetadataCodec.decodeComponent(tokens.readDataLine(AcMetadataCodec.COMPONENT, "")));
         }
@@ -196,7 +241,7 @@ public final class ProjectData implements Serializable {
                 long sheet = block.getParentCircuitSheet() instanceof gecko.geckocircuits.control.SubCircuitSheet child
                         ? child._subBlock.getUniqueObjectIdentifier() : 0;
                 if (hierarchy == null) block.exportASCII(asc, acSettings);
-                else block.exportScopedAcASCII(asc, hierarchyScopes.get(sheet));
+                else block.exportScopedAcASCII(asc, hierarchyScopes.get(sheet), acSettings != null);
             }
             else elem.exportASCII(asc);
             elementCounter++;
@@ -227,6 +272,8 @@ public final class ProjectData implements Serializable {
         asc.append("\nsolverType ").append(solverType);
         if (acSettings != null) asc.append('\n').append(AcMetadataCodec.SETTINGS).append(' ')
                 .append(AcMetadataCodec.encode(acSettings));
+        if (!rootParameterDefinitions.isEmpty()) asc.append('\n').append(HierarchyMetadataCodec.ROOT_PARAMETERS).append(' ')
+                .append(HierarchyMetadataCodec.encodeRootParameters(rootParameterDefinitions));
         if (hierarchy != null) asc.append('\n').append(gecko.core.io.HierarchyMetadataCodec.DOCUMENT).append(' ')
                 .append(gecko.core.io.HierarchyMetadataCodec.encode(hierarchy));
         if (acProvenance != null) asc.append('\n').append(AcMetadataCodec.PROVENANCE).append(' ')
@@ -268,7 +315,8 @@ public final class ProjectData implements Serializable {
         return asc.toString();
     }
 
-    private int importASCII(String[] ascii, final boolean isBackupRead, final String modelFileName) {
+    private int importASCII(String[] ascii, final boolean isBackupRead, final String modelFileName,
+                            Map<Long, double[]> validatedAcValues) {
         final TokenMap tokenMap = new TokenMap(ascii, true);
         //tokenMap.makeBlockTokenMap(ascii, true);
 
@@ -287,6 +335,12 @@ public final class ProjectData implements Serializable {
         }
         if (tokenMap.containsToken(AcMetadataCodec.SETTINGS)) {
             acSettings = AcMetadataCodec.decodeSettings(tokenMap.readDataLine(AcMetadataCodec.SETTINGS, ""));
+        }
+        if (tokenMap.containsToken(HierarchyMetadataCodec.ROOT_PARAMETERS)) {
+            if (acSettings != null) throw new IllegalArgumentException("Use one root parameter definition field.");
+            rootParameterDefinitions = HierarchyMetadataCodec.decodeRootParameters(
+                    tokenMap.readDataLine(HierarchyMetadataCodec.ROOT_PARAMETERS, ""));
+            gecko.core.io.CircuitHierarchy.parameters(rootParameterDefinitions);
         }
         String hierarchyToken = gecko.core.io.HierarchyMetadataCodec.DOCUMENT;
         if (tokenMap.containsToken(hierarchyToken)) {
@@ -474,6 +528,14 @@ public final class ProjectData implements Serializable {
                 elementLKMap != null; elementLKMap = tokenMap.getSpecialBlockTokenMap("e")) {
             int typ = elementLKMap.readDataLine("typ", -1);
             AbstractBlockInterface newBlock = AbstractTypeInfo.fabricFromFile(CircuitTyp.getFromIntNumber(typ), elementLKMap);
+            var values = validatedAcValues.get(newBlock.getUniqueObjectIdentifier());
+            var ac = newBlock.getAcComponent();
+            int slot = ac == null ? -1 : AcMetadataCodec.compatibilitySlot(ac.law());
+            if (values != null && slot >= 0) {
+                double[] staged = newBlock.getParameter().clone();
+                staged[slot] = values[slot];
+                newBlock.setParameterWithoutUnDo(staged);
+            }
             _allSheetComponents.add(newBlock);
         }
 

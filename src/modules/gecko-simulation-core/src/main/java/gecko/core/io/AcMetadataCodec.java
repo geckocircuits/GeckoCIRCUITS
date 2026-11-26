@@ -167,16 +167,20 @@ public final class AcMetadataCodec {
 
     public static double[] compatibilityValues(AcComponent component, double[] saved, Map<String, String> parameters) {
         double[] values = saved.clone();
+        int slot = compatibilitySlot(component.law());
+        if (slot >= values.length) {
+            throw new IllegalArgumentException("Require compatibility slot " + slot + " on " + component.instance() + ".");
+        }
         switch (component.law()) {
-            case AcComponent.Passive law -> values[0] = SpiceValue.requirePositivePassive(
+            case AcComponent.Passive law -> values[slot] = SpiceValue.requirePositivePassive(
                     SpiceValue.evaluate(law.expression(), parameters), component.instance());
-            case AcComponent.Inductance law -> values[0] = law.origin().tested()
+            case AcComponent.Inductance law -> values[slot] = law.origin().tested()
                     ? law.evaluate(parameters).henries() : SpiceValue.requirePositivePassive(
                             SpiceValue.evaluate(law.expression(), parameters), component.instance());
-            case AcComponent.Voltage law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
-            case AcComponent.Current law -> values[1] = SpiceValue.evaluate(law.dc(), parameters);
+            case AcComponent.Voltage law -> values[slot] = SpiceValue.evaluate(law.dc(), parameters);
+            case AcComponent.Current law -> values[slot] = SpiceValue.evaluate(law.dc(), parameters);
             case AcComponent.Controlled law -> {
-                if (!law.laplace()) values[0] = SpiceValue.evaluate(law.expression(), parameters);
+                if (slot >= 0) values[slot] = SpiceValue.evaluate(law.expression(), parameters);
             }
         }
         for (double value : values) {
@@ -185,6 +189,17 @@ public final class AcMetadataCodec {
             }
         }
         return values;
+    }
+
+    /** Returns the native slot derived from the law, or -1 if the law has no such slot. */
+    public static int compatibilitySlot(AcComponent.Law law) {
+        return switch (law) {
+            case AcComponent.Passive passive -> 0;
+            case AcComponent.Inductance inductance -> 0;
+            case AcComponent.Voltage voltage -> 1;
+            case AcComponent.Current current -> 1;
+            case AcComponent.Controlled controlled -> controlled.laplace() ? -1 : 0;
+        };
     }
 
     static String encode(List<String> fields) {

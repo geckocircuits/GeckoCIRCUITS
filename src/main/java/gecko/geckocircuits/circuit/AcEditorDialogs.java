@@ -37,9 +37,8 @@ public final class AcEditorDialogs {
         fields.add(new JLabel("Scalar definitions (name = expression)"));
         panel.add(fields, BorderLayout.NORTH);
         var definitions = new JTextArea(10, 42);
-        if (current != null) {
-            current.parameters().forEach(p -> definitions.append(p.name() + " = " + p.expression() + "\n"));
-        }
+        var rootParameters = current == null ? editor.getRootParameterDefinitions() : current.parameters();
+        rootParameters.forEach(p -> definitions.append(p.name() + " = " + p.expression() + "\n"));
         panel.add(new JScrollPane(definitions), BorderLayout.CENTER);
         while (JOptionPane.showConfirmDialog(window, panel, "AC analysis settings",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION) {

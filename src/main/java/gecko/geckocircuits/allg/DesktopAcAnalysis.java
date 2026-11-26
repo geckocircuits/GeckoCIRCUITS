@@ -49,7 +49,8 @@ final class DesktopAcAnalysis {
                 scripts.getDeclarationCode(), scripts.getExtraFilesHashes());
         var snapshot = new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(), settings,
                 MainWindow.optimizerParameterData, MainWindow._fileManager, sources, MainWindow.getOpenFileName(),
-                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues(), editor.getHierarchy());
+                editor.getAcSettings(), editor.getAcProvenance(), editor.getConversionIssues(), editor.getHierarchy(),
+                editor.getRootParameterDefinitions());
         return new CircuitPreparation().prepare(snapshot, PreparationRequest.defaults());
     }
 

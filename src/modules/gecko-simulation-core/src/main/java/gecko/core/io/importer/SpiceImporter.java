@@ -5,6 +5,7 @@ import gecko.core.ac.AcInputOrigin;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.ac.AcSweep;
 import gecko.core.ac.ParameterDefinition;
+import gecko.core.io.CircuitHierarchy;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitModel.ComponentData;
 import gecko.core.io.CircuitModel.ConnectionData;
@@ -20,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.TreeMap;
 import java.util.function.DoubleUnaryOperator;
 import java.util.regex.Pattern;
@@ -32,17 +33,18 @@ public final class SpiceImporter {
 
     public CircuitModel convert(String source, String sourceName) {
         return convert(sourceName, source.hashCode(), lines(source), new LinkedHashMap<>(), Map.of(),
-                AcInputOrigin.PORTABLE_CIR);
+                AcInputOrigin.PORTABLE_CIR, null, List.of()).model();
     }
 
-    CircuitModel convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
-                         Map<String, ComponentData> placements, AcInputOrigin origin) {
-        return convert(sourceName, sourceId, statements, nodes, placements, origin, Map.of(), Map.of());
-    }
+    record SheetResult(CircuitModel model, List<ParameterDefinition> parameters, Map<String, String> scope,
+                       List<CircuitHierarchy.RequiredInput> requiredInputs) { }
+    record ChildContext(boolean ac,
+                        BiFunction<List<ParameterDefinition>, List<CircuitHierarchy.RequiredInput>,
+                                Map<String, String>> bindParameters) { }
 
-    CircuitModel convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
-                         Map<String, ComponentData> placements, AcInputOrigin origin,
-                         Map<String, String> childScalarMembers, Map<String, String> caller) {
+    SheetResult convert(String sourceName, int sourceId, List<Line> statements, Map<String, String> nodes,
+                        Map<String, ComponentData> placements, AcInputOrigin origin, ChildContext child,
+                        List<CircuitHierarchy.RequiredInput> scalarReads) {
         var model = new CircuitModel();
         model.setFilePath(sourceName);
         model.setFileVersion(202);
@@ -51,20 +53,18 @@ public final class SpiceImporter {
         model.setTimeStep(1e-6);
         var parameters = new HashMap<String, String>();
         var orderedParameters = new ArrayList<ParameterDefinition>();
-        boolean ac = statements.stream().anyMatch(line -> keyword(line.text()).equals(".ac"));
         var definitions = new HashMap<String, String>();
         List<Line> lines = rootLines(statements, model);
+        boolean acRequested = lines.stream().anyMatch(line -> keyword(line.text()).equals(".ac"));
         for (var line : lines) {
             String directive = keyword(line.text());
             if (directive.equals(".param")) {
                 if (!assignments(line.text().substring(6), parameters)) {
                     issue(model, line, "MALFORMED_PARAMETER", "", "The parameter assignment is invalid.");
                 }
-                if (ac) {
-                    var assignment = ASSIGNMENT.matcher(line.text().substring(6));
-                    while (assignment.find()) {
-                        orderedParameters.add(new ParameterDefinition(assignment.group(1), assignment.group(2)));
-                    }
+                var assignment = ASSIGNMENT.matcher(line.text().substring(6));
+                while (assignment.find()) {
+                    orderedParameters.add(new ParameterDefinition(assignment.group(1), assignment.group(2)));
                 }
             }
             if (directive.equals(".model")) {
@@ -91,7 +91,7 @@ public final class SpiceImporter {
                 continue;
             }
             if (!keyword(line.text()).equals(".tran")) continue;
-            if (ac) issue(model, line, "MULTIPLE_ANALYSES", ".tran", "Select one analysis.");
+            if (acRequested) issue(model, line, "MULTIPLE_ANALYSES", ".tran", "Select one analysis.");
             try {
                 String[] args = arguments(line.text().substring(5));
                 if (args.length < 2 || args.length > 5) {
@@ -116,9 +116,22 @@ public final class SpiceImporter {
                 issue(model, line, "INVALID_TRANSIENT", "", error.getMessage());
             }
         }
+        boolean ac = child == null ? model.getAcSettings() != null : child.ac();
+        var requiredInputs = scalarReads.stream()
+                .filter(input -> !parameters.containsKey(input.name().toLowerCase(Locale.ROOT))).toList();
+        if (child != null) {
+            var scope = child.bindParameters().apply(List.copyOf(orderedParameters), requiredInputs);
+            parameters.clear();
+            parameters.putAll(scope);
+        } else if (child == null && !ac) {
+            // Scalar lookup uses the last definition of each name in a non-AC document.
+            var effective = new LinkedHashMap<String, ParameterDefinition>();
+            for (var definition : orderedParameters) {
+                effective.put(definition.name().toLowerCase(Locale.ROOT), definition);
+            }
+            model.setRootParameterDefinitions(List.copyOf(effective.values()));
+        }
         nodes.putIfAbsent("0", "0");
-        var required = new HashSet<>(childScalarMembers.values());
-        required.removeAll(parameters.keySet());
         var names = new HashSet<String>();
         for (var line : lines) {
             String text = line.text();
@@ -156,14 +169,14 @@ public final class SpiceImporter {
                 data.getImportTokens().put("uniqueObjectIdentifier", Long.toString(10000L + index));
                 List<String> aliases = List.of(positive, negative);
                 AcComponent.Law law = null;
-                boolean bindScalar = childScalarMembers.containsKey(name) && !required.isEmpty();
+                var scalarBindings = new HashMap<Integer, String>();
                 switch (kind) {
                     case 'R', 'L', 'C' -> {
                         String[] args = arguments(fields[3]);
-                        Double v = bindScalar ? childGeometryScalar(args[0], parameters, caller, required)
-                                : Double.valueOf(value(args[0], parameters));
+                        double v = SpiceValue.requirePositivePassive(value(args[0], parameters), name);
                         double[] values = new double[type == 1 ? 3 : type == 2 ? 5 : 11];
-                        values[0] = v == null ? Double.NaN : SpiceValue.requirePositivePassive(v, name);
+                        values[0] = v;
+                        if (!ac) bindIfScoped(scalarBindings, 0, args[0]);
                         if (ac && kind == 'L') {
                             law = acInductance(fields[3], args, origin);
                         } else if (args.length > 1) {
@@ -171,6 +184,7 @@ public final class SpiceImporter {
                                 throw new IllegalArgumentException("Unsupported passive component attributes.");
                             }
                             values[1] = value(args[1].substring(3), parameters);
+                            if (!ac) bindIfScoped(scalarBindings, 1, args[1].substring(3));
                         }
                         data.setNumericParameters(values);
                         if (ac && (kind == 'R' || kind == 'C')) law = new AcComponent.Passive(args[0]);
@@ -178,23 +192,21 @@ public final class SpiceImporter {
                     case 'V', 'I' -> {
                         if (ac) {
                             var voltage = acVoltage(fields[3]);
-                            Double dc = bindScalar ? childGeometryScalar(voltage.dc(), parameters, caller, required)
-                                    : null;
-                            if (bindScalar) {
-                                var saved = new double[21];
-                                saved[0] = 401;
-                                saved[1] = dc == null ? Double.NaN : dc;
-                                sourceSettings(data, saved);
-                            } else {
-                                source(data, voltage.dc(), model, parameters);
-                            }
+                            source(data, voltage.dc(), model, parameters);
                             if (kind == 'I' && !voltage.waveform().isEmpty()) {
                                 throw new IllegalArgumentException("Unsupported transient AC current source waveform.");
                             }
                             law = kind == 'V' ? voltage : new AcComponent.Current(voltage.dc(),
                                     voltage.magnitude(), voltage.phaseDegrees());
                         } else {
+                            String spec = fields[3].strip().toUpperCase(Locale.ROOT);
+                            if (child != null && (spec.startsWith("PULSE") || spec.startsWith("SIN"))) {
+                                issue(model, line, "UNSUPPORTED_HIERARCHY_CONTROL", name,
+                                        "Child waveform CONTROL components and resources are unsupported.");
+                                continue;
+                            }
                             source(data, fields[3], model, parameters);
+                            if (data.getNumericParameters()[0] == 401) bindIfScoped(scalarBindings, 1, dcValue(fields[3]));
                         }
                     }
                     case 'E' -> {
@@ -228,6 +240,8 @@ public final class SpiceImporter {
                     case 'S' -> voltageSwitch(data, fields[3], model, parameters, definitions, nodes);
                     default -> throw new IllegalArgumentException("Unsupported element.");
                 }
+                if (!scalarBindings.isEmpty()) data.setScalarBindings(scalarBindings);
+                data.setSourceLocation(model.getFilePath() + ":" + line.number());
                 if (law != null) {
                     data.setAcComponent(new AcComponent(name, descriptor.ports().stream()
                             .map(SpicePorts.PortSpec::order).toList(), aliases, false, law));
@@ -246,23 +260,12 @@ public final class SpiceImporter {
                 issue(model, line, "MALFORMED_ELEMENT", fields[0], error.getMessage());
             }
         }
-        if (!ac) addScope(model, nodes);
+        if (!ac && child == null) addScope(model, nodes);
         int circuitRows = (model.getCircuitComponents().size() + 5) / 6;
         for (int index = 0; index < model.getControlComponents().size(); index++) {
             model.getControlComponents().get(index).getPosition()[1] = 5 + circuitRows * 14 + index / 6 * 12;
         }
-        return model;
-    }
-
-    // A missing required input is permitted only in the private child geometry.
-    private static Double childGeometryScalar(String expression, Map<String, String> local,
-                                              Map<String, String> caller, Set<String> required) {
-        try {
-            return SpiceValue.evaluateGeometry(expression, local, caller, required);
-        } catch (SpiceValue.UnknownScalarParameter error) {
-            if (!required.contains(error.name)) throw error;
-            return null;
-        }
+        return new SheetResult(model, List.copyOf(orderedParameters), Map.copyOf(parameters), requiredInputs);
     }
 
     private static AcComponent.Inductance acInductance(String value, String[] args, AcInputOrigin origin) {
@@ -424,10 +427,22 @@ public final class SpiceImporter {
             }));
             saved[0] = 400;
         } else {
-            String value = keyword(spec).equals("dc") ? spec.substring(2).trim() : spec.trim();
-            saved[1] = value(value, parameters);
+            saved[1] = value(dcValue(spec), parameters);
         }
         sourceSettings(data, saved);
+    }
+
+    private static String dcValue(String spec) {
+        return keyword(spec).equals("dc") ? spec.substring(2).trim() : spec.trim();
+    }
+
+    private static void bindIfScoped(Map<Integer, String> bindings, int slot, String expression) {
+        try {
+            SpiceValue.evaluate(expression, Map.of());
+        } catch (IllegalArgumentException error) {
+            // The expression has already evaluated in the occurrence scope.
+            bindings.put(slot, expression);
+        }
     }
 
     static void controlledSource(ComponentData data, String signal) {

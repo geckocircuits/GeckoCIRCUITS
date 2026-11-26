@@ -6,11 +6,14 @@ import gecko.core.ac.AcInputOrigin;
 import gecko.core.io.importer.LtspiceImportReceipt;
 import gecko.core.ac.AcResult;
 import gecko.core.ac.Complex;
+import gecko.core.ac.ParameterDefinition;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitTopology;
+import gecko.core.io.HierarchyIndex;
+import gecko.core.io.importer.LtspiceImporter;
 import gecko.core.io.importer.SpiceImporter;
 import gecko.core.io.importer.Main;
 import gecko.core.preparation.CircuitPreparation;
@@ -21,6 +24,7 @@ import gecko.geckocircuits.circuit.AbstractCircuitSheetComponent;
 import gecko.geckocircuits.circuit.AbstractTypeInfo;
 import gecko.geckocircuits.circuit.ConnectorType;
 import gecko.geckocircuits.circuit.CircuitSheet;
+import gecko.geckocircuits.circuit.EditorCircuitCapture;
 import gecko.geckocircuits.circuit.SpecialTyp;
 import gecko.geckocircuits.circuit.Verbindung;
 import gecko.geckocircuits.circuit.circuitcomponents.AcControlledVoltageSource;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -475,18 +480,7 @@ class NativeAcDesktopTest {
     @Test
     void preservesRequiredHierarchyInputsDuringDesktopEditSaveAndReopen() throws Exception {
         Path evidence = evidence();
-        Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
-                .toAbsolutePath().normalize();
-        Path fixture = Files.createDirectory(evidence.resolve("required-input-source"));
-        for (String name : List.of("root.asc", "wrapper.asc", "wrapper.asy", "leaf.asc", "leaf.asy",
-                "res.asy", "cap.asy", "voltage.asy")) {
-            String text = Files.readString(source.resolve(name));
-            if (name.equals("leaf.asc")) text = text.replace("series=3k shunt=2k", "shunt=2k");
-            Files.writeString(fixture.resolve(name), text, java.nio.file.StandardOpenOption.CREATE_NEW);
-        }
-        Path input = evidence.resolve("required-inputs.ipes");
-        assertEquals(0, Main.run(new String[]{fixture.resolve("root.asc").toString(), input.toString(),
-                "--symbols", fixture.toString(), "--source-root", fixture.toString()}, System.out, System.err));
+        Path input = createRequiredHierarchyInput(evidence);
         try {
             onEdt(() -> {
                 open(input);
@@ -521,6 +515,101 @@ class NativeAcDesktopTest {
         }
     }
 
+    @Test
+    void preflightsRequiredHierarchyBeforeReplacingDesktopDocument() throws Exception {
+        Path evidence = evidence();
+        Path input = createRequiredHierarchyInput(evidence);
+        var model = new gecko.core.io.CircuitFileParser().parse(input.toString());
+        var owner = model.getSpecialComponents().stream().filter(block -> block.getName().equals("Xleaf"))
+                .findFirst().orElseThrow().getSavedBlock();
+        String token = owner.tokens().get(gecko.core.io.HierarchyMetadataCodec.OCCURRENCE);
+        var call = gecko.core.io.HierarchyMetadataCodec.decodeOccurrence(token);
+        String nativeText;
+        try (var gzip = new java.util.zip.GZIPInputStream(Files.newInputStream(input))) {
+            nativeText = new String(gzip.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        int identifier = nativeText.indexOf("\nuniqueObjectIdentifier " + owner.uniqueObjectIdentifier() + "\n");
+        int blockStart = nativeText.lastIndexOf("<ElementSPECIAL>", identifier);
+        int tokenStart = nativeText.indexOf(token, blockStart);
+        assertTrue(identifier > blockStart && blockStart >= 0 && tokenStart > blockStart && tokenStart < identifier);
+        var missing = new gecko.core.io.CircuitHierarchy.Occurrence(call.definitionId(), call.instance(), List.of());
+        var invalid = new gecko.core.io.CircuitHierarchy.Occurrence(call.definitionId(), call.instance(),
+                List.of(new gecko.core.ac.ParameterDefinition("series", "-1")));
+        var valid = new gecko.core.io.CircuitHierarchy.Occurrence(call.definitionId(), call.instance(),
+                List.of(new gecko.core.ac.ParameterDefinition("series", "{caller+2k}")));
+        String prefix = nativeText.substring(0, tokenStart);
+        String suffix = nativeText.substring(tokenStart + token.length());
+        String missingText = prefix + gecko.core.io.HierarchyMetadataCodec.encode(missing) + suffix;
+        String invalidText = prefix + gecko.core.io.HierarchyMetadataCodec.encode(invalid) + suffix;
+        String validText = prefix + gecko.core.io.HierarchyMetadataCodec.encode(valid) + suffix;
+        Path invalidPath = writeNativeHierarchyVariant(evidence.resolve("invalid.ipes"), invalidText);
+        Path validPath = writeNativeHierarchyVariant(evidence.resolve("valid.ipes"), validText);
+        try {
+            onEdt(() -> {
+                var window = open(input);
+                var editor = MainWindow._se;
+                var first = hierarchyComponent(showOccurrence("X1", "Xleaf"), "Rseries");
+                assertEquals(1000, first.getParameter()[0]);
+                var previousSheet = editor._circuitSheet;
+                var previousHierarchy = editor.getHierarchy();
+                var previousSettings = editor.getAcSettings();
+                var previousProvenance = editor.getAcProvenance();
+                var previousManager = MainWindow._fileManager;
+                var previousPath = GlobalFilePathes.DATNAM;
+                var previousLoadPath = GlobalFilePathes.datnamAbsLoadIPES;
+                var previousOpenFile = MainWindow.getOpenFileName();
+                var previousModified = editor.getZustandGeaendert();
+                assertTrue(assertThrows(IllegalArgumentException.class, () -> window.openFile(invalidPath.toString()))
+                        .getMessage().contains("positive passive"));
+                assertTrue(assertThrows(IllegalArgumentException.class, () -> window.openFile(
+                        new java.io.BufferedReader(new java.io.StringReader(missingText))))
+                        .getMessage().contains("Missing required input series"));
+                assertSame(previousSheet, editor._circuitSheet);
+                assertSame(previousHierarchy, editor.getHierarchy());
+                assertSame(previousSettings, editor.getAcSettings());
+                assertSame(previousProvenance, editor.getAcProvenance());
+                assertSame(previousManager, MainWindow._fileManager);
+                assertEquals(previousPath, GlobalFilePathes.DATNAM);
+                assertEquals(previousLoadPath, GlobalFilePathes.datnamAbsLoadIPES);
+                assertEquals(previousOpenFile, MainWindow.getOpenFileName());
+                assertEquals(previousModified, editor.getZustandGeaendert());
+                assertSame(first, hierarchyComponent(showOccurrence("X1", "Xleaf"), "Rseries"));
+                assertEquals(1000, first.getParameter()[0]);
+
+                open(validPath);
+                assertEquals(3000, hierarchyComponent(showOccurrence("X1", "Xleaf"), "Rseries").getParameter()[0]);
+                assertEquals(4000, hierarchyComponent(showOccurrence("X2", "Xleaf"), "Rseries").getParameter()[0]);
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    private static Path writeNativeHierarchyVariant(Path destination, String text) throws java.io.IOException {
+        try (var gzip = new java.util.zip.GZIPOutputStream(Files.newOutputStream(destination,
+                java.nio.file.StandardOpenOption.CREATE_NEW))) {
+            gzip.write(text.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        }
+        return destination;
+    }
+
+    private static Path createRequiredHierarchyInput(Path evidence) throws Exception {
+        Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
+                .toAbsolutePath().normalize();
+        Path fixture = Files.createDirectory(evidence.resolve("required-input-source"));
+        for (String name : List.of("root.asc", "wrapper.asc", "wrapper.asy", "leaf.asc", "leaf.asy",
+                "res.asy", "cap.asy", "voltage.asy")) {
+            String text = Files.readString(source.resolve(name));
+            if (name.equals("leaf.asc")) text = text.replace("series=3k shunt=2k", "shunt=2k");
+            Files.writeString(fixture.resolve(name), text, java.nio.file.StandardOpenOption.CREATE_NEW);
+        }
+        Path input = evidence.resolve("required-inputs.ipes");
+        assertEquals(0, Main.run(new String[]{fixture.resolve("root.asc").toString(), input.toString(),
+                "--symbols", fixture.toString(), "--source-root", fixture.toString()}, System.out, System.err));
+        return input;
+    }
+
     private static Path createHierarchyInput(Path evidence) {
         Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
                 .toAbsolutePath().normalize();
@@ -528,6 +617,98 @@ class NativeAcDesktopTest {
         assertEquals(0, Main.run(new String[]{source.resolve("root.asc").toString(), input.toString(),
                 "--symbols", source.toString(), "--source-root", source.toString()}, System.out, System.err));
         return input;
+    }
+
+    @Test
+    void savesAndEditsSharedTransientHierarchyParameters() throws Exception {
+        Path evidence = evidence();
+        Path source = Path.of("src", "modules", "gecko-simulation-core", "src", "test", "resources", "ltspice-hierarchy")
+                .toAbsolutePath().normalize();
+        for (String name : List.of("leaf.asc", "leaf.asy", "wrapper.asc", "wrapper.asy", "res.asy", "cap.asy", "voltage.asy")) {
+            Files.copy(source.resolve(name), evidence.resolve(name));
+        }
+        Path root = Files.writeString(evidence.resolve("root.asc"), Files.readString(source.resolve("root.asc"))
+                .replace("Value AC 1", "Value 1").replace("first=1k", "base=2k").replace("{first}", "{base}")
+                .replace(".ac dec 2 10 100k", ".tran 0 20m 0 100u"));
+        Path input = evidence.resolve("transient.ipes");
+        var imported = new LtspiceImporter().convert(root, evidence, List.of(evidence));
+        assertTrue(imported.getConversionIssues().isEmpty(), imported.getConversionIssues().toString());
+        new CircuitFileWriter().write(imported, input);
+
+        onEdt(() -> {
+            try {
+                open(input);
+                assertTransientDesktopValues(2000);
+                assertTransientCapture(captureTransientEditor(), 2000, "{base}");
+
+                showOccurrence("X1");
+                editHierarchyParameters("caller=3k", "caller={base+1k}");
+                assertTransientDesktopValues(3000);
+                assertTransientCapture(captureTransientEditor(), 3000, "{base+1k}");
+
+                Path saved = evidence.resolve("transient-edited.ipes");
+                saveAndReopenHierarchy(saved);
+                assertTransientDesktopValues(3000);
+                assertTransientCapture(captureTransientEditor(), 3000, "{base+1k}");
+                var before = Files.readAllBytes(saved);
+
+                var firstCall = assertInstanceOf(SubcircuitBlock.class,
+                        hierarchyComponent(MainWindow._se._circuitSheet, "X1"));
+                var editsField = MainWindow._se.getClass().getDeclaredField("hierarchyEdits");
+                editsField.setAccessible(true);
+                var edits = editsField.get(MainWindow._se);
+                var setParameters = edits.getClass().getDeclaredMethod("setParameters",
+                        SubcircuitBlock.class, List.class, List.class);
+                setParameters.setAccessible(true);
+                var rejected = assertThrows(java.lang.reflect.InvocationTargetException.class, () ->
+                        setParameters.invoke(edits, firstCall, List.of(new ParameterDefinition("caller", "3k")),
+                                List.of(new ParameterDefinition("caller", "{-base}"))));
+                assertInstanceOf(IllegalArgumentException.class, rejected.getCause());
+                assertTransientDesktopValues(3000);
+                assertTransientCapture(captureTransientEditor(), 3000, "{base+1k}");
+                assertArrayEquals(before, Files.readAllBytes(saved));
+            } finally {
+                closeDesktop();
+            }
+            return null;
+        });
+    }
+
+    private static void assertTransientDesktopValues(double first) {
+        assertNull(MainWindow._se.getAcSettings());
+        assertEquals(first, hierarchyComponent(showOccurrence("X1", "Xleaf"), "Rseries").getParameter()[0]);
+        assertEquals(4000, hierarchyComponent(showOccurrence("X2", "Xleaf"), "Rseries").getParameter()[0]);
+    }
+
+    private static CircuitModel captureTransientEditor() throws Exception {
+        var editor = MainWindow._se;
+        return new EditorCircuitCapture().capture(editor._circuitSheet.getAllElements(),
+                MainWindow._solverSettings, MainWindow.optimizerParameterData, MainWindow._fileManager,
+                EditorCircuitCapture.ScriptSources.EMPTY, MainWindow.getOpenFileName(), editor.getAcSettings(),
+                editor.getAcProvenance(), editor.getConversionIssues(), editor.getHierarchy(),
+                editor.getRootParameterDefinitions()).toModel();
+    }
+
+    private static void assertTransientCapture(CircuitModel model, double first, String firstOverride) {
+        assertNull(model.getAcSettings());
+        assertEquals(List.of(new ParameterDefinition("base", "2k")), model.getRootParameterDefinitions());
+        assertEquals(2, model.getHierarchy().definitions().size());
+        var index = new HierarchyIndex(model);
+        var resistors = model.getCircuitComponents().stream().filter(c -> c.getName().equals("Rseries")).toList();
+        assertEquals(2, resistors.size());
+        assertEquals(1, resistors.stream().map(c -> index.sheet(HierarchyIndex.parent(c.getSavedBlock()))
+                .definition().id()).distinct().count());
+        for (var resistor : resistors) {
+            var leaf = index.sheet(HierarchyIndex.parent(resistor.getSavedBlock()));
+            var wrapper = index.sheet(leaf.parent());
+            boolean firstCall = wrapper.call().instance().equals("X1");
+            assertNull(resistor.getAcComponent());
+            assertEquals(Map.of(0, "{series}"), resistor.getScalarBindings());
+            assertEquals(List.of(new ParameterDefinition("series", "{caller}")), leaf.call().overrides());
+            assertEquals(List.of(new ParameterDefinition("caller", firstCall ? firstOverride : "4k")),
+                    wrapper.call().overrides());
+            assertEquals(firstCall ? first : 4000, resistor.getNumericParameters()[0]);
+        }
     }
 
     private static Path editAndSaveHierarchy(Path evidence, Path input) throws Exception {
@@ -871,6 +1052,58 @@ class NativeAcDesktopTest {
                 var parsed = new CircuitFileParser().parse(saved.toString());
                 assertEquals(53, parsed.getCircuitComponents().stream().filter(c -> c.getName().equals("E1")).findFirst().orElseThrow().getType());
                 assertEquals(53, parsed.getControlComponents().getFirst().getType());
+            } finally {
+                closeDesktop();
+            }
+            return null;
+        });
+    }
+
+    @Test
+    void rejectsScalarBoundComponentMergesBeforeChangingTheDestination() throws Exception {
+        Path evidence = evidence();
+        Path destination = evidence.resolve("scalar-destination.ipes");
+        Path source = evidence.resolve("scalar-source.ipes");
+        Path literal = evidence.resolve("literal-source.ipes");
+        var importer = new SpiceImporter();
+        var writer = new CircuitFileWriter();
+        writer.write(importer.convert(".param base=3k\nRdest out 0 {base}\n", "destination.cir"), destination);
+        writer.write(importer.convert(".param base=2k\nRbound other 0 {base}\n", "source.cir"), source);
+        writer.write(importer.convert("Rliteral spare 0 1k\n", "literal.cir"), literal);
+        var destinationBytes = Files.readAllBytes(destination);
+        var sourceBytes = Files.readAllBytes(source);
+        String[] sourceLines;
+        try (var gzip = new java.util.zip.GZIPInputStream(Files.newInputStream(source))) {
+            sourceLines = new String(gzip.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8)
+                    .lines().toArray(String[]::new);
+        }
+        onEdt(() -> {
+            try {
+                open(destination);
+                var editor = MainWindow._se;
+                String loadPath = GlobalFilePathes.datnamAbsLoadIPES;
+                var components = List.copyOf(editor._circuitSheet.getAllElements());
+                var resistor = component("Rdest");
+                var position = new Point(resistor.getSheetPosition().x, resistor.getSheetPosition().y);
+                var files = List.copyOf(MainWindow._fileManager._allAvailableFiles);
+                boolean dirty = editor.getZustandGeaendert();
+                assertThrows(IllegalArgumentException.class, () -> MainWindow.importComponentsFromFile(source.toString(), null));
+                assertEquals(loadPath, GlobalFilePathes.datnamAbsLoadIPES);
+                var staged = new ProjectData(sourceLines, false, null);
+                String stagedLoadPath = GlobalFilePathes.datnamAbsLoadIPES;
+                assertThrows(IllegalArgumentException.class, () -> editor.importProjectComponents(staged, null));
+                assertEquals(stagedLoadPath, GlobalFilePathes.datnamAbsLoadIPES);
+                assertEquals(destination.toAbsolutePath().normalize(), Path.of(MainWindow.getOpenFileName()).toAbsolutePath().normalize());
+                assertEquals(components, List.copyOf(editor._circuitSheet.getAllElements()));
+                assertEquals(position, resistor.getSheetPosition());
+                assertEquals(3000, resistor.getParameter()[0]);
+                assertEquals(List.of(new ParameterDefinition("base", "3k")), editor.getRootParameterDefinitions());
+                assertEquals(files, List.copyOf(MainWindow._fileManager._allAvailableFiles));
+                assertEquals(dirty, editor.getZustandGeaendert());
+                assertArrayEquals(destinationBytes, Files.readAllBytes(destination));
+                assertArrayEquals(sourceBytes, Files.readAllBytes(source));
+                MainWindow.importComponentsFromFile(literal.toString(), null);
+                assertEquals(1000, component("Rliteral").getParameter()[0]);
             } finally {
                 closeDesktop();
             }
