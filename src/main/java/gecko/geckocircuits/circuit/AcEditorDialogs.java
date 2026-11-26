@@ -146,6 +146,25 @@ public final class AcEditorDialogs {
                     return new AcComponent.Current(dc.getText().strip(), magnitude.getText().strip(), phase.getText().strip());
                 };
             }
+            case AcComponent.IdealDiode law -> {
+                var forward = addField(fields, "Forward threshold (V)", law.forwardVoltage());
+                var on = addField(fields, "On resistance (Ω, blank for default)", law.onResistance());
+                var off = addField(fields, "Off resistance (Ω, blank for profile default)", law.offResistance());
+                updatedLaw = () -> {
+                    var edited = new AcComponent.IdealDiode(law.modelName(), forward.getText().strip(),
+                            on.getText().strip(), off.getText().strip(), law.origin());
+                    edited.evaluate(parameters);
+                    return edited;
+                };
+            }
+            case AcComponent.Transconductance law -> {
+                var expression = addField(fields, "Transconductance (S)", law.expression());
+                updatedLaw = () -> {
+                    String text = expression.getText().strip();
+                    SpiceValue.evaluate(text, parameters);
+                    return new AcComponent.Transconductance(text);
+                };
+            }
             case AcComponent.Controlled law -> {
                 var expression = addField(fields, "Voltage gain", law.expression());
                 var laplace = new JCheckBox("Use Laplace variable s", law.laplace());

@@ -118,13 +118,19 @@ final class CircuitReadiness {
         topology.getCircuitComponents().clear();
         List<CircuitModel.ComponentData> unknown = new ArrayList<>();
         for (var component : model.getCircuitComponents()) {
-            if (component.getType() == 9 || (CircuitTypCore.isValidTypeNumber(component.getType())
-                    && registry.hasStamper(CircuitTypCore.fromTypeNumber(component.getType())))) {
+            boolean diodeAcLaw = component.getAcComponent() != null
+                    && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode;
+            if (!diodeAcLaw && (component.getType() == 9 || (CircuitTypCore.isValidTypeNumber(component.getType())
+                    && registry.hasStamper(CircuitTypCore.fromTypeNumber(component.getType()))))) {
                 topology.addCircuitComponent(component);
             } else {
                 unknown.add(component);
+                String message = diodeAcLaw ? "Use AC analysis for this ideal diode law."
+                        : component.getType() == CircuitTypCore.LK_VCCS.getTypeNumber()
+                                ? "Use AC analysis for the voltage-controlled current source."
+                        : "The headless engine does not support this component type.";
                 diagnostics.add(new Diagnostic("UNSUPPORTED_COMPONENT", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
-                        "The headless engine does not support this component type.", "LK", component.getName(), null,
+                        message, "LK", component.getName(), null,
                         component.getSourceLocation()));
             }
         }

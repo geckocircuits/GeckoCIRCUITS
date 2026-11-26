@@ -590,10 +590,114 @@ class NativeAcTest {
         assertEquals(.001, current(solve(roundTrip(model)), "R1", 0).abs(), 1e-14);
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"2m", "-2m", "0"})
+    void solvesVccsWithoutAnOutputCurrentUnknown(String gm) throws Exception {
+        var original = spice("""
+                .ac dec 1 10 100
+                Vp cp 0 AC 3
+                Vn cn 0 AC 2
+                G1 out 0 cp cn {gm}
+                Rload out 0 1k
+                """ + ".param gm=" + gm);
+        var parsed = roundTrip(original);
+        var dev = parsed.getCircuitComponents().stream().filter(c -> c.getName().equals("G1")).findFirst().orElseThrow();
+        assertEquals(gecko.core.io.SpicePorts.G.type(), dev.getType());
+        assertEquals(new AcComponent.Transconductance("{gm}"), dev.getAcComponent().law());
+        double value = SpiceValue.evaluate(gm, Map.of());
+        assertEquals(value, dev.getNumericParameters()[0]);
+        var result = solve(parsed);
+        assertEquals(5, result.complexUnknowns());
+        var trace = result.currents().stream().filter(i -> i.instance().equals("G1")).findFirst().orElseThrow();
+        assertEquals(1, trace.positive().spiceOrder());
+        assertEquals(2, trace.negative().spiceOrder());
+        assertEquals("G", trace.positive().deviceKind());
+        close(new Complex(-1000 * value, 0), voltage(result, "G1", 1, 0));
+        close(new Complex(value, 0), current(result, "G1", 0));
+        close(Complex.ZERO, current(result, "Vp", 0));
+        close(Complex.ZERO, current(result, "Vn", 0));
+        close(Complex.ZERO, current(result, "G1", 0).add(current(result, "Rload", 0)));
+    }
+
+    @Test
+    void preservesVccsPolarityThroughRcLoadAndPinSwaps() throws Exception {
+        String deck = """
+                .ac dec 2 10 1000
+                Vdrive cp 0 AC 1 23
+                G1 out 0 cp 0 2m
+                Rload out 0 1k
+                Cload out 0 1u
+                """;
+        var drive = polar(1, 23);
+        for (String form : List.of("G1 out 0 cp 0", "G1 0 out cp 0", "G1 out 0 0 cp")) {
+            var result = solve(roundTrip(spice(deck.replace("G1 out 0 cp 0", form))));
+            double outputSign = form.equals("G1 out 0 cp 0") ? -1 : 1;
+            double branchSign = form.equals("G1 out 0 0 cp") ? -1 : 1;
+            int outputPin = form.equals("G1 0 out cp 0") ? 2 : 1;
+            for (int i = 0; i < result.frequencyHz().size(); i++) {
+                var acAdmittance = new Complex(.001, 2 * Math.PI * result.frequencyHz().get(i) * 1e-6);
+                close(drive.scale(.002 * outputSign).divide(acAdmittance), voltage(result, "G1", outputPin, i));
+                close(drive.scale(.002 * branchSign), current(result, "G1", i));
+                var load = current(result, "Rload", i).add(current(result, "Cload", i));
+                close(Complex.ZERO, load.add(current(result, "G1", i).scale(outputPin == 1 ? 1 : -1)));
+                assertTrue(result.residualEta().get(i) <= 1e-12);
+            }
+        }
+    }
+
+    @Test
+    void checksVccsMatrixRankWithoutGroundingItsSenseNodes() {
+        String deck = ".ac dec 1 10 100\nVdrive in 0 AC 1\n";
+        var feedback = solve(spice(deck + "Iload out 0 AC 1m\nG1 out 0 out 0 2m\n"));
+        close(new Complex(-.5, 0), voltage(feedback, "G1", 1, 0));
+        for (String disconnected : List.of("G1 out 0 in 0 2m\n",
+                "G1 out 0 a b 2m\nRload out 0 1k\nRfloat a b 1k\n",
+                "G1 out 0 out 0 -1m\nRload out 0 1k\n")) {
+            assertThrows(IllegalArgumentException.class, () -> new AcExecutionPlan(spice(deck + disconnected)).execute());
+        }
+        var transientModel = spice("Vdrive in 0 1\nG1 out 0 in 0 2m\nRload out 0 1k\n.tran 1u 1m\n");
+        assertTrue(transientModel.getImportIssues().stream().anyMatch(i -> i.component().equals("G1")
+                && i.message().contains("Use AC analysis")));
+        assertTrue(spice(deck + "G1 out 0 in 0 LAPLACE=s\n").getImportIssues().stream()
+                .anyMatch(i -> i.component().equals("G1") && i.message().contains("scalar transconductance")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"R0", "R90", "R180", "R270", "M0", "M90", "M180", "M270"})
+    void tracksStockVccsPolarityAfterRotationAndReflection(String orientation) throws Exception {
+        var result = solve(roundTrip(new LtspiceImporter().convert(orientedSource(orientation, true), "g.asc")));
+        var sense = polar(3, 17).subtract(polar(1, -28));
+        close(sense.scale(.002), current(result, "G1", 0));
+        close(sense.scale(-2), voltage(result, "G1", 1, 0));
+        close(polar(.4, 71), voltage(result, "G1", 2, 0));
+    }
+
+    @Test
+    void checksAndHashesTheStockVccsSymbol() throws Exception {
+        for (String name : List.of("g.asy", "voltage.asy", "res.asy")) {
+            try (var symbol = getClass().getResourceAsStream("/ltspice-hierarchy/" + name)) {
+                Files.write(directory.resolve(name), java.util.Objects.requireNonNull(symbol).readAllBytes());
+            }
+        }
+        var source = Files.writeString(directory.resolve("stock.asc"), orientedSource("R0", true));
+        var importer = new LtspiceImporter();
+        var model = importer.convert(source, directory, List.of(), AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C);
+        assertEquals(gecko.core.io.ArtifactDigest.sha256(Files.readAllBytes(directory.resolve("g.asy"))),
+                model.getAcProvenance().dependencySha256().get("g.asy"));
+        Path symbol = directory.resolve("g.asy");
+        Files.writeString(symbol, Files.readString(symbol).replace("PIN 0 96", "PIN 0 112"));
+        assertTrue(assertThrows(IllegalArgumentException.class, () -> importer.convert(source, directory, List.of(),
+                AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C)).getMessage().contains("stock symbol pins differ"));
+    }
+
     private static String orientedSource(String orientation) {
+        return orientedSource(orientation, false);
+    }
+
+    private static String orientedSource(String orientation, boolean vccs) {
         String[] labels = {"output", "return", "positive", "negative"};
-        int[][] pins = {{0, 16}, {0, 96}, {-48, 32}, {-48, 80}};
-        int[][] direction = {{0, -16}, {0, 16}, {-16, 0}, {-16, 0}};
+        int[][] pins = {{0, vccs ? 96 : 16}, {0, vccs ? 16 : 96}, {-48, 32}, {-48, 80}};
+        int[][] direction = {{0, vccs ? 16 : -16}, {0, vccs ? -16 : 16}, {-16, 0}, {-16, 0}};
         var text = new StringBuilder("Version 4\nSHEET 1 1500 500\n");
         for (int i = 0; i < pins.length; i++) {
             int[] a = transform(orientation, pins[i][0], pins[i][1]);
@@ -601,10 +705,12 @@ class NativeAcTest {
             text.append("WIRE ").append(a[0]).append(' ').append(a[1]).append(' ').append(b[0]).append(' ').append(b[1]).append('\n');
             text.append("FLAG ").append((a[0] + b[0]) / 2).append(' ').append((a[1] + b[1]) / 2).append(' ').append(labels[i]).append('\n');
         }
-        return text.append("SYMBOL e 0 0 ").append(orientation).append("""
+        String symbol = vccs ? "g" : "e";
+        String instance = vccs ? "G1" : "E1";
+        return text.append("SYMBOL ").append(symbol).append(" 0 0 ").append(orientation).append('\n')
+                .append("SYMATTR InstName ").append(instance).append('\n')
+                .append("SYMATTR Value ").append(vccs ? "2m" : "3").append('\n').append("""
 
-                SYMATTR InstName E1
-                SYMATTR Value 3
                 FLAG 400 16 positive
                 FLAG 400 96 0
                 SYMBOL voltage 400 0 R0

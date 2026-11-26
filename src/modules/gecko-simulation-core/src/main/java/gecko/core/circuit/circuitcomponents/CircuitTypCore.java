@@ -101,7 +101,8 @@ public enum CircuitTypCore {
 
     // Non-linear reluctance
     NONLIN_REL(52),    // Non-linear reluctance
-    LK_VCVS(53);
+    LK_VCVS(53),
+    LK_VCCS(54);
 
     private final int typeNumber;
 

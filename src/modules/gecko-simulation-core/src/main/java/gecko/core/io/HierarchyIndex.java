@@ -1,5 +1,6 @@
 package gecko.core.io;
 
+import gecko.core.ac.AcComponent;
 import gecko.core.io.CircuitModel.ComponentData;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,12 +48,20 @@ public final class HierarchyIndex {
             path(sheet.id(), new HashSet<>());
         }
         var terminalMembers = new HashMap<Long, Map<String, ComponentData>>();
+        var diodeModels = new HashMap<Long, Map<String, AcComponent.IdealDiode>>();
         for (var components : List.of(model.getCircuitComponents(), model.getSpecialComponents(),
                 model.getControlComponents(), model.getThermalComponents())) {
             for (var component : components) {
                 var saved = component.getSavedBlock();
                 validateFieldPlacement(saved, component.getType());
                 long parent = parent(saved);
+                if (component.getAcComponent() != null && component.getAcComponent().law() instanceof AcComponent.IdealDiode diode) {
+                    var previous = diodeModels.computeIfAbsent(parent, ignored -> new HashMap<>())
+                            .putIfAbsent(diode.modelName(), diode);
+                    if (previous != null && !previous.equals(diode)) {
+                        throw invalid("Conflicting ideal diode model " + diode.modelName() + " in " + path(parent));
+                    }
+                }
                 String key = key(saved);
                 var signature = signatures.get(parent);
                 if (!component.getScalarBindings().isEmpty()) {

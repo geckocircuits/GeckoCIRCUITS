@@ -61,7 +61,7 @@ public class SchematicComponentSelection2 extends JTabbedPane {
     private CircuitTyp[] _typLK = new CircuitTyp[]{
         CircuitTyp.LK_U, CircuitTyp.LK_I, CircuitTyp.LK_R, CircuitTyp.LK_C, CircuitTyp.LK_L,
         CircuitTyp.LK_LKOP2, CircuitTyp.LK_M, CircuitTyp.LK_S, CircuitTyp.LK_IGBT, CircuitTyp.LK_MOSFET,
-        CircuitTyp.LK_D, CircuitTyp.LK_THYR, CircuitTyp.LK_BJT, CircuitTyp.LK_OPV1, CircuitTyp.LK_TRANS, CircuitTyp.LK_VCVS
+        CircuitTyp.LK_D, CircuitTyp.LK_THYR, CircuitTyp.LK_BJT, CircuitTyp.LK_OPV1, CircuitTyp.LK_TRANS, CircuitTyp.LK_VCVS, CircuitTyp.LK_VCCS
     };
     private CircuitTyp[] _typMotor = new CircuitTyp[]{
         CircuitTyp.LK_MOTOR, CircuitTyp.LK_MOTOR_PERM, CircuitTyp.LK_MOTOR_PMSM, CircuitTyp.LK_MOTOR_SMSALIENT, CircuitTyp.LK_MOTOR_SMROUND,

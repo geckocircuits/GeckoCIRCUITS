@@ -582,7 +582,7 @@ public final class CircuitTopology {
             boolean topologyOnly = structuralOnly || shorted || boundary(component, domain) || global(component, domain);
             (topologyOnly ? structural : active).add(identity);
             long sheet = saved == null ? 0 : saved.parentSheetIdentifier();
-            var registry = domain.equals("LK") && (component.getAcComponent() != null || component.getType() == SpicePorts.E.type())
+            var registry = domain.equals("LK") && (component.getAcComponent() != null || component.getType() == SpicePorts.E.type() || component.getType() == SpicePorts.G.type())
                     ? SpicePorts.find(domain, component.getType()) : null;
             var importedBoundary = importedBoundaries.get(component);
             for (Side side : Side.values()) {

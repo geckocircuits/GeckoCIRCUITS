@@ -226,6 +226,30 @@ class NativeAcHierarchyTest {
                 .map(component -> component.getNumericParameters()[0]).toList();
     }
 
+    @Test void evaluatesVccsInTwoOccurrencesOfOneDefinition() throws Exception {
+        change("wrapper.asc", text -> text.replace("series={caller}", "series={caller} gm={caller/1meg}"));
+        change("leaf.asc", text -> text.replace("shunt=2k", "shunt=2k gm=3m") + """
+                FLAG 432 160 OUT
+                FLAG 432 80 RET
+                FLAG 384 96 IN
+                FLAG 384 144 RET
+                SYMBOL g 432 64 R0
+                SYMATTR InstName G1
+                SYMATTR Value {gm}
+                """);
+        var parsed = roundTrip(fixture());
+        assertEquals(List.of(.001, .004), parsed.getCircuitComponents().stream()
+                .filter(component -> component.getName().equals("G1"))
+                .map(component -> component.getNumericParameters()[0]).toList());
+        var result = solve(parsed);
+        for (String occurrence : List.of("X1", "X2")) {
+            String instance = occurrence + ":Xleaf:G1";
+            double gm = occurrence.equals("X1") ? .001 : .004;
+            assertEquals(0, voltage(result, instance, 3, 0).subtract(voltage(result, instance, 4, 0))
+                    .scale(gm).subtract(current(result, instance, 0)).abs(), 1e-12);
+        }
+    }
+
     @Test void checksRequiredOverridesWhenReadingNativeAcData() throws Exception {
         var model = fixture(Map.of(
                 "leaf.asc", text -> text.replace("series=3k shunt=2k", "shunt=2k") + """
@@ -616,7 +640,7 @@ class NativeAcHierarchyTest {
 
     private CircuitModel fixture(Map<String, java.util.function.UnaryOperator<String>> mutations) throws Exception {
         for (String name : List.of("leaf.asc", "leaf.asy", "wrapper.asc", "wrapper.asy", "root.asc",
-                "res.asy", "cap.asy", "voltage.asy", "ind.asy")) {
+                "res.asy", "cap.asy", "voltage.asy", "ind.asy", "g.asy")) {
             String text = fixtureText(name);
             Files.writeString(sources.resolve(name), mutations.getOrDefault(name, java.util.function.UnaryOperator.identity()).apply(text),
                     java.nio.file.StandardOpenOption.CREATE_NEW);

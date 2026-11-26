@@ -40,7 +40,8 @@ final class HierarchyEditCoordinator {
     void setSharedLaw(AbstractBlockInterface selected, AcComponent.Law law) {
         SchematicEditor2.requireEditThread();
         editor.inspectHierarchy();
-        var peers = peers(selected, AbstractBlockInterface.class);
+        var peers = law instanceof AcComponent.IdealDiode diode
+                ? idealDiodeModelPeers(selected, diode) : peers(selected, AbstractBlockInterface.class);
         for (var peer : peers) {
             var owned = peer.getAcComponentOrLiteral();
             if (owned == null || owned.law().getClass() != law.getClass()) {
@@ -49,6 +50,32 @@ final class HierarchyEditCoordinator {
             validateLaw(law, scope(peer));
         }
         group(() -> peers.forEach(peer -> peer.setAcLawLocal(law)));
+    }
+
+    private List<AbstractBlockInterface> idealDiodeModelPeers(AbstractBlockInterface selected, AcComponent.IdealDiode edited) {
+        var original = selected.getAcComponent();
+        if (original == null || !(original.law() instanceof AcComponent.IdealDiode diode)
+                || !diode.modelName().equals(edited.modelName()) || diode.origin() != edited.origin()) {
+            throw new IllegalArgumentException("Retain the local ideal diode model name and origin.");
+        }
+        String definition = definitionOf(selected);
+        var peers = new ArrayList<AbstractBlockInterface>();
+        for (var element : editor._circuitSheet.getAllElements()) {
+            if (element instanceof AbstractBlockInterface block && block.getAcComponent() != null
+                    && block.getAcComponent().law() instanceof AcComponent.IdealDiode law
+                    && law.modelName().equals(diode.modelName()) && definitionOf(block).equals(definition)) {
+                peers.add(block);
+            }
+        }
+        return peers;
+    }
+
+    private static String definitionOf(AbstractBlockInterface component) {
+        if (component.getParentCircuitSheet() instanceof SubCircuitSheet sheet
+                && sheet._subBlock.getHierarchyCall() != null) {
+            return sheet._subBlock.getHierarchyCall().definitionId();
+        }
+        return "";
     }
 
     void setParameters(SubcircuitBlock owner, List<ParameterDefinition> defaults,
@@ -344,6 +371,8 @@ final class HierarchyEditCoordinator {
             case AcComponent.Inductance inductor -> inductor.evaluate(scope);
             case AcComponent.Voltage voltage -> validateSource(voltage.dc(), voltage.magnitude(), voltage.phaseDegrees(), scope);
             case AcComponent.Current current -> validateSource(current.dc(), current.magnitude(), current.phaseDegrees(), scope);
+            case AcComponent.IdealDiode diode -> diode.evaluate(scope);
+            case AcComponent.Transconductance lawG -> SpiceValue.evaluate(lawG.expression(), scope);
             case AcComponent.Controlled controlled -> {
                 if (controlled.laplace()) SpiceValue.transfer(controlled.expression(), scope);
                 else SpiceValue.evaluate(controlled.expression(), scope);

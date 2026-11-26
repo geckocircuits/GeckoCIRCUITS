@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Checks profiled inductor membership against native component and occurrence identity. */
+/** Checks profiled law membership against native component and occurrence identity. */
 public final class AcOriginMembership {
     private AcOriginMembership() { }
 
@@ -26,8 +26,8 @@ public final class AcOriginMembership {
     public static void validate(CircuitModel model, HierarchyIndex hierarchy) {
         var provenance = model.getAcProvenance();
         if (provenance == null || !provenance.origin().tested()) {
-            if (model.getCircuitComponents().stream().anyMatch(AcOriginMembership::profiledInductor)) {
-                throw new IllegalArgumentException("Require the imported ASC origin for the inductor law.");
+            if (model.getCircuitComponents().stream().anyMatch(AcOriginMembership::profiledDevice)) {
+                throw new IllegalArgumentException("Require the imported ASC origin for the profiled component law.");
             }
             return;
         }
@@ -52,22 +52,25 @@ public final class AcOriginMembership {
             if (id == null || !ids.add(id)) {
                 throw new IllegalArgumentException("Require unique native identifiers for the ASC profile.");
             }
-            if (!profiledInductor(component)) continue;
+            if (!profiledDevice(component)) continue;
             var owned = component.getAcComponent();
-            var law = (AcComponent.Inductance) owned.law();
-            if (law.origin() != origin || component.getType() != SpicePorts.IND.type()
+            boolean diode = owned.law() instanceof AcComponent.IdealDiode;
+            var lawOrigin = diode ? ((AcComponent.IdealDiode) owned.law()).origin()
+                    : ((AcComponent.Inductance) owned.law()).origin();
+            if (lawOrigin != origin || component.getType() != (diode ? SpicePorts.DIODE : SpicePorts.IND).type()
                     || !owned.instance().equals(component.getName())) {
-                throw new IllegalArgumentException("Invalid profiled ASC inductor identity.");
+                throw new IllegalArgumentException("Invalid profiled ASC component identity.");
             }
             var saved = component.getSavedBlock();
             long parent = HierarchyIndex.parent(saved);
             String definition = parent == 0 ? "" : hierarchy.sheet(parent).definition().id();
             String source = parent == 0 ? sourceSha256 : definitions.get(definition);
-            if (source == null) throw new IllegalArgumentException("Missing ASC inductor source digest.");
+            if (source == null) throw new IllegalArgumentException("Missing ASC component source digest.");
             String key = HierarchyIndex.key(saved);
             var fields = new ArrayList<>(List.of(source, origin.profileId(), origin.configurationSha256(),
                     id.toString(), definition, key == null ? "" : key, owned.instance()));
             fields.addAll(hierarchy.path(parent));
+            if (diode) fields.add("IDEAL_DIODE_V1");
             result.put(id, ArtifactDigest.sha256(AcMetadataCodec.encode(fields).getBytes(StandardCharsets.UTF_8)));
         }
         return result;
@@ -76,5 +79,10 @@ public final class AcOriginMembership {
     private static boolean profiledInductor(CircuitModel.ComponentData component) {
         return component.getAcComponent() != null
                 && component.getAcComponent().law() instanceof AcComponent.Inductance law && law.origin().tested();
+    }
+
+    private static boolean profiledDevice(CircuitModel.ComponentData component) {
+        return profiledInductor(component) || component.getAcComponent() != null
+                && component.getAcComponent().law() instanceof AcComponent.IdealDiode law && law.origin().tested();
     }
 }

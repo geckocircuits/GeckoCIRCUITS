@@ -27,6 +27,7 @@ import gecko.geckocircuits.circuit.CircuitSheet;
 import gecko.geckocircuits.circuit.EditorCircuitCapture;
 import gecko.geckocircuits.circuit.SpecialTyp;
 import gecko.geckocircuits.circuit.Verbindung;
+import gecko.geckocircuits.circuit.circuitcomponents.AcControlledCurrentSource;
 import gecko.geckocircuits.circuit.circuitcomponents.AcControlledVoltageSource;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
@@ -79,6 +80,83 @@ class NativeAcDesktopTest {
             R1 output 0 1k
             """;
     private static final int WITNESS = 210;
+
+    @Test
+    void opensAndRebiasesTheNativeIdealDiodeAfterSave() throws Exception {
+        Path evidence = evidence();
+        Path source = evidence.resolve("ideal-diode.ipes");
+        var model = new SpiceImporter().convert("""
+                .ac dec 1 10 100
+                V1 rail 0 DC 2 AC 1
+                R1 rail leaf 1k
+                D1 leaf 0 clamp
+                D2 leaf 0 CLAMP
+                .model clamp D(Vfwd=.5 Ron=10 Roff=1meg)
+                """, "ideal-diode.cir");
+        assertTrue(model.getImportIssues().isEmpty(), model.getImportIssues().toString());
+        new CircuitFileWriter().write(model, source);
+        try {
+            onEdt(() -> {
+                open(source);
+                var block = component("D1");
+                assertSame(CircuitTyp.LK_D, block.getTypeEnum());
+                assertEquals(.5, block.getParameter()[1]);
+                var law = assertInstanceOf(AcComponent.IdealDiode.class, block.getAcComponent().law());
+                assertEquals(.1 / (.001 + .2) * .001, solve().currents().stream()
+                        .filter(trace -> trace.instance().equals("D1")).findFirst().orElseThrow()
+                        .currentA().getFirst().real(), 1e-12);
+                block.setAcLaw(new AcComponent.IdealDiode(law.modelName(), "3", law.onResistance(),
+                        law.offResistance(), law.origin()));
+                assertEquals(block.getAcComponent().law(), component("D2").getAcComponent().law());
+                Path edited = evidence.resolve("ideal-diode-edited.ipes");
+                GeckoSim._win.saveDocumentTo(edited.toFile(), true);
+                open(edited);
+                assertEquals(3, component("D1").getParameter()[1]);
+                assertEquals(3, component("D2").getParameter()[1]);
+                assertEquals(10, component("D2").getParameter()[2]);
+                assertEquals(1e6, component("D2").getParameter()[3]);
+                assertEquals(1e-6 / (.001 + 2e-6) * .001, solve().currents().stream()
+                        .filter(trace -> trace.instance().equals("D1")).findFirst().orElseThrow()
+                        .currentA().getFirst().real(), 1e-12);
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
+
+    @Test
+    void opensEditsAndReopensTheNativeFourTerminalVccs() throws Exception {
+        Path evidence = evidence();
+        Path source = evidence.resolve("vccs.ipes");
+        var model = new SpiceImporter().convert("""
+                .ac dec 1 10 100
+                Vdrive sense 0 AC 1
+                G1 out 0 sense 0 2m
+                Rload out 0 1k
+                """, "vccs.cir");
+        new CircuitFileWriter().write(model, source);
+        try {
+            onEdt(() -> {
+                open(source);
+                var block = assertInstanceOf(AcControlledCurrentSource.class, component("G1"));
+                assertEquals(54, CircuitTypCore.LK_VCCS.getTypeNumber());
+                assertSame(CircuitTyp.LK_VCCS, block.getTypeEnum());
+                assertEquals(.002, solve().currents().stream().filter(c -> c.instance().equals("G1"))
+                        .findFirst().orElseThrow().currentA().getFirst().real(), 1e-12);
+                block.setAcLaw(new AcComponent.Transconductance("-3m"));
+                Path edited = evidence.resolve("vccs-edited.ipes");
+                GeckoSim._win.saveDocumentTo(edited.toFile(), true);
+                open(edited);
+                assertEquals(new AcComponent.Transconductance("-3m"), component("G1").getAcComponent().law());
+                assertEquals(-.003, solve().currents().stream().filter(c -> c.instance().equals("G1"))
+                        .findFirst().orElseThrow().currentA().getFirst().real(), 1e-12);
+                return null;
+            });
+        } finally {
+            onEdt(() -> { closeDesktop(); return null; });
+        }
+    }
 
     @Test
     void rollsBackSharedEditAndGroupsToggleAndCopyCommands() throws Exception {

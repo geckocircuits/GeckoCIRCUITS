@@ -17,6 +17,11 @@ public enum SpicePorts {
             new PortSpec(1, Side.OUTPUT, 0, new Point(0, 16), new Point(0, -2)),
             new PortSpec(2, Side.OUTPUT, 1, new Point(0, 96), new Point(0, 2)),
             new PortSpec(3, Side.INPUT, 0, new Point(-48, 32), new Point(-2, -1)),
+            new PortSpec(4, Side.INPUT, 1, new Point(-48, 80), new Point(-2, 1)))),
+    G(54, 'G', List.of(
+            new PortSpec(1, Side.OUTPUT, 0, new Point(0, 96), new Point(0, 2)),
+            new PortSpec(2, Side.OUTPUT, 1, new Point(0, 16), new Point(0, -2)),
+            new PortSpec(3, Side.INPUT, 0, new Point(-48, 32), new Point(-2, -1)),
             new PortSpec(4, Side.INPUT, 1, new Point(-48, 80), new Point(-2, 1))));
 
     public record Point(int x, int y) { }
