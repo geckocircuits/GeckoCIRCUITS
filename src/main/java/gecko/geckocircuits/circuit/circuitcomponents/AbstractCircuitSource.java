@@ -340,7 +340,7 @@ public abstract class AbstractCircuitSource extends AbstractTwoPortLKreisBlock i
     @Override
     public final void setParentCircuitSheet(final CircuitSheet sheet) {
         super.setParentCircuitSheet(sheet);
-        if (sheet != null && detachedPwlFile != null) {
+        if (detachedPwlFile != null) {
             addFiles(List.of(detachedPwlFile));
             detachedPwlFile = null;
         }
