@@ -262,6 +262,10 @@ class CircuitImportContractTest {
                 + ".param edge=3u top=2\nR1 in 0 1\n.tran " + step + " 12u");
         assertTrue(model.getImportIssues().isEmpty(), model.getImportIssues().toString());
         assertEquals(1, model.getResources().size());
+        var importedSource = model.getCircuitComponents().getFirst();
+        long ownerId = Long.parseLong(importedSource.getImportTokens().get("uniqueObjectIdentifier"));
+        assertEquals(ownerId, importedSource.getParameters().get("uniqueObjectIdentifier"));
+        assertEquals(List.of(ownerId), model.getResources().values().iterator().next().ownerIds());
         Path circuit = write(model, kind + "pwl.ipes");
         var reopened = new CircuitFileParser().parse(circuit.toString());
         assertEquals(1, reopened.getResources().size());

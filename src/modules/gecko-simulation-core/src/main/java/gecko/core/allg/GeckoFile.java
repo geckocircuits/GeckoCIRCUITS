@@ -505,9 +505,13 @@ public final class GeckoFile {
         SerializationUtils.appendAsString(ascii.append("\nrelPath"), path);
         SerializationUtils.appendAsString(ascii.append("\nfileSep"), _separator);
         SerializationUtils.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
-
-        if (!_sourceOwnedPwl) {
+        if (_sourceOwnedPwl) {
+            ascii.append("\nusageList[] ");
+            for (Long userID : _usageList) {
+                ascii.append('/').append(userID);
+            }
+        } else {
+            SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
             ascii.append("\n<usageList>");
             for (Long userID : _usageList) {
                 ascii.append('\n');

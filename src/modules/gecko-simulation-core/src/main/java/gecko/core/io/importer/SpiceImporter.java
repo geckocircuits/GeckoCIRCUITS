@@ -372,7 +372,7 @@ public final class SpiceImporter {
         if (piecewiseLinear(spec.strip())) {
             var waveform = piecewiseLinearSamples(spec.strip().substring(3), parameters);
             long resourceId = 300000L + model.getResources().size();
-            long ownerId = 400000L + model.getResources().size();
+            long ownerId = Long.parseLong(data.getImportTokens().get("uniqueObjectIdentifier"));
             String filename = "pwl-" + resourceId + ".bin";
             data.setParameter("uniqueObjectIdentifier", ownerId);
             data.getImportTokens().put(PiecewiseLinearWaveform.RESOURCE_ID_TOKEN, Long.toString(resourceId));

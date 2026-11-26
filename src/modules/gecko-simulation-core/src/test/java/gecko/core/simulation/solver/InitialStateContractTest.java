@@ -18,7 +18,7 @@ class InitialStateContractTest {
         var netlist = new CircuitNetlist();
         netlist.initNetlist(new CircuitTypCore[]{CircuitTypCore.LK_U, CircuitTypCore.LK_R, CircuitTypCore.LK_C},
                 new int[]{1, 1, 2}, new int[]{0, 2, 0}, new int[]{1, -1, -1},
-                new double[][]{{SourceType.PWL, 0}, {1}, {1e-6, initialCapacitorVoltage}}, 2, 1, 3);
+                new double[][]{{SourceType.PWL, 0}, {1, 0, 0}, {1e-6, initialCapacitorVoltage}}, 2, 1, 3);
         netlist.setPwlWaveform(0, new PiecewiseLinearWaveform(new double[]{1e-6, 2e-6}, new double[]{-2, 3}));
         var matrix = new MatrixSolver(SolverType.SOLVER_BE);
         matrix.initializeMatrices(2, 1, 3);
