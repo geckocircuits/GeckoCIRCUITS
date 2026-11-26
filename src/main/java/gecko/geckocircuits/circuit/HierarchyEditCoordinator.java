@@ -212,10 +212,14 @@ final class HierarchyEditCoordinator {
                 copy.setAcComponentWithoutUndo(block.getAcComponentOrLiteral());
                 peer = copy;
             }
+            long previousOwner = peer.getUniqueObjectIdentifier();
             do {
                 peer.getIdentifier().createNewIdentifier(0);
                 peer.getIdentifier().createNewIdentifier();
             } while (!used.add(peer.getUniqueObjectIdentifier()));
+            if (peer instanceof gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitSource sourcePeer) {
+                sourcePeer.rebindPwlOwner(previousOwner);
+            }
             peer.setHierarchyMember(key);
             additions.add(new Placement(peer, owner._myCircuitSheet));
         }

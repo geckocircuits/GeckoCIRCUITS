@@ -14,12 +14,14 @@
 package gecko.geckocircuits.allg;
 
 import gecko.core.allg.GeckoFile;
+import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitSource;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.io.AcMetadataCodec;
 import gecko.core.io.AcProvenance;
 import gecko.core.io.CircuitFileParser.CircuitParseException;
 import gecko.core.io.ImportIssue;
 import gecko.core.io.ImportIssueCodec;
+import gecko.core.io.SavedPwlResources;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
@@ -154,6 +156,10 @@ public final class ProjectData implements Serializable {
         for (String record : List.of("sp", "e", "eTH", "c", "verbindungLK", "verbindungTHERM", "verbindungCONTROL")) {
             for (var block = tokens.getSpecialBlockTokenMap(record); block != null; block = tokens.getSpecialBlockTokenMap(record)) {
                 requireFlatImportFields(block);
+                if (record.equals("e") && block.containsToken(
+                        gecko.core.circuit.waveform.PiecewiseLinearWaveform.RESOURCE_ID_TOKEN)) {
+                    throw new IllegalArgumentException("Open the PWL sources in a separate circuit document.");
+                }
             }
         }
     }
@@ -191,6 +197,9 @@ public final class ProjectData implements Serializable {
         //asc.append("\nverbindungLeistungskreisANZAHL ").append(connectors.size());
         int elementCounter = 0;
         for (AbstractCircuitSheetComponent elem : _allSheetComponents) {
+            if (elem instanceof AbstractCircuitSource source) {
+                source.validatePwlResource(_fileManager);
+            }
             asc.append("\n" + elem.getExportImportCharacters() + " (" + elementCounter + ")\n");
             if (elem instanceof AbstractBlockInterface block) {
                 long sheet = block.getParentCircuitSheet() instanceof gecko.geckocircuits.control.SubCircuitSheet child
@@ -470,21 +479,27 @@ public final class ProjectData implements Serializable {
         }
 
 
+        var savedPwlSources = new ArrayList<SavedPwlResources.Source>();
         for (TokenMap elementLKMap = tokenMap.getSpecialBlockTokenMap("e");
                 elementLKMap != null; elementLKMap = tokenMap.getSpecialBlockTokenMap("e")) {
             int typ = elementLKMap.readDataLine("typ", -1);
+            var savedPwl = SavedPwlResources.source(elementLKMap.getLines(),
+                    typ == CircuitTyp.LK_U.getTypeNumber() || typ == CircuitTyp.LK_I.getTypeNumber());
+            if (savedPwl != null) savedPwlSources.add(savedPwl);
             AbstractBlockInterface newBlock = AbstractTypeInfo.fabricFromFile(CircuitTyp.getFromIntNumber(typ), elementLKMap);
             _allSheetComponents.add(newBlock);
         }
 
         for (TokenMap thermTokenMap = tokenMap.getSpecialBlockTokenMap("eTH"); thermTokenMap != null;
                 thermTokenMap = tokenMap.getSpecialBlockTokenMap("eTH")) {
+            SavedPwlResources.source(thermTokenMap.getLines(), false);
             int typ = thermTokenMap.readDataLine("typ", -1);
             _allSheetComponents.add(AbstractTypeInfo.fabricFromFile(CircuitTyp.getFromIntNumber(typ), thermTokenMap));
         }
 
         for (TokenMap controlTokenMap = tokenMap.getSpecialBlockTokenMap("c");
                 controlTokenMap != null; controlTokenMap = tokenMap.getSpecialBlockTokenMap("c")) {
+            SavedPwlResources.source(controlTokenMap.getLines(), false);
             int typ = controlTokenMap.readDataLine("typ", -1);
             try {
                 if (typ == SpecialTyp.TEXTFIELD.getTypeNumber()) { // this is for backwards-compatiblity before v 1.62
@@ -501,6 +516,7 @@ public final class ProjectData implements Serializable {
 
         for (TokenMap specialTokenMap = tokenMap.getSpecialBlockTokenMap("sp");
                 specialTokenMap != null; specialTokenMap = tokenMap.getSpecialBlockTokenMap("sp")) {
+            SavedPwlResources.source(specialTokenMap.getLines(), false);
             int typ = specialTokenMap.readDataLine("typ", -1);
             try {
                 AbstractBlockInterface newBlock = AbstractTypeInfo.fabricFromFile(SpecialTyp.getFromIntNumber(typ), specialTokenMap);
@@ -517,21 +533,55 @@ public final class ProjectData implements Serializable {
         }
 
         // the GeckoFile-Object are created after the single block creation!
+        var pwlSources = _allSheetComponents.stream()
+                .filter(element -> element instanceof AbstractCircuitSource source && source.hasPwlConfiguration())
+                .map(AbstractCircuitSource.class::cast).toList();
+        for (var source : pwlSources) {
+            source.validatePwlOwner(_allSheetComponents);
+        }
+        var fileBlocks = new ArrayList<TokenMap>();
         TokenMap fileBlock = tokenMap.getSpecialBlockTokenMap("GeckoFileManager");
         if (fileBlock != null) {
             fileMgrFiles = new ArrayList<GeckoFile>();
-            for (TokenMap fileSubBlock = fileBlock.getBlockTokenMap("<GeckoFile>"); fileSubBlock != null;
-                    fileSubBlock = fileBlock.getBlockTokenMap("<GeckoFile>")) {
-                try {
-                    GeckoFile newFile = new GeckoFile(fileSubBlock, _allSheetComponents, modelFileName, null);
-                    fileMgrFiles.add(newFile);
-                } catch (FileNotFoundException e) {
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);
-                }
+            collectFileBlocks(fileBlock, fileBlocks);
+        }
+        int ordinaryBlockLimit = fileBlocks.size();
+        if (!savedPwlSources.isEmpty()) {
+            for (fileBlock = tokenMap.getSpecialBlockTokenMap("GeckoFileManager"); fileBlock != null;
+                    fileBlock = tokenMap.getSpecialBlockTokenMap("GeckoFileManager")) {
+                collectFileBlocks(fileBlock, fileBlocks);
             }
         }
+        readSavedFiles(savedPwlSources, fileBlocks, ordinaryBlockLimit, (file, pwl) -> {
+            try {
+                fileMgrFiles.add(new GeckoFile(file, _allSheetComponents, modelFileName, null, pwl));
+            } catch (FileNotFoundException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR: File not found", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
+        GeckoFileManager loadedFiles = new GeckoFileManager(fileMgrFiles);
+        for (var source : pwlSources) {
+            source.validatePwlResource(loadedFiles);
+        }
         return uniqueFileId;
+    }
+
+    private static void collectFileBlocks(TokenMap manager, List<TokenMap> blocks) {
+        for (TokenMap block = manager.getBlockTokenMap("<GeckoFile>"); block != null;
+                block = manager.getBlockTokenMap("<GeckoFile>")) {
+            blocks.add(block);
+        }
+    }
+
+    static void readSavedFiles(List<SavedPwlResources.Source> sources, List<TokenMap> blocks,
+            int ordinaryBlockLimit, java.util.function.BiConsumer<TokenMap, SavedPwlResources.Embedded> read) {
+        var embedded = SavedPwlResources.preflight(sources, blocks.stream().map(TokenMap::getLines).toList());
+        for (int i = 0; i < blocks.size(); i++) {
+            if (i < ordinaryBlockLimit || embedded.containsKey(i)) {
+                read.accept(blocks.get(i), embedded.get(i));
+            }
+        }
     }
 
     // Hilfsfunktionen:

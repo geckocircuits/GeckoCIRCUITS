@@ -41,6 +41,11 @@ final class PeriodicSteadyStateValidation {
                         && type != CircuitTypCore.TH_TEMP && type != CircuitTypCore.REL_MMF) continue;
                 double[] parameters = netlist.getParameter(element);
                 int kind = (int) parameters[0];
+                if ((type == CircuitTypCore.LK_U || type == CircuitTypCore.LK_I)
+                        && (kind == SourceType.PWL || kind == SourceType.PWL_NEW)) {
+                    issues.add(new SimulationTiming.SettingIssue("periodicSteadyState.period",
+                            "Electrical PWL source " + element + " does not repeat."));
+                }
                 if ((kind == SourceType.QUELLE_SIN || kind == SourceType.QUELLE_SIN_NEW) && !wholeCycles(period, parameters[2])) {
                     issues.add(new SimulationTiming.SettingIssue("periodicSteadyState.period",
                             "Electrical sine source " + element + " does not complete whole cycles in the period."));

@@ -81,6 +81,16 @@ public class CircuitModel {
     private final Map<Long, CircuitResourceFailure> resourceFailures = new HashMap<>();
 
     public List<ComponentData> getSpecialComponents() { return specialComponents; }
+
+    public boolean hasUniqueComponentIdentifier(long identifier) {
+        return identifier != 0 && java.util.stream.Stream.of(
+                circuitComponents, controlComponents, thermalComponents, specialComponents).flatMap(List::stream)
+                .filter(component -> component != null && (Long.valueOf(identifier).equals(
+                        component.getParameters().get("uniqueObjectIdentifier"))
+                        || component.getSavedBlock() != null
+                        && identifier == component.getSavedBlock().uniqueObjectIdentifier())).count() == 1;
+    }
+
     public List<StructuralComponent> getStructuralComponents() { return structuralComponents; }
     public List<SavedCircuitBlock> getSavedBlocks() { return savedBlocks; }
     public Map<String, String> getSavedSettings() { return savedSettings; }

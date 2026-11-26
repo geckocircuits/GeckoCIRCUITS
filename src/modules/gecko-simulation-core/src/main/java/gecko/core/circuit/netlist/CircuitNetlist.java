@@ -14,6 +14,7 @@
 package gecko.core.circuit.netlist;
 
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import java.util.*;
 
 /**
@@ -78,6 +79,7 @@ public class CircuitNetlist implements INetList {
     private int[] voltageSourceNumbers;  // Voltage source numbering for extended MNA
     private double[][] parameters;       // Component parameters
     private int[] controlElementIndices = new int[0];
+    private PiecewiseLinearWaveform[] pwlWaveforms = new PiecewiseLinearWaveform[0];
 
     // Netlist metrics
     private int nodeCount;              // Maximum node index (nodes 0 to nodeCount)
@@ -122,6 +124,7 @@ public class CircuitNetlist implements INetList {
         copy.wireReference = wireReference;
         copy.numericalNodeOrder = numericalNodeOrder.clone();
         copy.controlElementIndices = controlElementIndices.clone();
+        copy.pwlWaveforms = pwlWaveforms.clone();
         copy.componentNameToIndex = Collections.unmodifiableMap(new LinkedHashMap<>(componentNameToIndex));
         copy.simulationTime = simulationTime;
         copy.lastNodeVoltages = lastNodeVoltages.clone();
@@ -204,6 +207,7 @@ public class CircuitNetlist implements INetList {
         this.voltageSourceCount = maxVoltageSourceIndex;
         this.elementCount = elementCount;
         controlElementIndices = new int[elementCount];
+        pwlWaveforms = new PiecewiseLinearWaveform[elementCount];
         Arrays.fill(controlElementIndices, -1);
 
         // A new circuit must not inherit results, probe mappings or simulation history.
@@ -214,6 +218,19 @@ public class CircuitNetlist implements INetList {
         componentNameToIndex = Collections.emptyMap();
         lastNodeVoltages = new double[0];
         lastComponentCurrents = new double[0];
+    }
+
+    public void setPwlWaveform(int elementIndex, PiecewiseLinearWaveform waveform) {
+        pwlWaveforms[Objects.checkIndex(elementIndex, elementCount)] = Objects.requireNonNull(waveform);
+    }
+
+    @Override
+    public PiecewiseLinearWaveform getPwlWaveform(int elementIndex) {
+        PiecewiseLinearWaveform waveform = pwlWaveforms[Objects.checkIndex(elementIndex, elementCount)];
+        if (waveform == null) {
+            return INetList.super.getPwlWaveform(elementIndex);
+        }
+        return waveform;
     }
 
     /** Assigns a controlling element in this run's netlist. */

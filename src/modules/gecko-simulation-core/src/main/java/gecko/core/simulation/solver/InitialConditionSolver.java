@@ -108,13 +108,15 @@ public class InitialConditionSolver {
     }
 
     /**
-     * Initializes configured dynamic states. Zero-start circuits retain their existing startup convention.
-     * A nonzero state is held fixed while the surrounding instantaneous resistive/source network is solved.
+     * Initializes configured dynamic states. Solve the instantaneous network for PWL sources or nonzero states.
+     * Other zero-start circuits retain their existing startup convention.
      */
     public void setDialogInitialConditions(MatrixSolver matrixSolver, INetList netlist) {
         validateState(matrixSolver, netlist);
         boolean hasInitialState = false;
+        boolean hasPwlSource = false;
         for (int i = 0; i < netlist.getElementCount(); i++) {
+            hasPwlSource |= isPwlSource(netlist.getType(i), netlist.getParameter(i));
             if (isDynamic(netlist.getType(i))) {
                 double[] parameters = netlist.getParameter(i);
                 double value = parameters.length > 1 ? parameters[1] : 0;
@@ -124,7 +126,7 @@ public class InitialConditionSolver {
                 hasInitialState |= value != 0;
             }
         }
-        if (!hasInitialState) {
+        if (!hasInitialState && !hasPwlSource) {
             seedHistories(matrixSolver, new double[matrixSolver.getMatrixSize()],
                     new double[netlist.getElementCount()]);
             return;
@@ -143,6 +145,7 @@ public class InitialConditionSolver {
             y[i] = netlist.getNodeY(i);
             double[] values = netlist.getParameter(i);
             parameters[i] = Arrays.copyOf(values, Math.max(13, values.length));
+            freezePwlSource(netlist, i, inductorCutset ? -1e-9 : 0, parameters[i]);
             boolean zeroStartCapacitor = (original == CircuitTypCore.LK_C || original == CircuitTypCore.TH_CTH)
                     && parameters[i][1] == 0;
             if (isDynamic(original) && !(inductorCutset && (isInductor(original) || zeroStartCapacitor))) {
@@ -229,6 +232,7 @@ public class InitialConditionSolver {
             x[i] = netlist.getNodeX(i);
             y[i] = netlist.getNodeY(i);
             parameters[i] = netlist.getParameter(i).clone();
+            freezePwlSource(netlist, i, 0, parameters[i]);
             sources[i] = -1;
             requireDcSupport(original, parameters[i], i);
             switch (original) {
@@ -287,6 +291,18 @@ public class InitialConditionSolver {
         source[0] = SourceType.QUELLE_DC_NEW;
         source[1] = value;
         return source;
+    }
+
+    private static void freezePwlSource(INetList netlist, int index, double time, double[] values) {
+        if (isPwlSource(netlist.getType(index), values)) {
+            values[0] = SourceType.QUELLE_DC_NEW;
+            values[1] = netlist.getPwlWaveform(index).calculate(time, 0);
+        }
+    }
+
+    private static boolean isPwlSource(CircuitTypCore type, double[] values) {
+        return (type == CircuitTypCore.LK_U || type == CircuitTypCore.LK_I) && values.length >= 2
+                && (values[0] == SourceType.PWL || values[0] == SourceType.PWL_NEW);
     }
 
     private static void requireDcSupport(CircuitTypCore type, double[] values, int element) {

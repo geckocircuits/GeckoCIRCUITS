@@ -5,6 +5,8 @@ import gecko.core.ac.AcInputOrigin;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.ac.AcSweep;
 import gecko.core.ac.ParameterDefinition;
+import gecko.core.circuit.SourceType;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitModel.ComponentData;
 import gecko.core.io.CircuitModel.ConnectionData;
@@ -115,7 +117,7 @@ public final class SpiceImporter {
             String text = line.text();
             String directive = keyword(text);
             if (List.of(".param", ".model", ".tran", ".ac").contains(directive)) continue;
-            if (ac && !origin.tested() && text.strip().equalsIgnoreCase(".options logparams")) continue;
+            if (ac && text.strip().equalsIgnoreCase(".options logparams")) continue;
             if (text.startsWith(".")) {
                 issue(model, line, "UNSUPPORTED_DIRECTIVE", directive, "The analysis or directive is unsupported.");
                 continue;
@@ -270,6 +272,9 @@ public final class SpiceImporter {
 
     private static AcComponent.Voltage acVoltage(String spec) {
         String[] fields = arguments(spec);
+        if (Arrays.stream(fields).anyMatch(SpiceImporter::piecewiseLinear)) {
+            throw new IllegalArgumentException("PWL sources are unsupported in AC analysis.");
+        }
         String dc = null, waveform = "", magnitude = null, phase = "0";
         for (int i = 0; i < fields.length; i++) {
             String field = fields[i];
@@ -313,6 +318,10 @@ public final class SpiceImporter {
 
     private static boolean waveform(String token) {
         return token.matches("(?is)^(pulse|sine?)(\\(.*)?");
+    }
+
+    private static boolean piecewiseLinear(String token) {
+        return token.matches("(?is)^pwl(?=$|[\\s(]).*");
     }
 
     static void addScope(CircuitModel model, Map<String, String> nodes) {
@@ -360,7 +369,17 @@ public final class SpiceImporter {
         String upper = spec.toUpperCase(Locale.ROOT).trim();
         double[] saved = new double[21];
         saved[0] = 401;
-        if (upper.startsWith("PULSE")) {
+        if (piecewiseLinear(spec.strip())) {
+            var waveform = piecewiseLinearSamples(spec.strip().substring(3), parameters);
+            long resourceId = 300000L + model.getResources().size();
+            long ownerId = 400000L + model.getResources().size();
+            String filename = "pwl-" + resourceId + ".bin";
+            data.setParameter("uniqueObjectIdentifier", ownerId);
+            data.getImportTokens().put(PiecewiseLinearWaveform.RESOURCE_ID_TOKEN, Long.toString(resourceId));
+            model.getResources().put(resourceId,
+                    new CircuitResource(resourceId, filename, filename, waveform.toBytes(), List.of(ownerId)));
+            saved[0] = SourceType.PWL;
+        } else if (upper.startsWith("PULSE")) {
             double[] args = Arrays.stream(arguments(unwrap(spec.substring(5)))).mapToDouble(s -> value(s, parameters)).toArray();
             if (args.length < 2 || args.length > 7) throw new IllegalArgumentException("PULSE requires two to seven arguments.");
             double low = args[0], high = args[1], delay = args.length > 2 ? args[2] : 0;
@@ -398,6 +417,27 @@ public final class SpiceImporter {
             saved[1] = value(value, parameters);
         }
         sourceSettings(data, saved);
+    }
+
+    private static PiecewiseLinearWaveform piecewiseLinearSamples(String spec, Map<String, String> parameters) {
+        String points = spec.strip();
+        if (!points.startsWith("(") || !points.endsWith(")")) {
+            throw new IllegalArgumentException("Use one parenthesized PWL list of absolute time and value pairs.");
+        }
+        String[] args = arguments(unwrap(points));
+        if (args.length < 2 || args.length % 2 != 0 || args.length / 2 > PiecewiseLinearWaveform.MAX_POINTS) {
+            throw new IllegalArgumentException("Use one to two million PWL time and value pairs.");
+        }
+        double[] times = new double[args.length / 2];
+        double[] values = new double[times.length];
+        for (int i = 0; i < args.length; i += 2) {
+            if (args[i].startsWith("+")) {
+                throw new IllegalArgumentException("Relative PWL times are unsupported.");
+            }
+            times[i / 2] = value(args[i], parameters);
+            values[i / 2] = value(args[i + 1], parameters);
+        }
+        return new PiecewiseLinearWaveform(times, values);
     }
 
     static void controlledSource(ComponentData data, String signal) {
@@ -504,7 +544,7 @@ public final class SpiceImporter {
         String tail = fields[3].toLowerCase(Locale.ROOT);
         return switch (kind) {
             case 'R', 'L', 'C', 'V', 'I' -> tail.matches("(?s)^(?:[+\\-0-9.{(]|dc\\s|pulse\\s*\\(|sine?\\s*\\().*")
-                    || parameters.containsKey(tail);
+                    || (kind == 'V' || kind == 'I') && piecewiseLinear(tail) || parameters.containsKey(tail);
             case 'D' -> definitions.containsKey(tail);
             case 'S' -> {
                 String[] args = tail.trim().split("\\s+");

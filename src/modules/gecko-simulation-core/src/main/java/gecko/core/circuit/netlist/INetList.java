@@ -14,6 +14,7 @@
 package gecko.core.circuit.netlist;
 
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 
 /**
  * Interface for netlist representation in circuit simulation.
@@ -117,6 +118,10 @@ public interface INetList {
     /** Returns the controlling element index, or -1 when no target is configured. */
     default int getControlElementIndex(int sourceIndex) {
         return -1;
+    }
+
+    default PiecewiseLinearWaveform getPwlWaveform(int elementIndex) {
+        throw new IllegalArgumentException("Missing PWL waveform for element " + elementIndex);
     }
 
     /** Magnetic metadata is optional for netlist implementations without coupled windings. */

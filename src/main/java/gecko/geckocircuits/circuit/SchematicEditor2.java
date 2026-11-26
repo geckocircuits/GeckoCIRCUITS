@@ -23,6 +23,7 @@ import gecko.geckocircuits.allg.AbstractComponentTyp;
 import gecko.geckocircuits.allg.ProjectData;
 import gecko.geckocircuits.allg.MainWindow;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
+import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitSource;
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitGlobalTerminal;
 import gecko.geckocircuits.circuit.circuitcomponents.SubcircuitBlock;
 import gecko.geckocircuits.control.*;
@@ -940,6 +941,10 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             throw new IllegalArgumentException("Open the profiled ASC as a separate circuit document.");
         }
         for (var element : project._allSheetComponents) {
+            if (element instanceof AbstractCircuitSource source
+                    && source.getSimulationDomain() == ConnectorType.LK && source.hasPwlConfiguration()) {
+                throw new IllegalArgumentException("Open the PWL sources in a separate circuit document.");
+            }
             if (element instanceof AbstractBlockInterface block) ProjectData.requireComponentMergeLaw(block.getAcComponent());
         }
         if (getHierarchy() != null || project.getHierarchy() != null || project._allSheetComponents.stream().anyMatch(element ->
