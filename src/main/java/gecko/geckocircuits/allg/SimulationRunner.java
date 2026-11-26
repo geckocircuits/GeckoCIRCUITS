@@ -205,6 +205,7 @@ public final class SimulationRunner {
     }
 
     private Execution prepareStart(Preparation preparation, SolverSettings settings) {
+        requireOutputStart(settings, settings._tDURATION.getValue());
         Object token = preparation.token();
         LegacySimulationFrontend presentation = new LegacySimulationFrontend(() -> isPreparing(token));
         SimulationsKern kernel = new SimulationsKern(settings.SOLVER_TYPE.getValue(), presentation);
@@ -218,6 +219,7 @@ public final class SimulationRunner {
         }
         settings._dt_ALT = dt;
         NetListContainer netlist = NetListContainer.fabricStartSimulation(_se, kernel);
+        netlist._nlControl.setOutputStartTime(settings.outputStartTime.getValue());
         Consumer<ContainerStatus> originStatus = NetzlisteCONTROL.globalData.captureStatusUpdater();
         if (!isPreparing(token)) {
             ticket.supersede();
@@ -419,8 +421,15 @@ public final class SimulationRunner {
         }
     }
 
+    private static void requireOutputStart(SolverSettings settings, double stop) {
+        if (!gecko.core.simulation.SimulationTiming.validOutputStart(settings.outputStartTime.getValue(), stop)) {
+            throw new IllegalArgumentException("Output start time must be finite and between zero and the stop time.");
+        }
+    }
+
     private Execution prepareScript(Preparation preparation, SolverSettings settings, double end, double dt,
             boolean usePreCalculation) {
+        requireOutputStart(settings, end);
         Object token = preparation.token();
         LegacySimulationFrontend presentation = new LegacySimulationFrontend(() -> isPreparing(token));
         SimulationsKern kernel = new SimulationsKern(settings.SOLVER_TYPE.getValue(), presentation);
@@ -433,6 +442,7 @@ public final class SimulationRunner {
             settings._dt_ALT = dt;
         }
         NetListContainer netlist = NetListContainer.fabricStartSimulation(_se, kernel);
+        netlist._nlControl.setOutputStartTime(settings.outputStartTime.getValue());
         Consumer<ContainerStatus> originStatus = NetzlisteCONTROL.globalData.captureStatusUpdater();
         if (!isPreparing(token)) {
             ticket.supersede();

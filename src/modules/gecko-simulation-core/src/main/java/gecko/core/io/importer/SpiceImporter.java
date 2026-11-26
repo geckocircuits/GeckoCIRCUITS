@@ -105,8 +105,10 @@ public final class SpiceImporter {
                     throw new IllegalArgumentException("The transient directive requires a step and duration.");
                 }
                 double step = value(args[0], parameters), end = value(args[1], parameters);
-                if (args.length > 2 && !args[2].equalsIgnoreCase("uic") && value(args[2], parameters) != 0) {
-                    issue(model, line, "UNSUPPORTED_TRANSIENT_OPTION", ".tran", "The transient output start time is unsupported.");
+                double outputStart = args.length > 2 && !args[2].equalsIgnoreCase("uic")
+                        ? value(args[2], parameters) : 0;
+                if (!gecko.core.simulation.SimulationTiming.validOutputStart(outputStart, end)) {
+                    throw new IllegalArgumentException("Output start time must be finite and between zero and the stop time.");
                 }
                 if (args.length > 3 && !args[3].equalsIgnoreCase("uic")) step = value(args[3], parameters);
                 if (args.length > 4 && !args[4].equalsIgnoreCase("uic")) {
@@ -119,6 +121,7 @@ public final class SpiceImporter {
                 if (step <= 0 || end <= step) throw new IllegalArgumentException("Require 0 < time step < duration.");
                 model.setTimeStep(step);
                 model.setSimulationDuration(end);
+                model.setOutputStartTime(outputStart);
             } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
                 issue(model, line, "INVALID_TRANSIENT", "", error.getMessage());
             }

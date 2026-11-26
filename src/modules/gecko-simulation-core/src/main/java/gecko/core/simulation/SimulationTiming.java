@@ -229,6 +229,11 @@ public final class SimulationTiming {
         if (steps > MAXIMUM_STEPS) throw new IllegalArgumentException("Combined simulation step count is too large.");
     }
 
+    /** Returns whether an optional recording start fits the effective stop time. */
+    public static boolean validOutputStart(double start, double stop) {
+        return start == 0 || Double.isFinite(start) && Double.isFinite(stop) && start > 0 && start <= stop;
+    }
+
     static double nextTime(double time, double step) {
         double next = time + step;
         if (!Double.isFinite(next) || !(next > time)) {

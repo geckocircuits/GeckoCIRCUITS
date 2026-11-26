@@ -38,6 +38,43 @@ class ImportIssueDesktopTest {
 
     @Test
     @Timeout(90)
+    void transientRecordingStartSurvivesDesktopSaveAndInvalidOpenIsAtomic(
+            @TempDir(cleanup = org.junit.jupiter.api.io.CleanupMode.NEVER) Path directory) throws Exception {
+        var original = directory.resolve("recording.ipes");
+        var model = new SpiceImporter().convert(
+                ".tran 1u 2m 1m\nV1 in 0 PULSE(0 1 0 1p 1p 10m 20m)\nR1 in out 1k\nC1 out 0 1u", "recording.cir");
+        new CircuitFileWriter().write(model, original);
+        var invalid = directory.resolve("bad-recording.ipes");
+        String bad = "tDURATION 0.002\ntOUTPUT_START 0.003\n";
+        try (var stream = new java.util.zip.GZIPOutputStream(Files.newOutputStream(invalid))) {
+            stream.write(bad.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        }
+        runOnDesktop(window -> {
+            window.openFile(original.toString());
+            assertEquals(0.001, MainWindow._solverSettings.outputStartTime.getValue());
+            var saved = directory.resolve("saved-recording.ipes");
+            window.rawSaveFile(saved.toFile());
+            assertEquals(0.001, new CircuitFileParser().parse(saved.toString()).getOutputStartTime());
+            window.openFile(saved.toString());
+            var elements = List.copyOf(MainWindow._se._circuitSheet.getAllElements());
+            var title = window.getTitle();
+            assertThrows(IllegalArgumentException.class, () -> window.openFile(invalid.toString()));
+            assertThrows(IllegalArgumentException.class, () -> window.openFile(
+                    new java.io.BufferedReader(new java.io.StringReader(bad))));
+            assertIterableEquals(elements, MainWindow._se._circuitSheet.getAllElements());
+            assertEquals(title, window.getTitle());
+            assertEquals(0.001, MainWindow._solverSettings.outputStartTime.getValue());
+            assertThrows(IllegalStateException.class, () -> {
+                MainWindow._solverSettings._tDURATION.setValueWithoutUndo(0.0005);
+                window.rawSaveFile(saved.toFile());
+            });
+            assertEquals(0.001, new CircuitFileParser().parse(saved.toString()).getOutputStartTime());
+            MainWindow._solverSettings._tDURATION.setValueWithoutUndo(0.002);
+        });
+    }
+
+    @Test
+    @Timeout(90)
     void completePwlCircuitSurvivesDesktopSaveAndReopen(@TempDir(cleanup = org.junit.jupiter.api.io.CleanupMode.NEVER)
             Path directory) throws Exception {
         Path spice = directory.resolve("pwl.cir");

@@ -84,6 +84,7 @@ public final class CircuitSnapshot {
         target.setHierarchy(source.getHierarchy());
         target.setAcProvenance(source.getAcProvenance());
         target.setSimulationDuration(source.getSimulationDuration());
+        target.setOutputStartTime(source.getOutputStartTime());
         target.setTimeStep(source.getTimeStep());
         target.setPreSimulationTime(source.getPreSimulationTime());
         target.setPreSimulationTimeStep(source.getPreSimulationTimeStep());

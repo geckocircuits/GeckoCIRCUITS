@@ -454,6 +454,14 @@ class LtspiceImporterTest {
         assertSimulationBlocked(model, "overlap.ipes");
     }
 
+    @Test void nativeRoundTripPreservesTransientOutputStartAndMaximumStep() throws Exception {
+        var model = roundTrip(convert(fixture("rc.asc").replace(".tran 1u 6m", ".tran 1u 2m 1m 500n")));
+        assertTrue(model.getConversionIssues().isEmpty(), model.getConversionIssues().toString());
+        assertEquals(0.001, model.getOutputStartTime());
+        assertEquals(0.002, model.getSimulationDuration());
+        assertEquals(5e-7, model.getTimeStep(), Math.ulp(5e-7));
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"1u 4u 0 1u loadstate=previous.ic", "4u loadstate=previous.ic", "4u\\n+ loadstate=previous.ic"})
     void retainsTheTransientStateModifierAsAnUnsupportedIssue(String arguments) throws Exception {
@@ -544,8 +552,11 @@ class LtspiceImporterTest {
         var model = importer.convert(input, directory);
         assertNull(model.getAcSettings());
         assertEquals(2, model.getAcProvenance().dependencySha256().size());
-        assertEquals(2, model.getConversionIssues().stream()
-                .filter(issue -> issue.code().equals("UNSUPPORTED_TRANSIENT_OPTION")).count());
+        assertEquals(0.001, model.getOutputStartTime());
+        var issues = model.getConversionIssues();
+        assertEquals(1, issues.size(), issues.toString());
+        assertEquals("UNSUPPORTED_TRANSIENT_OPTION", issues.getFirst().code());
+        assertTrue(issues.getFirst().message().toLowerCase(java.util.Locale.ROOT).contains("uic"));
         var profile = assertThrows(IllegalArgumentException.class, () -> importer.convert(input, directory, List.of(),
                 AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C));
         assertTrue(profile.getMessage().contains("requires a complete import"));

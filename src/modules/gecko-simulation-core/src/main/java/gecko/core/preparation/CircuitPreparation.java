@@ -73,6 +73,9 @@ public final class CircuitPreparation {
             if (positive(settings.duration())) model.setSimulationDuration(settings.duration());
             else diagnostics.add(invalidSetting("duration", "Simulation duration must be finite and positive"));
         }
+        if (!SimulationTiming.validOutputStart(model.getOutputStartTime(), model.getSimulationDuration())) {
+            diagnostics.add(invalidSetting("outputStartTime", "Output start time must be finite and between zero and the stop time"));
+        }
         if (!settings.features().valid()) {
             diagnostics.add(invalidSetting("controlSamplePeriod", "CONTROL sample period must be finite and non-negative"));
         }

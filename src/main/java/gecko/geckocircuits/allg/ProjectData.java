@@ -79,6 +79,7 @@ public final class ProjectData implements Serializable {
     //------------------
     // Simulationsparameter
     public double _dt, _tDURATION;
+    private double outputStartTime;
     public double _tPAUSE = -1;
     //------------------
     // Ansicht im SchematicEntry
@@ -124,6 +125,10 @@ public final class ProjectData implements Serializable {
         this.conversionIssues = se.getConversionIssues();
         this._dt = solverSettings.dt.getValue();
         this._tDURATION = solverSettings._tDURATION.getValue();
+        this.outputStartTime = solverSettings.outputStartTime.getValue();
+        if (!gecko.core.simulation.SimulationTiming.validOutputStart(outputStartTime, _tDURATION)) {
+            throw new IllegalArgumentException("Output start time must be finite and between zero and the stop time.");
+        }
         this._T_pre = solverSettings._T_pre.getValue();
         this._dt_pre = solverSettings._dt_pre.getValue();
         this.solverType = solverSettings.SOLVER_TYPE.getValue().getOldGeckoIndex();
@@ -162,6 +167,20 @@ public final class ProjectData implements Serializable {
         _optimizer = optimizer;
         optimizerParameterData = new OptimizerParameterData();
         _uniqueFileId = this.importASCII(ascii, isBackupRead, modelFileName, validatedAcValues);
+    }
+
+    static void preflightOutputStart(String[] ascii) {
+        readOutputStart(new TokenMap(ascii, true));
+    }
+
+    private static double readOutputStart(TokenMap tokens) {
+        if (!tokens.containsToken("tOUTPUT_START")) return 0;
+        double start = tokens.readDataLine("tOUTPUT_START", Double.NaN);
+        double stop = tokens.readDataLine("tDURATION", Double.NaN);
+        if (!gecko.core.simulation.SimulationTiming.validOutputStart(start, stop)) {
+            throw new IllegalArgumentException("Output start time must be finite and between zero and the stop time.");
+        }
+        return start;
     }
 
     static Map<Long, double[]> preflightRequiredAc(String[] ascii, String modelFileName) {
@@ -281,6 +300,7 @@ public final class ProjectData implements Serializable {
         //------------------
         // Simulations-Einstellungen:
         asc.append("\ntDURATION ").append(_tDURATION);
+        if (outputStartTime != 0) asc.append("\ntOUTPUT_START ").append(outputStartTime);
         asc.append("\ndt ").append(_dt);
         asc.append("\ntPAUSE ").append(_tPAUSE);
         asc.append("\nT_pre ").append(_T_pre);
@@ -344,6 +364,7 @@ public final class ProjectData implements Serializable {
         if (isBackupRead) {
             return uniqueFileId;
         }
+        outputStartTime = readOutputStart(tokenMap);
         try {
             conversionIssues = ImportIssueCodec.decodeDocument(ascii);
         } catch (CircuitParseException error) {
@@ -909,6 +930,7 @@ public final class ProjectData implements Serializable {
     void updateSolverSettings(final SolverSettings solverSettings) {
         solverSettings.dt.setValueWithoutUndo(_dt);
         solverSettings._tDURATION.setValueWithoutUndo(_tDURATION);
+        solverSettings.outputStartTime.setValueWithoutUndo(outputStartTime);
         solverSettings._T_pre.setValueWithoutUndo(_T_pre);
         solverSettings._dt_pre.setValueWithoutUndo(_dt_pre);
         solverSettings.SOLVER_TYPE.setValueWithoutUndo(SolverType.getFromOldGeckoIndex(solverType));
