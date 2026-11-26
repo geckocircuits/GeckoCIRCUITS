@@ -16,6 +16,7 @@ package gecko.core.io;
 import gecko.core.allg.SolverType;
 import gecko.core.ac.AcComponent;
 import gecko.core.ac.AcDocumentSettings;
+import gecko.core.ac.ParameterDefinition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.Map;
  */
 public class CircuitModel {
     private AcDocumentSettings acSettings;
+    private List<ParameterDefinition> rootParameterDefinitions = List.of();
     private CircuitHierarchy hierarchy;
 
     public CircuitHierarchy getHierarchy() { return hierarchy; }
@@ -37,7 +39,63 @@ public class CircuitModel {
     private AcProvenance acProvenance;
 
     public AcDocumentSettings getAcSettings() { return acSettings; }
-    public void setAcSettings(AcDocumentSettings settings) { acSettings = settings; }
+    public void setAcSettings(AcDocumentSettings settings) {
+        if (settings != null && !rootParameterDefinitions.isEmpty()) {
+            throw new IllegalArgumentException("Use one root parameter definition field.");
+        }
+        acSettings = settings;
+    }
+
+    public List<ParameterDefinition> getRootParameterDefinitions() { return rootParameterDefinitions; }
+
+    public void setRootParameterDefinitions(List<ParameterDefinition> definitions) {
+        var copy = List.copyOf(definitions);
+        if (acSettings != null && !copy.isEmpty()) {
+            throw new IllegalArgumentException("Use one root parameter definition field.");
+        }
+        var root = CircuitHierarchy.parameters(copy);
+        if (acSettings == null && (hierarchy != null || hasScalarBindings())) {
+            materializeScalarBindings(new HierarchyIndex(this), root);
+        }
+        rootParameterDefinitions = copy;
+    }
+
+    public Map<String, String> rootParameterMap() {
+        return acSettings == null ? CircuitHierarchy.parameters(rootParameterDefinitions) : acSettings.parameterMap();
+    }
+
+    public void materializeScalarBindings(HierarchyIndex index) {
+        if (hasScalarBindings() || acSettings == null && hierarchy != null) {
+            materializeScalarBindings(index, rootParameterMap());
+        }
+    }
+
+    public void materializeScalarBindings() {
+        if (hasScalarBindings() || acSettings == null && hierarchy != null) {
+            materializeScalarBindings(new HierarchyIndex(this), rootParameterMap());
+        }
+    }
+
+    private boolean hasScalarBindings() {
+        return getCircuitComponents().stream().anyMatch(component -> !component.getScalarBindings().isEmpty());
+    }
+
+    private void materializeScalarBindings(HierarchyIndex index, Map<String, String> root) {
+        var scopes = index.parameterScopes(root);
+        var replacements = new HashMap<ComponentData, double[]>();
+        for (var component : getCircuitComponents()) {
+            if (component.getScalarBindings().isEmpty()) continue;
+            long sheet = HierarchyIndex.parent(component.getSavedBlock());
+            try {
+                replacements.put(component, ScalarParameterBindings.values(component.getType(),
+                        component.getNumericParameters(), component.getScalarBindings(), scopes.get(sheet)));
+            } catch (IllegalArgumentException error) {
+                throw new IllegalArgumentException(index.path(sheet) + " " + component.getName() + " "
+                        + error.getMessage(), error);
+            }
+        }
+        replacements.forEach(ComponentData::applyBoundValues);
+    }
     public AcProvenance getAcProvenance() { return acProvenance; }
     public void setAcProvenance(AcProvenance provenance) { acProvenance = provenance; }
     /** Captured grid geometry. Hidden proxy terminals do not have physical junctions. */
@@ -389,6 +447,7 @@ public class CircuitModel {
         private String[] terminalYLabels = new String[0];  // labelEndKnoten[]
         private String[] parameterStrings = new String[0]; // parameterString[]
         private double[] numericParameters = new double[0]; // parameter[] raw values
+        private Map<Integer, String> scalarBindings = Map.of();
 
         private boolean parsedInput;
         private boolean configurationNormalized;
@@ -492,6 +551,23 @@ public class CircuitModel {
 
         public void setNumericParameters(double[] numericParameters) {
             this.numericParameters = numericParameters != null ? numericParameters : new double[0];
+        }
+
+        public Map<Integer, String> getScalarBindings() { return scalarBindings; }
+
+        public void setScalarBindings(Map<Integer, String> bindings) {
+            ScalarParameterBindings.validateSlots(type, numericParameters, bindings);
+            scalarBindings = Map.copyOf(bindings);
+        }
+
+        private void applyBoundValues(double[] values) {
+            setNumericParameters(values);
+            for (var slot : scalarBindings.keySet()) {
+                parameters.computeIfPresent("param" + slot, (key, previous) -> values[slot]);
+            }
+            if (scalarBindings.containsKey(0)) {
+                parameters.computeIfPresent(CircuitFileParser.resolveParameterKey(type), (key, previous) -> values[0]);
+            }
         }
 
         @Override

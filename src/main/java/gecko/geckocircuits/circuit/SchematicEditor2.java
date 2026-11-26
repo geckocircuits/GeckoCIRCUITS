@@ -14,6 +14,7 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.core.ac.AcDocumentSettings;
+import gecko.core.ac.ParameterDefinition;
 import gecko.core.io.AcProvenance;
 import gecko.modelviewcontrol.ModelMVC;
 import java.util.Optional;
@@ -57,6 +58,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         justification = "Static fields (Singleton, fonts) are intentionally mutable for runtime configuration; public fields for UI component access; stores component selection reference; Singleton name is a widely-used pattern in codebase")
 public final class SchematicEditor2 implements MouseListener, MouseMotionListener {
     private final ModelMVC<Optional<AcDocumentSettings>> acSettings = new ModelMVC<>(Optional.empty(), "AC analysis");
+    private List<ParameterDefinition> rootParameterDefinitions = List.of();
     private AcProvenance acProvenance;
     private final ModelMVC<Optional<gecko.core.io.CircuitHierarchy>> hierarchy =
             new ModelMVC<>(Optional.empty(), "ASC definitions");
@@ -66,6 +68,16 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
     private volatile List<ImportIssue> conversionIssues = List.of();
 
     public AcDocumentSettings getAcSettings() { return acSettings.getValue().orElse(null); }
+
+    public List<ParameterDefinition> getRootParameterDefinitions() {
+        return getAcSettings() == null ? rootParameterDefinitions : List.of();
+    }
+
+    public java.util.Map<String, String> rootParameterMap() {
+        var settings = getAcSettings();
+        return settings == null ? gecko.core.io.CircuitHierarchy.parameters(rootParameterDefinitions)
+                : settings.parameterMap();
+    }
     public AcProvenance getAcProvenance() { return acProvenance; }
     public gecko.core.io.CircuitHierarchy getHierarchy() { return hierarchy.getValue().orElse(null); }
 
@@ -83,7 +95,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
 
     public gecko.core.io.HierarchyIndex inspectHierarchy() {
         return EditorCircuitCapture.inspectHierarchy(_circuitSheet.getAllElements(), getHierarchy(),
-                getAcSettings(), getAcProvenance());
+                getAcSettings(), getAcProvenance(), getRootParameterDefinitions());
     }
 
     void setHierarchy(gecko.core.io.CircuitHierarchy value) {
@@ -812,6 +824,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         CircuitSheet.clearFindNodes();
         CircuitSheet.clearShowNodes();
         acSettings.setValueWithoutUndo(Optional.empty());
+        rootParameterDefinitions = List.of();
         hierarchy.setValueWithoutUndo(Optional.empty());
         acProvenance = null;
         conversionIssues = List.of();
@@ -940,7 +953,12 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
             throw new IllegalArgumentException("Open the profiled ASC as a separate circuit document.");
         }
         for (var element : project._allSheetComponents) {
-            if (element instanceof AbstractBlockInterface block) ProjectData.requireComponentMergeLaw(block.getAcComponent());
+            if (element instanceof AbstractBlockInterface block) {
+                if (!block.scalarBindings().isEmpty()) {
+                    throw new IllegalArgumentException("Open the circuit with scalar parameter bindings as a separate document.");
+                }
+                ProjectData.requireComponentMergeLaw(block.getAcComponent());
+            }
         }
         if (getHierarchy() != null || project.getHierarchy() != null || project._allSheetComponents.stream().anyMatch(element ->
                 element.getHierarchyMember() != null || element instanceof SubcircuitBlock block && block.getHierarchyCall() != null)) {
@@ -957,6 +975,7 @@ public final class SchematicEditor2 implements MouseListener, MouseMotionListene
         if (replaceAcMetadata) {
             acProvenance = daten.getAcProvenance();
             acSettings.setValueWithoutUndo(Optional.ofNullable(daten.getAcSettings()));
+            rootParameterDefinitions = daten.getRootParameterDefinitions();
             hierarchy.setValueWithoutUndo(Optional.ofNullable(daten.getHierarchy()));
         }
         for (AbstractCircuitSheetComponent elem : daten._allSheetComponents) {

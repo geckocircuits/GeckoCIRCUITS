@@ -78,7 +78,7 @@ public record CircuitHierarchy(List<Definition> definitions) {
         public Member { requireText(key); }
     }
 
-    private static LinkedHashMap<String, String> parameters(List<ParameterDefinition> parameters) {
+    public static LinkedHashMap<String, String> parameters(List<ParameterDefinition> parameters) {
         var map = new LinkedHashMap<String, String>();
         for (var parameter : parameters) {
             if (map.putIfAbsent(parameter.name().toLowerCase(Locale.ROOT), parameter.expression()) != null) {

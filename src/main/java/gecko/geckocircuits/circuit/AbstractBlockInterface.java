@@ -16,6 +16,8 @@ package gecko.geckocircuits.circuit;
 import gecko.core.ac.AcComponent;
 import gecko.core.ac.AcDocumentSettings;
 import gecko.core.io.AcMetadataCodec;
+import gecko.core.io.HierarchyMetadataCodec;
+import gecko.core.io.ScalarParameterBindings;
 import gecko.core.io.SpicePorts;
 import gecko.core.io.importer.SpiceValue;
 import gecko.geckocircuits.allg.TechFormat;
@@ -268,11 +270,23 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     }
 
+    private java.util.Map<Integer, String> scalarBindings = java.util.Map.of();
+
+    final java.util.Map<Integer, String> scalarBindings() { return scalarBindings; }
+
+    final double[] scopedScalarValues(java.util.Map<String, String> scope) {
+        return ScalarParameterBindings.values(getTypeEnum().getTypeNumber(), getParameter(), scalarBindings, scope);
+    }
+
     @Override
     public void importASCII(final TokenMap tokenMap) {
         if (getSimulationDomain() == ConnectorType.LK && tokenMap.containsToken(AcMetadataCodec.COMPONENT)) {
             acComponent.setValueWithoutUndo(Optional.of(
                     AcMetadataCodec.decodeComponent(tokenMap.readDataLine(AcMetadataCodec.COMPONENT, ""))));
+        }
+        if (getSimulationDomain() == ConnectorType.LK && tokenMap.containsToken(HierarchyMetadataCodec.SCALAR_BINDINGS)) {
+            scalarBindings = HierarchyMetadataCodec.decodeScalarBindings(
+                    tokenMap.readDataLine(HierarchyMetadataCodec.SCALAR_BINDINGS, ""));
         }
         if (this instanceof SemiconductorLossCalculatable) {
             TokenMap subBlock = tokenMap.getBlockTokenMap("<Verluste>");
@@ -435,19 +449,21 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     /** Exports current law and compatibility fields with the owning document parameters. */
     public final void exportASCII(StringBuffer ascii, AcDocumentSettings settings) {
-        AcComponent owned = settings == null ? getAcComponent() : getAcComponentOrLiteral();
+        AcComponent owned = settings == null || !scalarBindings.isEmpty() ? getAcComponent() : getAcComponentOrLiteral();
         double[] values = owned == null ? parameter : AcMetadataCodec.compatibilityValues(owned, getParameter(), settings);
+        if (settings != null && !scalarBindings.isEmpty()) values = scopedScalarValues(settings.parameterMap());
         writeASCII(ascii, owned, values);
     }
 
-    public final void exportScopedAcASCII(StringBuffer ascii, java.util.Map<String, String> scope) {
-        AcComponent owned = getAcComponentOrLiteral();
-        double[] values = owned == null ? parameter : AcMetadataCodec.compatibilityValues(owned, getParameter(), scope);
+    public final void exportScopedAcASCII(StringBuffer ascii, java.util.Map<String, String> scope, boolean ac) {
+        AcComponent owned = ac && scalarBindings.isEmpty() ? getAcComponentOrLiteral() : getAcComponent();
+        double[] values = owned == null ? scopedScalarValues(scope)
+                : AcMetadataCodec.compatibilityValues(owned, getParameter(), scope);
         writeASCII(ascii, owned, values);
     }
 
     final void exportForCapture(StringBuffer ascii, AcDocumentSettings settings) {
-        if (settings == null) {
+        if (settings == null || !scalarBindings.isEmpty()) {
             exportASCII(ascii);
         } else {
             writeASCII(ascii, getAcComponentOrLiteral(), getParameter());
@@ -528,6 +544,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         ProjectData.appendAsString(ascii.append("\ny"), getSheetPosition().y);
         ProjectData.appendAsString(ascii.append("\nparameter"), values);
         if (owned != null) ascii.append('\n').append(AcMetadataCodec.COMPONENT).append(' ').append(AcMetadataCodec.encode(owned));
+        if (!scalarBindings.isEmpty()) ascii.append('\n').append(HierarchyMetadataCodec.SCALAR_BINDINGS).append(' ')
+                .append(HierarchyMetadataCodec.encodeScalarBindings(scalarBindings));
 
         ProjectData.appendAsString(ascii.append("\nparameterString"), parameterString);
         updateNameOptArray();
@@ -541,6 +559,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
         for (UserParameter par : getRegisteredParameters()) {
+            if (scalarBindings.containsKey(par.getParameterIndex())) continue;
             if (owned != null && ((owned.law() instanceof AcComponent.Passive || owned.law() instanceof AcComponent.Inductance)
                     && par.getParameterIndex() == 0 || (owned.law() instanceof AcComponent.Voltage
                     || owned.law() instanceof AcComponent.Current) && par.getParameterIndex() == 1)) continue;

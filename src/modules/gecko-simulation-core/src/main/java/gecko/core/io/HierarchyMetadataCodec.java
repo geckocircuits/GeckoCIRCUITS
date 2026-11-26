@@ -3,15 +3,50 @@ package gecko.core.io;
 import gecko.core.ac.ParameterDefinition;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /** Versioned hierarchy fields shared by both IPES entry points. */
 public final class HierarchyMetadataCodec {
     public static final String DOCUMENT = "geckoHierarchy";
+    public static final String ROOT_PARAMETERS = "geckoRootParameters";
+    public static final String SCALAR_BINDINGS = "geckoScalarParameterBindings";
     public static final String MEMBER = "geckoHierarchyMember";
     public static final String OCCURRENCE = "geckoHierarchyOccurrence";
     public static final String BOUNDARY_LOCATION = "geckoHierarchyBoundaryLocation";
 
     private HierarchyMetadataCodec() { }
+
+    public static String encodeRootParameters(List<ParameterDefinition> parameters) {
+        var fields = new ArrayList<String>();
+        appendParameters(fields, parameters);
+        return AcMetadataCodec.encode(fields);
+    }
+
+    public static List<ParameterDefinition> decodeRootParameters(String text) {
+        var fields = new Fields(text);
+        var parameters = fields.parameters();
+        fields.requireEnd();
+        return List.copyOf(parameters);
+    }
+
+    public static String encodeScalarBindings(Map<Integer, String> bindings) {
+        var fields = new ArrayList<String>();
+        new TreeMap<>(bindings).forEach((slot, expression) -> fields.addAll(List.of(slot.toString(), expression)));
+        return AcMetadataCodec.encode(fields);
+    }
+
+    public static Map<Integer, String> decodeScalarBindings(String text) {
+        var fields = new Fields(text);
+        var bindings = new TreeMap<Integer, String>();
+        while (fields.remaining() > 0) {
+            int slot = Integer.parseInt(fields.next());
+            if (bindings.putIfAbsent(slot, fields.next()) != null) {
+                throw new IllegalArgumentException("Duplicate native scalar parameter slot " + slot + ".");
+            }
+        }
+        return Map.copyOf(bindings);
+    }
 
     public static String encode(CircuitHierarchy document) {
         var fields = new ArrayList<String>();

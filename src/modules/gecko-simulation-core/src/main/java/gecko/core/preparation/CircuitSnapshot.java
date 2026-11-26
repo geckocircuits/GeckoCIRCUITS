@@ -80,6 +80,7 @@ public final class CircuitSnapshot {
     private static CircuitModel copy(CircuitModel source) {
         var target = new CircuitModel();
         target.setAcSettings(source.getAcSettings());
+        target.setRootParameterDefinitions(source.getRootParameterDefinitions());
         target.setHierarchy(source.getHierarchy());
         target.setAcProvenance(source.getAcProvenance());
         target.setSimulationDuration(source.getSimulationDuration());
@@ -138,6 +139,7 @@ public final class CircuitSnapshot {
             copy.setTerminalYLabels(component.getTerminalYLabels().clone());
             copy.setParameterStrings(component.getParameterStrings().clone());
             copy.setNumericParameters(component.getNumericParameters().clone());
+            copy.setScalarBindings(component.getScalarBindings());
             copy.setParsedInput(component.isParsedInput());
             copy.getImportTokens().putAll(component.getImportTokens());
             copy.setConfigurationNormalized(component.isConfigurationNormalized());

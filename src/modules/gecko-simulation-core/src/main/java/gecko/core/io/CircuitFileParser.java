@@ -125,6 +125,11 @@ public class CircuitFileParser {
             if (tokenMap.containsKey(AcMetadataCodec.SETTINGS)) {
                 model.setAcSettings(AcMetadataCodec.decodeSettings(savedSettingValue(lines, tokenMap, AcMetadataCodec.SETTINGS)));
             }
+            if (tokenMap.containsKey(HierarchyMetadataCodec.ROOT_PARAMETERS)) {
+                if (model.getAcSettings() != null) throw new IllegalArgumentException("Use one root parameter definition field.");
+                model.setRootParameterDefinitions(HierarchyMetadataCodec.decodeRootParameters(
+                        savedSettingValue(lines, tokenMap, HierarchyMetadataCodec.ROOT_PARAMETERS)));
+            }
             if (tokenMap.containsKey(HierarchyMetadataCodec.DOCUMENT)) {
                 model.setHierarchy(HierarchyMetadataCodec.decodeDocument(
                         savedSettingValue(lines, tokenMap, HierarchyMetadataCodec.DOCUMENT)));
@@ -166,6 +171,7 @@ public class CircuitFileParser {
         try {
             hierarchy = new HierarchyIndex(model);
             AcOriginMembership.validate(model, hierarchy);
+            model.materializeScalarBindings(hierarchy);
         } catch (IllegalArgumentException error) {
             throw new CircuitParseException(filePath + ": " + error.getMessage(), error);
         }
@@ -400,6 +406,10 @@ public class CircuitFileParser {
                 if (elementBlock.containsToken(AcMetadataCodec.COMPONENT)) {
                     comp.setAcComponent(AcMetadataCodec.decodeComponent(
                             elementBlock.readDataLine(AcMetadataCodec.COMPONENT, "")));
+                }
+                if (elementBlock.containsToken(HierarchyMetadataCodec.SCALAR_BINDINGS)) {
+                    comp.setScalarBindings(HierarchyMetadataCodec.decodeScalarBindings(
+                            elementBlock.readDataLine(HierarchyMetadataCodec.SCALAR_BINDINGS, "")));
                 }
 
                 // Store numeric parameters by index
@@ -825,7 +835,7 @@ public class CircuitFileParser {
     /**
      * Returns the semantic parameter key for the primary value of a component type.
      */
-    private static String resolveParameterKey(int type) {
+    static String resolveParameterKey(int type) {
         return switch (type) {
             case 1 -> "resistance";     // LK_R
             case 2 -> "inductance";     // LK_L

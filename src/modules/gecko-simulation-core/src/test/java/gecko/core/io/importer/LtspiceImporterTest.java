@@ -408,6 +408,37 @@ class LtspiceImporterTest {
         assertEquals(3, new CircuitFileParser().parse(target.toString()).getCircuitComponents().size());
     }
 
+    @Test void checksStockSymbolsForTransientImportAndKeepsUnsupportedOptions() throws Exception {
+        Path input = writeProfileFixture("");
+        String source = Files.readString(input).replace("Value AC 1", "Value 1")
+                .replaceFirst("(?m)!\\.ac[^\\r\\n]*", "!.tran 0 6m 1m 1u uic");
+        Files.writeString(input, source);
+        var importer = new LtspiceImporter();
+        var model = importer.convert(input, directory);
+        assertNull(model.getAcSettings());
+        assertEquals(2, model.getAcProvenance().dependencySha256().size());
+        assertEquals(2, model.getConversionIssues().stream()
+                .filter(issue -> issue.code().equals("UNSUPPORTED_TRANSIENT_OPTION")).count());
+        var profile = assertThrows(IllegalArgumentException.class, () -> importer.convert(input, directory, List.of(),
+                AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C));
+        assertTrue(profile.getMessage().contains("requires a complete import"));
+
+        Files.writeString(directory.resolve("ind.asy"), "Version 4\nSymbolType CELL\n");
+        assertThrows(IllegalArgumentException.class, () -> importer.convert(input, directory));
+    }
+
+    @Test void reportsAnExplicitStockVerificationFindingForDiodes() throws Exception {
+        Path input = writeProfileFixture("");
+        String source = Files.readString(input).replace("Value AC 1", "Value 1")
+                .replaceFirst("(?m)!\\.ac[^\\r\\n]*", "!.tran 1u 6m")
+                + "\nSYMBOL diode 320 16 R0\nSYMATTR InstName D1\nSYMATTR Value D\n";
+        Files.writeString(input, source);
+        var model = new LtspiceImporter().convert(input, directory);
+        assertTrue(model.getConversionIssues().stream().anyMatch(issue ->
+                issue.code().equals("UNSUPPORTED_STOCK_SYMBOL_VERIFICATION") && issue.component().equals("D1")
+                        && issue.sourceLocation().startsWith(input + ":")));
+    }
+
     private record Trace(List<Double> times, List<Double> values) { }
 
     private Trace trace(CircuitModel model, String file, String component) throws Exception {

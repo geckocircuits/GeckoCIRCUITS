@@ -34,7 +34,7 @@ public final class CircuitFileWriter {
         var identifiers = identifiers(model);
         var hierarchy = new HierarchyIndex(model);
         AcOriginMembership.validate(model, hierarchy);
-        var scopes = hierarchy.parameterScopes(model.getAcSettings() == null ? Map.of() : model.getAcSettings().parameterMap());
+        var scopes = hierarchy.parameterScopes(model.rootParameterMap());
         var text = new StringBuilder();
         int ordinal = 0;
         for (var data : model.getCircuitComponents()) component(text, scopes, data, "LK", "e", ++ordinal, identifiers.get(data));
@@ -59,6 +59,11 @@ public final class CircuitFileWriter {
         settings.remove(AcMetadataCodec.SETTINGS);
         settings.remove(AcMetadataCodec.PROVENANCE);
         settings.remove(HierarchyMetadataCodec.DOCUMENT);
+        settings.remove(HierarchyMetadataCodec.ROOT_PARAMETERS);
+        if (!model.getRootParameterDefinitions().isEmpty()) {
+            settings.put(HierarchyMetadataCodec.ROOT_PARAMETERS,
+                    HierarchyMetadataCodec.encodeRootParameters(model.getRootParameterDefinitions()));
+        }
         if (model.getHierarchy() != null) {
             settings.put(HierarchyMetadataCodec.DOCUMENT, HierarchyMetadataCodec.encode(model.getHierarchy()));
         }
@@ -127,6 +132,10 @@ public final class CircuitFileWriter {
         var tokens = tokens(data.getSavedBlock());
         tokens.putAll(data.getImportTokens());
         tokens.remove(AcMetadataCodec.COMPONENT);
+        tokens.remove(HierarchyMetadataCodec.SCALAR_BINDINGS);
+        if (!data.getScalarBindings().isEmpty()) {
+            tokens.put(HierarchyMetadataCodec.SCALAR_BINDINGS, HierarchyMetadataCodec.encodeScalarBindings(data.getScalarBindings()));
+        }
         if (data.getAcComponent() != null) {
             tokens.put(AcMetadataCodec.COMPONENT, AcMetadataCodec.encode(data.getAcComponent()));
         }
@@ -139,9 +148,11 @@ public final class CircuitFileWriter {
                 || tokens.containsKey(HierarchyMetadataCodec.OCCURRENCE)) {
             tokens.put("labelAnfangsKnoten[]", strings(data.getTerminalXLabels()));
             tokens.put("labelEndKnoten[]", strings(data.getTerminalYLabels()));
-            double[] values = data.getAcComponent() == null ? data.getNumericParameters()
+            var scope = scopes.getOrDefault(HierarchyIndex.parent(data.getSavedBlock()), scopes.get(0L));
+            double[] values = data.getAcComponent() == null
+                    ? ScalarParameterBindings.values(data.getType(), data.getNumericParameters(), data.getScalarBindings(), scope)
                     : AcMetadataCodec.compatibilityValues(data.getAcComponent(), data.getNumericParameters(),
-                            scopes.getOrDefault(HierarchyIndex.parent(data.getSavedBlock()), scopes.get(0L)));
+                            scope);
             tokens.put("parameter[]", Arrays.stream(values).mapToObj(Double::toString)
                     .collect(Collectors.joining(" ")));
             tokens.put("parameterString[]", strings(data.getParameterStrings()));
