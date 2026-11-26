@@ -4,6 +4,7 @@ import gecko.core.ac.AcComponent;
 import gecko.core.ac.AcInputOrigin;
 import gecko.core.ac.ParameterDefinition;
 import gecko.core.io.AcMetadataCodec;
+import gecko.core.io.ArtifactDigest;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitHierarchy;
@@ -147,7 +148,10 @@ class LtspiceImporterTest {
         "SYMATTR SpiceModel model",
         "SYMATTR Value2 Flux=I",
         "TEXT 0 264 Left 2 !.option temp=85",
-        "TEXT 0 264 Left 2 !.options logparams",
+        "TEXT 0 264 Left 2 !.options logparams temp=85",
+        "TEXT 0 264 Left 2 !.options logparams gfarad=1p",
+        "TEXT 0 264 Left 2 !.options logparams=1",
+        "TEXT 0 264 Left 2 !.options unknown",
         "TEXT 0 264 Left 2 !.model test IND",
         "TEXT 0 264 Left 2 !K1 L1 L2 .99",
         "SYMBOL diode 320 0 R0\\nSYMATTR InstName D1\\nSYMATTR Value D"
@@ -156,6 +160,21 @@ class LtspiceImporterTest {
         var input = writeProfileFixture(extra.replace("\\n", "\n"));
         assertThrows(IllegalArgumentException.class, () -> new LtspiceImporter().convert(input, directory, List.of(),
                 AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C));
+    }
+
+    @Test void acceptsBareLogparamsInProfiledAcAndPreservesImportProvenance() throws Exception {
+        var input = writeProfileFixture("TEXT 0 264 Left 2 !.OPTIONS LogParams");
+        byte[] authoredSource = Files.readAllBytes(input);
+        var origin = AcInputOrigin.LTSPICE_26_1_1_NORMAL_27C;
+        var model = new LtspiceImporter().convert(input, directory, List.of(), origin);
+        assertTrue(model.getConversionIssues().isEmpty(), model.getConversionIssues().toString());
+        assertEquals(origin, model.getAcProvenance().origin());
+        assertEquals(ArtifactDigest.sha256(authoredSource), model.getAcProvenance().sourceSha256());
+        var reopened = roundTrip(model);
+        assertTrue(reopened.getConversionIssues().isEmpty(), reopened.getConversionIssues().toString());
+        assertEquals(model.getAcSettings(), reopened.getAcSettings());
+        assertEquals(model.getAcProvenance(), reopened.getAcProvenance());
+        assertArrayEquals(authoredSource, Files.readAllBytes(input));
     }
 
     @Test void rejectsProfileOnPortableOrWrongVersionAndKeepsUnselectedAsc() throws Exception {

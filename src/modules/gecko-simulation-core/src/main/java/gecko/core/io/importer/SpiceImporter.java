@@ -142,7 +142,7 @@ public final class SpiceImporter {
             String text = line.text();
             String directive = keyword(text);
             if (List.of(".param", ".model", ".tran", ".ac").contains(directive)) continue;
-            if (ac && !origin.tested() && text.strip().equalsIgnoreCase(".options logparams")) continue;
+            if (ac && text.strip().equalsIgnoreCase(".options logparams")) continue;
             if (text.startsWith(".")) {
                 issue(model, line, "UNSUPPORTED_DIRECTIVE", directive, "The analysis or directive is unsupported.");
                 continue;
