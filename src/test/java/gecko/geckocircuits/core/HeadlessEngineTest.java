@@ -16,7 +16,9 @@ package gecko.geckocircuits.core;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import gecko.geckocircuits.math.Matrix;
@@ -31,7 +33,14 @@ import gecko.geckocircuits.circuit.circuitcomponents.CircuitTyp;
  * without any GUI dependencies.
  */
 @DisplayName("Headless Engine Tests")
+@Tag("headless-engine")
 class HeadlessEngineTest {
+
+    @BeforeAll
+    static void requireHeadlessFork() {
+        assertTrue(java.awt.GraphicsEnvironment.isHeadless(),
+                "Run this suite in the dedicated headless-engine test JVM.");
+    }
 
     @Nested
     @DisplayName("Matrix Solver Headless")
@@ -40,7 +49,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Matrix creation works without display")
         void matrixCreationHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             Matrix m = new Matrix(3, 3);
             m.set(0, 0, 1.0);
@@ -53,7 +61,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("LU decomposition works headless")
         void luDecompositionHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             double[][] data = {{2, 1}, {1, 3}};
             Matrix A = new Matrix(data);
@@ -65,7 +72,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Large matrix operations headless")
         void largeMatrixHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             int size = 100;
             Matrix large = Matrix.identity(size, size);
@@ -87,7 +93,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Registry creation headless")
         void registryCreationHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             StamperRegistry registry = StamperRegistry.createDefault();
             assertNotNull(registry);
@@ -96,7 +101,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("All basic stampers available headless")
         void basicStampersHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             StamperRegistry registry = StamperRegistry.createDefault();
 
@@ -108,7 +112,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Stamping operations headless")
         void stampingHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             StamperRegistry registry = StamperRegistry.createDefault();
             IMatrixStamper resistor = registry.getStamper(CircuitTyp.LK_R);
@@ -127,7 +130,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Solver context creation headless")
         void solverContextHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             SolverContext solver = new SolverContext(1e-6, SolverContext.SOLVER_TRZ);
             assertNotNull(solver);
@@ -136,7 +138,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Component conductance calculations headless")
         void conductanceCalculationsHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             SolverContext solver = new SolverContext(1e-6, SolverContext.SOLVER_TRZ);
 
@@ -155,7 +156,6 @@ class HeadlessEngineTest {
         @Test
         @DisplayName("Complete RC simulation headless")
         void rcSimulationHeadless() {
-            System.setProperty("java.awt.headless", "true");
 
             // Build and solve RC circuit
             double R = 1000.0;
