@@ -278,7 +278,7 @@
             <phase>test</phase>
             <goals><goal>test</goal></goals>
             <configuration>
-              <test>HeadlessEngineTest</test>
+              <includes><include>**/HeadlessEngineTest.java</include></includes>
               <groups>headless-engine</groups>
               <excludedGroups combine.self="override"/>
               <argLine>@{argLine} -Djava.awt.headless=true</argLine>
