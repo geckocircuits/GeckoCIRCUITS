@@ -139,9 +139,11 @@ public final class CircuitTopology {
                 wires.add(new Wire(connection, domain, saved == null ? 0 : saved.parentSheetIdentifier()));
             }
         }
+        // A transient ASC primitive can have two labels and still need geometry to reach an occurrence pin.
         boolean electricalGeometry = wires.stream().anyMatch(wire -> "LK".equals(wire.domain()) || "RELUCTANCE".equals(wire.domain()))
-                && model.getCircuitComponents().stream().anyMatch(component -> twoPort(component.getType())
-                    && (missingLabel(component, Side.INPUT) || missingLabel(component, Side.OUTPUT)));
+                && ((!importedBoundaries.isEmpty() && model.getAcSettings() == null)
+                    || model.getCircuitComponents().stream().anyMatch(component -> twoPort(component.getType())
+                        && (missingLabel(component, Side.INPUT) || missingLabel(component, Side.OUTPUT))));
         addComponents("LK", model.getCircuitComponents(), identities, ports, active, structural, sheets, false,
                 electricalGeometry, importedBoundaries);
         addComponents("CONTROL", model.getControlComponents(), identities, ports, active, structural, sheets, false, false, Map.of());

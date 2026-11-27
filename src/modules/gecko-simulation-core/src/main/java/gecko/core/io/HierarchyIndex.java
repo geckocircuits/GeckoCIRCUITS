@@ -140,6 +140,14 @@ public final class HierarchyIndex {
     public Sheet sheet(long id) { return sheets.get(id); }
     public List<String> path(long id) { return paths.getOrDefault(id, List.of()); }
 
+    /** Names an execution row without altering the component's saved local name. */
+    public String executionName(ComponentData component) {
+        var occurrence = path(parent(component.getSavedBlock()));
+        String name = component.getName();
+        return occurrence.isEmpty() || name == null || name.isEmpty()
+                ? name : String.join(":", occurrence) + ":" + name;
+    }
+
     public Map<Long, Map<String, String>> parameterScopes(Map<String, String> root) {
         var scopes = new LinkedHashMap<Long, Map<String, String>>();
         scopes.put(0L, Map.copyOf(root));

@@ -94,6 +94,7 @@ public class CircuitNetlist implements INetList {
 
     // Component name → element index mapping (for AMP probe / gate coupling)
     private Map<String, Integer> componentNameToIndex = Collections.emptyMap();
+    private Map<Integer, Integer> hierarchyGroupToNode = Map.of();
 
     // Result storage (Task 3.6)
     private double[] lastNodeVoltages = new double[0];
@@ -126,6 +127,7 @@ public class CircuitNetlist implements INetList {
         copy.controlElementIndices = controlElementIndices.clone();
         copy.pwlWaveforms = pwlWaveforms.clone();
         copy.componentNameToIndex = Collections.unmodifiableMap(new LinkedHashMap<>(componentNameToIndex));
+        copy.hierarchyGroupToNode = hierarchyGroupToNode;
         copy.simulationTime = simulationTime;
         copy.lastNodeVoltages = lastNodeVoltages.clone();
         copy.lastComponentCurrents = lastComponentCurrents.clone();
@@ -714,6 +716,15 @@ public class CircuitNetlist implements INetList {
         this.componentNameToIndex = nameToIndex != null
                 ? Collections.unmodifiableMap(new LinkedHashMap<>(nameToIndex))
                 : Collections.emptyMap();
+    }
+
+    void setHierarchyGroupNodes(Map<Integer, Integer> nodes) {
+        hierarchyGroupToNode = Map.copyOf(nodes);
+    }
+
+    /** Returns the solver node for a hierarchical electrical terminal group or null if it has no row. */
+    public Integer getHierarchyGroupNode(gecko.core.io.CircuitTopology.Group group) {
+        return group == null ? null : hierarchyGroupToNode.get(group.id());
     }
 
     /**

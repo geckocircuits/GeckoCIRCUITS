@@ -152,14 +152,16 @@ public class NetlistBuilder {
         topology.validatePhysicalConnections();
         Set<CircuitTopology.ComponentIdentity> active = new HashSet<>(topology.activeComponents());
         Set<String> names = new HashSet<>();
+        var hierarchy = model.getHierarchy() == null ? null : new gecko.core.io.HierarchyIndex(model);
         for (CircuitModel.ComponentData component : model.getCircuitComponents()) {
             if (component == null) {
                 throw new IllegalArgumentException("Circuit component cannot be null");
             }
             if (!active.contains(topology.identity(component))) continue;
-            if (component.getName() != null && !component.getName().isEmpty()
-                    && !names.add(component.getName())) {
-                throw new IllegalArgumentException("Duplicate component name '" + component.getName() + "'");
+            String name = hierarchy == null ? component.getName() : hierarchy.executionName(component);
+            String key = hierarchy == null || name == null ? name : name.toLowerCase(java.util.Locale.ROOT);
+            if (name != null && !name.isEmpty() && !names.add(key)) {
+                throw new IllegalArgumentException("Duplicate component name '" + name + "'");
             }
             if (component.getType() == CircuitTypCore.LK_M.getTypeNumber()) {
                 couplingComponents.add(component);
@@ -218,6 +220,18 @@ public class NetlistBuilder {
                             ? 0L : component.getSavedBlock().parentSheetIdentifier()).distinct().count() == 1;
             CircuitNetlist netlist = buildFromComponentsWithGroups(allComponents, terminalGroups, referenceNodes,
                     legacyLabelOnly, topology.connectionGroupOrder());
+            if (hierarchy != null) {
+                var executionNames = new LinkedHashMap<String, Integer>();
+                var groupNodes = new LinkedHashMap<Integer, Integer>();
+                for (int index = 0; index < allComponents.size(); index++) {
+                    String name = hierarchy.executionName(allComponents.get(index));
+                    if (name != null && !name.isEmpty()) executionNames.put(name, index);
+                    groupNodes.put(terminalGroups[index][0].id(), netlist.getNodeX(index));
+                    groupNodes.put(terminalGroups[index][1].id(), netlist.getNodeY(index));
+                }
+                netlist.setComponentNameToIndex(executionNames);
+                netlist.setHierarchyGroupNodes(groupNodes);
+            }
             bindElectricalSourceWaveforms(model, netlist, allComponents);
             registerMagneticCouplings(netlist, allComponents, couplingComponents);
             return netlist;

@@ -313,13 +313,16 @@ public final class CircuitConfiguration {
 
     static List<Diagnostic> apply(CircuitModel model, Map<String, Double> parameters) {
         List<Diagnostic> diagnostics = new ArrayList<>();
+        if (parameters.isEmpty()) return diagnostics;
+        var hierarchy = model.getHierarchy() == null ? null : new gecko.core.io.HierarchyIndex(model);
+        var components = components(model);
         Map<Binding, Double> assignments = new LinkedHashMap<>();
         for (var entry : parameters.entrySet()) {
             String path = entry.getKey();
             List<Binding> matches = new ArrayList<>();
             if (path != null) {
-                for (var component : components(model)) {
-                    String prefix = component.data().getName() + ".";
+                for (var component : components) {
+                    String prefix = executionName(hierarchy, component) + ".";
                     if (path.startsWith(prefix)) {
                         String key = path.substring(prefix.length());
                         for (var field : fields(component)) {
@@ -328,8 +331,12 @@ public final class CircuitConfiguration {
                     }
                 }
             }
-            boolean duplicateName = matches.size() == 1 && components(model).stream()
-                    .filter(item -> Objects.equals(item.data().getName(), matches.get(0).component().data().getName())).count() > 1;
+            boolean duplicateName = matches.size() == 1 && components.stream().filter(item -> {
+                String name = executionName(hierarchy, item);
+                String target = executionName(hierarchy, matches.getFirst().component());
+                return hierarchy == null ? Objects.equals(name, target)
+                        : name != null && name.equalsIgnoreCase(target);
+            }).count() > 1;
             if (matches.size() != 1 || duplicateName) {
                 diagnostics.add(override(matches.isEmpty() ? readOnlyCode(model, path) : "AMBIGUOUS_PARAMETER", path, null,
                         "The parameter path must identify one configured field"));
@@ -354,10 +361,15 @@ public final class CircuitConfiguration {
             model.getImportIssues().removeIf(issue -> isNormalizationIssue(issue)
                     && binding.component().domain().equals(issue.domain())
                     && Objects.equals(binding.component().data().getName(), issue.component())
+                    && (hierarchy == null || Objects.equals(binding.component().data().getSourceLocation(), issue.sourceLocation()))
                     && issue.parameterPath() != null && issue.parameterPath().startsWith(prefix)
                     && binding.field().matches(issue.parameterPath().substring(prefix.length())));
         });
         return diagnostics;
+    }
+
+    static String executionName(gecko.core.io.HierarchyIndex hierarchy, Component component) {
+        return hierarchy == null ? component.data().getName() : hierarchy.executionName(component.data());
     }
 
     static boolean isNormalizationIssue(ImportIssue issue) {
