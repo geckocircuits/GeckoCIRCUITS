@@ -30,6 +30,16 @@ import java.util.regex.Pattern;
 
 /** Imports the documented SPICE element subset and retains unsupported source evidence. */
 public final class SpiceImporter {
+    private final boolean exponentialAcDiodes;
+
+    public SpiceImporter() {
+        this(false);
+    }
+
+    public SpiceImporter(boolean exponentialAcDiodes) {
+        this.exponentialAcDiodes = exponentialAcDiodes;
+    }
+
     record Line(int number, String text) { }
     private static final Pattern ASSIGNMENT = Pattern.compile("([a-zA-Z_][a-zA-Z_0-9]*)\\s*=\\s*(\\{[^}]*}|[^\\s,=]+)");
 
@@ -257,7 +267,12 @@ public final class SpiceImporter {
                         data.setNumericParameters(new double[]{1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1});
                         String modelName = fields[3].strip();
                         String definition = definitions.get(modelName.toLowerCase(Locale.ROOT));
-                        if (ac) {
+                        if (ac && exponentialAcDiodes && !isIdealDiodeModel(".model " + modelName + " " + definition)) {
+                            if (child != null || origin.tested()) {
+                                throw new IllegalArgumentException("Use the exponential diode only with flat, unselected AC import.");
+                            }
+                            law = exponentialDiode(modelName, definition);
+                        } else if (ac) {
                             var expressions = idealDiodeExpressions(definition);
                             var diode = new AcComponent.IdealDiode(modelName, expressions.get("vfwd"),
                                     expressions.getOrDefault("ron", ""), expressions.getOrDefault("roff", ""), origin);
@@ -677,6 +692,18 @@ public final class SpiceImporter {
         } catch (IllegalArgumentException error) {
             return false;
         }
+    }
+
+    private static AcComponent.ExponentialDiode exponentialDiode(String name, String definition) {
+        if (definition == null || !modelType(definition).equals("d")) {
+            throw new IllegalArgumentException("Require a local exponential diode model.");
+        }
+        var parameters = CircuitHierarchy.parameters(parameterAssignments(modelArguments(definition)));
+        if (!List.of("is", "n", "rs", "tt").containsAll(parameters.keySet())) {
+            throw new IllegalArgumentException("The exponential AC diode supports only Is, N, Rs, and Tt.");
+        }
+        return new AcComponent.ExponentialDiode(name, parameters.getOrDefault("is", "1e-14"),
+                parameters.getOrDefault("n", "1"), parameters.getOrDefault("rs", "0"), parameters.getOrDefault("tt", "0"));
     }
 
     private static Map<String, String> idealDiodeExpressions(String definition) {

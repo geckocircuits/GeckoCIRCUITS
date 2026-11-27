@@ -18,11 +18,13 @@ public final class Main {
 
     /** Returns zero for a complete import, two for a partial import, or one for an input/output error. */
     public static int run(String[] args, PrintStream output, PrintStream errors) {
+        boolean exponentialDiodes = args.length > 0 && args[args.length - 1].equals("--exponential-diodes");
+        if (exponentialDiodes) args = java.util.Arrays.copyOf(args, args.length - 1);
         boolean ascOptions = args.length >= 4 && args.length % 2 == 0 && args[2].equals("--symbols")
                 && args[0].toLowerCase(Locale.ROOT).endsWith(".asc");
         if (args.length != 2 && !ascOptions) {
             errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
-                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]]");
+                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]] [--exponential-diodes]");
             return 1;
         }
         try {
@@ -31,7 +33,7 @@ public final class Main {
             String lowerName = inputName.toLowerCase(Locale.ROOT);
             CircuitModel model;
             if (lowerName.endsWith(".asc")) {
-                var importer = new LtspiceImporter();
+                var importer = new LtspiceImporter(exponentialDiodes);
                 var sourceRoots = new java.util.ArrayList<Path>();
                 AcInputOrigin origin = AcInputOrigin.UNSELECTED_ASC;
                 for (int i = 4; i < args.length; i += 2) {
@@ -44,13 +46,19 @@ public final class Main {
                         default -> throw new IllegalArgumentException("Unknown import option " + args[i]);
                     }
                 }
+                if (exponentialDiodes && (origin.tested() || !sourceRoots.isEmpty())) {
+                    throw new IllegalArgumentException("Use exponential diodes only with flat, unselected AC import.");
+                }
                 model = args.length == 2 ? importer.convert(input)
                         : importer.convert(input, Path.of(args[3]), sourceRoots, origin);
             } else {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
                 model = lowerName.endsWith(".plecs")
                         ? new PlecsImporter().convert(source, inputName)
-                        : new SpiceImporter().convert(source, inputName);
+                        : new SpiceImporter(exponentialDiodes).convert(source, inputName);
+            }
+            if (exponentialDiodes && model.getAcSettings() == null) {
+                throw new IllegalArgumentException("Use the exponential diode option only with SPICE or LTspice AC input.");
             }
             new CircuitFileWriter().write(model, Path.of(args[1]));
             for (var issue : model.getImportIssues()) output.println("{\"code\":" + json(issue.code())

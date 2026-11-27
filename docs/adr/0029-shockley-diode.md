@@ -22,13 +22,13 @@ Table 1. The Shockley junction with charge uses the parameters in case 103.
 
 For the initial model, use saturation current, emission coefficient, series resistance, and transit time at nominal temperature. Reject unsupported model parameters at import. Expose the opt-in through the solver settings. Enable the existing PWL path by default.
 
-Linearize current and charge inside each electrical trial. Use junction-voltage limiting and damped Newton iterations. Start with a 50-iteration limit and at most eight line-search halvings per iteration. Accept a result only when the physical Kirchhoff current residual and the voltage correction meet their tolerances. Use an absolute and a relative tolerance for each quantity. The initial values are 1 pA, 10 nV, and a relative tolerance of 10⁻⁶ [A].
+Linearize current and charge inside each electrical trial. Use junction-voltage limiting and damped Newton iterations. For transient trials, start with a 50-iteration limit and at most eight line-search halvings per iteration. Accept a result only when the physical Kirchhoff current residual and the voltage correction meet their tolerances. Use an absolute and a relative tolerance for each quantity. The initial values are 1 pA, 10 nV, and a relative tolerance of 10⁻⁶ [A].
 
 Keep each trial’s junction voltage and charge separate from committed state. Independent adaptive companion solves start from the same committed state. An accepted sub-step advances the history for the next sub-step. Event-location and refinement trials reconverge at their candidate width and discard tentative history. On failure, reduce the adaptive step if possible. Report nonconvergence at the minimum width or in fixed-step mode. Never publish an unconverged trial. The continuous diode produces no PWL switching event.
 
 ## AC bias
 
-Start with flat AC circuits. The import flag explicitly selects the exponential law. Keep that law in the saved document. Use the diode's converged DC current and tangent conductance to derive AC admittance. Include series resistance and diffusion charge. Reject incompatible laws and unsupported parameters. The initial AC implementation does not enable transient execution of the saved law.
+Start with flat AC circuits. The import flag explicitly selects the exponential law. Keep that law in the saved document. Use the diode's converged DC current and tangent conductance to derive AC admittance. The AC bias permits up to 48 line-search halvings to reach the junction-voltage range from a high-impedance initial state. Include series resistance and diffusion charge. Reject incompatible laws and unsupported parameters. The initial AC implementation does not enable transient execution of the saved law.
 
 ## Consequences
 

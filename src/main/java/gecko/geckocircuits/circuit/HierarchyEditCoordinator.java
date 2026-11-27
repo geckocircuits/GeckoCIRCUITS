@@ -376,6 +376,7 @@ final class HierarchyEditCoordinator {
             case AcComponent.Voltage voltage -> validateSource(voltage.dc(), voltage.magnitude(), voltage.phaseDegrees(), scope);
             case AcComponent.Current current -> validateSource(current.dc(), current.magnitude(), current.phaseDegrees(), scope);
             case AcComponent.IdealDiode diode -> diode.evaluate(scope);
+            case AcComponent.ExponentialDiode diode -> diode.validate(scope);
             case AcComponent.Transconductance lawG -> SpiceValue.evaluate(lawG.expression(), scope);
             case AcComponent.Controlled controlled -> {
                 if (controlled.laplace()) SpiceValue.transfer(controlled.expression(), scope);
