@@ -32,8 +32,12 @@ public final class AcExecutionPlan {
         }
 
         Branch withConductance(double value) {
+            return withAdmittance(ignored -> new Complex(value, 0));
+        }
+
+        Branch withAdmittance(SpiceValue.Transfer value) {
             return new Branch(instance, positive, negative, sensePositive, senseNegative, currentRow,
-                    ignored -> new Complex(value, 0), capacitance, gain, excitation, dc);
+                    value, capacitance, gain, excitation, dc);
         }
     }
 
@@ -80,6 +84,7 @@ public final class AcExecutionPlan {
         var seen = new HashSet<List<String>>();
         var prepared = new ArrayList<Branch>();
         var diodes = new LinkedHashMap<Integer, AcComponent.EvaluatedDiode>();
+        var exponentialDiodes = new LinkedHashMap<Integer, ShockleyDiode>();
         var inductors = new HashSet<Integer>();
         boolean frequencyDependentGain = false;
         int nextCurrent = voltageRows;
@@ -182,6 +187,13 @@ public final class AcExecutionPlan {
                     prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
+                case AcComponent.ExponentialDiode law -> {
+                    if (type != SpicePorts.DIODE || hierarchical || model.getAcProvenance() != null
+                            && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);
+                    exponentialDiodes.put(prepared.size(), law.evaluate(parameters));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
+                            -1, null, 0, null, Complex.ZERO, 0));
+                }
                 case AcComponent.Controlled law -> {
                     if (type != SpicePorts.E) throw wrongLaw(owned);
                     SpiceValue.Transfer gain;
@@ -201,10 +213,15 @@ public final class AcExecutionPlan {
         }
         if (hierarchical) traceBindings.resolve();
         if (prepared.isEmpty()) throw new IllegalArgumentException("Add an AC circuit component.");
-        if (!diodes.isEmpty() && (!inductors.isEmpty() || frequencyDependentGain)) {
+        if ((!diodes.isEmpty() || !exponentialDiodes.isEmpty()) && (!inductors.isEmpty() || frequencyDependentGain)) {
             throw new IllegalArgumentException("DC diode bias requires static gains and nonzero inductor series resistance.");
         }
-        diodeOperatingPoints = diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent);
+        if (!exponentialDiodes.isEmpty() && !diodes.isEmpty()) {
+            throw new IllegalArgumentException("Use one diode law in an AC bias solve.");
+        }
+        diodeOperatingPoints = exponentialDiodes.isEmpty()
+                ? (diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent))
+                : linearizeExponentialDiodes(prepared, exponentialDiodes, nextCurrent);
         // A feedback VCCS can constrain a node without a galvanic path. Use matrix rank for this circuit.
         if (prepared.stream().noneMatch(branch -> branch.currentRow < 0 && branch.gain != null)) {
             validateGroundPaths(groupNodes.values().stream().toList(), prepared, voltageRows);
@@ -294,6 +311,116 @@ public final class AcExecutionPlan {
             branches.set(index, branches.get(index).withConductance(accepted.get(i).conductanceS));
         }
         return accepted;
+    }
+
+    private record BiasEquations(Complex[][] matrix, Complex[] rhs) {
+        double residualAt(Complex[] bias, Complex[] sourceRhs) {
+            double maximum = 0;
+            for (int row = 0; row < rhs.length; row++) {
+                Complex error = rhs[row];
+                for (int column = 0; column < bias.length; column++) {
+                    error = error.subtract(matrix[row][column].multiply(bias[column]));
+                }
+                // Use fixed source magnitudes. A large trial tangent must not make a bad trial look better.
+                maximum = Math.max(maximum, error.abs() / Math.max(1, sourceRhs[row].abs()));
+            }
+            return maximum;
+        }
+    }
+
+    private static List<DiodeOperatingPoint> linearizeExponentialDiodes(List<Branch> branches,
+            Map<Integer, ShockleyDiode> diodes, int size) {
+        Complex[] bias = new Complex[size];
+        Arrays.fill(bias, Complex.ZERO);
+        BiasEquations fixed = linearBiasEquations(branches, diodes, size);
+        BiasEquations equations = exponentialBiasEquations(branches, diodes, fixed, bias);
+        double error = equations.residualAt(bias, fixed.rhs);
+        for (int iteration = 0; iteration <= 50; iteration++) {
+            Complex[] next = solve(equations.matrix, equations.rhs);
+            boolean diodeVoltagesConverged = true;
+            for (int index : diodes.keySet()) {
+                var branch = branches.get(index);
+                double voltage = branchVoltage(bias, branch);
+                double correction = Math.abs(branchVoltage(next, branch) - voltage);
+                diodeVoltagesConverged &= correction <= 1e-10 + 1e-9 * Math.abs(voltage);
+            }
+            if (error <= 1e-12 && diodeVoltagesConverged) {
+                var points = new ArrayList<DiodeOperatingPoint>();
+                for (var entry : diodes.entrySet()) {
+                    int index = entry.getKey();
+                    var branch = branches.get(index);
+                    double voltage = branchVoltage(bias, branch);
+                    var diode = entry.getValue().at(voltage);
+                    points.add(new DiodeOperatingPoint(branch.instance, voltage > 0, voltage,
+                            diode.current(), diode.conductance()));
+                    branches.set(index, branch.withAdmittance(diode::admittance));
+                }
+                return List.copyOf(points);
+            }
+            if (iteration == 50) break;
+            double scale = 1;
+            boolean accepted = false;
+            for (int half = 0; half < 48; half++, scale /= 2) {
+                var trial = new Complex[size];
+                for (int row = 0; row < size; row++) {
+                    trial[row] = bias[row].add(next[row].subtract(bias[row]).scale(scale));
+                }
+                BiasEquations trialEquations;
+                try {
+                    trialEquations = exponentialBiasEquations(branches, diodes, fixed, trial);
+                } catch (IllegalArgumentException outOfRange) {
+                    continue;
+                }
+                double trialError = trialEquations.residualAt(trial, fixed.rhs);
+                if (trialError < error) {
+                    bias = trial;
+                    equations = trialEquations;
+                    error = trialError;
+                    accepted = true;
+                    break;
+                }
+            }
+            if (!accepted) throw new IllegalArgumentException("The exponential diode DC bias cannot reduce its residual.");
+        }
+        throw new IllegalArgumentException("The exponential diode DC bias did not converge.");
+    }
+
+    private static BiasEquations linearBiasEquations(List<Branch> branches, Map<Integer, ShockleyDiode> diodes, int size) {
+        Complex[][] matrix = new Complex[size][size];
+        for (var row : matrix) Arrays.fill(row, Complex.ZERO);
+        Complex[] rhs = new Complex[size];
+        Arrays.fill(rhs, Complex.ZERO);
+        for (int i = 0; i < branches.size(); i++) {
+            if (diodes.containsKey(i)) continue;
+            var branch = branches.get(i);
+            if (branch.capacitance > 0) {
+                add(matrix, branch.currentRow, branch.currentRow, Complex.ONE);
+            } else {
+                stamp(matrix, rhs, branch.withExcitation(branch.dc), Complex.ZERO, 0);
+            }
+        }
+        return new BiasEquations(matrix, rhs);
+    }
+
+    private static BiasEquations exponentialBiasEquations(List<Branch> branches, Map<Integer, ShockleyDiode> diodes,
+            BiasEquations fixed, Complex[] bias) {
+        var matrix = new Complex[fixed.matrix.length][];
+        for (int row = 0; row < matrix.length; row++) matrix[row] = fixed.matrix[row].clone();
+        var rhs = fixed.rhs.clone();
+        for (var entry : diodes.entrySet()) {
+            var branch = branches.get(entry.getKey());
+            double voltage = branchVoltage(bias, branch);
+            var point = entry.getValue().at(voltage);
+            double conductance = point.conductance();
+            double offset = Math.fma(-conductance, voltage, point.current());
+            stamp(matrix, rhs, branch.withConductance(conductance), Complex.ZERO, 0);
+            stampCurrent(rhs, branch.positive, branch.negative, new Complex(offset, 0));
+        }
+        return new BiasEquations(matrix, rhs);
+    }
+
+    private static double branchVoltage(Complex[] bias, Branch branch) {
+        return at(bias, branch.positive).real() - at(bias, branch.negative).real();
     }
 
     private static double voltageUncertainty(double a, double b, double reference) {
