@@ -1,5 +1,6 @@
 package gecko.core.simulation;
 
+import gecko.core.circuit.netlist.CircuitNetlist;
 import gecko.core.allg.AdaptiveStepSettings;
 import gecko.core.allg.PeriodicSteadyStateSettings;
 import gecko.core.allg.SolverSettingsCore;
@@ -128,13 +129,25 @@ public final class SimulationTiming {
         if (pss == null || !positive(pss.period()) || !positive(step) || !Double.isFinite(samplePeriod) || samplePeriod < 0) {
             return List.of();
         }
+        // Only active thermal elements count, like the runtime. If the network cannot be built, any element counts.
+        CircuitNetlist thermalNetlist = null;
+        boolean thermal;
+        try {
+            thermalNetlist = gecko.core.circuit.netlist.NetlistBuilder.buildThermalFromCircuitModel(model);
+            thermal = thermalNetlist.getElementCount() > 0;
+        } catch (RuntimeException unbuildable) {
+            thermal = model.getThermalComponents().stream().anyMatch(component -> component.getType() != 49
+                    && component.getType() != 50);
+        }
         ControlRuntime runtime = null;
         try {
             var netlist = gecko.core.circuit.netlist.NetlistBuilder.buildFromCircuitModel(model);
-            runtime = ControlRuntime.fromDeferred(model, step, netlist, samplePeriod);
-            return PeriodicSteadyStateValidation.circuitIssues(pss.period(), netlist, runtime.calculators());
+            runtime = ControlRuntime.fromDeferred(model, step, netlist, samplePeriod,
+                    thermalNetlist == null || thermalNetlist.getElementCount() == 0 ? null : thermalNetlist);
+            return PeriodicSteadyStateValidation.circuitIssues(pss.period(), netlist, runtime.calculators(), thermal);
         } catch (RuntimeException unassembled) {
-            return List.of();
+            // A thermal circuit is rejected whatever else fails to assemble.
+            return thermal ? PeriodicSteadyStateValidation.circuitIssues(pss.period(), null, List.of(), true) : List.of();
         } finally {
             if (runtime != null) runtime.close();
         }

@@ -65,13 +65,15 @@ class CircuitReadinessTest {
     }
 
     @Test
-    void thermalModelsCannotPassReadinessWithoutParserEvidence() {
+    void anUnknownThermalTypeStaysUnsupportedSoTheLegacyKernelRunsIt() {
         var model = resistorCircuit();
         model.addThermalComponent(component(101, "heat", new double[]{10}, "hot", "0"));
         var result = assertInstanceOf(PreparationResult.Inspectable.class, prepare(model));
         assertEquals(ReadinessReport.Outcome.UNSUPPORTED, result.report().outcome());
-        assertTrue(result.report().diagnostics().stream().anyMatch(d -> d.code().equals("UNSUPPORTED_DOMAIN")
-                && d.domain().equals("THERMAL") && d.component().equals("heat")));
+        assertTrue(result.report().diagnostics().stream().anyMatch(d -> d.code().equals("UNSUPPORTED_THERMAL_COMPONENT")
+                && d.category() == Diagnostic.Category.CAPABILITY && d.domain().equals("THERMAL")
+                && d.component().equals("heat")));
+        assertFalse(result.report().diagnostics().stream().anyMatch(d -> d.code().equals("UNSUPPORTED_DOMAIN")));
     }
 
     @Test

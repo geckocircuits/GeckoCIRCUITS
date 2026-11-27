@@ -84,6 +84,41 @@ public class ControlBlockMapping {
         return Collections.unmodifiableList(sourceMappings);
     }
 
+    // --- Thermal probes and sources (ADR-0023) ---
+
+    /** TEMP probe: the potential difference of two thermal node indices in the thermal netlist. */
+    public record ThermalTemperatureProbe(AbstractControlCalculatable calculator, int nodeA, int nodeB, String name) { }
+
+    /**
+     * FLOW probe: the heat flow of a thermal element, or one loss component of a loss source.
+     *
+     * @param lossSource true when elementName is a loss source and part selects its loss component
+     */
+    public record ThermalFlowProbe(AbstractControlCalculatable calculator, String elementName, boolean lossSource,
+            gecko.core.circuit.losscalculation.LossComponent part, String name) { }
+
+    private final List<ThermalTemperatureProbe> thermalTemperatureProbes = new ArrayList<>();
+    private final List<ThermalFlowProbe> thermalFlowProbes = new ArrayList<>();
+    private final List<SourceMapping> thermalSourceMappings = new ArrayList<>();
+
+    public void addThermalTemperatureProbe(AbstractControlCalculatable calculator, int nodeA, int nodeB, String name) {
+        thermalTemperatureProbes.add(new ThermalTemperatureProbe(calculator, nodeA, nodeB, name));
+    }
+
+    public void addThermalFlowProbe(AbstractControlCalculatable calculator, String elementName, boolean lossSource,
+            gecko.core.circuit.losscalculation.LossComponent part, String name) {
+        thermalFlowProbes.add(new ThermalFlowProbe(calculator, elementName, lossSource, part, name));
+    }
+
+    /** A signal-controlled thermal source: its name is the thermal netlist element name. */
+    public void addThermalSourceMapping(AbstractControlCalculatable producer, int output, String sourceName) {
+        thermalSourceMappings.add(new SourceMapping(producer, output, sourceName));
+    }
+
+    public List<ThermalTemperatureProbe> getThermalTemperatureProbes() { return Collections.unmodifiableList(thermalTemperatureProbes); }
+    public List<ThermalFlowProbe> getThermalFlowProbes() { return Collections.unmodifiableList(thermalFlowProbes); }
+    public List<SourceMapping> getThermalSourceMappings() { return Collections.unmodifiableList(thermalSourceMappings); }
+
     // --- SCOPE ---
 
     public void setScopeInfo(AbstractControlCalculatable scopeCalculator, String[] signalNames) {

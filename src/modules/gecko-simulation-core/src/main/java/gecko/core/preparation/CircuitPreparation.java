@@ -168,6 +168,11 @@ public final class CircuitPreparation {
         var conversionIssues = model.getConversionIssues();
         model.getImportIssues().removeIf(issue -> parserTimingIssues.contains(issue) && !conversionIssues.contains(issue));
         CircuitReadiness.appendImportDiagnostics(model, diagnostics);
+        for (var component : model.getThermalComponents()) {
+            diagnostics.add(new Diagnostic("UNSUPPORTED_DOMAIN", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
+                    "AC analysis does not support THERMAL elements.", "THERMAL", component.getName(), null,
+                    component.getSourceLocation()));
+        }
         if (diagnostics.stream().anyMatch(diagnostic -> diagnostic.severity() == Diagnostic.Severity.ERROR)) {
             return new PreparationResult.Inspectable(snapshot, new ReadinessReport(ReadinessReport.Outcome.INVALID, diagnostics));
         }
