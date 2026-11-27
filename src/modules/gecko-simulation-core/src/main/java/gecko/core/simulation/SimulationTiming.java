@@ -243,22 +243,25 @@ public final class SimulationTiming {
                 issues.add(new SettingIssue("periodicSteadyState.maxPeriods", "Search and main step count is too large."));
             }
         }
-        if (periodValid && positive(samplePeriod)) {
-            double ratio = period / samplePeriod;
-            if (Math.rint(ratio) < 1 || Math.abs(ratio - Math.rint(ratio)) > WHOLE_STEP * ratio) {
-                issues.add(new SettingIssue("periodicSteadyState.period", "Period must be a whole multiple of the CONTROL sample period."));
-            }
+        if (periodValid && positive(samplePeriod) && !isWholeMultiple(period, samplePeriod)) {
+            issues.add(new SettingIssue("periodicSteadyState.period", "Period must be a whole multiple of the CONTROL sample period."));
         }
         for (var entry : subsystemPeriods.entrySet()) {
             Double value = entry.getValue();
             if (!periodValid || value == null || !positive(value)) continue;
-            double ratio = period / value;
-            if (Math.rint(ratio) < 1 || Math.abs(ratio - Math.rint(ratio)) > WHOLE_STEP * ratio) {
+            if (!isWholeMultiple(period, value)) {
                 issues.add(new SettingIssue("periodicSteadyState.period", "Period must be a whole multiple of the CONTROL sample period of '"
                         + entry.getKey() + "'."));
             }
         }
         return issues;
+    }
+
+    private static boolean isWholeMultiple(double period, double samplePeriod) {
+        double ratio = period / samplePeriod;
+        double nearest = Math.rint(ratio);
+        // An infinite ratio exceeds the precision of the whole-period tolerance.
+        return nearest >= 1 && (Double.isInfinite(ratio) || Math.abs(ratio - nearest) <= WHOLE_STEP * ratio);
     }
 
     /**

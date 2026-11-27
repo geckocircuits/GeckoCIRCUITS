@@ -102,6 +102,24 @@ class ControlSubsystemClockParityTest {
     }
 
     @Test
+    void aClockBelowTheGridResolutionStillSamplesAndExportsAnInRangePhase() throws Exception {
+        double dt = 1e-6;
+        double period = 1e-30;
+        try (var runtime = ControlRuntime.fromDeferred(grouped(), dt, null, 0, null, Map.of("fast", period))) {
+            var netlist = new CircuitNetlist();
+            for (int step = 0; step < 4; step++) {
+                double time = step * dt;
+                runtime.advanceAfterElectricalStep(netlist, time);
+                var exported = export(runtime, time);
+                String label = "sample phase of CONTROL group 1";
+                double phase = Double.longBitsToDouble(only(exported, label, 0));
+                assertTrue(phase >= 0 && phase <= period, "phase at step " + step + " is " + phase);
+                assertEquals(Double.doubleToRawLongBits(1), only(exported, label, 1));
+            }
+        }
+    }
+
+    @Test
     void aStepChangeKeepsEveryGroupOnTheGlobalRunClock() throws Exception {
         compare(1e-6, 10e-6, 100e-6, 3000, 1500, 2e-6);
         compare(4e-6, 10e-6, 100e-6, 1500, 700, 20e-6);

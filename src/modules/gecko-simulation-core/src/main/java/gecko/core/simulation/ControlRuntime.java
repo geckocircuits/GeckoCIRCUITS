@@ -39,6 +39,8 @@ final class ControlRuntime implements AutoCloseable {
     private final List<FromExternalCalculator> externalInputs;
     private final List<ToExternalCalculator> externalOutputs;
     private static final double SAMPLE_TOLERANCE = 1e-9;
+    private static final double FIRST_INEXACT_SAMPLE_INDEX = 0x1.0p53;
+    private static final long SAMPLE_INDEX_BEYOND_PRECISION = -1;
     /** The sample period of each CONTROL group on the absolute clock. Group 0 is the default at the global period. */
     private final double[] periods;
     private final long[] nextSampleIndex;
@@ -328,7 +330,7 @@ final class ControlRuntime implements AutoCloseable {
         for (int group = 0; group < periods.length; group++) {
             double period = periods[group];
             groupSteps[group] = controlStep(group, dt);
-            if (period <= 0) {
+            if (period <= 0 || nextSampleIndex[group] == SAMPLE_INDEX_BEYOND_PRECISION) {
                 sampledNow[group] = true;
             } else {
                 double gridWidth = Math.min(dt, period);
@@ -336,7 +338,12 @@ final class ControlRuntime implements AutoCloseable {
                 double slack = Math.min(gridWidth / 4, Math.max(SAMPLE_TOLERANCE * gridWidth, 4 * Math.ulp(samplingTime)));
                 double dueThrough = samplingTime + slack;
                 sampledNow[group] = dueThrough >= nextSampleIndex[group] * period;
-                if (sampledNow[group]) nextSampleIndex[group] = (long) Math.floor(dueThrough / period) + 1;
+                if (sampledNow[group]) {
+                    double index = Math.floor(dueThrough / period);
+                    // Adjacent sample indices no longer fit in a double. The grid can publish only once per step.
+                    nextSampleIndex[group] = index >= FIRST_INEXACT_SAMPLE_INDEX
+                            ? SAMPLE_INDEX_BEYOND_PRECISION : (long) index + 1;
+                }
             }
             any |= sampledNow[group];
         }
@@ -369,7 +376,10 @@ final class ControlRuntime implements AutoCloseable {
         for (int group = 0; group < periods.length; group++) {
             if (periods[group] <= 0) continue;
             sink.group(PeriodicStateMonitor.Unit.TIME, group == 0 ? "sample phase" : "sample phase of CONTROL group " + group);
-            sink.value(nextSampleIndex[group] * periods[group] - samplingTime);
+            double period = periods[group];
+            double phase = nextSampleIndex[group] == SAMPLE_INDEX_BEYOND_PRECISION
+                    ? period - samplingTime % period : nextSampleIndex[group] * period - samplingTime;
+            sink.value(phase);
             sink.flag(outputsPublishedLastStep[group]);
         }
     }
