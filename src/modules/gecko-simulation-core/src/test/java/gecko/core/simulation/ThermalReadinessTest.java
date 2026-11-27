@@ -122,6 +122,21 @@ class ThermalReadinessTest {
         assertEquals("THERMAL", item.domain());
     }
 
+    @Test
+    void thermalNetlistRejectsDuplicateNamesAndUnsupportedModules() throws Exception {
+        String resistor = ThermalFixture.thermal(46, "Rth.D", 5200, "hot", "0", "2.0", "");
+        String duplicate = ThermalFixture.thermal(46, "Rth.D", 5201, "warm", "0", "1.0", "");
+        var duplicateModel = withBlocks(resistor + duplicate);
+        var duplicateError = assertThrows(IllegalArgumentException.class,
+                () -> gecko.core.circuit.netlist.NetlistBuilder.buildThermalFromCircuitModel(duplicateModel));
+        assertTrue(duplicateError.getMessage().contains("Duplicate thermal component name 'Rth.D'"));
+
+        var module = withBlocks(ThermalFixture.thermal(42, "Module", 5202, "hot", "0", "1.0", ""));
+        var moduleError = assertThrows(IllegalArgumentException.class,
+                () -> gecko.core.circuit.netlist.NetlistBuilder.buildThermalFromCircuitModel(module));
+        assertTrue(moduleError.getMessage().contains("Unsupported thermal component 'Module'"));
+    }
+
     private gecko.core.ac.AcDocumentSettings importedAcSettings() throws Exception {
         return nativeHierarchy().getAcSettings();
     }
