@@ -74,13 +74,11 @@ public final class AcMetadataCodec {
                             law.junctionCapacitance(), law.junctionPotential(), law.gradingCoefficient()));
                 }
             }
+            case AcComponent.Mosfet law -> fields.addAll(List.of("MOSFET_TRANSIENT_V1", law.modelName(),
+                    law.pChannel() ? "PMOS" : "NMOS", law.width(), law.length(), encodeLawParameters(law.parameters())));
             case AcComponent.Bipolar law -> {
-                var parameters = new java.util.ArrayList<String>();
-                new java.util.TreeMap<>(law.parameters()).forEach((key, value) -> {
-                    parameters.add(key);
-                    parameters.add(value);
-                });
-                fields.addAll(List.of("BIPOLAR_V1", law.modelName(), law.pnp() ? "PNP" : "NPN", law.area(), encode(parameters)));
+                fields.addAll(List.of("BIPOLAR_V1", law.modelName(), law.pnp() ? "PNP" : "NPN", law.area(),
+                        encodeLawParameters(law.parameters())));
             }
             case AcComponent.Transconductance law -> fields.addAll(List.of("VCCS_V1", law.expression()));
             case AcComponent.Controlled law -> fields.addAll(List.of(law.laplace() ? "LAPLACE" : "GAIN", law.expression()));
@@ -95,6 +93,7 @@ public final class AcMetadataCodec {
         int aliasIndex = switch (fields[3]) {
             case "VOLTAGE", "BIPOLAR_V1" -> 8;
             case "CURRENT" -> 7;
+            case "MOSFET_TRANSIENT_V1" -> 9;
             case "IDEAL_DIODE_V1", "EXPONENTIAL_DIODE_V1", "EXPONENTIAL_DIODE_TRANSIENT_V1" -> 9;
             case "EXPONENTIAL_DIODE_V2" -> 12;
             case "INDUCTANCE" -> 6;
@@ -130,13 +129,11 @@ public final class AcMetadataCodec {
                     fields[7], fields[8], fields[9], fields[10], fields[11]);
             case "BIPOLAR_V1" -> {
                 require(fields[5].equals("NPN") || fields[5].equals("PNP"));
-                var encoded = decode(fields[7]);
-                require(encoded.length % 2 == 0);
-                var parameters = new java.util.LinkedHashMap<String, String>();
-                for (int i = 0; i < encoded.length; i += 2) {
-                    require(parameters.put(encoded[i], encoded[i + 1]) == null);
-                }
-                yield new AcComponent.Bipolar(fields[4], fields[5].equals("PNP"), fields[6], parameters);
+                yield new AcComponent.Bipolar(fields[4], fields[5].equals("PNP"), fields[6], decodeLawParameters(fields[7]));
+            }
+            case "MOSFET_TRANSIENT_V1" -> {
+                require(fields[5].equals("NMOS") || fields[5].equals("PMOS"));
+                yield new AcComponent.Mosfet(fields[4], fields[5].equals("PMOS"), fields[6], fields[7], decodeLawParameters(fields[8]));
             }
             case "VCCS_V1" -> new AcComponent.Transconductance(fields[4]);
             case "GAIN", "LAPLACE" -> new AcComponent.Controlled(fields[4], fields[3].equals("LAPLACE"));
@@ -222,6 +219,7 @@ public final class AcMetadataCodec {
                 values[3] = diode.offResistance();
             }
             case AcComponent.ExponentialDiode law -> { }
+            case AcComponent.Mosfet law -> { }
             case AcComponent.Bipolar law -> values[slot] = law.pnp() ? 0 : 1;
             case AcComponent.Passive law -> values[slot] = SpiceValue.requirePositivePassive(
                     SpiceValue.evaluate(law.expression(), parameters), component.instance());
@@ -258,10 +256,30 @@ public final class AcMetadataCodec {
             case AcComponent.IdealDiode diode -> -1;
             case AcComponent.ExponentialDiode diode -> -1;
             case AcComponent.Bipolar transistor -> 6;
+            case AcComponent.Mosfet transistor -> -1;
             case AcComponent.Voltage voltage -> 1;
             case AcComponent.Current current -> 1;
             case AcComponent.Controlled controlled -> controlled.laplace() ? -1 : 0;
         };
+    }
+
+    private static String encodeLawParameters(Map<String, String> values) {
+        var fields = new java.util.ArrayList<String>();
+        new java.util.TreeMap<>(values).forEach((key, value) -> {
+            fields.add(key);
+            fields.add(value);
+        });
+        return encode(fields);
+    }
+
+    private static Map<String, String> decodeLawParameters(String text) {
+        var fields = decode(text);
+        require(fields.length % 2 == 0);
+        var parameters = new java.util.LinkedHashMap<String, String>();
+        for (int i = 0; i < fields.length; i += 2) {
+            require(parameters.put(fields[i], fields[i + 1]) == null);
+        }
+        return parameters;
     }
 
     static String encode(List<String> fields) {

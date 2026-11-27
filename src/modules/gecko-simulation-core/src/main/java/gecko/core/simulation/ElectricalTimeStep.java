@@ -52,7 +52,7 @@ final class ElectricalTimeStep {
     private static final int REFINEMENTS = 2;
     private final boolean zeroCrossing;
     private final int[] diodeElements;
-    private final TransientExponentialDiodes exponentialDiodes;
+    private final TransientSemiconductors nonlinearDevices;
     private final int[] sourceElements;
     private final double[] savedDiodeStates;
     private final double[] savedSourceStates;
@@ -132,10 +132,10 @@ final class ElectricalTimeStep {
     }
 
     ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, SolverFeatures features, boolean uic,
-            TransientExponentialDiodes exponentialDiodes) {
-        this.exponentialDiodes = exponentialDiodes;
-        if (exponentialDiodes != null && (solverType == SolverType.SOLVER_GS || features.dcOperatingPoint() || uic)) {
-            throw new IllegalArgumentException("Use backward Euler or trapezoidal integration without DC start or UIC for transient exponential diodes.");
+            TransientSemiconductors nonlinearDevices) {
+        this.nonlinearDevices = nonlinearDevices;
+        if (nonlinearDevices != null && (solverType == SolverType.SOLVER_GS || features.dcOperatingPoint() || uic)) {
+            throw new IllegalArgumentException("Use backward Euler or trapezoidal integration without DC start or UIC for transient semiconductor models.");
         }
         this.adaptive = features.adaptiveStep();
         if (adaptive != null && solverType == SolverType.SOLVER_GS) {
@@ -144,8 +144,8 @@ final class ElectricalTimeStep {
         this.zeroCrossing = features.zeroCrossing() || adaptive != null;
         this.netlist = netlist;
         nodeOrder = netlist.getNumericalNodeOrder();
-        numericalNetlist = nodeOrder.length == 0 && exponentialDiodes == null
-                ? netlist : new NumericalNetlist(netlist, nodeOrder, exponentialDiodes);
+        numericalNetlist = nodeOrder.length == 0 && nonlinearDevices == null
+                ? netlist : new NumericalNetlist(netlist, nodeOrder, nonlinearDevices);
         matrixSolver = new MatrixSolver(solverType, features.sparseSolver());
         matrixSolver.initializeMatrices(netlist.getNodeMax(), netlist.getVoltageSourceMax(),
                 netlist.getElementCount());
@@ -165,7 +165,7 @@ final class ElectricalTimeStep {
         int sourceCount = 0;
         for (int element = 0; element < diodes.length; element++) {
             CircuitTypCore type = netlist.getType(element);
-            if (isDiodeFamily(type) && !isExponentialDiode(element)) diodes[diodeCount++] = element;
+            if (isDiodeFamily(type) && !isNonlinearDevice(element)) diodes[diodeCount++] = element;
             else if (type == CircuitTypCore.LK_U && netlist.getParameter(element).length > 14) sources[sourceCount++] = element;
         }
         diodeElements = Arrays.copyOf(diodes, diodeCount);
@@ -220,7 +220,7 @@ final class ElectricalTimeStep {
         // Compute against previous-step histories before committing the new state.
         componentCurrentCalculator.calculateComponentCurrents(
                 matrixSolver, numericalNetlist, computedCurrents, 0.0, dt, time, true);
-        commitExponentialDiodes(matrixSolver, dt);
+        commitNonlinearDevices(matrixSolver, dt);
         matrixSolver.shiftHistory();
         double[] currents = matrixSolver.getIALT();
         System.arraycopy(computedCurrents, 0, currents, 0, computedCurrents.length);
@@ -416,8 +416,8 @@ final class ElectricalTimeStep {
     private void solveStartTopology(double width, double time) { solveStartTopology(matrixSolver, width, time); }
 
     private void solveStartTopology(MatrixSolver solver, double width, double time) {
-        if (exponentialDiodes != null) {
-            exponentialDiodes.solve(solver, numericalNetlist, width, time);
+        if (nonlinearDevices != null) {
+            nonlinearDevices.solve(solver, numericalNetlist, width, time);
             return;
         }
         if (!numericalNetlist.usesWireReference() || matrixInputsChanged(width)) {
@@ -431,7 +431,7 @@ final class ElectricalTimeStep {
     private void commitSubStep(double width, double time) {
         componentCurrentCalculator.calculateComponentCurrents(
                 matrixSolver, numericalNetlist, computedCurrents, 0.0, width, time, true);
-        commitExponentialDiodes(matrixSolver, width);
+        commitNonlinearDevices(matrixSolver, width);
         matrixSolver.shiftHistory();
         System.arraycopy(computedCurrents, 0, matrixSolver.getIALT(), 0, computedCurrents.length);
         rememberMatrixInputs(width);
@@ -647,7 +647,7 @@ final class ElectricalTimeStep {
         while (true) {
             double remaining = gridTime - startTime;
             // Avoid a rounding-size final step after many sub-steps. A located event keeps its exact width.
-            double endTolerance = exponentialDiodes != null && pinned == null ? 1e-8 * stepMin : 0;
+            double endTolerance = nonlinearDevices != null && pinned == null ? 1e-8 * stepMin : 0;
             double end = first || remaining - width <= endTolerance ? gridTime : startTime + width;
             double h = first ? width : end - startTime;
             boolean restartTrial = first || restartPending;
@@ -759,7 +759,7 @@ final class ElectricalTimeStep {
                 }
                 updateMarginHistory(end);
                 return new SubStepOutcome(end, located + newlyLocated);
-            } catch (TransientExponentialDiodes.Nonconvergence failure) {
+            } catch (TransientSemiconductors.Nonconvergence failure) {
                 restoreTrialState();
                 if (first || h <= stepMin || retries >= MAX_RETRIES) throw failure;
                 rejectedSubSteps++;
@@ -800,8 +800,8 @@ final class ElectricalTimeStep {
 
     /** Builds and solves unconditionally, so a rejected trial leaves no cached matrix behind. */
     private void solveFresh(MatrixSolver solver, double width, double time) {
-        if (exponentialDiodes != null) {
-            exponentialDiodes.solve(solver, numericalNetlist, width, time);
+        if (nonlinearDevices != null) {
+            nonlinearDevices.solve(solver, numericalNetlist, width, time);
             return;
         }
         solver.buildMatrixA(numericalNetlist, width, time, false);
@@ -812,7 +812,7 @@ final class ElectricalTimeStep {
     /** Commits the used trial. Its type decides the current formulas, so a restart commits Backward Euler. */
     private void commitUsed(MatrixSolver used, double width, double time) {
         componentCurrentCalculator.calculateComponentCurrents(used, numericalNetlist, computedCurrents, 0.0, width, time, true);
-        commitExponentialDiodes(used, width);
+        commitNonlinearDevices(used, width);
         if (used != matrixSolver) System.arraycopy(used.getP(), 0, matrixSolver.getP(), 0, matrixSolver.getMatrixSize());
         matrixSolver.shiftHistory();
         System.arraycopy(computedCurrents, 0, matrixSolver.getIALT(), 0, computedCurrents.length);
@@ -820,12 +820,12 @@ final class ElectricalTimeStep {
         committedOnce = true;
     }
 
-    private void commitExponentialDiodes(MatrixSolver solver, double width) {
-        if (exponentialDiodes != null) exponentialDiodes.commit(solver, numericalNetlist, width, computedCurrents);
+    private void commitNonlinearDevices(MatrixSolver solver, double width) {
+        if (nonlinearDevices != null) nonlinearDevices.commit(solver, numericalNetlist, width, computedCurrents);
     }
 
-    private boolean isExponentialDiode(int element) {
-        return exponentialDiodes != null && exponentialDiodes.includes(element);
+    private boolean isNonlinearDevice(int element) {
+        return nonlinearDevices != null && nonlinearDevices.includes(element);
     }
 
     private boolean changedInTrial() {
@@ -857,8 +857,8 @@ final class ElectricalTimeStep {
      * the Backward Euler local error, so it is not divided by 3. Only reads parameters.
      */
     private double estimateError(MatrixSolver used, MatrixSolver other, double width) {
-        double worst = exponentialDiodes == null ? 0
-                : exponentialDiodes.adaptiveError(used, other, numericalNetlist, width, adaptive.tolerance());
+        double worst = nonlinearDevices == null ? 0
+                : nonlinearDevices.adaptiveError(used, other, numericalNetlist, width, adaptive.tolerance());
         double[] oldPotentials = matrixSolver.getPALT();
         for (int element = 0; element < netlist.getElementCount(); element++) {
             CircuitTypCore type = netlist.getType(element);
@@ -907,10 +907,10 @@ final class ElectricalTimeStep {
     private double discontinuityValue(int element) {
         CircuitTypCore type = netlist.getType(element);
         double[] parameters = netlist.getParameter(element);
-        if (isDiodeFamily(type) && !isExponentialDiode(element)) {
+        if (isDiodeFamily(type) && !isNonlinearDevice(element)) {
             return parameters.length > 8 ? parameters[8] : Double.NaN;
         }
-        if (type == CircuitTypCore.LK_S || type == CircuitTypCore.LK_MOSFET) return parameters[0];
+        if (type == CircuitTypCore.LK_S || type == CircuitTypCore.LK_MOSFET && !isNonlinearDevice(element)) return parameters[0];
         if ((type == CircuitTypCore.LK_U || type == CircuitTypCore.LK_I) && parameters.length > 1) {
             int source = (int) parameters[0];
             boolean held = source == SourceType.QUELLE_SIGNALGESTEUERT || source == SourceType.QUELLE_SIGNALGESTEUERT_NEW;
@@ -1096,7 +1096,7 @@ final class ElectricalTimeStep {
                         && type != CircuitTypCore.LK_IGBT) {
                     continue;
                 }
-                if (isExponentialDiode(i) || pinned != null && pinned[i]) {
+                if (isNonlinearDevice(i) || pinned != null && pinned[i]) {
                     continue;
                 }
 
@@ -1160,11 +1160,11 @@ final class ElectricalTimeStep {
             changed |= matrixSolver.updateControlledSourceLimits(netlist, time);
             if (changed) {
                 anyChangedOverall = true;
-                if (exponentialDiodes == null) {
+                if (nonlinearDevices == null) {
                     matrixSolver.setMatrixChanged();
                     matrixSolver.solve();
                 } else {
-                    exponentialDiodes.solve(matrixSolver, numericalNetlist, dt, time);
+                    nonlinearDevices.solve(matrixSolver, numericalNetlist, dt, time);
                 }
                 iterCount++;
 
@@ -1181,9 +1181,9 @@ final class ElectricalTimeStep {
         return anyChangedOverall;
     }
 
-    private record NumericalNetlist(CircuitNetlist source, int[] order, TransientExponentialDiodes exponentialDiodes)
+    private record NumericalNetlist(CircuitNetlist source, int[] order, TransientSemiconductors nonlinearDevices)
             implements INetList {
-        private static final double[] DIODE_PLACEHOLDER = {1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+        private static final double[] NONLINEAR_PLACEHOLDER = {1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1};
         @Override public boolean usesWireReference() { return order.length != 0; }
         @Override public int getNodeMax() { return source.getNodeMax(); }
         @Override public int getVoltageSourceMax() { return source.getVoltageSourceMax(); }
@@ -1193,7 +1193,7 @@ final class ElectricalTimeStep {
         @Override public int getNodeY(int index) { return ordered(source.getNodeY(index)); }
         private int ordered(int index) { return order.length == 0 ? index : order[index]; }
         @Override public double[] getParameter(int index) {
-            return exponentialDiodes != null && exponentialDiodes.includes(index) ? DIODE_PLACEHOLDER : source.getParameter(index);
+            return nonlinearDevices != null && nonlinearDevices.includes(index) ? NONLINEAR_PLACEHOLDER : source.getParameter(index);
         }
         @Override public int getVoltageSourceNumber(int index) { return source.getVoltageSourceNumber(index); }
         @Override public double getSimulationTime() { return source.getSimulationTime(); }

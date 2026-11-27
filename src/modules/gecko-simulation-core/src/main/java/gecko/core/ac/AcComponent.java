@@ -21,11 +21,11 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
     }
 
     private static List<Integer> terminalOrders(Law law) {
-        if (law instanceof Bipolar) return List.of(1, 2, 3);
+        if (law instanceof Bipolar || law instanceof Mosfet) return List.of(1, 2, 3);
         return law instanceof Controlled || law instanceof Transconductance ? List.of(1, 2, 3, 4) : List.of(1, 2);
     }
 
-    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode, Bipolar { }
+    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode, Bipolar, Mosfet { }
 
     public record Passive(String expression) implements Law { }
     public record Inductance(String expression, Resistance resistance, AcInputOrigin origin) implements Law {
@@ -102,11 +102,27 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
     }
 
     /** Imported nominal-temperature AC bipolar transistor with collector, base, and emitter terminals. */
+    public record Mosfet(String modelName, boolean pChannel, String width, String length,
+                         Map<String, String> parameters) implements Law {
+        public Mosfet {
+            requireLocalModelName(modelName);
+            parameters = Map.copyOf(parameters);
+        }
+
+        public MosfetModel evaluate(Map<String, String> scope) {
+            return MosfetModel.from(this, scope);
+        }
+    }
+
+    private static void requireLocalModelName(String modelName) {
+        if (!modelName.matches("[A-Za-z0-9_.$+-]+")) {
+            throw new IllegalArgumentException("Require a local semiconductor model name.");
+        }
+    }
+
     public record Bipolar(String modelName, boolean pnp, String area, Map<String, String> parameters) implements Law {
         public Bipolar {
-            if (!modelName.matches("[A-Za-z0-9_.$+-]+")) {
-                throw new IllegalArgumentException("Require a local bipolar transistor model name.");
-            }
+            requireLocalModelName(modelName);
             parameters = Map.copyOf(parameters);
         }
 

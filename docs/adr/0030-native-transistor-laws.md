@@ -27,6 +27,12 @@ The TL431 comparator trial replaces its external 2N2907 with a switch. The switc
 
 Start with terminal-current and derivative tests for BJT and MOSFET laws. The BJT pilot is the archive's TL431 discrete AC test. Its child uses bipolar transistors, diodes, resistors, and capacitors. Preserve the transistor area multipliers and its hierarchical terminal connections. The unchanged archive case 443 gives a 401-point LTspice reference. The generated deck contains all 11 BJTs. LTspice uses Gmin stepping to establish its bias [S, High]. Retain the authored model cards and gate-drive circuits. Qualify each import on the original analysis and its physical traces. Record an approximation on the archive issue only after its affected traces and limits are known.
 
+## Transient MOSFET scope
+
+Use the Level 1 channel law with explicitly selected width and length and a source-tied bulk. Include the body diode and the reverse channel. Use the drain and gate derivatives in the transient Newton solve. Keep the legacy switch model for circuits that do not select a device law.
+
+Supply the supported NMOS or PMOS parameters in a local model card. Use separate circuit elements for external capacitance and resistance. Vendor models, intrinsic charge, and an independent bulk terminal require separate device laws. [SPICE Level 1 reference](https://github.com/ngspice/ngspice/blob/master/src/spicelib/devices/mos1/mos1load.c)
+
 ## Initial AC scope
 
 Use a nominal-temperature bipolar law with collector, base, and emitter terminals. Preserve local model cards and device area. Accept an implicit substrate or an explicit grounded substrate. Reject unsupported substrate and model effects.
