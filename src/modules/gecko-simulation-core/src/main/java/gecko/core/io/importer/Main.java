@@ -33,24 +33,28 @@ public final class Main {
                 && args[0].toLowerCase(Locale.ROOT).endsWith(".asc");
         if (args.length != 2 && !ascOptions) {
             errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
-                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]] [--exponential-diodes] [--bipolar-transistors]");
+                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>] [--model-cards <file>]] [--exponential-diodes] [--bipolar-transistors]");
             return 1;
         }
         try {
             Path input = Path.of(args[0]);
             String inputName = input.toString();
             String lowerName = inputName.toLowerCase(Locale.ROOT);
-            if (bipolarTransistors && !lowerName.endsWith(".cir")) {
+            if (bipolarTransistors && !lowerName.endsWith(".cir") && !ascOptions) {
                 throw new IllegalArgumentException("Use the bipolar transistor option only with flat SPICE AC input.");
             }
             CircuitModel model;
             if (lowerName.endsWith(".asc")) {
-                var importer = new LtspiceImporter(exponentialDiodes);
                 var sourceRoots = new java.util.ArrayList<Path>();
+                Path modelCards = null;
                 AcInputOrigin origin = AcInputOrigin.UNSELECTED_ASC;
                 for (int i = 4; i < args.length; i += 2) {
                     switch (args[i]) {
                         case "--source-root" -> sourceRoots.add(Path.of(args[i + 1]));
+                        case "--model-cards" -> {
+                            if (modelCards != null) throw new IllegalArgumentException("Select one semiconductor model file.");
+                            modelCards = Path.of(args[i + 1]);
+                        }
                         case "--profile" -> {
                             if (origin.tested()) throw new IllegalArgumentException("Select one ASC import profile.");
                             origin = AcInputOrigin.selectProfile(args[i + 1]);
@@ -58,9 +62,14 @@ public final class Main {
                         default -> throw new IllegalArgumentException("Unknown import option " + args[i]);
                     }
                 }
-                if (exponentialDiodes && (origin.tested() || !sourceRoots.isEmpty())) {
-                    throw new IllegalArgumentException("Use exponential diodes only with flat, unselected SPICE import.");
+                if (bipolarTransistors != (modelCards != null)) {
+                    throw new IllegalArgumentException("Select both the bipolar transistor option and a local model file for ASC input.");
                 }
+                if (exponentialDiodes && (origin.tested() || !sourceRoots.isEmpty() && modelCards == null)) {
+                    throw new IllegalArgumentException("Use unselected ASC input with explicit models for hierarchical exponential diodes.");
+                }
+                var importer = modelCards == null ? new LtspiceImporter(exponentialDiodes)
+                        : new LtspiceImporter(exponentialDiodes, modelCards);
                 model = args.length == 2 ? importer.convert(input)
                         : importer.convert(input, Path.of(args[3]), sourceRoots, origin);
             } else {

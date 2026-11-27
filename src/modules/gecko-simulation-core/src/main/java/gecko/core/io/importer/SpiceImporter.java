@@ -194,7 +194,7 @@ public final class SpiceImporter {
                     continue;
                 }
                 if (descriptor == null || descriptor == SpicePorts.E && !ac
-                        || descriptor == SpicePorts.BJT && (!ac || !bipolarAcTransistors || child != null)) {
+                        || descriptor == SpicePorts.BJT && (!ac || !bipolarAcTransistors)) {
                     issue(model, line, "UNSUPPORTED_ELEMENT", name, "Unsupported SPICE element: " + name);
                     continue;
                 }
@@ -275,8 +275,8 @@ public final class SpiceImporter {
                         String modelName = fields[3].strip();
                         String definition = definitions.get(modelName.toLowerCase(Locale.ROOT));
                         if ((ac || transientParsed) && exponentialAcDiodes && !isIdealDiodeModel(".model " + modelName + " " + definition)) {
-                            if (child != null || origin.tested()) {
-                                throw new IllegalArgumentException("Use the exponential diode only with flat, unselected SPICE import.");
+                            if (origin.tested()) {
+                                throw new IllegalArgumentException("Use the exponential diode with unselected SPICE import.");
                             }
                             law = exponentialDiode(modelName, definition, !ac);
                         } else if (ac) {
@@ -773,7 +773,7 @@ public final class SpiceImporter {
         return trimmed.substring(1, trimmed.length() - 1);
     }
 
-    private static List<Line> lines(String source) {
+    static List<Line> lines(String source) {
         var result = new ArrayList<Line>();
         int number = 0;
         for (String raw : source.split("\\R")) {
