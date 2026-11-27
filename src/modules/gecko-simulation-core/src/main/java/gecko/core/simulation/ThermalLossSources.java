@@ -120,8 +120,18 @@ public final class ThermalLossSources {
         return index < values.length ? values[index] : 0;
     }
 
+    /** A saved {@code <Verluste>} value, which overrides the parameter array like the legacy import. */
     private static double token(CircuitModel.ComponentData component, String name, double fallback) {
-        String text = component.getImportTokens().get(name);
+        String text = null;
+        var saved = component.getSavedBlock();
+        String section = saved == null ? null : saved.sections().get("Verluste");
+        if (section != null) {
+            for (String line : section.split("\\R")) {
+                String[] pair = line.trim().split("\\s+", 2);
+                if (pair[0].equals(name) && pair.length == 2) text = pair[1];
+            }
+        }
+        if (text == null) text = component.getImportTokens().get(name);
         if (text == null || text.isBlank()) return fallback;
         try { return Double.parseDouble(text.trim()); }
         catch (NumberFormatException error) { return Double.NaN; }
