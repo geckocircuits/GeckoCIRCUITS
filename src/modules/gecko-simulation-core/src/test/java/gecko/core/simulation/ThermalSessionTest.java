@@ -1,5 +1,6 @@
 package gecko.core.simulation;
 
+import gecko.core.io.SavedCircuitBlock;
 import static org.junit.jupiter.api.Assertions.*;
 
 import gecko.core.allg.AdaptiveStepSettings;
@@ -21,6 +22,20 @@ class ThermalSessionTest {
     private static double nextTemperature(double previous, double heat, double dt, double resistance, double capacitance) {
         double conductance = 1 / resistance + 1 / 10000.0;
         return (capacitance / dt * previous + heat) / (capacitance / dt + conductance);
+    }
+
+    @Test
+    void savedLossTypeUsesTheFirstValueAndTheLegacyIntegerDefault() throws Exception {
+        var model = ThermalFixture.model();
+        var source = model.getThermalComponents().stream().filter(c -> "Pv.1".equals(c.getName())).findFirst().orElseThrow();
+        var coupled = ThermalLossSources.resolve(model, source).spec().coupled();
+        for (String first : new String[]{"verlustTyp 1", "verlustTyp 1.8", "verlustTyp invalid"}) {
+            coupled.setSavedBlock(SavedCircuitBlock.parse("ElementLK", new String[]{
+                "<Verluste>", first, "verlustTyp 2", "<" + (char) 92 + "Verluste>"
+            }));
+            var result = ThermalLossSources.resolve(model, source);
+            assertNotNull(result.spec(), first);
+        }
     }
 
     @Test
