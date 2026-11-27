@@ -116,15 +116,31 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
     /** An explicitly selected, nominal-temperature AC diode law. */
     public record ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
                                    String seriesResistance, String transitTime, String junctionCapacitance,
-                                   String junctionPotential, String gradingCoefficient) implements Law {
+                                   String junctionPotential, String gradingCoefficient, boolean transientLaw) implements Law {
         public ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
                                 String seriesResistance, String transitTime) {
-            this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime, "0", "1", "0.5");
+            this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime, false);
+        }
+
+        public ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
+                                String seriesResistance, String transitTime, boolean transientLaw) {
+            this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime, "0", "1", "0.5", transientLaw);
+        }
+
+        public ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
+                                String seriesResistance, String transitTime, String junctionCapacitance,
+                                String junctionPotential, String gradingCoefficient) {
+            this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime,
+                    junctionCapacitance, junctionPotential, gradingCoefficient, false);
         }
 
         public ExponentialDiode {
             if (!modelName.matches("[A-Za-z0-9_.$+-]+")) {
                 throw new IllegalArgumentException("Require a local exponential diode model name.");
+            }
+            if (transientLaw && !("0".equals(junctionCapacitance) && "1".equals(junctionPotential)
+                    && "0.5".equals(gradingCoefficient))) {
+                throw new IllegalArgumentException("Transient exponential diodes support diffusion charge only.");
             }
             modelName = modelName.toLowerCase(Locale.ROOT);
         }
@@ -133,7 +149,7 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
             evaluate(parameters);
         }
 
-        ShockleyDiode evaluate(Map<String, String> parameters) {
+        public ShockleyDiode evaluate(Map<String, String> parameters) {
             return new ShockleyDiode(SpiceValue.evaluate(saturationCurrent, parameters),
                     SpiceValue.evaluate(emissionCoefficient, parameters), SpiceValue.evaluate(seriesResistance, parameters),
                     SpiceValue.evaluate(transitTime, parameters), SpiceValue.evaluate(junctionCapacitance, parameters),

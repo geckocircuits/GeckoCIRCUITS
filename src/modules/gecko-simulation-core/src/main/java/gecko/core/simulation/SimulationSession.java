@@ -168,7 +168,8 @@ public final class SimulationSession implements AutoCloseable {
             ElectricalTimeStep constructedElectrical = hasElectrical
                     ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(),
                             new SolverFeatures(0, settings.isZeroCrossing(), dcStart, null,
-                                    settings.getAdaptiveStep(), settings.getSparseSolver()), uic) : null;
+                                    settings.getAdaptiveStep(), settings.getSparseSolver()), uic,
+                            TransientExponentialDiodes.from(model, constructedNetlist)) : null;
             netlist = constructedNetlist;
             thermal = constructedThermal;
             control = constructedControl;

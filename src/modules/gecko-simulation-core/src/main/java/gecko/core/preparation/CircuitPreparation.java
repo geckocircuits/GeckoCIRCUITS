@@ -119,6 +119,23 @@ public final class CircuitPreparation {
             return rejected ? new PreparationResult.Rejected(report) : new PreparationResult.Inspectable(snapshot, report);
         }
         diagnostics.addAll(CircuitConfiguration.validate(execution));
+        for (var component : execution.getCircuitComponents()) {
+            if (component.getAcComponent() == null || !(component.getAcComponent().law()
+                    instanceof gecko.core.ac.AcComponent.ExponentialDiode diode) || !diode.transientLaw()) continue;
+            if (execution.getHierarchy() != null || execution.isTransientUic() || settings.features().dcOperatingPoint()
+                    || settings.features().periodicSteadyState() != null || execution.getSolverType() == SolverType.SOLVER_GS) {
+                diagnostics.add(invalidSetting("solver", "Use backward Euler or trapezoidal integration on a flat circuit "
+                        + "without DC start, periodic steady state, or UIC for transient exponential diodes."));
+                rejected = true;
+                break;
+            }
+            try {
+                diode.validate(execution.rootParameterMap());
+            } catch (IllegalArgumentException error) {
+                diagnostics.add(invalidSetting(component.getName(), error.getMessage()));
+                rejected = true;
+            }
+        }
         if (execution.isTransientUic()) {
             String problem;
             try {

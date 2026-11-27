@@ -274,11 +274,11 @@ public final class SpiceImporter {
                         data.setNumericParameters(new double[]{1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1});
                         String modelName = fields[3].strip();
                         String definition = definitions.get(modelName.toLowerCase(Locale.ROOT));
-                        if (ac && exponentialAcDiodes && !isIdealDiodeModel(".model " + modelName + " " + definition)) {
+                        if ((ac || transientParsed) && exponentialAcDiodes && !isIdealDiodeModel(".model " + modelName + " " + definition)) {
                             if (child != null || origin.tested()) {
-                                throw new IllegalArgumentException("Use the exponential diode only with flat, unselected AC import.");
+                                throw new IllegalArgumentException("Use the exponential diode only with flat, unselected SPICE import.");
                             }
-                            law = exponentialDiode(modelName, definition);
+                            law = exponentialDiode(modelName, definition, !ac);
                         } else if (ac) {
                             var expressions = idealDiodeExpressions(definition);
                             var diode = new AcComponent.IdealDiode(modelName, expressions.get("vfwd"),
@@ -726,11 +726,19 @@ public final class SpiceImporter {
         }
     }
 
-    private static AcComponent.ExponentialDiode exponentialDiode(String name, String definition) {
+    private static AcComponent.ExponentialDiode exponentialDiode(String name, String definition, boolean transientLaw) {
         if (definition == null || !modelType(definition).equals("d")) {
             throw new IllegalArgumentException("Require a local exponential diode model.");
         }
         var parameters = CircuitHierarchy.parameters(parameterAssignments(modelArguments(definition)));
+        if (transientLaw) {
+            if (!List.of("is", "n", "rs", "tt").containsAll(parameters.keySet())) {
+                throw new IllegalArgumentException("The exponential diode supports only Is, N, Rs, and Tt.");
+            }
+            return new AcComponent.ExponentialDiode(name, parameters.getOrDefault("is", "1e-14"),
+                    parameters.getOrDefault("n", "1"), parameters.getOrDefault("rs", "0"),
+                    parameters.getOrDefault("tt", "0"), transientLaw);
+        }
         if (!List.of("is", "n", "rs", "tt", "cjo", "vj", "m", "iave", "vpk", "mfg", "type").containsAll(parameters.keySet())) {
             throw new IllegalArgumentException("The exponential AC diode model has unsupported parameters.");
         }
