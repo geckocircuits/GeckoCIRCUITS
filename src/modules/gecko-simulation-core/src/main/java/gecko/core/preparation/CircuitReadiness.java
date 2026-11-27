@@ -119,13 +119,16 @@ final class CircuitReadiness {
         List<CircuitModel.ComponentData> unknown = new ArrayList<>();
         for (var component : model.getCircuitComponents()) {
             boolean diodeAcLaw = component.getAcComponent() != null
-                    && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode;
+                    && (component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode
+                    || component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode);
             if (!diodeAcLaw && (component.getType() == 9 || (CircuitTypCore.isValidTypeNumber(component.getType())
                     && registry.hasStamper(CircuitTypCore.fromTypeNumber(component.getType()))))) {
                 topology.addCircuitComponent(component);
             } else {
                 unknown.add(component);
-                String message = diodeAcLaw ? "Use AC analysis for this ideal diode law."
+                String message = diodeAcLaw
+                        ? (component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode
+                                ? "Use AC analysis for this ideal diode law." : "Use AC analysis for this exponential diode law.")
                         : component.getType() == CircuitTypCore.LK_VCCS.getTypeNumber()
                                 ? "Use AC analysis for the voltage-controlled current source."
                         : "The headless engine does not support this component type.";
