@@ -599,7 +599,11 @@ public final class CircuitTopology {
                     int required = (int) registry.nativePorts().stream().filter(pin -> pin.side() == side).count();
                     if (labels.length < required) labels = Arrays.copyOf(labels, required);
                 }
-                if (labels.length == 0 && (domain.equals("LK") || domain.equals("THERMAL")) && twoPort(component.getType())) {
+                boolean lossOrAmbient = domain.equals("THERMAL")
+                        && (component.getType() == CircuitTypCore.TH_PvCHIP.getTypeNumber()
+                        || component.getType() == CircuitTypCore.TH_AMBIENT.getTypeNumber());
+                if (labels.length == 0 && (domain.equals("LK") || domain.equals("THERMAL"))
+                        && (twoPort(component.getType()) || lossOrAmbient)) {
                     labels = new String[]{""};
                 }
                 for (int port = 0; port < labels.length; port++) {

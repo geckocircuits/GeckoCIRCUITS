@@ -13,6 +13,7 @@
  */
 package gecko.core.simulation;
 
+import gecko.core.circuit.TokenMap;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.circuit.losscalculation.DetailedLossCurves;
 import gecko.core.circuit.losscalculation.SemiconductorLossModel;
@@ -53,7 +54,7 @@ public final class ThermalLossSources {
     public static Resolution resolve(CircuitModel model, CircuitModel.ComponentData lossSource) {
         CircuitModel.ComponentData coupled = coupledComponent(model, lossSource);
         if (coupled == null) {
-            return Resolution.unsupported("UNSUPPORTED_LOSS_COMPONENT", "The loss source has no resolvable coupled component.");
+            return Resolution.unsupported("UNSUPPORTED_LOSS_COMPONENT", "The loss source reference does not match exactly one electrical component.");
         }
         int type = coupled.getType();
         if (type == CircuitTypCore.LK_R.getTypeNumber()) {
@@ -65,9 +66,14 @@ public final class ThermalLossSources {
             return Resolution.unsupported("UNSUPPORTED_LOSS_COMPONENT",
                     "The core cannot compute the losses of component type " + type + ".");
         }
-        int lossType = (int) Math.rint(token(coupled, "verlustTyp", SIMPLE));
+        var saved = coupled.getSavedBlock();
+        String section = saved == null ? null : saved.sections().get("Verluste");
+        TokenMap lossTokens = section == null ? null : new TokenMap(section.lines().toArray(String[]::new), false);
+        int lossType = lossTokens != null && lossTokens.containsToken("verlustTyp")
+                ? lossTokens.readDataLine("verlustTyp", SIMPLE) : (int) Math.rint(token(coupled, null, "verlustTyp", SIMPLE));
         if (lossType == DETAILED) {
-            long hash = (long) token(coupled, "lossFileHashValue", 0);
+            long hash = lossTokens != null && lossTokens.containsToken("lossFileHashValue")
+                    ? lossTokens.readDataLine("lossFileHashValue", 0L) : (long) token(coupled, null, "lossFileHashValue", 0);
             var resource = model.getResources().get(hash);
             if (resource == null) {
                 return Resolution.unsupported("UNSUPPORTED_LOSS_MODEL", "The DETAILED loss file is not available.");
@@ -84,9 +90,9 @@ public final class ThermalLossSources {
         }
         double uf = forwardDrop ? parameter(coupled, 1) : 0;
         double rOn = parameter(coupled, type == CircuitTypCore.LK_S.getTypeNumber() ? 1 : 2);
-        double kOn = token(coupled, "kON", parameter(coupled, 6));
-        double kOff = token(coupled, "kOFF", parameter(coupled, 7));
-        double blocking = token(coupled, "uSWnorm", DEFAULT_BLOCKING_VOLTAGE);
+        double kOn = token(coupled, lossTokens, "kON", parameter(coupled, 6));
+        double kOff = token(coupled, lossTokens, "kOFF", parameter(coupled, 7));
+        double blocking = token(coupled, lossTokens, "uSWnorm", DEFAULT_BLOCKING_VOLTAGE);
         if (!Double.isFinite(uf) || !Double.isFinite(rOn) || !Double.isFinite(kOn) || !Double.isFinite(kOff)
                 || !Double.isFinite(blocking) || blocking == 0) {
             return Resolution.unsupported("UNSUPPORTED_LOSS_MODEL", "The SIMPLE loss parameters are not finite and nonzero.");
@@ -94,25 +100,22 @@ public final class ThermalLossSources {
         return new Resolution(new Spec(coupled, () -> SemiconductorLossModel.simple(uf, rOn, kOn, kOff, blocking)), null, null);
     }
 
+    /** The one component whose saved identifier equals the saved reference, or null. Names repeat across sheet copies. */
     private static CircuitModel.ComponentData coupledComponent(CircuitModel model, CircuitModel.ComponentData lossSource) {
         String reference = lossSource.getImportTokens().get("coupledReferenceID[]");
-        if (reference != null && !reference.isBlank()) {
-            try {
-                long identifier = Long.parseLong(reference.trim().split("\\s+")[0]);
-                for (var component : model.getCircuitComponents()) {
-                    if (component.getParameters().get("uniqueObjectIdentifier") instanceof Number number
-                            && number.longValue() == identifier) return component;
-                }
-            } catch (NumberFormatException ignored) {
-                // Fall back to the saved coupled name.
+        if (reference == null || reference.isBlank()) return null;
+        long identifier;
+        try { identifier = Long.parseLong(reference.trim().split("\\s+")[0]); }
+        catch (NumberFormatException error) { return null; }
+        CircuitModel.ComponentData match = null;
+        for (var component : model.getCircuitComponents()) {
+            if (component.getParameters().get("uniqueObjectIdentifier") instanceof Number number
+                    && number.longValue() == identifier) {
+                if (match != null) return null;
+                match = component;
             }
-            return null;
         }
-        String[] names = lossSource.getParameterStrings();
-        if (names.length > 0) {
-            for (var component : model.getCircuitComponents()) if (names[0].equals(component.getName())) return component;
-        }
-        return null;
+        return match;
     }
 
     private static double parameter(CircuitModel.ComponentData component, int index) {
@@ -120,18 +123,9 @@ public final class ThermalLossSources {
         return index < values.length ? values[index] : 0;
     }
 
-    /** A saved {@code <Verluste>} value, which overrides the parameter array like the legacy import. */
-    private static double token(CircuitModel.ComponentData component, String name, double fallback) {
-        String text = null;
-        var saved = component.getSavedBlock();
-        String section = saved == null ? null : saved.sections().get("Verluste");
-        if (section != null) {
-            for (String line : section.split("\\R")) {
-                String[] pair = line.trim().split("\\s+", 2);
-                if (pair[0].equals(name) && pair.length == 2) text = pair[1];
-            }
-        }
-        if (text == null) text = component.getImportTokens().get(name);
+    private static double token(CircuitModel.ComponentData component, TokenMap saved, String name, double fallback) {
+        if (saved != null && saved.containsToken(name)) return saved.readDataLine(name, fallback);
+        String text = component.getImportTokens().get(name);
         if (text == null || text.isBlank()) return fallback;
         try { return Double.parseDouble(text.trim()); }
         catch (NumberFormatException error) { return Double.NaN; }
