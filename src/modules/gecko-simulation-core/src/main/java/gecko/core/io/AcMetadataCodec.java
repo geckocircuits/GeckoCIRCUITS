@@ -64,9 +64,16 @@ public final class AcMetadataCodec {
             case AcComponent.Current law -> fields.addAll(List.of("CURRENT", law.dc(), law.magnitude(), law.phaseDegrees()));
             case AcComponent.IdealDiode law -> fields.addAll(List.of("IDEAL_DIODE_V1", law.modelName(),
                     law.forwardVoltage(), law.onResistance(), law.offResistance(), law.origin().name()));
-            case AcComponent.ExponentialDiode law -> fields.addAll(List.of("EXPONENTIAL_DIODE_V2", law.modelName(),
-                    law.saturationCurrent(), law.emissionCoefficient(), law.seriesResistance(), law.transitTime(),
-                    law.junctionCapacitance(), law.junctionPotential(), law.gradingCoefficient()));
+            case AcComponent.ExponentialDiode law -> {
+                if (law.transientLaw()) {
+                    fields.addAll(List.of("EXPONENTIAL_DIODE_TRANSIENT_V1", law.modelName(), law.saturationCurrent(),
+                            law.emissionCoefficient(), law.seriesResistance(), law.transitTime()));
+                } else {
+                    fields.addAll(List.of("EXPONENTIAL_DIODE_V2", law.modelName(), law.saturationCurrent(),
+                            law.emissionCoefficient(), law.seriesResistance(), law.transitTime(),
+                            law.junctionCapacitance(), law.junctionPotential(), law.gradingCoefficient()));
+                }
+            }
             case AcComponent.Bipolar law -> {
                 var parameters = new java.util.ArrayList<String>();
                 new java.util.TreeMap<>(law.parameters()).forEach((key, value) -> {
@@ -88,7 +95,7 @@ public final class AcMetadataCodec {
         int aliasIndex = switch (fields[3]) {
             case "VOLTAGE", "BIPOLAR_V1" -> 8;
             case "CURRENT" -> 7;
-            case "IDEAL_DIODE_V1", "EXPONENTIAL_DIODE_V1" -> 9;
+            case "IDEAL_DIODE_V1", "EXPONENTIAL_DIODE_V1", "EXPONENTIAL_DIODE_TRANSIENT_V1" -> 9;
             case "EXPONENTIAL_DIODE_V2" -> 12;
             case "INDUCTANCE" -> 6;
             case "INDUCTANCE_ORIGIN_V1" -> 10;
@@ -117,8 +124,8 @@ public final class AcMetadataCodec {
             case "CURRENT" -> new AcComponent.Current(fields[4], fields[5], fields[6]);
             case "IDEAL_DIODE_V1" -> new AcComponent.IdealDiode(fields[4], fields[5], fields[6], fields[7],
                     AcInputOrigin.valueOf(fields[8]));
-            case "EXPONENTIAL_DIODE_V1" -> new AcComponent.ExponentialDiode(fields[4], fields[5], fields[6],
-                    fields[7], fields[8]);
+            case "EXPONENTIAL_DIODE_V1", "EXPONENTIAL_DIODE_TRANSIENT_V1" -> new AcComponent.ExponentialDiode(
+                    fields[4], fields[5], fields[6], fields[7], fields[8], fields[3].equals("EXPONENTIAL_DIODE_TRANSIENT_V1"));
             case "EXPONENTIAL_DIODE_V2" -> new AcComponent.ExponentialDiode(fields[4], fields[5], fields[6],
                     fields[7], fields[8], fields[9], fields[10], fields[11]);
             case "BIPOLAR_V1" -> {

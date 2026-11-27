@@ -183,6 +183,11 @@ final class CircuitReadiness {
     }
 
     private static CircuitNetlist checkTopology(CircuitModel model, List<Diagnostic> diagnostics) {
+        if (model.getHierarchy() != null) {
+            // Admission has checked the bounded hierarchy. Keep its structural pins when resolving the topology.
+            if (hasUnresolvedElectricalInput(model)) return null;
+            return buildElectricalTopology(model, diagnostics);
+        }
         var registry = StamperRegistry.createDefault();
         var topology = new CircuitSnapshot(model).toModel();
         topology.getCircuitComponents().clear();
@@ -190,7 +195,7 @@ final class CircuitReadiness {
         for (var component : model.getCircuitComponents()) {
             boolean diodeAcLaw = component.getAcComponent() != null
                     && (component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode
-                    || component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode);
+                    || component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode diode && !diode.transientLaw());
             if (!diodeAcLaw && (component.getType() == 9 || (CircuitTypCore.isValidTypeNumber(component.getType())
                     && registry.hasStamper(CircuitTypCore.fromTypeNumber(component.getType()))))) {
                 topology.addCircuitComponent(component);
@@ -207,7 +212,7 @@ final class CircuitReadiness {
                         component.getSourceLocation()));
             }
         }
-        if (model.getImportIssues().stream().anyMatch(issue -> "LK".equals(issue.domain()) && !configurationIssue(issue))) return null;
+        if (hasUnresolvedElectricalInput(model)) return null;
         if (!unknown.isEmpty()) {
             if (model.getConnections().stream().anyMatch(wire -> "LK".equals(wire.getType()))) return null;
             Set<String> affected = new HashSet<>();
@@ -223,9 +228,17 @@ final class CircuitReadiness {
             topology.getCircuitComponents().removeIf(component -> nonGroundLabels(component).stream().anyMatch(affected::contains)
                     || (component.getType() == 9 && !affected.isEmpty()));
         }
+        CircuitNetlist netlist = buildElectricalTopology(topology, diagnostics);
+        return unknown.isEmpty() ? netlist : null;
+    }
+
+    private static boolean hasUnresolvedElectricalInput(CircuitModel model) {
+        return model.getImportIssues().stream().anyMatch(issue -> "LK".equals(issue.domain()) && !configurationIssue(issue));
+    }
+
+    private static CircuitNetlist buildElectricalTopology(CircuitModel model, List<Diagnostic> diagnostics) {
         try {
-            CircuitNetlist netlist = NetlistBuilder.buildFromCircuitModel(topology);
-            return unknown.isEmpty() ? netlist : null;
+            return NetlistBuilder.buildFromCircuitModel(model);
         } catch (TopologyValidationException error) {
             diagnostics.add(new Diagnostic(error.code(), Diagnostic.Category.TOPOLOGY, Diagnostic.Severity.ERROR,
                     error.getMessage(), "LK", error.component(), null, model.getFilePath()));
@@ -248,9 +261,13 @@ final class CircuitReadiness {
         return labels;
     }
 
-    private static Integer resolveElectricalTerminalNode(CircuitModel model, CircuitModel.ComponentData measurement,
-            String label, CircuitNetlist topology) {
+    private static Integer resolveElectricalTerminalNode(CircuitModel model, CircuitTopology resolved,
+            CircuitModel.ComponentData measurement, String label, CircuitNetlist topology) {
         long sheet = measurement.getSavedBlock() == null ? 0 : measurement.getSavedBlock().parentSheetIdentifier();
+        if (model.getHierarchy() != null) {
+            var group = resolved.labelGroup("LK", sheet, label);
+            return topology == null ? group == null ? null : 0 : topology.getHierarchyGroupNode(group);
+        }
         for (var component : model.getCircuitComponents()) {
             long componentSheet = component.getSavedBlock() == null ? 0 : component.getSavedBlock().parentSheetIdentifier();
             if (componentSheet != sheet) continue;
@@ -334,7 +351,7 @@ final class CircuitReadiness {
                 for (int port = 0; port < 2; port++) {
                     String reference = port < references.length ? references[port] : "";
                     Integer resolvedNode = reference == null || reference.isBlank() ? null
-                            : resolveElectricalTerminalNode(model, component, reference, topology);
+                            : resolveElectricalTerminalNode(model, controlTopology, component, reference, topology);
                     if (resolvedNode == null || topology != null
                             && (resolvedNode < 0 || resolvedNode > topology.getNodeMax())) {
                         diagnostics.add(control("INVALID_PROBE_REFERENCE", Diagnostic.Category.REFERENCES, component,

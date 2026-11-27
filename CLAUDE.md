@@ -141,3 +141,4 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 | 2026-11-27 | [ADR-0029: Shockley diode](docs/adr/0029-shockley-diode.md) |
 | 2026-11-27 | [ADR-0030: Native transistor laws](docs/adr/0030-native-transistor-laws.md) |
 | 2026-11-27 | [ADR-0031: Compare the authored recording with pinned evidence](docs/adr/0031-authored-recording-verification.md) |
+| 2026-11-27 | [ADR-0032: Native transient occurrence execution](docs/adr/0032-native-transient-occurrence-execution.md) |

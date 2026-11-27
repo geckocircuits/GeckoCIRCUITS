@@ -35,6 +35,9 @@ public final class CircuitSnapshot {
     CircuitModel executionModel() {
         var execution = toModel();
         var topology = CircuitTopology.resolve(execution);
+        // HierarchyIndex needs the saved occurrence owners and formal terminals in their native lists.
+        // CircuitTopology selects active computational rows from those records when it builds the netlist.
+        if (execution.getHierarchy() != null) return execution;
         execution.getConnections().removeIf(connection -> !topology.isActiveConnection(connection));
         var active = new LinkedHashSet<>(topology.activeComponents());
         var structural = new LinkedHashSet<>(topology.structuralComponents());

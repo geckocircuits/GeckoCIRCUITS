@@ -27,3 +27,4 @@
 | 2026-11-27 | [ADR-0029: Shockley diode](0029-shockley-diode.md) |
 | 2026-11-27 | [ADR-0030: Native transistor laws](0030-native-transistor-laws.md) |
 | 2026-11-27 | [ADR-0031: Compare the authored recording with pinned evidence](0031-authored-recording-verification.md) |
+| 2026-11-27 | [ADR-0032: Native transient occurrence execution](0032-native-transient-occurrence-execution.md) |

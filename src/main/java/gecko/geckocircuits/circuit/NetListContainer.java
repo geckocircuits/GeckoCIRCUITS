@@ -29,6 +29,11 @@ public final class NetListContainer {
 
     static void requireLegacySourceSupport(final Iterable<? extends AbstractCircuitBlockInterface> elements) {
         for (var element : elements) {
+            if (element.isCircuitEnabled() == Enabled.ENABLED && element.getAcComponent() != null
+                    && element.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode diode
+                    && diode.transientLaw()) {
+                throw new IllegalArgumentException("Use the Core backend for exponential diode " + element.getStringID());
+            }
             if (element instanceof AbstractCircuitSource source
                     && source.getSimulationDomain() == ConnectorType.LK && source.isPwlSource()
                     && source.isCircuitEnabled() == Enabled.ENABLED) {

@@ -59,7 +59,7 @@ public final class Main {
                     }
                 }
                 if (exponentialDiodes && (origin.tested() || !sourceRoots.isEmpty())) {
-                    throw new IllegalArgumentException("Use exponential diodes only with flat, unselected AC import.");
+                    throw new IllegalArgumentException("Use exponential diodes only with flat, unselected SPICE import.");
                 }
                 model = args.length == 2 ? importer.convert(input)
                         : importer.convert(input, Path.of(args[3]), sourceRoots, origin);
@@ -72,8 +72,10 @@ public final class Main {
             if (bipolarTransistors && model.getAcSettings() == null) {
                 throw new IllegalArgumentException("Use the bipolar transistor option only with flat SPICE AC input.");
             }
-            if (exponentialDiodes && model.getAcSettings() == null) {
-                throw new IllegalArgumentException("Use the exponential diode option only with SPICE or LTspice AC input.");
+            if (exponentialDiodes && model.getAcSettings() == null && model.getCircuitComponents().stream().noneMatch(
+                    component -> component.getAcComponent() != null && component.getAcComponent().law()
+                            instanceof gecko.core.ac.AcComponent.ExponentialDiode diode && diode.transientLaw())) {
+                throw new IllegalArgumentException("Require an AC analysis or a transient exponential diode.");
             }
             new CircuitFileWriter().write(model, Path.of(args[1]));
             for (var issue : model.getImportIssues()) output.println("{\"code\":" + json(issue.code())

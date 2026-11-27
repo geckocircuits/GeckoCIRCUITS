@@ -19,6 +19,7 @@ import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import gecko.core.circuit.matrix.StamperRegistry;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.CircuitTopology;
+import gecko.core.io.HierarchyIndex;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.Set;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Factory class for building CircuitNetlist from various sources.
@@ -152,14 +154,18 @@ public class NetlistBuilder {
         topology.validatePhysicalConnections();
         Set<CircuitTopology.ComponentIdentity> active = new HashSet<>(topology.activeComponents());
         Set<String> names = new HashSet<>();
+        var hierarchy = model.getHierarchy() == null ? null : new HierarchyIndex(model);
+        Function<CircuitModel.ComponentData, String> executionName =
+                hierarchy == null ? CircuitModel.ComponentData::getName : hierarchy::executionName;
         for (CircuitModel.ComponentData component : model.getCircuitComponents()) {
             if (component == null) {
                 throw new IllegalArgumentException("Circuit component cannot be null");
             }
             if (!active.contains(topology.identity(component))) continue;
-            if (component.getName() != null && !component.getName().isEmpty()
-                    && !names.add(component.getName())) {
-                throw new IllegalArgumentException("Duplicate component name '" + component.getName() + "'");
+            String name = executionName.apply(component);
+            String key = hierarchy == null || name == null ? name : name.toLowerCase(java.util.Locale.ROOT);
+            if (name != null && !name.isEmpty() && !names.add(key)) {
+                throw new IllegalArgumentException("Duplicate component name '" + name + "'");
             }
             if (component.getType() == CircuitTypCore.LK_M.getTypeNumber()) {
                 couplingComponents.add(component);
@@ -217,7 +223,15 @@ public class NetlistBuilder {
                     && allComponents.stream().map(component -> component.getSavedBlock() == null
                             ? 0L : component.getSavedBlock().parentSheetIdentifier()).distinct().count() == 1;
             CircuitNetlist netlist = buildFromComponentsWithGroups(allComponents, terminalGroups, referenceNodes,
-                    legacyLabelOnly, topology.connectionGroupOrder());
+                    legacyLabelOnly, topology.connectionGroupOrder(), executionName);
+            if (hierarchy != null) {
+                var groupNodes = new LinkedHashMap<Integer, Integer>();
+                for (int index = 0; index < allComponents.size(); index++) {
+                    groupNodes.put(terminalGroups[index][0].id(), netlist.getNodeX(index));
+                    groupNodes.put(terminalGroups[index][1].id(), netlist.getNodeY(index));
+                }
+                netlist.setHierarchyGroupNodes(groupNodes);
+            }
             bindElectricalSourceWaveforms(model, netlist, allComponents);
             registerMagneticCouplings(netlist, allComponents, couplingComponents);
             return netlist;
@@ -298,7 +312,7 @@ public class NetlistBuilder {
         }
         boolean legacyLabelOnly = !hasWires && components.stream().allMatch(component -> component.getTerminalData().isEmpty());
         return buildFromComponentsWithGroups(components, groups.toArray(new CircuitTopology.Group[0][]), referenceNodes,
-                legacyLabelOnly, topology.connectionGroupOrder());
+                legacyLabelOnly, topology.connectionGroupOrder(), CircuitModel.ComponentData::getName);
     }
 
     private static boolean groupsLabelFree(CircuitModel.ComponentData component) {
@@ -330,7 +344,7 @@ public class NetlistBuilder {
      */
     private static CircuitNetlist buildFromComponentsWithGroups(List<CircuitModel.ComponentData> components,
             CircuitTopology.Group[][] terminalGroups, boolean[][] referenceNodes, boolean legacyLabelOnly,
-            List<CircuitTopology.Group> connectionOrder) {
+            List<CircuitTopology.Group> connectionOrder, Function<CircuitModel.ComponentData, String> executionName) {
         // Step 1: Build node label → index map
         // Ground reference: label "0" or "" → node 0
         // Legacy label-only models share named numerical nodes across physical component types.
@@ -425,7 +439,7 @@ public class NetlistBuilder {
         // Step 4: Build component name-to-index map
         Map<String, Integer> nameToIndex = new LinkedHashMap<>();
         for (int i = 0; i < elementCount; i++) {
-            String name = components.get(i).getName();
+            String name = executionName.apply(components.get(i));
             if (name != null && !name.isEmpty()) {
                 nameToIndex.put(name, i);
             }
