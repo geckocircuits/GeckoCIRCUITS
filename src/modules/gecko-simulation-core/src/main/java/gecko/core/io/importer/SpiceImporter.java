@@ -58,6 +58,7 @@ public final class SpiceImporter {
         var definitions = new HashMap<String, String>();
         List<Line> lines = rootLines(statements, model);
         boolean acRequested = lines.stream().anyMatch(line -> keyword(line.text()).equals(".ac"));
+        boolean transientParsed = false;
         for (var line : lines) {
             String directive = keyword(line.text());
             if (directive.equals(".param")) {
@@ -122,6 +123,7 @@ public final class SpiceImporter {
                 model.setTimeStep(step);
                 model.setSimulationDuration(end);
                 model.setOutputStartTime(outputStart);
+                transientParsed = true;
             } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
                 issue(model, line, "INVALID_TRANSIENT", "", error.getMessage());
             }
@@ -147,7 +149,7 @@ public final class SpiceImporter {
             String text = line.text();
             String directive = keyword(text);
             if (List.of(".param", ".model", ".tran", ".ac").contains(directive)) continue;
-            if (ac && text.strip().equalsIgnoreCase(".options logparams")) continue;
+            if ((ac || (child == null && transientParsed)) && text.strip().equalsIgnoreCase(".options logparams")) continue;
             if (text.startsWith(".")) {
                 issue(model, line, "UNSUPPORTED_DIRECTIVE", directive, "The analysis or directive is unsupported.");
                 continue;

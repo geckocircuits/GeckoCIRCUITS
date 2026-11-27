@@ -454,6 +454,62 @@ class LtspiceImporterTest {
         assertSimulationBlocked(model, "overlap.ipes");
     }
 
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void acceptsBareTransientParameterLoggingAndPreservesSourceProvenance(boolean optionFirst) throws Exception {
+        for (String symbol : List.of("voltage.asy", "res.asy", "cap.asy")) {
+            try (var resource = getClass().getResourceAsStream("/ltspice-hierarchy/" + symbol)) {
+                Files.copy(java.util.Objects.requireNonNull(resource), directory.resolve(symbol));
+            }
+        }
+        String analysis = "TEXT 0 192 Left 2 !.tran 1u 2m 1m";
+        String option = "TEXT 0 224 Left 2 !.OpTiOnS LoGpArAmS";
+        String source = fixture("rc.asc").replace("TEXT 0 192 Left 2 !.tran 1u 6m",
+                optionFirst ? option + "\n" + analysis : analysis + "\n" + option);
+        Path input = Files.writeString(directory.resolve("transient.asc"), source);
+        var model = new LtspiceImporter().convert(input, directory);
+        var reopened = roundTrip(model);
+        assertTrue(reopened.getConversionIssues().isEmpty(), reopened.getConversionIssues().toString());
+        assertNull(reopened.getAcSettings());
+        assertEquals(1e-6, reopened.getTimeStep());
+        assertEquals(2e-3, reopened.getSimulationDuration());
+        assertEquals(1e-3, reopened.getOutputStartTime());
+        assertEquals(ArtifactDigest.sha256(Files.readAllBytes(input)), reopened.getAcProvenance().sourceSha256());
+        assertEquals(model.getAcProvenance(), reopened.getAcProvenance());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"logparams temp=85", "logparams gfarad=1p", "logparams=1", "logparams unknown", "unknown"})
+    void transientParameterLoggingDoesNotAdmitMixedAssignedOrUnknownOptions(String options) throws Exception {
+        var model = roundTrip(convert(fixture("rc.asc") + "\nTEXT 0 224 Left 2 !.options " + options));
+        assertEquals(List.of("UNSUPPORTED_DIRECTIVE"), model.getConversionIssues().stream().map(issue -> issue.code()).toList());
+    }
+
+    @Test void bareParameterLoggingStillRequiresAnAdmittedAnalysis() throws Exception {
+        String source = fixture("rc.asc");
+        String option = "\nTEXT 0 224 Left 2 !.options logparams";
+        var noAnalysis = convert(source.replace("!.tran 1u 6m", ";no analysis") + option);
+        assertEquals(List.of("UNSUPPORTED_DIRECTIVE"), noAnalysis.getConversionIssues().stream().map(issue -> issue.code()).toList());
+        var invalid = convert(source.replace(".tran 1u 6m", ".tran -1u 6m") + option);
+        assertEquals(List.of("INVALID_TRANSIENT", "UNSUPPORTED_DIRECTIVE"),
+                invalid.getConversionIssues().stream().map(issue -> issue.code()).toList());
+        var uic = convert(source.replace(".tran 1u 6m", ".tran 1u 6m uic") + option);
+        assertEquals(List.of("UNSUPPORTED_TRANSIENT_OPTION"),
+                uic.getConversionIssues().stream().map(issue -> issue.code()).toList());
+        var mixed = convert(source + option + "\nTEXT 0 256 Left 2 !.ac dec 10 1 100");
+        assertTrue(mixed.getConversionIssues().stream().anyMatch(issue -> issue.code().equals("MULTIPLE_ANALYSES")));
+    }
+
+    @Test void childTransientWithoutRootAnalysisDoesNotEnableParameterLogging() {
+        var child = new SpiceImporter.ChildContext(false, (definitions, required) -> java.util.Map.of());
+        var model = new SpiceImporter().convert("child.asc", 0,
+                List.of(new SpiceImporter.Line(1, ".tran 1u 2m"),
+                        new SpiceImporter.Line(2, ".options logparams")),
+                new java.util.LinkedHashMap<>(), java.util.Map.of(), AcInputOrigin.UNSELECTED_ASC, child, List.of())
+                .model();
+        assertEquals(List.of("UNSUPPORTED_DIRECTIVE"), model.getConversionIssues().stream().map(issue -> issue.code()).toList());
+    }
+
     @Test void nativeRoundTripPreservesTransientOutputStartAndMaximumStep() throws Exception {
         var model = roundTrip(convert(fixture("rc.asc").replace(".tran 1u 6m", ".tran 1u 2m 1m 500n")));
         assertTrue(model.getConversionIssues().isEmpty(), model.getConversionIssues().toString());
