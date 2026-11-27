@@ -47,7 +47,13 @@ public final class CircuitPreparation {
      */
     public PreparationResult prepare(CircuitSnapshot base, PreparationRequest request) {
         var model = base.toModel();
-        if (model.getAcSettings() != null) return prepareAc(base, model, request);
+        if (model.getAcSettings() != null) {
+            if (model.isTransientUic()) {
+                return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.INVALID,
+                        List.of(invalidSetting("transientUic", "UIC applies only to transient analysis."))));
+            }
+            return prepareAc(base, model, request);
+        }
         if (model.getHierarchy() != null || model.getCircuitComponents().stream().anyMatch(component ->
                 component.getAcComponent() != null && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Inductance)) {
             return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.UNSUPPORTED,
@@ -113,6 +119,18 @@ public final class CircuitPreparation {
             return rejected ? new PreparationResult.Rejected(report) : new PreparationResult.Inspectable(snapshot, report);
         }
         diagnostics.addAll(CircuitConfiguration.validate(execution));
+        if (execution.isTransientUic()) {
+            String problem;
+            try {
+                problem = uicProblem(execution, settings.features());
+            } catch (IllegalArgumentException error) {
+                problem = error.getMessage();
+            }
+            if (problem != null) {
+                diagnostics.add(invalidSetting("transientUic", problem));
+                rejected = true;
+            }
+        }
         if (settings.features().periodicSteadyState() != null && !rejected) {
             for (var issue : SimulationTiming.periodicSteadyStateCircuitIssues(execution, model.getTimeStep(),
                     settings.features().controlSamplePeriod(), settings.features().periodicSteadyState())) {
@@ -156,6 +174,52 @@ public final class CircuitPreparation {
         return new PreparationResult.Ready(snapshot, new PreparedCircuit(snapshot, plan),
                 new ReadinessReport(ReadinessReport.Outcome.READY, diagnostics));
     }
+    private static String uicProblem(CircuitModel model, SolverFeatures features) {
+        if (features.dcOperatingPoint() || features.periodicSteadyState() != null
+                || features.adaptiveStep() != null || features.zeroCrossing()
+                || model.getPreSimulationTime() > 0 || model.getSolverType() != SolverType.SOLVER_BE) {
+            return "UIC requires fixed backward Euler and cannot be combined with DC or other startup features.";
+        }
+        if (!model.getThermalComponents().isEmpty() || !model.getSpecialComponents().isEmpty()
+                || model.getControlComponents().stream().anyMatch(component -> component.getType() != 1 && component.getType() != 5)) {
+            return "UIC supports only a grounded series RC circuit with voltage observation.";
+        }
+        var netlist = gecko.core.circuit.netlist.NetlistBuilder.buildFromCircuitModel(model);
+        int voltage = -1, resistor = -1, capacitor = -1;
+        if (netlist != null && netlist.getElementCount() == 3 && netlist.getNodeMax() == 2) {
+            for (int i = 0; i < netlist.getElementCount(); i++) {
+                switch (netlist.getType(i)) {
+                    case LK_U -> voltage = i;
+                    case LK_R -> resistor = i;
+                    case LK_C -> capacitor = i;
+                    default -> { }
+                }
+            }
+        }
+        if (voltage < 0 || resistor < 0 || capacitor < 0) {
+            return "UIC requires one constant voltage source, one resistor, and one capacitor.";
+        }
+        var resistorValues = netlist.getParameter(resistor);
+        var capacitorValues = netlist.getParameter(capacitor);
+        if (resistorValues.length == 0 || capacitorValues.length < 2
+                || !positive(resistorValues[0]) || !positive(capacitorValues[0])
+                || !Double.isFinite(capacitorValues[1])) {
+            return "UIC requires finite capacitor initial voltage and positive finite resistance and capacitance.";
+        }
+        var source = netlist.getParameter(voltage);
+        int input = netlist.getNodeX(voltage);
+        int output = netlist.getNodeX(capacitor);
+        if (source.length < 2 || !Double.isFinite(source[1])
+                || source[0] != gecko.core.circuit.SourceType.QUELLE_DC
+                && source[0] != gecko.core.circuit.SourceType.QUELLE_DC_NEW
+                || input == 0 || output == 0 || input == output
+                || netlist.getNodeY(voltage) != 0 || netlist.getNodeY(capacitor) != 0
+                || netlist.getNodeX(resistor) != input || netlist.getNodeY(resistor) != output) {
+            return "UIC requires the signed source and capacitor terminals of a grounded series RC circuit.";
+        }
+        return null;
+    }
+
     private static boolean positive(double value) { return Double.isFinite(value) && value > 0; }
     private static Diagnostic invalidSetting(String path, String message) {
         return new Diagnostic("INVALID_SETTING", Diagnostic.Category.CONFIGURATION, Diagnostic.Severity.ERROR,

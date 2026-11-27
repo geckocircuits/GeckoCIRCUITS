@@ -59,6 +59,7 @@ public final class SpiceImporter {
         List<Line> lines = rootLines(statements, model);
         boolean acRequested = lines.stream().anyMatch(line -> keyword(line.text()).equals(".ac"));
         boolean transientParsed = false;
+        Line uicDirective = null;
         for (var line : lines) {
             String directive = keyword(line.text());
             if (directive.equals(".param")) {
@@ -102,6 +103,8 @@ public final class SpiceImporter {
             if (acRequested) issue(model, line, "MULTIPLE_ANALYSES", ".tran", "Select one analysis.");
             try {
                 String[] args = arguments(line.text().substring(5));
+                boolean uic = args.length > 0 && args[args.length - 1].equalsIgnoreCase("uic");
+                if (uic) args = Arrays.copyOf(args, args.length - 1);
                 if (args.length < 2 || args.length > 5) {
                     throw new IllegalArgumentException("The transient directive requires a step and duration.");
                 }
@@ -115,7 +118,8 @@ public final class SpiceImporter {
                 if (args.length > 4 && !args[4].equalsIgnoreCase("uic")) {
                     issue(model, line, "UNSUPPORTED_TRANSIENT_OPTION", ".tran", "The trailing transient option is unsupported: " + args[4]);
                 }
-                if (Arrays.stream(args).anyMatch(argument -> argument.equalsIgnoreCase("uic"))) {
+                if (Arrays.stream(args).anyMatch(argument -> argument.equalsIgnoreCase("uic"))
+                        || uic && (child != null || acRequested || args.length > 4)) {
                     issue(model, line, "UNSUPPORTED_TRANSIENT_OPTION", ".tran", "The UIC transient option is unsupported.");
                 }
                 if (step == 0) step = end / 10000;
@@ -123,6 +127,11 @@ public final class SpiceImporter {
                 model.setTimeStep(step);
                 model.setSimulationDuration(end);
                 model.setOutputStartTime(outputStart);
+                if (uic && child == null && !acRequested && args.length <= 4
+                        && Arrays.stream(args).noneMatch(argument -> argument.equalsIgnoreCase("uic"))) {
+                    model.setTransientUic(true);
+                    uicDirective = line;
+                }
                 transientParsed = true;
             } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
                 issue(model, line, "INVALID_TRANSIENT", "", error.getMessage());
@@ -292,6 +301,16 @@ public final class SpiceImporter {
                 model.getResources().keySet().retainAll(resourceIds);
                 issue(model, line, "MALFORMED_ELEMENT", fields[0], error.getMessage());
             }
+        }
+        if (uicDirective != null && lines.stream().filter(line -> keyword(line.text()).equals(".tran")).count() != 1) {
+            issue(model, uicDirective, "MULTIPLE_ANALYSES", ".tran", "UIC requires one transient analysis.");
+        }
+        if (uicDirective != null && (model.getCircuitComponents().size() != 3
+                || !model.getCircuitComponents().stream().map(ComponentData::getType).sorted().toList()
+                        .equals(List.of(1, 3, 4)) || !model.getControlComponents().isEmpty()
+                || !model.getResources().isEmpty())) {
+            issue(model, uicDirective, "UNSUPPORTED_TRANSIENT_OPTION", ".tran",
+                    "UIC requires one constant voltage source, one resistor, and one capacitor.");
         }
         if (!ac && child == null) addScope(model, nodes);
         int circuitRows = (model.getCircuitComponents().size() + 5) / 6;

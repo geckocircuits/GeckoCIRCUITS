@@ -103,6 +103,7 @@ public final class EditorCircuitCapture {
         section(ascii, "scripterDeclarations", scripts.declarations());
         section(ascii, "extraScriptSourceFiles", scripts.extraFiles());
         ascii.append("\ntDURATION ").append(settings._tDURATION.getValue());
+        if (settings.transientUic.getValue()) ascii.append("\ntransientUic 1");
         if (settings.outputStartTime.getValue() != 0) {
             ascii.append("\ntOUTPUT_START ").append(settings.outputStartTime.getValue());
         }

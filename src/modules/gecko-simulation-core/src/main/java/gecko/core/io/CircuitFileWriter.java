@@ -61,6 +61,7 @@ public final class CircuitFileWriter {
         }
         var settings = new TreeMap<>(model.getSavedSettings());
         settings.remove("tOUTPUT_START");
+        settings.remove("transientUic");
         settings.remove(AcMetadataCodec.SETTINGS);
         settings.remove(AcMetadataCodec.PROVENANCE);
         settings.remove(HierarchyMetadataCodec.DOCUMENT);
@@ -85,6 +86,7 @@ public final class CircuitFileWriter {
         if (model.getOutputStartTime() != 0) {
             settings.put("tOUTPUT_START", Double.toString(model.getOutputStartTime()));
         }
+        if (model.isTransientUic()) settings.put("transientUic", "1");
         settings.put("dt", Double.toString(model.getTimeStep()));
         settings.put("T_pre", Double.toString(model.getPreSimulationTime()));
         settings.put("dt_pre", Double.toString(model.getPreSimulationTimeStep() > 0 ? model.getPreSimulationTimeStep() : model.getTimeStep()));

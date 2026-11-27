@@ -85,6 +85,7 @@ public final class CircuitSnapshot {
         target.setAcProvenance(source.getAcProvenance());
         target.setSimulationDuration(source.getSimulationDuration());
         target.setOutputStartTime(source.getOutputStartTime());
+        target.setTransientUic(source.isTransientUic());
         target.setTimeStep(source.getTimeStep());
         target.setPreSimulationTime(source.getPreSimulationTime());
         target.setPreSimulationTimeStep(source.getPreSimulationTimeStep());
