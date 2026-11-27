@@ -9,6 +9,39 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SimulationSessionConcurrencyTest {
     @Test
+    void completionStatusCanPrecedeFinalSampleDelivery() throws Exception {
+        var finalSampleEntered = new CountDownLatch(1);
+        var releaseFinalSample = new CountDownLatch(1);
+        var delivered = new java.util.concurrent.ConcurrentLinkedQueue<SimulationSession.Sample>();
+        var executor = Executors.newSingleThreadExecutor();
+        try (var session = open()) {
+            try {
+                var run = executor.submit(() -> session.run(() -> false, sample -> {
+                    if (sample.time() == 0.25) {
+                        finalSampleEntered.countDown();
+                        await(releaseFinalSample);
+                    }
+                    delivered.add(sample);
+                }));
+                assertTrue(finalSampleEntered.await(5, TimeUnit.SECONDS));
+                assertEquals(SimulationSession.State.COMPLETED, session.status().state());
+                assertEquals(3, session.status().committedSteps());
+                assertEquals(2, delivered.size());
+                assertFalse(run.isDone());
+                releaseFinalSample.countDown();
+                assertEquals(SimulationSession.State.COMPLETED, run.get(5, TimeUnit.SECONDS).state());
+                assertArrayEquals(new double[]{0, 0.125, 0.25},
+                        delivered.stream().mapToDouble(SimulationSession.Sample::time).toArray());
+            } finally {
+                releaseFinalSample.countDown();
+            }
+        } finally {
+            executor.shutdownNow();
+            assertTrue(executor.awaitTermination(5, TimeUnit.SECONDS));
+        }
+    }
+
+    @Test
     void anAdmittedRunAcknowledgesPauseBeforeItsFirstStepAndCanResume() throws Exception {
         var entered = new CountDownLatch(1);
         var release = new CountDownLatch(1);
