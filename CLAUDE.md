@@ -139,3 +139,4 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 | 2026-11-24 | [ADR-0023: Run the thermal network in the core once per grid step](docs/adr/0023-core-thermal-network.md) |
 | 2026-11-24 | [ADR-0024: Run CONTROL subsystems on their own sample clocks](docs/adr/0024-control-subsystem-sample-clocks.md) |
 | 2026-11-27 | [ADR-0029: Shockley diode](docs/adr/0029-shockley-diode.md) |
+| 2026-11-27 | [ADR-0030: Native transistor laws](docs/adr/0030-native-transistor-laws.md) |

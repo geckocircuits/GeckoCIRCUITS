@@ -31,13 +31,19 @@ import java.util.regex.Pattern;
 /** Imports the documented SPICE element subset and retains unsupported source evidence. */
 public final class SpiceImporter {
     private final boolean exponentialAcDiodes;
+    private final boolean bipolarAcTransistors;
 
     public SpiceImporter() {
         this(false);
     }
 
     public SpiceImporter(boolean exponentialAcDiodes) {
+        this(exponentialAcDiodes, false);
+    }
+
+    public SpiceImporter(boolean exponentialAcDiodes, boolean bipolarAcTransistors) {
         this.exponentialAcDiodes = exponentialAcDiodes;
+        this.bipolarAcTransistors = bipolarAcTransistors;
     }
 
     record Line(int number, String text) { }
@@ -187,7 +193,8 @@ public final class SpiceImporter {
                     issue(model, line, "UNSUPPORTED_ELEMENT", name, "Use AC analysis for the voltage-controlled current source.");
                     continue;
                 }
-                if (descriptor == null || descriptor == SpicePorts.E && !ac) {
+                if (descriptor == null || descriptor == SpicePorts.E && !ac
+                        || descriptor == SpicePorts.BJT && (!ac || !bipolarAcTransistors || child != null)) {
                     issue(model, line, "UNSUPPORTED_ELEMENT", name, "Unsupported SPICE element: " + name);
                     continue;
                 }
@@ -293,6 +300,31 @@ public final class SpiceImporter {
                                 issue(model, line, "DIODE_MODEL_APPROXIMATION", name, "The diode model uses unsupported exponential behavior.");
                             }
                         }
+                    }
+                    case 'Q' -> {
+                        var args = arguments(fields[3]);
+                        if (args.length < 2 || args.length > 4) {
+                            throw new IllegalArgumentException("Require an emitter node, local model, and optional area.");
+                        }
+                        String emitter = node(nodes, args[0]);
+                        int modelIndex = args.length > 2 && args[1].equals("0") ? 2 : 1;
+                        if (args.length > modelIndex + 2) {
+                            throw new IllegalArgumentException("Use an implicit or grounded bipolar substrate.");
+                        }
+                        String modelName = args[modelIndex];
+                        String definition = definitions.get(modelName.toLowerCase(Locale.ROOT));
+                        if (definition == null || !List.of("npn", "pnp").contains(modelType(definition))) {
+                            throw new IllegalArgumentException("Require a local NPN or PNP model.");
+                        }
+                        String area = args.length > modelIndex + 1 ? args[modelIndex + 1] : "1";
+                        if (area.toLowerCase(Locale.ROOT).startsWith("area=")) area = area.substring(5);
+                        var transistor = new AcComponent.Bipolar(modelName, modelType(definition).equals("pnp"), area,
+                                CircuitHierarchy.parameters(parameterAssignments(modelArguments(definition))));
+                        transistor.validate(parameters);
+                        aliases = List.of(positive, negative, emitter);
+                        assignPorts(data, descriptor, aliases);
+                        data.setNumericParameters(new double[18]);
+                        law = transistor;
                     }
                     case 'S' -> voltageSwitch(data, fields[3], model, parameters, definitions, nodes);
                     default -> throw new IllegalArgumentException("Unsupported element.");
@@ -699,11 +731,12 @@ public final class SpiceImporter {
             throw new IllegalArgumentException("Require a local exponential diode model.");
         }
         var parameters = CircuitHierarchy.parameters(parameterAssignments(modelArguments(definition)));
-        if (!List.of("is", "n", "rs", "tt").containsAll(parameters.keySet())) {
-            throw new IllegalArgumentException("The exponential AC diode supports only Is, N, Rs, and Tt.");
+        if (!List.of("is", "n", "rs", "tt", "cjo", "vj", "m", "iave", "vpk", "mfg", "type").containsAll(parameters.keySet())) {
+            throw new IllegalArgumentException("The exponential AC diode model has unsupported parameters.");
         }
         return new AcComponent.ExponentialDiode(name, parameters.getOrDefault("is", "1e-14"),
-                parameters.getOrDefault("n", "1"), parameters.getOrDefault("rs", "0"), parameters.getOrDefault("tt", "0"));
+                parameters.getOrDefault("n", "1"), parameters.getOrDefault("rs", "0"), parameters.getOrDefault("tt", "0"),
+                parameters.getOrDefault("cjo", "0"), parameters.getOrDefault("vj", "1"), parameters.getOrDefault("m", "0.5"));
     }
 
     private static Map<String, String> idealDiodeExpressions(String definition) {
