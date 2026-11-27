@@ -49,6 +49,23 @@ public class ControlCalculatorFactory {
         }
     }
 
+    /** Reports a TEMP or FLOW probe whose thermal reference is missing or that the core cannot run. */
+    public static final class ThermalProbeException extends IllegalArgumentException {
+        private static final long serialVersionUID = 1L;
+        private final String code;
+        private final String component;
+
+        private ThermalProbeException(String code, String component, String message) {
+            super("CONTROL block '" + component + "': " + message);
+            this.code = code;
+            this.component = component;
+        }
+
+        /** @return INVALID_THERMAL_PROBE for a missing reference, UNSUPPORTED_CONTROL_COMPONENT for an unsupported one */
+        public String code() { return code; }
+        public String component() { return component; }
+    }
+
     /** Reports a connected vector width that the selected calculator cannot execute. */
     public static final class InvalidSignalWidthException extends IllegalArgumentException {
         private static final long serialVersionUID = 1L;
@@ -71,6 +88,7 @@ public class ControlCalculatorFactory {
         private final ControlBlockMapping mapping;
         private final List<FromExternalCalculator> externalInputs;
         private final List<ToExternalCalculator> externalOutputs;
+        private final double[] groupPeriods;
 
         public BuildResult(ControlNetlist controlNetlist, ControlBlockMapping mapping) {
             this(controlNetlist, mapping, List.of(), List.of());
@@ -78,6 +96,13 @@ public class ControlCalculatorFactory {
 
         BuildResult(ControlNetlist controlNetlist, ControlBlockMapping mapping,
                 List<FromExternalCalculator> externalInputs, List<ToExternalCalculator> externalOutputs) {
+            this(controlNetlist, mapping, externalInputs, externalOutputs, null);
+        }
+
+        BuildResult(ControlNetlist controlNetlist, ControlBlockMapping mapping,
+                List<FromExternalCalculator> externalInputs, List<ToExternalCalculator> externalOutputs,
+                double[] groupPeriods) {
+            this.groupPeriods = groupPeriods == null ? null : groupPeriods.clone();
             this.controlNetlist = controlNetlist;
             this.mapping = mapping;
             this.externalInputs = List.copyOf(externalInputs);
@@ -88,6 +113,8 @@ public class ControlCalculatorFactory {
         public ControlBlockMapping getMapping() { return mapping; }
         List<FromExternalCalculator> externalInputs() { return externalInputs; }
         List<ToExternalCalculator> externalOutputs() { return externalOutputs; }
+        /** @return the sample period of each CONTROL group, global first, or null for the single global clock */
+        double[] groupPeriods() { return groupPeriods == null ? null : groupPeriods.clone(); }
     }
 
     /**
@@ -114,7 +141,7 @@ public class ControlCalculatorFactory {
      * @throws DependencyCycleException if instantaneous dependencies contain a cycle
      */
     public BuildResult build(List<CircuitModel.ComponentData> controlComponents, double timeStep) {
-        return build(controlComponents, timeStep, null, null);
+        return build(controlComponents, timeStep, null, null, null, null);
     }
 
     /**
@@ -136,12 +163,46 @@ public class ControlCalculatorFactory {
     }
 
     public BuildResult buildCircuit(CircuitModel model, double timeStep, CircuitNetlist electricalNetlist) {
+        return buildCircuit(model, timeStep, electricalNetlist, null);
+    }
+
+    /**
+     * Builds the CONTROL runtime with TEMP and FLOW probes resolved against the thermal netlist.
+     *
+     * @param thermalNetlist the thermal netlist of the circuit, or null when it has no thermal element
+     * @throws ThermalProbeException if a TEMP or FLOW block has no usable thermal reference
+     */
+    public BuildResult buildCircuit(CircuitModel model, double timeStep, CircuitNetlist electricalNetlist,
+            CircuitNetlist thermalNetlist) {
+        return buildCircuit(model, timeStep, electricalNetlist, thermalNetlist, null);
+    }
+
+    /**
+     * Builds the CONTROL runtime with blocks split into sample-clock groups by sheet path.
+     * The assignment is computed on the resolved model that the calculators wire, so a clone keeps its groups.
+     *
+     * @param timeStep the electrical step in seconds. Each group plans with the larger of its period and this step.
+     * @param spec the global period and the periods by sheet path, or null for one clock at the given step
+     * @throws IllegalArgumentException if a configured sheet path or period cannot execute
+     */
+    BuildResult buildCircuit(CircuitModel model, double timeStep, CircuitNetlist electricalNetlist,
+            CircuitNetlist thermalNetlist, ControlSubsystems.Spec spec) {
         var resolved = model == null ? null : CircuitConfiguration.resolveSavedControl(model);
-        return build(resolved == null ? null : resolved.getControlComponents(), timeStep, resolved, electricalNetlist);
+        return build(resolved == null ? null : resolved.getControlComponents(), timeStep, resolved, electricalNetlist,
+                thermalNetlist, spec);
     }
 
     private BuildResult build(List<CircuitModel.ComponentData> controlComponents, double timeStep, CircuitModel model,
-            CircuitNetlist electricalNetlist) {
+            CircuitNetlist electricalNetlist, CircuitNetlist thermalNetlist, ControlSubsystems.Spec spec) {
+        ControlSubsystems.Plan plan = null;
+        if (spec != null && spec.grouped()) {
+            if (model == null) throw new IllegalArgumentException("CONTROL subsystem periods need a circuit model.");
+            plan = ControlSubsystems.plan(model, spec);
+            if (!plan.issues().isEmpty()) {
+                var first = plan.issues().get(0);
+                throw new IllegalArgumentException(first.message() + " [" + first.parameterPath() + "]");
+            }
+        }
         if (controlComponents == null || controlComponents.isEmpty()) {
             var mapping = new ControlBlockMapping();
             addSourceMappings(model, null, Map.of(), mapping);
@@ -161,13 +222,14 @@ public class ControlCalculatorFactory {
         for (CircuitModel.ComponentData comp : controlComponents) {
             AbstractControlCalculatable calc = createCalculator(comp, model);
             if (calc != null) {
-                entries.add(new CalculatorEntry(comp, calc));
+                entries.add(new CalculatorEntry(comp, calc, plan == null ? 0 : ControlSubsystems.groupOf(plan, comp)));
             }
         }
 
+        double[] groupSteps = plan == null ? new double[]{timeStep} : plan.steps(timeStep);
         if (timeStep > 0 && Double.isFinite(timeStep)) {
             for (var entry : entries) {
-                if (entry.calculator instanceof DelayCalculator delay) delay.validateTimeStep(timeStep);
+                if (entry.calculator instanceof DelayCalculator delay) delay.validateTimeStep(groupSteps[entry.group]);
             }
         }
 
@@ -221,6 +283,14 @@ public class ControlCalculatorFactory {
         // Step 4: Build probe/gate/scope mappings
         for (CalculatorEntry entry : entries) {
             int type = entry.component.getType();
+            if (type == TEMP_TYPE) {
+                addTemperatureProbe(model, topology, thermalNetlist, entry, mapping);
+                continue;
+            }
+            if (type == FLOW_TYPE) {
+                addFlowProbe(model, thermalNetlist, entry, mapping);
+                continue;
+            }
             if (!ControlTypCore.isKnown(type)) continue;
 
             ControlTypCore controlType = ControlTypCore.fromTypeNumber(type);
@@ -260,11 +330,16 @@ public class ControlCalculatorFactory {
         }
 
         // Execute each signal producer before its consumers.
-        ControlNetlist netlist = ControlNetlist.fromOrderedCalculators(dependencyOrder(entries, timeStep, true));
-        netlist.setDependencyOrder((step, activatePending) -> dependencyOrder(entries, step, activatePending));
+        ControlNetlist netlist = ControlNetlist.fromOrderedCalculators(dependencyOrder(entries, groupSteps, true));
+        netlist.setDependencyOrder((steps, activatePending) -> dependencyOrder(entries, steps, activatePending));
+        if (plan != null) {
+            var assignment = new IdentityHashMap<AbstractControlCalculatable, Integer>();
+            for (var entry : entries) assignment.put(entry.calculator, entry.group);
+            netlist.configureGroups(assignment, plan.groups());
+        }
         var externalInputs = orderedExternal(entries, 23, FromExternalCalculator.class);
         var externalOutputs = orderedExternal(entries, 22, ToExternalCalculator.class);
-        return new BuildResult(netlist, mapping, externalInputs, externalOutputs);
+        return new BuildResult(netlist, mapping, externalInputs, externalOutputs, plan == null ? null : plan.periods());
     }
 
     private static <T extends AbstractControlCalculatable> List<T> orderedExternal(List<CalculatorEntry> entries,
@@ -276,7 +351,8 @@ public class ControlCalculatorFactory {
                 .map(entry -> calculatorType.cast(entry.calculator)).toList();
     }
 
-    private static List<AbstractControlCalculatable> dependencyOrder(List<CalculatorEntry> entries, double dt, boolean activatePending) {
+    private static List<AbstractControlCalculatable> dependencyOrder(List<CalculatorEntry> entries, double[] steps,
+            boolean activatePending) {
         Map<double[], Integer> producers = new IdentityHashMap<>();
         List<Set<Integer>> consumers = new ArrayList<>();
         int[] dependencies = new int[entries.size()];
@@ -291,7 +367,7 @@ public class ControlCalculatorFactory {
             if (entry.calculator instanceof PT2Calculator) continue;
             if (entry.calculator instanceof DelayCalculator delay) {
                 double delayTime = activatePending ? delay.getConfiguredDelayTime() : delay.getDelayTime();
-                if (delayTime > 0 && dt <= delayTime) continue;
+                if (delayTime > 0 && steps[entry.group] <= delayTime) continue;
             }
             for (double[] input : entries.get(index).calculator._inputSignal) {
                 Integer producer = producers.get(input);
@@ -372,6 +448,112 @@ public class ControlCalculatorFactory {
             mapping.addSourceMapping(producer == null ? null : producer.calculator,
                     producer == null ? 0 : producer.portIndex, source.getName());
         }
+        for (CircuitModel.ComponentData source : model.getThermalComponents()) {
+            double[] numeric = source.getNumericParameters();
+            boolean signalMode = numeric.length > 0 && (numeric[0] == 400 || numeric[0] == 2);
+            if (!signalMode || (source.getType() != CircuitTypCore.TH_FLOW.getTypeNumber()
+                    && source.getType() != CircuitTypCore.TH_TEMP.getTypeNumber())) continue;
+            String[] names = source.getParameterStrings();
+            String signal = names.length > 0 && names[0] != null ? names[0].trim() : "";
+            long sheet = source.getSavedBlock() == null ? 0 : source.getSavedBlock().parentSheetIdentifier();
+            var group = topology == null || signal.isEmpty() ? null : topology.labelGroup("CONTROL", sheet, signal);
+            SignalPort producer = group == null ? null : outputMap.get(group.id());
+            mapping.addThermalSourceMapping(producer == null ? null : producer.calculator,
+                    producer == null ? 0 : producer.portIndex, source.getName());
+        }
+    }
+
+    private static final int TEMP_TYPE = 16;
+    private static final int FLOW_TYPE = 17;
+
+    private static void addTemperatureProbe(CircuitModel model, CircuitTopology topology, CircuitNetlist thermal,
+            CalculatorEntry entry, ControlBlockMapping mapping) {
+        var component = entry.component;
+        String name = component.getName();
+        String[] labels = component.getParameterStrings();
+        String first = labels.length > 0 ? labels[0] : "";
+        String second = labels.length > 1 ? labels[1] : "";
+        if (model == null || thermal == null || thermal.getElementCount() == 0) {
+            throw new ThermalProbeException("INVALID_THERMAL_PROBE", name, "The circuit has no thermal network to measure.");
+        }
+        long sheet = component.getSavedBlock() == null ? 0 : component.getSavedBlock().parentSheetIdentifier();
+        if (!first.isEmpty() && !second.isEmpty()) {
+            mapping.addThermalTemperatureProbe(entry.calculator, thermalNode(model, topology, thermal, name, sheet, first),
+                    thermalNode(model, topology, thermal, name, sheet, second), name);
+            return;
+        }
+        var coupled = coupledThermal(model, component);
+        int index = coupled == null || coupled.getType() == CircuitTypCore.TH_PvCHIP.getTypeNumber() ? -1
+                : thermal.getElementIndexByName(coupled.getName());
+        if (index < 0) {
+            throw new ThermalProbeException(coupled != null && coupled.getType() == CircuitTypCore.TH_PvCHIP.getTypeNumber()
+                    ? "UNSUPPORTED_CONTROL_COMPONENT" : "INVALID_THERMAL_PROBE", name,
+                    "The temperature probe has no supported thermal reference.");
+        }
+        mapping.addThermalTemperatureProbe(entry.calculator, thermal.getNodeX(index), thermal.getNodeY(index), name);
+    }
+
+    private static void addFlowProbe(CircuitModel model, CircuitNetlist thermal, CalculatorEntry entry,
+            ControlBlockMapping mapping) {
+        var component = entry.component;
+        String name = component.getName();
+        var coupled = model == null ? null : coupledThermal(model, component);
+        if (thermal == null || coupled == null || thermal.getElementIndexByName(coupled.getName()) < 0) {
+            throw new ThermalProbeException("INVALID_THERMAL_PROBE", name, "The heat-flow probe has no thermal reference.");
+        }
+        int type = coupled.getType();
+        if (type == CircuitTypCore.TH_PvCHIP.getTypeNumber()) {
+            String saved = component.getImportTokens().get("losscomp");
+            mapping.addThermalFlowProbe(entry.calculator, coupled.getName(), true,
+                    saved == null ? gecko.core.circuit.losscalculation.LossComponent.TOTAL
+                            : gecko.core.circuit.losscalculation.LossComponent.getEnumFromSaveString(saved.trim()), name);
+        } else if (type == CircuitTypCore.TH_FLOW.getTypeNumber() || type == CircuitTypCore.TH_RTH.getTypeNumber()
+                || type == CircuitTypCore.TH_CTH.getTypeNumber() || type == CircuitTypCore.TH_AMBIENT.getTypeNumber()) {
+            mapping.addThermalFlowProbe(entry.calculator, coupled.getName(), false, null, name);
+        } else {
+            throw new ThermalProbeException("UNSUPPORTED_CONTROL_COMPONENT", name,
+                    "The core cannot measure the heat flow of thermal component type " + type + ".");
+        }
+    }
+
+    private static CircuitModel.ComponentData coupledThermal(CircuitModel model, CircuitModel.ComponentData control) {
+        String reference = control.getImportTokens().get("coupledReferenceID[]");
+        if (reference != null && !reference.isBlank()) {
+            try {
+                long identifier = Long.parseLong(reference.trim().split("\\s+")[0]);
+                for (var thermal : model.getThermalComponents()) {
+                    if (thermal.getParameters().get("uniqueObjectIdentifier") instanceof Number number
+                            && number.longValue() == identifier) return thermal;
+                }
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+            return null;
+        }
+        String[] names = control.getParameterStrings();
+        if (names.length > 0) {
+            for (var thermal : model.getThermalComponents()) if (names[0].equals(thermal.getName())) return thermal;
+        }
+        return null;
+    }
+
+    /** The thermal netlist node of a label on the probe's sheet, like the legacy findIndexFromLabelInSheet. */
+    private static int thermalNode(CircuitModel model, CircuitTopology topology, CircuitNetlist thermal, String probe,
+            long sheet, String label) {
+        var group = topology.labelGroup("THERMAL", sheet, label);
+        if (group != null) {
+            for (var component : model.getThermalComponents()) {
+                for (var side : CircuitTopology.Side.values()) {
+                    var terminal = topology.group(component, side, 0);
+                    if (terminal == null || terminal.id() != group.id()) continue;
+                    String element = component.getType() == CircuitTypCore.TH_PvCHIP.getTypeNumber()
+                            ? component.getName() + NetlistBuilder.LOSS_SOURCE_RESISTOR_SUFFIX : component.getName();
+                    int index = thermal.getElementIndexByName(element);
+                    if (index >= 0) return side == CircuitTopology.Side.INPUT ? thermal.getNodeX(index) : thermal.getNodeY(index);
+                }
+            }
+        }
+        throw new ThermalProbeException("INVALID_THERMAL_PROBE", probe, "The thermal label '" + label + "' is unknown.");
     }
 
     private static int resolveProbeNode(CircuitModel model, CircuitNetlist electricalNetlist,
@@ -397,10 +579,12 @@ public class ControlCalculatorFactory {
     private static class CalculatorEntry {
         final CircuitModel.ComponentData component;
         final AbstractControlCalculatable calculator;
+        final int group;
 
-        CalculatorEntry(CircuitModel.ComponentData component, AbstractControlCalculatable calculator) {
+        CalculatorEntry(CircuitModel.ComponentData component, AbstractControlCalculatable calculator, int group) {
             this.component = component;
             this.calculator = calculator;
+            this.group = group;
         }
     }
 

@@ -116,3 +116,15 @@ The connection from one ordered block pin on a parent sheet to its formal port o
 
 **Port current**:
 The signed current through one boundary connection. Positive current enters the child sheet through its formal port.
+
+**Thermal network**:
+The THERMAL domain of a circuit. Its node potentials are temperatures in °C and its branch currents are heat flows in W.
+_Avoid_: Thermal circuit, heat model
+
+**Loss source**:
+A heat-flow source in the thermal network whose value is the power loss of one coupled electrical component.
+_Avoid_: Pv chip, heat source
+
+**CONTROL subsystem**:
+The CONTROL blocks of one sheet path and of its nested sheets that have no sample period of their own. Blocks outside every configured subsystem use the global sample period.
+_Avoid_: Task, rate group, sheet

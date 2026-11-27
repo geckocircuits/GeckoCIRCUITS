@@ -32,7 +32,22 @@ final class PeriodicSteadyStateValidation {
      */
     static List<SimulationTiming.SettingIssue> circuitIssues(double period, CircuitNetlist netlist,
             List<AbstractControlCalculatable> calculators) {
+        return circuitIssues(period, netlist, calculators, false);
+    }
+
+    /**
+     * As above, and rejects a circuit with a THERMAL network, because this search has no thermal state or loss history
+     * (ADR-0023).
+     *
+     * @param thermal true when the circuit has an active thermal element
+     */
+    static List<SimulationTiming.SettingIssue> circuitIssues(double period, CircuitNetlist netlist,
+            List<AbstractControlCalculatable> calculators, boolean thermal) {
         var issues = new ArrayList<SimulationTiming.SettingIssue>();
+        if (thermal) {
+            issues.add(new SimulationTiming.SettingIssue("periodicSteadyState",
+                    "The periodic steady-state search does not support a THERMAL network, which has thermal state and loss histories."));
+        }
         if (netlist != null) {
             for (int element = 0; element < netlist.getElementCount(); element++) {
                 CircuitTypCore type = netlist.getType(element);

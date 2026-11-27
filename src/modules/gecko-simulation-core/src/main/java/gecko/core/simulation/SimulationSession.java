@@ -63,6 +63,7 @@ public final class SimulationSession implements AutoCloseable {
     private static final int MAX_OBSERVATION_SAMPLES = 10000;
     private final CircuitNetlist netlist;
     private final ElectricalTimeStep electrical;
+    private final ThermalNetwork thermal;
     private final boolean zeroCrossing;
     private final ControlRuntime control;
     private final ExecutionOptions options;
@@ -76,6 +77,9 @@ public final class SimulationSession implements AutoCloseable {
     private final ThreadLocal<Boolean> callbackDelivery = new ThreadLocal<>();
     private volatile Status status;
     private int recordedSamples;
+    // Compensated grid time for sample scheduling. Electrical and recorded times keep their compatibility clock.
+    private double samplingTime;
+    private double samplingTimeError;
     private Phase phase = Phase.MAIN;
     private int segmentFirstStep;
     private int segmentFirstRecorded;
@@ -128,13 +132,15 @@ public final class SimulationSession implements AutoCloseable {
         ControlRuntime constructedControl = suppliedControl;
         try {
             CircuitNetlist constructedNetlist = NetlistBuilder.buildFromCircuitModel(model);
+            ThermalNetwork constructedThermal = ThermalNetwork.build(model, constructedNetlist, settings.getSolverType());
             if (constructedControl == null) {
                 constructedControl = ControlRuntime.fromDeferred(model, dt, constructedNetlist,
-                        settings.getControlSamplePeriod());
+                        settings.getControlSamplePeriod(), constructedThermal == null ? null : constructedThermal.netlist(),
+                        settings.getControlSubsystemPeriods());
             }
             if (periodic) {
                 var issues = PeriodicSteadyStateValidation.circuitIssues(search.period(), constructedNetlist,
-                        constructedControl.calculators());
+                        constructedControl.calculators(), constructedThermal != null);
                 if (!issues.isEmpty()) {
                     throw new IllegalArgumentException(issues.stream()
                             .map(issue -> issue.parameterPath() + ": " + issue.message())
@@ -152,6 +158,7 @@ public final class SimulationSession implements AutoCloseable {
             Status constructedStatus = statusFor(State.READY, 0, 0, 0, duration, dt);
             boolean hasElectrical = constructedNetlist != null && constructedNetlist.getElementCount() > 0;
             if (hasElectrical) constructedControl.seedSources(constructedNetlist);
+            if (constructedThermal != null) constructedControl.seedThermalSources(constructedThermal);
             if (hasElectrical && dcStart) {
                 // The DC solve needs the gates the first step will use. Initializing CONTROL here is the same
                 // call the first step makes, so the default order is unchanged when the feature is off.
@@ -163,6 +170,7 @@ public final class SimulationSession implements AutoCloseable {
                             new SolverFeatures(0, settings.isZeroCrossing(), dcStart, null,
                                     settings.getAdaptiveStep(), settings.getSparseSolver()), uic) : null;
             netlist = constructedNetlist;
+            thermal = constructedThermal;
             control = constructedControl;
             signalNames = constructedSignalNames;
             recording = constructedRecording;
@@ -214,6 +222,9 @@ public final class SimulationSession implements AutoCloseable {
 
     Sample step(HeadlessSimulationEngine.StepTraceListener listener) { return step(listener, false); }
 
+    /** @return the number of thermal solves so far, which is one per committed grid step, or 0 without a thermal network */
+    int thermalSolves() { return thermal == null ? 0 : thermal.committedSteps(); }
+
     private Sample step(HeadlessSimulationEngine.StepTraceListener listener, boolean pauseAfterStep) {
         Trace[] trace = new Trace[1];
         Sample sample;
@@ -252,7 +263,8 @@ public final class SimulationSession implements AutoCloseable {
                     else if (zeroCrossing) electrical.advanceInterval(before.stepWidth(), time, capture);
                     else electrical.advance(before.stepWidth(), time, capture);
                 }
-                control.advanceAfterElectricalStep(netlist, time);
+                if (thermal != null) thermal.advance(before.stepWidth(), time, netlist);
+                control.advanceAfterElectricalStep(netlist, thermal, time, samplingTime);
                 float[] values = new float[signalNames.length];
                 if (control.hasScope()) values = control.sampleScope();
                 else if (electrical != null) electrical.copyNodeVoltagesTo(values);
@@ -270,7 +282,7 @@ public final class SimulationSession implements AutoCloseable {
                 if (searching) {
                     monitor.begin();
                     if (electrical != null) electrical.exportPeriodicState(monitor.sink());
-                    control.exportPeriodicState(netlist, time, monitor.sink());
+                    control.exportPeriodicState(netlist, samplingTime, monitor.sink());
                     var outcome = monitor.commit(before.committedSteps() + 1, time);
                     steadyState = monitor.report();
                     if (outcome == PeriodicStateMonitor.Outcome.CONVERGED) {
@@ -288,6 +300,10 @@ public final class SimulationSession implements AutoCloseable {
                 initialObservationPending = false;
                 status = statusFor(nextState, before.committedSteps() + (initialObservation ? 0 : 1), time, nextTime,
                         endTime, before.stepWidth());
+                double compensatedStep = before.stepWidth() - samplingTimeError;
+                double nextSamplingTime = samplingTime + compensatedStep;
+                samplingTimeError = (nextSamplingTime - samplingTime) - compensatedStep;
+                samplingTime = nextSamplingTime;
                 recording.setContainerStatus(nextState == State.COMPLETED ? ContainerStatus.FINISHED
                         : nextState == State.RUNNING ? ContainerStatus.RUNNING : ContainerStatus.PAUSED);
                 if (pauseAfterStep || nextState == State.COMPLETED) control.tearDownOnPause();

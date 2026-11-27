@@ -110,6 +110,8 @@ public record ControlBlockDescriptor(int type, int inputPorts, int outputPorts, 
                 : new SubtractionMoreParameter(data.getTerminalXLabels().length));
         add(result, 14, -1, 1, data -> arithmetic(data.getTerminalXLabels().length, true));
         simple(result, 15, DivCalculator::new);
+        simple(result, 16, () -> new NothingToDoCalculator(0, 1));
+        simple(result, 17, () -> new NothingToDoCalculator(0, 1));
         simple(result, 18, NotCalculator::new);
         add(result, 19, -1, 1, data -> data.getTerminalXLabels().length == 2 ? new AndTwoPortCalculator()
                 : new AndMultiInputCalculator(data.getTerminalXLabels().length));
