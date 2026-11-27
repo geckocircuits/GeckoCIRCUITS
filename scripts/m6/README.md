@@ -92,3 +92,71 @@ The JSON report records the input hashes, required interval, startup coverage, a
 Exit codes are 0 for a metric pass, 1 for a metric failure, and 2 for invalid input.
 A metric pass supplies evidence for review. The command has no qualification ledger access.
 The AC numerical policy remains the existing 3% comparison.
+
+### Recorded-window policy v2
+
+Add `--policy transient-windowed-v2` to select the recorded-window policy.
+Supply the original declared recording start and stop in the comparison manifest.
+The start can be greater than zero. Both traces must still cover both declared bounds.
+The report marks whether the comparison includes startup and whether each input covers time zero.
+A late recording covers the whole declared recording only.
+
+The `Ts` window must fit. The second window has duration `min(10 Ts, stop - start)`.
+The report shows both requested and actual durations.
+The metric limits remain the same. Without `--policy`, the CLI continues to use v1.
+
+## Run a batch of pinned comparisons
+
+Use a batch manifest to compare original analyses with pinned input files and evidence.
+Paths in pins are relative to the batch manifest unless they are absolute.
+Each pin has `path` and a lowercase `sha256`.
+Record the batch manifest SHA-256 before execution.
+
+The manifest has `schema` set to `m6-metric-batch-v1` and a `cases` array.
+Each case has these fields:
+
+| Field | Value |
+|---|---|
+| `id` | A unique lowercase ID with letters, digits, hyphens, or underscores |
+| `archive_path` | The original relative schematic path with forward slashes |
+| `source_sha256` | The original schematic digest |
+| `analysis` | An object with the zero-based directive `index` and original `directive` |
+| `policy` | The explicit comparison policy ID |
+| `inputs` | Pins named `source`, `reference`, `candidate`, and `manifest` |
+| `receipts` | Pins named `source`, `runtime`, `native`, and `physics` |
+
+Each stage receipt is a JSON object. It gives the `stage`, `status` of `PASS`, and `policy`.
+Copy the case ID, archive path, source digest, and analysis into the receipt's `case` object.
+Set its `inputs` object to the four named input digests.
+Set `prior_receipts` to the digests of all earlier stages, starting with an empty object for `source`.
+Set `artifacts` to the supporting file pins.
+These receipt envelopes bind the supporting evidence to the case. Independent review must still validate the evidence.
+
+```powershell
+& $auditPython -B scripts/m6/verification_batch.py `
+  --manifest 'D:\codex-evidence\case-inputs\batch.json' `
+  --manifest-sha256 $batchManifestSha256 `
+  --output-dir 'D:\codex-evidence\case-results-new'
+```
+
+The command writes one exclusive report per case and an audit index with all report digests.
+A checksum file identifies the audit index. The command preserves partial reports on a global failure.
+A case with invalid inputs or failed metrics does not stop the subsequent cases.
+Exit code 1 indicates at least one case without a metric pass. Exit code 2 indicates a batch input or output error.
+No simulator starts from the manifest. Metric results and bound receipts require independent review before qualification.
+
+### AC comparisons in a batch
+
+Use `ac-strict-v1` for an AC case.
+The metric manifest has `analysis` set to `.ac`, the declared `frequencies_hz`, and the required `signals`.
+Each signal has a `name`, a `unit`, and an optional positive reference `floor`.
+The default floors are 1 nV for V and 1 pA for A.
+
+Use one `frequency` column and two signed columns per signal.
+For example, use `V(out) [V] real` and `V(out) [V] imag`.
+Both exports must contain the exact declared frequency grid and signal set.
+Use enough digits to round-trip each frequency to the declared numeric value.
+The limit at each frequency is 3% of the larger of the reference magnitude and its floor.
+The comparator uses the magnitude of the signed complex difference.
+
+A case with an unsupported policy receives an explicit `unsupported` result.
