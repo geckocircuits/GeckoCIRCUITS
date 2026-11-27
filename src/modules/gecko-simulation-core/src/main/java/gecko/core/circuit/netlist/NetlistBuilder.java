@@ -267,7 +267,7 @@ public class NetlistBuilder {
             }
             if (type == CircuitTypCore.TH_PvCHIP.getTypeNumber()) {
                 components.add(expansion(component, CircuitTypCore.TH_FLOW, component.getName(),
-                        CircuitSourceType.QUELLE_SIGNALGESTEUERT, 0));
+                        CircuitSourceType.QUELLE_SIGNALGESTEUERT.getOldGeckoID(), 0));
                 components.add(expansion(component, CircuitTypCore.TH_RTH,
                         component.getName() + LOSS_SOURCE_RESISTOR_SUFFIX, LOSS_SOURCE_PARALLEL_RESISTANCE, 0));
                 groups.add(new CircuitTopology.Group[]{input, output});
