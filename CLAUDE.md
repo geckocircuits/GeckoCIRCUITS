@@ -140,3 +140,4 @@ Never run `python -m venv`, `uv venv`, or `virtualenv`.
 | 2026-11-24 | [ADR-0024: Run CONTROL subsystems on their own sample clocks](docs/adr/0024-control-subsystem-sample-clocks.md) |
 | 2026-11-27 | [ADR-0029: Shockley diode](docs/adr/0029-shockley-diode.md) |
 | 2026-11-27 | [ADR-0030: Native transistor laws](docs/adr/0030-native-transistor-laws.md) |
+| 2026-11-27 | [ADR-0031: Compare the authored recording with pinned evidence](docs/adr/0031-authored-recording-verification.md) |
