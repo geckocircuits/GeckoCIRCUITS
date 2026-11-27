@@ -41,7 +41,8 @@ public final class AcExecutionPlan {
         }
     }
 
-    private record BipolarDevice(int[] external, int[] intrinsic, double[] resistance, BipolarJunction model) {
+    private record BipolarDevice(int[] external, int[] intrinsic, double[] resistance, BipolarJunction model,
+                                 List<AcResult.SourceMember> terminals) {
         BipolarJunction.Point at(Complex[] bias) {
             return model.at(voltage(bias, 2), voltage(bias, 0));
         }
@@ -66,21 +67,42 @@ public final class AcExecutionPlan {
             int collector = intrinsic[0], base = intrinsic[1], emitter = intrinsic[2];
             for (int i = 0; i < 3; i++) {
                 int row = intrinsic[i];
-                var be = new Complex(point.dBe()[i], 0);
-                var bc = new Complex(point.dBc()[i], 0);
-                if (i == 0) bc = bc.subtract(frequency.scale(point.cBc()));
-                if (i == 1) {
-                    be = be.add(frequency.scale(point.cBe()));
-                    bc = bc.add(frequency.scale(point.cBc() + point.cBeBc()));
-                }
-                if (i == 2) {
-                    be = be.subtract(frequency.scale(point.cBe()));
-                    bc = bc.subtract(frequency.scale(point.cBeBc()));
-                }
+                var slopes = slopes(point, frequency, i);
+                var be = slopes.be();
+                var bc = slopes.bc();
                 add(matrix, row, base, be.add(bc));
                 add(matrix, row, emitter, be.scale(-1));
                 add(matrix, row, collector, bc.scale(-1));
             }
+        }
+
+        private record Slopes(Complex be, Complex bc) { }
+
+        private static Slopes slopes(BipolarJunction.Point point, Complex frequency, int i) {
+            var be = new Complex(point.dBe()[i], 0);
+            var bc = new Complex(point.dBc()[i], 0);
+            if (i == 0) bc = bc.subtract(frequency.scale(point.cBc()));
+            if (i == 1) {
+                be = be.add(frequency.scale(point.cBe()));
+                bc = bc.add(frequency.scale(point.cBc() + point.cBeBc()));
+            }
+            if (i == 2) {
+                be = be.subtract(frequency.scale(point.cBe()));
+                bc = bc.subtract(frequency.scale(point.cBeBc()));
+            }
+            return new Slopes(be, bc);
+        }
+
+        Complex terminalCurrent(BipolarJunction.Point point, Complex frequency, Complex[] solved, int terminal) {
+            if (resistance[terminal] > 0) {
+                return AcExecutionPlan.at(solved, external[terminal]).subtract(AcExecutionPlan.at(solved, intrinsic[terminal]))
+                        .scale(1 / resistance[terminal]);
+            }
+            var base = AcExecutionPlan.at(solved, intrinsic[1]);
+            var be = base.subtract(AcExecutionPlan.at(solved, intrinsic[2]));
+            var bc = base.subtract(AcExecutionPlan.at(solved, intrinsic[0]));
+            var slope = slopes(point, frequency, terminal);
+            return slope.be().multiply(be).add(slope.bc().multiply(bc));
         }
 
         void stampBias(Complex[][] matrix, Complex[] rhs, Complex[] bias) {
@@ -250,14 +272,14 @@ public final class AcExecutionPlan {
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
                 case AcComponent.ExponentialDiode law -> {
-                    if (type != SpicePorts.DIODE || law.transientLaw() || hierarchical || model.getAcProvenance() != null
+                    if (type != SpicePorts.DIODE || law.transientLaw() || model.getAcProvenance() != null
                             && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);
                     exponentialDiodes.put(prepared.size(), law.evaluate(parameters));
                     prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
                 case AcComponent.Bipolar law -> {
-                    if (type != SpicePorts.BJT || hierarchical || model.getAcProvenance() != null
+                    if (type != SpicePorts.BJT || model.getAcProvenance() != null
                             && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);
                     var device = BipolarJunction.from(law, parameters);
                     double[] resistance = device.seriesResistance();
@@ -265,7 +287,8 @@ public final class AcExecutionPlan {
                     for (int i = 0; i < internal.length; i++) {
                         if (resistance[i] > 0) internal[i] = nextCurrent++;
                     }
-                    bipolars.add(new BipolarDevice(ports, internal, resistance, device));
+                    var members = traceBindings.sourceMembers(Arrays.asList(terminalIds));
+                    bipolars.add(new BipolarDevice(ports, internal, resistance, device, members));
                     continue;
                 }
                 case AcComponent.Controlled law -> {
@@ -647,6 +670,12 @@ public final class AcExecutionPlan {
         checkCancellation();
         var voltage = samples(nodes.size());
         var current = samples(branches.size());
+        var terminalCurrent = new LinkedHashMap<AcResult.SourceMember, List<Complex>>();
+        if (hierarchical) {
+            for (var bipolar : bipolarStamps) {
+                for (var terminal : bipolar.device.terminals) terminalCurrent.put(terminal, new ArrayList<>());
+            }
+        }
         var residuals = new ArrayList<Double>();
         for (double frequency : frequencies) {
             checkCancellation();
@@ -668,6 +697,15 @@ public final class AcExecutionPlan {
                     Complex value = branchCurrent(x, s, branch);
                     checkFinite(value);
                     current.get(i).add(value);
+                }
+                if (hierarchical) {
+                    for (var bipolar : bipolarStamps) {
+                        for (int terminal = 0; terminal < 3; terminal++) {
+                            var value = bipolar.device.terminalCurrent(bipolar.point, s, x, terminal);
+                            checkFinite(value);
+                            terminalCurrent.get(bipolar.device.terminals.get(terminal)).add(value);
+                        }
+                    }
                 }
             } catch (IllegalArgumentException error) {
                 throw new IllegalArgumentException("AC at " + frequency + " Hz: " + error.getMessage(), error);
@@ -694,7 +732,7 @@ public final class AcExecutionPlan {
                     branches.get(acquiredIndex).instance));
         }
         return new AcResult(Arrays.stream(frequencies).boxed().toList(), voltages, currents, residuals, size,
-                hierarchical ? traceBindings.result(current, frequencies.length) : null);
+                hierarchical ? traceBindings.result(current, terminalCurrent, frequencies.length) : null);
     }
 
     private static void checkCancellation() {
