@@ -4,6 +4,9 @@ import gecko.core.allg.AdaptiveStepSettings;
 import gecko.core.allg.SparseSolverSettings;
 import gecko.core.allg.PeriodicSteadyStateSettings;
 import gecko.core.allg.SolverSettingsCore;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Opt-in solver features that circuit files do not describe. Each feature is off by default.
@@ -24,11 +27,26 @@ import gecko.core.allg.SolverSettingsCore;
  * @param adaptiveStep adapts the electrical sub-step between the fixed grid points. Null is off. It turns on
  *        zero-crossing location. CONTROL and recordings stay on the grid.
  * @param sparseSolver selects the sparse LU for the electrical system. Null keeps the dense LU.
+ * @param controlSubsystemPeriods sample period in seconds by CONTROL subsystem sheet path, with each segment an
+ *        occurrence instance or a saved sheet name and segments joined by "/". Blocks outside every named sheet keep
+ *        {@code controlSamplePeriod}. Null or empty keeps the single clock. The record keeps a detached sorted copy.
  */
 public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint,
         PeriodicSteadyStateSettings periodicSteadyState, AdaptiveStepSettings adaptiveStep,
-        SparseSolverSettings sparseSolver) {
+        SparseSolverSettings sparseSolver, Map<String, Double> controlSubsystemPeriods) {
     private static final SolverFeatures NONE = new SolverFeatures(0, false, false, null, null, null);
+
+    public SolverFeatures {
+        controlSubsystemPeriods = controlSubsystemPeriods == null || controlSubsystemPeriods.isEmpty() ? Map.of()
+                : Collections.unmodifiableMap(new TreeMap<>(controlSubsystemPeriods));
+    }
+
+    /** Every feature except the per-subsystem CONTROL periods. */
+    public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint,
+            PeriodicSteadyStateSettings periodicSteadyState, AdaptiveStepSettings adaptiveStep,
+            SparseSolverSettings sparseSolver) {
+        this(controlSamplePeriod, zeroCrossing, dcOperatingPoint, periodicSteadyState, adaptiveStep, sparseSolver, null);
+    }
 
     /** Every feature except the sparse solver. */
     public SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, boolean dcOperatingPoint,
@@ -56,13 +74,14 @@ public record SolverFeatures(double controlSamplePeriod, boolean zeroCrossing, b
     /** @return every feature off */
     public static SolverFeatures none() { return NONE; }
 
-    /** @return true when every value can execute */
+    /** @return true when the global sample period can execute. Subsystem periods are checked against the circuit. */
     boolean valid() { return Double.isFinite(controlSamplePeriod) && controlSamplePeriod >= 0; }
 
     /** Writes the feature values into execution settings. */
     SolverSettingsCore applyTo(SolverSettingsCore settings) {
         return settings.withControlSamplePeriod(controlSamplePeriod).withZeroCrossing(zeroCrossing)
                 .withDcOperatingPoint(dcOperatingPoint).withPeriodicSteadyState(periodicSteadyState)
-                .withAdaptiveStep(adaptiveStep).withSparseSolver(sparseSolver);
+                .withAdaptiveStep(adaptiveStep).withSparseSolver(sparseSolver)
+                .withControlSubsystemPeriods(controlSubsystemPeriods);
     }
 }

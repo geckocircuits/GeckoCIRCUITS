@@ -66,7 +66,8 @@ public final class SimulationConfig {
                 durationExplicit ? solverSettings.getSimulationDuration() : null,
                 new SolverFeatures(solverSettings.getControlSamplePeriod(), solverSettings.isZeroCrossing(),
                         solverSettings.isDcOperatingPoint(), solverSettings.getPeriodicSteadyState(),
-                        solverSettings.getAdaptiveStep(), solverSettings.getSparseSolver()));
+                        solverSettings.getAdaptiveStep(), solverSettings.getSparseSolver(),
+                        solverSettings.getControlSubsystemPeriods()));
     }
     /** Uses file defaults only for settings the caller did not supply. */
     SolverSettingsCore resolveSolverSettings(CircuitModel model) {
@@ -198,6 +199,22 @@ public final class SimulationConfig {
          */
         public Builder controlSamplePeriod(double period) {
             this.solverSettings.withControlSamplePeriod(period);
+            return this;
+        }
+
+        /**
+         * Gives one CONTROL subsystem its own sample period. The name is a sheet path: occurrence instances and
+         * saved sheet names joined by "/", compared without regard to case. Blocks outside every named subsystem
+         * keep the global period. A later call with the same name replaces the period.
+         *
+         * @param sheetPath the subsystem sheet path
+         * @param period sample period in seconds, finite and not negative
+         * @return this builder
+         */
+        public Builder controlSubsystemPeriod(String sheetPath, double period) {
+            var periods = new java.util.TreeMap<>(this.solverSettings.getControlSubsystemPeriods());
+            periods.put(java.util.Objects.requireNonNull(sheetPath, "A sheet path is required."), period);
+            this.solverSettings.withControlSubsystemPeriods(periods);
             return this;
         }
 

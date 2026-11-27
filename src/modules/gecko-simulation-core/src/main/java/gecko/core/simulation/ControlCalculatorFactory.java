@@ -88,6 +88,7 @@ public class ControlCalculatorFactory {
         private final ControlBlockMapping mapping;
         private final List<FromExternalCalculator> externalInputs;
         private final List<ToExternalCalculator> externalOutputs;
+        private final double[] groupPeriods;
 
         public BuildResult(ControlNetlist controlNetlist, ControlBlockMapping mapping) {
             this(controlNetlist, mapping, List.of(), List.of());
@@ -95,6 +96,13 @@ public class ControlCalculatorFactory {
 
         BuildResult(ControlNetlist controlNetlist, ControlBlockMapping mapping,
                 List<FromExternalCalculator> externalInputs, List<ToExternalCalculator> externalOutputs) {
+            this(controlNetlist, mapping, externalInputs, externalOutputs, null);
+        }
+
+        BuildResult(ControlNetlist controlNetlist, ControlBlockMapping mapping,
+                List<FromExternalCalculator> externalInputs, List<ToExternalCalculator> externalOutputs,
+                double[] groupPeriods) {
+            this.groupPeriods = groupPeriods == null ? null : groupPeriods.clone();
             this.controlNetlist = controlNetlist;
             this.mapping = mapping;
             this.externalInputs = List.copyOf(externalInputs);
@@ -105,6 +113,8 @@ public class ControlCalculatorFactory {
         public ControlBlockMapping getMapping() { return mapping; }
         List<FromExternalCalculator> externalInputs() { return externalInputs; }
         List<ToExternalCalculator> externalOutputs() { return externalOutputs; }
+        /** @return the sample period of each CONTROL group, global first, or null for the single global clock */
+        double[] groupPeriods() { return groupPeriods == null ? null : groupPeriods.clone(); }
     }
 
     /**
@@ -131,7 +141,7 @@ public class ControlCalculatorFactory {
      * @throws DependencyCycleException if instantaneous dependencies contain a cycle
      */
     public BuildResult build(List<CircuitModel.ComponentData> controlComponents, double timeStep) {
-        return build(controlComponents, timeStep, null, null, null);
+        return build(controlComponents, timeStep, null, null, null, null);
     }
 
     /**
@@ -164,13 +174,35 @@ public class ControlCalculatorFactory {
      */
     public BuildResult buildCircuit(CircuitModel model, double timeStep, CircuitNetlist electricalNetlist,
             CircuitNetlist thermalNetlist) {
+        return buildCircuit(model, timeStep, electricalNetlist, thermalNetlist, null);
+    }
+
+    /**
+     * Builds the CONTROL runtime with blocks split into sample-clock groups by sheet path.
+     * The assignment is computed on the resolved model that the calculators wire, so a clone keeps its groups.
+     *
+     * @param timeStep the electrical step in seconds. Each group plans with the larger of its period and this step.
+     * @param spec the global period and the periods by sheet path, or null for one clock at the given step
+     * @throws IllegalArgumentException if a configured sheet path or period cannot execute
+     */
+    BuildResult buildCircuit(CircuitModel model, double timeStep, CircuitNetlist electricalNetlist,
+            CircuitNetlist thermalNetlist, ControlSubsystems.Spec spec) {
         var resolved = model == null ? null : CircuitConfiguration.resolveSavedControl(model);
         return build(resolved == null ? null : resolved.getControlComponents(), timeStep, resolved, electricalNetlist,
-                thermalNetlist);
+                thermalNetlist, spec);
     }
 
     private BuildResult build(List<CircuitModel.ComponentData> controlComponents, double timeStep, CircuitModel model,
-            CircuitNetlist electricalNetlist, CircuitNetlist thermalNetlist) {
+            CircuitNetlist electricalNetlist, CircuitNetlist thermalNetlist, ControlSubsystems.Spec spec) {
+        ControlSubsystems.Plan plan = null;
+        if (spec != null && spec.grouped()) {
+            if (model == null) throw new IllegalArgumentException("CONTROL subsystem periods need a circuit model.");
+            plan = ControlSubsystems.plan(model, spec);
+            if (!plan.issues().isEmpty()) {
+                var first = plan.issues().get(0);
+                throw new IllegalArgumentException(first.message() + " [" + first.parameterPath() + "]");
+            }
+        }
         if (controlComponents == null || controlComponents.isEmpty()) {
             var mapping = new ControlBlockMapping();
             addSourceMappings(model, null, Map.of(), mapping);
@@ -190,13 +222,14 @@ public class ControlCalculatorFactory {
         for (CircuitModel.ComponentData comp : controlComponents) {
             AbstractControlCalculatable calc = createCalculator(comp, model);
             if (calc != null) {
-                entries.add(new CalculatorEntry(comp, calc));
+                entries.add(new CalculatorEntry(comp, calc, plan == null ? 0 : ControlSubsystems.groupOf(plan, comp)));
             }
         }
 
+        double[] groupSteps = plan == null ? new double[]{timeStep} : plan.steps(timeStep);
         if (timeStep > 0 && Double.isFinite(timeStep)) {
             for (var entry : entries) {
-                if (entry.calculator instanceof DelayCalculator delay) delay.validateTimeStep(timeStep);
+                if (entry.calculator instanceof DelayCalculator delay) delay.validateTimeStep(groupSteps[entry.group]);
             }
         }
 
@@ -297,11 +330,16 @@ public class ControlCalculatorFactory {
         }
 
         // Execute each signal producer before its consumers.
-        ControlNetlist netlist = ControlNetlist.fromOrderedCalculators(dependencyOrder(entries, timeStep, true));
-        netlist.setDependencyOrder((step, activatePending) -> dependencyOrder(entries, step, activatePending));
+        ControlNetlist netlist = ControlNetlist.fromOrderedCalculators(dependencyOrder(entries, groupSteps, true));
+        netlist.setDependencyOrder((steps, activatePending) -> dependencyOrder(entries, steps, activatePending));
+        if (plan != null) {
+            var assignment = new IdentityHashMap<AbstractControlCalculatable, Integer>();
+            for (var entry : entries) assignment.put(entry.calculator, entry.group);
+            netlist.configureGroups(assignment, plan.groups());
+        }
         var externalInputs = orderedExternal(entries, 23, FromExternalCalculator.class);
         var externalOutputs = orderedExternal(entries, 22, ToExternalCalculator.class);
-        return new BuildResult(netlist, mapping, externalInputs, externalOutputs);
+        return new BuildResult(netlist, mapping, externalInputs, externalOutputs, plan == null ? null : plan.periods());
     }
 
     private static <T extends AbstractControlCalculatable> List<T> orderedExternal(List<CalculatorEntry> entries,
@@ -313,7 +351,8 @@ public class ControlCalculatorFactory {
                 .map(entry -> calculatorType.cast(entry.calculator)).toList();
     }
 
-    private static List<AbstractControlCalculatable> dependencyOrder(List<CalculatorEntry> entries, double dt, boolean activatePending) {
+    private static List<AbstractControlCalculatable> dependencyOrder(List<CalculatorEntry> entries, double[] steps,
+            boolean activatePending) {
         Map<double[], Integer> producers = new IdentityHashMap<>();
         List<Set<Integer>> consumers = new ArrayList<>();
         int[] dependencies = new int[entries.size()];
@@ -328,7 +367,7 @@ public class ControlCalculatorFactory {
             if (entry.calculator instanceof PT2Calculator) continue;
             if (entry.calculator instanceof DelayCalculator delay) {
                 double delayTime = activatePending ? delay.getConfiguredDelayTime() : delay.getDelayTime();
-                if (delayTime > 0 && dt <= delayTime) continue;
+                if (delayTime > 0 && steps[entry.group] <= delayTime) continue;
             }
             for (double[] input : entries.get(index).calculator._inputSignal) {
                 Integer producer = producers.get(input);
@@ -540,10 +579,12 @@ public class ControlCalculatorFactory {
     private static class CalculatorEntry {
         final CircuitModel.ComponentData component;
         final AbstractControlCalculatable calculator;
+        final int group;
 
-        CalculatorEntry(CircuitModel.ComponentData component, AbstractControlCalculatable calculator) {
+        CalculatorEntry(CircuitModel.ComponentData component, AbstractControlCalculatable calculator, int group) {
             this.component = component;
             this.calculator = calculator;
+            this.group = group;
         }
     }
 
