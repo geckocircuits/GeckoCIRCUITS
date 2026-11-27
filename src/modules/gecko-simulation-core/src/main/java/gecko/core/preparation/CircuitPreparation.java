@@ -3,6 +3,8 @@ package gecko.core.preparation;
 import gecko.core.allg.SolverType;
 import gecko.core.ac.AcExecutionPlan;
 import gecko.core.io.CircuitModel;
+import gecko.core.io.HierarchyIndex;
+import gecko.core.io.HierarchyMetadataCodec;
 import gecko.core.io.ImportIssue;
 import gecko.core.simulation.SimulationTiming;
 import java.util.ArrayList;
@@ -18,9 +20,12 @@ public final class CircuitPreparation {
      * @return an immutable field list with immutable alias lists
      */
     public List<ConfigurationField> configurationFields(CircuitSnapshot source) {
-        return CircuitConfiguration.components(source.toModel()).stream()
+        var model = source.toModel();
+        var hierarchy = model.getHierarchy() == null || model.getAcSettings() != null ? null : new HierarchyIndex(model);
+        return CircuitConfiguration.components(model).stream()
                 .flatMap(component -> CircuitConfiguration.fields(component).stream().map(field ->
-                        new ConfigurationField(component.domain(), component.data().getName(), field.name(),
+                        new ConfigurationField(component.domain(),
+                                CircuitConfiguration.executionName(hierarchy, component), field.name(),
                                 "param" + field.slot(), field.aliases())))
                 .toList();
     }
@@ -54,11 +59,13 @@ public final class CircuitPreparation {
             }
             return prepareAc(base, model, request);
         }
-        if (model.getHierarchy() != null || model.getCircuitComponents().stream().anyMatch(component ->
+        boolean hierarchy = model.getHierarchy() != null;
+        if ((hierarchy && !supportsTransientHierarchy(model)) || model.getCircuitComponents().stream().anyMatch(component ->
                 component.getAcComponent() != null && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Inductance)) {
             return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.UNSUPPORTED,
                     List.of(new Diagnostic("UNSUPPORTED_TRANSIENT_LAW", Diagnostic.Category.CAPABILITY, Diagnostic.Severity.ERROR,
-                            "Select AC analysis for the imported hierarchy or series resistance law.",
+                            hierarchy ? "Transient hierarchy requires ordinary R/C, constant electrical sources and root voltage observation."
+                                    : "Select AC analysis for the imported series resistance law.",
                             "LK", null, "analysis", model.getFilePath()))));
         }
         for (var finding : CircuitConfiguration.normalize(model)) {
@@ -67,7 +74,15 @@ public final class CircuitPreparation {
             if (!model.getImportIssues().contains(issue)) model.getImportIssues().add(issue);
         }
         List<Diagnostic> diagnostics = new ArrayList<>();
-        var overrideDiagnostics = CircuitConfiguration.apply(model, request.parameters());
+        List<Diagnostic> overrideDiagnostics;
+        try {
+            overrideDiagnostics = CircuitConfiguration.apply(model, request.parameters());
+        } catch (IllegalArgumentException error) {
+            if (!hierarchy) throw error;
+            return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.INVALID,
+                    List.of(new Diagnostic("INVALID_TOPOLOGY", Diagnostic.Category.TOPOLOGY, Diagnostic.Severity.ERROR,
+                            error.getMessage(), null, null, null, model.getFilePath()))));
+        }
         diagnostics.addAll(overrideDiagnostics);
         var settings = request.settings();
         if (settings.solver() != null) model.setSolverType(settings.solver());
@@ -106,6 +121,12 @@ public final class CircuitPreparation {
                 });
         boolean rejected = !overrideDiagnostics.isEmpty() || diagnostics.stream().anyMatch(item -> item.code().equals("INVALID_SETTING"));
         CircuitConfiguration.derive(model);
+        if (model.getHierarchy() != null && !supportsTransientHierarchy(model)) {
+            diagnostics.add(new Diagnostic("UNSUPPORTED_TRANSIENT_LAW", Diagnostic.Category.CAPABILITY,
+                    Diagnostic.Severity.ERROR, "The configured hierarchy uses a source or element outside the transient subset.",
+                    "LK", null, "analysis", model.getFilePath()));
+            return new PreparationResult.Rejected(new ReadinessReport(ReadinessReport.Outcome.UNSUPPORTED, diagnostics));
+        }
         var snapshot = capture(model);
         CircuitModel execution;
         try {
@@ -171,6 +192,35 @@ public final class CircuitPreparation {
         if (rejected) return new PreparationResult.Rejected(report);
         if (!report.readyForHeadless()) return new PreparationResult.Inspectable(snapshot, report);
         return new PreparationResult.Ready(snapshot, new PreparedCircuit(snapshot, settings.features()), report);
+    }
+
+    private static boolean supportsTransientHierarchy(CircuitModel model) {
+        if (!model.getThermalComponents().isEmpty() || !model.getResources().isEmpty()
+                || !model.getResourceFailures().isEmpty() || !model.getStructuralComponents().isEmpty()
+                || model.isTransientUic()) return false;
+        if (model.getSpecialComponents().isEmpty() || model.getSpecialComponents().stream().anyMatch(component ->
+                component.getType() != 27 || component.getSavedBlock() == null
+                        || !component.getSavedBlock().sections().isEmpty()
+                        || !component.getSavedBlock().tokens().containsKey(HierarchyMetadataCodec.OCCURRENCE)
+                        || component.getSavedBlock().enabledState() != 1)) return false;
+        return model.getCircuitComponents().stream().allMatch(component -> {
+            if (!enabled(component) || component.getAcComponent() != null) return false;
+            if (component.getType() == 1 || component.getType() == 3) return true;
+            if (component.getType() == 29) {
+                var saved = component.getSavedBlock();
+                return HierarchyIndex.parent(saved) != 0
+                        && saved.tokens().containsKey(HierarchyMetadataCodec.BOUNDARY_LOCATION);
+            }
+            double[] values = component.getNumericParameters();
+            return (component.getType() == 4 || component.getType() == 5) && values.length > 0
+                    && (values[0] == 0 || values[0] == 401);
+        }) && model.getControlComponents().stream().allMatch(component ->
+                (component.getType() == 1 || component.getType() == 5) && enabled(component)
+                        && HierarchyIndex.parent(component.getSavedBlock()) == 0);
+    }
+
+    private static boolean enabled(CircuitModel.ComponentData component) {
+        return component.getSavedBlock() == null || component.getSavedBlock().enabledState() == 1;
     }
 
     private PreparationResult prepareAc(CircuitSnapshot snapshot, CircuitModel model, PreparationRequest request) {
