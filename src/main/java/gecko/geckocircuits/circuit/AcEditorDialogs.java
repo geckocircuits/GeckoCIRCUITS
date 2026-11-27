@@ -158,7 +158,7 @@ public final class AcEditorDialogs {
                 };
             }
             case AcComponent.ExponentialDiode law -> {
-                fields.add(new JLabel("Imported exponential AC diode"));
+                fields.add(new JLabel(law.transientLaw() ? "Imported exponential transient diode" : "Imported exponential AC diode"));
                 fields.add(new JLabel(law.modelName()));
                 updatedLaw = () -> law;
             }

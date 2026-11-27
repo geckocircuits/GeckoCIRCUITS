@@ -52,6 +52,7 @@ final class ElectricalTimeStep {
     private static final int REFINEMENTS = 2;
     private final boolean zeroCrossing;
     private final int[] diodeElements;
+    private final TransientExponentialDiodes exponentialDiodes;
     private final int[] sourceElements;
     private final double[] savedDiodeStates;
     private final double[] savedSourceStates;
@@ -127,6 +128,15 @@ final class ElectricalTimeStep {
     }
 
     ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, SolverFeatures features, boolean uic) {
+        this(netlist, solverType, features, uic, null);
+    }
+
+    ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, SolverFeatures features, boolean uic,
+            TransientExponentialDiodes exponentialDiodes) {
+        this.exponentialDiodes = exponentialDiodes;
+        if (exponentialDiodes != null && (solverType == SolverType.SOLVER_GS || features.dcOperatingPoint() || uic)) {
+            throw new IllegalArgumentException("Use backward Euler or trapezoidal integration without DC start or UIC for transient exponential diodes.");
+        }
         this.adaptive = features.adaptiveStep();
         if (adaptive != null && solverType == SolverType.SOLVER_GS) {
             throw new IllegalArgumentException(SimulationTiming.GS_ADAPTIVE_MESSAGE);
@@ -134,7 +144,8 @@ final class ElectricalTimeStep {
         this.zeroCrossing = features.zeroCrossing() || adaptive != null;
         this.netlist = netlist;
         nodeOrder = netlist.getNumericalNodeOrder();
-        numericalNetlist = nodeOrder.length == 0 ? netlist : new NumericalNetlist(netlist, nodeOrder);
+        numericalNetlist = nodeOrder.length == 0 && exponentialDiodes == null
+                ? netlist : new NumericalNetlist(netlist, nodeOrder, exponentialDiodes);
         matrixSolver = new MatrixSolver(solverType, features.sparseSolver());
         matrixSolver.initializeMatrices(netlist.getNodeMax(), netlist.getVoltageSourceMax(),
                 netlist.getElementCount());
@@ -154,7 +165,7 @@ final class ElectricalTimeStep {
         int sourceCount = 0;
         for (int element = 0; element < diodes.length; element++) {
             CircuitTypCore type = netlist.getType(element);
-            if (isDiodeFamily(type)) diodes[diodeCount++] = element;
+            if (isDiodeFamily(type) && !isExponentialDiode(element)) diodes[diodeCount++] = element;
             else if (type == CircuitTypCore.LK_U && netlist.getParameter(element).length > 14) sources[sourceCount++] = element;
         }
         diodeElements = Arrays.copyOf(diodes, diodeCount);
@@ -203,16 +214,13 @@ final class ElectricalTimeStep {
         if (!Double.isFinite(dt) || dt <= 0 || !Double.isFinite(time) || time < 0) {
             throw new IllegalArgumentException("Time step must be finite and positive; time must be finite and non-negative");
         }
-        if (!numericalNetlist.usesWireReference() || matrixInputsChanged(dt)) {
-            matrixSolver.buildMatrixA(numericalNetlist, dt, time, false);
-        }
-        matrixSolver.buildVectorB(numericalNetlist, dt, time, false);
-        matrixSolver.solve();
+        solveStartTopology(matrixSolver, dt, time);
         doDiodeIteration(numericalNetlist, dt, time);
 
         // Compute against previous-step histories before committing the new state.
         componentCurrentCalculator.calculateComponentCurrents(
                 matrixSolver, numericalNetlist, computedCurrents, 0.0, dt, time, true);
+        commitExponentialDiodes(matrixSolver, dt);
         matrixSolver.shiftHistory();
         double[] currents = matrixSolver.getIALT();
         System.arraycopy(computedCurrents, 0, currents, 0, computedCurrents.length);
@@ -408,6 +416,10 @@ final class ElectricalTimeStep {
     private void solveStartTopology(double width, double time) { solveStartTopology(matrixSolver, width, time); }
 
     private void solveStartTopology(MatrixSolver solver, double width, double time) {
+        if (exponentialDiodes != null) {
+            exponentialDiodes.solve(solver, numericalNetlist, width, time);
+            return;
+        }
         if (!numericalNetlist.usesWireReference() || matrixInputsChanged(width)) {
             solver.buildMatrixA(numericalNetlist, width, time, false);
         }
@@ -419,6 +431,7 @@ final class ElectricalTimeStep {
     private void commitSubStep(double width, double time) {
         componentCurrentCalculator.calculateComponentCurrents(
                 matrixSolver, numericalNetlist, computedCurrents, 0.0, width, time, true);
+        commitExponentialDiodes(matrixSolver, width);
         matrixSolver.shiftHistory();
         System.arraycopy(computedCurrents, 0, matrixSolver.getIALT(), 0, computedCurrents.length);
         rememberMatrixInputs(width);
@@ -632,7 +645,10 @@ final class ElectricalTimeStep {
         boolean skipDetection = first;
         if (!first) width = predictCrossing(startTime, width, stepMin);
         while (true) {
-            double end = first || gridTime - startTime <= width ? gridTime : startTime + width;
+            double remaining = gridTime - startTime;
+            // Avoid a rounding-size final step after many sub-steps. A located event keeps its exact width.
+            double endTolerance = exponentialDiodes != null && pinned == null ? 1e-8 * stepMin : 0;
+            double end = first || remaining - width <= endTolerance ? gridTime : startTime + width;
             double h = first ? width : end - startTime;
             boolean restartTrial = first || restartPending;
             MatrixSolver used = restartTrial && matrixSolver.getSolverType() != SolverType.SOLVER_BE ? companionSolver : matrixSolver;
@@ -640,108 +656,119 @@ final class ElectricalTimeStep {
             saveTrialState();
             copyHistories(companionSolver);
             if (!first) computeThresholdMargin(matrixSolver.getPALT(), startMargin);
-            solveFresh(used, h, end);
-            if (!first) computeThresholdMargin(used.getP(), trialMargin);
-            doDiodeIteration(used, numericalNetlist, h, end, pinned);
-            if (!skipDetection && pinned == null) {
-                boolean[] candidate = new boolean[diodeElements.length];
-                boolean any = false;
-                boolean capReached = located >= MAX_LOCATED_PER_STEP;
-                for (int slot = 0; slot < diodeElements.length; slot++) {
-                    if (capReached || locatedInStep[slot] || !toggled(slot) || !(startMargin[slot] * trialMargin[slot] < 0)
-                            || gateDriven(slot, isOff(savedDiodeStates[slot]))) continue;
-                    candidate[slot] = true;
-                    any = true;
+            try {
+                solveFresh(used, h, end);
+                if (!first) computeThresholdMargin(used.getP(), trialMargin);
+                doDiodeIteration(used, numericalNetlist, h, end, pinned);
+                if (!skipDetection && pinned == null) {
+                    boolean[] candidate = new boolean[diodeElements.length];
+                    boolean any = false;
+                    boolean capReached = located >= MAX_LOCATED_PER_STEP;
+                    for (int slot = 0; slot < diodeElements.length; slot++) {
+                        if (capReached || locatedInStep[slot] || !toggled(slot) || !(startMargin[slot] * trialMargin[slot] < 0)
+                                || gateDriven(slot, isOff(savedDiodeStates[slot]))) continue;
+                        candidate[slot] = true;
+                        any = true;
+                    }
+                    if (any) {
+                        double epsilon = BOUNDARY_FRACTION * h;
+                        double[] crossing = new double[diodeElements.length];
+                        int best = -1;
+                        for (int slot = 0; slot < candidate.length; slot++) {
+                            if (!candidate[slot]) continue;
+                            crossing[slot] = refine(used, slot, startMargin[slot], trialMargin[slot], startTime, end, epsilon);
+                            if (best < 0 || crossing[slot] < crossing[best]) best = slot;
+                        }
+                        eventTime = crossing[best];
+                        eventBefore = startMargin.clone();
+                        eventAfter = trialMargin.clone();
+                        // Candidates that cross together, such as two series devices of a bridge, switch together.
+                        boolean[] together = new boolean[diodeElements.length];
+                        int count = 0;
+                        for (int slot = 0; slot < candidate.length && located + count < MAX_LOCATED_PER_STEP; slot++) {
+                            if (candidate[slot] && crossing[slot] - eventTime <= epsilon) { together[slot] = true; count++; }
+                        }
+                        restoreTrialState();
+                        eventSlots = together;
+                        if (eventTime >= end - epsilon) {
+                            // Every candidate crosses at the end of this sub-step, so the free trial is the step.
+                            skipDetection = true;
+                            continue;
+                        }
+                        if (eventTime > startTime + epsilon) {
+                            pinned = new boolean[netlist.getElementCount()];
+                            for (int slot = 0; slot < together.length; slot++) if (together[slot]) pinned[diodeElements[slot]] = true;
+                            width = eventTime - startTime;
+                            continue;
+                        }
+                        // The crossing is at the start: the device switches there, with no sub-step.
+                        for (int slot = 0; slot < together.length; slot++) {
+                            if (!together[slot]) continue;
+                            accept(slot, eventTime);
+                            toggleDiode(slot);
+                        }
+                        restartPending = true;
+                        return new SubStepOutcome(startTime, located + count);
+                    }
                 }
-                if (any) {
-                    double epsilon = BOUNDARY_FRACTION * h;
-                    double[] crossing = new double[diodeElements.length];
-                    int best = -1;
-                    for (int slot = 0; slot < candidate.length; slot++) {
-                        if (!candidate[slot]) continue;
-                        crossing[slot] = refine(used, slot, startMargin[slot], trialMargin[slot], startTime, end, epsilon);
-                        if (best < 0 || crossing[slot] < crossing[best]) best = slot;
-                    }
-                    eventTime = crossing[best];
-                    eventBefore = startMargin.clone();
-                    eventAfter = trialMargin.clone();
-                    // Candidates that cross together, such as two series devices of a bridge, switch together.
-                    boolean[] together = new boolean[diodeElements.length];
-                    int count = 0;
-                    for (int slot = 0; slot < candidate.length && located + count < MAX_LOCATED_PER_STEP; slot++) {
-                        if (candidate[slot] && crossing[slot] - eventTime <= epsilon) { together[slot] = true; count++; }
-                    }
-                    restoreTrialState();
-                    eventSlots = together;
-                    if (eventTime >= end - epsilon) {
-                        // Every candidate crosses at the end of this sub-step, so the free trial is the step.
-                        skipDetection = true;
+                double error = 0;
+                boolean forced = false;
+                if (!first) {
+                    solveFresh(other, h, end);
+                    error = estimateError(used, other, h);
+                    forced = error > 1;
+                    if (!(error <= 1 || h <= stepMin || retries >= MAX_RETRIES)) {
+                        restoreTrialState();
+                        rejectedSubSteps++;
+                        retries++;
+                        // A shorter step can move an event to a later sub-step, so location repeats there.
+                        width = Math.max(stepMin, Math.min(h * SAFETY * Math.sqrt(1 / error), h * SAFETY));
+                        pinned = null;
+                        eventSlots = null;
+                        skipDetection = false;
                         continue;
                     }
-                    if (eventTime > startTime + epsilon) {
-                        pinned = new boolean[netlist.getElementCount()];
-                        for (int slot = 0; slot < together.length; slot++) if (together[slot]) pinned[diodeElements[slot]] = true;
-                        width = eventTime - startTime;
-                        continue;
-                    }
-                    // The crossing is at the start: the device switches there, with no sub-step.
-                    for (int slot = 0; slot < together.length; slot++) {
-                        if (!together[slot]) continue;
+                }
+                // Accept the trial.
+                boolean[] atEnd = pinned == null ? eventSlots : null;
+                int newlyLocated = 0;
+                if (atEnd != null) {
+                    for (int slot = 0; slot < atEnd.length; slot++) if (atEnd[slot]) { accept(slot, end); newlyLocated++; }
+                }
+                boolean switched = changedInTrial();
+                commitUsed(used, h, end);
+                recordSubStep(startTime, h, error, forced, used.getSolverType() == SolverType.SOLVER_BE);
+                reconcile(end);
+                if (first) {
+                    restartPending = true;
+                } else if (pinned != null) {
+                    System.arraycopy(eventBefore, 0, startMargin, 0, startMargin.length);
+                    System.arraycopy(eventAfter, 0, trialMargin, 0, trialMargin.length);
+                    for (int slot = 0; slot < eventSlots.length; slot++) {
+                        if (!eventSlots[slot]) continue;
                         accept(slot, eventTime);
                         toggleDiode(slot);
+                        newlyLocated++;
                     }
                     restartPending = true;
-                    return new SubStepOutcome(startTime, located + count);
+                    controllerStep = Math.max(stepMin, Math.min(controllerStep, gridTime - end));
+                } else {
+                    restartPending = switched || atEnd != null;
+                    double growth = error <= 0 ? Double.POSITIVE_INFINITY : SAFETY * Math.sqrt(1 / error);
+                    controllerStep = Math.min(stepMax, Math.max(stepMin, h * growth));
                 }
+                updateMarginHistory(end);
+                return new SubStepOutcome(end, located + newlyLocated);
+            } catch (TransientExponentialDiodes.Nonconvergence failure) {
+                restoreTrialState();
+                if (first || h <= stepMin || retries >= MAX_RETRIES) throw failure;
+                rejectedSubSteps++;
+                retries++;
+                width = Math.max(stepMin, h / 2);
+                pinned = null;
+                eventSlots = null;
+                skipDetection = false;
             }
-            double error = 0;
-            boolean forced = false;
-            if (!first) {
-                solveFresh(other, h, end);
-                error = estimateError(used, other, h);
-                forced = error > 1;
-                if (!(error <= 1 || h <= stepMin || retries >= MAX_RETRIES)) {
-                    restoreTrialState();
-                    rejectedSubSteps++;
-                    retries++;
-                    // A shorter step can move an event to a later sub-step, so location repeats there.
-                    width = Math.max(stepMin, Math.min(h * SAFETY * Math.sqrt(1 / error), h * SAFETY));
-                    pinned = null;
-                    eventSlots = null;
-                    skipDetection = false;
-                    continue;
-                }
-            }
-            // Accept the trial.
-            boolean[] atEnd = pinned == null ? eventSlots : null;
-            int newlyLocated = 0;
-            if (atEnd != null) {
-                for (int slot = 0; slot < atEnd.length; slot++) if (atEnd[slot]) { accept(slot, end); newlyLocated++; }
-            }
-            boolean switched = changedInTrial();
-            commitUsed(used, h, end);
-            recordSubStep(startTime, h, error, forced, used.getSolverType() == SolverType.SOLVER_BE);
-            reconcile(end);
-            if (first) {
-                restartPending = true;
-            } else if (pinned != null) {
-                System.arraycopy(eventBefore, 0, startMargin, 0, startMargin.length);
-                System.arraycopy(eventAfter, 0, trialMargin, 0, trialMargin.length);
-                for (int slot = 0; slot < eventSlots.length; slot++) {
-                    if (!eventSlots[slot]) continue;
-                    accept(slot, eventTime);
-                    toggleDiode(slot);
-                    newlyLocated++;
-                }
-                restartPending = true;
-                controllerStep = Math.max(stepMin, Math.min(controllerStep, gridTime - end));
-            } else {
-                restartPending = switched || atEnd != null;
-                double growth = error <= 0 ? Double.POSITIVE_INFINITY : SAFETY * Math.sqrt(1 / error);
-                controllerStep = Math.min(stepMax, Math.max(stepMin, h * growth));
-            }
-            updateMarginHistory(end);
-            return new SubStepOutcome(end, located + newlyLocated);
         }
     }
 
@@ -773,6 +800,10 @@ final class ElectricalTimeStep {
 
     /** Builds and solves unconditionally, so a rejected trial leaves no cached matrix behind. */
     private void solveFresh(MatrixSolver solver, double width, double time) {
+        if (exponentialDiodes != null) {
+            exponentialDiodes.solve(solver, numericalNetlist, width, time);
+            return;
+        }
         solver.buildMatrixA(numericalNetlist, width, time, false);
         solver.buildVectorB(numericalNetlist, width, time, false);
         solver.solve();
@@ -781,11 +812,20 @@ final class ElectricalTimeStep {
     /** Commits the used trial. Its type decides the current formulas, so a restart commits Backward Euler. */
     private void commitUsed(MatrixSolver used, double width, double time) {
         componentCurrentCalculator.calculateComponentCurrents(used, numericalNetlist, computedCurrents, 0.0, width, time, true);
+        commitExponentialDiodes(used, width);
         if (used != matrixSolver) System.arraycopy(used.getP(), 0, matrixSolver.getP(), 0, matrixSolver.getMatrixSize());
         matrixSolver.shiftHistory();
         System.arraycopy(computedCurrents, 0, matrixSolver.getIALT(), 0, computedCurrents.length);
         rememberMatrixInputs(width);
         committedOnce = true;
+    }
+
+    private void commitExponentialDiodes(MatrixSolver solver, double width) {
+        if (exponentialDiodes != null) exponentialDiodes.commit(solver, numericalNetlist, width, computedCurrents);
+    }
+
+    private boolean isExponentialDiode(int element) {
+        return exponentialDiodes != null && exponentialDiodes.includes(element);
     }
 
     private boolean changedInTrial() {
@@ -817,7 +857,8 @@ final class ElectricalTimeStep {
      * the Backward Euler local error, so it is not divided by 3. Only reads parameters.
      */
     private double estimateError(MatrixSolver used, MatrixSolver other, double width) {
-        double worst = 0;
+        double worst = exponentialDiodes == null ? 0
+                : exponentialDiodes.adaptiveError(used, other, numericalNetlist, width, adaptive.tolerance());
         double[] oldPotentials = matrixSolver.getPALT();
         for (int element = 0; element < netlist.getElementCount(); element++) {
             CircuitTypCore type = netlist.getType(element);
@@ -866,7 +907,9 @@ final class ElectricalTimeStep {
     private double discontinuityValue(int element) {
         CircuitTypCore type = netlist.getType(element);
         double[] parameters = netlist.getParameter(element);
-        if (isDiodeFamily(type)) return parameters.length > 8 ? parameters[8] : Double.NaN;
+        if (isDiodeFamily(type) && !isExponentialDiode(element)) {
+            return parameters.length > 8 ? parameters[8] : Double.NaN;
+        }
         if (type == CircuitTypCore.LK_S || type == CircuitTypCore.LK_MOSFET) return parameters[0];
         if ((type == CircuitTypCore.LK_U || type == CircuitTypCore.LK_I) && parameters.length > 1) {
             int source = (int) parameters[0];
@@ -1053,7 +1096,7 @@ final class ElectricalTimeStep {
                         && type != CircuitTypCore.LK_IGBT) {
                     continue;
                 }
-                if (pinned != null && pinned[i]) {
+                if (isExponentialDiode(i) || pinned != null && pinned[i]) {
                     continue;
                 }
 
@@ -1117,8 +1160,12 @@ final class ElectricalTimeStep {
             changed |= matrixSolver.updateControlledSourceLimits(netlist, time);
             if (changed) {
                 anyChangedOverall = true;
-                matrixSolver.setMatrixChanged();
-                matrixSolver.solve();
+                if (exponentialDiodes == null) {
+                    matrixSolver.setMatrixChanged();
+                    matrixSolver.solve();
+                } else {
+                    exponentialDiodes.solve(matrixSolver, numericalNetlist, dt, time);
+                }
                 iterCount++;
 
                 if (iterCount > 2) {
@@ -1134,15 +1181,20 @@ final class ElectricalTimeStep {
         return anyChangedOverall;
     }
 
-    private record NumericalNetlist(CircuitNetlist source, int[] order) implements INetList {
-        @Override public boolean usesWireReference() { return true; }
+    private record NumericalNetlist(CircuitNetlist source, int[] order, TransientExponentialDiodes exponentialDiodes)
+            implements INetList {
+        private static final double[] DIODE_PLACEHOLDER = {1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+        @Override public boolean usesWireReference() { return order.length != 0; }
         @Override public int getNodeMax() { return source.getNodeMax(); }
         @Override public int getVoltageSourceMax() { return source.getVoltageSourceMax(); }
         @Override public int getElementCount() { return source.getElementCount(); }
         @Override public CircuitTypCore getType(int index) { return source.getType(index); }
-        @Override public int getNodeX(int index) { return order[source.getNodeX(index)]; }
-        @Override public int getNodeY(int index) { return order[source.getNodeY(index)]; }
-        @Override public double[] getParameter(int index) { return source.getParameter(index); }
+        @Override public int getNodeX(int index) { return ordered(source.getNodeX(index)); }
+        @Override public int getNodeY(int index) { return ordered(source.getNodeY(index)); }
+        private int ordered(int index) { return order.length == 0 ? index : order[index]; }
+        @Override public double[] getParameter(int index) {
+            return exponentialDiodes != null && exponentialDiodes.includes(index) ? DIODE_PLACEHOLDER : source.getParameter(index);
+        }
         @Override public int getVoltageSourceNumber(int index) { return source.getVoltageSourceNumber(index); }
         @Override public double getSimulationTime() { return source.getSimulationTime(); }
         @Override public int getControlElementIndex(int index) { return source.getControlElementIndex(index); }

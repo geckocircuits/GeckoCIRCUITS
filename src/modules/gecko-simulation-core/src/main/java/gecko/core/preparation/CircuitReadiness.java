@@ -190,7 +190,7 @@ final class CircuitReadiness {
         for (var component : model.getCircuitComponents()) {
             boolean diodeAcLaw = component.getAcComponent() != null
                     && (component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode
-                    || component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode);
+                    || component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode diode && !diode.transientLaw());
             if (!diodeAcLaw && (component.getType() == 9 || (CircuitTypCore.isValidTypeNumber(component.getType())
                     && registry.hasStamper(CircuitTypCore.fromTypeNumber(component.getType()))))) {
                 topology.addCircuitComponent(component);

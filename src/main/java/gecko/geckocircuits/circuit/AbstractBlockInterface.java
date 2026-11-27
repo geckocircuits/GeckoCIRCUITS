@@ -944,7 +944,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                     _textInfo.addParameter(law.modelName() + " Vfwd = "
                             + AC_VALUE_FORMAT.formatENG(model.forwardVoltage(), 4) + " V");
                 }
-                case AcComponent.ExponentialDiode law -> _textInfo.addParameter(law.modelName() + " (exponential AC)");
+                case AcComponent.ExponentialDiode law -> _textInfo.addParameter(law.modelName() + (law.transientLaw() ? " (exponential transient)" : " (exponential AC)"));
                 case AcComponent.Transconductance law -> {
                     double gm = SpiceValue.evaluate(law.expression(), parameters);
                     _textInfo.addParameter("gm = " + AC_VALUE_FORMAT.formatENG(gm, 4) + " S");

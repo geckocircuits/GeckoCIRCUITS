@@ -1,11 +1,11 @@
 package gecko.core.ac;
 
 /** Evaluation of a Shockley junction at the nominal LTspice temperature of 27 °C. */
-record ShockleyDiode(double saturationCurrent, double emissionCoefficient, double resistance, double transitTime) {
+public record ShockleyDiode(double saturationCurrent, double emissionCoefficient, double resistance, double transitTime) {
     private static final double THERMAL_VOLTAGE = 1.380649e-23 * 300.15 / 1.602176634e-19;
     private static final double GMIN = 1e-12;
 
-    ShockleyDiode {
+    public ShockleyDiode {
         if (!(saturationCurrent > 0 && Double.isFinite(saturationCurrent)
                 && emissionCoefficient * THERMAL_VOLTAGE > 0 && Double.isFinite(emissionCoefficient)
                 && resistance >= 0 && Double.isFinite(resistance)
@@ -48,6 +48,43 @@ record ShockleyDiode(double saturationCurrent, double emissionCoefficient, doubl
             throw new IllegalArgumentException("The exponential diode trial exceeds the numerical range.");
         }
         return new Point(current, conductance, resistance, transitTime);
+    }
+
+    /** Terminal current and charge for the linearization of one transient trial. */
+    public record TransientPoint(double current, double conductance, double junctionVoltage,
+                                 double charge, double chargeCurrent) { }
+
+    /** Evaluate a series resistor and a junction with a Backward Euler or trapezoidal charge history. */
+    public TransientPoint transientAt(double terminalVoltage, double historyWeight, double oldCharge, double oldChargeCurrent) {
+        double scale = emissionCoefficient * THERMAL_VOLTAGE;
+        double history = Math.fma(historyWeight, oldCharge, oldChargeCurrent);
+        double transportScale = Math.fma(historyWeight, transitTime, 1);
+        double junction = terminalVoltage;
+        if (resistance > 0) {
+            // With zero exponential current, this expression bounds the junction on the far side of zero.
+            double bound = Math.fma(resistance, history, terminalVoltage) / (1 + resistance * GMIN);
+            double low = Math.min(0, bound), high = Math.max(0, bound);
+            for (int i = 0; i < 96; i++) {
+                junction = low + (high - low) / 2;
+                if (junction == low || junction == high) break;
+                double ampere = transportScale * saturationCurrent * Math.expm1(junction / scale) + GMIN * junction - history;
+                double residual = Math.fma(resistance, ampere, junction) - terminalVoltage;
+                if (residual == 0) break;
+                if (residual > 0) high = junction;
+                else low = junction;
+            }
+        }
+        double transport = saturationCurrent * Math.expm1(junction / scale);
+        double charge = transitTime * transport;
+        double chargeCurrent = Math.fma(historyWeight, charge - oldCharge, -oldChargeCurrent);
+        double current = transport + GMIN * junction + chargeCurrent;
+        double tangent = transportScale * saturationCurrent * Math.exp(junction / scale) / scale + GMIN;
+        double conductance = tangent / Math.fma(resistance, tangent, 1);
+        if (!(Double.isFinite(current) && Double.isFinite(conductance) && Double.isFinite(charge)
+                && Double.isFinite(chargeCurrent))) {
+            throw new IllegalArgumentException("The transient exponential diode trial exceeds the numerical range.");
+        }
+        return new TransientPoint(current, conductance, junction, charge, chargeCurrent);
     }
 
     private double current(double voltage, double scale) {

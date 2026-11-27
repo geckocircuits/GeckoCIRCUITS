@@ -188,7 +188,7 @@ public final class AcExecutionPlan {
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
                 case AcComponent.ExponentialDiode law -> {
-                    if (type != SpicePorts.DIODE || hierarchical || model.getAcProvenance() != null
+                    if (type != SpicePorts.DIODE || law.transientLaw() || hierarchical || model.getAcProvenance() != null
                             && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);
                     exponentialDiodes.put(prepared.size(), law.evaluate(parameters));
                     prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,

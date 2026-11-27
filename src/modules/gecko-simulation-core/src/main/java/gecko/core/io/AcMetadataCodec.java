@@ -64,7 +64,7 @@ public final class AcMetadataCodec {
             case AcComponent.Current law -> fields.addAll(List.of("CURRENT", law.dc(), law.magnitude(), law.phaseDegrees()));
             case AcComponent.IdealDiode law -> fields.addAll(List.of("IDEAL_DIODE_V1", law.modelName(),
                     law.forwardVoltage(), law.onResistance(), law.offResistance(), law.origin().name()));
-            case AcComponent.ExponentialDiode law -> fields.addAll(List.of("EXPONENTIAL_DIODE_V1", law.modelName(),
+            case AcComponent.ExponentialDiode law -> fields.addAll(List.of(law.transientLaw() ? "EXPONENTIAL_DIODE_TRANSIENT_V1" : "EXPONENTIAL_DIODE_V1", law.modelName(),
                     law.saturationCurrent(), law.emissionCoefficient(), law.seriesResistance(), law.transitTime()));
             case AcComponent.Transconductance law -> fields.addAll(List.of("VCCS_V1", law.expression()));
             case AcComponent.Controlled law -> fields.addAll(List.of(law.laplace() ? "LAPLACE" : "GAIN", law.expression()));
@@ -79,7 +79,7 @@ public final class AcMetadataCodec {
         int aliasIndex = switch (fields[3]) {
             case "VOLTAGE" -> 8;
             case "CURRENT" -> 7;
-            case "IDEAL_DIODE_V1", "EXPONENTIAL_DIODE_V1" -> 9;
+            case "IDEAL_DIODE_V1", "EXPONENTIAL_DIODE_V1", "EXPONENTIAL_DIODE_TRANSIENT_V1" -> 9;
             case "INDUCTANCE" -> 6;
             case "INDUCTANCE_ORIGIN_V1" -> 10;
             default -> 5;
@@ -107,8 +107,8 @@ public final class AcMetadataCodec {
             case "CURRENT" -> new AcComponent.Current(fields[4], fields[5], fields[6]);
             case "IDEAL_DIODE_V1" -> new AcComponent.IdealDiode(fields[4], fields[5], fields[6], fields[7],
                     AcInputOrigin.valueOf(fields[8]));
-            case "EXPONENTIAL_DIODE_V1" -> new AcComponent.ExponentialDiode(fields[4], fields[5], fields[6],
-                    fields[7], fields[8]);
+            case "EXPONENTIAL_DIODE_V1", "EXPONENTIAL_DIODE_TRANSIENT_V1" -> new AcComponent.ExponentialDiode(
+                    fields[4], fields[5], fields[6], fields[7], fields[8], fields[3].equals("EXPONENTIAL_DIODE_TRANSIENT_V1"));
             case "VCCS_V1" -> new AcComponent.Transconductance(fields[4]);
             case "GAIN", "LAPLACE" -> new AcComponent.Controlled(fields[4], fields[3].equals("LAPLACE"));
             default -> throw new IllegalArgumentException("Unsupported IPES component law: " + fields[3]);
