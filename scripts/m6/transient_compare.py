@@ -141,13 +141,21 @@ def _window_metrics(integrals, begin, end, atol, full=False):
     return metrics
 
 
-def compare(reference, candidate, *, start, stop, ts, atol, scale=None):
+def compare(reference, candidate, *, start, stop, ts, atol, scale=None, policy='transient-windowed-v1'):
     """Return metric evidence for iterables of (time in seconds, signed value)."""
     if not all(math.isfinite(x) for x in (start, stop, ts, atol)) or not start < stop or ts <= 0 or atol < 0:
         raise ValueError('Specify finite start < stop, Ts > 0, and atol >= 0')
     long_window = _finite(10 * ts)
-    if _finite(stop - start) < long_window:
+    span = _finite(stop - start)
+    if policy not in ('transient-windowed-v1', 'transient-windowed-v2'):
+        raise ValueError('Use a supported transient policy')
+    if policy == 'transient-windowed-v1' and span < long_window:
         raise ValueError('Supply coverage for both Ts and 10 Ts windows')
+    if policy == 'transient-windowed-v2':
+        if start < 0:
+            raise ValueError('Use a nonnegative recording start time')
+        if span < ts:
+            raise ValueError('Supply at least one complete Ts window')
     if scale is not None and (not math.isfinite(scale) or scale < 0):
         raise ValueError('Specify a finite, nonnegative signal scale')
     reference, candidate = _trace(reference), _trace(candidate)
@@ -168,8 +176,9 @@ def compare(reference, candidate, *, start, stop, ts, atol, scale=None):
     integrals = _Integrals(grid, values)
     full = _window_metrics(integrals, start, stop, atol, full=True)
     sliding = []
-    for width in (ts, long_window):
-        tail = stop - width
+    for requested in (ts, long_window):
+        width = min(requested, span) if policy == 'transient-windowed-v2' else requested
+        tail = start if policy == 'transient-windowed-v2' and width == span else stop - width
         if tail < start:
             raise ValueError('Window bounds exceed numeric precision')
         starts = {start, tail}
@@ -183,7 +192,10 @@ def compare(reference, candidate, *, start, stop, ts, atol, scale=None):
             for name, metric in _window_metrics(integrals, begin, end, atol).items():
                 if name not in worst or _rank(metric) > _rank(worst[name]):
                     worst[name] = metric
-        sliding.append(dict(duration=width, evaluated=len(starts), worst=worst))
+        row = dict(duration=width, evaluated=len(starts), worst=worst)
+        if policy == 'transient-windowed-v2':
+            row.update(requested_duration=requested, shortened=width < requested)
+        sliding.append(row)
     passed = all(m['passed'] for m in [peak, *full.values(),
                                      *(m for row in sliding for m in row['worst'].values())])
     return dict(scope='transient_metrics_only', passed=passed, start=start, stop=stop, ts=ts,
@@ -210,12 +222,12 @@ def _number(value):
     return _finite(float(value))
 
 
-def _manifest(data):
+def _manifest(data, version):
     policy = json.loads(data, object_pairs_hook=_unique_keys)
     if not isinstance(policy, dict) or set(policy) != {'start', 'stop', 'ts', 'signals'}:
         raise ValueError('Specify start, stop, ts and signals in the manifest')
     start, stop, ts = (_number(policy[key]) for key in ('start', 'stop', 'ts'))
-    if start != 0:
+    if version == 'transient-windowed-v1' and start != 0:
         raise ValueError('Declare startup at time zero for a complete transient comparison')
     signals = policy['signals']
     if not isinstance(signals, list) or not signals:
@@ -258,7 +270,7 @@ def _case_trace(data, signals):
     return times, values
 
 
-def compare_case(reference_path, candidate_path, manifest_path):
+def compare_case(reference_path, candidate_path, manifest_path, *, policy='transient-windowed-v1'):
     """Compare every required signal and bind the report to the input bytes."""
     paths = {'reference': reference_path, 'candidate': candidate_path, 'manifest': manifest_path}
     pins = {}
@@ -270,15 +282,30 @@ def compare_case(reference_path, candidate_path, manifest_path):
         pins[name] = dict(path=str(path), bytes=len(data), sha256=sha256(data).hexdigest())
         return data
 
-    start, stop, ts, signals = _manifest(load('manifest'))
+    return compare_case_inputs(load, pins, policy=policy)
+
+
+def compare_case_inputs(load, pins, *, policy):
+    """Compare the same input bytes that the caller records in pins."""
+    start, stop, ts, signals = _manifest(load('manifest'), policy)
     ref_times, ref_values = _case_trace(load('reference'), signals)
     cand_times, cand_values = _case_trace(load('candidate'), signals)
     observed = {}
     for signal, ref, cand in zip(signals, ref_values, cand_values):
         metrics = compare(zip(ref_times, ref), zip(cand_times, cand), start=start, stop=stop, ts=ts,
-                          atol=signal['atol'], scale=signal.get('scale'))
+                          atol=signal['atol'], scale=signal.get('scale'), policy=policy)
         observed[signal['name']] = dict(unit=signal['unit'], **metrics)
-    return dict(policy='transient-windowed-v1', scope='transient_metrics_only',
+    if policy == 'transient-windowed-v2':
+        coverage = {'reference': ref_times[0] <= 0 <= ref_times[-1],
+                    'candidate': cand_times[0] <= 0 <= cand_times[-1]}
+        return dict(policy=policy, scope='transient_metrics_only',
+                    passed=all(metrics['passed'] for metrics in observed.values()),
+                    required_interval=[start, stop], coverage_scope='whole_declared_recording',
+                    startup_compared=start == 0, startup_available=coverage,
+                    startup_observed=start == 0 and all(coverage.values()),
+                    startup_samples={'reference': 0 in ref_times, 'candidate': 0 in cand_times},
+                    inputs=pins, signals=observed)
+    return dict(policy=policy, scope='transient_metrics_only',
                 passed=all(metrics['passed'] for metrics in observed.values()),
                 required_interval=[start, stop], startup_observed=True,
                 startup_samples={'reference': start in ref_times, 'candidate': start in cand_times},
@@ -290,9 +317,11 @@ def main(argv=None):
     parser.add_argument('reference')
     parser.add_argument('candidate')
     parser.add_argument('--manifest', required=True)
+    parser.add_argument('--policy', choices=('transient-windowed-v1', 'transient-windowed-v2'),
+                        default='transient-windowed-v1')
     args = parser.parse_args(argv)
     try:
-        result = compare_case(args.reference, args.candidate, args.manifest)
+        result = compare_case(args.reference, args.candidate, args.manifest, policy=args.policy)
     except (OSError, ValueError, OverflowError, csv.Error) as error:
         parser.error(str(error))
     print(json.dumps(result, indent=2, allow_nan=False))
