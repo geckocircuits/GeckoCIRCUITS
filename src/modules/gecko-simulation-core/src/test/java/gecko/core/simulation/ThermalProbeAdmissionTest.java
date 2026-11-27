@@ -120,6 +120,14 @@ class ThermalProbeAdmissionTest {
                 && item.component().equals("FLOW.X")), result.diagnostics().toString());
     }
 
+    @Test
+    void aLegacyFlowProbeWithoutAnIdentifierCanReferenceAThermalResistorByName() throws Exception {
+        var blocks = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID);
+        var probe = ThermalFixture.control(17, "FLOW.R", 6113, "", "PR", "/Rth.S/NIX_NIX_NIX/0", "");
+        var result = report(ThermalFixture.model(blocks + probe));
+        assertEquals(ReadinessReport.Outcome.READY, result.outcome(), result.diagnostics().toString());
+    }
+
     private static CircuitModel thermalComponentReference(String blocks, String probe, String reference) throws Exception {
         var model = ThermalFixture.model(blocks);
         var component = model.getControlComponents().stream().filter(item -> probe.equals(item.getName())).findFirst().orElseThrow();
