@@ -18,19 +18,31 @@ public final class Main {
 
     /** Returns zero for a complete import, two for a partial import, or one for an input/output error. */
     public static int run(String[] args, PrintStream output, PrintStream errors) {
-        boolean exponentialDiodes = args.length > 0 && args[args.length - 1].equals("--exponential-diodes");
-        if (exponentialDiodes) args = java.util.Arrays.copyOf(args, args.length - 1);
+        boolean exponentialDiodes = false;
+        boolean bipolarTransistors = false;
+        int length = args.length;
+        while (length > 2) {
+            String flag = args[length - 1];
+            if (flag.equals("--exponential-diodes")) exponentialDiodes = true;
+            else if (flag.equals("--bipolar-transistors")) bipolarTransistors = true;
+            else break;
+            length--;
+        }
+        if (length != args.length) args = java.util.Arrays.copyOf(args, length);
         boolean ascOptions = args.length >= 4 && args.length % 2 == 0 && args[2].equals("--symbols")
                 && args[0].toLowerCase(Locale.ROOT).endsWith(".asc");
         if (args.length != 2 && !ascOptions) {
             errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
-                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]] [--exponential-diodes]");
+                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]] [--exponential-diodes] [--bipolar-transistors]");
             return 1;
         }
         try {
             Path input = Path.of(args[0]);
             String inputName = input.toString();
             String lowerName = inputName.toLowerCase(Locale.ROOT);
+            if (bipolarTransistors && !lowerName.endsWith(".cir")) {
+                throw new IllegalArgumentException("Use the bipolar transistor option only with flat SPICE AC input.");
+            }
             CircuitModel model;
             if (lowerName.endsWith(".asc")) {
                 var importer = new LtspiceImporter(exponentialDiodes);
@@ -55,7 +67,10 @@ public final class Main {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
                 model = lowerName.endsWith(".plecs")
                         ? new PlecsImporter().convert(source, inputName)
-                        : new SpiceImporter(exponentialDiodes).convert(source, inputName);
+                        : new SpiceImporter(exponentialDiodes, bipolarTransistors).convert(source, inputName);
+            }
+            if (bipolarTransistors && model.getAcSettings() == null) {
+                throw new IllegalArgumentException("Use the bipolar transistor option only with flat SPICE AC input.");
             }
             if (exponentialDiodes && model.getAcSettings() == null) {
                 throw new IllegalArgumentException("Use the exponential diode option only with SPICE or LTspice AC input.");

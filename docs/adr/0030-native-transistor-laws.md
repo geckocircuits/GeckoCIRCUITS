@@ -27,6 +27,10 @@ The TL431 comparator trial replaces its external 2N2907 with a switch. The switc
 
 Start with terminal-current and derivative tests for BJT and MOSFET laws. The BJT pilot is the archive's TL431 discrete AC test. Its child uses bipolar transistors, diodes, resistors, and capacitors. Preserve the transistor area multipliers and its hierarchical terminal connections. The unchanged archive case 443 gives a 401-point LTspice reference. The generated deck contains all 11 BJTs. LTspice uses Gmin stepping to establish its bias [S, High]. Retain the authored model cards and gate-drive circuits. Qualify each import on the original analysis and its physical traces. Record an approximation on the archive issue only after its affected traces and limits are known.
 
-## Status
+## Initial AC scope
 
-Proposed by Codex on 2026-11-27. The tests above compare two LTspice configurations. Gecko device-model parity and archive qualification remain unverified.
+Use a nominal-temperature bipolar law with collector, base, and emitter terminals. Preserve local model cards and device area. Accept an implicit substrate or an explicit grounded substrate. Reject unsupported substrate and model effects.
+
+Solve the nonlinear bias before the AC sweep. Include Early effect, gain reduction at high current, terminal resistance, depletion capacitance, and diffusion charge. Use source stepping for feedback circuits with a difficult bias. Keep the opt-in off by default.
+
+The flat import path accepts the expanded electrical deck of the TL431 pilot. Device terminal currents, direct schematic hierarchy import, transient bipolar operation, and MOSFET operation need separate support. The acceptance evidence belongs to the issue and its pull request. [#164](https://github.com/tinix84/GeckoCIRCUITS/issues/164)

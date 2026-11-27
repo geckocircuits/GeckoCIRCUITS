@@ -68,7 +68,7 @@ class NativeExponentialDiodeAcTest {
 
     @Test
     void rejectsModelEffectsOutsideTheSupportedLaw() {
-        var model = new SpiceImporter(true).convert(DECK.replace("tt=100n", "Cjo=100p"), "diode.cir");
+        var model = new SpiceImporter(true).convert(DECK.replace("tt=100n", "Bv=50"), "diode.cir");
         assertTrue(model.getImportIssues().stream().anyMatch(issue -> issue.component().equals("D1")));
     }
 }
