@@ -13,6 +13,7 @@
  */
 package gecko.core.simulation;
 
+import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.allg.SolverType;
 import gecko.core.circuit.losscalculation.SemiconductorLossModel;
 import gecko.core.circuit.netlist.CircuitNetlist;
@@ -72,7 +73,7 @@ final class ThermalNetwork {
         if (thermal.getElementCount() == 0) return null;
         List<LossSource> sources = new ArrayList<>();
         for (var component : model.getThermalComponents()) {
-            if (component.getType() != 41) continue;
+            if (component.getType() != CircuitTypCore.TH_PvCHIP.getTypeNumber()) continue;
             int flow = thermal.getElementIndexByName(component.getName());
             int resistor = thermal.getElementIndexByName(component.getName() + NetlistBuilder.LOSS_SOURCE_RESISTOR_SUFFIX);
             if (flow < 0 || resistor < 0) continue; // The source is disabled.

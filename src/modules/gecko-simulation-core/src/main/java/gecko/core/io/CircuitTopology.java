@@ -1,5 +1,6 @@
 package gecko.core.io;
 
+import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -304,7 +305,7 @@ public final class CircuitTopology {
                         .map(java.util.Map.Entry::getKey).findFirst().orElse(null);
                 // A loss source may leave its output open: its 10 kOhm resistor ties the node to the thermal zero.
                 boolean openLossSource = owner != null && first.id().component().domain().equals("THERMAL")
-                        && owner.getType() == 41;
+                        && owner.getType() == CircuitTypCore.TH_PvCHIP.getTypeNumber();
                 if (!openLossSource) {
                     String name = owner == null ? "" : java.util.Objects.toString(owner.getName(), "");
                     physicalConnectionIssues.add("Component '" + name + "' has an unconnected "
@@ -648,7 +649,8 @@ public final class CircuitTopology {
                         geometry = new CircuitModel.TerminalData(terminalDomain, terminalSheet, side, port, x, y, true);
                     }
                     boolean zeroTerminal = domain.equals("THERMAL") && port == 0
-                            && (component.getType() == 41 && side == Side.INPUT || component.getType() == 48 && side == Side.OUTPUT);
+                            && (component.getType() == CircuitTypCore.TH_PvCHIP.getTypeNumber() && side == Side.INPUT
+                            || component.getType() == CircuitTypCore.TH_AMBIENT.getTypeNumber() && side == Side.OUTPUT);
                     if (zeroTerminal && geometry == null) {
                         geometry = new CircuitModel.TerminalData(terminalDomain, 0, side, port, THERMAL_ZERO, THERMAL_ZERO, true);
                     } else if (geometry != null && geometry.geometric() && geometry.domain().equals("THERMAL")

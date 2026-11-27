@@ -152,7 +152,7 @@ final class CircuitReadiness {
                     diagnostics.add(thermal("UNSUPPORTED_PARAMETER", Diagnostic.Category.CAPABILITY, component,
                             component.getName() + ".sourceType", "This thermal source mode is unsupported by the headless engine."));
                 }
-            } else if (type == 41) {
+            } else if (type == CircuitTypCore.TH_PvCHIP.getTypeNumber()) {
                 var resolution = ThermalLossSources.resolve(model, component);
                 if (resolution.spec() == null) {
                     runnable = false;
