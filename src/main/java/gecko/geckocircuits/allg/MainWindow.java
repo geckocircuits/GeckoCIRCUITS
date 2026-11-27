@@ -981,6 +981,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public void createNewFile() {
         documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();
+        _solverSettings.transientUic.setValueWithoutUndo(false);
         optimizerParameterData.clear();
         aktuellerDateiName = UNTITLED;
         this.setTitle(aktuellerDateiName + spTitleX + "GeckoCIRCUITS");
@@ -1124,7 +1125,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public void openFile(String dateiName) throws FileNotFoundException {
         if (!new File(dateiName).exists()) throw new FileNotFoundException(dateiName);
         String[] lines = getLinesArrayFromIpesFile(dateiName);
-        ProjectData.preflightOutputStart(lines);
+        ProjectData.preflightTransientSettings(lines);
         var validatedAcValues = ProjectData.preflightRequiredAc(lines, dateiName);
         documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();

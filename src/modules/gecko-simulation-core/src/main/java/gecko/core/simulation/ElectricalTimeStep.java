@@ -123,6 +123,10 @@ final class ElectricalTimeStep {
     }
 
     ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, SolverFeatures features) {
+        this(netlist, solverType, features, false);
+    }
+
+    ElectricalTimeStep(CircuitNetlist netlist, SolverType solverType, SolverFeatures features, boolean uic) {
         this.adaptive = features.adaptiveStep();
         if (adaptive != null && solverType == SolverType.SOLVER_GS) {
             throw new IllegalArgumentException(SimulationTiming.GS_ADAPTIVE_MESSAGE);
@@ -139,6 +143,7 @@ final class ElectricalTimeStep {
         publicPotentials = new double[matrixSolver.getMatrixSize()];
         InitialConditionSolver initialConditions = new InitialConditionSolver(solverType);
         if (features.dcOperatingPoint()) initialConditions.setDcOperatingPoint(matrixSolver, numericalNetlist);
+        else if (uic) initialConditions.setConstrainedInitialConditions(matrixSolver, numericalNetlist);
         else initialConditions.setDialogInitialConditions(matrixSolver, numericalNetlist);
         initializationBackend = initialConditions.getLastSolverBackend();
         initializationStoredCoefficients = initialConditions.getLastSolverStoredCoefficients();
@@ -420,7 +425,7 @@ final class ElectricalTimeStep {
         committedOnce = true;
     }
 
-    private void publishGrid(double time, HeadlessSimulationEngine.StepTraceListener traceListener) {
+    void publishGrid(double time, HeadlessSimulationEngine.StepTraceListener traceListener) {
         double[] currents = matrixSolver.getIALT();
         double[] potentials = matrixSolver.getPALT();
         System.arraycopy(potentials, 0, publicPotentials, 0, potentials.length);

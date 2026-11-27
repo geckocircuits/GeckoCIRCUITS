@@ -493,11 +493,20 @@ class LtspiceImporterTest {
         var invalid = convert(source.replace(".tran 1u 6m", ".tran -1u 6m") + option);
         assertEquals(List.of("INVALID_TRANSIENT", "UNSUPPORTED_DIRECTIVE"),
                 invalid.getConversionIssues().stream().map(issue -> issue.code()).toList());
-        var uic = convert(source.replace(".tran 1u 6m", ".tran 1u 6m uic") + option);
+        var startup = convert(source.replace(".tran 1u 6m", ".tran 1u 6m startup") + option);
         assertEquals(List.of("UNSUPPORTED_TRANSIENT_OPTION"),
-                uic.getConversionIssues().stream().map(issue -> issue.code()).toList());
+                startup.getConversionIssues().stream().map(issue -> issue.code()).toList());
         var mixed = convert(source + option + "\nTEXT 0 256 Left 2 !.ac dec 10 1 100");
         assertTrue(mixed.getConversionIssues().stream().anyMatch(issue -> issue.code().equals("MULTIPLE_ANALYSES")));
+    }
+
+    @Test void preservesAuthoredUicAndOutputWindowThroughNativeIO() throws Exception {
+        var model = roundTrip(convert(fixture("rc.asc").replace("PULSE(0 5 100u 1u 1u 8m 20m)", "1")
+                .replace(".tran 1u 6m", ".tran 0 2m 1m 1u uic")));
+        assertTrue(model.getConversionIssues().isEmpty(), model.getConversionIssues().toString());
+        assertTrue(model.isTransientUic());
+        assertEquals(1e-3, model.getOutputStartTime());
+        assertEquals(1e-6, model.getTimeStep());
     }
 
     @Test void childTransientWithoutRootAnalysisDoesNotEnableParameterLogging() {

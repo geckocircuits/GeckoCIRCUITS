@@ -178,6 +178,7 @@ public final class DesktopSimulationController {
         externalSettings.dt.setValueWithoutUndo(settings.dt.getValue());
         externalSettings._tDURATION.setValueWithoutUndo(end);
         externalSettings.outputStartTime.setValueWithoutUndo(settings.outputStartTime.getValue());
+        externalSettings.transientUic.setValueWithoutUndo(settings.transientUic.getValue());
         externalSettings._tPAUSE.setValueWithoutUndo(settings._tPAUSE.getValue());
         externalSettings.SOLVER_TYPE.setValueWithoutUndo(settings.SOLVER_TYPE.getValue());
         return initializeScript(externalSettings, settings.dt.getValue(), end);

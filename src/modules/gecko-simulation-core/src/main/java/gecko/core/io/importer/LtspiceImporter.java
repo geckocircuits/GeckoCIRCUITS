@@ -618,6 +618,8 @@ public final class LtspiceImporter {
         } catch (IllegalArgumentException error) {
             return directive; // The SPICE importer records the malformed argument list.
         }
+        boolean uic = arguments.length > 0 && arguments[arguments.length - 1].equalsIgnoreCase("uic");
+        if (uic) arguments = java.util.Arrays.copyOf(arguments, arguments.length - 1);
         var times = new ArrayList<String>();
         boolean hasOptions = false;
         for (String argument : arguments) {
@@ -629,7 +631,7 @@ public final class LtspiceImporter {
             } else times.add(argument);
         }
         if (times.size() == 1) times.addFirst("0");
-        return new Line(directive.number(), ".tran " + String.join(" ", times));
+        return new Line(directive.number(), ".tran " + String.join(" ", times) + (uic ? " uic" : ""));
     }
 
     private static List<PlacedSymbol> placeSymbols(List<Symbol> symbols, String sourceName,

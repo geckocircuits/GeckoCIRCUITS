@@ -88,6 +88,8 @@ public final class SimulationSession implements AutoCloseable {
     /** Committed step count at which the main phase of a periodic search began. Zero when the search is off. */
     private int loggingOrigin;
     private final RecordingWindow recordingWindow;
+    private final boolean uic;
+    private boolean initialObservationPending;
     private volatile SteadyStateReport steadyState;
 
     private SimulationSession(CircuitModel model, SolverSettingsCore settings, ExecutionOptions options,
@@ -98,6 +100,8 @@ public final class SimulationSession implements AutoCloseable {
         double dt = settings.getStepWidth();
         double duration = settings.getSimulationDuration();
         recordingWindow = new RecordingWindow(model == null ? 0 : model.getOutputStartTime());
+        uic = model != null && model.isTransientUic();
+        initialObservationPending = uic;
         zeroCrossing = settings.isZeroCrossing() || settings.getAdaptiveStep() != null;
         PeriodicSteadyStateSettings search = settings.getPeriodicSteadyState();
         // The search seeds itself from the DC operating point. The caller's settings stay as given.
@@ -157,7 +161,7 @@ public final class SimulationSession implements AutoCloseable {
             ElectricalTimeStep constructedElectrical = hasElectrical
                     ? new ElectricalTimeStep(constructedNetlist, settings.getSolverType(),
                             new SolverFeatures(0, settings.isZeroCrossing(), dcStart, null,
-                                    settings.getAdaptiveStep(), settings.getSparseSolver())) : null;
+                                    settings.getAdaptiveStep(), settings.getSparseSolver()), uic) : null;
             netlist = constructedNetlist;
             control = constructedControl;
             signalNames = constructedSignalNames;
@@ -235,6 +239,7 @@ public final class SimulationSession implements AutoCloseable {
                     before.endTime(), before.stepWidth());
             recording.setContainerStatus(ContainerStatus.RUNNING);
             try {
+                boolean initialObservation = initialObservationPending;
                 double nextTime = SimulationTiming.nextTime(time, before.stepWidth());
                 control.initializeAtSimulationStart();
                 if (netlist != null) netlist.setSimulationTime(time);
@@ -243,7 +248,8 @@ public final class SimulationSession implements AutoCloseable {
                     HeadlessSimulationEngine.StepTraceListener capture = listener == null ? null :
                             (t, volts, currents, circuit) -> trace[0] = new Trace(t, volts.clone(), currents.clone(),
                                     circuit.detachedSnapshot());
-                    if (zeroCrossing) electrical.advanceInterval(before.stepWidth(), time, capture);
+                    if (initialObservation) electrical.publishGrid(time, capture);
+                    else if (zeroCrossing) electrical.advanceInterval(before.stepWidth(), time, capture);
                     else electrical.advance(before.stepWidth(), time, capture);
                 }
                 control.advanceAfterElectricalStep(netlist, time);
@@ -251,8 +257,10 @@ public final class SimulationSession implements AutoCloseable {
                 if (control.hasScope()) values = control.sampleScope();
                 else if (electrical != null) electrical.copyNodeVoltagesTo(values);
                 boolean inRecordingWindow = recordingWindow.includes(time);
+                int observationIndex = before.committedSteps() - loggingOrigin;
+                if (uic && !initialObservation) observationIndex++;
                 if (inRecordingWindow && !searching && options.loggingEnabled()
-                        && (before.committedSteps() - loggingOrigin) % options.loggingInterval() == 0) {
+                        && observationIndex % options.loggingInterval() == 0) {
                     recording.insertValuesAtEnd(values, time);
                     recordedSamples++;
                 }
@@ -277,7 +285,8 @@ public final class SimulationSession implements AutoCloseable {
                         nextState = State.COMPLETED;
                     }
                 }
-                status = statusFor(nextState, before.committedSteps() + 1, time, nextTime,
+                initialObservationPending = false;
+                status = statusFor(nextState, before.committedSteps() + (initialObservation ? 0 : 1), time, nextTime,
                         endTime, before.stepWidth());
                 recording.setContainerStatus(nextState == State.COMPLETED ? ContainerStatus.FINISHED
                         : nextState == State.RUNNING ? ContainerStatus.RUNNING : ContainerStatus.PAUSED);
@@ -455,6 +464,9 @@ public final class SimulationSession implements AutoCloseable {
     private void extendAtBoundary(double endTime, double step, Phase nextPhase, boolean automaticPhase) {
         Status before = status;
         if (before.state() == State.FAILED) throw new IllegalStateException("The simulation session has failed.");
+        if (uic && step != before.stepWidth()) {
+            throw new IllegalArgumentException("UIC continuation requires the original step width.");
+        }
         int additional = SimulationTiming.remainingSteps(before.nextTime(), endTime, step, before.committedSteps());
         if ((!automaticPhase && endTime <= before.endTime()) || (automaticPhase && endTime < before.endTime())
                 || !automaticPhase && endTime < before.nextTime()) {

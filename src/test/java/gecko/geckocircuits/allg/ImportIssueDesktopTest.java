@@ -38,6 +38,41 @@ class ImportIssueDesktopTest {
 
     @Test
     @Timeout(90)
+    void preservesExplicitUicInDesktopSaveAndRejectsInvalidMarkerBeforeReplacingTheDocument(
+            @TempDir(cleanup = org.junit.jupiter.api.io.CleanupMode.NEVER) Path directory) throws Exception {
+        var source = directory.resolve("uic.ipes");
+        var model = new SpiceImporter().convert(
+                "V1 in 0 1\nR1 in out 1k\nC1 out 0 1u IC=0.25\n.tran 1u 2u uic", "uic.cir");
+        new CircuitFileWriter().write(model, source);
+        var invalid = directory.resolve("invalid-uic.ipes");
+        String duplicate = "tDURATION 0.002\ntransientUic 1\ntransientUic 0\n";
+        try (var stream = new java.util.zip.GZIPOutputStream(Files.newOutputStream(invalid))) {
+            stream.write(duplicate.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        }
+        runOnDesktop(window -> {
+            window.openFile(source.toString());
+            assertTrue(MainWindow._solverSettings.transientUic.getValue());
+            var saved = directory.resolve("uic-saved.ipes");
+            window.rawSaveFile(saved.toFile());
+            assertTrue(new CircuitFileParser().parse(saved.toString()).isTransientUic());
+            window.openFile(saved.toString());
+            var elements = List.copyOf(MainWindow._se._circuitSheet.getAllElements());
+            var title = window.getTitle();
+            assertThrows(IllegalArgumentException.class, () -> window.openFile(invalid.toString()));
+            assertThrows(IllegalArgumentException.class, () -> window.openFile(
+                    new java.io.BufferedReader(new java.io.StringReader(duplicate))));
+            assertIterableEquals(elements, MainWindow._se._circuitSheet.getAllElements());
+            assertEquals(title, window.getTitle());
+            assertTrue(MainWindow._solverSettings.transientUic.getValue());
+            window.createNewFile();
+            assertFalse(MainWindow._solverSettings.transientUic.getValue());
+            window.openFile(saved.toString());
+            assertTrue(MainWindow._solverSettings.transientUic.getValue());
+        });
+    }
+
+    @Test
+    @Timeout(90)
     void transientRecordingStartSurvivesDesktopSaveAndInvalidOpenIsAtomic(
             @TempDir(cleanup = org.junit.jupiter.api.io.CleanupMode.NEVER) Path directory) throws Exception {
         var original = directory.resolve("recording.ipes");

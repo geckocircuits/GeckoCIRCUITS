@@ -80,6 +80,7 @@ public final class ProjectData implements Serializable {
     // Simulationsparameter
     public double _dt, _tDURATION;
     private double outputStartTime;
+    private boolean transientUic;
     public double _tPAUSE = -1;
     //------------------
     // Ansicht im SchematicEntry
@@ -126,6 +127,7 @@ public final class ProjectData implements Serializable {
         this._dt = solverSettings.dt.getValue();
         this._tDURATION = solverSettings._tDURATION.getValue();
         this.outputStartTime = solverSettings.outputStartTime.getValue();
+        this.transientUic = solverSettings.transientUic.getValue();
         if (!gecko.core.simulation.SimulationTiming.validOutputStart(outputStartTime, _tDURATION)) {
             throw new IllegalArgumentException("Output start time must be finite and between zero and the stop time.");
         }
@@ -169,8 +171,21 @@ public final class ProjectData implements Serializable {
         _uniqueFileId = this.importASCII(ascii, isBackupRead, modelFileName, validatedAcValues);
     }
 
-    static void preflightOutputStart(String[] ascii) {
-        readOutputStart(new TokenMap(ascii, true));
+    static void preflightTransientSettings(String[] ascii) {
+        var tokens = new TokenMap(ascii, true);
+        readOutputStart(tokens);
+        readTransientUic(ascii, tokens);
+    }
+
+    private static boolean readTransientUic(String[] ascii, TokenMap tokens) {
+        if (!tokens.containsToken("transientUic")) return false;
+        long count = java.util.Arrays.stream(ascii).filter(line ->
+                line.strip().split("\\s+", 2)[0].equals("transientUic")).count();
+        String value = tokens.readDataLine("transientUic", "");
+        if (count != 1 || !List.of("0", "1").contains(value)) {
+            throw new IllegalArgumentException("The saved UIC setting must occur once and contain 0 or 1.");
+        }
+        return value.equals("1");
     }
 
     private static double readOutputStart(TokenMap tokens) {
@@ -301,6 +316,7 @@ public final class ProjectData implements Serializable {
         // Simulations-Einstellungen:
         asc.append("\ntDURATION ").append(_tDURATION);
         if (outputStartTime != 0) asc.append("\ntOUTPUT_START ").append(outputStartTime);
+        if (transientUic) asc.append("\ntransientUic 1");
         asc.append("\ndt ").append(_dt);
         asc.append("\ntPAUSE ").append(_tPAUSE);
         asc.append("\nT_pre ").append(_T_pre);
@@ -365,6 +381,7 @@ public final class ProjectData implements Serializable {
             return uniqueFileId;
         }
         outputStartTime = readOutputStart(tokenMap);
+        transientUic = readTransientUic(ascii, tokenMap);
         try {
             conversionIssues = ImportIssueCodec.decodeDocument(ascii);
         } catch (CircuitParseException error) {
@@ -931,6 +948,7 @@ public final class ProjectData implements Serializable {
         solverSettings.dt.setValueWithoutUndo(_dt);
         solverSettings._tDURATION.setValueWithoutUndo(_tDURATION);
         solverSettings.outputStartTime.setValueWithoutUndo(outputStartTime);
+        solverSettings.transientUic.setValueWithoutUndo(transientUic);
         solverSettings._T_pre.setValueWithoutUndo(_T_pre);
         solverSettings._dt_pre.setValueWithoutUndo(_dt_pre);
         solverSettings.SOLVER_TYPE.setValueWithoutUndo(SolverType.getFromOldGeckoIndex(solverType));

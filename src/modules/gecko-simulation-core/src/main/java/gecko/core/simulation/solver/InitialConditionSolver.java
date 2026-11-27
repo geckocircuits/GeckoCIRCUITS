@@ -112,6 +112,15 @@ public class InitialConditionSolver {
      * Other zero-start circuits retain their existing startup convention.
      */
     public void setDialogInitialConditions(MatrixSolver matrixSolver, INetList netlist) {
+        setInitialConditionsFromElements(matrixSolver, netlist, false);
+    }
+
+    /** Solve algebraic states with configured capacitor voltages, including zero. */
+    public void setConstrainedInitialConditions(MatrixSolver matrixSolver, INetList netlist) {
+        setInitialConditionsFromElements(matrixSolver, netlist, true);
+    }
+
+    private void setInitialConditionsFromElements(MatrixSolver matrixSolver, INetList netlist, boolean constrainZero) {
         validateState(matrixSolver, netlist);
         boolean hasInitialState = false;
         boolean hasPwlSource = false;
@@ -126,7 +135,7 @@ public class InitialConditionSolver {
                 hasInitialState |= value != 0;
             }
         }
-        if (!hasInitialState && !hasPwlSource) {
+        if (!constrainZero && !hasInitialState && !hasPwlSource) {
             seedHistories(matrixSolver, new double[matrixSolver.getMatrixSize()],
                     new double[netlist.getElementCount()]);
             return;

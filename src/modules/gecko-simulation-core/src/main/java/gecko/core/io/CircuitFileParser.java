@@ -247,6 +247,16 @@ public class CircuitFileParser {
             model.setSimulationDuration(readSavedTiming(model, lines, tokenMap, "tDURATION", "duration", 0.02));
         }
 
+        if (tokenMap.containsKey("transientUic")) {
+            long count = java.util.Arrays.stream(lines).filter(line ->
+                    line.strip().split("\\s+", 2)[0].equals("transientUic")).count();
+            String[] marker = lines[tokenMap.get("transientUic")].strip().split("\\s+");
+            String value = marker.length == 2 ? marker[1] : "";
+            if (count != 1 || !List.of("0", "1").contains(value)) {
+                throw new CircuitParseException(model.getFilePath() + ": invalid or repeated transientUic setting.");
+            }
+            model.setTransientUic(value.equals("1"));
+        }
         if (tokenMap.containsKey("tOUTPUT_START")) {
             double outputStart = readSavedTiming(model, lines, tokenMap, "tOUTPUT_START", "outputStartTime", 0);
             if (outputStart < 0) addInvalidSavedSetting(model, tokenMap, "tOUTPUT_START", "outputStartTime");

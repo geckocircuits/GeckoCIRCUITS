@@ -422,6 +422,9 @@ public final class SimulationRunner {
     }
 
     private static void requireOutputStart(SolverSettings settings, double stop) {
+        if (settings.transientUic.getValue()) {
+            throw new IllegalArgumentException("UIC requires the core transient backend.");
+        }
         if (!gecko.core.simulation.SimulationTiming.validOutputStart(settings.outputStartTime.getValue(), stop)) {
             throw new IllegalArgumentException("Output start time must be finite and between zero and the stop time.");
         }

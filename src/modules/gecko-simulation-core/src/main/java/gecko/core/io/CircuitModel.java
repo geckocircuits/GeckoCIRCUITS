@@ -137,6 +137,7 @@ public class CircuitModel {
     // Simulation parameters
     private double simulationDuration;
     private double outputStartTime;
+    private boolean transientUic;
     private double timeStep;
     private double preSimulationTime;
     private double preSimulationTimeStep;
@@ -223,6 +224,14 @@ public class CircuitModel {
 
     public void setSimulationDuration(double simulationDuration) {
         this.simulationDuration = simulationDuration;
+    }
+
+    public boolean isTransientUic() {
+        return transientUic;
+    }
+
+    public void setTransientUic(boolean transientUic) {
+        this.transientUic = transientUic;
     }
 
     public double getOutputStartTime() {
