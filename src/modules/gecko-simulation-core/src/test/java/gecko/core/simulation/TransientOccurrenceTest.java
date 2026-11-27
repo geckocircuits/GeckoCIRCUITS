@@ -5,6 +5,7 @@ import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitFileWriter;
 import gecko.core.io.CircuitModel;
 import gecko.core.io.HierarchyIndex;
+import gecko.core.io.SavedCircuitBlock;
 import gecko.core.io.importer.LtspiceImporter;
 import gecko.core.io.importer.SpiceImporter;
 import gecko.core.preparation.CircuitPreparation;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +44,11 @@ class TransientOccurrenceTest {
     void savedNativeAscExecutesEachOccurrenceWithItsOwnParametersAndSignedCurrents() throws Exception {
         var ac = importFixture(Files.createDirectory(inputs.resolve("ac")), false);
         assertReturnConnection(ac);
+        var preparation = new CircuitPreparation();
+        assertTrue(preparation.configurationFields(preparation.capture(ac)).stream()
+                .anyMatch(field -> field.component().equals("Rseries")));
+        ac.setAcSettings(null);
+        assertUnsupported(ac, Map.of());
         var model = importTransient();
         assertTrue(model.getConversionIssues().isEmpty(), model.getConversionIssues().toString());
         var probe = model.getControlComponents().stream().filter(component -> component.getType() == 1)
@@ -59,6 +67,9 @@ class TransientOccurrenceTest {
 
         var baseline = ready(reopened, Map.of());
         var overridden = ready(reopened, Map.of(R1 + ".resistance", 2000.0));
+        assertTrue(preparation.configurationFields(baseline.circuit()).stream()
+                .anyMatch(field -> field.component().equals(R1)));
+        ready(reopened, Map.of("Vdrive.sourceType", 0.0));
         String observedSignal = probe.getTerminalYLabels()[0];
         var reopenedProbe = reopened.getControlComponents().stream().filter(c -> c.getName().equals(probe.getName()))
                 .findFirst().orElseThrow();
@@ -106,7 +117,6 @@ class TransientOccurrenceTest {
         }
 
         assertArrayEquals(reopenedBytes, writer.write(reopened));
-        var preparation = new CircuitPreparation();
         var invalid = preparation.prepare(preparation.capture(reopened),
                 new PreparationRequest(solver(), Map.of("Rseries.resistance", 2000.0)));
         assertInstanceOf(PreparationResult.Rejected.class, invalid);
@@ -114,6 +124,68 @@ class TransientOccurrenceTest {
         var unresolved = preparation.prepare(preparation.capture(model), new PreparationRequest(solver(), Map.of()));
         assertTrue(unresolved.report().diagnostics().stream().anyMatch(d -> d.code().equals("INVALID_PROBE_REFERENCE")),
                 unresolved.report().diagnostics().toString());
+    }
+
+    enum UnsupportedChange {
+        INDUCTOR, NON_CONSTANT_SOURCE, UNCAPTURED_RESOURCE, UIC, DISABLED_COMPONENT, DISABLED_OCCURRENCE,
+        CHILD_PROBE, ROOT_CONTROL_ALGORITHM, ROOT_LEGACY_CONTAINER
+    }
+
+    @ParameterizedTest
+    @EnumSource(UnsupportedChange.class)
+    void keepsUnsupportedSavedHierarchyConfigurationsOutOfTransientExecution(UnsupportedChange change)
+            throws Exception {
+        var model = roundTrip(importTransient());
+        var hierarchy = new HierarchyIndex(model);
+        switch (change) {
+            case INDUCTOR -> {
+                var inductor = new CircuitModel.ComponentData(2, "Lload");
+                inductor.setNumericParameters(new double[]{1e-6, 0, 0, 0, 0});
+                inductor.setTerminalXLabels(new String[]{"outA"});
+                inductor.setTerminalYLabels(new String[]{"0"});
+                model.getCircuitComponents().add(inductor);
+            }
+            case NON_CONSTANT_SOURCE -> {
+                var source = component(model, hierarchy, "Vdrive");
+                var values = source.getNumericParameters().clone();
+                values[0] = 402;
+                source.setNumericParameters(values);
+            }
+            case UNCAPTURED_RESOURCE -> model.getResourceFailures().put(7L,
+                    new gecko.core.io.CircuitResourceFailure(7, "waveform.txt", List.of(), "Resource bytes unavailable"));
+            case UIC -> model.setTransientUic(true);
+            case DISABLED_COMPONENT -> replaceSavedToken(component(model, hierarchy, R1), "enabledShorted", "0");
+            case DISABLED_OCCURRENCE -> replaceSavedToken(model.getSpecialComponents().getFirst(), "enabledShorted", "0");
+            case CHILD_PROBE -> replaceSavedToken(model.getControlComponents().getFirst(), "parentSheetIdentifier",
+                    Long.toString(model.getSpecialComponents().getFirst().getSavedBlock().uniqueObjectIdentifier()));
+            case ROOT_CONTROL_ALGORITHM -> model.getControlComponents().add(new CircuitModel.ComponentData(4, "SIGNAL.test"));
+            case ROOT_LEGACY_CONTAINER -> model.getSpecialComponents().add(new CircuitModel.ComponentData(27, "LocalSheet"));
+        }
+        assertUnsupported(model, Map.of());
+    }
+
+    @Test
+    void doesNotAdmitAConstantSourceSwitchedToAWaveformByAnOverride() throws Exception {
+        assertUnsupported(roundTrip(importTransient()), Map.of("Vdrive.sourceType", 1.0));
+    }
+
+    private static void assertUnsupported(CircuitModel model, Map<String, Double> overrides) {
+        var preparation = new CircuitPreparation();
+        var result = preparation.prepare(preparation.capture(model), new PreparationRequest(solver(), overrides));
+        assertInstanceOf(PreparationResult.Rejected.class, result);
+        assertTrue(result.report().diagnostics().stream().anyMatch(d -> d.code().equals("UNSUPPORTED_TRANSIENT_LAW")),
+                result.report().diagnostics().toString());
+    }
+
+    private static CircuitModel roundTrip(CircuitModel model) throws Exception {
+        return new CircuitFileParser().parse(new ByteArrayInputStream(new CircuitFileWriter().write(model)), "native.ipes");
+    }
+
+    private static void replaceSavedToken(CircuitModel.ComponentData component, String field, String value) {
+        var block = component.getSavedBlock();
+        var rows = new ArrayList<>(block.serializedText().lines().filter(row -> !row.startsWith(field + " ")).toList());
+        rows.add(field + " " + value);
+        component.setSavedBlock(SavedCircuitBlock.parse(block.tag(), rows.toArray(String[]::new)));
     }
 
     @Test
