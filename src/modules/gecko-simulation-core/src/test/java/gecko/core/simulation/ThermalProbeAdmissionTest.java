@@ -91,6 +91,50 @@ class ThermalProbeAdmissionTest {
         assertEquals(Diagnostic.Category.REFERENCES, item.category());
     }
 
+    @Test
+    void aTemperatureProbeCanUseTheTerminalsOfAReferencedResistor() throws Exception {
+        var blocks = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID);
+        var probe = ThermalFixture.control(16, "TEMP.R", 6110, "", "TjR", "/Rth.S/0/0",
+                "coupledReferenceID[] 5010 \n");
+        var result = report(thermalComponentReference(blocks + probe, "TEMP.R", "Rth.S"));
+        assertEquals(ReadinessReport.Outcome.READY, result.outcome(), result.diagnostics().toString());
+    }
+
+    @Test
+    void aTemperatureProbeCannotUseALossSourceAsItsComponentReference() throws Exception {
+        var blocks = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID);
+        var probe = ThermalFixture.control(16, "TEMP.PV", 6111, "", "TjP", "/Pv.1/0/0",
+                "coupledReferenceID[] 5001 \n");
+        var result = report(thermalComponentReference(blocks + probe, "TEMP.PV", "Pv.1"));
+        assertTrue(result.diagnostics().stream().anyMatch(item -> item.code().equals("UNSUPPORTED_CONTROL_COMPONENT")
+                && item.component().equals("TEMP.PV")), result.diagnostics().toString());
+    }
+
+    @Test
+    void aFlowProbeWithAnInvalidSavedIdentifierReportsTheReferenceError() throws Exception {
+        var blocks = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID);
+        var probe = ThermalFixture.control(17, "FLOW.X", 6112, "", "PX", "/Rth.S/0/0",
+                "coupledReferenceID[] invalid \n");
+        var result = report(ThermalFixture.model(blocks + probe));
+        assertTrue(result.diagnostics().stream().anyMatch(item -> item.code().equals("INVALID_THERMAL_PROBE")
+                && item.component().equals("FLOW.X")), result.diagnostics().toString());
+    }
+
+    @Test
+    void aLegacyFlowProbeWithoutAnIdentifierCanReferenceAThermalResistorByName() throws Exception {
+        var blocks = ThermalFixture.thermalBlocks(ThermalFixture.SWITCH_ID, ThermalFixture.DIODE_ID);
+        var probe = ThermalFixture.control(17, "FLOW.R", 6113, "", "PR", "/Rth.S/NIX_NIX_NIX/0", "");
+        var result = report(ThermalFixture.model(blocks + probe));
+        assertEquals(ReadinessReport.Outcome.READY, result.outcome(), result.diagnostics().toString());
+    }
+
+    private static CircuitModel thermalComponentReference(String blocks, String probe, String reference) throws Exception {
+        var model = ThermalFixture.model(blocks);
+        var component = model.getControlComponents().stream().filter(item -> probe.equals(item.getName())).findFirst().orElseThrow();
+        component.setParameterStrings(new String[]{reference, ""});
+        return model;
+    }
+
     private static String disabled(String blocks) { return blocks.replace("enabledShorted 1", "enabledShorted 0"); }
 
     private static ReadinessReport withSearch(CircuitModel model) {

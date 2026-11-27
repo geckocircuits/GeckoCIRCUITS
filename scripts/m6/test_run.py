@@ -13,7 +13,7 @@ class DestinationAdmissionTest(TestCase):
                 validate_destinations(sealed / 'new-run', sealed)
 
     def test_existing_report_refuses_before_running_imports(self):
-        output = Path(r'D:\unused-new-run')
+        output = Path(r'D:\unused-new-run').resolve()
         report = output.with_name(output.name + '-scoreboard')
         with patch.object(Path, 'exists', autospec=True, side_effect=lambda path: path == report):
             with self.assertRaisesRegex(ValueError, 'all be new'):
@@ -21,7 +21,8 @@ class DestinationAdmissionTest(TestCase):
 
     def test_existing_temp_refuses_before_running_imports(self):
         output = Path(r'D:\unused-new-run')
-        with patch.object(Path, 'exists', autospec=True, side_effect=lambda path: path.name == output.name and path != output):
+        temp = (Path(r'D:\codex-temp\gecko-m6') / output.name).resolve()
+        with patch.object(Path, 'exists', autospec=True, side_effect=lambda path: path == temp):
             with self.assertRaisesRegex(ValueError, 'all be new'):
                 validate_destinations(output, Path(r'D:\unused-qualification'))
 
