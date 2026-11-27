@@ -41,6 +41,66 @@ public final class AcExecutionPlan {
         }
     }
 
+    private record BipolarDevice(int[] external, int[] intrinsic, double[] resistance, BipolarJunction model) {
+        BipolarJunction.Point at(Complex[] bias) {
+            return model.at(voltage(bias, 2), voltage(bias, 0));
+        }
+
+        double voltage(Complex[] bias, int terminal) {
+            return AcExecutionPlan.at(bias, intrinsic[1]).real() - AcExecutionPlan.at(bias, intrinsic[terminal]).real();
+        }
+
+        void stampSeries(Complex[][] matrix) {
+            for (int terminal = 0; terminal < 3; terminal++) {
+                if (resistance[terminal] == 0) continue;
+                int p = external[terminal], n = intrinsic[terminal];
+                var y = new Complex(1 / resistance[terminal], 0);
+                add(matrix, p, p, y);
+                add(matrix, p, n, y.scale(-1));
+                add(matrix, n, p, y.scale(-1));
+                add(matrix, n, n, y);
+            }
+        }
+
+        void stampJunction(Complex[][] matrix, BipolarJunction.Point point, Complex frequency) {
+            int collector = intrinsic[0], base = intrinsic[1], emitter = intrinsic[2];
+            for (int i = 0; i < 3; i++) {
+                int row = intrinsic[i];
+                var be = new Complex(point.dBe()[i], 0);
+                var bc = new Complex(point.dBc()[i], 0);
+                if (i == 0) bc = bc.subtract(frequency.scale(point.cBc()));
+                if (i == 1) {
+                    be = be.add(frequency.scale(point.cBe()));
+                    bc = bc.add(frequency.scale(point.cBc() + point.cBeBc()));
+                }
+                if (i == 2) {
+                    be = be.subtract(frequency.scale(point.cBe()));
+                    bc = bc.subtract(frequency.scale(point.cBeBc()));
+                }
+                add(matrix, row, base, be.add(bc));
+                add(matrix, row, emitter, be.scale(-1));
+                add(matrix, row, collector, bc.scale(-1));
+            }
+        }
+
+        void stampBias(Complex[][] matrix, Complex[] rhs, Complex[] bias) {
+            var point = at(bias);
+            stampJunction(matrix, point, Complex.ZERO);
+            double be = voltage(bias, 2), bc = voltage(bias, 0);
+            for (int i = 0; i < 3; i++) {
+                double offset = point.current()[i] - point.dBe()[i] * be - point.dBc()[i] * bc;
+                stampCurrent(rhs, intrinsic[i], -1, new Complex(offset, 0));
+            }
+        }
+    }
+
+    private record LinearBipolar(BipolarDevice device, BipolarJunction.Point point) {
+        void stamp(Complex[][] matrix, Complex frequency) {
+            device.stampSeries(matrix);
+            device.stampJunction(matrix, point, frequency);
+        }
+    }
+
     public record DiodeOperatingPoint(String instance, boolean forward, double voltageV,
                                       double currentA, double conductanceS) { }
 
@@ -48,6 +108,7 @@ public final class AcExecutionPlan {
     private final List<Node> nodes;
     private final List<Branch> branches;
     private final int size;
+    private final List<LinearBipolar> bipolarStamps;
     private final AcHierarchyTraces traceBindings;
     private final boolean hierarchical;
     private final List<DiodeOperatingPoint> diodeOperatingPoints;
@@ -86,6 +147,7 @@ public final class AcExecutionPlan {
         var diodes = new LinkedHashMap<Integer, AcComponent.EvaluatedDiode>();
         var exponentialDiodes = new LinkedHashMap<Integer, ShockleyDiode>();
         var inductors = new HashSet<Integer>();
+        var bipolars = new ArrayList<BipolarDevice>();
         boolean frequencyDependentGain = false;
         int nextCurrent = voltageRows;
         for (var component : model.getCircuitComponents()) {
@@ -97,7 +159,7 @@ public final class AcExecutionPlan {
             SpicePorts type = SpicePorts.find("LK", component.getType());
             if (type != SpicePorts.RES && type != SpicePorts.CAP && type != SpicePorts.IND
                     && type != SpicePorts.VOLTAGE && type != SpicePorts.CURRENT && type != SpicePorts.E && type != SpicePorts.G
-                    && type != SpicePorts.DIODE) {
+                    && type != SpicePorts.DIODE && type != SpicePorts.BJT) {
                 throw new IllegalArgumentException("Unsupported AC component: " + component.getName());
             }
             AcComponent owned = component.getAcComponent();
@@ -194,6 +256,18 @@ public final class AcExecutionPlan {
                     prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
+                case AcComponent.Bipolar law -> {
+                    if (type != SpicePorts.BJT || hierarchical || model.getAcProvenance() != null
+                            && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);
+                    var device = BipolarJunction.from(law, parameters);
+                    double[] resistance = device.seriesResistance();
+                    int[] internal = ports.clone();
+                    for (int i = 0; i < internal.length; i++) {
+                        if (resistance[i] > 0) internal[i] = nextCurrent++;
+                    }
+                    bipolars.add(new BipolarDevice(ports, internal, resistance, device));
+                    continue;
+                }
                 case AcComponent.Controlled law -> {
                     if (type != SpicePorts.E) throw wrongLaw(owned);
                     SpiceValue.Transfer gain;
@@ -212,18 +286,27 @@ public final class AcExecutionPlan {
             traceBindings.addBranch(terminalIds[0], terminalIds[1]);
         }
         if (hierarchical) traceBindings.resolve();
-        if (prepared.isEmpty()) throw new IllegalArgumentException("Add an AC circuit component.");
-        if ((!diodes.isEmpty() || !exponentialDiodes.isEmpty()) && (!inductors.isEmpty() || frequencyDependentGain)) {
-            throw new IllegalArgumentException("DC diode bias requires static gains and nonzero inductor series resistance.");
+        if (prepared.isEmpty() && bipolars.isEmpty()) throw new IllegalArgumentException("Add an AC circuit component.");
+        if ((!diodes.isEmpty() || !exponentialDiodes.isEmpty() || !bipolars.isEmpty())
+                && (!inductors.isEmpty() || frequencyDependentGain)) {
+            throw new IllegalArgumentException("Nonlinear DC bias requires static gains and nonzero inductor series resistance.");
         }
         if (!exponentialDiodes.isEmpty() && !diodes.isEmpty()) {
             throw new IllegalArgumentException("Use one diode law in an AC bias solve.");
         }
-        diodeOperatingPoints = exponentialDiodes.isEmpty()
-                ? (diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent))
-                : linearizeExponentialDiodes(prepared, exponentialDiodes, nextCurrent);
+        if (bipolars.isEmpty()) {
+            bipolarStamps = List.of();
+            diodeOperatingPoints = exponentialDiodes.isEmpty()
+                    ? (diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent))
+                    : linearizeExponentialDiodes(prepared, exponentialDiodes, nextCurrent);
+        } else {
+            if (!diodes.isEmpty()) throw new IllegalArgumentException("Use exponential diodes with AC bipolar transistors.");
+            Complex[] bias = solveBipolarBias(prepared, exponentialDiodes, bipolars, nextCurrent);
+            bipolarStamps = bipolars.stream().map(device -> new LinearBipolar(device, device.at(bias))).toList();
+            diodeOperatingPoints = commitDiodeBias(prepared, exponentialDiodes, bias);
+        }
         // A feedback VCCS can constrain a node without a galvanic path. Use matrix rank for this circuit.
-        if (prepared.stream().noneMatch(branch -> branch.currentRow < 0 && branch.gain != null)) {
+        if (bipolars.isEmpty() && prepared.stream().noneMatch(branch -> branch.currentRow < 0 && branch.gain != null)) {
             validateGroundPaths(groupNodes.values().stream().toList(), prepared, voltageRows);
         }
         nodes = List.copyOf(groupNodes.values());
@@ -345,17 +428,7 @@ public final class AcExecutionPlan {
                 diodeVoltagesConverged &= correction <= 1e-10 + 1e-9 * Math.abs(voltage);
             }
             if (error <= 1e-12 && diodeVoltagesConverged) {
-                var points = new ArrayList<DiodeOperatingPoint>();
-                for (var entry : diodes.entrySet()) {
-                    int index = entry.getKey();
-                    var branch = branches.get(index);
-                    double voltage = branchVoltage(bias, branch);
-                    var diode = entry.getValue().at(voltage);
-                    points.add(new DiodeOperatingPoint(branch.instance, voltage > 0, voltage,
-                            diode.current(), diode.conductance()));
-                    branches.set(index, branch.withAdmittance(diode::admittance));
-                }
-                return List.copyOf(points);
+                return commitDiodeBias(branches, diodes, bias);
             }
             if (iteration == 50) break;
             double scale = 1;
@@ -385,7 +458,45 @@ public final class AcExecutionPlan {
         throw new IllegalArgumentException("The exponential diode DC bias did not converge.");
     }
 
+    private static Complex[] solveBipolarBias(List<Branch> branches, Map<Integer, ShockleyDiode> diodes,
+            List<BipolarDevice> bipolars, int size) {
+        double[] weights = new double[size];
+        Arrays.fill(weights, 1e3);
+        for (var branch : branches) {
+            if (branch.currentRow >= 0) weights[branch.currentRow] = 1;
+        }
+        return BipolarBias.solve(size, weights, fraction -> {
+            var fixed = linearBiasEquations(branches, diodes, size, fraction);
+            bipolars.forEach(device -> device.stampSeries(fixed.matrix));
+            return bias -> {
+                var equations = exponentialBiasEquations(branches, diodes, fixed, bias);
+                bipolars.forEach(device -> device.stampBias(equations.matrix, equations.rhs, bias));
+                return new BipolarBias.Equations(equations.matrix, equations.rhs);
+            };
+        });
+    }
+
+    private static List<DiodeOperatingPoint> commitDiodeBias(List<Branch> branches,
+            Map<Integer, ShockleyDiode> diodes, Complex[] bias) {
+        var points = new ArrayList<DiodeOperatingPoint>();
+        for (var entry : diodes.entrySet()) {
+            int index = entry.getKey();
+            var branch = branches.get(index);
+            double voltage = branchVoltage(bias, branch);
+            var diode = entry.getValue().at(voltage);
+            points.add(new DiodeOperatingPoint(branch.instance, voltage > 0, voltage,
+                    diode.current(), diode.conductance()));
+            branches.set(index, branch.withAdmittance(diode::admittance));
+        }
+        return List.copyOf(points);
+    }
+
     private static BiasEquations linearBiasEquations(List<Branch> branches, Map<Integer, ShockleyDiode> diodes, int size) {
+        return linearBiasEquations(branches, diodes, size, 1);
+    }
+
+    private static BiasEquations linearBiasEquations(List<Branch> branches, Map<Integer, ShockleyDiode> diodes,
+            int size, double sourceScale) {
         Complex[][] matrix = new Complex[size][size];
         for (var row : matrix) Arrays.fill(row, Complex.ZERO);
         Complex[] rhs = new Complex[size];
@@ -396,7 +507,7 @@ public final class AcExecutionPlan {
             if (branch.capacitance > 0) {
                 add(matrix, branch.currentRow, branch.currentRow, Complex.ONE);
             } else {
-                stamp(matrix, rhs, branch.withExcitation(branch.dc), Complex.ZERO, 0);
+                stamp(matrix, rhs, branch.withExcitation(sourceScale * branch.dc), Complex.ZERO, 0);
             }
         }
         return new BiasEquations(matrix, rhs);
@@ -546,6 +657,7 @@ public final class AcExecutionPlan {
                 Complex[] rhs = new Complex[size];
                 Arrays.fill(rhs, Complex.ZERO);
                 for (var branch : branches) stamp(matrix, rhs, branch, s, frequency);
+                for (var bipolar : bipolarStamps) bipolar.stamp(matrix, s);
                 Complex[] x = solve(matrix, rhs);
                 double eta = residual(matrix, rhs, x);
                 if (eta > 1e-12) throw new IllegalArgumentException("The AC backward residual exceeds 1e-12.");

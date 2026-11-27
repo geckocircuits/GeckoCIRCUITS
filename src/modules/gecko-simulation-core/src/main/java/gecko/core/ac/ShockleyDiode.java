@@ -1,7 +1,11 @@
 package gecko.core.ac;
 
 /** Evaluation of a Shockley junction at the nominal LTspice temperature of 27 °C. */
-public record ShockleyDiode(double saturationCurrent, double emissionCoefficient, double resistance, double transitTime) {
+public record ShockleyDiode(double saturationCurrent, double emissionCoefficient, double resistance, double transitTime,
+                     double junctionCapacitance, double junctionPotential, double gradingCoefficient) {
+    ShockleyDiode(double saturationCurrent, double emissionCoefficient, double resistance, double transitTime) {
+        this(saturationCurrent, emissionCoefficient, resistance, transitTime, 0, 1, 0.5);
+    }
     private static final double THERMAL_VOLTAGE = 1.380649e-23 * 300.15 / 1.602176634e-19;
     private static final double GMIN = 1e-12;
 
@@ -9,19 +13,22 @@ public record ShockleyDiode(double saturationCurrent, double emissionCoefficient
         if (!(saturationCurrent > 0 && Double.isFinite(saturationCurrent)
                 && emissionCoefficient * THERMAL_VOLTAGE > 0 && Double.isFinite(emissionCoefficient)
                 && resistance >= 0 && Double.isFinite(resistance)
-                && transitTime >= 0 && Double.isFinite(transitTime))) {
+                && transitTime >= 0 && Double.isFinite(transitTime)
+                && junctionCapacitance >= 0 && Double.isFinite(junctionCapacitance)
+                && junctionPotential > 0 && Double.isFinite(junctionPotential)
+                && gradingCoefficient >= 0 && gradingCoefficient <= 1)) {
             throw new IllegalArgumentException("Require finite exponential diode parameters with positive Is and N.");
         }
     }
 
-    record Point(double current, double junctionConductance, double seriesResistance, double transitTime) {
+    record Point(double current, double junctionConductance, double seriesResistance, double chargeSlope) {
         double conductance() {
             double slope = junctionConductance + GMIN;
             return slope / (1 + seriesResistance * slope);
         }
 
         Complex admittance(Complex s) {
-            var junction = new Complex(junctionConductance + GMIN, 0).add(s.scale(transitTime * junctionConductance));
+            var junction = new Complex(junctionConductance + GMIN, 0).add(s.scale(chargeSlope));
             return junction.divide(Complex.ONE.add(junction.scale(seriesResistance)));
         }
     }
@@ -47,7 +54,15 @@ public record ShockleyDiode(double saturationCurrent, double emissionCoefficient
         if (!Double.isFinite(current) || !Double.isFinite(conductance)) {
             throw new IllegalArgumentException("The exponential diode trial exceeds the numerical range.");
         }
-        return new Point(current, conductance, resistance, transitTime);
+        double capacitance = depletion(junctionCapacitance, junctionVoltage, junctionPotential, gradingCoefficient);
+        return new Point(current, conductance, resistance, transitTime * conductance + capacitance);
+    }
+
+    static double depletion(double capacitance, double voltage, double potential, double exponent) {
+        if (capacitance == 0) return 0;
+        double normalized = voltage / potential;
+        if (normalized < 0.5) return capacitance / Math.pow(1 - normalized, exponent);
+        return capacitance * (0.5 + (normalized - 0.5) * exponent) / Math.pow(0.5, 1 + exponent);
     }
 
     /** Terminal current and charge for the linearization of one transient trial. */

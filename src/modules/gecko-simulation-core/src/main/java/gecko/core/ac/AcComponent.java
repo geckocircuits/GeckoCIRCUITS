@@ -21,10 +21,11 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
     }
 
     private static List<Integer> terminalOrders(Law law) {
+        if (law instanceof Bipolar) return List.of(1, 2, 3);
         return law instanceof Controlled || law instanceof Transconductance ? List.of(1, 2, 3, 4) : List.of(1, 2);
     }
 
-    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode { }
+    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode, Bipolar { }
 
     public record Passive(String expression) implements Law { }
     public record Inductance(String expression, Resistance resistance, AcInputOrigin origin) implements Law {
@@ -100,16 +101,46 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
         }
     }
 
+    /** Imported nominal-temperature AC bipolar transistor with collector, base, and emitter terminals. */
+    public record Bipolar(String modelName, boolean pnp, String area, Map<String, String> parameters) implements Law {
+        public Bipolar {
+            if (!modelName.matches("[A-Za-z0-9_.$+-]+")) {
+                throw new IllegalArgumentException("Require a local bipolar transistor model name.");
+            }
+            parameters = Map.copyOf(parameters);
+        }
+
+        public void validate(Map<String, String> scope) { BipolarJunction.from(this, scope); }
+    }
+
     /** An explicitly selected, nominal-temperature AC diode law. */
     public record ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
-                                   String seriesResistance, String transitTime, boolean transientLaw) implements Law {
+                                   String seriesResistance, String transitTime, String junctionCapacitance,
+                                   String junctionPotential, String gradingCoefficient, boolean transientLaw) implements Law {
         public ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
                                 String seriesResistance, String transitTime) {
             this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime, false);
         }
+
+        public ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
+                                String seriesResistance, String transitTime, boolean transientLaw) {
+            this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime, "0", "1", "0.5", transientLaw);
+        }
+
+        public ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
+                                String seriesResistance, String transitTime, String junctionCapacitance,
+                                String junctionPotential, String gradingCoefficient) {
+            this(modelName, saturationCurrent, emissionCoefficient, seriesResistance, transitTime,
+                    junctionCapacitance, junctionPotential, gradingCoefficient, false);
+        }
+
         public ExponentialDiode {
             if (!modelName.matches("[A-Za-z0-9_.$+-]+")) {
                 throw new IllegalArgumentException("Require a local exponential diode model name.");
+            }
+            if (transientLaw && !("0".equals(junctionCapacitance) && "1".equals(junctionPotential)
+                    && "0.5".equals(gradingCoefficient))) {
+                throw new IllegalArgumentException("Transient exponential diodes support diffusion charge only.");
             }
             modelName = modelName.toLowerCase(Locale.ROOT);
         }
@@ -121,7 +152,8 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
         public ShockleyDiode evaluate(Map<String, String> parameters) {
             return new ShockleyDiode(SpiceValue.evaluate(saturationCurrent, parameters),
                     SpiceValue.evaluate(emissionCoefficient, parameters), SpiceValue.evaluate(seriesResistance, parameters),
-                    SpiceValue.evaluate(transitTime, parameters));
+                    SpiceValue.evaluate(transitTime, parameters), SpiceValue.evaluate(junctionCapacitance, parameters),
+                    SpiceValue.evaluate(junctionPotential, parameters), SpiceValue.evaluate(gradingCoefficient, parameters));
         }
     }
 

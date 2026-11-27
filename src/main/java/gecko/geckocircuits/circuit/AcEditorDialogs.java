@@ -157,6 +157,11 @@ public final class AcEditorDialogs {
                     return edited;
                 };
             }
+            case AcComponent.Bipolar law -> {
+                fields.add(new JLabel("Imported AC bipolar transistor"));
+                fields.add(new JLabel(law.modelName()));
+                updatedLaw = () -> law;
+            }
             case AcComponent.ExponentialDiode law -> {
                 fields.add(new JLabel(law.transientLaw() ? "Imported exponential transient diode" : "Imported exponential AC diode"));
                 fields.add(new JLabel(law.modelName()));

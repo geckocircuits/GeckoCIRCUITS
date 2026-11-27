@@ -25,3 +25,4 @@
 | 2026-11-24 | [ADR-0023: Run the thermal network in the core once per grid step](0023-core-thermal-network.md) |
 | 2026-11-24 | [ADR-0024: Run CONTROL subsystems on their own sample clocks](0024-control-subsystem-sample-clocks.md) |
 | 2026-11-27 | [ADR-0029: Shockley diode](0029-shockley-diode.md) |
+| 2026-11-27 | [ADR-0030: Native transistor laws](0030-native-transistor-laws.md) |
