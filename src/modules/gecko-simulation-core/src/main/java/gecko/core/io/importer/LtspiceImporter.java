@@ -40,6 +40,16 @@ import java.util.Set;
 
 /** Imports standard LTspice symbols and preserves the source wire geometry. */
 public final class LtspiceImporter {
+    private final SpiceImporter spiceImporter;
+
+    public LtspiceImporter() {
+        this(false);
+    }
+
+    public LtspiceImporter(boolean exponentialAcDiodes) {
+        spiceImporter = new SpiceImporter(exponentialAcDiodes);
+    }
+
     private record Point(int x, int y) {
         int[] coordinates() { return new int[]{x, y}; }
     }
@@ -195,14 +205,15 @@ public final class LtspiceImporter {
         for (var component : model.getCircuitComponents()) {
             var descriptor = SpicePorts.find("LK", component.getType());
             String name = descriptor == null ? null : names.get(descriptor);
-            boolean idealDiode = component.getAcComponent() != null
-                    && component.getAcComponent().law() instanceof AcComponent.IdealDiode;
-            if (descriptor == SpicePorts.DIODE && !idealDiode || descriptor == SpicePorts.SW) {
+            boolean acDiode = component.getAcComponent() != null
+                    && (component.getAcComponent().law() instanceof AcComponent.IdealDiode
+                    || component.getAcComponent().law() instanceof AcComponent.ExponentialDiode);
+            if (descriptor == SpicePorts.DIODE && !acDiode || descriptor == SpicePorts.SW) {
                 model.addConversionIssue(new ImportIssue("UNSUPPORTED_STOCK_SYMBOL_VERIFICATION", "LTSPICE",
                         component.getName(), "Stock symbol verification is unsupported for this component.",
                         component.getSourceLocation() == null ? path.toString() : component.getSourceLocation(), true));
             }
-            if (name == null || descriptor == SpicePorts.DIODE && !idealDiode || !checkedStock.add(name)) continue;
+            if (name == null || descriptor == SpicePorts.DIODE && !acDiode || !checkedStock.add(name)) continue;
             Path symbolPath = symbols.resolve(name);
             byte[] symbol = Files.readAllBytes(symbolPath);
             checkSymbol(decode(symbol), descriptor, symbolPath);
@@ -381,7 +392,7 @@ public final class LtspiceImporter {
                 statements.add(normalizeDirective(directive, sourceName, issues));
             }
         }
-        var converted = new SpiceImporter().convert(sourceName, source.hashCode(), statements, nodeLabels,
+        var converted = spiceImporter.convert(sourceName, source.hashCode(), statements, nodeLabels,
                 placements, origin, childContext, scalarReads);
         var model = converted.model();
         issues.forEach(model::addConversionIssue);

@@ -24,7 +24,7 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
         return law instanceof Controlled || law instanceof Transconductance ? List.of(1, 2, 3, 4) : List.of(1, 2);
     }
 
-    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode { }
+    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode { }
 
     public record Passive(String expression) implements Law { }
     public record Inductance(String expression, Resistance resistance, AcInputOrigin origin) implements Law {
@@ -97,6 +97,27 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
                 throw new IllegalArgumentException("Require finite ideal diode coefficients and 0 < Ron < Roff.");
             }
             return new EvaluatedDiode(vfwd, ron, roff);
+        }
+    }
+
+    /** An explicitly selected, nominal-temperature AC diode law. */
+    public record ExponentialDiode(String modelName, String saturationCurrent, String emissionCoefficient,
+                                   String seriesResistance, String transitTime) implements Law {
+        public ExponentialDiode {
+            if (!modelName.matches("[A-Za-z0-9_.$+-]+")) {
+                throw new IllegalArgumentException("Require a local exponential diode model name.");
+            }
+            modelName = modelName.toLowerCase(Locale.ROOT);
+        }
+
+        public void validate(Map<String, String> parameters) {
+            evaluate(parameters);
+        }
+
+        ShockleyDiode evaluate(Map<String, String> parameters) {
+            return new ShockleyDiode(SpiceValue.evaluate(saturationCurrent, parameters),
+                    SpiceValue.evaluate(emissionCoefficient, parameters), SpiceValue.evaluate(seriesResistance, parameters),
+                    SpiceValue.evaluate(transitTime, parameters));
         }
     }
 

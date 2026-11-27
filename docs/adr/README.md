@@ -22,4 +22,5 @@
 | 2026-11-24 | [ADR-0020: Native linear AC analysis](0020-native-linear-ac-analysis.md) |
 | 2026-11-24 | [ADR-0021: Order the enabled LU like the dense reference or like EJML](0021-sparse-numerical-compatibility.md) |
 | 2026-11-24 | [ADR-0022: Native ASC hierarchy](0022-native-asc-hierarchy.md) |
+| 2026-11-27 | [ADR-0029: Shockley diode](0029-shockley-diode.md) |
 | 2026-11-27 | [ADR-0030: Native transistor laws](0030-native-transistor-laws.md) |
