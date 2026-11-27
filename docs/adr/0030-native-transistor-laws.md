@@ -25,7 +25,7 @@ The TL431 comparator trial replaces its external 2N2907 with a switch. The switc
 
 ## Consequences
 
-Start with terminal-current and derivative tests for BJT and MOSFET laws. The BJT pilot is the archive's TL431 discrete AC test. Its child uses bipolar transistors, diodes, resistors, and capacitors. Preserve the transistor area multipliers and its hierarchical terminal connections. Retain the authored model cards and gate-drive circuits. Qualify each import on the original analysis and its physical traces. Record an approximation on the archive issue only after its affected traces and limits are known.
+Start with terminal-current and derivative tests for BJT and MOSFET laws. The BJT pilot is the archive's TL431 discrete AC test. Its child uses bipolar transistors, diodes, resistors, and capacitors. Preserve the transistor area multipliers and its hierarchical terminal connections. The unchanged archive case 443 gives a 401-point LTspice reference. The generated deck contains all 11 BJTs. LTspice uses Gmin stepping to establish its bias [S, High]. Retain the authored model cards and gate-drive circuits. Qualify each import on the original analysis and its physical traces. Record an approximation on the archive issue only after its affected traces and limits are known.
 
 ## Status
 
