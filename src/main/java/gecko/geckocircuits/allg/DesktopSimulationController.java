@@ -169,6 +169,7 @@ public final class DesktopSimulationController {
         SolverSettings externalSettings = new SolverSettings();
         externalSettings.dt.setValueWithoutUndo(settings.dt.getValue());
         externalSettings._tDURATION.setValueWithoutUndo(end);
+        externalSettings.outputStartTime.setValueWithoutUndo(settings.outputStartTime.getValue());
         externalSettings._tPAUSE.setValueWithoutUndo(settings._tPAUSE.getValue());
         externalSettings.SOLVER_TYPE.setValueWithoutUndo(settings.SOLVER_TYPE.getValue());
         return initializeScript(externalSettings, settings.dt.getValue(), end);
@@ -292,12 +293,7 @@ public final class DesktopSimulationController {
     }
 
     private static void drainScriptSamples(CoreScriptExecution execution) {
-        execution.host.drainSamples(sample -> {
-            float[] sourceValues = sample.values();
-            float[] values = new float[execution.rows.length];
-            for (int row = 0; row < execution.rows.length; row++) values[row] = sourceValues[execution.rows[row]];
-            NetzlisteCONTROL.globalData.insertValuesAtEnd(values, sample.time());
-        });
+        execution.host.drainSamples(sample -> recordSample(execution.rows, sample));
     }
 
     private void retireScriptForReplacement() {
@@ -532,11 +528,16 @@ public final class DesktopSimulationController {
         run.host.drainSamples(sample -> insertSample(run, sample));
     }
 
-    private static void insertSample(CoreAsyncExecution run, SimulationSession.Sample sample) {
+    private static void recordSample(int[] rows, SimulationSession.Sample sample) {
+        if (!sample.inRecordingWindow()) return;
         float[] sourceValues = sample.values();
-        float[] values = new float[run.rows.length];
-        for (int row = 0; row < run.rows.length; row++) values[row] = sourceValues[run.rows[row]];
+        float[] values = new float[rows.length];
+        for (int row = 0; row < rows.length; row++) values[row] = sourceValues[rows[row]];
         NetzlisteCONTROL.globalData.insertValuesAtEnd(values, sample.time());
+    }
+
+    private static void insertSample(CoreAsyncExecution run, SimulationSession.Sample sample) {
+        recordSample(run.rows, sample);
     }
 
     private static void setScopeBoundaries(NetListContainer netlist, double start, double end) {
@@ -607,12 +608,7 @@ public final class DesktopSimulationController {
                     Thread.currentThread().interrupt();
                     throw error;
                 }
-                host.drainSamples(sample -> {
-                    float[] sourceValues = sample.values();
-                    float[] values = new float[rows.length];
-                    for (int row = 0; row < rows.length; row++) values[row] = sourceValues[rows[row]];
-                    NetzlisteCONTROL.globalData.insertValuesAtEnd(values, sample.time());
-                });
+                host.drainSamples(sample -> recordSample(rows, sample));
                 completed = true;
                 return true;
             } catch (Exception | Error error) {

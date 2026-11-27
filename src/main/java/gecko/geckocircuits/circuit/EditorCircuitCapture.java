@@ -103,6 +103,9 @@ public final class EditorCircuitCapture {
         section(ascii, "scripterDeclarations", scripts.declarations());
         section(ascii, "extraScriptSourceFiles", scripts.extraFiles());
         ascii.append("\ntDURATION ").append(settings._tDURATION.getValue());
+        if (settings.outputStartTime.getValue() != 0) {
+            ascii.append("\ntOUTPUT_START ").append(settings.outputStartTime.getValue());
+        }
         ascii.append("\ndt ").append(settings.dt.getValue());
         ascii.append("\ntPAUSE ").append(settings._tPAUSE.getValue());
         ascii.append("\nT_pre ").append(settings._T_pre.getValue());

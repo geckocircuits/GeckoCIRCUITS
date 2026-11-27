@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -67,6 +68,65 @@ class CircuitImportContractTest {
             double expected = 5 * (1 - Math.exp(-elapsed / 1e-3));
             assertEquals(expected, voltages.get(i), 0.05, "t=" + times.get(i));
         }
+    }
+
+    @Test void recordingStartsAtTheAuthoredTimeWithoutChangingTheRcTrajectory() throws Exception {
+        String circuit = "V1 in 0 PULSE(0 1 0 1p 1p 10m 20m)\nR1 in out 1k\nC1 out 0 1u\n.tran 1u 2m";
+        var full = roundTrip(convert(circuit));
+        var cropped = roundTrip(convert(circuit + " 1m"));
+        assertEquals(0, full.getOutputStartTime());
+        assertEquals(0, convert(circuit + " 0").getOutputStartTime());
+        assertEquals(0.001, cropped.getOutputStartTime());
+        assertTrue(cropped.getConversionIssues().isEmpty());
+        var prep = new gecko.core.preparation.CircuitPreparation();
+        var defaults = gecko.core.preparation.PreparationRequest.defaults();
+        var fullRun = assertInstanceOf(gecko.core.preparation.PreparationResult.Ready.class,
+                prep.prepare(prep.capture(full), defaults));
+        var croppedCapture = prep.capture(cropped);
+        var croppedRun = assertInstanceOf(gecko.core.preparation.PreparationResult.Ready.class,
+                prep.prepare(croppedCapture, defaults));
+        var override = new gecko.core.preparation.PreparationRequest(
+                new gecko.core.preparation.SolverOverrides(null, null, 0.0009), Map.of());
+        var invalid = assertInstanceOf(gecko.core.preparation.PreparationResult.Rejected.class,
+                prep.prepare(croppedCapture, override));
+        assertTrue(invalid.report().diagnostics().stream().anyMatch(d -> "outputStartTime".equals(d.parameterPath())));
+        assertEquals(0.002, cropped.getSimulationDuration());
+        assertEquals(0.001, cropped.getOutputStartTime());
+
+        var options = gecko.core.preparation.ExecutionOptions.defaults();
+        try (var a = gecko.core.simulation.SimulationSession.open(fullRun.execution(), options);
+             var b = gecko.core.simulation.SimulationSession.open(croppedRun.execution(), options)) {
+            a.run();
+            b.run();
+            var all = a.observe(0, 3000);
+            var kept = b.observe(0, 3000);
+            assertEquals(a.status().committedSteps(), b.status().committedSteps());
+            assertEquals(1001, kept.times().length);
+            assertEquals(0.001, kept.times()[0], 1e-15);
+            assertEquals(0.002, kept.times()[1000], 1e-15);
+            assertArrayEquals(Arrays.copyOfRange(all.times(), 1000, all.times().length), kept.times(), 1e-14);
+            assertEquals(0, cropped.getPreSimulationTime());
+            for (int row = 0; row < all.values().length; row++) {
+                assertArrayEquals(Arrays.copyOfRange(all.values()[row], 1000, all.times().length), kept.values()[row]);
+            }
+            var netlist = NetlistBuilder.buildFromCircuitModel(croppedRun.execution().newRunModel());
+            int capacitor = netlist.getElementIndexByName("C1");
+            assertEquals(0, netlist.getNodeY(capacitor));
+            String capacitorVoltage = "V_N" + netlist.getNodeX(capacitor);
+            assertEquals("V_N2", capacitorVoltage);
+            int output = Arrays.asList(b.signalNames()).indexOf(capacitorVoltage);
+            assertTrue(output >= 0, Arrays.toString(b.signalNames()));
+            assertEquals(0.63212056, kept.values()[output][0], 0.63212056 * 0.03);
+            assertEquals(0.86466472, kept.values()[output][1000], 0.86466472 * 0.03);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-1u", "3m", "1e309"})
+    void rejectsInvalidAuthoredTransientOutputStart(String start) {
+        var model = convert("V1 in 0 1\nR1 in 0 1k\n.tran 1u 2m " + start);
+        assertTrue(model.getConversionIssues().stream().anyMatch(issue -> issue.code().equals("INVALID_TRANSIENT")));
+        assertEquals(0, model.getOutputStartTime());
     }
 
     @Test void repeatedSerializationPreservesTopologySlotsSettingsAndEmbeddedWaveforms() throws Exception {

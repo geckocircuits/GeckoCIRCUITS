@@ -247,6 +247,12 @@ public class CircuitFileParser {
             model.setSimulationDuration(readSavedTiming(model, lines, tokenMap, "tDURATION", "duration", 0.02));
         }
 
+        if (tokenMap.containsKey("tOUTPUT_START")) {
+            double outputStart = readSavedTiming(model, lines, tokenMap, "tOUTPUT_START", "outputStartTime", 0);
+            if (outputStart < 0) addInvalidSavedSetting(model, tokenMap, "tOUTPUT_START", "outputStartTime");
+            else model.setOutputStartTime(outputStart);
+        }
+
         if (tokenMap.containsKey("dt")) {
             model.setTimeStep(readSavedTiming(model, lines, tokenMap, "dt", "timeStep", 1e-6));
         }

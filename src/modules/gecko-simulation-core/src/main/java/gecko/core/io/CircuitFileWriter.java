@@ -28,6 +28,10 @@ public final class CircuitFileWriter {
 
     /** Returns a gzip-compressed UTF-8 circuit with embedded resource bytes. */
     public byte[] write(CircuitModel model) throws IOException {
+        if (!gecko.core.simulation.SimulationTiming.validOutputStart(model.getOutputStartTime(),
+                model.getSimulationDuration())) {
+            throw new IOException("Output start time must be finite and between zero and the stop time.");
+        }
         if (!model.getResourceFailures().isEmpty()) {
             throw new IOException("Capture all circuit resources before writing the circuit.");
         }
@@ -56,6 +60,7 @@ public final class CircuitFileWriter {
             text.append("<\\Verbindung>\n");
         }
         var settings = new TreeMap<>(model.getSavedSettings());
+        settings.remove("tOUTPUT_START");
         settings.remove(AcMetadataCodec.SETTINGS);
         settings.remove(AcMetadataCodec.PROVENANCE);
         settings.remove(HierarchyMetadataCodec.DOCUMENT);
@@ -77,6 +82,9 @@ public final class CircuitFileWriter {
                 || Set.of("e", "c", "eTH", "sp", "verbindungLK", "verbindungCONTROL",
                         "verbindungTHERM", "GeckoFileManager").contains(key));
         settings.put("tDURATION", Double.toString(model.getSimulationDuration()));
+        if (model.getOutputStartTime() != 0) {
+            settings.put("tOUTPUT_START", Double.toString(model.getOutputStartTime()));
+        }
         settings.put("dt", Double.toString(model.getTimeStep()));
         settings.put("T_pre", Double.toString(model.getPreSimulationTime()));
         settings.put("dt_pre", Double.toString(model.getPreSimulationTimeStep() > 0 ? model.getPreSimulationTimeStep() : model.getTimeStep()));

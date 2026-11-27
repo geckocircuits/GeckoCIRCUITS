@@ -116,6 +116,60 @@ class SimulationSessionContinuationTest {
         }
     }
 
+    @Test
+    void outputWindowKeepsTheAbsoluteIntervalGridAndPreWindowControlHistory() {
+        var fullModel = delay(0.25, 1, 0.75);
+        var croppedModel = delay(0.25, 1, 0.75);
+        croppedModel.setOutputStartTime(0.8);
+        var logging = new ExecutionOptions(true, 2);
+        try (var full = open(fullModel, logging); var cropped = open(croppedModel, logging)) {
+            full.run();
+            var early = new java.util.ArrayList<SimulationSession.Sample>();
+            cropped.run(() -> false, sample -> {
+                early.add(sample);
+                if (early.size() == 2) cropped.pause();
+            });
+            assertEquals(2, early.size());
+            assertFalse(early.getFirst().inRecordingWindow());
+            assertEquals(0, cropped.observe(0, 10).times().length);
+            cropped.run();
+            assertArrayEquals(new double[]{1}, cropped.observe(0, 10).times());
+            full.extend(2, 0.25);
+            cropped.extend(2, 0.25);
+            full.run();
+            cropped.run();
+            var original = full.observe(0, 10);
+            var saved = cropped.observe(0, 10);
+            assertArrayEquals(new double[]{1, 1.5, 2}, saved.times());
+            for (int row = 0; row < saved.values().length; row++) {
+                assertArrayEquals(java.util.Arrays.copyOfRange(original.values()[row], 2, 5), saved.values()[row]);
+            }
+            assertEquals(0.25f, saved.values()[1][0]);
+        }
+    }
+
+    @Test
+    void aRoundedTimestampBeforeTheBoundaryIsNotExported() {
+        var fullModel = delay(0.1, 1.5, 0.5);
+        var croppedModel = delay(0.1, 1.5, 0.5);
+        croppedModel.setOutputStartTime(1);
+        try (var full = open(fullModel); var cropped = open(croppedModel)) {
+            var fullSamples = new java.util.ArrayList<SimulationSession.Sample>();
+            full.run(() -> false, fullSamples::add);
+            assertTrue(fullSamples.get(10).time() < 1, "The prior grid sample rounds below the boundary.");
+            var retained = fullSamples.stream().filter(sample -> sample.time() >= 1).toList();
+            cropped.run();
+            var observed = cropped.observe(0, 20);
+            assertEquals(retained.size(), observed.times().length);
+            assertEquals(retained.getFirst().time(), observed.times()[0]);
+            assertTrue(java.util.Arrays.stream(observed.times()).allMatch(time -> time >= 1));
+            for (int i = 0; i < retained.size(); i++) {
+                assertEquals(retained.get(i).time(), observed.times()[i], 1e-14);
+                assertEquals(retained.get(i).values()[1], observed.values()[1][i]);
+            }
+        }
+    }
+
     private static CircuitModel delay(double dt, double duration, double delay) {
         var model = new CircuitModel();
         model.setTimeStep(dt);
@@ -127,9 +181,13 @@ class SimulationSessionContinuationTest {
     }
 
     private static SimulationSession open(CircuitModel model) {
+        return open(model, ExecutionOptions.defaults());
+    }
+
+    private static SimulationSession open(CircuitModel model, ExecutionOptions options) {
         var preparation = new CircuitPreparation();
         var ready = assertInstanceOf(PreparationResult.Ready.class,
                 preparation.prepare(preparation.capture(model), PreparationRequest.defaults()));
-        return SimulationSession.open(ready.execution(), ExecutionOptions.defaults());
+        return SimulationSession.open(ready.execution(), options);
     }
 }

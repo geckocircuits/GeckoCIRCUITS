@@ -136,6 +136,7 @@ public class CircuitModel {
 
     // Simulation parameters
     private double simulationDuration;
+    private double outputStartTime;
     private double timeStep;
     private double preSimulationTime;
     private double preSimulationTimeStep;
@@ -222,6 +223,14 @@ public class CircuitModel {
 
     public void setSimulationDuration(double simulationDuration) {
         this.simulationDuration = simulationDuration;
+    }
+
+    public double getOutputStartTime() {
+        return outputStartTime;
+    }
+
+    public void setOutputStartTime(double outputStartTime) {
+        this.outputStartTime = outputStartTime;
     }
 
     public double getTimeStep() {

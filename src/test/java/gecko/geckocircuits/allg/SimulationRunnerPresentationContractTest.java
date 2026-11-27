@@ -232,6 +232,29 @@ class SimulationRunnerPresentationContractTest {
     }
 
     @Test
+    void legacyScriptRetainsOnlySamplesAtOrAfterTheAbsoluteRecordingStart() throws Exception {
+        var settings = MainWindow._solverSettings;
+        double previousOutputStart = settings.outputStartTime.getValue();
+        try {
+            settings.outputStartTime.setValueWithoutUndo(0.5);
+            var runner = window._simRunner;
+            runner.initSim(0.25, 1);
+            var kernel = runner.simKern;
+            kernel.setScopeMenuesStartStop();
+            kernel.simulateOneStep();
+            kernel.simulateOneStep();
+            var data = NetzlisteCONTROL.globalData;
+            assertEquals(-1, data.getMaximumTimeIndex(0));
+            kernel.simulateOneStep();
+            assertEquals(0, data.getMaximumTimeIndex(0));
+            assertEquals(0.5, data.getTimeValue(0, 0));
+            assertEquals(0.75, kernel.getZeitAktuell());
+        } finally {
+            settings.outputStartTime.setValueWithoutUndo(previousOutputStart);
+        }
+    }
+
+    @Test
     void repeatedInitializationRetainsOnlyTheCurrentKernelOwner() throws Exception {
         for (int run = 0; run < 4; run++) {
             window._simRunner.initSim(1, 1);

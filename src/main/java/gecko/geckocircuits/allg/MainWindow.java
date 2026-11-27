@@ -1124,6 +1124,7 @@ public final class MainWindow extends JFrame implements WindowListener, ActionLi
     public void openFile(String dateiName) throws FileNotFoundException {
         if (!new File(dateiName).exists()) throw new FileNotFoundException(dateiName);
         String[] lines = getLinesArrayFromIpesFile(dateiName);
+        ProjectData.preflightOutputStart(lines);
         var validatedAcValues = ProjectData.preflightRequiredAc(lines, dateiName);
         documentGeneration.incrementAndGet();
         _simRunner.cancelAcAnalysis();

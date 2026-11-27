@@ -34,7 +34,8 @@ public final class SimulationSession implements AutoCloseable {
     }
 
     /** A detached sample after both electrical and CONTROL calculations commit. */
-    public record Sample(double time, float[] values) {
+    public record Sample(double time, float[] values, boolean inRecordingWindow) {
+        public Sample(double time, float[] values) { this(time, values, true); }
         /** Copies the captured values into this sample. */
         public Sample { values = values.clone(); }
         /** @return detached values in recording row order */
@@ -86,6 +87,7 @@ public final class SimulationSession implements AutoCloseable {
     private boolean searching;
     /** Committed step count at which the main phase of a periodic search began. Zero when the search is off. */
     private int loggingOrigin;
+    private final RecordingWindow recordingWindow;
     private volatile SteadyStateReport steadyState;
 
     private SimulationSession(CircuitModel model, SolverSettingsCore settings, ExecutionOptions options,
@@ -95,6 +97,7 @@ public final class SimulationSession implements AutoCloseable {
         SimulationTiming.validateSettings(settings);
         double dt = settings.getStepWidth();
         double duration = settings.getSimulationDuration();
+        recordingWindow = new RecordingWindow(model == null ? 0 : model.getOutputStartTime());
         zeroCrossing = settings.isZeroCrossing() || settings.getAdaptiveStep() != null;
         PeriodicSteadyStateSettings search = settings.getPeriodicSteadyState();
         // The search seeds itself from the DC operating point. The caller's settings stay as given.
@@ -247,7 +250,9 @@ public final class SimulationSession implements AutoCloseable {
                 float[] values = new float[signalNames.length];
                 if (control.hasScope()) values = control.sampleScope();
                 else if (electrical != null) electrical.copyNodeVoltagesTo(values);
-                if (!searching && options.loggingEnabled() && (before.committedSteps() - loggingOrigin) % options.loggingInterval() == 0) {
+                boolean inRecordingWindow = recordingWindow.includes(time);
+                if (inRecordingWindow && !searching && options.loggingEnabled()
+                        && (before.committedSteps() - loggingOrigin) % options.loggingInterval() == 0) {
                     recording.insertValuesAtEnd(values, time);
                     recordedSamples++;
                 }
@@ -277,7 +282,7 @@ public final class SimulationSession implements AutoCloseable {
                 recording.setContainerStatus(nextState == State.COMPLETED ? ContainerStatus.FINISHED
                         : nextState == State.RUNNING ? ContainerStatus.RUNNING : ContainerStatus.PAUSED);
                 if (pauseAfterStep || nextState == State.COMPLETED) control.tearDownOnPause();
-                sample = new Sample(time, values);
+                sample = new Sample(time, values, inRecordingWindow);
             } catch (RuntimeException | Error failure) {
                 failExecution(failure);
                 throw failure;
