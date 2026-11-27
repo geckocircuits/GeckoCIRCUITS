@@ -20,7 +20,9 @@ import gecko.core.control.calculators.PT2Calculator;
 import gecko.core.control.calculators.InitializableAtSimulationStart;
 import gecko.core.control.IsDtChangeSensitive;
 
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -47,13 +49,41 @@ public class ControlNetlist {
 
     private AbstractControlCalculatable[] sortedCalculators = new AbstractControlCalculatable[0];
     private double simulationTime;
-    private double lastStep = Double.NaN;
+    /** The controller step each sample-clock group last ran with. One group unless {@link #configureGroups} says more. */
+    private double[] lastSteps = {Double.NaN};
     private long stateVersion;
-    private java.util.function.BiFunction<Double, Boolean, List<AbstractControlCalculatable>> dependencyOrder;
+    private IdentityHashMap<AbstractControlCalculatable, Integer> groups;
+    private double[] scratchSteps = new double[1];
+    private boolean[] allDue = {true};
+    private BiFunction<double[], Boolean, List<AbstractControlCalculatable>> dependencyOrder;
 
-    void setDependencyOrder(java.util.function.BiFunction<Double, Boolean, List<AbstractControlCalculatable>> order) {
+    /** Sets the planner, which receives the controller step of every group and returns the global execution order. */
+    void setDependencyOrder(BiFunction<double[], Boolean, List<AbstractControlCalculatable>> order) {
         dependencyOrder = order;
         stateVersion++;
+    }
+
+    /**
+     * Splits the calculators into sample-clock groups. A calculator that the map omits belongs to group 0.
+     * Every calculator still runs in the one global order. A group has its own controller step and delay clocks.
+     */
+    void configureGroups(IdentityHashMap<AbstractControlCalculatable, Integer> assignment, int count) {
+        groups = assignment;
+        lastSteps = new double[count];
+        java.util.Arrays.fill(lastSteps, Double.NaN);
+        scratchSteps = new double[count];
+        allDue = new boolean[count];
+        java.util.Arrays.fill(allDue, true);
+        stateVersion++;
+    }
+
+    int groupOf(AbstractControlCalculatable calculator) {
+        return groups == null ? 0 : groups.getOrDefault(calculator, 0);
+    }
+
+    private double[] uniform(double dt) {
+        java.util.Arrays.fill(scratchSteps, dt);
+        return scratchSteps;
     }
 
     /**
@@ -82,24 +112,29 @@ public class ControlNetlist {
      * @throws ControlCalculatorFactory.DependencyCycleException if the selected step creates an instantaneous cycle
      */
     public Runnable prepareInitialization(double dt) {
-        validateStep(dt);
+        return prepareInitialization(uniform(dt).clone());
+    }
+
+    /** As above, with one controller step per sample-clock group. */
+    Runnable prepareInitialization(double[] steps) {
+        validateSteps(steps);
         var planned = dependencyOrder == null ? sortedCalculators
-                : dependencyOrder.apply(dt, true).toArray(AbstractControlCalculatable[]::new);
+                : dependencyOrder.apply(steps, true).toArray(AbstractControlCalculatable[]::new);
         for (var calculator : sortedCalculators) {
             if (calculator != null) calculator.validateInputSignalWidths();
         }
-        var delayUpdates = prepareDelayUpdates(dt, true);
+        var delayUpdates = prepareDelayUpdates(steps, true, null);
         return stagedTransition(() -> {
             for (var calculator : sortedCalculators) {
                 if (calculator == null) continue;
                 calculator.setSimulationTime(0);
                 if (!(calculator instanceof DelayCalculator) && calculator instanceof InitializableAtSimulationStart initializable) {
-                    initializable.initializeAtSimulationStart(dt);
+                    initializable.initializeAtSimulationStart(steps[groupOf(calculator)]);
                 }
             }
             for (int index = 0; index < delayUpdates.size(); index++) delayUpdates.get(index).run();
             simulationTime = 0;
-            lastStep = dt;
+            lastSteps = steps.clone();
             sortedCalculators = planned;
         });
     }
@@ -140,25 +175,49 @@ public class ControlNetlist {
      * @throws ControlCalculatorFactory.DependencyCycleException if a step change creates an instantaneous cycle
      */
     public void executeTimeStep(double dt, double time) {
-        validateStep(dt);
-        boolean stepChanges = !Double.isNaN(lastStep) && lastStep != dt;
-        var planned = dependencyOrder != null && (Double.isNaN(lastStep) || stepChanges)
-                ? dependencyOrder.apply(dt, stepChanges).toArray(AbstractControlCalculatable[]::new) : sortedCalculators;
-        var delayUpdates = stepChanges ? prepareDelayUpdates(dt, false) : List.<Runnable>of();
+        executeDue(uniform(dt), allDue, time);
+    }
+
+    /**
+     * Executes the calculators of the due groups in the one global order, each with the step of its group.
+     * A calculator of a group that is not due keeps its output, history and clock.
+     * The array arguments hold one entry per group and are not retained.
+     */
+    void executeDue(double[] steps, boolean[] due, double time) {
+        validateSteps(steps);
+        boolean anyUninitialized = false;
+        boolean anyChange = false;
+        for (int group = 0; group < steps.length; group++) {
+            if (Double.isNaN(lastSteps[group])) anyUninitialized = true;
+            else if (lastSteps[group] != steps[group]) anyChange = true;
+        }
+        boolean[] changed = null;
+        if (anyChange) {
+            // Every write replaces the whole array: all NaN before initialization, all finite after. So here all are finite.
+            changed = new boolean[steps.length];
+            for (int group = 0; group < steps.length; group++) changed[group] = lastSteps[group] != steps[group];
+        }
+        var planned = dependencyOrder != null && (anyUninitialized || anyChange)
+                ? dependencyOrder.apply(steps, anyChange).toArray(AbstractControlCalculatable[]::new) : sortedCalculators;
+        var delayUpdates = anyChange ? prepareDelayUpdates(steps, false, changed) : List.<Runnable>of();
         stateVersion++;
-        if (stepChanges) {
+        if (anyChange) {
             for (var calculator : sortedCalculators) {
-                if (!(calculator instanceof DelayCalculator) && calculator instanceof IsDtChangeSensitive sensitive) sensitive.initWithNewDt(dt);
+                if (!(calculator instanceof DelayCalculator) && calculator instanceof IsDtChangeSensitive sensitive
+                        && changed[groupOf(calculator)]) sensitive.initWithNewDt(steps[groupOf(calculator)]);
             }
         }
         delayUpdates.forEach(Runnable::run);
         sortedCalculators = planned;
-        lastStep = dt;
+        System.arraycopy(steps, 0, lastSteps, 0, steps.length);
         this.simulationTime = time;
         for (AbstractControlCalculatable calc : sortedCalculators) {
-            if (calc != null) calc.setSimulationTime(time);
+            if (calc != null && due[groupOf(calc)]) calc.setSimulationTime(time);
         }
         for (AbstractControlCalculatable calc : sortedCalculators) {
+            int group = groupOf(calc);
+            if (!due[group]) continue;
+            double dt = steps[group];
             if (calc instanceof PT2Calculator pt2) {
                 pt2.publishPreviousInputOutput(dt);
             }
@@ -167,6 +226,9 @@ public class ControlNetlist {
             }
         }
         for (AbstractControlCalculatable calc : sortedCalculators) {
+            int group = groupOf(calc);
+            if (!due[group]) continue;
+            double dt = steps[group];
             if (calc instanceof PT2Calculator) continue;
             if (calc instanceof DelayCalculator delay && dt <= delay.getDelayTime()) {
                 continue;
@@ -176,6 +238,9 @@ public class ControlNetlist {
             }
         }
         for (AbstractControlCalculatable calc : sortedCalculators) {
+            int group = groupOf(calc);
+            if (!due[group]) continue;
+            double dt = steps[group];
             if (calc instanceof PT2Calculator pt2) {
                 pt2.captureCurrentInput();
             }
@@ -200,26 +265,37 @@ public class ControlNetlist {
      * @throws ControlCalculatorFactory.DependencyCycleException if the selected step creates an instantaneous cycle
      */
     public Runnable prepareTimeStepChange(double dt) {
-        validateStep(dt);
-        if (Double.isNaN(lastStep)) {
-            throw new IllegalStateException("The CONTROL netlist requires initialization before a staged step change.");
+        return prepareTimeStepChange(uniform(dt).clone(), null);
+    }
+
+    /**
+     * As above, with one controller step per group. Only groups that the mask selects stage callbacks and
+     * resample delay histories. A null mask selects every group.
+     */
+    Runnable prepareTimeStepChange(double[] steps, boolean[] only) {
+        validateSteps(steps);
+        for (double last : lastSteps) {
+            if (Double.isNaN(last)) {
+                throw new IllegalStateException("The CONTROL netlist requires initialization before a staged step change.");
+            }
         }
         var planned = dependencyOrder == null ? sortedCalculators
-                : dependencyOrder.apply(dt, true).toArray(AbstractControlCalculatable[]::new);
+                : dependencyOrder.apply(steps, true).toArray(AbstractControlCalculatable[]::new);
         for (var calculator : sortedCalculators) {
-            if (calculator instanceof DelayCalculator delay) delay.validateTimeStep(dt);
+            if (calculator instanceof DelayCalculator delay) delay.validateTimeStep(steps[groupOf(calculator)]);
         }
         var updates = new ArrayList<Runnable>();
         for (var calculator : sortedCalculators) {
-            if (calculator instanceof IsDtChangeSensitive sensitive) {
-                updates.add(java.util.Objects.requireNonNull(sensitive.prepareTimeStepChange(dt),
+            int group = groupOf(calculator);
+            if (calculator instanceof IsDtChangeSensitive sensitive && (only == null || only[group])) {
+                updates.add(java.util.Objects.requireNonNull(sensitive.prepareTimeStepChange(steps[group]),
                         "A staged CONTROL callback must supply a commit action."));
             }
         }
         return stagedTransition(() -> {
             for (int index = 0; index < updates.size(); index++) updates.get(index).run();
             sortedCalculators = planned;
-            lastStep = dt;
+            lastSteps = steps.clone();
         });
     }
 
@@ -240,17 +316,23 @@ public class ControlNetlist {
         };
     }
 
-    private List<Runnable> prepareDelayUpdates(double dt, boolean restart) {
+    private List<Runnable> prepareDelayUpdates(double[] steps, boolean restart, boolean[] only) {
         var updates = new ArrayList<Runnable>();
         for (var calculator : sortedCalculators) {
-            if (calculator instanceof DelayCalculator delay) delay.validateTimeStep(dt);
+            if (calculator instanceof DelayCalculator delay) delay.validateTimeStep(steps[groupOf(calculator)]);
         }
         for (var calculator : sortedCalculators) {
-            if (calculator instanceof DelayCalculator delay) {
-                updates.add(restart ? delay.prepareInitialization(dt) : delay.prepareStepChange(dt));
+            int group = groupOf(calculator);
+            if (calculator instanceof DelayCalculator delay && (only == null || only[group])) {
+                updates.add(restart ? delay.prepareInitialization(steps[group]) : delay.prepareStepChange(steps[group]));
             }
         }
         return updates;
+    }
+
+    private void validateSteps(double[] steps) {
+        if (steps.length != lastSteps.length) throw new IllegalArgumentException("One step per CONTROL group is required.");
+        for (double step : steps) validateStep(step);
     }
 
     private static void validateStep(double dt) {

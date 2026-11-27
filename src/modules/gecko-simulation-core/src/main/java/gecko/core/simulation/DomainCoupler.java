@@ -16,6 +16,7 @@ package gecko.core.simulation;
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
 import gecko.core.circuit.netlist.CircuitNetlist;
 import gecko.core.control.calculators.AbstractControlCalculatable;
+import java.util.function.Predicate;
 
 import java.util.List;
 
@@ -60,6 +61,7 @@ public class DomainCoupler {
 
     // ControlBlockMapping-based probe/gate coupling
     private ControlBlockMapping controlBlockMapping;
+    private final java.util.IdentityHashMap<AbstractControlCalculatable, Double> heldGateValues = new java.util.IdentityHashMap<>();
 
     /** Gate signal parameter index in CircuitNetlist parameter array */
     private static final int PARAM_GATE = 8;
@@ -178,6 +180,15 @@ public class DomainCoupler {
      * @return true if any switch resistance changed (caller should rebuild A matrix)
      */
     public boolean applyGateSignals(CircuitNetlist circuitNetlist) {
+        return applyGateSignals(circuitNetlist, calculator -> false);
+    }
+
+    /**
+     * As above. A gate that {@code holds} selects applies the value it published at its last sample,
+     * not the live input, so a producer that runs faster cannot leak between its samples.
+     * Before its first publication a gate reads its live input.
+     */
+    boolean applyGateSignals(CircuitNetlist circuitNetlist, Predicate<AbstractControlCalculatable> holds) {
         if (controlBlockMapping == null || circuitNetlist == null) {
             return false;
         }
@@ -187,7 +198,8 @@ public class DomainCoupler {
 
         for (ControlBlockMapping.GateMapping gate : gates) {
             AbstractControlCalculatable gateCalc = gate.getCalculator();
-            double gateValue = readGateValue(gateCalc);
+            Double held = holds.test(gateCalc) ? heldGateValues.get(gateCalc) : null;
+            double gateValue = held != null ? held : readGateValue(gateCalc);
 
             String switchName = gate.getSwitchName();
             int switchIndex = circuitNetlist.getElementIndexByName(switchName);
@@ -309,8 +321,14 @@ public class DomainCoupler {
 
     /** Writes each signal-controlled thermal source value (parameter 1) from its CONTROL output. */
     void transferControlToThermalSources(ThermalNetwork thermal) {
+        transferControlToThermalSources(thermal, producer -> true);
+    }
+
+    /** As above, for the sources whose producer {@code publishes}. The others keep their held value. */
+    void transferControlToThermalSources(ThermalNetwork thermal, Predicate<AbstractControlCalculatable> publishes) {
         if (controlBlockMapping == null || thermal == null) return;
         for (var source : controlBlockMapping.getThermalSourceMappings()) {
+            if (source.producer() != null && !publishes.test(source.producer())) continue;
             int index = thermal.netlist().getElementIndexByName(source.sourceName());
             if (index < 0) continue;
             thermal.netlist().getParameter(index)[1] = source.producer() == null
@@ -323,12 +341,28 @@ public class DomainCoupler {
      * as desktop {@code SimulationsKern.setControlledSourcesFromControlValue}.
      */
     void transferControlToSources(CircuitNetlist circuitNetlist) {
+        transferControlToSources(circuitNetlist, producer -> true);
+    }
+
+    /** As above, for the sources whose producer {@code publishes}. The others keep their held value. */
+    void transferControlToSources(CircuitNetlist circuitNetlist, Predicate<AbstractControlCalculatable> publishes) {
         if (controlBlockMapping == null || circuitNetlist == null) return;
         for (var source : controlBlockMapping.getSourceMappings()) {
+            if (source.producer() != null && !publishes.test(source.producer())) continue;
             int index = circuitNetlist.getElementIndexByName(source.sourceName());
             if (index < 0) continue;
             circuitNetlist.getParameter(index)[1] = source.producer() == null
                     ? 0 : source.producer()._outputSignal[source.output()][0];
+        }
+    }
+
+    /** Exports the value each gate last published. It only reads. */
+    void exportHeldGates(PeriodicStateMonitor.Sink sink) {
+        sink.group(PeriodicStateMonitor.Unit.CONTROL, "held gate value");
+        if (controlBlockMapping == null) return;
+        for (var gate : controlBlockMapping.getGateMappings()) {
+            Double held = heldGateValues.get(gate.getCalculator());
+            if (held != null) sink.value(held);
         }
     }
 
@@ -343,6 +377,11 @@ public class DomainCoupler {
     }
 
     void transferGateSignalsToLk(CircuitNetlist circuitNetlist) {
+        transferGateSignalsToLk(circuitNetlist, gate -> true);
+    }
+
+    /** As above, for the gates that {@code publishes} selects. Each publishing gate also records its held value. */
+    void transferGateSignalsToLk(CircuitNetlist circuitNetlist, Predicate<AbstractControlCalculatable> publishes) {
         if (controlBlockMapping == null || circuitNetlist == null) {
             return;
         }
@@ -350,7 +389,9 @@ public class DomainCoupler {
         List<ControlBlockMapping.GateMapping> gates = controlBlockMapping.getGateMappings();
         for (ControlBlockMapping.GateMapping gate : gates) {
             AbstractControlCalculatable gateCalc = gate.getCalculator();
+            if (!publishes.test(gateCalc)) continue;
             double gateValue = readGateValue(gateCalc);
+            heldGateValues.put(gateCalc, gateValue);
 
             String switchName = gate.getSwitchName();
             int switchIndex = circuitNetlist.getElementIndexByName(switchName);

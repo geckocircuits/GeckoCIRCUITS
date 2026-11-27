@@ -77,6 +77,9 @@ public final class SimulationSession implements AutoCloseable {
     private final ThreadLocal<Boolean> callbackDelivery = new ThreadLocal<>();
     private volatile Status status;
     private int recordedSamples;
+    // Compensated grid time for sample scheduling. Electrical and recorded times keep their compatibility clock.
+    private double samplingTime;
+    private double samplingTimeError;
     private Phase phase = Phase.MAIN;
     private int segmentFirstStep;
     private int segmentFirstRecorded;
@@ -132,7 +135,8 @@ public final class SimulationSession implements AutoCloseable {
             ThermalNetwork constructedThermal = ThermalNetwork.build(model, constructedNetlist, settings.getSolverType());
             if (constructedControl == null) {
                 constructedControl = ControlRuntime.fromDeferred(model, dt, constructedNetlist,
-                        settings.getControlSamplePeriod(), constructedThermal == null ? null : constructedThermal.netlist());
+                        settings.getControlSamplePeriod(), constructedThermal == null ? null : constructedThermal.netlist(),
+                        settings.getControlSubsystemPeriods());
             }
             if (periodic) {
                 var issues = PeriodicSteadyStateValidation.circuitIssues(search.period(), constructedNetlist,
@@ -261,7 +265,7 @@ public final class SimulationSession implements AutoCloseable {
                     else electrical.advance(before.stepWidth(), time, capture);
                 }
                 if (thermal != null) thermal.advance(before.stepWidth(), time, netlist);
-                control.advanceAfterElectricalStep(netlist, thermal, time);
+                control.advanceAfterElectricalStep(netlist, thermal, time, samplingTime);
                 float[] values = new float[signalNames.length];
                 if (control.hasScope()) values = control.sampleScope();
                 else if (electrical != null) electrical.copyNodeVoltagesTo(values);
@@ -279,7 +283,7 @@ public final class SimulationSession implements AutoCloseable {
                 if (searching) {
                     monitor.begin();
                     if (electrical != null) electrical.exportPeriodicState(monitor.sink());
-                    control.exportPeriodicState(netlist, time, monitor.sink());
+                    control.exportPeriodicState(netlist, samplingTime, monitor.sink());
                     var outcome = monitor.commit(before.committedSteps() + 1, time);
                     steadyState = monitor.report();
                     if (outcome == PeriodicStateMonitor.Outcome.CONVERGED) {
@@ -297,6 +301,10 @@ public final class SimulationSession implements AutoCloseable {
                 initialObservationPending = false;
                 status = statusFor(nextState, before.committedSteps() + (initialObservation ? 0 : 1), time, nextTime,
                         endTime, before.stepWidth());
+                double compensatedStep = before.stepWidth() - samplingTimeError;
+                double nextSamplingTime = samplingTime + compensatedStep;
+                samplingTimeError = (nextSamplingTime - samplingTime) - compensatedStep;
+                samplingTime = nextSamplingTime;
                 recording.setContainerStatus(nextState == State.COMPLETED ? ContainerStatus.FINISHED
                         : nextState == State.RUNNING ? ContainerStatus.RUNNING : ContainerStatus.PAUSED);
                 if (pauseAfterStep || nextState == State.COMPLETED) control.tearDownOnPause();

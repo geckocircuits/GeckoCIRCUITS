@@ -13,6 +13,10 @@
  */
 package gecko.core.allg;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  * GUI-free solver configuration for headless simulation.
  * This class provides simulation parameters without any GUI dependencies.
@@ -34,6 +38,7 @@ public final class SolverSettingsCore {
     private double simulationDuration; // total simulation time
     private double pauseTime;          // optional pause time (-1 means no pause)
     private double controlSamplePeriod; // CONTROL sample period Ts in seconds; 0 runs CONTROL every step
+    private Map<String, Double> controlSubsystemPeriods = Map.of(); // sample period per CONTROL subsystem sheet path
     private boolean zeroCrossing;      // locate diode-family switching inside a step; off by default
     private boolean dcOperatingPoint;  // seed the first step from a solved DC operating point; off by default
     private PeriodicSteadyStateSettings periodicSteadyState; // periodic steady-state search; null means off
@@ -106,6 +111,19 @@ public final class SolverSettingsCore {
      */
     public SolverSettingsCore withControlSamplePeriod(double period) {
         this.controlSamplePeriod = period;
+        return this;
+    }
+
+    /**
+     * Gives each named CONTROL subsystem its own sample period. A key is a sheet path, joined by "/".
+     * Blocks outside every named subsystem keep the global period. An empty map keeps the single clock.
+     * The settings keep a detached, sorted, unmodifiable copy. Validation happens when a simulation starts.
+     *
+     * @param periods sample period in seconds by sheet path, or null for none
+     */
+    public SolverSettingsCore withControlSubsystemPeriods(Map<String, Double> periods) {
+        this.controlSubsystemPeriods = periods == null || periods.isEmpty() ? Map.of()
+                : Collections.unmodifiableMap(new TreeMap<>(periods));
         return this;
     }
 
@@ -184,6 +202,11 @@ public final class SolverSettingsCore {
         return controlSamplePeriod;
     }
 
+    /** @return the unmodifiable sample period by CONTROL subsystem sheet path, empty for the single clock */
+    public Map<String, Double> getControlSubsystemPeriods() {
+        return controlSubsystemPeriods;
+    }
+
     public SolverType getSolverType() {
         return solverType;
     }
@@ -243,6 +266,7 @@ public final class SolverSettingsCore {
         copy.simulationDuration = this.simulationDuration;
         copy.pauseTime = this.pauseTime;
         copy.controlSamplePeriod = this.controlSamplePeriod;
+        copy.controlSubsystemPeriods = this.controlSubsystemPeriods;
         copy.zeroCrossing = this.zeroCrossing;
         copy.dcOperatingPoint = this.dcOperatingPoint;
         copy.periodicSteadyState = this.periodicSteadyState;
