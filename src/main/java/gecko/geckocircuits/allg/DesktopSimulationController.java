@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
@@ -40,6 +41,7 @@ public final class DesktopSimulationController {
     private final MainWindow window;
     private final SchematicEditor2 editor;
     private final Supplier<NetListContainer> preparePresentation;
+    private final Function<SessionHost, Future<SimulationSession.Status>> submitAsync;
     private volatile SessionHost currentHost;
     private volatile boolean coreExecution;
     private volatile double completedTime;
@@ -77,7 +79,7 @@ public final class DesktopSimulationController {
         private final int[] rows;
         private volatile Timer timer;
         private volatile long startedAtMillis;
-        private volatile boolean awaitingRunAdmission;
+        private boolean terminalPublished;
         private volatile boolean ending;
         private volatile Future<SimulationSession.Status> runFuture;
 
@@ -92,9 +94,15 @@ public final class DesktopSimulationController {
     }
 
     DesktopSimulationController(MainWindow window, SchematicEditor2 editor, Supplier<NetListContainer> preparePresentation) {
+        this(window, editor, preparePresentation, SessionHost::run);
+    }
+
+    DesktopSimulationController(MainWindow window, SchematicEditor2 editor, Supplier<NetListContainer> preparePresentation,
+            Function<SessionHost, Future<SimulationSession.Status>> submitAsync) {
         this.window = window;
         this.editor = editor;
         this.preparePresentation = preparePresentation;
+        this.submitAsync = submitAsync;
     }
 
     void reset() {
@@ -358,7 +366,7 @@ public final class DesktopSimulationController {
                 run.origin.accept(ContainerStatus.RUNNING);
                 window.setMenuDuringSimulation(true, false);
                 run.timer = new Timer(40, event -> tick(run));
-                run.runFuture = host.run();
+                run.runFuture = submitAsync.apply(host);
                 run.timer.start();
             });
             statusStarted = true;
@@ -390,11 +398,17 @@ public final class DesktopSimulationController {
     boolean continueAsync(SolverSettings settings) {
         CoreAsyncExecution run = asyncExecution;
         if (run == null) return false;
+        LegacySimulationFrontend.onEventThread(() -> continuePublishedRun(run, settings));
+        return true;
+    }
+
+    private void continuePublishedRun(CoreAsyncExecution run, SolverSettings settings) {
+        if (asyncExecution != run || run.ending || !run.terminalPublished) return;
         SimulationSession.Status status = run.host.status();
         if (status.state() == SimulationSession.State.CLOSED || status.state() == SimulationSession.State.FAILED) {
-            return true;
+            return;
         }
-        if (status.state() == SimulationSession.State.RUNNING) return true;
+        if (status.state() == SimulationSession.State.RUNNING) return;
 
         double end = status.endTime();
         boolean reachedEnd = status.state() == SimulationSession.State.COMPLETED || status.time() >= end;
@@ -405,18 +419,14 @@ public final class DesktopSimulationController {
         }
         completedTime = 0;
         run.startedAtMillis = System.currentTimeMillis();
-        run.awaitingRunAdmission = true;
-        // Queue the next run before restarting the EDT timer. In the extension case, the
-        // previous COMPLETED status remains visible while extend() copies the recording;
-        // a timer tick in that window would stop itself before the queued run starts.
-        run.runFuture = run.host.run();
-        LegacySimulationFrontend.onEventThread(() -> {
-            run.origin.accept(ContainerStatus.RUNNING);
-            run.presentation.accept(true);
-            window.setMenuDuringSimulation(true, false);
-            if (!run.timer.isRunning()) run.timer.start();
-        });
-        return true;
+        run.terminalPublished = false;
+        // The host serializes any queued extension before the next run. The timer waits
+        // for this new command before interpreting the host's terminal status.
+        run.runFuture = submitAsync.apply(run.host);
+        run.origin.accept(ContainerStatus.RUNNING);
+        run.presentation.accept(true);
+        window.setMenuDuringSimulation(true, false);
+        if (!run.timer.isRunning()) run.timer.start();
     }
 
     boolean endAsync() {
@@ -488,22 +498,32 @@ public final class DesktopSimulationController {
             run.timer.stop();
             return;
         }
-        SimulationSession.Status status = run.host.status();
         if (run.ending) {
             if (run.runFuture == null || run.runFuture.isDone()) finishEnd(run);
             return;
         }
-        if (run.awaitingRunAdmission) {
-            if (run.runFuture != null && !run.runFuture.isDone()
-                    && status.state() != SimulationSession.State.RUNNING) return;
-            run.awaitingRunAdmission = false;
+        var command = run.runFuture;
+        if (!command.isDone()) {
+            drainSamples(run);
+            return;
         }
+        try {
+            // Terminal status can be visible before the owner queues its final sample.
+            command.get(0, TimeUnit.NANOSECONDS);
+        } catch (TimeoutException error) {
+            return;
+        } catch (InterruptedException error) {
+            Thread.currentThread().interrupt();
+            return;
+        } catch (ExecutionException error) {
+            // The session's status determines how failed runs are presented.
+        }
+        SimulationSession.Status status = run.host.status();
         drainSamples(run);
         SimulationSession.State state = status.state();
         if (state != SimulationSession.State.PAUSED && state != SimulationSession.State.COMPLETED
                 && state != SimulationSession.State.FAILED) return;
 
-        drainSamples(run);
         run.timer.stop();
         completedTime = status.time();
         if (state == SimulationSession.State.FAILED) {
@@ -521,6 +541,7 @@ public final class DesktopSimulationController {
             if (state == SimulationSession.State.COMPLETED) {
                 window.jtfStatus.setzeStatusRechenzeit(System.currentTimeMillis() - run.startedAtMillis);
             }
+            run.terminalPublished = true;
         }
     }
 
