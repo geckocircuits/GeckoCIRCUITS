@@ -20,11 +20,13 @@ public final class Main {
     public static int run(String[] args, PrintStream output, PrintStream errors) {
         boolean exponentialDiodes = false;
         boolean bipolarTransistors = false;
+        boolean levelOneMosfets = false;
         int length = args.length;
         while (length > 2) {
             String flag = args[length - 1];
             if (flag.equals("--exponential-diodes")) exponentialDiodes = true;
             else if (flag.equals("--bipolar-transistors")) bipolarTransistors = true;
+            else if (flag.equals("--level-one-mosfets")) levelOneMosfets = true;
             else break;
             length--;
         }
@@ -33,7 +35,7 @@ public final class Main {
                 && args[0].toLowerCase(Locale.ROOT).endsWith(".asc");
         if (args.length != 2 && !ascOptions) {
             errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
-                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]] [--exponential-diodes] [--bipolar-transistors]");
+                    + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]] [--exponential-diodes] [--bipolar-transistors] [--level-one-mosfets]");
             return 1;
         }
         try {
@@ -42,6 +44,9 @@ public final class Main {
             String lowerName = inputName.toLowerCase(Locale.ROOT);
             if (bipolarTransistors && !lowerName.endsWith(".cir")) {
                 throw new IllegalArgumentException("Use the bipolar transistor option only with flat SPICE AC input.");
+            }
+            if (levelOneMosfets && !lowerName.endsWith(".cir")) {
+                throw new IllegalArgumentException("Use the Level 1 MOSFET option with flat transient SPICE input.");
             }
             CircuitModel model;
             if (lowerName.endsWith(".asc")) {
@@ -67,7 +72,7 @@ public final class Main {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
                 model = lowerName.endsWith(".plecs")
                         ? new PlecsImporter().convert(source, inputName)
-                        : new SpiceImporter(exponentialDiodes, bipolarTransistors).convert(source, inputName);
+                        : new SpiceImporter(exponentialDiodes, bipolarTransistors, levelOneMosfets).convert(source, inputName);
             }
             if (bipolarTransistors && model.getAcSettings() == null) {
                 throw new IllegalArgumentException("Use the bipolar transistor option only with flat SPICE AC input.");

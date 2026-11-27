@@ -281,8 +281,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     @Override
     public void importASCII(final TokenMap tokenMap) {
         if (getSimulationDomain() == ConnectorType.LK && tokenMap.containsToken(AcMetadataCodec.COMPONENT)) {
-            acComponent.setValueWithoutUndo(Optional.of(
-                    AcMetadataCodec.decodeComponent(tokenMap.readDataLine(AcMetadataCodec.COMPONENT, ""))));
+            setAcComponentWithoutUndo(AcMetadataCodec.decodeComponent(tokenMap.readDataLine(AcMetadataCodec.COMPONENT, "")));
         }
         if (getSimulationDomain() == ConnectorType.LK && tokenMap.containsToken(HierarchyMetadataCodec.SCALAR_BINDINGS)) {
             scalarBindings = HierarchyMetadataCodec.decodeScalarBindings(
@@ -472,7 +471,13 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     public final AcComponent getAcComponent() { return acComponent.getValue().orElse(null); }
 
-    final void setAcComponentWithoutUndo(AcComponent owned) { acComponent.setValueWithoutUndo(Optional.of(owned)); }
+    final void setAcComponentWithoutUndo(AcComponent owned) {
+        acComponent.setValueWithoutUndo(Optional.of(owned));
+        onAcComponentInstalled(owned);
+    }
+
+    /** Adds any additional graphical terminals owned by an imported semiconductor law. */
+    protected void onAcComponentInstalled(AcComponent owned) { }
 
     public final AcComponent getAcComponentOrLiteral() {
         var owned = getAcComponent();
@@ -796,8 +801,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public void copyLKBlockPars(final AbstractBlockInterface copy) {
-        acComponent.getValue().ifPresent(current -> copy.acComponent.setValueWithoutUndo(Optional.of(
-                new AcComponent(copy.getStringID(), current.spiceOrders(), List.of(), current.mirrored(), current.law()))));
+        acComponent.getValue().ifPresent(current -> copy.setAcComponentWithoutUndo(
+                new AcComponent(copy.getStringID(), current.spiceOrders(), List.of(), current.mirrored(), current.law())));
         copy.setSheetPositionWithoutUndo(getSheetPosition());
         copy.setPositionVorVerschieben(getSheetPosition());
         System.arraycopy(parameter, 0, copy.parameter, 0, parameter.length);
@@ -944,6 +949,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                     _textInfo.addParameter(law.modelName() + " Vfwd = "
                             + AC_VALUE_FORMAT.formatENG(model.forwardVoltage(), 4) + " V");
                 }
+                case AcComponent.Mosfet law -> _textInfo.addParameter(law.modelName() + (law.pChannel() ? " (PMOS)" : " (NMOS)"));
                 case AcComponent.Bipolar law -> _textInfo.addParameter(law.modelName() + " (AC bipolar)");
                 case AcComponent.ExponentialDiode law -> _textInfo.addParameter(law.modelName() + (law.transientLaw() ? " (exponential transient)" : " (exponential AC)"));
                 case AcComponent.Transconductance law -> {

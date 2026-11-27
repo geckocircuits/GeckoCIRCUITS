@@ -157,6 +157,11 @@ public final class AcEditorDialogs {
                     return edited;
                 };
             }
+            case AcComponent.Mosfet law -> {
+                fields.add(new JLabel(law.pChannel() ? "Imported Level 1 PMOS" : "Imported Level 1 NMOS"));
+                fields.add(new JLabel(law.modelName()));
+                updatedLaw = () -> law;
+            }
             case AcComponent.Bipolar law -> {
                 fields.add(new JLabel("Imported AC bipolar transistor"));
                 fields.add(new JLabel(law.modelName()));

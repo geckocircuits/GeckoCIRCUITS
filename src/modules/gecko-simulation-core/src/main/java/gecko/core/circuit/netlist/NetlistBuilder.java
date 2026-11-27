@@ -196,8 +196,8 @@ public class NetlistBuilder {
             }
         }
 
-        CircuitTopology.Group[][] terminalGroups = new CircuitTopology.Group[allComponents.size()][2];
-        boolean[][] referenceNodes = new boolean[allComponents.size()][2];
+        CircuitTopology.Group[][] terminalGroups = new CircuitTopology.Group[allComponents.size()][3];
+        boolean[][] referenceNodes = new boolean[allComponents.size()][3];
         boolean hasElectricalWires = topology.hasConnections("LK") || topology.hasConnections("RELUCTANCE")
                 || topology.hasConnections("THERMAL");
         for (int i = 0; i < allComponents.size(); i++) {
@@ -209,6 +209,17 @@ public class NetlistBuilder {
                 terminalGroups[i][side] = group;
                 referenceNodes[i][side] = group.canonicalLabel().equals("0") || group.canonicalLabel().equalsIgnoreCase("gnd")
                         || group.canonicalLabel().isEmpty() && !topology.hasConnections(group.domain()) && component.getTerminalData().isEmpty();
+            }
+            if (component.getAcComponent() != null
+                    && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Mosfet) {
+                var gate = topology.group(component, CircuitTopology.Side.INPUT, 1);
+                boolean grounded = gate != null && (gate.canonicalLabel().equalsIgnoreCase("gnd")
+                        || gate.canonicalLabel().equals("0"));
+                if (gate == null || !grounded && gate.terminals().size() < 2) {
+                    throw new IllegalArgumentException("Connect the MOSFET gate on " + component.getName() + ".");
+                }
+                terminalGroups[i][2] = gate;
+                referenceNodes[i][2] = grounded;
             }
         }
 
@@ -353,8 +364,9 @@ public class NetlistBuilder {
         int nextNode = 1;
 
         for (int component = 0; component < terminalGroups.length; component++) {
-            for (int side = 0; side < 2; side++) {
+            for (int side = 0; side < terminalGroups[component].length; side++) {
                 var group = terminalGroups[component][side];
+                if (group == null) continue;
                 Object key = nodeKey(group, legacyLabelOnly);
                 if (referenceNodes[component][side]) groupToNode.put(key, 0);
                 else if (!groupToNode.containsKey(key)) {
@@ -469,6 +481,12 @@ public class NetlistBuilder {
                 nodeCount - 1, voltageSourceCount, elementCount);
         netlist.setComponentNameToIndex(nameToIndex);
         if (wireReference) netlist.setNumericalNodeOrder(order);
+        Map<Integer, Integer> gateNodes = new LinkedHashMap<>();
+        for (int index = 0; index < terminalGroups.length; index++) {
+            var ports = terminalGroups[index];
+            if (ports.length > 2 && ports[2] != null) gateNodes.put(index, groupToNode.get(nodeKey(ports[2], legacyLabelOnly)));
+        }
+        netlist.setMosfetGateNodes(gateNodes);
         return netlist;
     }
 
@@ -552,7 +570,10 @@ public class NetlistBuilder {
 
     private static String terminalLabel(CircuitModel.ComponentData component, boolean xTerminal) {
         String[] labels = xTerminal ? component.getTerminalXLabels() : component.getTerminalYLabels();
-        if (labels.length > 1 || (labels.length == 1 && labels[0] == null)) {
+        boolean gateOnInput = xTerminal && component.getAcComponent() != null
+                && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Mosfet;
+        int maximum = gateOnInput ? 2 : 1;
+        if (labels.length > maximum || java.util.Arrays.stream(labels).anyMatch(java.util.Objects::isNull)) {
             throw new IllegalArgumentException("Component '" + component.getName()
                     + "' requires one valid label per electrical terminal");
         }

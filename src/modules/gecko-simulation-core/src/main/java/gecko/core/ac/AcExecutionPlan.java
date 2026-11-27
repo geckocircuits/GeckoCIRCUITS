@@ -256,6 +256,7 @@ public final class AcExecutionPlan {
                     prepared.add(new Branch(instance, ports[0], ports[1], -1, -1,
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
+                case AcComponent.Mosfet law -> throw wrongLaw(owned);
                 case AcComponent.Bipolar law -> {
                     if (type != SpicePorts.BJT || hierarchical || model.getAcProvenance() != null
                             && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);

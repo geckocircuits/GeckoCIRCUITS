@@ -74,6 +74,17 @@ public class CircuitNetlist implements INetList {
 
     // Basic circuit topology
     private CircuitTypCore[] componentTypes;
+    private Map<Integer, Integer> mosfetGateNodes = Map.of();
+
+    void setMosfetGateNodes(Map<Integer, Integer> gateNodes) {
+        mosfetGateNodes = Map.copyOf(gateNodes);
+    }
+
+    /** @return the electrical gate node of a selected native MOSFET, or -1. */
+    public int getMosfetGateNode(int element) {
+        return mosfetGateNodes.getOrDefault(element, -1);
+    }
+
     private int[] nodeX;          // X terminal node indices
     private int[] nodeY;          // Y terminal node indices
     private int[] voltageSourceNumbers;  // Voltage source numbering for extended MNA
@@ -135,6 +146,7 @@ public class CircuitNetlist implements INetList {
             copy.couplingRegistry.registerCoupling(coupling.getInductor1Index(), coupling.getInductor2Index(),
                     coupling.getCouplingCoefficient(), coupling.getInductance1(), coupling.getInductance2());
         }
+        copy.mosfetGateNodes = mosfetGateNodes;
         return copy;
     }
 

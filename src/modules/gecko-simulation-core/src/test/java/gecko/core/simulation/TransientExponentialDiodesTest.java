@@ -53,7 +53,7 @@ class TransientExponentialDiodesTest {
         var model = executionModel(DECK);
         var netlist = NetlistBuilder.buildFromCircuitModel(model);
         var step = new ElectricalTimeStep(netlist, SolverType.SOLVER_BE, SolverFeatures.none(), false,
-                TransientExponentialDiodes.from(model, netlist));
+                TransientSemiconductors.from(model, netlist));
         int diode = netlist.getElementIndexByName("D1");
         double conduction = 1e-14 * Math.expm1(.6 / VT);
         step.advance(STEP, 0, null);
@@ -69,9 +69,9 @@ class TransientExponentialDiodesTest {
         var netlist = NetlistBuilder.buildFromCircuitModel(model);
         var twinNetlist = NetlistBuilder.buildFromCircuitModel(twinModel);
         var step = new ElectricalTimeStep(netlist, SolverType.SOLVER_TRZ, new SolverFeatures(0, true), false,
-                TransientExponentialDiodes.from(model, netlist));
+                TransientSemiconductors.from(model, netlist));
         var twin = new ElectricalTimeStep(twinNetlist, SolverType.SOLVER_TRZ, new SolverFeatures(0, true), false,
-                TransientExponentialDiodes.from(twinModel, twinNetlist));
+                TransientSemiconductors.from(twinModel, twinNetlist));
         step.subStepForTest(STEP, 50e-9, -1);
         twin.subStepForTest(STEP, 50e-9, -1);
         step.trialAndRestoreForTest(3 * STEP, 80e-9);
@@ -86,7 +86,7 @@ class TransientExponentialDiodesTest {
         var model = executionModel(DECK.replace("V1 anode 0 .6", "V1 anode 0 0\nI1 0 sense .5p\nR1 sense 0 1T"));
         var netlist = NetlistBuilder.buildFromCircuitModel(model);
         var step = new ElectricalTimeStep(netlist, SolverType.SOLVER_BE, SolverFeatures.none(), false,
-                TransientExponentialDiodes.from(model, netlist));
+                TransientSemiconductors.from(model, netlist));
         step.advance(STEP, 0, null);
         int resistor = netlist.getElementIndexByName("R1");
         double[] voltages = netlist.getLastNodeVoltagesRef();
@@ -100,7 +100,7 @@ class TransientExponentialDiodesTest {
         var features = new SolverFeatures(0, false, false, null,
                 new gecko.core.allg.AdaptiveStepSettings(1e-3));
         var step = new ElectricalTimeStep(netlist, SolverType.SOLVER_TRZ, features, false,
-                TransientExponentialDiodes.from(model, netlist));
+                TransientSemiconductors.from(model, netlist));
         for (int grid = 0; grid <= 16; grid++) step.advanceAdaptiveForTest(STEP, grid * STEP);
         assertTrue(step.adaptiveReport().rejected() > 0);
     }
@@ -114,9 +114,9 @@ class TransientExponentialDiodesTest {
         var sparseSettings = new gecko.core.allg.SparseSolverSettings(gecko.core.allg.SparseSolverSettings.Mode.SPARSE);
         var features = new SolverFeatures(0, false, false, null, null, sparseSettings);
         var reference = new ElectricalTimeStep(dense, SolverType.SOLVER_TRZ, SolverFeatures.none(), false,
-                TransientExponentialDiodes.from(denseModel, dense));
+                TransientSemiconductors.from(denseModel, dense));
         var candidate = new ElectricalTimeStep(sparse, SolverType.SOLVER_TRZ, features, false,
-                TransientExponentialDiodes.from(sparseModel, sparse));
+                TransientSemiconductors.from(sparseModel, sparse));
         for (int i = 0; i < 4; i++) {
             reference.advance(STEP, i * STEP, null);
             candidate.advance(STEP, i * STEP, null);
