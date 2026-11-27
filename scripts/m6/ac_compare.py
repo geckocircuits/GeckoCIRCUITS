@@ -70,7 +70,7 @@ def _trace(data, grid, signals):
             raise ValueError('CSV row width or frequency count differs')
         ordered = [_number(row[index]) for index in columns]
         frequency = ordered[0]
-        if frequency <= previous or abs(frequency - grid[count]) > 1e-12 * grid[count]:
+        if frequency <= previous or frequency != grid[count]:
             raise ValueError('CSV frequency grid differs from the declared analysis')
         previous = frequency
         for index, signal in enumerate(values):

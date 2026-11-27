@@ -154,7 +154,8 @@ The default floors are 1 nV for V and 1 pA for A.
 
 Use one `frequency` column and two signed columns per signal.
 For example, use `V(out) [V] real` and `V(out) [V] imag`.
-The same declared grid and signal set must appear in both exports.
+Both exports must contain the exact declared frequency grid and signal set.
+Use enough digits to round-trip each frequency to the declared numeric value.
 The limit at each frequency is 3% of the larger of the reference magnitude and its floor.
 The comparator uses the magnitude of the signed complex difference.
 

@@ -43,6 +43,16 @@ class AcComparatorTest(TestCase):
             with self.subTest(candidate=candidate), self.assertRaises(ValueError):
                 self.run_case(reference, candidate)
 
+    def test_rejects_reference_and_candidate_offsets_below_old_relative_tolerance(self):
+        exact = payload([1j, 2j], [1.0, 10.0])
+        lower = payload([1j, 2j], [0.9999999999995, 10])
+        upper = payload([1j, 2j], [1.0000000000005, 10])
+        self.assertTrue(self.run_case(exact, exact)['passed'])
+        for reference, candidate in ((lower, exact), (exact, upper), (lower, upper)):
+            with self.subTest(reference=reference, candidate=candidate), self.assertRaisesRegex(
+                    ValueError, 'frequency grid differs'):
+                self.run_case(reference, candidate)
+
     def test_nonfinite_values_and_frequency_reordering_are_rejected(self):
         reference = payload([1j, 2j])
         for candidate in [payload([complex(float('nan'), 0), 2j]), payload([1j, 2j], [10, 1])]:
