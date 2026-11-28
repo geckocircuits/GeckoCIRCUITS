@@ -1,3 +1,24 @@
+# M6 batch acceptance (lean protocol, #198)
+
+Run from WSL in the repository root, after building the core jar once:
+
+```bash
+mvn -o -f pom-reactor.xml -pl src/modules/gecko-simulation-core -am -DskipTests package
+python3 -B scripts/m6/accept.py --analysis ac --ids 106,113 --output-dir /mnt/d/claude-m6/my-new-run
+python3 -B scripts/m6/accept.py --analysis ac --ids all --output-dir /mnt/d/claude-m6/my-new-run
+```
+
+Each case runs four stages, each with its own timeout (`--timeout`, default 300 s):
+`import` (importer `Main` with the 26.1.1 profile, then reopen in core),
+`ltspice` (`LTspice.exe -b` on the unchanged schematic),
+`gecko` (`gecko.core.ac.AcMain` on the saved `.ipes`) and
+`compare` (`ac_compare.py` on every trace present in both outputs).
+A reference trace that Gecko lacks fails the case. LTspice-only subcircuit internals (`V(x1:n001)`, `I(X1:R5)`) are listed and not compared; root port currents `Ix(x1:pin)` are compared.
+`worst_ratio` is the worst error divided by its allowed error, so a case passes when it is at most 1.
+
+The output folder holds `results.jsonl` (one row per case, written as the batch runs), `summary.json` and `summary.md` (failures grouped by stage and normalised message, largest group first) and `cases/<id>/` with every intermediate file.
+The command writes nothing outside the output folder. Windows temp, `%APPDATA%` and `%LOCALAPPDATA%` for LTspice point into it, and the batch stops when its drive has under 3 GB free.
+
 # M6 archive scoreboard
 
 Run these commands from the repository root in PowerShell. Use a new run name each time. Outputs stay on D:, and the runner does not delete files.
