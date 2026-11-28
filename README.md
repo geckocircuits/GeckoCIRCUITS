@@ -59,6 +59,12 @@ The `resources/` directory contains ready-to-simulate circuits:
 | Vienna Rectifier | Three-phase AC-DC | `resources/tutorials/3xx_acdc_rectifiers/303_vienna_rectifier/` |
 | EMI Filters | CM/DM filter design | `resources/tutorials/6xx_emi_emc/602_cm_dm_filters/` |
 
+## Headless transient parameter overrides
+
+Use the occurrence path for a component inside a native hierarchy. For example, set
+`PreparationRequest.parameters` to `Map.of("X1:Xleaf:Rseries.resistance", 2000.0)` to apply 2 kΩ
+to `Rseries` in `X1/Xleaf` for that run.
+
 ## Build from Source
 
 ```bash
@@ -102,6 +108,8 @@ Full documentation is available at **[tinix84.github.io/GeckoCIRCUITS](https://t
 - [Developer Guide](https://tinix84.github.io/GeckoCIRCUITS/resources/developer-guide/)
 
 ## Contributing
+
+For command-line circuit conversion, see [Circuit import](docs/circuit-import.md).
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 

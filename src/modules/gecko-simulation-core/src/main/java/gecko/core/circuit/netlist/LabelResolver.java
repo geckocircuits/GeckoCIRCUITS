@@ -70,8 +70,7 @@ public class LabelResolver {
 
         for (int i = 0; i < labelList.length; i++) {
             if (labelList[i] != null && !labelList[i].isEmpty()) {
-                labelToIndex.put(labelList[i], i);
-                indexToLabel.put(i, labelList[i]);
+                addLabel(labelList[i], i);
             }
         }
     }
@@ -82,20 +81,16 @@ public class LabelResolver {
      * @param labelMap map of label string to index
      */
     public LabelResolver(Map<String, Integer> labelMap) {
-        this.labelToIndex = new HashMap<>(labelMap);
-        this.indexToLabel = new HashMap<>();
-
-        // Build reverse mapping and find max index for labelList
-        int maxIndex = 0;
-        for (Map.Entry<String, Integer> entry : labelMap.entrySet()) {
-            indexToLabel.put(entry.getValue(), entry.getKey());
-            maxIndex = Math.max(maxIndex, entry.getValue());
+        this();
+        if (labelMap == null) {
+            throw new IllegalArgumentException("Label map cannot be null");
         }
-
-        // Build labelList array
-        this.labelList = new String[maxIndex + 1];
-        for (Map.Entry<Integer, String> entry : indexToLabel.entrySet()) {
-            labelList[entry.getKey()] = entry.getValue();
+        for (Map.Entry<String, Integer> entry : labelMap.entrySet()) {
+            Integer index = entry.getValue();
+            if (index == null || index < 0 || index == Integer.MAX_VALUE || indexToLabel.containsKey(index)) {
+                throw new IllegalArgumentException("Label indices must be non-negative and unique");
+            }
+            addLabel(entry.getKey(), index);
         }
     }
 
@@ -319,9 +314,11 @@ public class LabelResolver {
      * @return new merged resolver
      */
     public LabelResolver merge(LabelResolver other) {
-        Map<String, Integer> merged = new HashMap<>(this.labelToIndex);
-        merged.putAll(other.labelToIndex);
-        return new LabelResolver(merged);
+        LabelResolver merged = new LabelResolver(this.labelList);
+        for (Map.Entry<String, Integer> entry : other.labelToIndex.entrySet()) {
+            merged.addLabel(entry.getKey(), entry.getValue());
+        }
+        return merged;
     }
 
     /**

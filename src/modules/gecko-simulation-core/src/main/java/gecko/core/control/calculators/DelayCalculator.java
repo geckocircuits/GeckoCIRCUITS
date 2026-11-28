@@ -13,149 +13,94 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 import gecko.core.control.IsDtChangeSensitive;
+import gecko.core.control.DelayHistory;
 
-/**
- * Calculator that delays an input signal by a specified time.
- *
- * This block implements a pure delay (transport delay) using a circular buffer.
- * The output at time t equals the input at time (t - delayTime).
- *
- * Features:
- * - Configurable delay time
- * - Handles time step changes via IsDtChangeSensitive
- * - Uses circular buffer for efficient memory usage
- * - Zero output during initial buffer filling period
- *
- * @author GeckoCIRCUITS Team
- */
+/** Adapts shared delay history to this runtime's signal arrays and lifecycle interfaces. */
 public final class DelayCalculator extends AbstractSingleInputSingleOutputCalculator
-        implements InitializableAtSimulationStart, IsDtChangeSensitive {
-
-    /** Original time step used when delay buffer was created */
-    private double _originalDt;
-
-    /** Circular buffer storing delayed values */
-    private double[] _delayBuffer = null;
-
-    /** Current write position in circular buffer */
-    private int _bufferIndex = -1;
-
-    /** Flag indicating buffer is still being filled */
-    private boolean _bufferEmpty;
-
-    /** Delay time to use at next initialization */
-    private double _initDelayTime;
-
-    /** Current active delay time */
-    private double _delayTime;
+        implements InitializableAtSimulationStart, IsDtChangeSensitive, PeriodicStateSource {
+    private final DelayHistory history;
 
     /**
-     * Creates a delay calculator with the specified delay time.
+     * Creates a calculator with a deferred initial delay.
      *
-     * @param delayTime delay time in seconds (must be non-negative)
-     * @throws IllegalArgumentException if delayTime is negative
+     * @param delayTime the finite, nonnegative delay in seconds.
+     * @throws IllegalArgumentException if the delay is invalid.
      */
-    public DelayCalculator(final double delayTime) {
-        super();
-        setDelayTime(delayTime);
-    }
+    public DelayCalculator(final double delayTime) { history = new DelayHistory(delayTime); }
 
     @Override
-    public void initWithNewDt(final double deltaT) {
-        _delayTime = _initDelayTime;
-
-        // Calculate new buffer size
-        int newBufferSize = Math.max(1, (int) (_delayTime / deltaT));
-        double[] newBuffer = new double[newBufferSize];
-
-        // Interpolate old buffer values into new buffer
-        if (_delayBuffer != null && _delayBuffer.length > 0) {
-            final double ratio = deltaT / _originalDt;
-            final int newStartIndex = Math.min(Math.max(0, (int) (_bufferIndex / ratio)), newBuffer.length - 1);
-
-            for (int i = 0; i < newBuffer.length; i++) {
-                int oldIndex = (int) (ratio * i);
-                if (oldIndex >= 0 && oldIndex < _delayBuffer.length) {
-                    newBuffer[i] = _delayBuffer[oldIndex];
-                }
-            }
-            _bufferIndex = newStartIndex;
-        } else {
-            _bufferIndex = 0;
-        }
-
-        _delayBuffer = newBuffer;
-        _originalDt = deltaT;
-    }
+    public void initWithNewDt(final double deltaT) { history.changeTimeStep(deltaT); }
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
-        _delayTime = _initDelayTime;
-        _originalDt = deltaT;
-        _bufferEmpty = true;
-
-        // Create buffer sized for delay time
-        int bufferSize = Math.max(1, (int) (_delayTime / deltaT));
-        _delayBuffer = new double[bufferSize];
-        _bufferIndex = 0;
+        history.restart(deltaT);
+        _outputSignal[0][0] = 0;
     }
 
     @Override
     public void berechneYOUT(final double deltaT) {
-        if (_bufferEmpty) {
-            // Buffer is still being filled
-            if (deltaT > _delayTime) {
-                // Minimal delay - just pass through input
-                _outputSignal[0][0] = _inputSignal[0][0];
-                return;
-            }
+        _outputSignal[0][0] = history.step(_inputSignal[0][0], deltaT);
+    }
 
-            // Output zero while filling
+    /**
+     * Defers a delay change until the next restart or time-step callback.
+     *
+     * @param delayTime the finite, nonnegative delay in seconds.
+     * @throws IllegalArgumentException if the delay is invalid.
+     */
+    public void setDelayTime(final double delayTime) { history.setDelayTime(delayTime); }
+
+    /** Publishes the current historical sample without capturing an input. Use after initialization. */
+    public void publishDelayedOutput() { _outputSignal[0][0] = history.publish(); }
+
+    /** Captures the settled input after combinational execution. Use after publishing the delayed output. */
+    public void captureCurrentInput() { history.capture(_inputSignal[0][0]); }
+
+    /** @return the delay activated by the most recent lifecycle callback. */
+    public double getDelayTime() { return history.getDelayTime(); }
+
+    /** @return the configured delay without changing the active history. */
+    public double getConfiguredDelayTime() { return history.getConfiguredDelayTime(); }
+
+    /**
+     * Checks the configured history size without changing active state.
+     *
+     * @param dt the finite, positive step in seconds
+     * @throws IllegalArgumentException if the step or history size is invalid
+     */
+    public void validateTimeStep(double dt) { DelayHistory.validateHistorySize(getConfiguredDelayTime(), dt); }
+
+    /**
+     * Allocates a restart update without changing history or output.
+     *
+     * @param dt the finite, positive step in seconds
+     * @return the action that commits this staged restart once
+     * @throws IllegalArgumentException if the step or history size is invalid
+     */
+    public Runnable prepareInitialization(double dt) {
+        var update = history.prepareRestart(dt);
+        return () -> {
+            update.commit();
             _outputSignal[0][0] = 0;
-
-            // Store input in buffer
-            _delayBuffer[_bufferIndex] = _inputSignal[0][0];
-            _bufferIndex++;
-
-            // Check if buffer is now full
-            if (_bufferIndex >= _delayBuffer.length) {
-                _bufferEmpty = false;
-                _bufferIndex = 0;
-            }
-        } else {
-            // Normal operation - output oldest value, store new input
-            _outputSignal[0][0] = _delayBuffer[_bufferIndex];
-            _delayBuffer[_bufferIndex] = _inputSignal[0][0];
-
-            // Advance circular buffer index
-            _bufferIndex++;
-            _bufferIndex %= _delayBuffer.length;
-        }
+        };
     }
 
     /**
-     * Sets the delay time.
+     * Allocates a resampling update without changing active history.
      *
-     * The new delay time will take effect at the next simulation start
-     * or when initWithNewDt() is called.
-     *
-     * @param delayTime delay time in seconds (must be non-negative)
-     * @throws IllegalArgumentException if delayTime is negative
+     * @param dt the finite, positive step in seconds
+     * @return the action that commits this staged step change once
+     * @throws IllegalArgumentException if the step or history size is invalid
      */
-    public void setDelayTime(final double delayTime) {
-        if (delayTime < 0) {
-            throw new IllegalArgumentException("Error: Delay time must be positive!");
-        }
-        _initDelayTime = delayTime;
-    }
+    public Runnable prepareStepChange(double dt) { return history.prepareTimeStepChange(dt)::commit; }
 
-    /**
-     * Gets the current delay time.
-     *
-     * @return the active delay time in seconds
-     */
-    public double getDelayTime() {
-        return _delayTime;
-    }
+    @Override
+    public Runnable prepareTimeStepChange(double dt) { return prepareStepChange(dt); }
+
+    @Override
+    public void exportState(final StateSink sink) { history.exportChronological(sink); }
 }

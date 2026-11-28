@@ -1,664 +1,851 @@
 package gecko.rest.service;
 
+import gecko.core.allg.PeriodicSteadyStateSettings;
 import gecko.core.allg.SolverType;
+import gecko.core.preparation.*;
 import gecko.core.simulation.HeadlessSimulationEngine;
-import gecko.core.simulation.SimulationConfig;
 import gecko.core.simulation.SimulationProgress;
 import gecko.core.simulation.SimulationResult;
+import gecko.core.simulation.SteadyStateReport;
+import gecko.core.signal.TimedSignal;
+import gecko.rest.config.SimulationJobLimits;
+import gecko.rest.model.BatchJobStatus;
+import gecko.rest.model.BatchSimulationRequest;
+import gecko.rest.model.BatchSimulationResponse;
 import gecko.rest.model.SimulationRequest;
 import gecko.rest.model.SimulationResponse;
+import gecko.rest.model.SimulationResponse.SimulationStatus;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.Instant;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import gecko.rest.model.BatchSimulationRequest;
-import gecko.rest.model.BatchSimulationResponse;
-import gecko.rest.model.BatchJobStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import java.util.concurrent.Executor;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.function.LongFunction;
+import java.util.function.Supplier;
 
 /**
- * Service layer for simulation operations.
- * Handles business logic for circuit simulations using HeadlessSimulationEngine.
- *
- * This service integrates with the gecko-simulation-core module to run
- * actual circuit simulations without any GUI dependencies.
+ * Owns simulation scheduling, state transitions, and progress subscriptions.
+ * Each job commits state under its monitor and delivers ordered notifications separately.
  */
 @Service
 public class SimulationService {
-
     private static final Logger logger = LoggerFactory.getLogger(SimulationService.class);
     static final String CANCELLED_BY_USER = "Cancelled by user";
+    private static final int DEFAULT_BATCH_CONCURRENCY = 4;
 
-    private final Map<String, SimulationResponse> simulationStore = new ConcurrentHashMap<>();
-    private final Map<String, HeadlessSimulationEngine> runningEngines = new ConcurrentHashMap<>();
-    private final Map<String, List<SseEmitter>> progressEmitters = new ConcurrentHashMap<>();
-    private final Map<String, BatchSimulationResponse> batchStore = new ConcurrentHashMap<>();
-    private final ExecutorService executorService = Executors.newFixedThreadPool(
-            Math.max(2, Runtime.getRuntime().availableProcessors() - 1)
-    );
+    private final Map<String, SimulationJob> jobs = new ConcurrentHashMap<>();
+    private final Map<String, BatchJob> batches = new ConcurrentHashMap<>();
+    private final ExecutorService executorService;
+    private final Supplier<HeadlessSimulationEngine> engineFactory;
+    private final LongFunction<SseEmitter> emitterFactory;
+    private final SimulationJobLimits limits;
+    private final Executor deliveryExecutor;
+    private final Object admissionMonitor = new Object();
+    private final CircuitFileService circuitFiles;
+    private final CircuitPreparation preparation = new CircuitPreparation();
 
-    // Optional: injected when the WebSocket infrastructure is available (i.e. not in @WebMvcTest slice)
     @Autowired(required = false)
     private WebSocketProgressService webSocketProgressService;
 
+    public SimulationService() {
+        this(new SimulationJobLimits());
+    }
+
+    public SimulationService(SimulationJobLimits limits) { this(limits, new CircuitFileService()); }
+
     /**
-     * Register an SSE emitter to receive progress events for a simulation.
+     * Creates bounded execution and delivery pools with a shared circuit source registry.
      *
-     * @param simulationId the simulation ID
-     * @param timeoutMs the timeout in milliseconds for the SSE connection
-     * @return an SseEmitter for streaming progress, or null if simulation not found
+     * @param limits the execution, delivery, and retained-result capacity limits.
+     * @param circuitFiles the source adapter used to capture input before job publication.
      */
-    public SseEmitter registerProgressStream(String simulationId, long timeoutMs) {
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response == null) {
-            return null;
-        }
+    @Autowired
+    public SimulationService(SimulationJobLimits limits, CircuitFileService circuitFiles) {
+        this(new ThreadPoolExecutor(limits.getWorkers(), limits.getWorkers(), 0, TimeUnit.MILLISECONDS,
+                        new ArrayBlockingQueue<>(limits.getQueued())), HeadlessSimulationEngine::new,
+                SseEmitter::new, null, limits,
+                new ThreadPoolExecutor(limits.getDeliveryWorkers(), limits.getDeliveryWorkers(), 0, TimeUnit.MILLISECONDS,
+                        new ArrayBlockingQueue<>(limits.getRetained()),
+                        Thread.ofPlatform().daemon().name("gecko-progress-", 0).factory()), circuitFiles);
+    }
 
-        SseEmitter emitter = new SseEmitter(timeoutMs);
-        progressEmitters.computeIfAbsent(simulationId, k -> new CopyOnWriteArrayList<>()).add(emitter);
+    SimulationService(ExecutorService executorService, Supplier<HeadlessSimulationEngine> engineFactory) {
+        this(executorService, engineFactory, SseEmitter::new, null);
+    }
 
-        // Clean up when client disconnects or times out
-        emitter.onCompletion(() -> removeEmitter(simulationId, emitter));
-        emitter.onTimeout(() -> removeEmitter(simulationId, emitter));
-        emitter.onError(e -> removeEmitter(simulationId, emitter));
+    SimulationService(ExecutorService executorService, Supplier<HeadlessSimulationEngine> engineFactory,
+                      LongFunction<SseEmitter> emitterFactory, WebSocketProgressService webSocketProgressService) {
+        this(executorService, engineFactory, emitterFactory, webSocketProgressService,
+                new SimulationJobLimits(), Runnable::run);
+    }
 
-        // If already completed/failed, send final event immediately
-        SimulationResponse.SimulationStatus status = response.getStatus();
-        if (status == SimulationResponse.SimulationStatus.COMPLETED ||
-            status == SimulationResponse.SimulationStatus.FAILED) {
-            try {
-                emitter.send(SseEmitter.event()
-                    .name("status")
-                    .data("{\"status\":\"" + status + "\",\"simulationId\":\"" + simulationId + "\"}"));
-                emitter.complete();
-            } catch (Exception ignored) {
-                // Client already gone
-            }
-        }
+    SimulationService(ExecutorService executorService, Supplier<HeadlessSimulationEngine> engineFactory,
+                      LongFunction<SseEmitter> emitterFactory, WebSocketProgressService webSocketProgressService,
+                      SimulationJobLimits limits, Executor deliveryExecutor) {
+        this(executorService, engineFactory, emitterFactory, webSocketProgressService, limits, deliveryExecutor,
+                new CircuitFileService());
+    }
 
-        return emitter;
+    SimulationService(ExecutorService executorService, Supplier<HeadlessSimulationEngine> engineFactory,
+                      LongFunction<SseEmitter> emitterFactory, WebSocketProgressService webSocketProgressService,
+                      SimulationJobLimits limits, Executor deliveryExecutor, CircuitFileService circuitFiles) {
+        this.circuitFiles = circuitFiles;
+        this.executorService = executorService;
+        this.engineFactory = engineFactory;
+        this.emitterFactory = emitterFactory;
+        this.webSocketProgressService = webSocketProgressService;
+        this.limits = limits;
+        this.deliveryExecutor = deliveryExecutor;
     }
 
     /**
-     * Removes an emitter from the list for a simulation.
-     */
-    private void removeEmitter(String simulationId, SseEmitter emitter) {
-        List<SseEmitter> emitters = progressEmitters.get(simulationId);
-        if (emitters != null) {
-            emitters.remove(emitter);
-            if (emitters.isEmpty()) {
-                progressEmitters.remove(simulationId);
-            }
-        }
-    }
-
-    /**
-     * Broadcast a progress update to all registered SSE emitters for a simulation.
-     */
-    public void broadcastProgress(String simulationId, double progress, double currentTime, double endTime) {
-        // SSE broadcast
-        List<SseEmitter> emitters = progressEmitters.get(simulationId);
-        if (emitters != null && !emitters.isEmpty()) {
-            String data = String.format(
-                "{\"progress\":%.3f,\"currentTime\":%.6f,\"endTime\":%.6f,\"simulationId\":\"%s\"}",
-                progress, currentTime, endTime, simulationId
-            );
-            List<SseEmitter> dead = new ArrayList<>();
-            for (SseEmitter emitter : emitters) {
-                try {
-                    emitter.send(SseEmitter.event().name("progress").data(data));
-                } catch (Exception e) {
-                    dead.add(emitter);
-                }
-            }
-            dead.forEach(e -> removeEmitter(simulationId, e));
-        }
-
-        // WebSocket broadcast (optional — only when WebSocket infra is available)
-        if (webSocketProgressService != null) {
-            SimulationResponse resp = simulationStore.get(simulationId);
-            int step = resp != null && resp.getProgressDetails() != null ? resp.getProgressDetails().currentStep() : 0;
-            int total = resp != null && resp.getProgressDetails() != null ? resp.getProgressDetails().totalSteps() : 0;
-            webSocketProgressService.broadcastProgress(simulationId, progress, currentTime, endTime, step, total, "RUNNING");
-        }
-    }
-
-    /**
-     * Complete all SSE emitters and broadcast WebSocket completion when a simulation finishes.
-     */
-    public void completeProgressStreams(String simulationId, boolean success) {
-        List<SseEmitter> emitters = progressEmitters.remove(simulationId);
-        if (emitters != null) {
-            String event = success ? "complete" : "error";
-            for (SseEmitter emitter : emitters) {
-                try {
-                    emitter.send(SseEmitter.event().name(event).data("{\"simulationId\":\"" + simulationId + "\"}"));
-                    emitter.complete();
-                } catch (Exception ignored) {
-                    // Client already gone
-                }
-            }
-        }
-
-        // WebSocket completion broadcast
-        if (webSocketProgressService != null) {
-            SimulationResponse resp = simulationStore.get(simulationId);
-            String error = resp != null ? resp.getErrorMessage() : null;
-            webSocketProgressService.broadcastCompletion(simulationId, success, error);
-        }
-    }
-
-    /**
-     * Submit a new simulation job.
-     * The simulation runs asynchronously and results are stored when complete.
+     * Captures and prepares one circuit before publishing or dispatching its Simulation job.
+     * Stored sources supply omitted settings, and explicit request settings take precedence.
      *
-     * @param request Simulation request parameters
-     * @return Created simulation response with ID for tracking
+     * @param request the source selection, optional settings, and numeric overrides.
+     * @return a detached snapshot of the accepted job.
+     * @throws CircuitPreparationException for invalid source selection, invalid overrides, or failed Headless readiness.
+     * @throws ResponseStatusException when capacity prevents admission.
      */
     public SimulationResponse submitSimulation(SimulationRequest request) {
-        String simulationId = UUID.randomUUID().toString();
-        SimulationResponse response = new SimulationResponse(simulationId);
-        response.setStatus(SimulationResponse.SimulationStatus.PENDING);
-        response.setStartTime(Instant.now());
-
-        simulationStore.put(simulationId, response);
-
-        // Start simulation asynchronously
-        executorService.submit(() -> runSimulation(simulationId, request));
-
-        logger.info("Submitted simulation {} for circuit: {}", simulationId, request.getCircuitFile());
-        return response;
+        PreparedCircuit circuit = prepare(request, circuitFiles.resolveSource(request.getCircuitId(), request.getCircuitFile()));
+        synchronized (admissionMonitor) {
+            requireCapacity(1, false);
+            SimulationJob job = createJob(circuit, null);
+            if (!dispatch(job) && !executorService.isShutdown()) {
+                jobs.remove(job.response.getSimulationId(), job);
+                throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Simulation queue is full");
+            }
+            return snapshot(job);
+        }
     }
 
-    /**
-     * Runs the simulation using HeadlessSimulationEngine.
-     */
-    private void runSimulation(String simulationId, SimulationRequest request) {
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response == null) {
-            return;
+    private void requireCapacity(int requestedJobs, boolean batch) {
+        if (requestedJobs > limits.getRetained() - jobs.size()
+                || (batch && batches.size() >= limits.getBatches())) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
+                    "Simulation capacity is full. Existing results are retained.");
         }
+    }
 
-        if (!markRunning(response)) {
-            logger.info("Skipping simulation {} because status is {}", simulationId, response.getStatus());
-            return;
+    private PreparedCircuit prepare(SimulationRequest request, CircuitFileService.ResolvedSource source) {
+        if (!source.stored() && (request.getTimeStep() == null || request.getSimulationTime() == null)) {
+            throw CircuitPreparationException.failure(HttpStatus.BAD_REQUEST, "INVALID_SETTING", Diagnostic.Category.CONFIGURATION,
+                    "Path requests require time step and simulation time", request.getTimeStep() == null ? "timeStep" : "simulationTime");
         }
+        PreparationResult result = preparation.prepare(source.snapshot(), new PreparationRequest(
+                new SolverOverrides(request.getSolverType() == null ? null : parseSolverType(request.getSolverType()),
+                        request.getTimeStep(), request.getSimulationTime(), features(request)),
+                request.getParameters() == null ? Map.of() : request.getParameters()));
+        if (result instanceof PreparationResult.Ready ready) return ready.execution();
+        throw new CircuitPreparationException(result instanceof PreparationResult.Rejected ? HttpStatus.BAD_REQUEST
+                : HttpStatus.UNPROCESSABLE_ENTITY, result.report());
+    }
 
+    private static SolverFeatures features(SimulationRequest request) {
+        var search = request.getPeriodicSteadyState();
+        if (search == null) return SolverFeatures.none();
+        return new SolverFeatures(0, false, false, new PeriodicSteadyStateSettings(
+                search.getPeriod() == null ? Double.NaN : search.getPeriod(),
+                search.getTolerance() == null ? PeriodicSteadyStateSettings.DEFAULT_TOLERANCE : search.getTolerance(),
+                search.getMaxPeriods() == null ? PeriodicSteadyStateSettings.DEFAULT_MAX_PERIODS : search.getMaxPeriods()));
+    }
+
+    private static SimulationResponse.SteadyState steadyState(SimulationResult result) {
+        if (!(result.getMetadata().get("steadyState") instanceof SteadyStateReport report)) return null;
+        return new SimulationResponse.SteadyState(report.converged(), report.periods(),
+                Double.isFinite(report.residual()) ? report.residual() : null, report.startTime());
+    }
+
+    private SimulationJob createJob(PreparedCircuit circuit, BatchJob batch) {
+        var principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        SimulationJob job = new SimulationJob(circuit, batch, deliveryExecutor,
+                principal == null || !principal.isAuthenticated() ? null : principal.getName());
+        jobs.put(job.response.getSimulationId(), job);
+        return job;
+    }
+
+    /** Checks the immutable owner captured before publication of a single or batch job. */
+    public boolean isOwnedBy(String simulationId, String owner) {
+        SimulationJob job = jobs.get(simulationId);
+        return job != null && owner != null && owner.equals(job.owner);
+    }
+
+    private boolean dispatch(SimulationJob job) {
         try {
-            SimulationConfig config = buildSimulationConfig(request);
+            executorService.execute(() -> runSimulation(job));
+            return true;
+        } catch (RejectedExecutionException e) {
+            synchronized (job) {
+                if (applyFailureResult(job.response, executorService.isShutdown()
+                        ? "Simulation executor is shut down" : "Simulation queue is full")) {
+                    publishTerminal(job);
+                }
+            }
+            return false;
+        }
+    }
 
-            // Create and run the simulation engine
-            HeadlessSimulationEngine engine = new HeadlessSimulationEngine();
-            runningEngines.put(simulationId, engine);
-
-            // Set up progress listener with SSE broadcasting
+    private void runSimulation(SimulationJob job) {
+        try {
+            synchronized (job) {
+                if (isTerminal(job.response)) {
+                    return;
+                }
+            }
+            HeadlessSimulationEngine engine = engineFactory.get();
             engine.setProgressListener((currentTime, endTime, currentStep) -> {
                 double progress = endTime > 0 ? currentTime / endTime : 0;
-                broadcastProgress(simulationId, progress, currentTime, endTime);
-                logger.debug("Simulation {} progress: {:.1f}%", simulationId, (progress * 100));
+                broadcastProgress(job.response.getSimulationId(), progress, currentTime, endTime);
             });
-
-            logger.info("Starting simulation {} with dt={}, duration={}",
-                    simulationId, request.getTimeStep(), request.getSimulationTime());
-
-            // Run the simulation
-            SimulationResult result = engine.runSimulation(config);
-
-            // Process results
-            if (result.isSuccess()) {
-                if (applySuccessfulResult(response, result)) {
-                    completeProgressStreams(simulationId, true);
-                    logger.info("Simulation {} completed: {} steps in {} ms",
-                            simulationId, result.getTotalTimeSteps(), result.getExecutionTimeMs());
-                } else {
-                    completeProgressStreams(simulationId, false);
-                    logger.info("Simulation {} completed after cancellation request; keeping cancelled status",
-                            simulationId);
+            synchronized (job) {
+                if (isTerminal(job.response)) {
+                    return;
                 }
-            } else {
-                if (applyFailureResult(response, result.getErrorMessage())) {
-                    completeProgressStreams(simulationId, false);
-                    logger.error("Simulation {} failed: {}", simulationId, result.getErrorMessage());
+                job.engine = engine;
+                markRunning(job.response);
+            }
+            // The durable signal also covers cancellation before the engine starts.
+            SimulationResult result = engine.runSimulation(job.circuit, job.options, job::isCancelled);
+            synchronized (job) {
+                boolean committed = result.isSuccess()
+                        ? applySuccessfulResult(job.response, result)
+                        : applyFailureResult(job.response, result.getErrorMessage());
+                // A cancelled job is already terminal, so its report attaches without changing the status.
+                if (!result.isSuccess() && steadyState(result) != null) job.response.setSteadyState(steadyState(result));
+                if (committed) {
+                    publishTerminal(job);
                 }
             }
-
         } catch (Exception e) {
-            if (applyFailureResult(response, "Simulation error: " + e.getMessage())) {
-                completeProgressStreams(simulationId, false);
-                logger.error("Simulation {} threw exception", simulationId, e);
+            synchronized (job) {
+                if (applyFailureResult(job.response, "Simulation error: " + e.getMessage())) {
+                    publishTerminal(job);
+                    logger.error("Simulation {} failed", job.response.getSimulationId(), e);
+                }
             }
         } finally {
-            runningEngines.remove(simulationId);
+            synchronized (job) {
+                job.engine = null;
+            }
+            releaseBatchSlot(job);
         }
     }
 
-    /**
-     * Get simulation by ID.
-     * If simulation is running, includes detailed progress information.
-     *
-     * @param simulationId Simulation identifier
-     * @return Simulation response or null if not found
-     */
     public SimulationResponse getSimulation(String simulationId) {
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null && response.getStatus() == SimulationResponse.SimulationStatus.RUNNING) {
-            // Populate progress details if simulation is running
-            HeadlessSimulationEngine engine = runningEngines.get(simulationId);
-            if (engine != null) {
-                SimulationProgress detailed = engine.getDetailedProgress();
-                if (detailed != null) {
-                    response.setProgressDetails(new SimulationResponse.ProgressDetails(
-                        detailed.getPreCalcProgress(),
-                        detailed.getMainSimProgress(),
-                        detailed.getCurrentTime(),
-                        detailed.getEndTime(),
-                        detailed.getCurrentStep(),
-                        detailed.getTotalSteps(),
-                        detailed.getEstimatedRemainingMs()
-                    ));
-                }
+        SimulationJob job = jobs.get(simulationId);
+        return job == null ? null : snapshot(job);
+    }
+
+    /**
+     * Captures detached status metadata without reading retained waveform arrays.
+     *
+     * @param simulationId the retained job identifier.
+     * @return metadata with empty results, or null when the job is absent.
+     */
+    public SimulationResponse getSimulationStatus(String simulationId) {
+        SimulationJob job = jobs.get(simulationId);
+        return job == null ? null : snapshot(job, false);
+    }
+
+    private SimulationResponse snapshot(SimulationJob job) {
+        return snapshot(job, true);
+    }
+
+    private SimulationResponse snapshot(SimulationJob job, boolean includeResults) {
+        synchronized (job) {
+            refreshProgress(job);
+            SimulationResponse source = job.response;
+            SimulationResponse result = new SimulationResponse(source.getSimulationId());
+            result.setStatus(source.getStatus());
+            result.setStartTime(source.getStartTime());
+            result.setEndTime(source.getEndTime());
+            result.setErrorMessage(source.getErrorMessage());
+            result.setProgressDetails(source.getProgressDetails());
+            result.setSteadyState(source.getSteadyState());
+            if (includeResults) result.setResults(source.getResults());
+            return result;
+        }
+    }
+
+    private void refreshProgress(SimulationJob job) {
+        if (job.engine != null && job.response.getStatus() == SimulationStatus.RUNNING) {
+            SimulationProgress detailed = job.engine.getDetailedProgress();
+            if (detailed != null) {
+                job.response.setProgressDetails(new SimulationResponse.ProgressDetails(
+                        detailed.getPreCalcProgress(), detailed.getMainSimProgress(), detailed.getCurrentTime(),
+                        detailed.getEndTime(), detailed.getCurrentStep(), detailed.getTotalSteps(),
+                        detailed.getEstimatedRemainingMs()));
             }
         }
-        return response;
     }
 
-    /**
-     * Get all simulations.
-     *
-     * @return Map of all simulations by ID
-     */
     public Map<String, SimulationResponse> getAllSimulations() {
-        return new ConcurrentHashMap<>(simulationStore);
+        Map<String, SimulationResponse> result = new HashMap<>();
+        jobs.forEach((id, job) -> result.put(id, snapshot(job)));
+        return result;
     }
 
-    /**
-     * Cancel a pending or running simulation.
-     *
-     * @param simulationId Simulation identifier
-     * @return Updated simulation response
-     */
     public SimulationResponse cancelSimulation(String simulationId) {
-        // Try to cancel the running engine
-        HeadlessSimulationEngine engine = runningEngines.get(simulationId);
-        if (engine != null) {
-            engine.cancel();
-            logger.info("Cancellation requested for simulation {}", simulationId);
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) {
+            return null;
         }
-
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null) {
-            markCancelled(response);
+        synchronized (job) {
+            if (markCancelled(job.response)) {
+                if (job.engine != null) {
+                    job.engine.cancel();
+                }
+                publishTerminal(job);
+            }
+            return snapshot(job);
         }
-        return response;
     }
 
-    /**
-     * Get simulation progress.
-     *
-     * @param simulationId Simulation identifier
-     * @return Progress as a percentage (0-100), or -1 if simulation is unknown
-     */
     public double getSimulationProgress(String simulationId) {
-        HeadlessSimulationEngine engine = runningEngines.get(simulationId);
-        if (engine != null) {
-            return engine.getProgress() * 100.0;
-        }
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response == null) {
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) {
             return -1;
         }
-        if (response.getStatus() == SimulationResponse.SimulationStatus.COMPLETED) {
-            return 100.0;
+        synchronized (job) {
+            if (job.response.getStatus() == SimulationStatus.COMPLETED) {
+                return 100.0;
+            }
+            if (job.response.getStatus() == SimulationStatus.RUNNING && job.engine != null) {
+                return job.engine.getProgress() * 100.0;
+            }
+            return 0.0;
         }
-        return 0.0;
     }
 
-    /**
-     * Get specific signal data from a completed simulation.
-     *
-     * @param simulationId Simulation identifier
-     * @param signalName Name of the signal
-     * @return Signal data array or null if not found
-     */
     public double[] getSignalData(String simulationId, String signalName) {
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null) {
-            return response.getResult(signalName);
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) {
+            return null;
         }
-        return null;
+        synchronized (job) {
+            return job.response.getResult(signalName);
+        }
     }
 
     /**
-     * Update simulation status.
+     * Captures one retained signal and its recorded clock under the same job monitor.
      *
-     * @param simulationId Simulation identifier
-     * @param status New status
+     * @param simulationId the retained job identifier.
+     * @param signalName the requested signal name.
+     * @return independent timed samples, or null when the job or signal is absent.
+     * @throws IllegalArgumentException if the retained signal has no valid matching clock.
      */
-    public void updateStatus(String simulationId, SimulationResponse.SimulationStatus status) {
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null) {
-            synchronized (response) {
-                response.setStatus(status);
-                if (status == SimulationResponse.SimulationStatus.COMPLETED ||
-                        status == SimulationResponse.SimulationStatus.FAILED) {
-                    response.setEndTime(Instant.now());
+    public TimedSignal getTimedSignalData(String simulationId, String signalName) {
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) return null;
+        synchronized (job) {
+            double[] values = job.response.getResult(signalName);
+            if (values == null || values.length == 0) return null;
+            return new TimedSignal(job.response.getResult("time"), values);
+        }
+    }
+
+    /** Updates a nonterminal job through the existing controller-facing interface. */
+    public void updateStatus(String simulationId, SimulationStatus status) {
+        SimulationJob job = jobs.get(simulationId);
+        if (job != null) {
+            synchronized (job) {
+                if (!isTerminal(job.response)) {
+                    job.response.setStatus(status);
+                    if (isTerminal(job.response)) {
+                        job.response.setEndTime(Instant.now());
+                        publishTerminal(job);
+                    }
                 }
             }
         }
     }
 
-    /**
-     * Add results to a completed simulation.
-     *
-     * @param simulationId Simulation identifier
-     * @param signalName Name of the signal
-     * @param signalData Array of signal values
-     */
     public void addResults(String simulationId, String signalName, double[] signalData) {
-        SimulationResponse response = simulationStore.get(simulationId);
-        if (response != null) {
-            response.addResult(signalName, signalData);
+        SimulationJob job = jobs.get(simulationId);
+        if (job != null) {
+            synchronized (job) {
+                job.response.addResult(signalName, signalData);
+            }
         }
     }
 
-    /**
-     * Clear all simulation data (for testing/cleanup).
-     */
-    public void clearAll() {
-        // Cancel all running simulations
-        for (HeadlessSimulationEngine engine : runningEngines.values()) {
-            engine.cancel();
+    public Map<SimulationStatus, Long> getStatistics() {
+        Map<SimulationStatus, Long> result = new EnumMap<>(SimulationStatus.class);
+        for (SimulationStatus status : SimulationStatus.values()) {
+            result.put(status, 0L);
         }
-        runningEngines.clear();
-        simulationStore.clear();
-        progressEmitters.clear();
-        batchStore.clear();
+        for (SimulationJob job : jobs.values()) {
+            synchronized (job) {
+                result.merge(job.response.getStatus(), 1L, Long::sum);
+            }
+        }
+        return result;
     }
 
-    /**
-     * Get count of simulations by status.
-     *
-     * @return Map of status to count
-     */
-    public Map<SimulationResponse.SimulationStatus, Long> getStatistics() {
-        Map<SimulationResponse.SimulationStatus, Long> stats = new ConcurrentHashMap<>();
-        for (SimulationResponse.SimulationStatus status : SimulationResponse.SimulationStatus.values()) {
-            stats.put(status, simulationStore.values().stream()
-                    .filter(r -> r.getStatus() == status)
-                    .count());
-        }
-        return stats;
-    }
-
-    /**
-     * Check if a simulation is currently running.
-     *
-     * @param simulationId Simulation identifier
-     * @return true if simulation is running
-     */
     public boolean isRunning(String simulationId) {
-        return runningEngines.containsKey(simulationId);
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) {
+            return false;
+        }
+        synchronized (job) {
+            return job.engine != null && job.response.getStatus() == SimulationStatus.RUNNING;
+        }
+    }
+
+    public SseEmitter registerProgressStream(String simulationId, long timeoutMs) {
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) {
+            return null;
+        }
+        synchronized (job) {
+            if (!isTerminal(job.response) && job.emitters.size() >= limits.getStreamsPerJob()) {
+                throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Too many progress streams for this job");
+            }
+            SseEmitter emitter = emitterFactory.apply(timeoutMs);
+            if (isTerminal(job.response)) {
+                String data = "{\"status\":\"" + job.response.getStatus()
+                        + "\",\"simulationId\":\"" + simulationId + "\"}";
+                try {
+                    deliveryExecutor.execute(() -> {
+                        try {
+                            emitter.send(SseEmitter.event().name("status").data(data));
+                            emitter.complete();
+                        } catch (Exception ignored) {
+                            // The subscriber disconnected before receiving the terminal state.
+                        }
+                    });
+                } catch (RejectedExecutionException full) {
+                    throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Progress delivery is busy");
+                }
+            } else {
+                job.emitters.add(emitter);
+                emitter.onCompletion(() -> removeEmitter(job, emitter));
+                emitter.onTimeout(() -> removeEmitter(job, emitter));
+                emitter.onError(error -> removeEmitter(job, emitter));
+            }
+            return emitter;
+        }
+    }
+
+    private void removeEmitter(SimulationJob job, SseEmitter emitter) {
+        synchronized (job) {
+            job.emitters.remove(emitter);
+        }
+    }
+
+    /**
+     * Sends a progress ratio to SSE subscribers and its percentage to STOMP subscribers.
+     *
+     * @param simulationId the retained job identifier.
+     * @param progressRatio the completion ratio from zero to one.
+     * @param currentTime the current simulation time in seconds.
+     * @param endTime the requested end time in seconds.
+     */
+    public void broadcastProgress(String simulationId, double progressRatio, double currentTime, double endTime) {
+        SimulationJob job = jobs.get(simulationId);
+        if (job == null) {
+            return;
+        }
+        synchronized (job) {
+            if (isTerminal(job.response)) {
+                return;
+            }
+            refreshProgress(job);
+            String data = String.format(Locale.ROOT,
+                    "{\"progress\":%.3f,\"currentTime\":%.6f,\"endTime\":%.6f,\"simulationId\":\"%s\"}",
+                    progressRatio, currentTime, endTime, simulationId);
+            List<SseEmitter> emitters = new ArrayList<>(job.emitters);
+            SimulationResponse.ProgressDetails details = job.response.getProgressDetails();
+            job.mailbox.progress(() -> {
+                for (SseEmitter emitter : emitters) {
+                    try {
+                        emitter.send(SseEmitter.event().name("progress").data(data));
+                    } catch (Exception e) {
+                        removeEmitter(job, emitter);
+                    }
+                }
+                if (webSocketProgressService != null) {
+                    try {
+                        webSocketProgressService.broadcastProgress(simulationId, progressRatio * 100.0, currentTime, endTime,
+                                details == null ? 0 : details.currentStep(), details == null ? 0 : details.totalSteps(),
+                                "RUNNING");
+                    } catch (Exception e) {
+                        logger.debug("WebSocket progress delivery failed for {}", simulationId, e);
+                    }
+                }
+            });
+        }
+    }
+
+    /** Publishes committed terminal state at most once, including manual completions. */
+    public void completeProgressStreams(String simulationId, boolean success) {
+        SimulationJob job = jobs.get(simulationId);
+        if (job != null) {
+            synchronized (job) {
+                publishTerminal(job);
+            }
+        }
+    }
+
+    private void publishTerminal(SimulationJob job) {
+        if (!isTerminal(job.response) || job.terminalPublished) {
+            return;
+        }
+        job.terminalPublished = true;
+        boolean success = job.response.getStatus() == SimulationStatus.COMPLETED;
+        String simulationId = job.response.getSimulationId();
+        List<SseEmitter> emitters = new ArrayList<>(job.emitters);
+        job.emitters.clear();
+        String errorMessage = job.response.getErrorMessage();
+        job.mailbox.terminal(() -> {
+            for (SseEmitter emitter : emitters) {
+                try {
+                    emitter.send(SseEmitter.event().name(success ? "complete" : "error")
+                            .data("{\"simulationId\":\"" + simulationId + "\"}"));
+                    emitter.complete();
+                } catch (Exception ignored) {
+                    // Delivery is attempted once for each subscribed transport.
+                }
+            }
+            if (webSocketProgressService != null) {
+                try {
+                    webSocketProgressService.broadcastCompletion(simulationId, success, errorMessage);
+                } catch (Exception e) {
+                    logger.debug("WebSocket terminal delivery failed for {}", simulationId, e);
+                }
+            }
+        }, () -> {
+            for (SseEmitter emitter : emitters) {
+                try {
+                    emitter.completeWithError(new RejectedExecutionException("Progress delivery is busy. Poll job status."));
+                } catch (RuntimeException ignored) {
+                    // The subscriber can already be disconnected.
+                }
+            }
+            logger.debug("Terminal delivery rejected for {}. Final status remains available.", simulationId);
+        });
+    }
+
+    public void clearAll() {
+        synchronized (admissionMonitor) {
+            for (BatchJob batch : batches.values()) {
+                synchronized (batch) {
+                    batch.cancelled = true;
+                }
+            }
+            for (String simulationId : jobs.keySet()) {
+                cancelSimulation(simulationId);
+            }
+            jobs.clear();
+            batches.clear();
+        }
     }
 
     @PreDestroy
     public void shutdown() {
+        clearAll();
         executorService.shutdownNow();
+        if (deliveryExecutor instanceof ExecutorService pool) {
+            pool.shutdownNow();
+        }
     }
 
-    SimulationConfig buildSimulationConfig(SimulationRequest request) {
-        SimulationConfig.Builder builder = SimulationConfig.builder()
-                .circuitFile(request.getCircuitFile())
-                .stepWidth(request.getTimeStep())
-                .simulationDuration(request.getSimulationTime())
-                .solverType(parseSolverType(request.getSolverType()));
-
-        if (request.getParameters() != null) {
-            builder.withParameters(request.getParameters());
-        }
-
-        return builder.build();
-    }
-
-    /**
-     * Parse solver type string to SolverType enum.
-     * Supports: "backward-euler", "be", "trapezoidal", "trz", "gear-shichman", "gear", "gs"
-     * Defaults to SOLVER_BE if string is null or unrecognized.
-     *
-     * @param solverTypeStr solver type string (case-insensitive)
-     * @return parsed SolverType
-     */
-    SolverType parseSolverType(String solverTypeStr) {
-        if (solverTypeStr == null) {
-            return SolverType.SOLVER_BE;
-        }
-        return switch (solverTypeStr.toLowerCase().trim()) {
-            case "trapezoidal", "trz" -> SolverType.SOLVER_TRZ;
-            case "gear-shichman", "gear", "gs" -> SolverType.SOLVER_GS;
-            default -> SolverType.SOLVER_BE;
-        };
+    SolverType parseSolverType(String value) {
+        return CircuitFileService.parseSolverType(value);
     }
 
     boolean markRunning(SimulationResponse response) {
         synchronized (response) {
-            if (response.getStatus() != SimulationResponse.SimulationStatus.PENDING) {
+            if (response.getStatus() != SimulationStatus.PENDING) {
                 return false;
             }
-            response.setStatus(SimulationResponse.SimulationStatus.RUNNING);
+            response.setStatus(SimulationStatus.RUNNING);
             return true;
         }
     }
 
     boolean markCancelled(SimulationResponse response) {
         synchronized (response) {
-            if (response.getStatus() == SimulationResponse.SimulationStatus.FAILED
-                    && isBlank(response.getErrorMessage())) {
-                response.setErrorMessage(CANCELLED_BY_USER);
-                response.setEndTime(Instant.now());
-                return true;
-            }
-            if (response.getStatus() != SimulationResponse.SimulationStatus.PENDING
-                    && response.getStatus() != SimulationResponse.SimulationStatus.RUNNING) {
+            if (isTerminal(response)) {
                 return false;
             }
-            response.setStatus(SimulationResponse.SimulationStatus.FAILED);
             response.setErrorMessage(CANCELLED_BY_USER);
             response.setEndTime(Instant.now());
+            response.setStatus(SimulationStatus.FAILED);
             return true;
         }
     }
 
     boolean applySuccessfulResult(SimulationResponse response, SimulationResult result) {
         synchronized (response) {
-            if (isCancelled(response)) {
+            if (isTerminal(response)) {
                 return false;
             }
-
-            // Copy result data to response before exposing COMPLETED.
-            String[] signalNames = result.getSignalNames();
-            for (int i = 0; i < signalNames.length; i++) {
-                float[] floatData = result.getSignalData(i);
-                if (floatData == null) {
-                    continue;
+            String[] names = result.getSignalNames();
+            for (int i = 0; i < names.length; i++) {
+                float[] values = result.getSignalData(i);
+                if (values != null) {
+                    double[] converted = new double[values.length];
+                    for (int j = 0; j < values.length; j++) {
+                        converted[j] = values[j];
+                    }
+                    response.addResult(names[i], converted);
                 }
-                double[] doubleData = new double[floatData.length];
-                for (int j = 0; j < floatData.length; j++) {
-                    doubleData[j] = floatData[j];
-                }
-                response.addResult(signalNames[i], doubleData);
             }
             response.addResult("time", result.getTimeArray());
-            response.setStatus(SimulationResponse.SimulationStatus.COMPLETED);
             response.setErrorMessage(null);
+            response.setSteadyState(steadyState(result));
             response.setEndTime(Instant.now());
+            response.setStatus(SimulationStatus.COMPLETED);
             return true;
         }
     }
 
     boolean applyFailureResult(SimulationResponse response, String errorMessage) {
         synchronized (response) {
-            if (isCancelled(response)) {
+            if (isTerminal(response)) {
                 return false;
             }
-            response.setStatus(SimulationResponse.SimulationStatus.FAILED);
             response.setErrorMessage(errorMessage);
             response.setEndTime(Instant.now());
+            response.setStatus(SimulationStatus.FAILED);
             return true;
         }
     }
 
-    private static boolean isCancelled(SimulationResponse response) {
-        return response.getStatus() == SimulationResponse.SimulationStatus.FAILED
-                && CANCELLED_BY_USER.equals(response.getErrorMessage());
-    }
-
-    private static boolean isBlank(String value) {
-        return value == null || value.trim().isEmpty();
+    private static boolean isTerminal(SimulationResponse response) {
+        return response.getStatus() == SimulationStatus.COMPLETED || response.getStatus() == SimulationStatus.FAILED;
     }
 
     /**
-     * Submit a batch of simulations. Returns a BatchSimulationResponse with all simulation IDs.
+     * Captures one base snapshot and prepares every child before publishing the Batch.
+     * Accepted jobs own their prepared settings and parameters independently of later caller changes.
      *
-     * @param batchRequest Batch simulation request with parameter variations
-     * @return BatchSimulationResponse with batchId and list of simulation IDs
+     * @param request the source selection, parameter variations, concurrency limit, and optional settings.
+     * @return a detached Batch summary after atomic capacity admission.
+     * @throws CircuitPreparationException for invalid input or a child that fails preparation.
+     * @throws ResponseStatusException when retained capacity prevents admission.
      */
-    public BatchSimulationResponse submitBatch(BatchSimulationRequest batchRequest) {
-        List<java.util.Map<String, Double>> parameterSets = expandParameterSets(batchRequest);
-        List<String> simulationIds = new ArrayList<>();
-
-        BatchSimulationRequest.SimulationSettings settings = batchRequest.getSimulationSettings();
-        double simTime = settings != null && settings.getSimulationTime() != null ? settings.getSimulationTime() : 0.02;
-        double timeStep = settings != null && settings.getTimeStep() != null ? settings.getTimeStep() : 1e-6;
-        String solverType = settings != null ? settings.getSolverType() : null;
-
-        for (java.util.Map<String, Double> params : parameterSets) {
-            SimulationRequest req = new SimulationRequest(batchRequest.getCircuitFile(), simTime, timeStep);
-            req.setParameters(params);
-            if (solverType != null) {
-                req.setSolverType(solverType);
-            }
-            SimulationResponse resp = submitSimulation(req);
-            simulationIds.add(resp.getSimulationId());
+    public BatchSimulationResponse submitBatch(BatchSimulationRequest request) {
+        int requestedLimit = request.getMaxConcurrent() == null
+                ? DEFAULT_BATCH_CONCURRENCY : request.getMaxConcurrent();
+        if (requestedLimit < 0 || requestedLimit > 100) throw invalidBatch("Batch concurrency must be between zero and 100");
+        CircuitFileService.ResolvedSource source = circuitFiles.resolveSource(request.getCircuitId(), request.getCircuitFile());
+        BatchSimulationRequest.SimulationSettings settings = request.getSimulationSettings();
+        Double duration = settings == null ? null : settings.getSimulationTime();
+        Double dt = settings == null ? null : settings.getTimeStep();
+        if (!source.stored()) {
+            if (duration == null) duration = 0.02;
+            if (dt == null) dt = 1e-6;
         }
-
-        String batchId = UUID.randomUUID().toString();
-        BatchSimulationResponse batchResponse = new BatchSimulationResponse(batchId, simulationIds,
-                batchRequest.getMaxConcurrent() != null ? batchRequest.getMaxConcurrent() : 4);
-        
-        // Store batch for later retrieval
-        batchStore.put(batchId, batchResponse);
-        logger.info("Submitted batch {} with {} simulations", batchId, simulationIds.size());
-        
-        return batchResponse;
+        List<Map<String, Double>> parameterSets = expandParameterSets(request);
+        List<PreparedCircuit> prepared = new ArrayList<>();
+        for (Map<String, Double> parameters : parameterSets) {
+            SimulationRequest child = new SimulationRequest(request.getCircuitFile(), duration, dt);
+            child.setCircuitId(request.getCircuitId());
+            child.setParameters(parameters);
+            child.setSolverType(settings == null ? null : settings.getSolverType());
+            prepared.add(prepare(child, source));
+        }
+        BatchJob batch = new BatchJob(requestedLimit);
+        synchronized (admissionMonitor) {
+            requireCapacity(prepared.size(), true);
+            List<String> ids = new ArrayList<>();
+            for (PreparedCircuit circuit : prepared) {
+                SimulationJob job = createJob(circuit, batch);
+                batch.pending.add(job);
+                ids.add(job.response.getSimulationId());
+            }
+            batch.response = new BatchSimulationResponse(UUID.randomUUID().toString(), List.copyOf(ids), requestedLimit);
+            batches.put(batch.response.getBatchId(), batch);
+        }
+        dispatchBatch(batch);
+        return batchSnapshot(batch);
     }
 
-    /**
-     * Get batch status by batch ID.
-     * Returns null if batch not found.
-     *
-     * @param batchId Batch identifier
-     * @return BatchJobStatus with aggregated status for all simulations in batch, or null if not found
-     */
+    private void dispatchBatch(BatchJob batch) {
+        boolean retry;
+        do {
+            List<SimulationJob> admitted = new ArrayList<>();
+            synchronized (batch) {
+                while (!batch.cancelled && batch.active < batch.limit && !batch.pending.isEmpty()) {
+                    SimulationJob job = batch.pending.remove();
+                    if (!job.isCancelled()) {
+                        batch.active++;
+                        admitted.add(job);
+                    }
+                }
+            }
+            retry = false;
+            for (SimulationJob job : admitted) {
+                if (!dispatch(job)) {
+                    synchronized (batch) {
+                        batch.active--;
+                    }
+                    retry = true;
+                }
+            }
+        } while (retry);
+    }
+
+    private void releaseBatchSlot(SimulationJob job) {
+        if (job.batch != null) {
+            synchronized (job.batch) {
+                job.batch.active--;
+            }
+            dispatchBatch(job.batch);
+        }
+    }
+
     public BatchJobStatus getBatchStatus(String batchId) {
-        BatchSimulationResponse batch = batchStore.get(batchId);
+        BatchJob batch = batches.get(batchId);
         if (batch == null) {
             return null;
         }
-
         BatchJobStatus status = new BatchJobStatus();
         status.setBatchId(batchId);
-        status.setTotal(batch.getTotalSimulations());
-        status.setSubmittedAt(batch.getSubmittedAt());
-
+        status.setTotal(batch.response.getTotalSimulations());
+        status.setSubmittedAt(batch.response.getSubmittedAt());
         int completed = 0;
         int failed = 0;
         int running = 0;
         int pending = 0;
         List<String> failedIds = new ArrayList<>();
-        Map<String, String> simStatuses = new ConcurrentHashMap<>();
-
-        for (String simId : batch.getSimulationIds()) {
-            SimulationResponse sim = getSimulation(simId);
-            if (sim != null) {
-                SimulationResponse.SimulationStatus simStatus = sim.getStatus();
-                simStatuses.put(simId, simStatus.toString());
-
-                switch (simStatus) {
-                    case COMPLETED -> completed++;
-                    case FAILED -> {
-                        failed++;
-                        failedIds.add(simId);
-                    }
-                    case RUNNING -> running++;
-                    case PENDING -> pending++;
-                }
+        Map<String, String> childStatuses = new HashMap<>();
+        for (String id : batch.response.getSimulationIds()) {
+            SimulationJob child = jobs.get(id);
+            if (child == null) {
+                continue;
+            }
+            SimulationStatus childStatus;
+            synchronized (child) {
+                childStatus = child.response.getStatus();
+            }
+            childStatuses.put(id, childStatus.toString());
+            switch (childStatus) {
+                case COMPLETED -> completed++;
+                case FAILED -> { failed++; failedIds.add(id); }
+                case RUNNING -> running++;
+                case PENDING -> pending++;
             }
         }
-
         status.setCompleted(completed);
         status.setFailed(failed);
         status.setRunning(running);
         status.setPending(pending);
-        status.setOverallProgress((completed + failed) * 100.0 / status.getTotal());
-        status.setDone((completed + failed) == status.getTotal());
-        status.setSimulationStatuses(simStatuses);
+        status.setOverallProgress(status.getTotal() == 0 ? 0.0 : (completed + failed) * 100.0 / status.getTotal());
+        status.setDone(completed + failed == status.getTotal());
+        status.setSimulationStatuses(childStatuses);
         status.setFailedIds(failedIds.isEmpty() ? null : failedIds);
-
         return status;
     }
 
-    /**
-     * Get batch by ID.
-     * Returns null if batch not found.
-     *
-     * @param batchId Batch identifier
-     * @return BatchSimulationResponse or null if not found
-     */
     public BatchSimulationResponse getBatch(String batchId) {
-        return batchStore.get(batchId);
+        BatchJob batch = batches.get(batchId);
+        return batch == null ? null : batchSnapshot(batch);
     }
 
-    /**
-     * Cancel all simulations in a batch.
-     * Returns null if batch not found.
-     *
-     * @param batchId Batch identifier
-     * @return true if batch was found and cancellation was requested
-     */
+    private BatchSimulationResponse batchSnapshot(BatchJob batch) {
+        BatchSimulationResponse source = batch.response;
+        BatchSimulationResponse result = new BatchSimulationResponse();
+        result.setBatchId(source.getBatchId());
+        result.setTotalSimulations(source.getTotalSimulations());
+        result.setSimulationIds(new ArrayList<>(source.getSimulationIds()));
+        result.setSubmittedAt(source.getSubmittedAt());
+        result.setMaxConcurrent(source.getMaxConcurrent());
+        result.setMessage(source.getMessage());
+        return result;
+    }
+
     public boolean cancelBatch(String batchId) {
-        BatchSimulationResponse batch = batchStore.get(batchId);
+        BatchJob batch = batches.get(batchId);
         if (batch == null) {
             return false;
         }
-
-        for (String simId : batch.getSimulationIds()) {
-            cancelSimulation(simId);
+        synchronized (batch) {
+            batch.cancelled = true;
         }
-        logger.info("Cancelled all {} simulations in batch {}", batch.getSimulationIds().size(), batchId);
+        batch.response.getSimulationIds().forEach(this::cancelSimulation);
         return true;
     }
 
+    private static final class SimulationJob {
+        private final String owner;
+        private final PreparedCircuit circuit;
+        private final ExecutionOptions options = ExecutionOptions.defaults();
+        private final BatchJob batch;
+        private final SimulationResponse response;
+        private final List<SseEmitter> emitters = new ArrayList<>();
+        private HeadlessSimulationEngine engine;
+        private boolean terminalPublished;
+        private final ProgressMailbox mailbox;
+
+        private SimulationJob(PreparedCircuit circuit, BatchJob batch, Executor deliveryExecutor, String owner) {
+            this.owner = owner;
+            mailbox = new ProgressMailbox(deliveryExecutor);
+            this.circuit = circuit;
+            this.batch = batch;
+            response = new SimulationResponse(UUID.randomUUID().toString());
+            response.setStartTime(Instant.now());
+        }
+
+        private synchronized boolean isCancelled() {
+            return response.getStatus() == SimulationStatus.FAILED
+                    && CANCELLED_BY_USER.equals(response.getErrorMessage());
+        }
+    }
+
+    private static final class BatchJob {
+        private final int limit;
+        private final Queue<SimulationJob> pending = new ArrayDeque<>();
+        private BatchSimulationResponse response;
+        private int active;
+        private boolean cancelled;
+
+        private BatchJob(int requestedLimit) {
+            limit = requestedLimit == 0 ? DEFAULT_BATCH_CONCURRENCY : Math.max(1, requestedLimit);
+        }
+    }
     private List<java.util.Map<String, Double>> expandParameterSets(BatchSimulationRequest req) {
         // Explicit list takes priority
         if (req.getParameterSets() != null && !req.getParameterSets().isEmpty()) {
-            return req.getParameterSets();
+            if (req.getParameterSets().size() > 100) throw invalidBatch("A Batch supports at most 100 explicit parameter sets");
+            List<Map<String, Double>> owned = new ArrayList<>();
+            for (Map<String, Double> row : req.getParameterSets()) {
+                if (row == null) throw invalidBatch("Each Batch parameter set must be a map");
+                owned.add(java.util.Collections.unmodifiableMap(new HashMap<>(row)));
+            }
+            return List.copyOf(owned);
         }
         // Linear sweep
         if (req.getLinearSweep() != null) {
             BatchSimulationRequest.LinearSweep sweep = req.getLinearSweep();
             List<java.util.Map<String, Double>> sets = new ArrayList<>();
             int n = sweep.getPoints();
+            validateSweep(sweep.getParameterPath(), sweep.getStartValue(), sweep.getEndValue(), n, false);
             for (int i = 0; i < n; i++) {
                 double val = sweep.getStartValue() + i * (sweep.getEndValue() - sweep.getStartValue()) / (n - 1);
                 java.util.Map<String, Double> params = new java.util.HashMap<>();
@@ -675,6 +862,7 @@ public class SimulationService {
             BatchSimulationRequest.LogSweep sweep = req.getLogSweep();
             List<java.util.Map<String, Double>> sets = new ArrayList<>();
             int n = sweep.getPoints();
+            validateSweep(sweep.getParameterPath(), sweep.getStartValue(), sweep.getEndValue(), n, true);
             double logStart = Math.log10(sweep.getStartValue());
             double logEnd = Math.log10(sweep.getEndValue());
             for (int i = 0; i < n; i++) {
@@ -689,7 +877,19 @@ public class SimulationService {
             }
             return sets;
         }
-        return java.util.Collections.emptyList();
+        throw invalidBatch("A Batch requires parameter sets or a sweep");
+    }
+
+    private static void validateSweep(String path, double start, double end, int points, boolean logarithmic) {
+        if (path == null || path.isBlank() || points < 2 || points > 1000
+                || !Double.isFinite(start) || !Double.isFinite(end) || (logarithmic && (start <= 0 || end <= 0))) {
+            throw invalidBatch("A sweep requires a parameter path, finite limits, and two to 1000 points");
+        }
+    }
+
+    private static CircuitPreparationException invalidBatch(String message) {
+        return CircuitPreparationException.failure(HttpStatus.BAD_REQUEST, "INVALID_BATCH",
+                Diagnostic.Category.CONFIGURATION, message, null);
     }
 
 }

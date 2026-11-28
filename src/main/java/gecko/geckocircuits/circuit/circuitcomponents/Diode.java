@@ -109,6 +109,12 @@ public final class Diode extends AbstractSemiconductor implements ForwardVoltage
 
     @Override
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
+        if (getAcComponent() != null && getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode) {
+            throw new IllegalArgumentException("Use AC analysis for this ideal diode law.");
+        }
+        if (getAcComponent() != null && getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode) {
+            throw new IllegalArgumentException("Use AC analysis for this exponential diode law.");
+        }
         return Arrays.asList(new DiodeCalculator(this));
     }
 

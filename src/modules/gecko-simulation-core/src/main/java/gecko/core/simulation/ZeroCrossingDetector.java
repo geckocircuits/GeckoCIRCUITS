@@ -24,10 +24,10 @@ import java.util.List;
  * events (MOSFET/IGBT gate transitions, diode conduction changes, thyristor firing) create
  * discontinuities that must be resolved within the time step.
  *
- * <p>In the main simulation loop ({@code SimulationsKern}), the detector would be called
- * after each time step to check gate/control signals for threshold crossings. When a
- * crossing is detected, the simulation steps back and splits the time step at the crossing
- * point, then re-stamps the MNA matrix with the new switch states.</p>
+ * <p>{@code ElectricalTimeStep} calls the detector when zero-crossing location is on. It
+ * checks the diode, thyristor and IGBT threshold quantity, splits the electrical step at
+ * the earliest crossing and re-stamps the MNA matrix with the new states. CONTROL signals
+ * are not located.</p>
  *
  * <p>Usage:</p>
  * <pre>{@code

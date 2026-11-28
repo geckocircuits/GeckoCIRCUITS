@@ -101,6 +101,8 @@ public final class WorksheetSize {
                     final Collection<SubCircuitTerminable> allSheetTerminals = subSheet._subBlock._myTerminals;
                     if(allSheetTerminals != null) {
                         for (SubCircuitTerminable term : allSheetTerminals) {
+                        if (term instanceof gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal imported
+                                && imported.importedBlockOffset() != null) continue;
                         if (term.getTerminalLocation() == EnumTerminalLocation.RIGHT) {
                             setCheckedTerminalSheetPosition(term, sizeX - 1, term.getSheetPosition().y, allSheetTerminals);
                         }
@@ -164,7 +166,9 @@ public final class WorksheetSize {
         final List<Point> allPoints = new ArrayList<Point>();
 
         for (AbstractCircuitSheetComponent elem : _parent.getLocalSheetComponents()) {
-            if (elem instanceof SubCircuitTerminable) { // don't consider TERMINALS in this check
+            if (elem instanceof SubCircuitTerminable
+                    && !(elem instanceof gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitTerminal imported
+                         && imported.importedBlockOffset() != null)) {
                 continue;
             }
 

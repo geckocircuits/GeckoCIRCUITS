@@ -13,11 +13,13 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /**
  * Logic AND for two input signals
  * @author andreas
  */
-public final class AndTwoPortCalculator extends AbstractTwoInputsOneOutputCalculator {
+public final class AndTwoPortCalculator extends AbstractTwoInputsOneOutputCalculator implements StatelessCalculation {
 
     @Override
     public void berechneYOUT(final double deltaT) {

@@ -6,6 +6,8 @@ import gecko.rest.service.SimulationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,9 +38,15 @@ class SimulationE2ETest {
     @Autowired
     private SimulationService simulationService;
 
+    @TempDir
+    Path temporaryDirectory;
+
+    private String circuitFile;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         simulationService.clearAll();
+        circuitFile = ExistingSimulationFixtures.rc(temporaryDirectory);
     }
 
     @Test
@@ -51,7 +59,7 @@ class SimulationE2ETest {
     @Test
     void fullSimulationWorkflow_submitAndRetrieve() throws Exception {
         // 1. Submit a simulation
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.001, 1e-6);
+        SimulationRequest request = new SimulationRequest(circuitFile, 0.001, 1e-6);
 
         MvcResult submitResult = mockMvc.perform(post("/api/v1/simulations")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,10 +98,10 @@ class SimulationE2ETest {
 
     @Test
     void submitSimulation_withParameters_acceptsRequest() throws Exception {
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.01, 1e-6);
+        SimulationRequest request = new SimulationRequest(circuitFile, 0.01, 1e-6);
         request.setParameters(java.util.Map.of(
-                "R1", 100.0,
-                "C1", 1e-6
+                "R1.resistance", 100.0,
+                "C1.capacitance", 1e-6
         ));
 
         mockMvc.perform(post("/api/v1/simulations")
@@ -123,7 +131,7 @@ class SimulationE2ETest {
     @Test
     void cancelSimulation_workflow() throws Exception {
         // Submit a longer simulation
-        SimulationRequest request = new SimulationRequest("test.ipes", 1.0, 1e-6);
+        SimulationRequest request = new SimulationRequest(circuitFile, 1.0, 1e-6);
 
         MvcResult submitResult = mockMvc.perform(post("/api/v1/simulations")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +157,7 @@ class SimulationE2ETest {
     @Test
     void listSimulations_withStatusFilter() throws Exception {
         // Submit multiple simulations
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.001, 1e-6);
+        SimulationRequest request = new SimulationRequest(circuitFile, 0.001, 1e-6);
 
         mockMvc.perform(post("/api/v1/simulations")
                         .contentType(MediaType.APPLICATION_JSON)

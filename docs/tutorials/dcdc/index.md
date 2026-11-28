@@ -8,9 +8,9 @@ DC-DC power conversion topologies and control.
 
 | Tutorial | Title | Difficulty |
 |----------|-------|------------|
-| [201](201_buck_converter/) | Buck Converter | 2/3 |
-| [202](202_boost_converter/) | Boost Converter | 2/3 |
-| [203](203_buck_boost/) | Buck-Boost Topologies | 2/3 |
+| [201](buck-converter.md) | Buck Converter | 2/3 |
+| [202](boost-converter.md) | Boost Converter | 2/3 |
+| [203](buck-boost.md) | Buck-Boost Topologies | 2/3 |
 | [204](204_analog_circuits/) | Analog Circuits (Op-Amp) | 2/3 |
 
 ## Learning Objectives

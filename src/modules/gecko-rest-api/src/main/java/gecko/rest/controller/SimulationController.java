@@ -51,6 +51,7 @@ public class SimulationController {
      * @param request Simulation request with circuit file and parameters
      * @return Created simulation response with ID
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     @Operation(summary = "Submit simulation", description = "Submit a new circuit simulation job")
     @ApiResponses(value = {
@@ -71,6 +72,7 @@ public class SimulationController {
      * @param simulationId ID of the simulation
      * @return Simulation response with current status and results
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{simulationId}")
     @Operation(summary = "Get simulation", description = "Retrieve status and results of a simulation")
     @ApiResponses(value = {
@@ -95,6 +97,7 @@ public class SimulationController {
      * @param simulationId ID of the simulation
      * @return Map of signal names to their data arrays
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{simulationId}/results")
     @Operation(summary = "Get simulation results", description = "Retrieve all signal data from a completed simulation")
     @ApiResponses(value = {
@@ -125,6 +128,7 @@ public class SimulationController {
      * @param signalName Name of the signal to retrieve
      * @return Signal data array
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{simulationId}/results/{signalName}")
     @Operation(summary = "Get signal data", description = "Retrieve specific signal data from a simulation")
     @ApiResponses(value = {
@@ -136,7 +140,7 @@ public class SimulationController {
             @Parameter(description = "Simulation ID") @PathVariable String simulationId,
             @Parameter(description = "Signal name") @PathVariable String signalName) {
 
-        SimulationResponse response = simulationService.getSimulation(simulationId);
+        SimulationResponse response = simulationService.getSimulationStatus(simulationId);
         if (response == null) {
             return ResponseEntity.notFound().build();
         }
@@ -163,6 +167,7 @@ public class SimulationController {
      * @param simulationId ID of the simulation
      * @return Progress information
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{simulationId}/progress")
     @Operation(summary = "Get simulation progress", description = "Get progress percentage for a running simulation")
     @ApiResponses(value = {
@@ -172,7 +177,7 @@ public class SimulationController {
     public ResponseEntity<Map<String, Object>> getSimulationProgress(
             @Parameter(description = "Simulation ID") @PathVariable String simulationId) {
 
-        SimulationResponse response = simulationService.getSimulation(simulationId);
+        SimulationResponse response = simulationService.getSimulationStatus(simulationId);
         if (response == null) {
             return ResponseEntity.notFound().build();
         }
@@ -193,6 +198,7 @@ public class SimulationController {
      * @param timeoutMs SSE connection timeout in milliseconds (default: 300000 = 5 minutes)
      * @return SSE emitter for streaming progress events
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping(value = "/{simulationId}/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "Stream simulation progress",
                description = "Real-time Server-Sent Events stream. Events: 'progress', 'status', 'complete', 'error'")
@@ -219,13 +225,19 @@ public class SimulationController {
      * @param status Optional status filter
      * @return Map of all simulations
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping
     @Operation(summary = "List simulations", description = "List all simulations with optional status filter")
     @ApiResponse(responseCode = "200", description = "List of simulations")
     public ResponseEntity<Map<String, Object>> listSimulations(
             @Parameter(description = "Filter by status", example = "COMPLETED")
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) String status,
+            @Parameter(description = "Zero-based page number") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size, capped at 100") @RequestParam(defaultValue = "20") int size,
+            @Parameter(description = "Sort: id or createdAt, followed by asc or desc")
+            @RequestParam(defaultValue = "id,asc") String sort) {
 
+        ListPage pagination = new ListPage(page, size, sort);
         Map<String, Object> response = new HashMap<>();
         Map<String, SimulationResponse> allSimulations = simulationService.getAllSimulations();
         Map<String, SimulationResponse> filtered = new HashMap<>();
@@ -242,7 +254,15 @@ public class SimulationController {
 
         response.put("total", allSimulations.size());
         response.put("count", filtered.size());
-        response.put("simulations", filtered);
+        Comparator<SimulationResponse> byId = Comparator.comparing(SimulationResponse::getSimulationId);
+        List<SimulationResponse> selected = pagination.select(new ArrayList<>(filtered.values()), Map.of(
+                "id", byId,
+                "createdAt", Comparator.comparing(SimulationResponse::getStartTime,
+                        Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(byId)));
+        Map<String, SimulationResponse> items = new java.util.LinkedHashMap<>();
+        selected.forEach(item -> items.put(item.getSimulationId(), item));
+        response.put("simulations", items);
+        response.put("page", pagination.metadata(filtered.size()));
         response.put("statistics", simulationService.getStatistics());
         return ResponseEntity.ok(response);
     }
@@ -253,6 +273,7 @@ public class SimulationController {
      * @param simulationId ID of the simulation to cancel
      * @return Cancelled simulation response
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{simulationId}")
     @Operation(summary = "Cancel simulation", description = "Cancel a pending or running simulation")
     @ApiResponses(value = {
@@ -285,6 +306,7 @@ public class SimulationController {
      * @param simulationId ID of the simulation
      * @return CSV formatted string
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/{simulationId}/export")
     @Operation(summary = "Export results", description = "Export simulation results in CSV format")
     @ApiResponses(value = {
@@ -369,6 +391,7 @@ public class SimulationController {
      * @param batchRequest Batch request with explicit parameter sets or sweep configuration
      * @return Batch response with batchId and list of submitted simulation IDs
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/batch")
     @Operation(summary = "Submit a batch of simulations",
             description = "Submit multiple simulations with parameter variations (explicit sets, linear sweep, or log sweep)")
@@ -387,6 +410,7 @@ public class SimulationController {
      * @param batchId Batch identifier
      * @return Batch status with progress information
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/batch/{batchId}")
     @Operation(summary = "Get batch job status",
             description = "Returns status summary for all simulations in a batch")
@@ -406,6 +430,7 @@ public class SimulationController {
      * @param batchId Batch identifier
      * @return No content response
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/batch/{batchId}")
     @Operation(summary = "Cancel all simulations in a batch")
     @ApiResponse(responseCode = "204", description = "Batch cancelled")

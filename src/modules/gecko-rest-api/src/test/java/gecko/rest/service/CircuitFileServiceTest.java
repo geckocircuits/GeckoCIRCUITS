@@ -38,9 +38,7 @@ class CircuitFileServiceTest {
         assertEquals("loaded", response.status());
         assertEquals("test-circuit.ipes", response.filename());
         assertNotNull(response.circuitId());
-        // Note: Component parsing not yet implemented in CircuitFileParser
-        // Component count will be 0 until component parsing is added
-        assertEquals(0, response.componentCount());
+        assertEquals(24, response.componentCount(), "The gzip fixture contains 12 electrical and 12 control components");
         assertNull(response.errorMessage());
     }
 
@@ -93,9 +91,13 @@ class CircuitFileServiceTest {
         assertNotNull(simParams.timeStep());
         assertNotNull(simParams.solverType());
 
-        // Check component counts - Note: Component parsing not implemented yet
         CircuitInfo.ComponentCounts counts = info.componentCounts();
-        assertEquals(0, counts.circuit() + counts.control() + counts.thermal());
+        assertEquals(12, counts.circuit());
+        assertEquals(12, counts.control());
+        assertEquals(0, counts.thermal());
+        assertEquals(10, counts.connections());
+        assertEquals(8e-4, simParams.endTime(), 1e-12);
+        assertEquals(1e-8, simParams.timeStep(), 1e-15);
     }
 
     @Test
@@ -116,8 +118,9 @@ class CircuitFileServiceTest {
         assertNotNull(response);
         assertEquals(circuitId, response.circuitId());
         assertNotNull(response.components());
-        // Note: Component parsing not yet implemented, so list will be empty
-        assertEquals(0, response.components().size());
+        assertEquals(24, response.components().size());
+        assertTrue(response.components().stream().anyMatch(component -> "U.1".equals(component.name())));
+        assertTrue(response.components().stream().anyMatch(component -> "R.1".equals(component.name())));
     }
 
     @Test
@@ -127,9 +130,9 @@ class CircuitFileServiceTest {
     }
 
     @Test
-    void testValidateCircuit_valid() {
-        // Load a circuit first
-        CircuitLoadResponse loadResponse = service.loadCircuit(validIpesBase64, "test-circuit.ipes");
+    void testValidateCircuit_valid() throws IOException {
+        CircuitLoadResponse loadResponse = service.loadCircuit(Base64.getEncoder().encodeToString(
+                gecko.rest.support.PreparationCircuitFixtures.resistorCircuit(10)), "ready-circuit.ipes");
         String circuitId = loadResponse.circuitId();
 
         // Validate
@@ -138,17 +141,40 @@ class CircuitFileServiceTest {
         assertNotNull(response);
         assertNotNull(response.warnings());
         assertNotNull(response.errors());
-        // Should have a warning about components not being implemented if valid
-        if (response.valid()) {
-            assertTrue(response.warnings().size() > 0);
-            assertTrue(response.warnings().stream().anyMatch(w -> w.contains("Component extraction not yet implemented")));
-        }
+        assertTrue(response.valid(), response.errors().toString());
+        assertTrue(response.errors().isEmpty());
+        assertTrue(response.warnings().isEmpty());
+    }
+
+    @Test
+    void validationRetainsInspectableLegacyCircuitAndItsReadinessFindings() {
+        String id = service.loadCircuit(validIpesBase64, "legacy-circuit.ipes").circuitId();
+        ValidationResponse response = service.validateCircuit(id);
+        assertFalse(response.valid());
+        assertFalse(response.readyForHeadless());
+        assertFalse(response.errors().isEmpty());
+        assertTrue(response.diagnostics().stream().anyMatch(item ->
+                item.category() == gecko.core.preparation.Diagnostic.Category.CAPABILITY));
+        assertEquals(24, service.getComponents(id).components().size());
     }
 
     @Test
     void testValidateCircuit_notFound() {
         ValidationResponse response = service.validateCircuit("nonexistent-id");
         assertNull(response);
+    }
+
+    @Test
+    void settingUpdatesReplaceTheCompleteStoredSnapshot() {
+        String id = service.loadCircuit(validIpesBase64, "owned-settings.ipes").circuitId();
+        var captured = service.resolveSource(id, null).snapshot().toModel();
+        service.updateCircuitParameters(id, new CircuitParameterUpdate(0.25, 0.125, "gear"));
+        var updated = service.resolveSource(id, null).snapshot().toModel();
+        assertEquals(0.25, updated.getSimulationDuration());
+        assertEquals(0.125, updated.getTimeStep());
+        assertEquals(gecko.core.allg.SolverType.SOLVER_GS, updated.getSolverType());
+        assertEquals(8e-4, captured.getSimulationDuration());
+        assertEquals(1e-8, captured.getTimeStep());
     }
 
     @Test
@@ -169,8 +195,7 @@ class CircuitFileServiceTest {
         CircuitListResponse.CircuitSummary summary1 = listResponse.circuits().get(0);
         assertNotNull(summary1.circuitId());
         assertNotNull(summary1.filename());
-        // Component count will be 0 until component parsing is implemented
-        assertEquals(0, summary1.componentCount());
+        assertEquals(24, summary1.componentCount());
         assertNotNull(summary1.loadedAt());
     }
 

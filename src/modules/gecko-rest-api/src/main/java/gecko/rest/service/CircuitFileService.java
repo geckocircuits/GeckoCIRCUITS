@@ -2,7 +2,9 @@ package gecko.rest.service;
 
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitModel;
-import gecko.core.io.ParameterOverrideApplicator;
+import gecko.core.preparation.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import gecko.rest.model.circuit.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 public class CircuitFileService {
 
     private final CircuitFileParser parser = new CircuitFileParser();
+    private final CircuitPreparation preparation = new CircuitPreparation();
 
     // In-memory storage of parsed circuits (circuit ID -> parsed data)
     private final Map<String, ParsedCircuit> circuits = new ConcurrentHashMap<>();
@@ -67,7 +70,7 @@ public class CircuitFileService {
             return null;
         }
 
-        CircuitModel model = parsed.model;
+        CircuitModel model = parsed.snapshot.toModel();
 
         // Build simulation parameters
         CircuitInfo.SimulationParameters simParams = new CircuitInfo.SimulationParameters(
@@ -119,22 +122,23 @@ public class CircuitFileService {
             return null;
         }
 
-        CircuitModel model = parsed.model;
+        CircuitModel model = parsed.snapshot.toModel();
         List<ComponentInfo> components = new ArrayList<>();
+        List<ConfigurationField> fields = preparation.configurationFields(parsed.snapshot);
 
         // Add circuit components
         for (CircuitModel.ComponentData comp : model.getCircuitComponents()) {
-            components.add(componentDataToInfo(comp, "circuit"));
+            components.add(componentDataToInfo(comp, "circuit", fields));
         }
 
         // Add control components
         for (CircuitModel.ComponentData comp : model.getControlComponents()) {
-            components.add(componentDataToInfo(comp, "control"));
+            components.add(componentDataToInfo(comp, "control", fields));
         }
 
         // Add thermal components
         for (CircuitModel.ComponentData comp : model.getThermalComponents()) {
-            components.add(componentDataToInfo(comp, "thermal"));
+            components.add(componentDataToInfo(comp, "thermal", fields));
         }
 
         return new ComponentListResponse(circuitId, components);
@@ -149,31 +153,7 @@ public class CircuitFileService {
             return null;
         }
 
-        CircuitModel model = parsed.model;
-        List<String> warnings = new ArrayList<>();
-        List<String> errors = new ArrayList<>();
-
-        // Check simulation parameters
-        if (!model.hasValidSimulationParameters()) {
-            errors.add("Invalid simulation parameters: time step must be positive and less than duration");
-        }
-
-        // Note: Component parsing not yet implemented in CircuitFileParser
-        // Component count will be 0 for now - this is expected
-        if (model.getTotalComponentCount() == 0) {
-            warnings.add("Component extraction not yet implemented (circuit file parsed for metadata only)");
-        }
-
-        // Check for disconnected components (future enhancement)
-        // For now, skip this check since components aren't parsed yet
-
-        if (errors.isEmpty()) {
-            return warnings.isEmpty()
-                ? ValidationResponse.success()
-                : ValidationResponse.successWithWarnings(warnings);
-        } else {
-            return ValidationResponse.failure(warnings, errors);
-        }
+        return ValidationResponse.fromReport(preparation.prepare(parsed.snapshot, PreparationRequest.defaults()).report());
     }
 
     /**
@@ -184,7 +164,7 @@ public class CircuitFileService {
         if (parsed == null) {
             return null;
         }
-        return parsed.model.toString(); // CircuitModel doesn't store raw content, return string representation
+        return parsed.snapshot.toModel().toString(); // CircuitModel doesn't store raw content, return string representation
     }
 
     /**
@@ -205,7 +185,7 @@ public class CircuitFileService {
                 return new CircuitListResponse.CircuitSummary(
                     id,
                     parsed.filename,
-                    parsed.model.getTotalComponentCount(),
+                    parsed.snapshot.toModel().getTotalComponentCount(),
                     parsed.loadedAt.toString()
                 );
             })
@@ -232,38 +212,12 @@ public class CircuitFileService {
             );
         }
 
-        try {
-            // Create a new model by copying key properties from the original
-            CircuitModel originalModel = sourceParsed.model;
-            CircuitModel newModel = copyCircuitModel(originalModel);
-
-            // Apply parameter overrides if provided
-            if (overrides != null && !overrides.isEmpty()) {
-                ParameterOverrideApplicator.applyOverrides(newModel, overrides);
-            }
-
-            // Generate unique circuit ID
-            String newCircuitId = UUID.randomUUID().toString();
-
-            // Create parsed circuit with timestamp
-            ParsedCircuit newParsed = new ParsedCircuit(
-                sourceParsed.filename,
-                newModel,
-                Instant.now()
-            );
-
-            // Store in memory
-            circuits.put(newCircuitId, newParsed);
-
-            return CircuitLoadResponse.success(newCircuitId, sourceParsed.filename, newModel.getTotalComponentCount());
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                "Failed to clone circuit: " + e.getMessage(),
-                e
-            );
-        }
+        PreparationResult result = preparation.prepare(sourceParsed.snapshot,
+                new PreparationRequest(SolverOverrides.none(), overrides == null ? Map.of() : overrides));
+        CircuitSnapshot snapshot = effectiveSnapshot(result);
+        String newCircuitId = UUID.randomUUID().toString();
+        circuits.put(newCircuitId, new ParsedCircuit(sourceParsed.filename, snapshot, Instant.now()));
+        return CircuitLoadResponse.success(newCircuitId, sourceParsed.filename, snapshot.toModel().getTotalComponentCount());
     }
 
     /**
@@ -276,32 +230,16 @@ public class CircuitFileService {
      * @throws ResponseStatusException 404 if circuit not found
      */
     public CircuitInfo updateCircuitParameters(String circuitId, CircuitParameterUpdate update) {
-        ParsedCircuit parsed = circuits.get(circuitId);
-        if (parsed == null) {
-            throw new ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "Circuit not found: " + circuitId
-            );
-        }
-
-        CircuitModel model = parsed.model;
-
-        // Update simulation duration if provided
-        if (update.getSimulationDuration() != null) {
-            model.setSimulationDuration(update.getSimulationDuration());
-        }
-
-        // Update time step if provided
-        if (update.getTimeStep() != null) {
-            model.setTimeStep(update.getTimeStep());
-        }
-
-        // Update solver type if provided
-        if (update.getSolverType() != null) {
-            gecko.core.allg.SolverType solverType = stringSolverType(update.getSolverType());
-            model.setSolverType(solverType);
-        }
-
+        circuits.compute(circuitId, (id, current) -> {
+            if (current == null) {
+                throw CircuitPreparationException.failure(HttpStatus.NOT_FOUND, "SOURCE_NOT_FOUND",
+                        Diagnostic.Category.PARSING, "Circuit not found: " + circuitId, "circuitId");
+            }
+            PreparationResult result = preparation.prepare(current.snapshot, new PreparationRequest(
+                    new SolverOverrides(update.getSolverType() == null ? null : parseSolverType(update.getSolverType()),
+                            update.getTimeStep(), update.getSimulationDuration()), Map.of()));
+            return new ParsedCircuit(current.filename, effectiveSnapshot(result), current.loadedAt);
+        });
         return getCircuitInfo(circuitId);
     }
 
@@ -315,13 +253,18 @@ public class CircuitFileService {
                 model = parser.parse(bais, filename);
             }
 
+            CircuitSnapshot snapshot = preparation.capture(model);
+            PreparationResult result = preparation.prepare(snapshot, PreparationRequest.defaults());
+            if (result instanceof PreparationResult.Ready ready) snapshot = ready.circuit();
+            else if (result instanceof PreparationResult.Inspectable inspectable) snapshot = inspectable.circuit();
+
             // Generate unique circuit ID
             String circuitId = UUID.randomUUID().toString();
 
             // Create parsed circuit with timestamp
             ParsedCircuit parsed = new ParsedCircuit(
                 filename,
-                model,
+                snapshot,
                 Instant.now()
             );
 
@@ -346,101 +289,74 @@ public class CircuitFileService {
      * Creates a deep copy of a CircuitModel by copying all essential fields.
      * Component lists are copied element-by-element.
      */
-    private CircuitModel copyCircuitModel(CircuitModel source) {
-        CircuitModel copy = new CircuitModel();
-
-        // Copy simulation parameters
-        copy.setSimulationDuration(source.getSimulationDuration());
-        copy.setTimeStep(source.getTimeStep());
-        copy.setPreSimulationTime(source.getPreSimulationTime());
-        copy.setPreSimulationTimeStep(source.getPreSimulationTimeStep());
-        copy.setPauseTime(source.getPauseTime());
-        copy.setSolverType(source.getSolverType());
-
-        // Copy file metadata
-        copy.setFilePath(source.getFilePath());
-        copy.setFileVersion(source.getFileVersion());
-        copy.setUniqueFileId(source.getUniqueFileId());
-        copy.setCreationDate(source.getCreationDate());
-
-        // Copy display settings
-        copy.setDisplayPixels(source.getDisplayPixels());
-        copy.setFontSize(source.getFontSize());
-        copy.setFontType(source.getFontType());
-        copy.setWindowWidth(source.getWindowWidth());
-        copy.setWindowHeight(source.getWindowHeight());
-
-        // Deep copy component lists (copy each component)
-        for (CircuitModel.ComponentData comp : source.getCircuitComponents()) {
-            copy.getCircuitComponents().add(copyComponentData(comp));
-        }
-        for (CircuitModel.ComponentData comp : source.getControlComponents()) {
-            copy.getControlComponents().add(copyComponentData(comp));
-        }
-        for (CircuitModel.ComponentData comp : source.getThermalComponents()) {
-            copy.getThermalComponents().add(copyComponentData(comp));
-        }
-
-        // Deep copy connections
-        for (CircuitModel.ConnectionData conn : source.getConnections()) {
-            copy.getConnections().add(copyConnectionData(conn));
-        }
-
-        // Copy optimizer parameters
-        copy.getOptimizerParameters().putAll(source.getOptimizerParameters());
-
-        // Copy data container signals
-        if (source.getDataContainerSignals() != null) {
-            copy.setDataContainerSignals(source.getDataContainerSignals().clone());
-        }
-
-        // Copy scripting code
-        copy.setScripterCode(source.getScripterCode());
-        copy.setScripterImports(source.getScripterImports());
-        copy.setScripterDeclarations(source.getScripterDeclarations());
-
-        return copy;
+    CircuitModel copyCircuitModel(CircuitModel source) {
+        return preparation.capture(source).toModel();
     }
 
     /**
-     * Creates a copy of ComponentData with independent parameter map.
+     * Owns captured input independently of later registry changes or filesystem writes.
+     *
+     * @param snapshot the immutable circuit input.
+     * @param stored whether an exact live registry entry supplied the input.
      */
-    private CircuitModel.ComponentData copyComponentData(CircuitModel.ComponentData source) {
-        CircuitModel.ComponentData copy = new CircuitModel.ComponentData(
-            source.getType(),
-            source.getName(),
-            source.getPosition()[0],
-            source.getPosition()[1],
-            source.getOrientation()
-        );
-
-        // Deep copy parameters
-        if (source.getParameters() != null) {
-            source.getParameters().forEach((key, value) -> copy.setParameter(key, value));
-        }
-
-        return copy;
-    }
+    public record ResolvedSource(CircuitSnapshot snapshot, boolean stored) {}
 
     /**
-     * Creates a copy of ConnectionData.
+     * Captures exactly one selected source without checking Headless readiness.
+     * An explicit ID requires an exact live registry entry.
+     * A legacy value selects an exact live entry or keeps its complete path meaning.
+     * Path input reads its bytes once before parsing.
+     *
+     * @param circuitId the explicit registry ID, or null when the legacy field selects the source.
+     * @param circuitFile the legacy registry ID or complete path, or null when an explicit ID selects the source.
+     * @return the owned snapshot and its stored-source classification.
+     * @throws CircuitPreparationException for invalid selection, missing input, or malformed captured bytes.
      */
-    private CircuitModel.ConnectionData copyConnectionData(CircuitModel.ConnectionData source) {
-        int[][] pointsCopy = new int[source.getPoints().length][];
-        for (int i = 0; i < source.getPoints().length; i++) {
-            pointsCopy[i] = source.getPoints()[i].clone();
+    public ResolvedSource resolveSource(String circuitId, String circuitFile) {
+        if ((circuitId == null) == (circuitFile == null)
+                || (circuitId != null && circuitId.isBlank()) || (circuitFile != null && circuitFile.isBlank())) {
+            throw CircuitPreparationException.failure(HttpStatus.BAD_REQUEST, "INVALID_SOURCE", Diagnostic.Category.CONFIGURATION,
+                    "Select exactly one circuit source", null);
         }
-        return new CircuitModel.ConnectionData(source.getType(), pointsCopy);
+        ParsedCircuit stored = circuits.get(circuitId == null ? circuitFile : circuitId);
+        if (stored != null) return new ResolvedSource(stored.snapshot, true);
+        if (circuitId != null) throw CircuitPreparationException.failure(HttpStatus.NOT_FOUND, "SOURCE_NOT_FOUND",
+                Diagnostic.Category.PARSING, "Circuit not found: " + circuitId, "circuitId");
+        byte[] content;
+        try {
+            content = Files.readAllBytes(Path.of(circuitFile));
+        } catch (java.nio.file.InvalidPathException | IOException e) {
+            throw CircuitPreparationException.failure(HttpStatus.NOT_FOUND, "SOURCE_NOT_FOUND", Diagnostic.Category.PARSING,
+                    "Cannot read circuit source: " + circuitFile, "circuitFile");
+        }
+        try (InputStream input = new ByteArrayInputStream(content)) {
+            return new ResolvedSource(preparation.capture(parser.parse(input, circuitFile)), false);
+        } catch (CircuitFileParser.CircuitParseException | IOException e) {
+            throw CircuitPreparationException.failure(HttpStatus.BAD_REQUEST, "MALFORMED_SOURCE", Diagnostic.Category.PARSING,
+                    "Cannot parse circuit source", "circuitFile");
+        }
     }
 
-    private ComponentInfo componentDataToInfo(CircuitModel.ComponentData comp, String domain) {
+    private CircuitSnapshot effectiveSnapshot(PreparationResult result) {
+        if (result instanceof PreparationResult.Ready ready) return ready.circuit();
+        if (result instanceof PreparationResult.Inspectable inspectable) return inspectable.circuit();
+        throw new CircuitPreparationException(HttpStatus.BAD_REQUEST, result.report());
+    }
+
+    private ComponentInfo componentDataToInfo(CircuitModel.ComponentData comp, String domain, List<ConfigurationField> fields) {
+        String coreDomain = switch (domain) {
+            case "circuit" -> "LK";
+            case "control" -> "CONTROL";
+            default -> "THERMAL";
+        };
         return new ComponentInfo(
             comp.getType(),
             comp.getName(),
             domain,
             comp.getPosition(),
             comp.getOrientation(),
-            comp.getParameters()
+            comp.getParameters(),
+            fields.stream().filter(field -> field.domain().equals(coreDomain) && field.component().equals(comp.getName())).toList()
         );
     }
 
@@ -452,15 +368,14 @@ public class CircuitFileService {
         };
     }
 
-    private gecko.core.allg.SolverType stringSolverType(String solverType) {
-        if (solverType == null) {
-            return gecko.core.allg.SolverType.SOLVER_BE;
-        }
-
-        return switch (solverType.toLowerCase()) {
+    static gecko.core.allg.SolverType parseSolverType(String value) {
+        if (value == null) return gecko.core.allg.SolverType.SOLVER_BE;
+        return switch (value.toLowerCase(Locale.ROOT).trim()) {
+            case "backward-euler", "be" -> gecko.core.allg.SolverType.SOLVER_BE;
             case "trapezoidal", "trz" -> gecko.core.allg.SolverType.SOLVER_TRZ;
-            case "gear-shichman", "gs" -> gecko.core.allg.SolverType.SOLVER_GS;
-            default -> gecko.core.allg.SolverType.SOLVER_BE;
+            case "gear-shichman", "gear", "gs" -> gecko.core.allg.SolverType.SOLVER_GS;
+            default -> throw CircuitPreparationException.failure(HttpStatus.BAD_REQUEST, "INVALID_SETTING",
+                    Diagnostic.Category.CONFIGURATION, "Unknown solver type: " + value, "solverType");
         };
     }
 
@@ -468,7 +383,7 @@ public class CircuitFileService {
 
     private record ParsedCircuit(
         String filename,
-        CircuitModel model,
+        CircuitSnapshot snapshot,
         Instant loadedAt
     ) {}
 }

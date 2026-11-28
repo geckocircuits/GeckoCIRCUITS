@@ -13,11 +13,13 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /**
  * Calculate the cosine (in radians) from a single input signal.
  * @author andreas
  */
-public final class CosCalculator extends AbstractSingleInputSingleOutputCalculator {    
+public final class CosCalculator extends AbstractSingleInputSingleOutputCalculator implements StatelessCalculation {    
     @Override
     public void berechneYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.cos(_inputSignal[0][0]);

@@ -16,6 +16,7 @@ package gecko.core.circuit;
 public enum CircuitSourceType {
 
     QUELLE_DC(SourceType.QUELLE_DC, SourceType.QUELLE_DC_NEW, "DC"),
+    PWL(SourceType.PWL, SourceType.PWL_NEW, "PWL"),
     QUELLE_SIN(SourceType.QUELLE_SIN, SourceType.QUELLE_SIN_NEW, "SIN"),
     QUELLE_SIGNALGESTEUERT(SourceType.QUELLE_SIGNALGESTEUERT, SourceType.QUELLE_SIGNALGESTEUERT_NEW ,"SIGNAL"),
     QUELLE_CURRENTCONTROLLED_DIRECTLY(SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY, SourceType.QUELLE_CURRENTCONTROLLED_DIRECTLY_NEW, "CURRENT_CONTROLLED"),
@@ -44,8 +45,7 @@ public enum CircuitSourceType {
                     return tmp;
             }
         }
-        assert false;
-        return QUELLE_DC;
+        throw new IllegalArgumentException("Unknown electrical source mode " + idValue);
     }
 
     public int getOldGeckoID() {

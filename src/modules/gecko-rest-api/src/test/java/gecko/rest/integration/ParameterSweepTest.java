@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,9 +43,21 @@ class ParameterSweepTest {
     @Autowired
     private SimulationService simulationService;
 
+    @TempDir
+    Path temporaryDirectory;
+
+    private String circuitFile;
+    private String acCircuitFile;
+    private String thermalCircuitFile;
+    private String complexCircuitFile;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         simulationService.clearAll();
+        circuitFile = ExistingSimulationFixtures.rc(temporaryDirectory);
+        acCircuitFile = ExistingSimulationFixtures.ac(temporaryDirectory);
+        thermalCircuitFile = ExistingSimulationFixtures.thermal(temporaryDirectory);
+        complexCircuitFile = ExistingSimulationFixtures.complex(temporaryDirectory);
     }
 
     @Test
@@ -53,10 +67,10 @@ class ParameterSweepTest {
         double[] resistanceValues = {100.0, 500.0, 1000.0, 5000.0, 10000.0};
 
         for (double resistance : resistanceValues) {
-            SimulationRequest request = new SimulationRequest("rc.ipes", 0.01, 1e-6);
+            SimulationRequest request = new SimulationRequest(circuitFile, 0.01, 1e-6);
             request.setParameters(Map.of(
-                "R1", resistance,
-                "C1", 1e-6
+                "R1.resistance", resistance,
+                "C1.capacitance", 1e-6
             ));
 
             MvcResult result = mockMvc.perform(post("/api/v1/simulations")
@@ -84,10 +98,10 @@ class ParameterSweepTest {
         double[] capacitorValues = {1e-9, 1e-8, 1e-7, 1e-6, 1e-5};
 
         for (double capacitance : capacitorValues) {
-            SimulationRequest request = new SimulationRequest("rc.ipes", 0.01, 1e-7);
+            SimulationRequest request = new SimulationRequest(circuitFile, 0.01, 1e-7);
             request.setParameters(Map.of(
-                "R1", 1000.0,
-                "C1", capacitance
+                "R1.resistance", 1000.0,
+                "C1.capacitance", capacitance
             ));
 
             mockMvc.perform(post("/api/v1/simulations")
@@ -110,10 +124,10 @@ class ParameterSweepTest {
 
         for (double r : resistances) {
             for (double c : capacitances) {
-                SimulationRequest request = new SimulationRequest("rc.ipes", 0.01, 1e-6);
+                SimulationRequest request = new SimulationRequest(circuitFile, 0.01, 1e-6);
                 Map<String, Double> params = new HashMap<>();
-                params.put("R1", r);
-                params.put("C1", c);
+                params.put("R1.resistance", r);
+                params.put("C1.capacitance", c);
                 request.setParameters(params);
 
                 mockMvc.perform(post("/api/v1/simulations")
@@ -134,8 +148,8 @@ class ParameterSweepTest {
         double[] voltages = {1.0, 5.0, 10.0, 12.0, 24.0};
 
         for (double voltage : voltages) {
-            SimulationRequest request = new SimulationRequest("rc.ipes", 0.005, 1e-6);
-            request.setParameters(Map.of("Vs", voltage));
+            SimulationRequest request = new SimulationRequest(circuitFile, 0.005, 1e-6);
+            request.setParameters(Map.of("Vs.dcValue", voltage));
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -154,8 +168,8 @@ class ParameterSweepTest {
             double simTime = 10 * period; // 10 periods
             double timeStep = period / 100; // 100 points per period
 
-            SimulationRequest request = new SimulationRequest("ac_circuit.ipes", simTime, timeStep);
-            request.setParameters(Map.of("frequency", freq));
+            SimulationRequest request = new SimulationRequest(acCircuitFile, simTime, timeStep);
+            request.setParameters(Map.of("Vs.frequency", freq));
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -170,8 +184,8 @@ class ParameterSweepTest {
         double[] temperatures = {-40.0, 0.0, 25.0, 85.0, 125.0};
 
         for (double temp : temperatures) {
-            SimulationRequest request = new SimulationRequest("thermal.ipes", 0.1, 1e-5);
-            request.setParameters(Map.of("ambient_temp", temp));
+            SimulationRequest request = new SimulationRequest(thermalCircuitFile, 0.1, 1e-5);
+            request.setParameters(Map.of("ambient.dcValue", temp));
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -183,7 +197,7 @@ class ParameterSweepTest {
     @Test
     @DisplayName("Empty parameters accepted")
     void emptyParametersAccepted() throws Exception {
-        SimulationRequest request = new SimulationRequest("test.ipes", 0.01, 1e-6);
+        SimulationRequest request = new SimulationRequest(circuitFile, 0.01, 1e-6);
         // No parameters set
 
         mockMvc.perform(post("/api/v1/simulations")
@@ -195,14 +209,14 @@ class ParameterSweepTest {
     @Test
     @DisplayName("Multiple parameters in single request")
     void multipleParametersSingleRequest() throws Exception {
-        SimulationRequest request = new SimulationRequest("complex.ipes", 0.01, 1e-6);
+        SimulationRequest request = new SimulationRequest(complexCircuitFile, 0.01, 1e-6);
         request.setParameters(Map.of(
-            "R1", 1000.0,
-            "R2", 2000.0,
-            "C1", 1e-6,
-            "C2", 2e-6,
-            "L1", 1e-3,
-            "Vs", 12.0
+            "R1.resistance", 1000.0,
+            "R2.resistance", 2000.0,
+            "C1.capacitance", 1e-6,
+            "C2.capacitance", 2e-6,
+            "L1.inductance", 1e-3,
+            "Vs.dcValue", 12.0
         ));
 
         mockMvc.perform(post("/api/v1/simulations")

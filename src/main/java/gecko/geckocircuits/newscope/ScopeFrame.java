@@ -236,24 +236,29 @@ public final class ScopeFrame extends javax.swing.JFrame{
    * @param simStarted true if simulation started, false otherwise
    */
   public void setScopeMenueEnabled(final boolean simStarted){
-    if(simStarted){
-      jMenuItemInitAndStart.setEnabled(false);
-      jMenuItemParameter.setEnabled(false);
-      jMenuItemContinue.setEnabled(false);
-      jMenuItemPause.setEnabled(true);
-      jMenuScopeData.setEnabled(false);
-      jMenuGraphs.setEnabled(false);
-      jMenuAnalysis.setEnabled(false);
-      // Worksheet-Daten waehrend der Simulation nicht zugaenglich:
-    }else{
-      jMenuItemInitAndStart.setEnabled(true);
-      jMenuItemParameter.setEnabled(true);
-      jMenuItemContinue.setEnabled(true);
-      jMenuItemPause.setEnabled(false);
-      jMenuScopeData.setEnabled(true);
-      jMenuGraphs.setEnabled(true);
-      jMenuAnalysis.setEnabled(true);
-    }
+    setScopeMenueEnabled(simStarted, () -> true);
+  }
+
+  private final gecko.geckocircuits.allg.LatestOwnedPresentation _scopeMenuUpdates =
+          new gecko.geckocircuits.allg.LatestOwnedPresentation();
+
+  /**
+   * Updates scope menus while the caller owns their presentation.
+   * Reentrant widget listeners can replace the request during a Swing setter.
+   *
+   * @param simStarted true while simulation execution is active
+   * @param stillCurrent checks ownership before each widget change
+   */
+  public void setScopeMenueEnabled(final boolean simStarted,
+          final java.util.function.BooleanSupplier stillCurrent) {
+    _scopeMenuUpdates.update(stillCurrent,
+            () -> jMenuItemInitAndStart.setEnabled(!simStarted),
+            () -> jMenuItemParameter.setEnabled(!simStarted),
+            () -> jMenuItemContinue.setEnabled(!simStarted),
+            () -> jMenuItemPause.setEnabled(simStarted),
+            () -> jMenuScopeData.setEnabled(!simStarted),
+            () -> jMenuGraphs.setEnabled(!simStarted),
+            () -> jMenuAnalysis.setEnabled(!simStarted));
   }
 
   @Override

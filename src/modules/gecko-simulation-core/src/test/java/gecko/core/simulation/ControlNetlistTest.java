@@ -130,14 +130,14 @@ class ControlNetlistTest {
     }
 
     @Test
-    void executeTimeStep_setsAbstractControlCalculatableStaticTime() {
-        MockCalculator calc = new MockCalculator(1, 1);
+    void executeTimeStep_setsCalculatorTime() {
+        var calc = new gecko.core.control.calculators.TimeCalculator();
         List<AbstractControlCalculatable> calculators = List.of(calc);
         netlist.setSortedCalculators(calculators);
 
         netlist.executeTimeStep(1e-6, 0.002);
 
-        assertEquals(0.002, AbstractControlCalculatable._time, 0.00001);
+        assertEquals(0.002, calc._outputSignal[0][0], 0.00001);
     }
 
     @Test

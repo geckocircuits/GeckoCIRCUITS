@@ -13,6 +13,14 @@
  */
 package gecko.geckocircuits.circuit;
 
+import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcDocumentSettings;
+import gecko.core.io.AcMetadataCodec;
+import gecko.core.io.HierarchyMetadataCodec;
+import gecko.core.io.ScalarParameterBindings;
+import gecko.core.io.SpicePorts;
+import gecko.core.io.importer.SpiceValue;
+import gecko.geckocircuits.allg.TechFormat;
 import gecko.core.circuit.ComponentIdentifiable;
 import gecko.core.circuit.TokenMap;
 import gecko.geckocircuits.control.ControlTypeInfo;
@@ -63,6 +71,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     private Point _sheetPosition = new Point(0, 0);
     protected String[] parameterString = new String[]{"", "", "0"};
     public final double[] parameter = new double[40];
+    private final ModelMVC<Optional<AcComponent>> acComponent = new ModelMVC<>(Optional.empty(), "AC component law");
+    private static final TechFormat AC_VALUE_FORMAT = new TechFormat();
     public final Stack<AbstractTerminal> XIN = new Stack<AbstractTerminal>();
     public final Stack<AbstractTerminal> YOUT = new Stack<AbstractTerminal>();
     private AffineTransform _origTransform;
@@ -260,8 +270,23 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     }
 
+    private java.util.Map<Integer, String> scalarBindings = java.util.Map.of();
+
+    final java.util.Map<Integer, String> scalarBindings() { return scalarBindings; }
+
+    final double[] scopedScalarValues(java.util.Map<String, String> scope) {
+        return ScalarParameterBindings.values(getTypeEnum().getTypeNumber(), getParameter(), scalarBindings, scope);
+    }
+
     @Override
     public void importASCII(final TokenMap tokenMap) {
+        if (getSimulationDomain() == ConnectorType.LK && tokenMap.containsToken(AcMetadataCodec.COMPONENT)) {
+            setAcComponentWithoutUndo(AcMetadataCodec.decodeComponent(tokenMap.readDataLine(AcMetadataCodec.COMPONENT, "")));
+        }
+        if (getSimulationDomain() == ConnectorType.LK && tokenMap.containsToken(HierarchyMetadataCodec.SCALAR_BINDINGS)) {
+            scalarBindings = HierarchyMetadataCodec.decodeScalarBindings(
+                    tokenMap.readDataLine(HierarchyMetadataCodec.SCALAR_BINDINGS, ""));
+        }
         if (this instanceof SemiconductorLossCalculatable) {
             TokenMap subBlock = tokenMap.getBlockTokenMap("<Verluste>");
             if (subBlock != null) {
@@ -418,6 +443,90 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
     @Override
     public final void exportASCII(final StringBuffer ascii) {
+        writeASCII(ascii, getAcComponent(), parameter);
+    }
+
+    /** Exports current law and compatibility fields with the owning document parameters. */
+    public final void exportASCII(StringBuffer ascii, AcDocumentSettings settings) {
+        AcComponent owned = settings == null || !scalarBindings.isEmpty() ? getAcComponent() : getAcComponentOrLiteral();
+        double[] values = owned == null ? parameter : AcMetadataCodec.compatibilityValues(owned, getParameter(), settings);
+        if (settings != null && !scalarBindings.isEmpty()) values = scopedScalarValues(settings.parameterMap());
+        writeASCII(ascii, owned, values);
+    }
+
+    public final void exportScopedAcASCII(StringBuffer ascii, java.util.Map<String, String> scope, boolean ac) {
+        AcComponent owned = ac && scalarBindings.isEmpty() ? getAcComponentOrLiteral() : getAcComponent();
+        double[] values = owned == null ? scopedScalarValues(scope)
+                : AcMetadataCodec.compatibilityValues(owned, getParameter(), scope);
+        writeASCII(ascii, owned, values);
+    }
+
+    final void exportForCapture(StringBuffer ascii, AcDocumentSettings settings) {
+        if (settings == null || !scalarBindings.isEmpty()) {
+            exportASCII(ascii);
+        } else {
+            writeASCII(ascii, getAcComponentOrLiteral(), getParameter());
+        }
+    }
+
+    public final AcComponent getAcComponent() { return acComponent.getValue().orElse(null); }
+
+    final void setAcComponentWithoutUndo(AcComponent owned) {
+        acComponent.setValueWithoutUndo(Optional.of(owned));
+        onAcComponentInstalled(owned);
+    }
+
+    /** Adds any additional graphical terminals owned by an imported semiconductor law. */
+    protected void onAcComponentInstalled(AcComponent owned) { }
+
+    public final AcComponent getAcComponentOrLiteral() {
+        var owned = getAcComponent();
+        if (owned != null) return owned;
+        if (getSimulationDomain() != ConnectorType.LK) return null;
+        var descriptor = SpicePorts.find("LK", getTypeEnum().getTypeNumber());
+        if (descriptor == null) return null;
+        double[] values = getParameter();
+        AcComponent.Law law = switch (descriptor) {
+            case RES, CAP -> new AcComponent.Passive(Double.toString(values[0]));
+            case VOLTAGE -> new AcComponent.Voltage(Double.toString(values[1]), "", "0", "0");
+            case E -> new AcComponent.Controlled(Double.toString(values[0]), false);
+            case G -> new AcComponent.Transconductance(Double.toString(values[0]));
+            default -> null;
+        };
+        return law == null ? null : new AcComponent(getStringID(), List.of(), false, law);
+    }
+
+    public final void setAcLaw(AcComponent.Law law) {
+        var editor = SchematicEditor2.Singleton;
+        if (law instanceof AcComponent.Inductance inductor) {
+            var current = getAcComponentOrLiteral();
+            if (current == null || !(current.law() instanceof AcComponent.Inductance original)
+                    || original.origin() != inductor.origin()) {
+                throw new IllegalArgumentException("Keep the imported AC inductor origin.");
+            }
+            if (editor == null || editor.getHierarchy() == null || getHierarchyMember() == null) {
+                inductor.evaluate(editor == null || editor.getAcSettings() == null
+                        ? java.util.Map.of() : editor.getAcSettings().parameterMap());
+            }
+        }
+        if (editor != null && (law instanceof AcComponent.IdealDiode
+                || editor.getHierarchy() != null && getHierarchyMember() != null)) {
+            editor.hierarchyEdits.setSharedLaw(this, law);
+            return;
+        }
+        setAcLawLocal(law);
+    }
+
+    final void setAcLawLocal(AcComponent.Law law) {
+        var current = Objects.requireNonNull(getAcComponentOrLiteral(), "The component has no AC law.");
+        if (current.law().getClass() != law.getClass()) throw new IllegalArgumentException("Invalid AC component law.");
+        acComponent.setValueWithoutUndo(Optional.of(current));
+        acComponent.setValue(Optional.of(new AcComponent(current.instance(), current.spiceOrders(), current.aliases(),
+                current.mirrored(), law)));
+        SchematicEditor2.Singleton.setDirtyFlag();
+    }
+
+    private void writeASCII(StringBuffer ascii, AcComponent owned, double[] values) {
         final String saveIdentifierStartString = "<" + getTypeInfo().getSaveIdentifier() + ">";
         ascii.append(saveIdentifierStartString);
 
@@ -440,7 +549,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
         ProjectData.appendAsString(ascii.append("\nx"), getSheetPosition().x);
         ProjectData.appendAsString(ascii.append("\ny"), getSheetPosition().y);
-        ProjectData.appendAsString(ascii.append("\nparameter"), parameter);
+        ProjectData.appendAsString(ascii.append("\nparameter"), values);
+        if (owned != null) ascii.append('\n').append(AcMetadataCodec.COMPONENT).append(' ').append(AcMetadataCodec.encode(owned));
+        if (!scalarBindings.isEmpty()) ascii.append('\n').append(HierarchyMetadataCodec.SCALAR_BINDINGS).append(' ')
+                .append(HierarchyMetadataCodec.encodeScalarBindings(scalarBindings));
 
         ProjectData.appendAsString(ascii.append("\nparameterString"), parameterString);
         updateNameOptArray();
@@ -454,6 +566,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
         for (UserParameter par : getRegisteredParameters()) {
+            if (scalarBindings.containsKey(par.getParameterIndex())) continue;
+            if (owned != null && ((owned.law() instanceof AcComponent.Passive || owned.law() instanceof AcComponent.Inductance)
+                    && par.getParameterIndex() == 0 || (owned.law() instanceof AcComponent.Voltage
+                    || owned.law() instanceof AcComponent.Current) && par.getParameterIndex() == 1)) continue;
             par.writeXMLToFile(ascii);
         }
 
@@ -685,6 +801,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
     }
 
     public void copyLKBlockPars(final AbstractBlockInterface copy) {
+        acComponent.getValue().ifPresent(current -> copy.setAcComponentWithoutUndo(
+                new AcComponent(copy.getStringID(), current.spiceOrders(), List.of(), current.mirrored(), current.law())));
         copy.setSheetPositionWithoutUndo(getSheetPosition());
         copy.setPositionVorVerschieben(getSheetPosition());
         System.arraycopy(parameter, 0, copy.parameter, 0, parameter.length);
@@ -773,8 +891,15 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             _textInfo.addParameter(getStringID());
         }
 
-        this.addTextInfoParameters();
-        _textInfo.addParameters(getRegisteredParameters(), getDisplayProperties());
+        var editor = SchematicEditor2.Singleton;
+        var settings = editor == null ? null : editor.getAcSettings();
+        var owned = getAcComponent();
+        if (settings != null && owned != null) {
+            if (getDisplayProperties().showParameter) addAcDisplayParameters(owned, settings);
+        } else {
+            this.addTextInfoParameters();
+            _textInfo.addParameters(getRegisteredParameters(), getDisplayProperties());
+        }
 
         _textInfo.zeichneLinie(graphics, getDisplayProperties().showTextLine);
 
@@ -785,6 +910,63 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
         }
 
         paintIndividualComponent(graphics);
+    }
+
+    private void addAcDisplayParameters(AcComponent owned, AcDocumentSettings settings) {
+        try {
+            var editor = SchematicEditor2.Singleton;
+            var parameters = editor.getHierarchy() == null ? settings.parameterMap() : editor.hierarchyEdits.scope(this);
+            switch (owned.law()) {
+                case AcComponent.Passive law -> {
+                    boolean resistance = getTypeEnum().getTypeNumber() == SpicePorts.RES.type();
+                    double value = SpiceValue.evaluate(law.expression(), parameters);
+                    _textInfo.addParameter((resistance ? "R = " : "C = ") + AC_VALUE_FORMAT.formatENG(value, 4)
+                            + (resistance ? " Ω" : " F"));
+                }
+                case AcComponent.Voltage law -> {
+                    double magnitude = SpiceValue.evaluate(law.magnitude(), parameters);
+                    if (magnitude != 0) {
+                        double phase = SpiceValue.evaluate(law.phaseDegrees(), parameters);
+                        _textInfo.addParameter("AC " + AC_VALUE_FORMAT.formatENG(magnitude, 4) + " V ∠ "
+                                + AC_VALUE_FORMAT.formatENG(phase, 4) + "°");
+                    } else {
+                        double dc = SpiceValue.evaluate(law.dc(), parameters);
+                        _textInfo.addParameter("DC " + AC_VALUE_FORMAT.formatENG(dc, 4) + " V");
+                    }
+                }
+                case AcComponent.Inductance law -> {
+                    var value = law.evaluate(parameters);
+                    _textInfo.addParameter("L = " + AC_VALUE_FORMAT.formatENG(value.henries(), 4) + " H");
+                    _textInfo.addParameter("Rser = " + AC_VALUE_FORMAT.formatENG(value.ohms(), 4)
+                            + " Ω (" + value.mode().label() + ")");
+                }
+                case AcComponent.Current law -> {
+                    _textInfo.addParameter("AC " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.magnitude(), parameters), 4)
+                            + " A ∠ " + AC_VALUE_FORMAT.formatENG(SpiceValue.evaluate(law.phaseDegrees(), parameters), 4) + "°");
+                }
+                case AcComponent.IdealDiode law -> {
+                    var model = law.evaluate(parameters);
+                    _textInfo.addParameter(law.modelName() + " Vfwd = "
+                            + AC_VALUE_FORMAT.formatENG(model.forwardVoltage(), 4) + " V");
+                }
+                case AcComponent.Mosfet law -> _textInfo.addParameter(law.modelName() + (law.pChannel() ? " (PMOS)" : " (NMOS)"));
+                case AcComponent.Behavioural law -> _textInfo.addParameter((law.current() ? "I = " : "V = ") + law.expression());
+                case AcComponent.Bipolar law -> _textInfo.addParameter(law.modelName() + " (AC bipolar)");
+                case AcComponent.ExponentialDiode law -> _textInfo.addParameter(law.modelName() + (law.transientLaw() ? " (exponential transient)" : " (exponential AC)"));
+                case AcComponent.Transconductance law -> {
+                    double gm = SpiceValue.evaluate(law.expression(), parameters);
+                    _textInfo.addParameter("gm = " + AC_VALUE_FORMAT.formatENG(gm, 4) + " S");
+                }
+                case AcComponent.Controlled law -> {
+                    if (!law.laplace()) {
+                        double gain = SpiceValue.evaluate(law.expression(), parameters);
+                        _textInfo.addParameter("Gain = " + AC_VALUE_FORMAT.formatENG(gain, 4));
+                    }
+                }
+            }
+        } catch (IllegalArgumentException error) {
+            _textInfo.addErrorValue("Invalid AC value");
+        }
     }
 
     /**
@@ -983,7 +1165,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
             labelDialog.setVisible(true);
             return;
         }
-        final Window dialog = openDialogWindow();
+        final Window dialog = (getAcComponent() != null || SchematicEditor2.Singleton.getAcSettings() != null)
+                && getAcComponentOrLiteral() != null ? AcEditorDialogs.componentDialog(this) : openDialogWindow();
         dialog.setVisible(true);
         if (dialog instanceof Frame) {
             Frame frame = (Frame) dialog;

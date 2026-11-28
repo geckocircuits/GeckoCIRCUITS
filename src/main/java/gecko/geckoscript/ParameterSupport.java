@@ -310,12 +310,8 @@ public class ParameterSupport extends javax.swing.JFrame {
                 if (firstElement instanceof RegelBlock) {
                     final List<String[]> currentElemTypeOutputs = ((RegelBlock) firstElement).getOutputs();
                     _availableParametersModel.addElement("-- OUTPUT --");
-                    if (currentElemTypeOutputs != null) {
-                        for (String[] output : currentElemTypeOutputs) {
-                            _availableParametersModel.addElement(output[0] + "\t(" + output[1] + ")");
-                        }
-                    } else {
-                        _availableParametersModel.addElement("No output available");
+                    for (String[] output : currentElemTypeOutputs) {
+                        _availableParametersModel.addElement(output[0] + "\t(" + output[1] + ")");
                     }
                 }
 

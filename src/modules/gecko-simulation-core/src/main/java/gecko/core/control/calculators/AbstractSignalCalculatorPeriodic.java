@@ -13,8 +13,11 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCalculator
-        implements InitializableAtSimulationStart {
+        implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private static final double THOUSAND = 1000;
     protected double _amplitudeAC;
@@ -42,6 +45,7 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
 
     @Override
     public final void initializeAtSimulationStart(final double deltaT) {
+        _outputSignal[0][0] = 0;
         final double txEnd = 1.0 / _frequency;
         final double dtx = txEnd / THOUSAND;
         double phaseX = calculatePhaseX();
@@ -83,5 +87,14 @@ public abstract class AbstractSignalCalculatorPeriodic extends AbstractSignalCal
 
     final void setPhase(final double phase) {
         _phase = phase;
+    }
+
+    /** @return the configured frequency in hertz */
+    public final double frequency() { return _frequency; }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(_triangle);
+        sink.flag(_aufsteigend);
     }
 }

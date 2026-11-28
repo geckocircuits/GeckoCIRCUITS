@@ -1,0 +1,200 @@
+package gecko.core.preparation;
+
+import gecko.core.allg.SolverType;
+import gecko.core.io.CircuitModel;
+import gecko.core.io.ImportIssue;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
+import static gecko.core.preparation.CircuitPreparationTest.component;
+import static gecko.core.preparation.CircuitPreparationTest.currents;
+import static gecko.core.preparation.CircuitPreparationTest.resistorCircuit;
+import static org.junit.jupiter.api.Assertions.*;
+
+class SnapshotOwnershipTest {
+    @Test
+    void captureAndPreparationOwnAllCallerAndInspectionRepresentations() {
+        var model = resistorCircuit();
+        model.setFilePath("uploaded.ipes");
+        model.setFileVersion(99);
+        model.setUniqueFileId(123);
+        model.setCreationDate("2026-11-04");
+        model.setDisplayPixels(20);
+        model.setFontSize(14);
+        model.setFontType("saved font");
+        model.setWindowWidth(800);
+        model.setWindowHeight(600);
+        model.setPreSimulationTime(-0.5);
+        model.setPreSimulationTimeStep(0.05);
+        model.setPauseTime(0.15);
+        model.setScripterCode("saved text");
+        model.setScripterImports("saved imports");
+        model.setScripterDeclarations("saved declarations");
+        model.setDataContainerSignals(new String[]{"voltage"});
+        model.setOptimizerParameter("unused", 7);
+        int[][] points = {{0, 0}, {1, 0}};
+        model.addConnection(new CircuitModel.ConnectionData("LK", points, "wire"));
+        double[][] nestedArray = {{1, 2}, {3, 4}};
+        var nestedList = new ArrayList<Object>(List.of(new String[]{"saved reference"}, new int[]{5, 6}));
+        var metadata = new LinkedHashMap<String, Object>();
+        metadata.put("array", nestedArray);
+        metadata.put("list", nestedList);
+        var resistor = model.getCircuitComponents().get(1);
+        resistor.setParameter("metadata", metadata);
+        resistor.setParameterStrings(new String[]{"reference"});
+        resistor.getImportTokens().put("savedToken", "original");
+        resistor.setSourceLocation("uploaded.ipes: line 7");
+        var probe = component(2, "probe", new double[0], "", "amps");
+        probe.setParameterStrings(new String[]{"R.1"});
+        model.addControlComponent(probe);
+        var scope = component(5, "scope", new double[0], "amps", "");
+        model.addControlComponent(scope);
+        var preparation = new CircuitPreparation();
+        var snapshot = preparation.capture(model);
+        var assignments = new LinkedHashMap<String, Double>();
+        assignments.put("R.1.resistance", 20.0);
+        var request = new PreparationRequest(SolverOverrides.none(), assignments);
+        assignments.put("R.1.resistance", 999.0);
+        var ready = assertInstanceOf(PreparationResult.Ready.class, preparation.prepare(snapshot, request));
+
+        points[0][0] = 900;
+        nestedArray[0][0] = 900;
+        ((String[]) nestedList.getFirst())[0] = "changed";
+        ((int[]) nestedList.get(1))[0] = 900;
+        metadata.put("new", new int[]{900});
+        model.setTimeStep(10);
+        model.setSimulationDuration(20);
+        model.setSolverType(SolverType.SOLVER_GS);
+        model.setPreSimulationTime(10);
+        model.setPauseTime(10);
+        model.getDataContainerSignals()[0] = "changed";
+        model.getOptimizerParameters().put("unused", 900.0);
+        model.setScripterCode("changed");
+        model.setScripterImports("changed");
+        model.setScripterDeclarations("changed");
+        model.setFilePath("changed.ipes");
+        model.setFileVersion(900);
+        model.setUniqueFileId(900);
+        model.setCreationDate("changed");
+        model.setDisplayPixels(900);
+        model.setFontSize(900);
+        model.setFontType("changed");
+        model.setWindowWidth(900);
+        model.setWindowHeight(900);
+        resistor.getPosition()[0] = 900;
+        resistor.getNumericParameters()[0] = 900;
+        resistor.setParameter("param0", 900.0);
+        resistor.getTerminalXLabels()[0] = "changed";
+        resistor.getParameterStrings()[0] = "changed";
+        resistor.getImportTokens().put("savedToken", "changed");
+        probe.getParameterStrings()[0] = "missing";
+        scope.getTerminalXLabels()[0] = "missing";
+        model.getConnections().clear();
+        model.getCircuitComponents().clear();
+        model.getControlComponents().clear();
+
+        var inspection = snapshot.toModel();
+        assertEquals(0.1, inspection.getTimeStep());
+        assertEquals(0.2, inspection.getSimulationDuration());
+        assertEquals(-0.5, inspection.getPreSimulationTime());
+        assertEquals(0.05, inspection.getPreSimulationTimeStep());
+        assertEquals(0.15, inspection.getPauseTime());
+        assertEquals("saved text", inspection.getScripterCode());
+        assertEquals("saved imports", inspection.getScripterImports());
+        assertEquals("saved declarations", inspection.getScripterDeclarations());
+        assertEquals("uploaded.ipes", inspection.getFilePath());
+        assertEquals(99, inspection.getFileVersion());
+        assertEquals(123, inspection.getUniqueFileId());
+        assertEquals("2026-11-04", inspection.getCreationDate());
+        assertEquals(20, inspection.getDisplayPixels());
+        assertEquals(14, inspection.getFontSize());
+        assertEquals("saved font", inspection.getFontType());
+        assertEquals(800, inspection.getWindowWidth());
+        assertEquals(600, inspection.getWindowHeight());
+        assertEquals(SolverType.SOLVER_BE, inspection.getSolverType());
+        assertArrayEquals(new String[]{"voltage"}, inspection.getDataContainerSignals());
+        assertEquals(7.0, inspection.getOptimizerParameters().get("unused"));
+        assertEquals(0, inspection.getConnections().getFirst().getPoints()[0][0]);
+        assertEquals("wire", inspection.getConnections().getFirst().getLabel());
+        var capturedResistor = inspection.getCircuitComponents().get(1);
+        assertEquals(0, capturedResistor.getPosition()[0]);
+        assertArrayEquals(new double[]{10}, capturedResistor.getNumericParameters());
+        assertArrayEquals(new String[]{"reference"}, capturedResistor.getParameterStrings());
+        assertEquals("original", capturedResistor.getImportTokens().get("savedToken"));
+        assertEquals("uploaded.ipes: line 7", capturedResistor.getSourceLocation());
+        var copiedMetadata = (Map<?, ?>) capturedResistor.getParameters().get("metadata");
+        assertEquals(1, ((double[][]) copiedMetadata.get("array"))[0][0]);
+        assertFalse(copiedMetadata.containsKey("new"));
+        var copiedList = (List<?>) copiedMetadata.get("list");
+        assertArrayEquals(new String[]{"saved reference"}, (String[]) copiedList.getFirst());
+        assertArrayEquals(new int[]{5, 6}, (int[]) copiedList.get(1));
+        assertEquals(List.of(0.3, 0.3, 0.3), currents(ready.execution()));
+
+        for (var detached : List.of(inspection, ready.circuit().toModel(), ready.execution().newRunModel())) {
+            detached.getCircuitComponents().get(1).getNumericParameters()[0] = 999;
+            detached.getCircuitComponents().get(1).setParameter("param0", 999.0);
+            detached.getCircuitComponents().get(1).getImportTokens().put("savedToken", "changed inspection");
+            detached.getControlComponents().getFirst().getParameterStrings()[0] = "missing";
+            detached.getConnections().getFirst().getPoints()[0][0] = 999;
+            ((double[][]) ((Map<?, ?>) detached.getCircuitComponents().get(1).getParameters().get("metadata")).get("array"))[0][0] = 999;
+            detached.setTimeStep(100);
+            detached.setSimulationDuration(100);
+            detached.setSolverType(SolverType.SOLVER_GS);
+            detached.getDataContainerSignals()[0] = "changed inspection";
+            detached.getOptimizerParameters().clear();
+        }
+        ready.execution().solverSettings().withStepWidth(100).withSimulationDuration(100);
+        assertEquals(List.of(0.3, 0.3, 0.3), currents(ready.execution()));
+        assertEquals(1, ((double[][]) ((Map<?, ?>) snapshot.toModel().getCircuitComponents().get(1)
+                .getParameters().get("metadata")).get("array"))[0][0]);
+        assertEquals(0.1, ready.execution().solverSettings().getStepWidth());
+        assertEquals("original", ready.circuit().toModel().getCircuitComponents().get(1).getImportTokens().get("savedToken"));
+    }
+
+    @Test
+    void captureOwnsThermalAndImportEvidenceEvenWhenTheCircuitIsInspectable() {
+        var model = resistorCircuit();
+        var thermal = component(101, "heat", new double[]{10, 20}, "hot", "0");
+        thermal.setParameterStrings(new String[]{"saved thermal reference"});
+        thermal.getImportTokens().put("isNonlinear", "false");
+        thermal.setParsedInput(true);
+        thermal.setConfigurationNormalized(true);
+        thermal.setImportedParameterCount(2);
+        thermal.setSourceLocation("thermal.ipes: line 3");
+        model.addThermalComponent(thermal);
+        model.getImportIssues().add(new ImportIssue("UNSUPPORTED_DOMAIN", "THERMAL", "heat", "Saved thermal input is unsupported.",
+                "thermal.ipes: line 3", true));
+        var preparation = new CircuitPreparation();
+        var snapshot = preparation.capture(model);
+        thermal.getNumericParameters()[0] = 999;
+        thermal.getParameterStrings()[0] = "changed";
+        thermal.getImportTokens().put("isNonlinear", "true");
+        thermal.setParsedInput(false);
+        thermal.setConfigurationNormalized(false);
+        thermal.setImportedParameterCount(900);
+        thermal.setSourceLocation("changed");
+        model.getThermalComponents().clear();
+        model.getImportIssues().clear();
+        var result = assertInstanceOf(PreparationResult.Inspectable.class,
+                preparation.prepare(snapshot, PreparationRequest.defaults()));
+        var copied = result.circuit().toModel().getThermalComponents().getFirst();
+        assertArrayEquals(new double[]{10, 20}, copied.getNumericParameters());
+        assertArrayEquals(new String[]{"saved thermal reference"}, copied.getParameterStrings());
+        assertEquals("false", copied.getImportTokens().get("isNonlinear"));
+        assertTrue(copied.isParsedInput());
+        assertTrue(copied.isConfigurationNormalized());
+        assertEquals(2, copied.getImportedParameterCount());
+        assertEquals("thermal.ipes: line 3", copied.getSourceLocation());
+        assertTrue(result.report().diagnostics().stream().anyMatch(d -> "thermal.ipes: line 3".equals(d.sourceLocation())));
+        var detached = result.circuit().toModel();
+        detached.getImportIssues().clear();
+        detached.getThermalComponents().getFirst().getImportTokens().clear();
+        detached.getThermalComponents().getFirst().getNumericParameters()[0] = 900;
+        detached.getThermalComponents().clear();
+        assertEquals(1, result.circuit().toModel().getImportIssues().size());
+        assertEquals(10, result.circuit().toModel().getThermalComponents().getFirst().getNumericParameters()[0]);
+        assertEquals(result.report(), preparation.prepare(snapshot, PreparationRequest.defaults()).report());
+    }
+}

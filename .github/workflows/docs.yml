@@ -9,6 +9,8 @@ on:
       - 'resources/tutorials/**'
       - 'resources/examples/**'
       - 'mkdocs.yml'
+      - 'scripts/sync-docs.py'
+      - 'scripts/tests/**'
       - '.github/workflows/docs.yml'
   workflow_dispatch:  # Allow manual trigger
 
@@ -42,11 +44,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
 
+      - name: Test documentation sync
+        run: python -m unittest discover -s scripts/tests -p test_sync_docs.py
+
       - name: Sync documentation from resources
         run: python scripts/sync-docs.py
 
       - name: Build documentation
-        run: mkdocs build
+        run: mkdocs build --strict
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

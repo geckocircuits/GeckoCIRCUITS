@@ -13,6 +13,8 @@
  */
 package gecko.core.circuit.matrix;
 
+import gecko.core.allg.SolverType;
+
 /**
  * Matrix stamper implementation for inductor components.
  *
@@ -53,15 +55,15 @@ public class InductorStamper implements IMatrixStamper {
     private static final int PREV_VOLTAGE = 1;
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
-                             double[] parameter, double dt) {
-        double conductance = getAdmittanceWeight(parameter[PARAM_INDUCTANCE], dt);
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
+                             double[] parameter, double dt, SolverType solverType) {
+        double conductance = getAdmittanceWeight(parameter[PARAM_INDUCTANCE], dt, solverType);
 
         // Stamp the standard two-terminal conductance pattern
-        a[nodeX][nodeX] += conductance;
-        a[nodeY][nodeY] += conductance;
-        a[nodeX][nodeY] -= conductance;
-        a[nodeY][nodeX] -= conductance;
+        a.add(nodeX, nodeX, conductance);
+        a.add(nodeY, nodeY, conductance);
+        a.add(nodeX, nodeY, -conductance);
+        a.add(nodeY, nodeX, -conductance);
     }
 
     @Override
@@ -93,59 +95,25 @@ public class InductorStamper implements IMatrixStamper {
 
     @Override
     public double getAdmittanceWeight(double inductance, double dt) {
-        // Clamp inductance to minimum value
+        // Backward Euler (default): G = dt/L
         double safeInductance = Math.max(inductance, MIN_INDUCTANCE);
-        // Backward Euler: G = dt/L
         return dt / safeInductance;
     }
 
     /**
-     * Calculates the equivalent conductance for trapezoidal integration.
-     * For trapezoidal rule: G = dt/(2L)
+     * Calculates solver-type-aware equivalent conductance for inductor.
      *
      * @param inductance the inductance value
      * @param dt time step size
-     * @return equivalent conductance for trapezoidal integration
+     * @param solverType the numerical integration method
+     * @return equivalent conductance matching the solver type
      */
-    public double getAdmittanceWeightTrapezoidal(double inductance, double dt) {
+    public double getAdmittanceWeight(double inductance, double dt, SolverType solverType) {
         double safeInductance = Math.max(inductance, MIN_INDUCTANCE);
-        return dt / (2.0 * safeInductance);
-    }
-
-    /**
-     * Stamps the B vector for trapezoidal integration.
-     * For trapezoidal: I_hist = i_prev + G * v_prev
-     *
-     * @param b the b vector to stamp into
-     * @param nodeX first node index
-     * @param nodeY second node index
-     * @param nodeZ auxiliary node index (unused)
-     * @param parameter component parameters array
-     * @param dt time step size
-     * @param time current simulation time
-     * @param previousValues array containing [i_prev, v_prev]
-     */
-    public void stampVectorBTrapezoidal(double[] b, int nodeX, int nodeY, int nodeZ,
-                                        double[] parameter, double dt, double time,
-                                        double[] previousValues) {
-        double inductance = Math.max(parameter[PARAM_INDUCTANCE], MIN_INDUCTANCE);
-        double conductance = dt / (2.0 * inductance);
-
-        double iPrev = 0.0;
-        double vPrev = 0.0;
-        if (previousValues != null) {
-            if (previousValues.length > PREV_CURRENT) {
-                iPrev = previousValues[PREV_CURRENT];
-            }
-            if (previousValues.length > PREV_VOLTAGE) {
-                vPrev = previousValues[PREV_VOLTAGE];
-            }
-        }
-
-        // For trapezoidal: I_hist = i_prev + G * v_prev
-        double historySource = iPrev + conductance * vPrev;
-
-        b[nodeX] += historySource;
-        b[nodeY] -= historySource;
+        return switch (solverType) {
+            case SOLVER_TRZ -> dt / (2.0 * safeInductance);
+            case SOLVER_GS  -> (2.0 / 3.0) * dt / safeInductance;
+            default         -> dt / safeInductance;  // BE
+        };
     }
 }

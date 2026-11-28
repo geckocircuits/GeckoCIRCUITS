@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class TimeCalculator extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class TimeCalculator extends AbstractControlCalculatable implements StatelessCalculation {
     
     public TimeCalculator() {
         super(0, 1);
@@ -21,7 +23,7 @@ public final class TimeCalculator extends AbstractControlCalculatable {
     
     @Override
     public void berechneYOUT(final double deltaT) {
-        _outputSignal[0][0] = _time;
+        _outputSignal[0][0] = getTime();
     }
     
 }

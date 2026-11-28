@@ -25,7 +25,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 103: PWM Basics](../../1xx_getting_started/103_pwm_basics/index.md)
+- Complete [Tutorial 103: PWM Basics](../../../getting-started/pwm-basics.md)
 - Understanding of inductor and capacitor behavior
 - Basic circuit analysis skills
 
@@ -271,9 +271,9 @@ Typical loss breakdown:
 
 ## Related Tutorials
 
-- [202 - Boost Converter](../202_boost_converter/index.md) - Step-up topology
-- [203 - Buck-Boost](../203_buck_boost/index.md) - Inverting topologies
-- [501 - Loss Calculation](../../5xx_thermal_simulation/501_loss_calculation/index.md) - Thermal analysis
+- [202 - Boost Converter](../boost-converter.md) - Step-up topology
+- [203 - Buck-Boost](../buck-boost.md) - Inverting topologies
+- [501 - Loss Calculation](../../thermal/loss-calculation.md) - Thermal analysis
 
 ## References
 

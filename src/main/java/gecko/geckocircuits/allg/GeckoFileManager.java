@@ -93,11 +93,15 @@ public final class GeckoFileManager {
 
     //write all the GeckoFiles to the .ipes file
     public void exportASCII(final StringBuffer ascii) {
+        exportASCII(ascii, null);
+    }
+
+    void exportASCII(final StringBuffer ascii, String targetModelPath) {
         ascii.append("\nGeckoFileManager");
         ascii.append("\n<GeckoFileManager>");
 
         for (GeckoFile file : _allAvailableFiles) {
-            file.exportASCII(ascii);
+            file.exportASCII(ascii, targetModelPath);
         }
         ascii.append("\n<\\GeckoFileManager>");
     }

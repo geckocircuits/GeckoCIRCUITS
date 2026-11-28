@@ -13,6 +13,8 @@
  */
 package gecko.core.circuit.matrix;
 
+import gecko.core.allg.SolverType;
+
 /**
  * Matrix stamper implementation for MOSFET components.
  *
@@ -104,16 +106,16 @@ public class MOSFETStamper implements IStatefulStamper {
     }
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
-                             double[] parameter, double dt) {
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
+                             double[] parameter, double dt, SolverType solverType) {
         double resistance = getCurrentResistance(parameter);
         double admittance = 1.0 / resistance;
 
         // Stamp standard two-terminal admittance pattern
-        a[nodeX][nodeX] += admittance;
-        a[nodeY][nodeY] += admittance;
-        a[nodeX][nodeY] -= admittance;
-        a[nodeY][nodeX] -= admittance;
+        a.add(nodeX, nodeX, admittance);
+        a.add(nodeY, nodeY, admittance);
+        a.add(nodeX, nodeY, -admittance);
+        a.add(nodeY, nodeX, -admittance);
     }
 
     @Override
@@ -134,9 +136,7 @@ public class MOSFETStamper implements IStatefulStamper {
 
     @Override
     public double getAdmittanceWeight(double parameterValue, double dt) {
-        double resistance = isOn ? rOn : rOff;
-        resistance = Math.max(resistance, MIN_RESISTANCE);
-        return 1.0 / resistance;
+        return 1.0 / Math.max(parameterValue, MIN_RESISTANCE);
     }
 
     @Override

@@ -46,6 +46,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
     private final double _freqStart;
     private final double _freqEnd;
     private final int _nMax;
+    private final double[] simulationFrequencies;
 
     public AbstractSignalCalculatorPeriodic _signalTypeCalculator;
     private int _noFreqs;
@@ -87,8 +88,9 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
         _addOutput = addOutput;
 
         _noFreqs = NOFREQSMAX;
-        calculateSimFreqs();
-        _nMax = (int) Math.round(_bode[0][_bode[0].length - 1] / _freqStart);
+        simulationFrequencies = calculateSimFreqs();
+        _bode = new double[][]{simulationFrequencies.clone(), null, null};
+        _nMax = (int) Math.round(simulationFrequencies[simulationFrequencies.length - 1] / _freqStart);
 
         switch (_signalType) {
             case SINE:
@@ -113,9 +115,9 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
      * @param time the simulation time
      */
     public void externalSetTime(double time) {
-        _time = time;
+        setSimulationTime(time);
         if (_signalTypeCalculator != null) {
-            _signalTypeCalculator._time = time;
+            _signalTypeCalculator.setSimulationTime(time);
         }
     }
 
@@ -160,7 +162,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
         }
     }
 
-    private void calculateSimFreqs() {
+    private double[] calculateSimFreqs() {
         int noPossibleFreqs = (int) Math.ceil((Math.floor(_freqEnd / _freqStart)) / 2);
         double[] possibleSimFreqs = new double[noPossibleFreqs];
         for (int i = 0; i < noPossibleFreqs; i++) {
@@ -168,8 +170,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
         }
 
         if (_signalType != SSAShape.SINE) {
-            _bode[0] = possibleSimFreqs;
-            return;
+            return possibleSimFreqs;
         }
 
         // Logarithmically spaced frequency indices
@@ -180,10 +181,11 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
 
         int[] index2 = removeDuplicates(index1, noPossibleFreqs);
         _noFreqs = index2.length;
-        _bode[0] = new double[_noFreqs];
-        for (int i = 0; i < _bode[0].length; i++) {
-            _bode[0][i] = possibleSimFreqs[index2[i]];
+        double[] frequencies = new double[_noFreqs];
+        for (int i = 0; i < frequencies.length; i++) {
+            frequencies[i] = possibleSimFreqs[index2[i]];
         }
+        return frequencies;
     }
 
     /**
@@ -196,8 +198,8 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
         double returnValue = 0;
         switch (_signalType) {
             case SINE:
-                for (int i = 0; i < _bode[0].length; i++) {
-                    returnValue += _amplitude * Math.sin(TWO_PI * _bode[0][i] * _time);
+                for (double frequency : simulationFrequencies) {
+                    returnValue += _amplitude * Math.sin(TWO_PI * frequency * getTime());
                 }
                 break;
             case RECTANGLE:
@@ -256,15 +258,15 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
     }
 
     private void calculateBode() {
-        _bode[1] = new double[_bode[0].length];
-        _bode[2] = new double[_bode[0].length];
+        double[][] bode = {simulationFrequencies.clone(), new double[simulationFrequencies.length],
+                new double[simulationFrequencies.length]};
         int maxHarmonic = getUsableHarmonicUpperBound();
 
-        for (int p = 0; p < _bode[0].length; p++) {
-            int harmonic = (int) Math.round(_bode[0][p] / _freqStart);
+        for (int p = 0; p < simulationFrequencies.length; p++) {
+            int harmonic = (int) Math.round(simulationFrequencies[p] / _freqStart);
             if (harmonic < 0 || harmonic > maxHarmonic) {
-                _bode[1][p] = Double.NaN;
-                _bode[2][p] = Double.NaN;
+                bode[1][p] = Double.NaN;
+                bode[2][p] = Double.NaN;
                 continue;
             }
 
@@ -272,9 +274,9 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
                     + ss_aVals[harmonic] * ss_aVals[harmonic]);
 
             if (magnitude <= NUMERIC_EPSILON) {
-                _bode[1][p] = Double.NaN;
+                bode[1][p] = Double.NaN;
             } else {
-                _bode[1][p] = 20 * Math.log10(magnitudeValues[harmonic] / magnitude);
+                bode[1][p] = 20 * Math.log10(magnitudeValues[harmonic] / magnitude);
             }
 
             double a = data_aVals[harmonic];
@@ -282,7 +284,7 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
             double c = ss_aVals[harmonic];
             double d = ss_bVals[harmonic];
 
-            double denominator = c * c - d * d;
+            double denominator = c * c + d * d;
             double xNumerator = a * c + b * d;
             double yNumerator = c * b - a * d;
             double x = xNumerator;
@@ -293,8 +295,9 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
             }
 
             double phaseAngle = Math.toDegrees(Math.atan2(y, x));
-            _bode[2][p] = phaseAngle;
+            bode[2][p] = phaseAngle;
         }
+        _bode = bode;
     }
 
     private int getUsableHarmonicUpperBound() {
@@ -328,6 +331,13 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
 
     @Override
     public void initializeAtSimulationStart(double deltaT) {
+        initializeSampleBuffer(deltaT);
+        if (_signalTypeCalculator != null) {
+            _signalTypeCalculator.initializeAtSimulationStart(deltaT);
+        }
+    }
+
+    private void initializeSampleBuffer(double deltaT) {
         double baseFreq = _freqStart;
         double baseTime = 1.0 / baseFreq;
         _N = (int) Math.round(baseTime / deltaT);
@@ -335,11 +345,14 @@ public class SmallSignalCalculator extends AbstractControlCalculatable
         _N = Math.max(2, _N);
         _measuredValues = new double[_N];
         _smallSignalValues = new double[_N];
+        circularIndex = 0;
+        _numberSamples = 0;
+        _calculationDeltaT = deltaT;
         _circularArrayFilled = false;
     }
 
     @Override
     public void initWithNewDt(double dt) {
-        initializeAtSimulationStart(dt);
+        initializeSampleBuffer(dt);
     }
 }

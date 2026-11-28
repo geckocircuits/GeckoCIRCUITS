@@ -8,6 +8,7 @@ import os
 import re
 import shutil
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 PROJECT_ROOT = Path(__file__).parent.parent
 RESOURCES_DIR = PROJECT_ROOT / "resources"
@@ -41,30 +42,103 @@ FILE_RENAME = {
     "README.md": "index.md",
 }
 
-def convert_links(content: str, source_path: Path) -> str:
-    """Convert relative links for web documentation."""
-    # Convert .ipes references to download links
-    content = re.sub(
-        r'\[([^\]]+)\]\(([^)]+\.ipes)\)',
-        r'[\1](https://github.com/geckocircuits/geckocircuits/blob/main/resources/\2)',
-        content
-    )
+LEGACY_DOC_TARGETS = {
+    "201_buck_converter/index.md": "tutorials/dcdc/buck-converter.md",
+    "202_boost_converter/index.md": "tutorials/dcdc/boost-converter.md",
+    "203_buck_boost/index.md": "tutorials/dcdc/buck-boost.md",
+    "301_diode_rectifier/index.md": "tutorials/acdc/diode-rectifier.md",
+    "302_pfc_basics/index.md": "tutorials/acdc/pfc-basics.md",
+    "303_vienna_rectifier/index.md": "tutorials/acdc/vienna-rectifier.md",
+    "401_single_phase_inverter/index.md": "tutorials/dcac/single-phase.md",
+    "402_three_phase_inverter/index.md": "tutorials/dcac/three-phase.md",
+    "403_npc_inverter/index.md": "tutorials/dcac/npc-inverter.md",
+    "501_loss_calculation/index.md": "tutorials/thermal/loss-calculation.md",
+    "502_junction_temperature/index.md": "tutorials/thermal/junction-temperature.md",
+    "503_heatsink_design/index.md": "tutorials/thermal/heatsink-design.md",
+    "103_pwm_basics/index.md": "getting-started/pwm-basics.md",
+    "702_matlab_integration/index.md": "tutorials/scripting/matlab.md",
+    "704_java_blocks/index.md": "tutorials/scripting/java-blocks.md",
+    "llc_resonant/index.md": "examples/power-supplies/llc.md",
+    "full_bridge/index.md": "examples/power-supplies/dab.md",
+    "multilevel_npc/index.md": "tutorials/dcac/npc-inverter.md",
+    "three_phase_vsi/index.md": "tutorials/dcac/three-phase.md",
+    "motor_drives/index.md": "examples/motor-drives/index.md",
+    "examples/inverters/index.md": "examples/inverters/index.md",
+    "802_motor_drives_pmsm/index.md": "examples/motor-drives/pmsm-foc.md",
+    "801_matrix_converters/index.md": "tutorials/advanced/index.md#801-matrix-converters",
+    "2xx_dcdc_converters/index.md": "tutorials/dcdc/index.md",
+    "3xx_acdc_rectifiers/index.md": "tutorials/acdc/index.md",
+    "9xx_magnetics_mechanical/index.md": "tutorials/magnetics/index.md",
+    "examples/basic_topologies/index.md": "examples/basic/index.md",
+}
 
-    # Convert relative tutorial links
-    content = re.sub(
-        r'\.\./\.\./tutorials/',
-        '../tutorials/',
-        content
-    )
 
-    # Convert relative example links
-    content = re.sub(
-        r'\.\./\.\./examples/',
-        '../examples/',
-        content
-    )
+def mapped_doc_path(resource: Path) -> Path | None:
+    """Map a resource path to the corresponding generated page."""
+    try:
+        relative = resource.resolve().relative_to(RESOURCES_DIR.resolve())
+    except ValueError:
+        return None
+    for source, destination in SYNC_MAP.items():
+        if relative == Path(source) or Path(source) in relative.parents:
+            target = DOCS_DIR / destination / relative.relative_to(source)
+            if target.name == "README.md":
+                target = target.with_name("index.md")
+            elif resource.is_dir():
+                target = target / "index.md"
+            return target
+    return None
 
-    return content
+
+def convert_links(content: str, source_path: Path, destination_path: Path | None = None) -> str:
+    """Resolve resource links relative to the generated page, preserving examples."""
+    destination_path = destination_path or mapped_doc_path(source_path)
+    if destination_path is None:
+        return content
+
+    def replace(match):
+        label, link = match.groups()
+        parts = urlsplit(link)
+        if parts.scheme or parts.netloc or not parts.path or parts.path.startswith('/'):
+            return match.group(0)
+        resource = (source_path.parent / parts.path).resolve()
+        if resource.suffix == '.ipes' and resource.is_file():
+            try:
+                relative = resource.relative_to(RESOURCES_DIR.resolve()).as_posix()
+            except ValueError:
+                return match.group(0)
+            return f'[{label}](https://github.com/tinix84/GeckoCIRCUITS/blob/main/resources/{relative})'
+        target = None
+        fragment = parts.fragment
+        page_path = parts.path + 'index.md' if parts.path.endswith('/') else parts.path
+        for legacy, replacement in sorted(LEGACY_DOC_TARGETS.items(), key=lambda item: -len(item[0])):
+            if page_path == legacy or page_path.endswith('/' + legacy):
+                mapped = urlsplit(replacement)
+                target = DOCS_DIR / mapped.path
+                fragment = mapped.fragment or fragment
+                if legacy == 'full_bridge/index.md' and label == 'Full Bridge':
+                    label = 'Dual Active Bridge'
+                break
+        if target is None:
+            target = mapped_doc_path(resource)
+        if target is None or not target.is_file():
+            # Some source READMEs omit a parent level before a resource root.
+            for source in SYNC_MAP:
+                offset = page_path.find(source + '/')
+                if offset >= 0 and (offset == 0 or page_path[offset - 1] == '/'):
+                    target = mapped_doc_path(RESOURCES_DIR / page_path[offset:])
+                    break
+        if target is None or not target.is_file():
+            candidate = (destination_path.parent / parts.path).resolve()
+            target = candidate / 'index.md' if candidate.is_dir() else candidate
+        if not target.is_file():
+            return match.group(0)
+        relative = Path(os.path.relpath(target, destination_path.parent)).as_posix()
+        return f'[{label}]({urlunsplit(("", "", relative, parts.query, fragment))})'
+
+    sections = re.split(r'(^```[^\n]*\n.*?^```[^\n]*(?:\n|$))', content, flags=re.MULTILINE | re.DOTALL)
+    return ''.join(section if index % 2 else re.sub(r'\[([^\]]+)\]\(([^)]+)\)', replace, section)
+                   for index, section in enumerate(sections))
 
 def add_frontmatter(content: str, title: str) -> str:
     """Add MkDocs frontmatter if not present."""
@@ -90,7 +164,7 @@ def sync_file(src: Path, dst: Path):
     content = src.read_text(encoding='utf-8')
 
     # Convert links
-    content = convert_links(content, src)
+    content = convert_links(content, src, dst)
 
     # Add frontmatter
     title = dst.stem.replace('-', ' ').replace('_', ' ').title()
@@ -159,9 +233,7 @@ def sync_articles():
         src_assets = ARTICLES_DIR / asset_dir
         if src_assets.exists():
             dst_assets = dst_dir / asset_dir
-            if dst_assets.exists():
-                shutil.rmtree(dst_assets)
-            shutil.copytree(src_assets, dst_assets)
+            shutil.copytree(src_assets, dst_assets, dirs_exist_ok=True)
             file_count = sum(1 for _ in dst_assets.iterdir())
             print(f"  Copied {file_count} files from {asset_dir}/")
 

@@ -363,6 +363,34 @@ Request:
 - `trapezoidal` - Implicit 2nd order (balanced accuracy/stability)
 - `gear-shichman` - Variable order (best for variable dynamics)
 
+**Periodic steady state** (optional, off when omitted)
+
+Add `periodicSteadyState` to the request to skip the startup transient:
+
+```json
+{
+  "simulationTime": 3e-5,
+  "timeStep": 1e-6,
+  "periodicSteadyState": { "period": 3e-5, "tolerance": 1e-4, "maxPeriods": 1000 }
+}
+```
+
+| Field | Unit | Default | Rule |
+|-------|------|---------|------|
+| `period` | s | none, required | A whole number of time steps, at least 2. A whole multiple of the CONTROL sample period if one is set. |
+| `tolerance` | relative | `1e-4` | Above 0, at most 0.1. |
+| `maxPeriods` | periods | `1000` | From 3 to 1000000. |
+
+The search runs period by period from the DC operating point and records nothing. The job then records `simulationTime` seconds from the converged state.
+A CONTROL carrier that clamps per step has a simulated period of a whole number of steps. A 35 kHz carrier at a 1 µs step has a period of 30 µs, not 28.57 µs.
+A pre-calculation time cannot combine with the search. Batch requests do not accept the field.
+Absolute-time forcing must repeat in the period. A sine source needs a whole number of cycles, an imported table needs a whole multiple of its duration, and a constant forcing repeats in any period.
+The search rejects random sources, sine sources with an input frequency, the matrix converter block, and a time block that feeds control logic. The request fails with HTTP 400 and `INVALID_SETTING` before the job exists.
+
+The response has a `steadyState` object with `converged`, `periods`, `residual` and `startTime`. `residual` is null when it is not finite.
+When the search reaches `maxPeriods`, the job has status `FAILED`, `steadyState.converged` is `false` and the job has no results.
+An invalid `periodicSteadyState` setting returns HTTP 400. Each entry in `diagnostics[]` has `code` `INVALID_SETTING` and the parameter path, such as `periodicSteadyState.period`. This covers a missing or out-of-range field, a period that the step grid or the circuit forcing cannot satisfy, and unsupported forcing.
+
 **Get Simulation Status and Results**
 
 ```bash
@@ -584,7 +612,8 @@ destination:/topic/simulations/9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f
 
 **Progress Message Format**
 
-Both SSE (`/api/v1/simulations/{id}/stream`) and WebSocket (`/topic/simulations/{id}`) use the same JSON message structure:
+WebSocket/STOMP (`/topic/simulations/{id}`) uses this JSON message structure.
+Its `progress` field is a percentage from 0 to 100:
 
 ```json
 {
@@ -600,11 +629,26 @@ Both SSE (`/api/v1/simulations/{id}/stream`) and WebSocket (`/topic/simulations/
 }
 ```
 
+SSE progress events (`/api/v1/simulations/{id}/stream`) retain a completion ratio from 0 to 1.
+At the same point, their payload is:
+
+```json
+{
+  "simulationId": "9a1d5f7e-3b2c-4d9e-8f1a-6c2b4a7d9e3f",
+  "progress": 0.45,
+  "currentTime": 0.009,
+  "endTime": 0.02
+}
+```
+
+The polling endpoint (`/api/v1/simulations/{id}/progress`) reports `progress` as a percentage, like STOMP.
+
 **Comparison: SSE vs WebSocket**
 
 | Feature | SSE | WebSocket |
 |---------|-----|-----------|
 | Endpoint | `/api/v1/simulations/{id}/stream` | `/topic/simulations/{id}` |
+| Progress units | Ratio (0-1) | Percentage (0-100) |
 | Protocol | HTTP/1.1 (text/event-stream) | TCP (STOMP/1.2) |
 | Direction | Server → Client only | Bidirectional (client → server coming in future versions) |
 | Browser Support | Native EventSource API | Requires SockJS or ws library |
@@ -613,7 +657,7 @@ Both SSE (`/api/v1/simulations/{id}/stream`) and WebSocket (`/topic/simulations/
 | Overhead | Higher (HTTP headers) | Lower (raw TCP frames) |
 | Best For | Simple dashboards | Interactive monitoring, multi-client scenarios |
 
-Both endpoints receive updates simultaneously from the same `broadcastProgress()` call, ensuring synchronized progress messages.
+Both endpoints receive the same underlying progress updates with transport-specific payloads and units.
 
 Live in: **v2.21.0+**
 
@@ -664,6 +708,14 @@ Response:
   "sampleCount": 20000
 }
 ```
+
+Stored signals use their recorded timestamps. They do not require `sampleRate`, and a supplied rate does not replace the recorded clock.
+Each omitted time bound defaults to the corresponding recorded endpoint.
+Bounds must be finite, increasing, and within the recorded clock.
+Between timestamps, analysis holds the preceding sample value. Exact window boundaries preserve the requested duration.
+`sampleCount` includes inserted boundary samples. Raw arrays retain their explicit sample-rate contract.
+These window rules apply to characteristics, RMS, and Fourier analysis.
+Fourier uses the selected duration for its base frequency and rejects harmonic counts beyond the selected signal resolution.
 
 **Fourier Harmonic Analysis**
 

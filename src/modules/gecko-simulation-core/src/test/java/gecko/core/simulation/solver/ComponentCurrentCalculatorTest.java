@@ -83,7 +83,8 @@ class ComponentCurrentCalculatorTest {
         calculator.calculateComponentCurrents(matrixSolver, netlist, 0.01, DT, 0.0, true);
 
         double[] params = netlist.getParameter(0);
-        assertEquals(5.1, params[1], 1.0e-10, "Inductor current should be 5.1 A");
+        assertEquals(0, params[1], "Configured initial current is unchanged");
+        assertEquals(5.1, params[2], 1.0e-10, "Inductor current should be 5.1 A");
     }
 
     @Test
@@ -106,7 +107,8 @@ class ComponentCurrentCalculatorTest {
         calculator.calculateComponentCurrents(matrixSolver, netlist, 0.01, DT, 0.0, true);
 
         double[] params = netlist.getParameter(0);
-        assertEquals(0.1, params[1], 1.0e-10, "Capacitor current should be 0.1 A");
+        assertEquals(0, params[1], "Configured initial voltage is unchanged");
+        assertEquals(0.1, params[2], 1.0e-10, "Capacitor current should be 0.1 A");
     }
 
     @Test

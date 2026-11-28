@@ -252,6 +252,12 @@ public final class ReglerSaveData extends RegelBlock implements Operationable {
         SchematicEditor2.Singleton._circuitSheet.repaint();
     }
 
+    /** Cancels the export owned by this execution without reporting successful completion. */
+    public void cancelSimulationExport() {
+        if (_dataSaver != null) _dataSaver.cancelSimulationExport();
+        _statusTxt = "Cancelled";
+    }
+
     @Override
     protected String getCenteredDrawString() {
         return new File(_file.getValue()).getName() + "\n" + _statusTxt;

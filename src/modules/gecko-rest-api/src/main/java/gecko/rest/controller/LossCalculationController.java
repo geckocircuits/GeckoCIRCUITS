@@ -44,6 +44,7 @@ public class LossCalculationController {
      * @param request Switching loss parameters (current, voltage, energies)
      * @return Loss response with switching energy [J]
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/switching")
     @Operation(
         summary = "Calculate switching losses",
@@ -77,6 +78,7 @@ public class LossCalculationController {
      * @param request Conduction loss parameters (current, resistance, threshold)
      * @return Loss response with conduction power [W]
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/conduction")
     @Operation(
         summary = "Calculate conduction losses",
@@ -110,6 +112,7 @@ public class LossCalculationController {
      * @param request Detailed loss parameters with multiple temperature curves
      * @return Loss response with interpolated switching and conduction losses
      */
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/detailed")
     @Operation(
         summary = "Calculate detailed losses with interpolation",

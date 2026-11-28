@@ -6,14 +6,32 @@ Complete history of GeckoCIRCUITS releases with download links, release notes, a
 
 ## Current Release
 
-The latest stable release is **v2.17.0** (released February 2026).
+The latest stable release is **v3.1.0**.
 
-[Download v2.17.0](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v2.17.0){ .md-button .md-button--primary }
-[View Release Notes](./2170.md){ .md-button }
+[Download v3.1.0](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v3.1.0){ .md-button .md-button--primary }
+[View Release Notes](./3100.md){ .md-button }
 
 ---
 
 ## Version History
+
+### v3.x Series - REST API Platform
+
+#### [v3.1.0](./3100.md) - REST API Hardening
+
+[Release Notes](./3100.md){ .md-button }
+[Download](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v3.1.0){ .md-button }
+
+---
+
+#### [v3.0.0](./3000.md) - Complete REST API Platform
+
+**Released:** 2026-02-18
+
+[Release Notes](./3000.md){ .md-button }
+[Download](https://github.com/tinix84/GeckoCIRCUITS/releases/tag/v3.0.0){ .md-button }
+
+---
 
 ### v2.x Series - Modern Development
 
@@ -99,17 +117,9 @@ The latest stable release is **v2.17.0** (released February 2026).
 
 ---
 
-## Future Roadmap
+## What's Next
 
-See the [Roadmap Page](../roadmap.md) for upcoming releases and features.
-
-### Upcoming Milestones
-
-- **v2.18.0 - v2.2x** (Q2-Q3 2026): Incremental REST API features
-- **v3.0.0** (Q3 2026): 🚀 Complete REST API Platform - **MARKETING WOW**
-- **v3.1.0** (Q4 2026): Web UI Launch (React + TypeScript)
-- **v3.2.0** (Q1 2027): Cloud Deployment (Kubernetes)
-- **v4.0.0** (Q2 2027): Machine Learning Integration
+Planned work is tracked in the [GitHub milestones](https://github.com/tinix84/GeckoCIRCUITS/milestones).
 
 ---
 

@@ -47,6 +47,11 @@ public final class NetzlisteCONTROL {
     private AbstractControlCalculatable[] _allSortedCalculatables;
     public AbstractControlCalculatable[] _allUnSortedControlCalculators;
     private RegelBlock[] _sortedReglerWONonCalculatables;
+    private gecko.core.simulation.RecordingWindow recordingWindow = new gecko.core.simulation.RecordingWindow(0);
+
+    public void setOutputStartTime(double start) {
+        recordingWindow = new gecko.core.simulation.RecordingWindow(start);
+    }
 
     /**
      * use static factory method for object construction!
@@ -56,6 +61,7 @@ public final class NetzlisteCONTROL {
 
     public static NetzlisteCONTROL fabricContinueSimulation(NetzlisteCONTROL previousNetList) {
         final NetzlisteCONTROL returnValue = new NetzlisteCONTROL();
+        returnValue.recordingWindow = previousNetList.recordingWindow;
         returnValue.reglerCalc = previousNetList.reglerCalc;
         returnValue._labelNodeMap.putAll(previousNetList._labelNodeMap);
         returnValue._scopePotentialMap.putAll(previousNetList._scopePotentialMap);
@@ -370,7 +376,7 @@ public final class NetzlisteCONTROL {
 //                }
 //            }
 //        }
-        writeData(time);
+        if (recordingWindow.includes(time)) writeData(time);
     }
 
     static int counter = 0;

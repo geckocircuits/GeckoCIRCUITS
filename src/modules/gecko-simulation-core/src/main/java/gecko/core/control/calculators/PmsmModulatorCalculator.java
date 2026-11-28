@@ -13,12 +13,14 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /**
  * TODO: beautify this mess!
  * @author andreas
  */
 @SuppressWarnings("PMD")
-public final class PmsmModulatorCalculator extends AbstractControlCalculatable {
+public final class PmsmModulatorCalculator extends AbstractControlCalculatable implements StatelessCalculation {
 
     private static final int NO_INPUTS = 4;
     private static final int NO_OUTPUTS = 3;

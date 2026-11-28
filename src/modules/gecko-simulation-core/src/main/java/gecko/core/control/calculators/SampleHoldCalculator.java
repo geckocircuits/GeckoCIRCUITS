@@ -13,7 +13,13 @@
  */
 package gecko.core.control.calculators;
 
-public final class SampleHoldCalculator extends AbstractTwoInputsOneOutputCalculator {    
+import gecko.core.control.StatelessCalculation;
+
+public final class SampleHoldCalculator extends AbstractTwoInputsOneOutputCalculator implements InitializableAtSimulationStart, StatelessCalculation {
+
+        /** Clears the held value for a new run. */
+        @Override
+        public void initializeAtSimulationStart(double deltaT) { _outputSignal[0][0] = 0; }
         
         @Override
         public void berechneYOUT(final double deltaT) {

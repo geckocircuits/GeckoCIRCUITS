@@ -1,7 +1,5 @@
 package gecko.geckocircuits.control.calculators;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -319,44 +317,35 @@ public class SparseMatrixCalculatorTest {
     }
 
     @Test
-    public void testCalculateSwitchingTimesZeroDenominatorsRemainFinite() throws Exception {
-        setPrivateField(calculator, "seIN", 1);
-        setPrivateField(calculator, "seOUT", 1);
-
-        invokePrivateMethod(calculator, "calculateSwitchingTimes",
-                new Class<?>[]{double.class, double.class, double.class, double.class, double.class, double.class, double.class},
-                0.0, 0.0, 0.0, 0.0, 10.0, 50.0, 0.0);
-
-        double[] dIN = (double[]) getPrivateField(calculator, "dIN");
-        double[] dOUT = (double[]) getPrivateField(calculator, "dOUT");
-
-        for (int i = 0; i < dIN.length; i++) {
-            assertFalse("dIN[" + i + "] should not be NaN", Double.isNaN(dIN[i]));
-            assertFalse("dIN[" + i + "] should not be infinite", Double.isInfinite(dIN[i]));
+    public void testZeroDenominatorsKeepBalancedRailDutyAndZeroOutputVoltage() {
+        double previousTime = AbstractControlCalculatable._time;
+        double dt = 1.0 / 25000 / 20;
+        int negativeS = 0;
+        int negativeT = 0;
+        calculator._inputSignal[5][0] = 10;
+        calculator._inputSignal[6][0] = 50;
+        calculator.initializeAtSimulationStart(dt);
+        try {
+            for (int step = 0; step < 20; step++) {
+                AbstractControlCalculatable.setTime(step * dt);
+                calculator.berechneYOUT(dt);
+                for (double[] output : calculator._outputSignal) {
+                    assertTrue("Gate commands must remain binary", output[0] == 0 || output[0] == 1);
+                }
+                assertEquals(1, calculator._outputSignal[0][0], TOLERANCE);
+                assertEquals(0, calculator._outputSignal[1][0] + calculator._outputSignal[2][0]
+                        + calculator._outputSignal[3][0], TOLERANCE);
+                assertEquals(1, calculator._outputSignal[4][0] + calculator._outputSignal[5][0], TOLERANCE);
+                assertEquals(1, calculator._outputSignal[6][0], TOLERANCE);
+                assertEquals(1, calculator._outputSignal[7][0], TOLERANCE);
+                assertEquals(1, calculator._outputSignal[8][0], TOLERANCE);
+                negativeS += (int) calculator._outputSignal[4][0];
+                negativeT += (int) calculator._outputSignal[5][0];
+            }
+            assertEquals("The zero-denominator fallback divides negative-rail duty equally", 0.5, negativeS / 20.0, 0.05);
+            assertEquals(0.5, negativeT / 20.0, 0.05);
+        } finally {
+            AbstractControlCalculatable.setTime(previousTime);
         }
-        for (int i = 0; i < dOUT.length; i++) {
-            assertFalse("dOUT[" + i + "] should not be NaN", Double.isNaN(dOUT[i]));
-            assertFalse("dOUT[" + i + "] should not be infinite", Double.isInfinite(dOUT[i]));
-        }
-        assertTrue("dIN[0] should be clamped to duty range", dIN[0] >= 0.0 && dIN[0] <= 1.0);
-        assertTrue("dIN[1] should be clamped to duty range", dIN[1] >= 0.0 && dIN[1] <= 1.0);
-    }
-
-    private static void setPrivateField(Object target, String fieldName, Object value) throws Exception {
-        Field field = target.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(target, value);
-    }
-
-    private static Object getPrivateField(Object target, String fieldName) throws Exception {
-        Field field = target.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        return field.get(target);
-    }
-
-    private static Object invokePrivateMethod(Object target, String methodName, Class<?>[] parameterTypes, Object... args) throws Exception {
-        Method method = target.getClass().getDeclaredMethod(methodName, parameterTypes);
-        method.setAccessible(true);
-        return method.invoke(target, args);
     }
 }

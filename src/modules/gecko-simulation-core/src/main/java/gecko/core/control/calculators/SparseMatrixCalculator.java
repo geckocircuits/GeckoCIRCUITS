@@ -13,11 +13,14 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 /**
  * TODO: this is the biggest mess I have ever seen. Pleas clean anybody up!
  * @author andreas
  */
-public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+public final class SparseMatrixCalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private static final double NUMERIC_EPSILON = 1e-12;
     private static final double DEFAULT_DUTY_RATIO = 0.5;
@@ -814,12 +817,12 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
 
         // Ausgang:
         double k = safeDivide(uOUTmax, uNmax * uNmax, 0.0) / Math.sqrt(3);  // Ann.: Ideales 3-ph. Spannungsnetz am Eingang
-        double phiOUT = 2 * Math.PI * fOUT * _time - Math.PI / 2;  // old version, does not work for PMSM-control 
-        if (fOUT <= 0) {
-            phiOUT = phi2 - Math.PI / 2;  // phiOUT= thetaEl +dPhiEl -Math.PI/2;  --> improvement EPE 2009
-        }
+        double phiOUT = outputPhase(fOUT, phi2) - Math.PI / 2;
         while (phiOUT >= Math.PI / 3) {
             phiOUT -= Math.PI / 3;
+        }
+        while (phiOUT < 0) {
+            phiOUT += Math.PI / 3;
         }
         double ua = sanitizeFinite(k * Math.cos(phiOUT + Math.PI / 6), 0.0);
         double ub = sanitizeFinite(k * Math.sin(phiOUT), 0.0);
@@ -995,38 +998,41 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
             seIN = 12;
         }
         // Sektor der Ausgangsspannungen:
-        double phiOUT = 2 * Math.PI * fOUT * _time;  // old version, does not work for PMSM-control 
-        if (fOUT <= 0) {
-            phiOUT = phi2;  // phiOUT= thetaEl +dPhiEl; --> improvement EPE 2009
-        }
+        double phiOUT = outputPhase(fOUT, phi2);
         double u1 = Math.sin(phiOUT);
         double u2 = Math.sin(phiOUT - 2 * Math.PI / 3);
         double u3 = Math.sin(phiOUT - 4 * Math.PI / 3);
-        if ((u2 < 0) && (u3 < u2)) {
+        if ((u2 <= 0) && (u3 <= u2)) {
             seOUT = 1;
-        } else if ((u2 > 0) && (u1 > u2)) {
+        } else if ((u2 >= 0) && (u1 >= u2)) {
             seOUT = 2;
-        } else if ((u1 > 0) && (u2 > u1)) {
+        } else if ((u1 >= 0) && (u2 >= u1)) {
             seOUT = 3;
-        } else if ((u1 < 0) && (u3 < u1)) {
+        } else if ((u1 <= 0) && (u3 <= u1)) {
             seOUT = 4;
-        } else if ((u3 < 0) && (u1 < u3)) {
+        } else if ((u3 <= 0) && (u1 <= u3)) {
             seOUT = 5;
-        } else if ((u3 > 0) && (u2 > u3)) {
+        } else if ((u3 >= 0) && (u2 >= u3)) {
             seOUT = 6;
-        } else if ((u2 > 0) && (u3 > u2)) {
+        } else if ((u2 >= 0) && (u3 >= u2)) {
             seOUT = 7;
-        } else if ((u2 < 0) && (u1 < u2)) {
+        } else if ((u2 <= 0) && (u1 <= u2)) {
             seOUT = 8;
-        } else if ((u1 < 0) && (u2 < u1)) {
+        } else if ((u1 <= 0) && (u2 <= u1)) {
             seOUT = 9;
-        } else if ((u1 > 0) && (u3 > u1)) {
+        } else if ((u1 >= 0) && (u3 >= u1)) {
             seOUT = 10;
-        } else if ((u3 > 0) && (u1 > u3)) {
+        } else if ((u3 >= 0) && (u1 >= u3)) {
             seOUT = 11;
-        } else if ((u3 < 0) && (u2 < u3)) {
+        } else if ((u3 <= 0) && (u2 <= u3)) {
             seOUT = 12;
         }
+    }
+
+    private double outputPhase(double frequency, double angle) {
+        double phase = frequency <= 0 ? angle : 2 * Math.PI * frequency * getTime();
+        phase %= 2 * Math.PI;
+        return phase < 0 ? phase + 2 * Math.PI : phase;
     }
 
     private double safeDutyRatio(double numerator, double denominator) {
@@ -1064,5 +1070,32 @@ public final class SparseMatrixCalculator extends AbstractControlCalculatable im
         for (int i = 0; i < values.length; i++) {
             values[i] = sanitizeFinite(values[i], 0.0);
         }
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(fDRaltalt);
+        sink.value(fDRalt);
+        sink.value(tLokal);
+        sink.value(Tp);
+        sink.value(sRp);
+        sink.value(sSp);
+        sink.value(sTp);
+        sink.value(sRm);
+        sink.value(sSm);
+        sink.value(sTm);
+        sink.value(s1);
+        sink.value(s2);
+        sink.value(s3);
+        sink.value(seIN);
+        sink.value(seOUT);
+        sink.value(dIN[0]);
+        sink.value(dIN[1]);
+        sink.value(dOUT[0]);
+        sink.value(dOUT[1]);
+        sink.value(dOUT[2]);
+        sink.value(dOUT[3]);
+        sink.value(dOUT[4]);
+        sink.flag(neuePulsperiodeBeginnt);
     }
 }

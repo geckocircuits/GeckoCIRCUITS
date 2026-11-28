@@ -1,0 +1,50 @@
+tDURATION 0.003
+dt 0.001
+solverType 0
+e (0)
+<ElementLK>
+typ 4
+idStringDialog V1
+x 0
+y 2
+orientierung 503
+parameter[] 401 6
+labelAnfangsKnoten[] /NIX_NIX_NIX
+labelEndKnoten[] /NIX_NIX_NIX
+<\ElementLK>
+e (1)
+<ElementLK>
+typ 1
+idStringDialog R1
+x 2
+y 0
+orientierung 502
+parameter[] 2
+labelAnfangsKnoten[] /NIX_NIX_NIX
+labelEndKnoten[] /NIX_NIX_NIX
+<\ElementLK>
+e (2)
+<ElementLK>
+typ 1
+idStringDialog R2
+x 8
+y 2
+orientierung 503
+parameter[] 4
+labelAnfangsKnoten[] /NIX_NIX_NIX
+labelEndKnoten[] /NIX_NIX_NIX
+<\ElementLK>
+verbindungLK (0)
+<Verbindung>
+label NIX_NIX_NIX
+x[] 4 5 6 7 8
+y[] 0 0 0 0 0
+enabled true
+<\Verbindung>
+verbindungLK (1)
+<Verbindung>
+label 0
+x[] 0 1 2 3 4 5 6 7 8
+y[] 4 4 4 4 4 4 4 4 4
+enabled true
+<\Verbindung>

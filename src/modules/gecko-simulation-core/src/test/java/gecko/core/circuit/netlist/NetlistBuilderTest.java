@@ -118,23 +118,15 @@ public class NetlistBuilderTest {
     }
 
     @Test
-    public void testBuildFromCircuitModelEstimatesDimensions() {
-        // Arrange
+    public void testBuildFromCircuitModelRejectsMissingTopology() {
         CircuitModel model = new CircuitModel();
         for (int i = 0; i < 10; i++) {
             model.addCircuitComponent(new CircuitModel.ComponentData(1, "R" + i));
         }
-
-        // Act
-        CircuitNetlist netlist = NetlistBuilder.buildFromCircuitModel(model);
-
-        // Assert
-        assertNotNull(netlist, "Netlist should not be null");
-        assertEquals(10, netlist.getElementCount(), "Element count should match component count");
-        // Estimated nodes: (10 / 2) + 1 = 6, so nodeMax = 5
-        assertEquals(5, netlist.getNodeMax(), "Nodes should be estimated");
-        // Estimated voltage sources: 10 / 5 = 2
-        assertEquals(2, netlist.getVoltageSourceMax(), "Voltage sources should be estimated");
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> NetlistBuilder.buildFromCircuitModel(model));
+        assertTrue(error.getMessage().contains("R0"));
+        assertTrue(error.getMessage().contains("terminal"));
     }
 
     @Test
@@ -159,14 +151,19 @@ public class NetlistBuilderTest {
         model.addCircuitComponent(new CircuitModel.ComponentData(2, "L1"));
         model.addControlComponent(new CircuitModel.ComponentData(3, "PI1"));
         model.addThermalComponent(new CircuitModel.ComponentData(4, "Th1"));
-        // Total: 4 components
+        // NetlistBuilder only includes LK (circuit) components — control/thermal are separate
+        for (CircuitModel.ComponentData component : model.getCircuitComponents()) {
+            component.setTerminalXLabels(new String[]{"live"});
+            component.setTerminalYLabels(new String[]{"0"});
+            component.setParameter("param0", 1.0);
+        }
 
         // Act
         CircuitNetlist netlist = NetlistBuilder.buildFromCircuitModel(model);
 
         // Assert
         assertNotNull(netlist, "Netlist should not be null");
-        assertEquals(4, netlist.getElementCount(), "Element count should be 4");
+        assertEquals(2, netlist.getElementCount(), "Element count should be 2 (only circuit components)");
     }
 
     @Test

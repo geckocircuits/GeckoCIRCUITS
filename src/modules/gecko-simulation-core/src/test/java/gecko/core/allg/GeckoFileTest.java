@@ -13,15 +13,20 @@
  */
 package gecko.core.allg;
 
+import gecko.core.circuit.TokenMap;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Tests for GeckoFile - file handling and storage strategy management.
@@ -74,6 +79,85 @@ public class GeckoFileTest {
     // ====================================================
     // Constructor Tests - External Storage
     // ====================================================
+
+    @Test
+    void restoresRelativeResourceFromTheSuppliedCircuitPath() throws IOException {
+        var tokens = new TokenMap(new String[]{
+                "fileSep /", "hashValue 123", "isExternal 1",
+                "absPath missing/testFile.txt", "relPath testFile.txt", "usageList[] /77"
+        });
+
+        var resource = new GeckoFile(tokens, List.of(), modelFile.getAbsolutePath(), null);
+
+        assertEquals(testFile.getAbsolutePath(), resource.getCurrentAbsolutePath());
+        assertEquals(TEST_CONTENT, resource.getContentsString());
+        assertEquals(1, resource.noOfUsers());
+    }
+
+    @Test
+    void normalizesPathsAfterFallbackFromAForeignSeparator() throws IOException {
+        String savedSeparator = File.separatorChar == '/' ? "\\" : "/";
+        String savedAbsolutePath = testFile.getAbsolutePath().replace(File.separator, savedSeparator);
+        Path circuit = Files.createFile(Files.createDirectory(tempDir.resolve("bundle")).resolve("model.ipes"));
+        var tokens = new TokenMap(new String[]{
+                "fileSep " + savedSeparator, "hashValue 123", "isExternal 1",
+                "absPath " + savedAbsolutePath, "relPath missing" + savedSeparator + testFile.getName(),
+                "usageList[] /77"
+        });
+
+        var resource = new GeckoFile(tokens, List.of(), circuit.toString(), null);
+
+        assertEquals(testFile.getName(), resource.getName());
+        assertEquals(TEST_CONTENT, resource.getContentsString());
+        assertEquals(1, resource.noOfUsers());
+        var serialized = new StringBuffer();
+        resource.exportASCII(serialized);
+        var exported = new TokenMap(serialized.toString().lines().toArray(String[]::new));
+        assertEquals(File.separator, exported.readDataLine("fileSep", ""));
+        assertEquals(testFile.getAbsolutePath(), exported.readDataLine("absPath", ""));
+        assertEquals(Path.of("..", testFile.getName()).toString(), exported.readDataLine("relPath", ""));
+
+        Path relocated = Files.createDirectories(tempDir.resolve("relocated/bundle"));
+        Path relocatedFile = Files.writeString(relocated.getParent().resolve(testFile.getName()), "relocated data");
+        Path relocatedCircuit = Files.createFile(relocated.resolve(circuit.getFileName()));
+        var reopened = new GeckoFile(exported, List.of(), relocatedCircuit.toString(), null);
+        assertEquals(relocatedFile, Path.of(reopened.getCurrentAbsolutePath()).normalize());
+        assertEquals("relocated data", reopened.getContentsString());
+        assertEquals(1, reopened.noOfUsers());
+
+        Path savedAs = Files.createFile(tempDir.resolve("saved-as.ipes"));
+        reopened.recomputeRelativePath(savedAs.toString());
+        var saved = new StringBuffer();
+        reopened.exportASCII(saved);
+        var savedTokens = new TokenMap(saved.toString().lines().toArray(String[]::new));
+        assertEquals(relocatedFile.toString(), savedTokens.readDataLine("absPath", ""));
+        assertEquals(tempDir.relativize(relocatedFile).toString(), savedTokens.readDataLine("relPath", ""));
+        var reopenedAfterSave = new GeckoFile(savedTokens, List.of(), savedAs.toString(), null);
+        assertEquals(relocatedFile.toString(), reopenedAfterSave.getCurrentAbsolutePath());
+        assertEquals("relocated data", reopenedAfterSave.getContentsString());
+        assertEquals(1, reopenedAfterSave.noOfUsers());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"fileContents[]", "fileContents"})
+    void preservesEmbeddedBytesAndOwnersAcrossDesktopSave(String contentsKey) throws IOException {
+        var tokens = new TokenMap(new String[]{
+                "fileSep " + File.separator, "hashValue 123", "isExternal 0",
+                "absPath embedded.txt", "relPath embedded.txt", "usageList[] /77",
+                contentsKey + " -1 0 127"
+        });
+        var resource = new GeckoFile(tokens, List.of(), modelFile.getAbsolutePath(), null);
+        var serialized = new StringBuffer();
+        resource.exportASCII(serialized);
+        var exported = new TokenMap(serialized.toString().lines().toArray(String[]::new));
+        assertTrue(exported.containsToken("fileContents[]"));
+        var reopened = new GeckoFile(exported, List.of(), modelFile.getAbsolutePath(), null);
+        assertArrayEquals(new byte[]{-1, 0, 127}, reopened.getContentsByteCopy());
+        assertEquals(1, reopened.noOfUsers());
+        var reserialized = new StringBuffer();
+        reopened.exportASCII(reserialized);
+        assertEquals(serialized.toString(), reserialized.toString());
+    }
 
     @Test
     public void testConstructor_ExternalStorage_FileExists() throws IOException {

@@ -24,6 +24,8 @@ public class SolverSettings {
 
     public final ModelMVC<Double> dt = new ModelMVC<Double>(0.1e-6, "simulation stepwidth dt");
     public final ModelMVC<Double> _tDURATION = new ModelMVC<Double>(20e-3, "simulation time");
+    public final ModelMVC<Double> outputStartTime = new ModelMVC<>(0.0, "output start time");
+    public final ModelMVC<Boolean> transientUic = new ModelMVC<>(false, "transient use initial conditions");
     public final ModelMVC<Double> _tPAUSE = new ModelMVC<Double>(-1.0, "simulation pause time");
 
     public double _dt_ALT;  // Merken der alten Werten nach einer Aenderung in 'DialogSimParameter'

@@ -10,10 +10,10 @@ Power electronics for electric vehicles, hybrid vehicles, and charging infrastru
 
 | Example | Description | Difficulty |
 |---------|-------------|------------|
-| [EV Charger](ev_charger/) | Level 2 AC charging | Intermediate |
-| [Onboard Charger](onboard_charger/) | OBC with PFC and isolation | Advanced |
-| [DC Fast Charger](dc_fast_charger/) | Level 3 DC charging station | Advanced |
-| [Traction Inverter](traction_inverter/) | EV motor drive inverter | Advanced |
+| [EV Charger](ev_charger/index.md) | Level 2 AC charging | Intermediate |
+| [Onboard Charger](onboard_charger/index.md) | OBC with PFC and isolation | Advanced |
+| [DC Fast Charger](dc_fast_charger/index.md) | Level 3 DC charging station | Advanced |
+| [Traction Inverter](traction_inverter/index.md) | EV motor drive inverter | Advanced |
 
 ## Quick Reference
 
@@ -73,7 +73,7 @@ DC Charger ─────┘   │ 400-800V│     │ │Inverter │ │
 
 ## Related Tutorials
 
-- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/index.md)
+- [302 - PFC Basics](../../tutorials/acdc/pfc-basics.md)
 - [Flyback Converter](../basic/flyback_converter/index.md)
-- [LLC Resonant](../power-supplies/llc_resonant/index.md)
+- [LLC Resonant](../power-supplies/llc.md)
 - [Motor Drives](../motor-drives/index.md)

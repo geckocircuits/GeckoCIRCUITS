@@ -23,7 +23,10 @@ jobs:
       - name: Build
         run: |
           mvn -f pom-reactor.xml clean install -DskipTests --no-transfer-progress
-          mvn assembly:single -DskipTests --no-transfer-progress
+          mvn package assembly:single -DskipTests --no-transfer-progress
+
+      - name: SpotBugs (zero bugs)
+        run: mvn spotbugs:check --no-transfer-progress
 
       - name: Install test dependencies
         run: |
@@ -36,26 +39,14 @@ jobs:
           chmod +x build_native_libraries.sh
           ./build_native_libraries.sh
 
-      - name: Run tests with coverage (all modules)
+      - name: Verify tests and coverage (all modules)
         run: |
-          export DISPLAY=:99
-          Xvfb :99 -screen 0 1024x768x24 &
-          sleep 1
-          mvn -f pom-reactor.xml test --no-transfer-progress -Dmaven.test.failure.ignore=true
-          mvn -f pom.xml jacoco:report --no-transfer-progress
-          mvn -f src/modules/gecko-simulation-core/pom.xml jacoco:report --no-transfer-progress
+          python3 -m unittest discover -s scripts/tests -p 'test_*.py' -v
+          python3 -B -m unittest discover -s scripts/m6 -p 'test_*.py' -v
+          bash scripts/verify-ci.sh
 
-      - name: Check test results
-        run: |
-          if grep -rq "Failures: [1-9]" target/surefire-reports/*.txt 2>/dev/null; then
-            echo "::warning::Test failures detected"
-            grep "Failures: [1-9]" target/surefire-reports/*.txt
-          fi
-          if grep -rq "Errors: [1-9]" target/surefire-reports/*.txt 2>/dev/null; then
-            echo "::warning::Test errors detected (expected in CI for GUI/native tests)"
-            grep "Errors: [1-9]" target/surefire-reports/*.txt
-          fi
-          echo "Build and test step completed"
+      - name: Verify application traces
+        run: mvn -f src/modules/gecko-simulation-core/pom.xml test -Papplication --no-transfer-progress
 
       - name: Coverage summary
         run: |
@@ -95,25 +86,36 @@ jobs:
           fi
 
       - name: Validate example circuits
-        continue-on-error: true
-        run: |
-          export DISPLAY=:99
-          python3 scripts/run-examples.py
+        run: xvfb-run -a python3 scripts/run-examples.py
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: GeckoCIRCUITS-jar
           path: target/gecko-1.0-jar-with-dependencies.jar
-          retention-days: 30
+          retention-days: 90
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: coverage-report
-          path: target/site/jacoco/
-          retention-days: 30
+          path: |
+            target/site/jacoco/
+            src/modules/gecko-simulation-core/target/site/jacoco/
+            src/modules/gecko-rest-api/target/site/jacoco/
+          retention-days: 90
+
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: all-module-test-reports
+          path: |
+            target/surefire-reports/
+            src/modules/gecko-simulation-core/target/surefire-reports/
+            src/modules/gecko-rest-api/target/surefire-reports/
+          retention-days: 90
 
   regression-tests:
     runs-on: ubuntu-latest
@@ -152,4 +154,4 @@ jobs:
         with:
           name: regression-surefire-reports
           path: target/surefire-reports/
-          retention-days: 30
+          retention-days: 90

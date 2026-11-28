@@ -135,6 +135,23 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
     _data.setContainerStatus(containerStatus);
   }
 
+  /**
+   * Captures a status writer for the recording selected at this call.
+   * Call after initialization and before replacement or clearing.
+   * Later initialization cannot redirect the writer to a replacement recording.
+   * Keep the writer only for that execution. Discarded recordings remain discarded.
+   *
+   * @return a writer that ignores a recording after its status becomes DELETED
+   */
+  public java.util.function.Consumer<ContainerStatus> captureStatusUpdater() {
+    AbstractDataContainer origin = _data;
+    return status -> {
+      if (origin.getContainerStatus() != ContainerStatus.DELETED) {
+        origin.setContainerStatus(status);
+      }
+    };
+  }
+
   @Override
   public boolean isInvalidNumbers(final int row){
     return _data.isInvalidNumbers(row);

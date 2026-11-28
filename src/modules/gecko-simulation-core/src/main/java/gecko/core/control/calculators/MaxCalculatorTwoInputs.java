@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class MaxCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator {    
+import gecko.core.control.StatelessCalculation;
+
+public final class MaxCalculatorTwoInputs extends AbstractTwoInputsOneOutputCalculator implements StatelessCalculation {    
     @Override
     public void berechneYOUT(final double deltaT) {
         _outputSignal[0][0] = Math.max(_inputSignal[0][0], _inputSignal[1][0]);

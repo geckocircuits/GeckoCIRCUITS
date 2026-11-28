@@ -158,6 +158,32 @@ curl -X POST http://localhost:8080/api/v1/simulations/550e8400-e29b-41d4-a716-44
   -o results.csv
 ```
 
+## Job capacity and progress delivery
+
+Job admission has configurable limits under `gecko.jobs` in Spring configuration:
+
+| Property | Default | Limit |
+|----------|---------|-------|
+| `workers` | CPU count minus one, clamped to 2–8 | Concurrent simulation workers |
+| `queued` | 128 | Waiting tasks in the execution pool |
+| `retained` | 1024 | Stored jobs, including pending batch children |
+| `batches` | 128 | Stored batches |
+| `streams-per-job` | 16 | Active SSE subscriptions for a running job |
+| `delivery-workers` | 4 | Progress delivery workers |
+
+All limits must be positive. New submissions return HTTP 429 when capacity is full. Existing results remain available.
+A rejected standalone submission does not consume a retained-job slot. Batch admission checks all child slots before creating jobs.
+Accepted batch children that encounter a full execution queue receive a recorded failure in their batch status.
+These limits bound object counts. They do not limit the byte size of an individual simulation result.
+
+Progress delivery runs separately from simulation workers. Each job retains only its latest pending progress update.
+Terminal events follow pending progress. A slow subscriber cannot hold the job-state lock during a network send.
+If the delivery queue rejects a terminal task, SSE subscribers close with an error. Read the final state from `GET /api/v1/simulations/{id}`.
+Late terminal subscriptions return HTTP 429 when the delivery queue is full. WebSocket delivery remains best effort.
+
+Signal analysis rejects nonfinite sample rates, durations, and values with HTTP 400.
+Signal values must fit the finite float range used by the analysis container.
+
 ## Docker Configuration
 
 ### Environment Variables
@@ -257,6 +283,14 @@ gecko-rest-api/
 - Concurrent simulations: Up to CPU core count
 
 ## Security
+
+When API-key authentication is enabled and keys are configured, send `X-API-Key` in the STOMP `CONNECT` headers.
+The WebSocket and SockJS handshakes remain available to browser clients.
+The server rejects missing or invalid credentials before it permits subscriptions.
+
+Explicit simulation settings override circuit-file settings.
+Omitted settings use the circuit-file values.
+Unsupported electrical and CONTROL component types fail with the component name and type.
 
 - **Non-root user**: Container runs as user `gecko` (UID 1000)
 - **Read-only circuits**: Circuit files mounted as read-only

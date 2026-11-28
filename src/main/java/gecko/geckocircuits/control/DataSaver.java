@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -43,7 +44,8 @@ public final class DataSaver extends Observable implements Observer {
     public static final AtomicInteger WAIT_COUNTER = new AtomicInteger(0);
     private static final int SLEEP_TIMER = 200;
     private static final double PERCENT_CONST = 100;
-    private boolean _hasCounterValue = false;
+    private final AtomicBoolean _hasCounterValue = new AtomicBoolean();
+    private final AtomicBoolean cancelled = new AtomicBoolean();
     private static final int MAX_FILE_COUNTER = 1000;
     private final ReglerSaveData _regler;
     private final FileNameGenerator _fileNameGenerator = new FileNameGenerator();
@@ -76,15 +78,27 @@ public final class DataSaver extends Observable implements Observer {
         _abortSignal = true;
     }
 
+    /** Cancels this execution's export without a final save. Call on the status delivery thread. */
+    public void cancelSimulationExport() {
+        if (cancelled.compareAndSet(false, true)) {
+            _data.deleteObserver(this);
+            releaseCounter();
+        }
+    }
+
+    private void releaseCounter() {
+        if (_hasCounterValue.compareAndSet(true, false)) WAIT_COUNTER.decrementAndGet();
+    }
+
     @Override
     public void update(final Observable obs, final Object arg) {
+        if (cancelled.get()) return;
         if (_regler._saveModus == ReglerSaveData.SaveModus.SIMULATION_END) {
             if (_data.getContainerStatus() == ContainerStatus.PAUSED) {
                 final Thread runThread = new Thread(_saveRunnable);
                 runThread.start();
             } else {
-                if (!_hasCounterValue) {
-                    _hasCounterValue = true;
+                if (_hasCounterValue.compareAndSet(false, true)) {
                     WAIT_COUNTER.incrementAndGet();
                 }
             }
@@ -120,22 +134,13 @@ public final class DataSaver extends Observable implements Observer {
         @Override
         public void run() {
             try {
+                if (cancelled.get()) return;
                 if (_regler._saveModus == ReglerSaveData.SaveModus.SIMULATION_END) {
                     initSave(_data);
                     doFullSave(_data);
-                    try {
-                        _linePrinter.closeStream();
-                    } catch (IOException ex) {
-                        Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    WAIT_COUNTER.decrementAndGet();
-                    if (WAIT_COUNTER.get() < 0) {
-                        WAIT_COUNTER.set(0);
-                    }
-                    _hasCounterValue = false;
                 } else {
                     initSave(_data);
-                    while (_data.getContainerStatus() == ContainerStatus.RUNNING) {
+                    while (!cancelled.get() && _data.getContainerStatus() == ContainerStatus.RUNNING) {
                         doFullSave(_data);
                         try {
                             Thread.sleep(SLEEP_TIMER);
@@ -144,21 +149,24 @@ public final class DataSaver extends Observable implements Observer {
                         }
                     }
                     // do one final save at simulation end!
-                    doFullSave(_data);
-                    try {
-                        _linePrinter.closeStream();
-                    } catch (IOException ex) {
-                        Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    if (!cancelled.get()) doFullSave(_data);
                 }
             } catch (SignalMissingException exc) {
                 JOptionPane.showMessageDialog(null,
                         exc.getMessage(),
                         "Error!",
                         JOptionPane.ERROR_MESSAGE);
+            } finally {
+                if (_linePrinter != null) {
+                    try {
+                        _linePrinter.closeStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(DataSaver.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                releaseCounter();
+                _data.deleteObserver(DataSaver.this);
             }
-
-            _data.deleteObserver(DataSaver.this);
 
         }
     }
@@ -212,6 +220,7 @@ public final class DataSaver extends Observable implements Observer {
     }
 
     private void doFullSave(final AbstractDataContainer data) {
+        if (cancelled.get()) return;
         final int maxIndex = data.getMaximumTimeIndex(0);
         int savePercentage = 0;
         final int skipDataPoints = _regler._skipDataPoints.getValue();
@@ -219,6 +228,7 @@ public final class DataSaver extends Observable implements Observer {
 
             if (_regler._transposeData.getValue()) {
                 _linePrinter.printTransposedData();
+                if (cancelled.get()) return;
                 _percentage = (int) PERCENT_CONST;
                 setChanged();
                 notifyObservers();
@@ -226,6 +236,7 @@ public final class DataSaver extends Observable implements Observer {
             }
 
             for (int line = _lastSavedDataIndex + 1; line <= maxIndex; line += skipDataPoints) {
+                if (cancelled.get()) return;
                 if (_abortSignal) {
                     _abortSignal = false;
                     return;
@@ -368,6 +379,7 @@ public final class DataSaver extends Observable implements Observer {
             }
 
             for (int i = 0; i <= maxIndex; i++) {
+                if (cancelled.get()) return;
                 final double timeValue = _data.getTimeValue(i, 0);
                 _bufferedWriter.write(Double.toString(timeValue));
                 if (i < maxIndex) {
@@ -380,12 +392,14 @@ public final class DataSaver extends Observable implements Observer {
 
 
             for (int column : _settings.getSelectedSignalIndices()) {
+                if (cancelled.get()) return;
                 if (_settings._printHeader.getValue()) {
                     _bufferedWriter.write(_data.getSignalName(column));
                     _bufferedWriter.write(_separator);
                 }
 
                 for (int i = 0; i <= maxIndex; i++) {
+                    if (cancelled.get()) return;
                     final float value = _data.getValue(column, i);
                     final String numberString = getFormatter(value).format(value);
                     _bufferedWriter.write(numberString);
@@ -495,11 +509,14 @@ public final class DataSaver extends Observable implements Observer {
         void printTransposedData() throws IOException {
             final int maxIndex = _data.getMaximumTimeIndex(0);
             for (int i = 0; i <= maxIndex; i++) {
+                if (cancelled.get()) return;
                 _outputStream.writeDouble(_data.getTimeValue(i, 0));
             }
 
             for (int index : _selectedIndices) {
+                if (cancelled.get()) return;
                 for (int i = 0; i <= maxIndex; i++) {
+                    if (cancelled.get()) return;
                     _outputStream.writeFloat(_data.getValue(index, i));
                 }
             }

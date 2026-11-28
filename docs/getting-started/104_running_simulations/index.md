@@ -346,9 +346,9 @@ In this tutorial, you learned:
 ## Next Steps
 
 You've completed the Getting Started series! Continue with:
-- **DC-DC Converters:** [2xx Series](../../2xx_dcdc_converters/index.md)
-- **Rectifiers:** [3xx Series](../../3xx_acdc_rectifiers/index.md)
-- **Examples:** [Basic Topologies](../examples/basic_topologies/index.md)
+- **DC-DC Converters:** [2xx Series](../../tutorials/dcdc/index.md)
+- **Rectifiers:** [3xx Series](../../tutorials/acdc/index.md)
+- **Examples:** [Basic Topologies](../../examples/basic/index.md)
 
 ---
 *Tutorial Version: 1.0*

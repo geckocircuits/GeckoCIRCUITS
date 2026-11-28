@@ -13,6 +13,8 @@
  */
 package gecko.core.circuit.matrix;
 
+import gecko.core.allg.SolverType;
+
 /**
  * Matrix stamper implementation for capacitor components.
  *
@@ -52,15 +54,15 @@ public class CapacitorStamper implements IMatrixStamper {
     private static final int PREV_CURRENT = 1;
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
-                             double[] parameter, double dt) {
-        double conductance = getAdmittanceWeight(parameter[PARAM_CAPACITANCE], dt);
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
+                             double[] parameter, double dt, SolverType solverType) {
+        double conductance = getAdmittanceWeight(parameter[PARAM_CAPACITANCE], dt, solverType);
 
         // Stamp the standard two-terminal conductance pattern
-        a[nodeX][nodeX] += conductance;
-        a[nodeY][nodeY] += conductance;
-        a[nodeX][nodeY] -= conductance;
-        a[nodeY][nodeX] -= conductance;
+        a.add(nodeX, nodeX, conductance);
+        a.add(nodeY, nodeY, conductance);
+        a.add(nodeX, nodeY, -conductance);
+        a.add(nodeY, nodeX, -conductance);
     }
 
     @Override
@@ -102,22 +104,25 @@ public class CapacitorStamper implements IMatrixStamper {
 
     @Override
     public double getAdmittanceWeight(double capacitance, double dt) {
-        // Clamp capacitance to minimum value
+        // Backward Euler (default): G = C/dt
         double safeCapacitance = Math.max(capacitance, MIN_CAPACITANCE);
-        // Backward Euler: G = C/dt
         return safeCapacitance / dt;
     }
 
     /**
-     * Calculates the equivalent conductance for trapezoidal integration.
-     * For trapezoidal rule: G = 2C/dt
+     * Calculates solver-type-aware equivalent conductance for capacitor.
      *
      * @param capacitance the capacitance value
      * @param dt time step size
-     * @return equivalent conductance for trapezoidal integration
+     * @param solverType the numerical integration method
+     * @return equivalent conductance matching the solver type
      */
-    public double getAdmittanceWeightTrapezoidal(double capacitance, double dt) {
+    public double getAdmittanceWeight(double capacitance, double dt, SolverType solverType) {
         double safeCapacitance = Math.max(capacitance, MIN_CAPACITANCE);
-        return 2.0 * safeCapacitance / dt;
+        return switch (solverType) {
+            case SOLVER_TRZ -> 2.0 * safeCapacitance / dt;
+            case SOLVER_GS  -> 1.5 * safeCapacitance / dt;
+            default         -> safeCapacitance / dt;  // BE
+        };
     }
 }

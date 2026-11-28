@@ -87,7 +87,11 @@ public abstract class AbstractCurrentSource extends AbstractCircuitSource {
     @Override
     @SuppressWarnings("rawtypes")
     public List<? extends CircuitComponent> getCircuitCalculatorsForSimulationStart() {
-        return Arrays.asList(new CurrentSourceCalculator(this));
+        CurrentSourceCalculator calculator = new CurrentSourceCalculator(this);
+        if (isPwlSource()) {
+            calculator.setFunction(requirePwlWaveform());
+        }
+        return Arrays.asList(calculator);
     }
 
 }

@@ -14,20 +14,17 @@
 package gecko.core.simulation;
 
 import gecko.core.allg.SolverSettingsCore;
-import gecko.core.datacontainer.ContainerStatus;
-import gecko.core.datacontainer.DataContainerGlobal;
 import gecko.core.io.CircuitFileParser;
 import gecko.core.io.CircuitModel;
-import gecko.core.io.ParameterOverrideApplicator;
-import gecko.core.simulation.solver.MatrixSolver;
-import gecko.core.simulation.solver.ComponentCurrentCalculator;
-import gecko.core.simulation.solver.InitialConditionSolver;
+import gecko.core.preparation.CircuitPreparation;
+import gecko.core.preparation.PreparationRequest;
+import gecko.core.preparation.PreparationResult;
+import gecko.core.preparation.PreparedCircuit;
+import gecko.core.preparation.ExecutionOptions;
 import gecko.core.circuit.netlist.CircuitNetlist;
-import gecko.core.circuit.netlist.NetlistBuilder;
-import gecko.core.simulation.ControlNetlist;
-import gecko.core.simulation.DomainCoupler;
 
 import java.io.IOException;
+import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -69,27 +66,23 @@ public class HeadlessSimulationEngine {
 
     private final AtomicReference<EngineState> state = new AtomicReference<>(EngineState.IDLE);
     private final AtomicBoolean cancelRequested = new AtomicBoolean(false);
+    private final Object pauseMonitor = new Object();
 
     // Progress tracking
     private volatile double currentTime = 0;
     private volatile double endTime = 0;
+    private volatile double overallEndTime = 0;
+    private volatile boolean hasPreCalculation;
+    private volatile SimulationSession.Phase phase = SimulationSession.Phase.MAIN;
     private volatile int currentStep = 0;
+    private volatile int expectedStepCount = 0;
     private volatile long simulationStartTime = 0;
 
     // Event listener
     private SimulationProgressListener progressListener;
 
-    // Solver components
-    private MatrixSolver matrixSolver;
-    private ComponentCurrentCalculator componentCurrentCalculator;
-    private InitialConditionSolver initialConditionSolver;
-
-    // Circuit and control netlists
-    private CircuitNetlist circuitNetlist;
-    private ControlNetlist controlNetlist;
-
-    // Domain coupling orchestrator
-    private DomainCoupler domainCoupler;
+    // Step trace listener for golden reference comparison
+    private StepTraceListener stepTraceListener;
 
     /**
      * Creates a new HeadlessSimulationEngine.
@@ -105,33 +98,115 @@ public class HeadlessSimulationEngine {
      * @return the simulation result
      */
     public SimulationResult runSimulation(SimulationConfig config) {
-        if (config == null) {
-            return SimulationResult.failed("Simulation configuration is required");
-        }
+        return runSimulation(config, () -> false);
+    }
 
-        if (!state.compareAndSet(EngineState.IDLE, EngineState.RUNNING)) {
-            return SimulationResult.failed("Engine is already running a simulation");
-        }
+    /**
+     * Runs a simulation with a durable cancellation signal from its owning job.
+     * The signal can be set before the engine starts and is checked before each step.
+     *
+     * @param config the simulation configuration
+     * @param cancellationSignal true when the owning job requests cancellation
+     * @return the simulation result
+     */
+    public SimulationResult runSimulation(SimulationConfig config, BooleanSupplier cancellationSignal) {
+        if (config == null) return SimulationResult.failed("Simulation configuration is required");
+        return runOwnedSimulation(start -> executeSimulation(config, start, cancellationSignal));
+    }
 
-        cancelRequested.set(false);
+    /**
+     * Runs an immutable prepared description with independent numerical and CONTROL state.
+     * Logging options and cancellation do not change its circuit configuration.
+     * This method blocks until completion. Numerical failure remains possible after successful preflight.
+     * Use separate engine instances for concurrent runs of the same Prepared circuit.
+     *
+     * @param circuit the immutable execution description from preparation
+     * @param options the data logging choices for this run
+     * @param cancellationSignal true when the owning job requests cancellation
+     * @return the successful, cancelled, or failed run result
+     */
+    public SimulationResult runSimulation(PreparedCircuit circuit, ExecutionOptions options,
+            BooleanSupplier cancellationSignal) {
+        return runOwnedSimulation(start -> {
+            var settings = circuit.solverSettings();
+            var config = SimulationConfig.builder().solverSettings(settings)
+                    .enableDataLogging(options.loggingEnabled()).dataLoggingInterval(options.loggingInterval()).build();
+            return executeSimulation(config, start, cancellationSignal, circuit.newRunModel(), settings);
+        });
+    }
+
+    private SimulationResult runOwnedSimulation(java.util.function.LongFunction<SimulationResult> execution) {
+        synchronized (pauseMonitor) {
+            if (!state.compareAndSet(EngineState.IDLE, EngineState.RUNNING)) {
+                return SimulationResult.failed("Engine is already running a simulation");
+            }
+            cancelRequested.set(false);
+            currentTime = 0;
+            currentStep = 0;
+            endTime = 0;
+            overallEndTime = 0;
+            hasPreCalculation = false;
+            phase = SimulationSession.Phase.MAIN;
+            expectedStepCount = 0;
+        }
         long startTime = System.currentTimeMillis();
         simulationStartTime = startTime;
-
         try {
-            return executeSimulation(config, startTime);
-        } catch (Exception e) {
-            return SimulationResult.failed("Simulation error: " + e.getMessage());
+            return execution.apply(startTime);
+        } catch (Exception error) {
+            error.printStackTrace();
+            return SimulationResult.failed("Simulation error: " + error.getMessage());
         } finally {
-            state.set(EngineState.IDLE);
+            synchronized (pauseMonitor) {
+                state.set(EngineState.IDLE);
+                pauseMonitor.notifyAll();
+            }
         }
     }
 
     /**
      * Executes the actual simulation loop.
+     *
+     * <p>Simulation order matches the proven SimulationsKern:
+     * <ol>
+     *   <li>Apply gate signals from PREVIOUS step's CONTROL output</li>
+     *   <li>Build A matrix</li>
+     *   <li>Build b vector</li>
+     *   <li>Solve Ax=b</li>
+     *   <li>Diode iteration loop (re-solve until converged)</li>
+     *   <li>Shift history (pALT←p, iALTALT←iALT) then store converged currents</li>
+     *   <li>Store results into netlist (for probes)</li>
+     *   <li>Capture the electrical step trace</li>
+     *   <li>LK → CONTROL transfer (VOLT/AMP probes)</li>
+     *   <li>Execute CONTROL calculators</li>
+     *   <li>CONTROL → LK gate signals (stored for step 1 of NEXT iteration)</li>
+     *   <li>Extract SCOPE values</li>
+     * </ol>
      */
-    private SimulationResult executeSimulation(SimulationConfig config, long startTime) {
+    private SimulationResult executeSimulation(SimulationConfig config, long startTime,
+            BooleanSupplier cancellationSignal) {
         CircuitModel circuitModel = parseCircuitModel(config);
-        SolverSettingsCore settings = config.getSolverSettings();
+        SolverSettingsCore settings = config.resolveSolverSettings(circuitModel);
+        validateSimulationSettings(settings.getStepWidth(), settings.getSimulationDuration());
+
+        if (circuitModel != null) {
+            var preparation = new CircuitPreparation();
+            var prepared = preparation.prepare(preparation.capture(circuitModel),
+                    new PreparationRequest(config.explicitSolverOverrides(), config.getParameterOverrides()));
+            if (!(prepared instanceof PreparationResult.Ready ready)) {
+                String findings = prepared.report().diagnostics().stream()
+                        .map(item -> item.code() + ": " + item.message())
+                        .collect(java.util.stream.Collectors.joining("; "));
+                return SimulationResult.failed(findings);
+            }
+            circuitModel = ready.execution().newRunModel();
+            settings = ready.execution().solverSettings();
+        }
+        return executeSimulation(config, startTime, cancellationSignal, circuitModel, settings);
+    }
+
+    private SimulationResult executeSimulation(SimulationConfig config, long startTime,
+            BooleanSupplier cancellationSignal, CircuitModel circuitModel, SolverSettingsCore settings) {
         double dt = settings.getStepWidth();
         double duration = settings.getSimulationDuration();
         validateSimulationSettings(dt, duration);
@@ -140,132 +215,95 @@ public class HeadlessSimulationEngine {
         currentTime = 0;
         currentStep = 0;
 
-        // Calculate expected number of steps
-        int expectedSteps = calculateExpectedSteps(dt, duration);
-
-        // Create data container for results
-        // For now, create a simple container with a few test signals
-        DataContainerGlobal dataContainer = new DataContainerGlobal();
-        String[] signalNames = resolveSignalNames(circuitModel);
-        dataContainer.init(signalNames.length, expectedSteps + 1, signalNames, "time [s]");
-        dataContainer.setContainerStatus(ContainerStatus.RUNNING);
-
-        // Initialize matrix solver
-        matrixSolver = new MatrixSolver(settings.getSolverType());
-        componentCurrentCalculator = new ComponentCurrentCalculator();
-        initialConditionSolver = new InitialConditionSolver(settings.getSolverType());
-
-        // Build netlists from circuit model
-        // Apply parameter overrides before building the netlist
-        if (circuitModel != null && !config.getParameterOverrides().isEmpty()) {
-            ParameterOverrideApplicator.applyOverrides(circuitModel, config.getParameterOverrides());
-        }
-
-        circuitNetlist = NetlistBuilder.buildFromCircuitModel(circuitModel);
-        controlNetlist = ControlNetlist.createEmpty();
-
-        // Initialize domain coupler for orchestrating LK, CONTROL, THERM domains
-        domainCoupler = new DomainCoupler();
-
-        // Re-initialize matrix solver with real netlist dimensions
-        if (circuitNetlist.getElementCount() > 0) {
-            matrixSolver.initializeMatrices(
-                circuitNetlist.getNodeMax(),
-                circuitNetlist.getVoltageSourceMax(),
-                circuitNetlist.getElementCount()
-            );
-        } else {
-            // Fallback for empty circuit: use signal-based dimensions
-            int nodeCount = signalNames.length;
-            int voltageSourceCount = 0;
-            int elementCount = signalNames.length;
-            matrixSolver.initializeMatrices(nodeCount, voltageSourceCount, elementCount);
-        }
-
-        // Main simulation loop
-        // Note: This is a placeholder implementation. In production, this would
-        // integrate with the actual SimulationsKern or circuit solver.
-        float[] values = new float[signalNames.length];
-
-        while (currentTime <= duration) {
-            if (cancelRequested.get()) {
-                dataContainer.setContainerStatus(ContainerStatus.PAUSED);
+        expectedStepCount = (int) Math.floor(duration / dt) + 1;
+        try (var session = SimulationSession.fromModel(circuitModel, settings,
+                new ExecutionOptions(config.isDataLoggingEnabled(), config.getDataLoggingInterval()))) {
+            phase = session.status().phase();
+            hasPreCalculation = phase == SimulationSession.Phase.WARMUP;
+            var search = settings.getPeriodicSteadyState();
+            // The search bound is only an upper limit for progress. The main phase replaces it on convergence.
+            overallEndTime = search != null ? session.status().endTime() + duration
+                    : hasPreCalculation ? settings.getPreCalculationTime() + duration : duration;
+            endTime = session.status().endTime();
+            expectedStepCount = expectedSegmentSteps(session.status());
+            while (session.status().state() != SimulationSession.State.COMPLETED) {
+                if (state.get() == EngineState.PAUSED) session.pauseAtCommittedStep();
+                awaitResumeOrCancellation(cancellationSignal);
+                if (cancelRequested.get() || Thread.currentThread().isInterrupted() || cancellationSignal.getAsBoolean()) {
+                    session.pauseAtCommittedStep();
+                    currentTime = session.status().time();
+                    var cancelled = SimulationResult.builder()
+                            .status(SimulationResult.Status.CANCELLED)
+                            .dataContainer(session.currentSegmentRecording())
+                            .executionTimeMs(System.currentTimeMillis() - startTime)
+                            .totalTimeSteps(currentStep)
+                            .simulatedTime(currentTime)
+                            .metadata("scopeChannels", session.scopeChannels());
+                    if (search != null) cancelled.metadata("steadyState", session.steadyStateReport());
+                    return cancelled.build();
+                }
+                currentTime = session.status().nextTime();
+                StepTraceListener listener = stepTraceListener;
+                var sample = session.step(listener == null ? null : (time, volts, currents, netlist) -> {
+                    var snapshot = session.status();
+                    phase = snapshot.phase();
+                    endTime = snapshot.endTime();
+                    currentTime = time;
+                    currentStep = Math.max(0, snapshot.segmentSteps() - 1);
+                    expectedStepCount = expectedSegmentSteps(snapshot);
+                    listener.onStep(time, volts, currents, netlist);
+                });
+                currentStep = session.status().segmentSteps();
+                currentTime = session.status().nextTime();
+                endTime = session.status().endTime();
+                phase = session.status().phase();
+                if (search != null && phase == SimulationSession.Phase.MAIN) overallEndTime = endTime;
+                expectedStepCount = expectedSegmentSteps(session.status());
+                if (sample == null) break;
+                if (progressListener != null && currentStep % 1000 == 0) {
+                    progressListener.onProgress(sample.time(), endTime, currentStep);
+                }
+            }
+            var steady = session.steadyStateReport();
+            if (steady != null && !steady.converged()) {
+                currentTime = session.status().time();
                 return SimulationResult.builder()
-                        .status(SimulationResult.Status.CANCELLED)
-                        .dataContainer(dataContainer)
+                        .status(SimulationResult.Status.FAILED)
+                        .errorMessage(String.format("Periodic steady state did not converge after %d periods (residual %s, worst %s)",
+                                steady.periods(), steady.residual(), steady.worstState()))
                         .executionTimeMs(System.currentTimeMillis() - startTime)
-                        .totalTimeSteps(currentStep)
+                        .totalTimeSteps(session.status().committedSteps())
                         .simulatedTime(currentTime)
+                        .metadata("steadyState", steady)
                         .build();
             }
-
-            // Phase 4: Execute domain coupling (LK → CONTROL → LK)
-            // Orchestrates data transfer between circuit, control, and thermal domains
-            domainCoupler.coupleDomainsForTimeStep(circuitNetlist, controlNetlist, dt, currentTime);
-
-            // Real MNA solver: build and solve circuit matrices
-            if (circuitNetlist != null && circuitNetlist.getElementCount() > 0) {
-                // 1. Build system matrix A (component stamps)
-                matrixSolver.buildMatrixA(circuitNetlist, dt, currentTime, false);
-
-                // 2. Build right-hand side vector b (sources, history terms)
-                matrixSolver.buildVectorB(circuitNetlist, dt, currentTime, false);
-
-                // 3. Solve Ax=b for node voltages
-                matrixSolver.solve();
-
-                // 4. Calculate component currents from solved node voltages
-                componentCurrentCalculator.calculateComponentCurrents(
-                    matrixSolver, circuitNetlist, 0.0, dt, currentTime, true
-                );
-
-                // 5. Shift history for next time step
-                matrixSolver.updateNodePotentials(dt, currentTime);
-
-                // 6. Store results back into netlist
-                circuitNetlist.storeResults(matrixSolver.getP(), matrixSolver.getIALT());
-
-                // 7. Extract signal values for data logging
-                double[] nodeVoltages = matrixSolver.getP();
-                for (int sigIdx = 0; sigIdx < values.length && sigIdx < nodeVoltages.length; sigIdx++) {
-                    values[sigIdx] = (float) nodeVoltages[sigIdx];
-                }
-            } else {
-                // Fallback: no circuit loaded, use zero output
-                for (int sigIdx = 0; sigIdx < values.length; sigIdx++) {
-                    values[sigIdx] = 0.0f;
-                }
+            currentTime = session.status().segmentSteps() == 0 ? 0 : session.status().time();
+            var success = SimulationResult.builder()
+                    .status(SimulationResult.Status.SUCCESS)
+                    .dataContainer(session.currentSegmentRecording())
+                    .executionTimeMs(System.currentTimeMillis() - startTime)
+                    .totalTimeSteps(currentStep)
+                    .simulatedTime(currentTime)
+                    .metadata("solver", settings.getSolverType().toString())
+                    .metadata("dt", dt)
+                    .metadata("scopeChannels", session.scopeChannels())
+                    .metadata("circuitFile", config.getCircuitFilePath())
+                    .metadata("parameterOverrides", config.getParameterOverrides().size());
+            if (steady != null) success.metadata("steadyState", steady);
+            if (session.locatesEvents()) {
+                var report = session.eventLocationReport();
+                success.metadata("zeroCrossingLocated", report.located())
+                        .metadata("zeroCrossingUnlocated", report.unlocated())
+                        .metadata("zeroCrossingFirstUnlocatedTime", report.firstUnlocatedTime())
+                        .metadata("zeroCrossingRetained", report.retained())
+                        .metadata("zeroCrossingDropped", report.dropped());
             }
-
-            // Store data (respecting logging interval)
-            if (config.isDataLoggingEnabled() &&
-                    (currentStep % config.getDataLoggingInterval() == 0)) {
-                dataContainer.insertValuesAtEnd(values, currentTime);
+            if (settings.getAdaptiveStep() != null) success.metadata("adaptiveStep", session.adaptiveStepReport());
+            if (settings.getSparseSolver() != null && session.linearSolverReport() != null) {
+                success.metadata("linearSolver", session.linearSolverReport());
             }
-
-            currentTime += dt;
-            currentStep++;
-
-            // Report progress
-            if (progressListener != null && currentStep % 1000 == 0) {
-                progressListener.onProgress(currentTime, duration, currentStep);
-            }
+            return success.build();
         }
-
-        dataContainer.setContainerStatus(ContainerStatus.FINISHED);
-        long executionTimeMs = System.currentTimeMillis() - startTime;
-
-        return SimulationResult.builder()
-                .status(SimulationResult.Status.SUCCESS)
-                .dataContainer(dataContainer)
-                .executionTimeMs(executionTimeMs)
-                .totalTimeSteps(currentStep)
-                .simulatedTime(currentTime)
-                .metadata("solver", settings.getSolverType().toString())
-                .metadata("dt", dt)
-                .metadata("circuitFile", config.getCircuitFilePath())
-                .metadata("parameterOverrides", config.getParameterOverrides().size())
-                .build();
     }
 
     /**
@@ -273,8 +311,29 @@ public class HeadlessSimulationEngine {
      * The simulation will stop at the next opportunity.
      */
     public void cancel() {
-        if (state.get() == EngineState.RUNNING) {
-            cancelRequested.set(true);
+        synchronized (pauseMonitor) {
+            if (state.get() != EngineState.IDLE) {
+                cancelRequested.set(true);
+                pauseMonitor.notifyAll();
+            }
+        }
+    }
+
+    private void awaitResumeOrCancellation(BooleanSupplier cancellationSignal) {
+        // Invoke the owner's signal outside this monitor to avoid lock inversion.
+        while (state.get() == EngineState.PAUSED && !cancelRequested.get()
+                && !Thread.currentThread().isInterrupted() && !cancellationSignal.getAsBoolean()) {
+            synchronized (pauseMonitor) {
+                if (state.get() == EngineState.PAUSED && !cancelRequested.get()) {
+                    try {
+                        // The external cancellation signal does not own this monitor.
+                        pauseMonitor.wait(50);
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
+            }
         }
     }
 
@@ -311,10 +370,10 @@ public class HeadlessSimulationEngine {
      * @return progress from 0.0 to 1.0
      */
     public double getProgress() {
-        if (endTime <= 0) {
+        if (overallEndTime <= 0) {
             return 0;
         }
-        return Math.min(1.0, currentTime / endTime);
+        return Math.min(1.0, currentTime / overallEndTime);
     }
 
     /**
@@ -343,7 +402,9 @@ public class HeadlessSimulationEngine {
      * @return true if pause was requested, false if simulation is not running
      */
     public boolean pause() {
-        return state.compareAndSet(EngineState.RUNNING, EngineState.PAUSED);
+        synchronized (pauseMonitor) {
+            return !cancelRequested.get() && state.compareAndSet(EngineState.RUNNING, EngineState.PAUSED);
+        }
     }
 
     /**
@@ -353,7 +414,13 @@ public class HeadlessSimulationEngine {
      * @return true if resume was successful, false if simulation was not paused
      */
     public boolean resume() {
-        return state.compareAndSet(EngineState.PAUSED, EngineState.RUNNING);
+        synchronized (pauseMonitor) {
+            boolean resumed = !cancelRequested.get() && state.compareAndSet(EngineState.PAUSED, EngineState.RUNNING);
+            if (resumed) {
+                pauseMonitor.notifyAll();
+            }
+            return resumed;
+        }
     }
 
     /**
@@ -379,9 +446,10 @@ public class HeadlessSimulationEngine {
 
         double overallProgress = getProgress();
 
-        // For now, pre-calculation progress is 0 (will be implemented with real solver)
-        double preCalcProgress = 0.0;
-        double mainSimProgress = overallProgress;
+        double segmentProgress = expectedStepCount == 0 ? 0 : Math.min(1.0, (double) currentStep / expectedStepCount);
+        double preCalcProgress = !hasPreCalculation ? 0
+                : phase == SimulationSession.Phase.WARMUP ? segmentProgress : 1;
+        double mainSimProgress = phase == SimulationSession.Phase.MAIN ? segmentProgress : 0;
 
         // Estimate remaining time based on current progress
         Long estimatedRemainingMs = null;
@@ -391,11 +459,7 @@ public class HeadlessSimulationEngine {
             estimatedRemainingMs = totalEstimatedMs - elapsedMs;
         }
 
-        // Calculate expected total steps
-        int totalSteps = (int) Math.ceil(endTime / (currentTime / Math.max(1, currentStep)));
-        if (totalSteps <= 0) {
-            totalSteps = currentStep + 1000; // Fallback estimate
-        }
+        int totalSteps = expectedStepCount;
 
         return new SimulationProgress(
             overallProgress,
@@ -425,21 +489,40 @@ public class HeadlessSimulationEngine {
         void onProgress(double currentTime, double endTime, int currentStep);
     }
 
-    private static int calculateExpectedSteps(double dt, double duration) {
-        double rawSteps = Math.ceil(duration / dt);
-        if (!Double.isFinite(rawSteps) || rawSteps > Integer.MAX_VALUE - 1) {
-            throw new IllegalArgumentException("Simulation step count is too large");
-        }
-        return Math.max(1, (int) rawSteps);
+    /**
+     * Listener interface for per-step trace capture.
+     * Used for golden reference comparison between SimulationsKern and HeadlessSimulationEngine.
+     */
+    @FunctionalInterface
+    public interface StepTraceListener {
+        /**
+         * Called after each LK time step with the complete simulation state.
+         *
+         * @param time current simulation time
+         * @param nodeVoltages node potentials (p[])
+         * @param currents component currents (iALT[])
+         * @param netlist the circuit netlist (for switch/diode state access)
+         */
+        void onStep(double time, double[] nodeVoltages, double[] currents, CircuitNetlist netlist);
+    }
+
+    /**
+     * Sets a step trace listener for per-step golden reference comparison.
+     *
+     * @param listener the listener, or null to remove
+     */
+    public void setStepTraceListener(StepTraceListener listener) {
+        this.stepTraceListener = listener;
+    }
+
+    private static int expectedSegmentSteps(SimulationSession.Status snapshot) {
+        double remaining = snapshot.nextTime() > snapshot.endTime() ? 0
+                : Math.floor((snapshot.endTime() - snapshot.nextTime()) / snapshot.stepWidth()) + 1;
+        return snapshot.segmentSteps() + (int) remaining;
     }
 
     private static void validateSimulationSettings(double dt, double duration) {
-        if (!Double.isFinite(dt) || dt <= 0) {
-            throw new IllegalArgumentException("Step width must be a finite value > 0");
-        }
-        if (!Double.isFinite(duration) || duration <= 0) {
-            throw new IllegalArgumentException("Simulation duration must be a finite value > 0");
-        }
+        SimulationSession.validateTiming(dt, duration);
     }
 
     private static CircuitModel parseCircuitModel(SimulationConfig config) {
@@ -456,11 +539,4 @@ public class HeadlessSimulationEngine {
         }
     }
 
-    private static String[] resolveSignalNames(CircuitModel circuitModel) {
-        if (circuitModel != null && circuitModel.getDataContainerSignals() != null
-                && circuitModel.getDataContainerSignals().length > 0) {
-            return circuitModel.getDataContainerSignals();
-        }
-        return new String[] {"V_out", "I_in", "P_loss"};
-    }
 }

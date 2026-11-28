@@ -38,18 +38,13 @@ public final class DelayCalculatorTest {
 
         assertEquals(5, _delCalculator._outputSignal[0][0], 1e-20);
 
-        // continue with other delay value:
-        double newDelayTime = 0.6;
-        _delCalculator.initWithNewDt(newDelayTime);
-
+        // Continue the same ramp with a 0.5 s step and the unchanged 4 s delay.
+        _delCalculator.initWithNewDt(0.5);
         for (int i = 0; i < 11; i++) {
-            _delCalculator._inputSignal[0][0] = 10 - i;
-            if(i == 3) { // test if values from the previous delay period are translated correctly!
-                assertEquals(3, _delCalculator._outputSignal[0][0], 1e-20);
-            }
-            _delCalculator.berechneYOUT(1);
+            _delCalculator._inputSignal[0][0] = 0.5 - 0.5 * i;
+            _delCalculator.berechneYOUT(0.5);
+            assertEquals(4.5 - 0.5 * i, _delCalculator._outputSignal[0][0], 1e-20);
         }
-        assertEquals(6, _delCalculator._outputSignal[0][0], 1e-20);
 
     }
 

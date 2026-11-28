@@ -13,14 +13,24 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
 /**
  * Der internen Zaehler kann durch den zweiten (unteren) RESET-Eingang auf '0' zurueckgesetzt werden:
  * solange der RESET-Eingang auf Null steht, ist der interne Zaehle auf Null gesetzt,
  * sobald der RESET-Eingang auf Eins gesetzt wird, beginnt der interne Zaehler zu laufen und wird direkt am Ausgang ausgegeben
  * @author andreas
  */
-public final class CounterCalculatable extends AbstractTwoInputsOneOutputCalculator {
+public final class CounterCalculatable extends AbstractTwoInputsOneOutputCalculator implements InitializableAtSimulationStart, PeriodicStateSource {
     private double _lastValue = 0;            
+
+    /** Clears the edge detector and counter for a new run. */
+    @Override
+    public void initializeAtSimulationStart(double deltaT) {
+        _lastValue = 0;
+        _outputSignal[0][0] = 0;
+    }
 
     @Override
     public void berechneYOUT(final double deltaT) {
@@ -33,5 +43,10 @@ public final class CounterCalculatable extends AbstractTwoInputsOneOutputCalcula
         }
         _lastValue = _inputSignal[0][0];
         
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(_lastValue);
     }
 }

@@ -13,8 +13,10 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
 
-public final class MaxCalculatorMultiInputs extends AbstractControlCalculatable {
+
+public final class MaxCalculatorMultiInputs extends AbstractControlCalculatable implements StatelessCalculation {
 
     public MaxCalculatorMultiInputs(final int noInputs) {
         super(noInputs, 1);

@@ -8,9 +8,9 @@ Power loss calculation and thermal analysis for reliable converter design.
 
 | Tutorial | Title | Difficulty | Materials |
 |----------|-------|------------|-----------|
-| [501](501_loss_calculation/) | Loss Calculation | 2/3 | circuit |
-| [502](502_junction_temperature/) | Junction Temperature | 3/3 | circuits |
-| [503](503_heatsink_design/) | Heatsink Design | 3/3 | README |
+| [501](loss-calculation.md) | Loss Calculation | 2/3 | circuit |
+| [502](junction-temperature.md) | Junction Temperature | 3/3 | circuits |
+| [503](heatsink-design.md) | Heatsink Design | 3/3 | README |
 
 ## Learning Objectives
 
@@ -78,5 +78,5 @@ Psw = (Eon + Eoff) × fsw × (Vdc/Vref) × (Ic/Iref)
 
 ## Related Examples
 
-- [Thermal Examples](/wip/#index.md)
-- [Loss Calculation](501_loss_calculation/)
+- [Thermal Examples](../../examples/thermal/index.md)
+- [Loss Calculation](loss-calculation.md)

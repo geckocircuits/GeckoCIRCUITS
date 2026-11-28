@@ -66,7 +66,7 @@ public class StamperRegistry {
         register(CircuitTypCore.LK_R, new ResistorStamper());
         register(CircuitTypCore.LK_C, new CapacitorStamper());
         register(CircuitTypCore.LK_L, new InductorStamper());
-        register(CircuitTypCore.LK_LKOP2, new InductorStamper());
+        register(CircuitTypCore.LK_LKOP2, new CoupledInductorStamper());
 
         // Sources
         register(CircuitTypCore.LK_U, new VoltageSourceStamper());

@@ -281,11 +281,30 @@ public final class ReglerCISPR16 extends RegelBlock implements SpecialNameVisibl
     }
 
     public void setTestReceiverCISPR16MenueEnabled(final boolean value) {
-        _testReceiverCISPR16.setTestReceiverCISPR16MenueEnabled(value);
         if (value) {
             _zvDatenRam.setContainerStatus(ContainerStatus.FINISHED);
         }
+        setSimulationPresentationActive(!value);
+    }
 
+    /**
+     * Updates receiver widgets without changing the simulation recording.
+     *
+     * @param active true while simulation execution is active
+     */
+    public void setSimulationPresentationActive(final boolean active) {
+        setSimulationPresentationActive(active, () -> true);
+    }
+
+    /**
+     * Updates receiver widgets while the caller owns their presentation.
+     *
+     * @param active true while simulation execution is active
+     * @param stillCurrent checks ownership before each widget change
+     */
+    public void setSimulationPresentationActive(final boolean active,
+            final java.util.function.BooleanSupplier stillCurrent) {
+        _testReceiverCISPR16.setTestReceiverCISPR16MenueEnabled(!active, stillCurrent);
     }
 
     @Override

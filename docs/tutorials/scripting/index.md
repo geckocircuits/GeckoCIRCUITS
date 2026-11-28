@@ -9,11 +9,11 @@ Programmatic control and external tool integration.
 | Tutorial | Title | Difficulty | Status |
 |----------|-------|------------|--------|
 | [701](701_gecko_script_basics/) | GeckoSCRIPT Basics | 2/3 | Available |
-| [702](702_matlab_integration/) | MATLAB Integration | 2/3 | Available |
+| [702](matlab.md) | MATLAB Integration | 2/3 | Available |
 | [703](703_simulink_cosimulation/) | Simulink Co-Simulation | 3/3 | Available |
-| [704](704_java_blocks/) | Java Blocks | 3/3 | Available |
+| [704](java-blocks.md) | Java Blocks | 3/3 | Available |
 | [705](705_api_integration/) | API Integration | 3/3 | Available |
-| [706](706_python_integration/) | Python Integration | 2/3 | Placeholder |
+| [706](706_python_integration/index.md) | Python Integration | 2/3 | Placeholder |
 
 ## Learning Objectives
 
@@ -125,5 +125,5 @@ for D in D_values:
 
 ## Related Tutorials
 
-- [104 - Running Simulations](/wip/#104_running_simulations/index.md) - Batch mode basics
-- [105 - Analysis Tools](/wip/#105_analysis_tools/index.md) - Automated analysis
+- [104 - Running Simulations](../../getting-started/104_running_simulations/index.md) - Batch mode basics
+- [105 - Analysis Tools](../../getting-started/105_analysis_tools/index.md) - Automated analysis

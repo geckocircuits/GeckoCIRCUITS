@@ -73,6 +73,36 @@ class HeadlessSimulationEngineTest {
         assertEquals(SimulationResult.Status.SUCCESS, result.getStatus());
     }
 
+    @Test
+    void durableCancellationBeforeStartCancelsWithoutStepsAndAllowsReuse() {
+        HeadlessSimulationEngine engine = new HeadlessSimulationEngine();
+        SimulationConfig config = SimulationConfig.builder()
+                .stepWidth(1e-6)
+                .simulationDuration(1e-3)
+                .build();
+
+        SimulationResult cancelled = engine.runSimulation(config, () -> true);
+
+        assertEquals(SimulationResult.Status.CANCELLED, cancelled.getStatus());
+        assertEquals(0, cancelled.getTotalTimeSteps());
+        assertEquals(HeadlessSimulationEngine.EngineState.IDLE, engine.getState());
+        assertTrue(engine.runSimulation(config).isSuccess());
+    }
+
+    @Test
+    void durableCancellationStopsBeforeTheNextStep() {
+        HeadlessSimulationEngine engine = new HeadlessSimulationEngine();
+        SimulationConfig config = SimulationConfig.builder()
+                .stepWidth(1e-6)
+                .simulationDuration(1e-3)
+                .build();
+
+        SimulationResult cancelled = engine.runSimulation(config, () -> engine.getCurrentStep() >= 2);
+
+        assertEquals(SimulationResult.Status.CANCELLED, cancelled.getStatus());
+        assertEquals(2, cancelled.getTotalTimeSteps());
+        assertEquals(HeadlessSimulationEngine.EngineState.IDLE, engine.getState());
+    }
     // ========== Pause/Resume Tests ==========
 
     @Test

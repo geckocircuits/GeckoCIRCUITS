@@ -10,12 +10,12 @@ Fundamental DC-DC converter circuits demonstrating essential power conversion pr
 
 | Example | Description | Difficulty |
 |---------|-------------|------------|
-| [Buck Converter](buck_converter/) | Step-down DC-DC | Beginner |
-| [Boost Converter](boost_converter/) | Step-up DC-DC | Beginner |
+| [Buck Converter](buck_converter/index.md) | Step-down DC-DC | Beginner |
+| [Boost Converter](boost_converter/index.md) | Step-up DC-DC | Beginner |
 | [Buck-Boost](buck_boost_converter/) | Inverting DC-DC | Intermediate |
-| [Flyback](flyback_converter/) | Isolated step-up/down | Intermediate |
-| [Forward](forward_converter/) | Isolated step-down | Intermediate |
-| [Full Bridge](full_bridge/) | High-power isolated | Advanced |
+| [Flyback](flyback_converter/index.md) | Isolated step-up/down | Intermediate |
+| [Forward](forward_converter/index.md) | Isolated step-down | Intermediate |
+| [Dual Active Bridge](../power-supplies/dab.md) | High-power isolated | Advanced |
 
 ## Quick Reference
 
@@ -47,6 +47,6 @@ Fundamental DC-DC converter circuits demonstrating essential power conversion pr
 
 ## Related Tutorials
 
-- [201 - Buck Converter](../tutorials/2xx_dcdc_converters/201_buck_converter/index.md)
-- [202 - Boost Converter](../tutorials/2xx_dcdc_converters/202_boost_converter/index.md)
-- [203 - Buck-Boost Topologies](../tutorials/2xx_dcdc_converters/203_buck_boost/index.md)
+- [201 - Buck Converter](../../tutorials/dcdc/buck-converter.md)
+- [202 - Boost Converter](../../tutorials/dcdc/boost-converter.md)
+- [203 - Buck-Boost Topologies](../../tutorials/dcdc/buck-boost.md)

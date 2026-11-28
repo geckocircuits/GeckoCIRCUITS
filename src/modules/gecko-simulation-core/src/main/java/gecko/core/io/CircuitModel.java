@@ -14,6 +14,9 @@
 package gecko.core.io;
 
 import gecko.core.allg.SolverType;
+import gecko.core.ac.AcComponent;
+import gecko.core.ac.AcDocumentSettings;
+import gecko.core.ac.ParameterDefinition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +30,114 @@ import java.util.Map;
  * <p>This class is designed for headless operation and contains no Swing/AWT dependencies.</p>
  */
 public class CircuitModel {
+    private AcDocumentSettings acSettings;
+    private List<ParameterDefinition> rootParameterDefinitions = List.of();
+    private CircuitHierarchy hierarchy;
+
+    public CircuitHierarchy getHierarchy() { return hierarchy; }
+    public void setHierarchy(CircuitHierarchy hierarchy) { this.hierarchy = hierarchy; }
+    private AcProvenance acProvenance;
+
+    public AcDocumentSettings getAcSettings() { return acSettings; }
+    public void setAcSettings(AcDocumentSettings settings) {
+        if (settings != null && !rootParameterDefinitions.isEmpty()) {
+            throw new IllegalArgumentException("Use one root parameter definition field.");
+        }
+        acSettings = settings;
+    }
+
+    public List<ParameterDefinition> getRootParameterDefinitions() { return rootParameterDefinitions; }
+
+    public void setRootParameterDefinitions(List<ParameterDefinition> definitions) {
+        var copy = List.copyOf(definitions);
+        if (acSettings != null && !copy.isEmpty()) {
+            throw new IllegalArgumentException("Use one root parameter definition field.");
+        }
+        var root = CircuitHierarchy.parameters(copy);
+        if (acSettings == null && (hierarchy != null || hasScalarBindings())) {
+            materializeScalarBindings(new HierarchyIndex(this), root);
+        }
+        rootParameterDefinitions = copy;
+    }
+
+    public Map<String, String> rootParameterMap() {
+        return acSettings == null ? CircuitHierarchy.parameters(rootParameterDefinitions) : acSettings.parameterMap();
+    }
+
+    public void materializeScalarBindings(HierarchyIndex index) {
+        if (hasScalarBindings() || acSettings == null && hierarchy != null) {
+            materializeScalarBindings(index, rootParameterMap());
+        }
+    }
+
+    public void materializeScalarBindings() {
+        if (hasScalarBindings() || acSettings == null && hierarchy != null) {
+            materializeScalarBindings(new HierarchyIndex(this), rootParameterMap());
+        }
+    }
+
+    private boolean hasScalarBindings() {
+        return getCircuitComponents().stream().anyMatch(component -> !component.getScalarBindings().isEmpty());
+    }
+
+    private void materializeScalarBindings(HierarchyIndex index, Map<String, String> root) {
+        var scopes = index.parameterScopes(root);
+        var replacements = new HashMap<ComponentData, double[]>();
+        for (var component : getCircuitComponents()) {
+            if (component.getScalarBindings().isEmpty()) continue;
+            long sheet = HierarchyIndex.parent(component.getSavedBlock());
+            try {
+                replacements.put(component, ScalarParameterBindings.values(component.getType(),
+                        component.getNumericParameters(), component.getScalarBindings(), scopes.get(sheet)));
+            } catch (IllegalArgumentException error) {
+                throw new IllegalArgumentException(index.path(sheet) + " " + component.getName() + " "
+                        + error.getMessage(), error);
+            }
+        }
+        replacements.forEach(ComponentData::applyBoundValues);
+    }
+
+    void materializeRequiredAcValues(HierarchyIndex index) {
+        if (acSettings == null) return;
+        boolean required = hierarchy != null
+                && hierarchy.definitions().stream().anyMatch(definition -> !definition.requiredInputs().isEmpty());
+        boolean hasDiode = getCircuitComponents().stream().anyMatch(component -> component.getAcComponent() != null
+                && component.getAcComponent().law() instanceof gecko.core.ac.AcComponent.IdealDiode);
+        if (!required && !hasDiode) {
+            return;
+        }
+        var scopes = index.parameterScopes(rootParameterMap());
+        var replacements = new HashMap<ComponentData, double[]>();
+        for (var component : getCircuitComponents()) {
+            var law = component.getAcComponent();
+            if (law == null || !required && !(law.law() instanceof gecko.core.ac.AcComponent.IdealDiode)) continue;
+            long sheet = HierarchyIndex.parent(component.getSavedBlock());
+            double[] saved = component.getNumericParameters();
+            if ("".equals(component.getImportTokens().get("parameter[]"))) {
+                saved = new double[0];
+            }
+            try {
+                replacements.put(component, AcMetadataCodec.compatibilityValues(
+                        law, saved, scopes.get(sheet)));
+            } catch (IllegalArgumentException error) {
+                throw new IllegalArgumentException(index.path(sheet) + " " + component.getName() + " "
+                        + error.getMessage(), error);
+            }
+        }
+        replacements.forEach(ComponentData::applyAcValues);
+    }
+    public AcProvenance getAcProvenance() { return acProvenance; }
+    public void setAcProvenance(AcProvenance provenance) { acProvenance = provenance; }
+    /** Captured grid geometry. Hidden proxy terminals do not have physical junctions. */
+    public record TerminalData(String domain, long sheetIdentifier, CircuitTopology.Side side, int port,
+                               int x, int y, boolean geometric) { }
+    /** Retains a nonexecuting block that still defines terminal connectivity. */
+    public record StructuralComponent(String domain, ComponentData component) { }
 
     // Simulation parameters
     private double simulationDuration;
+    private double outputStartTime;
+    private boolean transientUic;
     private double timeStep;
     private double preSimulationTime;
     private double preSimulationTimeStep;
@@ -54,6 +162,44 @@ public class CircuitModel {
     private final List<ComponentData> controlComponents = new ArrayList<>();
     private final List<ComponentData> thermalComponents = new ArrayList<>();
     private final List<ConnectionData> connections = new ArrayList<>();
+    private final List<StructuralComponent> structuralComponents = new ArrayList<>();
+    private final List<ComponentData> specialComponents = new ArrayList<>();
+    private final List<SavedCircuitBlock> savedBlocks = new ArrayList<>();
+    private final Map<String, String> savedSettings = new HashMap<>();
+    private final List<SavedCircuitBlock.Section> savedSections = new ArrayList<>();
+    private final Map<Long, CircuitResource> resources = new HashMap<>();
+    private final Map<Long, CircuitResourceFailure> resourceFailures = new HashMap<>();
+
+    public List<ComponentData> getSpecialComponents() { return specialComponents; }
+
+    public boolean hasUniqueComponentIdentifier(long identifier) {
+        return identifier != 0 && java.util.stream.Stream.of(
+                circuitComponents, controlComponents, thermalComponents, specialComponents).flatMap(List::stream)
+                .filter(component -> component != null && (Long.valueOf(identifier).equals(
+                        component.getParameters().get("uniqueObjectIdentifier"))
+                        || component.getSavedBlock() != null
+                        && identifier == component.getSavedBlock().uniqueObjectIdentifier())).count() == 1;
+    }
+
+    public List<StructuralComponent> getStructuralComponents() { return structuralComponents; }
+    public List<SavedCircuitBlock> getSavedBlocks() { return savedBlocks; }
+    public Map<String, String> getSavedSettings() { return savedSettings; }
+    public List<SavedCircuitBlock.Section> getSavedSections() { return savedSections; }
+    public Map<Long, CircuitResource> getResources() { return resources; }
+    public Map<Long, CircuitResourceFailure> getResourceFailures() { return resourceFailures; }
+
+    private final List<ImportIssue> importIssues = new ArrayList<>();
+    private final List<ImportIssue> conversionIssues = new ArrayList<>();
+    private final List<ImportIssue> savedTransientSettingIssues = new ArrayList<>();
+
+    public void addSavedTransientSettingIssue(ImportIssue issue) {
+        savedTransientSettingIssues.add(issue);
+        if (!importIssues.contains(issue)) importIssues.add(issue);
+    }
+
+    public List<ImportIssue> getSavedTransientSettingIssues() {
+        return savedTransientSettingIssues.stream().filter(importIssues::contains).toList();
+    }
 
     // Optimizer parameters
     private final Map<String, Double> optimizerParameters = new HashMap<>();
@@ -78,6 +224,22 @@ public class CircuitModel {
 
     public void setSimulationDuration(double simulationDuration) {
         this.simulationDuration = simulationDuration;
+    }
+
+    public boolean isTransientUic() {
+        return transientUic;
+    }
+
+    public void setTransientUic(boolean transientUic) {
+        this.transientUic = transientUic;
+    }
+
+    public double getOutputStartTime() {
+        return outputStartTime;
+    }
+
+    public void setOutputStartTime(double outputStartTime) {
+        this.outputStartTime = outputStartTime;
     }
 
     public double getTimeStep() {
@@ -202,6 +364,21 @@ public class CircuitModel {
         return circuitComponents;
     }
 
+    public List<ImportIssue> getImportIssues() {
+        return importIssues;
+    }
+
+    /** Records a diagnostic from a source format for serialization with the circuit. */
+    public void addConversionIssue(ImportIssue issue) {
+        if (!importIssues.contains(issue)) importIssues.add(issue);
+        if (!conversionIssues.contains(issue)) conversionIssues.add(issue);
+    }
+
+    /** Returns source-format diagnostics. Native parser diagnostics are generated on each read. */
+    public List<ImportIssue> getConversionIssues() {
+        return conversionIssues.stream().filter(importIssues::contains).toList();
+    }
+
     public void addCircuitComponent(ComponentData component) {
         circuitComponents.add(component);
     }
@@ -229,6 +406,8 @@ public class CircuitModel {
     public void addConnection(ConnectionData connection) {
         connections.add(connection);
     }
+
+
 
     // Optimizer parameters
 
@@ -313,6 +492,10 @@ public class CircuitModel {
      * Represents a circuit component's data.
      */
     public static class ComponentData {
+        private AcComponent acComponent;
+
+        public AcComponent getAcComponent() { return acComponent; }
+        public void setAcComponent(AcComponent component) { acComponent = component; }
         private final int type;
         private final String name;
         private final Map<String, Object> parameters;
@@ -320,6 +503,41 @@ public class CircuitModel {
         private final int orientation;
         private String[] terminalXLabels = new String[0];  // labelAnfangsKnoten[]
         private String[] terminalYLabels = new String[0];  // labelEndKnoten[]
+        private String[] parameterStrings = new String[0]; // parameterString[]
+        private double[] numericParameters = new double[0]; // parameter[] raw values
+        private Map<Integer, String> scalarBindings = Map.of();
+
+        private boolean parsedInput;
+        private boolean configurationNormalized;
+        private final Map<String, String> importTokens = new HashMap<>();
+        private int importedParameterCount = -1;
+        private String sourceLocation;
+        private SavedCircuitBlock savedBlock;
+        private int sourceOrdinal = -1;
+        private final List<TerminalData> terminalData = new ArrayList<>();
+
+        public List<TerminalData> getTerminalData() { return terminalData; }
+        /** Keeps the original domain-list order when an execution view excludes components. */
+        public int getSourceOrdinal() { return sourceOrdinal; }
+        public void setSourceOrdinal(int ordinal) { sourceOrdinal = ordinal; }
+
+        /** @return the shared immutable saved configuration, or null when absent */
+        public SavedCircuitBlock getSavedBlock() { return savedBlock; }
+        /**
+         * Retains immutable saved configuration without copying it.
+         * @param block the saved configuration, or null to clear it
+         */
+        public void setSavedBlock(SavedCircuitBlock block) { savedBlock = block; }
+
+        public boolean isParsedInput() { return parsedInput; }
+        public void setParsedInput(boolean parsedInput) { this.parsedInput = parsedInput; }
+        public boolean isConfigurationNormalized() { return configurationNormalized; }
+        public void setConfigurationNormalized(boolean normalized) { this.configurationNormalized = normalized; }
+        public Map<String, String> getImportTokens() { return importTokens; }
+        public int getImportedParameterCount() { return importedParameterCount; }
+        public void setImportedParameterCount(int count) { this.importedParameterCount = count; }
+        public String getSourceLocation() { return sourceLocation; }
+        public void setSourceLocation(String sourceLocation) { this.sourceLocation = sourceLocation; }
 
         public ComponentData(int type, String name) {
             this.type = type;
@@ -377,6 +595,50 @@ public class CircuitModel {
             this.terminalYLabels = terminalYLabels != null ? terminalYLabels : new String[0];
         }
 
+        public String[] getParameterStrings() {
+            return parameterStrings;
+        }
+
+        public void setParameterStrings(String[] parameterStrings) {
+            this.parameterStrings = parameterStrings != null ? parameterStrings : new String[0];
+        }
+
+        public double[] getNumericParameters() {
+            return numericParameters;
+        }
+
+        public void setNumericParameters(double[] numericParameters) {
+            this.numericParameters = numericParameters != null ? numericParameters : new double[0];
+        }
+
+        public Map<Integer, String> getScalarBindings() { return scalarBindings; }
+
+        public void setScalarBindings(Map<Integer, String> bindings) {
+            ScalarParameterBindings.validateSlots(type, numericParameters, bindings);
+            scalarBindings = Map.copyOf(bindings);
+        }
+
+        private void applyBoundValues(double[] values) {
+            setNumericParameters(values);
+            for (var slot : scalarBindings.keySet()) {
+                updateParameterCache(slot, values[slot]);
+            }
+        }
+
+        private void applyAcValues(double[] values) {
+            setNumericParameters(values);
+            for (int slot = 0; slot < values.length; slot++) {
+                updateParameterCache(slot, values[slot]);
+            }
+        }
+
+        private void updateParameterCache(int slot, double value) {
+            parameters.computeIfPresent("param" + slot, (key, previous) -> value);
+            if (slot == 0) {
+                parameters.computeIfPresent(CircuitFileParser.resolveParameterKey(type), (key, previous) -> value);
+            }
+        }
+
         @Override
         public String toString() {
             return "ComponentData{type=" + type + ", name='" + name + "'}";
@@ -388,11 +650,30 @@ public class CircuitModel {
      */
     public static class ConnectionData {
         private final String type; // LK, CONTROL, THERMAL
+        private final String label;
         private final int[][] points;
+        private SavedCircuitBlock savedBlock;
+
+        /** @return the shared immutable saved configuration, or null when absent */
+        public SavedCircuitBlock getSavedBlock() { return savedBlock; }
+        /**
+         * Retains immutable saved configuration without copying it.
+         * @param block the saved configuration, or null to clear it
+         */
+        public void setSavedBlock(SavedCircuitBlock block) { savedBlock = block; }
 
         public ConnectionData(String type, int[][] points) {
+            this(type, points, "");
+        }
+
+        public ConnectionData(String type, int[][] points, String label) {
             this.type = type;
             this.points = points;
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
         }
 
         public String getType() {

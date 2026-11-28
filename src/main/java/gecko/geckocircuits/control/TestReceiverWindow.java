@@ -1203,12 +1203,25 @@ public final class TestReceiverWindow extends JFrame {
     }
 
     public void setTestReceiverCISPR16MenueEnabled(final boolean value) {
-        jButtonCalculate.setEnabled(value);
-        if (value) {
-            jLabelStatus.setText("Simulation finished, data available.");
-        } else {
-            jLabelStatus.setText("Simulation running. Waiting for data...");
-        }
+        setTestReceiverCISPR16MenueEnabled(value, () -> true);
+    }
+
+    private final gecko.geckocircuits.allg.LatestOwnedPresentation _receiverMenuUpdates =
+            new gecko.geckocircuits.allg.LatestOwnedPresentation();
+
+    /**
+     * Updates receiver widgets while the caller owns their presentation.
+     * Reentrant widget listeners can replace the request during a Swing setter.
+     *
+     * @param value true when receiver calculation is available
+     * @param stillCurrent checks ownership before each widget change
+     */
+    public void setTestReceiverCISPR16MenueEnabled(final boolean value,
+            final java.util.function.BooleanSupplier stillCurrent) {
+        _receiverMenuUpdates.update(stillCurrent,
+                () -> jButtonCalculate.setEnabled(value),
+                () -> jLabelStatus.setText(value ? "Simulation finished, data available."
+                        : "Simulation running. Waiting for data..."));
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

@@ -27,7 +27,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 104: Running Simulations](..//wip/#104_running_simulations/index.md)
+- Complete [Tutorial 104: Running Simulations](../../../getting-started/104_running_simulations/index.md)
 - Python 3.8+ installed
 - Familiarity with NumPy and Matplotlib
 
@@ -355,9 +355,9 @@ with ProcessPoolExecutor(max_workers=4) as executor:
 
 ## Related Tutorials
 
-- [702 - MATLAB Integration](..//wip/#index.md) - Alternative interface
-- [701 - GeckoSCRIPT](..//wip/#index.md) - Built-in scripting
-- [105 - Analysis Tools](..//wip/#105_analysis_tools/index.md) - Frequency analysis
+- [702 - MATLAB Integration](../matlab.md) - Alternative interface
+- [701 - GeckoSCRIPT](../701_gecko_script_basics/) - Built-in scripting
+- [105 - Analysis Tools](../../../getting-started/105_analysis_tools/index.md) - Frequency analysis
 
 ## References
 

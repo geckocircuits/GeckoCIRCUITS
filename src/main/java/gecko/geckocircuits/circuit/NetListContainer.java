@@ -14,6 +14,7 @@
 package gecko.geckocircuits.circuit;
 
 import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitBlockInterface;
+import gecko.geckocircuits.circuit.circuitcomponents.AbstractCircuitSource;
 import gecko.geckocircuits.control.NetzlisteCONTROL;
 
 public final class NetListContainer {
@@ -22,7 +23,31 @@ public final class NetListContainer {
     public final NetListLK _nlLK;
     public final NetListLK _nlTH;
 
+    public static void requireLegacySourceSupport(final SchematicEditor2 editor) {
+        requireLegacySourceSupport(editor.getElementLK());
+    }
+
+    static void requireLegacySourceSupport(final Iterable<? extends AbstractCircuitBlockInterface> elements) {
+        for (var element : elements) {
+            if (element.isCircuitEnabled() == Enabled.ENABLED && element.getAcComponent() != null
+                    && element.getAcComponent().law() instanceof gecko.core.ac.AcComponent.Mosfet) {
+                throw new IllegalArgumentException("Use the Core backend for Level 1 MOSFET " + element.getStringID());
+            }
+            if (element.isCircuitEnabled() == Enabled.ENABLED && element.getAcComponent() != null
+                    && element.getAcComponent().law() instanceof gecko.core.ac.AcComponent.ExponentialDiode diode
+                    && diode.transientLaw()) {
+                throw new IllegalArgumentException("Use the Core backend for exponential diode " + element.getStringID());
+            }
+            if (element instanceof AbstractCircuitSource source
+                    && source.getSimulationDomain() == ConnectorType.LK && source.isPwlSource()
+                    && source.isCircuitEnabled() == Enabled.ENABLED) {
+                throw new IllegalArgumentException("Use the Core backend for PWL source " + source.getStringID());
+            }
+        }
+    }
+
     public static NetListContainer fabricStartSimulation(final SchematicEditor2 schematicEntry, SimulationsKern simKern) {
+        if (simKern != null) requireLegacySourceSupport(schematicEntry);
         schematicEntry.checkNameOptParameters();
         NetzlisteAllg nlC1 = NetzlisteAllg.fabricNetzlistDisabledParentSubsRemoved(schematicEntry.getConnection(ConnectorType.CONTROL), schematicEntry.getElementCONTROL());
         NetListLK nlL = schematicEntry.getNetzliste(ConnectorType.LK_AND_RELUCTANCE);
@@ -47,6 +72,7 @@ public final class NetListContainer {
 
     public static NetListContainer fabricContinueSimulation(final SchematicEditor2 schematicEntry, SimulationsKern simKern,
             NetListContainer oldNetlist) {
+        if (simKern != null) requireLegacySourceSupport(schematicEntry);
         schematicEntry.checkNameOptParameters();
         return new NetListContainer(NetzlisteCONTROL.fabricContinueSimulation(oldNetlist._nlControl), oldNetlist._nlLK, oldNetlist._nlTH);
     }

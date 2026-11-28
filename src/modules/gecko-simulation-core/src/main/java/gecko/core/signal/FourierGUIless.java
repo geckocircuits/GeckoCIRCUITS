@@ -48,7 +48,7 @@ public final class FourierGUIless {
         if ((_nMin < 0) || (_nMax < 0) || (_nMin > _nMax)) {
               throw new GeckoInvalidArgumentException("Invalid harmonics value for Fourier analysis.");
         }
-        if (_baseFreq <= 0) {
+        if (!Double.isFinite(_rng1) || !Double.isFinite(_rng2) || !Double.isFinite(_baseFreq) || _baseFreq <= 0) {
               throw new GeckoInvalidArgumentException("Invalid range supplied for Fourier analysis.");
         }
         double[][][] erg;
@@ -60,62 +60,47 @@ public final class FourierGUIless {
         }
     }
 
-    private double[][][] calculate() {  // eventuell OutOfMemoryError bei zuvielen Oberschwingungen
-        final double[][] anVals = new double[_header.length][_nMax - _nMin + 1];
-        final double[][] bnVals = new double[_header.length][_nMax - _nMin + 1];
-        final double[][] cnVals = new double[_header.length][_nMax - _nMin + 1];  // Amplitude
-        final double[][] jnVals = new double[_header.length][_nMax - _nMin + 1];  // Winkel [rad]
-
-
-
-        int index1 = 0; // Startpunkt finden:
-        while (_worksheet.getTimeValue(index1, 0) <= _rng1) {
-            index1++;
+    private double[][][] calculate() throws GeckoInvalidArgumentException {
+        final int maximum = _worksheet.getMaximumTimeIndex(0);
+        if (maximum < 1 || _rng1 < _worksheet.getTimeValue(0, 0)
+                || _rng2 > _worksheet.getTimeValue(maximum, 0)) {
+            throw new GeckoInvalidArgumentException("Analysis bounds must be within a recorded clock with at least two samples.");
         }
-        final int startIndex = findStartIndex();
-
-        final int stopIndex = findStopIndex(startIndex);
-
-
-        final int numberOfSamples = stopIndex - startIndex;
-
-        _nValues = 1;
-        while (_nValues < numberOfSamples) {
-            _nValues *= 2;
+        for (int i = 0; i <= maximum; i++) {
+            double time = _worksheet.getTimeValue(i, 0);
+            if (!Double.isFinite(time) || (i > 0 && time <= _worksheet.getTimeValue(i - 1, 0))) {
+                throw new GeckoInvalidArgumentException("Recorded timestamps must be finite and strictly increasing.");
+            }
         }
-
-        if (_nValues > numberOfSamples) {
-            _nValues /= 2;
+        int startIndex = 0;
+        while (startIndex < maximum && _worksheet.getTimeValue(startIndex + 1, 0) <= _rng1) startIndex++;
+        int stopIndex = startIndex + 1;
+        while (stopIndex < maximum && _worksheet.getTimeValue(stopIndex, 0) < _rng2) stopIndex++;
+        _nValues = Integer.highestOneBit(stopIndex - startIndex);
+        if (_nMax > 0 && _nMax >= _nValues / 2) {
+            throw new GeckoInvalidArgumentException("Harmonic count exceeds the selected signal resolution.");
         }
-
-        final float stopTime = (float) _worksheet.getTimeValue(stopIndex, 0);
-        final float startTime = (float) _worksheet.getTimeValue(startIndex, 0);
-
-        final double timeSpan = stopTime - startTime;
-
-        for (int i2 = 0; i2 < _header.length; i2++) {  // Schleife ueber alle Fourier-zu-zerlegenden Kurven
-
-                float[] data = new float[_nValues];
-                int jjj = startIndex;
-                for (int i = 0; i < _nValues; i++) {
-                    while (_worksheet.getTimeValue(jjj, 0) < startTime + i * timeSpan / _nValues) {
-                        jjj++;
-                    }
-                    data[i] = (float) _worksheet.getValue(i2, jjj);
-                }
-
-
-
-                Cispr16Fft.realft(data, 1);
-                for (int n = _nMin; n <= _nMax; n++) {
-                    anVals[i2][n - _nMin] = 2 * data[2 * n] / _nValues;
-                    bnVals[i2][n - _nMin] = 2 * data[2 * n + 1] / _nValues ;
-                }
-
+        final double[][] anVals = new double[_header.length][_nMax + 1];
+        final double[][] bnVals = new double[_header.length][_nMax + 1];
+        final double[][] cnVals = new double[_header.length][_nMax + 1];
+        final double[][] jnVals = new double[_header.length][_nMax + 1];
+        final double duration = _rng2 - _rng1;
+        for (int row = 0; row < _header.length; row++) {
+            float[] data = new float[_nValues];
+            int source = startIndex;
+            for (int i = 0; i < _nValues; i++) {
+                double relativeTime = i * (duration / _nValues);
+                while (source < maximum && _worksheet.getTimeValue(source + 1, 0) - _rng1 <= relativeTime) source++;
+                data[i] = _worksheet.getValue(row, source);
+            }
+            if (_nValues > 1) Cispr16Fft.realft(data, 1);
+            anVals[row][0] = 2 * data[0] / _nValues;
+            for (int n = 1; n <= _nMax; n++) {
+                anVals[row][n] = 2 * data[2 * n] / _nValues;
+                bnVals[row][n] = 2 * data[2 * n + 1] / _nValues;
+            }
         }
-        // Auswertung:
-        double[][][] returnValue = evaluate(anVals, bnVals, cnVals, jnVals);
-        return returnValue;
+        return evaluate(anVals, bnVals, cnVals, jnVals);
     }
 
     private double[][][] evaluate(final double[][] anVals, final double[][] bnVals,
@@ -145,24 +130,4 @@ public final class FourierGUIless {
         return erg;
     }
 
-    private int findStartIndex() {
-        int index1 = 0; // Startpunkt finden:
-        while (_worksheet.getTimeValue(index1, 0) <= _rng1) {
-            index1++;
-        }
-        return index1;
-    }
-
-    private int findStopIndex(final int startIndex) {
-        int index1 = startIndex;
-        int returnValue = 0;
-        while ((index1 < _worksheet.getMaximumTimeIndex(0))
-                && (_worksheet.getTimeValue(index1 + 1, 0) > _worksheet.getTimeValue(index1, 0))
-                && (_rng1 <= _worksheet.getTimeValue(index1, 0))
-                && (_worksheet.getTimeValue(index1, 0) <= _rng2)) {  // Schleife Zeitbereich [t1...t2]
-            returnValue = index1;
-            index1++;
-        }
-        return returnValue;
-    }
 }

@@ -24,18 +24,27 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(ApiKeyAuthFilter.class);
 
     private static final Set<String> PUBLIC_PATH_PREFIXES = Set.of(
+            "/api/health",
+            "/api-docs",
             "/actuator/health",
             "/api/v1/health",
             "/swagger-ui",
+            "/swagger-ui.html",
             "/v3/api-docs",
             "/ws",
             "/ws-raw"
     );
 
     private final ApiKeyProperties apiKeyProperties;
+    private final JwtService tokens;
 
     public ApiKeyAuthFilter(ApiKeyProperties apiKeyProperties) {
+        this(apiKeyProperties, null);
+    }
+
+    public ApiKeyAuthFilter(ApiKeyProperties apiKeyProperties, JwtService tokens) {
         this.apiKeyProperties = apiKeyProperties;
+        this.tokens = tokens;
     }
 
     @Override
@@ -44,23 +53,47 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                                     @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getServletPath();
+        String path = requestPath(request);
 
         // Allow public paths
-        if (isPublicPath(path)) {
+        if (isPublicPath(path) || path.equals("/api/v1/auth/refresh")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // If auth is disabled, pass through
         if (!apiKeyProperties.isAuthEnabled()) {
+            var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(ApiIdentity.forKey(null, apiKeyProperties));
+            org.springframework.security.core.context.SecurityContextHolder.setContext(context);
             filterChain.doFilter(request, response);
             return;
         }
 
         // Validate API key
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null) {
+            try {
+                if (tokens == null || !authorization.regionMatches(true, 0, "Bearer ", 0, 7)) {
+                    throw new org.springframework.security.oauth2.jwt.BadJwtException("A bearer token is required.");
+                }
+                var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+                context.setAuthentication(tokens.authenticate(authorization.substring(7)));
+                org.springframework.security.core.context.SecurityContextHolder.setContext(context);
+                filterChain.doFilter(request, response);
+                return;
+            } catch (org.springframework.security.oauth2.jwt.JwtException invalid) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"A valid access token is required.\"}");
+                return;
+            }
+        }
         String providedKey = request.getHeader(API_KEY_HEADER);
         if (apiKeyProperties.isValidKey(providedKey)) {
+            var context = org.springframework.security.core.context.SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(ApiIdentity.forKey(providedKey, apiKeyProperties));
+            org.springframework.security.core.context.SecurityContextHolder.setContext(context);
             filterChain.doFilter(request, response);
         } else {
             log.debug("Rejected request to {} - invalid or missing API key", path);
@@ -72,10 +105,15 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     private boolean isPublicPath(String path) {
         for (String prefix : PUBLIC_PATH_PREFIXES) {
-            if (path.startsWith(prefix)) {
+            if (path.equals(prefix) || path.startsWith(prefix + "/")) {
                 return true;
             }
         }
         return false;
+    }
+
+    static String requestPath(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.isEmpty() ? request.getRequestURI().substring(request.getContextPath().length()) : path;
     }
 }

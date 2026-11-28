@@ -13,6 +13,8 @@
  */
 package gecko.core.circuit.matrix;
 
+import gecko.core.allg.SolverType;
+
 /**
  * Matrix stamper implementation for diode components.
  *
@@ -106,16 +108,16 @@ public class DiodeStamper implements IStatefulStamper {
     }
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
-                             double[] parameter, double dt) {
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
+                             double[] parameter, double dt, SolverType solverType) {
         double resistance = getCurrentResistance(parameter);
         double admittance = 1.0 / resistance;
 
         // Stamp standard two-terminal admittance pattern
-        a[nodeX][nodeX] += admittance;
-        a[nodeY][nodeY] += admittance;
-        a[nodeX][nodeY] -= admittance;
-        a[nodeY][nodeX] -= admittance;
+        a.add(nodeX, nodeX, admittance);
+        a.add(nodeY, nodeY, admittance);
+        a.add(nodeX, nodeY, -admittance);
+        a.add(nodeY, nodeX, -admittance);
     }
 
     @Override
@@ -210,15 +212,18 @@ public class DiodeStamper implements IStatefulStamper {
     }
 
     /**
-     * Gets current resistance, using parameter array if provided.
+     * Gets current resistance from the parameter array.
      *
-     * @param parameter optional parameter array (may override instance values)
+     * <p>Uses parameter[0] directly as the current resistance value (rD), matching
+     * the .ipes file convention where parameter[0] is toggled between R_ON and R_OFF
+     * by the semiconductor state management logic in the simulation loop.</p>
+     *
+     * @param parameter component parameter array where [0]=rD (current resistance)
      * @return current effective resistance
      */
     private double getCurrentResistance(double[] parameter) {
-        if (parameter != null && parameter.length > PARAM_R_OFF) {
-            double r = isOn ? parameter[PARAM_R_ON] : parameter[PARAM_R_OFF];
-            return Math.max(r, MIN_RESISTANCE);
+        if (parameter != null && parameter.length > 0) {
+            return Math.max(parameter[0], MIN_RESISTANCE);
         }
         return getCurrentResistance();
     }

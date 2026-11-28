@@ -8,13 +8,13 @@ Introduction to GeckoCIRCUITS for new users.
 
 | Tutorial | Title | Difficulty | Duration |
 |----------|-------|------------|----------|
-| [101](101_first_simulation/) | First Simulation | 1/3 | 15-20 min |
-| [102](102_basic_circuits/) | Basic Circuits | 1/3 | 25-30 min |
-| [103](103_pwm_basics/) | PWM Basics | 2/3 | 30-35 min |
-| [104](104_running_simulations/) | Running Simulations | 2/3 | 25-30 min |
-| [105](105_analysis_tools/) | Analysis Tools | 2/3 | 40-50 min |
-| [106](106_state_machines/) | State Machines | 2/3 | 35-45 min |
-| [107](107_component_libraries/) | Component Libraries | 2/3 | 30-40 min |
+| [101](101_first_simulation/index.md) | First Simulation | 1/3 | 15-20 min |
+| [102](102_basic_circuits/index.md) | Basic Circuits | 1/3 | 25-30 min |
+| [103](pwm-basics.md) | PWM Basics | 2/3 | 30-35 min |
+| [104](104_running_simulations/index.md) | Running Simulations | 2/3 | 25-30 min |
+| [105](105_analysis_tools/index.md) | Analysis Tools | 2/3 | 40-50 min |
+| [106](106_state_machines/index.md) | State Machines | 2/3 | 35-45 min |
+| [107](107_component_libraries/index.md) | Component Libraries | 2/3 | 30-40 min |
 
 ## Learning Path
 
@@ -57,10 +57,10 @@ By completing this series, you will be able to:
 ## Next Steps
 
 After completing the Getting Started series:
-- **DC-DC Converters:** [2xx Series](../2xx_dcdc_converters/index.md) - Buck, Boost, Buck-Boost
-- **Rectifiers:** [3xx Series](../3xx_acdc_rectifiers/index.md) - Diode bridges, PFC
-- **Magnetics:** [9xx Series](../9xx_magnetics_mechanical/index.md) - Transformer, inductor modeling
-- **Examples:** [Basic Topologies](../examples/basic_topologies/index.md) - Reference designs
+- **DC-DC Converters:** [2xx Series](../tutorials/dcdc/index.md) - Buck, Boost, Buck-Boost
+- **Rectifiers:** [3xx Series](../tutorials/acdc/index.md) - Diode bridges, PFC
+- **Magnetics:** [9xx Series](../tutorials/magnetics/index.md) - Transformer, inductor modeling
+- **Examples:** [Basic Topologies](../examples/basic/index.md) - Reference designs
 
 ## Quick Reference
 

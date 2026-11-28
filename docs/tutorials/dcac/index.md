@@ -8,9 +8,9 @@ DC to AC power conversion and PWM control.
 
 | Tutorial | Title | Difficulty | Materials |
 |----------|-------|------------|-----------|
-| [401](401_single_phase_inverter/) | Single-Phase Inverter | 2/3 | circuit |
-| [402](402_three_phase_inverter/) | Three-Phase Inverter | 2/3 | PDF + circuits |
-| [403](403_npc_inverter/) | NPC 3-Level Inverter | 3/3 | README |
+| [401](single-phase.md) | Single-Phase Inverter | 2/3 | circuit |
+| [402](three-phase.md) | Three-Phase Inverter | 2/3 | PDF + circuits |
+| [403](npc-inverter.md) | NPC 3-Level Inverter | 3/3 | README |
 
 ## Learning Objectives
 
@@ -58,9 +58,9 @@ DC to AC power conversion and PWM control.
 
 - Complete 2xx DC-DC Converters (basics of switching)
 - Understanding of three-phase systems
-- PWM fundamentals ([103 - PWM Basics](../1xx_getting_started/103_pwm_basics/index.md))
+- PWM fundamentals ([103 - PWM Basics](../../getting-started/pwm-basics.md))
 
 ## Related Examples
 
-- [Inverters](../examples/inverters/index.md)
-- [Motor Drives](../examples/motor_drives/index.md)
+- [Inverters](../../examples/inverters/index.md)
+- [Motor Drives](../../examples/motor-drives/index.md)

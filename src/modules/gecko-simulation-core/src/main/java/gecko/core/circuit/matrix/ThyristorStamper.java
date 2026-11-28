@@ -13,6 +13,8 @@
  */
 package gecko.core.circuit.matrix;
 
+import gecko.core.allg.SolverType;
+
 /**
  * Matrix stamper implementation for Thyristor (SCR) components.
  *
@@ -23,7 +25,7 @@ package gecko.core.circuit.matrix;
  * Key characteristics (from LKMatrices.java):
  * - Gate-triggered turn-on: Requires gate pulse AND forward voltage > threshold
  * - Current-zero turn-off: Cannot be turned off by gate, only turns OFF when current reaches zero
- * - Reverse recovery time: Stays OFF for a minimum time after turning off
+ * - Reverse recovery interval: Delays turn-off after reverse bias is first detected
  * - Latching: Once triggered ON, stays ON regardless of gate signal (until current zero)
  *
  * Parameter mapping (from LKMatrices):
@@ -126,6 +128,9 @@ public class ThyristorStamper implements IStatefulStamper {
     /** Last switch-off time */
     private double lastSwitchOffTime;
 
+    /** Start of the current uninterrupted reverse-bias recovery interval. */
+    private double recoveryStartTime = Double.NaN;
+
     /**
      * Creates a thyristor stamper with default parameters.
      */
@@ -152,16 +157,16 @@ public class ThyristorStamper implements IStatefulStamper {
     }
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
-                             double[] parameter, double dt) {
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
+                             double[] parameter, double dt, SolverType solverType) {
         double resistance = getCurrentResistance(parameter);
         double admittance = 1.0 / resistance;
 
         // Stamp standard two-terminal admittance pattern
-        a[nodeX][nodeX] += admittance;
-        a[nodeY][nodeY] += admittance;
-        a[nodeX][nodeY] -= admittance;
-        a[nodeY][nodeX] -= admittance;
+        a.add(nodeX, nodeX, admittance);
+        a.add(nodeY, nodeY, admittance);
+        a.add(nodeX, nodeY, -admittance);
+        a.add(nodeY, nodeX, -admittance);
     }
 
     @Override
@@ -170,9 +175,7 @@ public class ThyristorStamper implements IStatefulStamper {
                              double[] previousValues) {
         // When ON (low resistance), compensate for forward voltage drop
         double resistance = getCurrentResistance(parameter);
-        double rOffThreshold = ON_STATE_FACTOR * getROff(parameter);
-
-        if (resistance < rOffThreshold) {
+        if (isConducting(parameter, resistance)) {
             double uf = getUForward(parameter);
             if (uf > 0) {
                 double admittance = 1.0 / resistance;
@@ -192,7 +195,7 @@ public class ThyristorStamper implements IStatefulStamper {
         double uf = getUForward(parameter);
         double vDiff = nodeVoltageX - nodeVoltageY;
 
-        if (isOn) {
+        if (isConducting(parameter, resistance) && uf > 0) {
             // Current through conducting thyristor: I = (V - Uf) / rOn
             return (vDiff - uf) / resistance;
         } else {
@@ -203,35 +206,13 @@ public class ThyristorStamper implements IStatefulStamper {
 
     @Override
     public double getAdmittanceWeight(double parameterValue, double dt) {
-        double resistance = isOn ? rOn : rOff;
-        resistance = Math.max(resistance, MIN_RESISTANCE);
-        return 1.0 / resistance;
+        return 1.0 / Math.max(parameterValue, MIN_RESISTANCE);
     }
 
     @Override
     public void updateState(double vx, double vy, double current, double time) {
-        // Basic state update based on voltage/current only
-        // For full thyristor behavior, use updateStateWithGate()
-
-        boolean previousState = isOn;
-        double vForward = vx - vy;
-
-        if (isOn) {
-            // Currently ON: turn OFF when current goes to zero (forward voltage drops)
-            if (vForward < (PERTURBATION_FACTOR * uForward + ACCEPTANCE_THRESHOLD)) {
-                // Check if recovery time has passed since any previous off-state
-                if (time - lastSwitchOffTime > 3 * recoveryTime) {
-                    lastSwitchOffTime = time;
-                }
-
-                if (time - lastSwitchOffTime >= recoveryTime) {
-                    isOn = false;
-                }
-            }
-        }
-        // Note: Turn ON requires gate signal - handled by updateStateWithGate()
-
-        stateChanged = (isOn != previousState);
+        // Voltage iteration can turn the device off, but cannot supply a gate trigger.
+        updateStateWithGate(0, vx, vy, time);
     }
 
     /**
@@ -253,14 +234,18 @@ public class ThyristorStamper implements IStatefulStamper {
             // Thyristor turns OFF when forward voltage drops below threshold
             // This indicates current is trying to reverse
             if (vForward < (PERTURBATION_FACTOR * uForward + ACCEPTANCE_THRESHOLD)) {
-                // Handle recovery time tracking
-                if (time - lastSwitchOffTime > 3 * recoveryTime) {
+                if (Double.isNaN(recoveryStartTime)) {
+                    recoveryStartTime = time;
                     lastSwitchOffTime = time;
                 }
 
-                if (time - lastSwitchOffTime >= recoveryTime) {
+                if (time - recoveryStartTime >= recoveryTime) {
                     isOn = false;
+                    recoveryStartTime = Double.NaN;
                 }
+            } else {
+                // Forward conduction cancels an interrupted recovery interval.
+                recoveryStartTime = Double.NaN;
             }
             // Note: Gate signal cannot turn OFF a thyristor (latching behavior)
         } else {
@@ -333,11 +318,23 @@ public class ThyristorStamper implements IStatefulStamper {
         boolean previousState = isOn;
         isOn = on;
         stateChanged = (isOn != previousState);
+        if (stateChanged) {
+            recoveryStartTime = Double.NaN;
+        }
     }
 
     @Override
     public double getCurrentResistance() {
         return isOn ? rOn : rOff;
+    }
+
+    /** Selects conduction using the same state source as matrix stamping. */
+    private boolean isConducting(double[] parameter, double resistance) {
+        if (parameter == null || parameter.length <= PARAM_R_CURRENT) {
+            return isOn;
+        }
+        // An explicit operating resistance takes precedence over this instance's state.
+        return resistance < ON_STATE_FACTOR * getROff(parameter);
     }
 
     /**

@@ -13,11 +13,13 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 /**
  *
  * @author andreas
  */
-public final class GainCalculator extends AbstractSingleInputSingleOutputCalculator {
+public final class GainCalculator extends AbstractSingleInputSingleOutputCalculator implements StatelessCalculation {
 
     private double _gain;
 

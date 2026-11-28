@@ -25,6 +25,14 @@ public abstract class AbstractControlCalculatable {
     public static void setTime(final double time) {
         _time = time;
     }
+
+    private double simulationTime = Double.NaN;
+
+    /** Sets this calculator's clock without changing another run. */
+    public final void setSimulationTime(double time) { simulationTime = time; }
+
+    /** Uses the legacy manual clock until a runtime assigns a local clock. */
+    protected final double getTime() { return Double.isNaN(simulationTime) ? _time : simulationTime; }
     
     public final double[][] _inputSignal;
     public final double[][] _outputSignal;
@@ -36,6 +44,15 @@ public abstract class AbstractControlCalculatable {
     }
 
     public abstract void berechneYOUT(final double deltaT);
+
+    /**
+     * Checks connected signal widths without changing calculator state.
+     * Scalar calculations can read the first value of a vector signal.
+     *
+     * @throws IllegalArgumentException if a required vector width does not match
+     */
+    public void validateInputSignalWidths() {
+    }
 
     public void setInputSignal(final int inputIndex, final AbstractControlCalculatable output, 
             final int outputIndex) throws Exception {

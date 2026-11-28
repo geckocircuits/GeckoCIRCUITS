@@ -26,6 +26,10 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <junit.version>5.11.3</junit.version>
+        <!-- Benchmarks run only when requested with -Dgroups=benchmark (see the benchmark profile). -->
+        <gecko.excludedGroups>application,benchmark</gecko.excludedGroups>
+        <!-- The all-tests profile runs application tests but still leaves benchmarks out unless requested. -->
+        <gecko.allTestsExcluded>benchmark</gecko.allTestsExcluded>
     </properties>
 
     <dependencies>
@@ -34,6 +38,13 @@
             <groupId>edu.emory.mathcs</groupId>
             <artifactId>JTransforms</artifactId>
             <version>2.4</version>
+        </dependency>
+
+        <!-- EJML sparse LU for large circuits (pure Java, Apache-2.0). Version checked against Maven Central metadata. -->
+        <dependency>
+            <groupId>org.ejml</groupId>
+            <artifactId>ejml-dsparse</artifactId>
+            <version>0.46.1</version>
         </dependency>
 
         <!-- SpotBugs annotations (compile-only, for @SuppressFBWarnings) -->
@@ -65,6 +76,51 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>embed-gecko-build-identity</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>run</goal></goals>
+                        <configuration>
+                            <target>
+                                <exec executable="git" dir="${project.basedir}" outputproperty="gecko.source.revision"
+                                      resultproperty="gecko.source.revisionStatus" failonerror="false" failifexecutionfails="false">
+                                    <arg line="rev-parse --verify HEAD"/>
+                                </exec>
+                                <exec executable="git" dir="${project.basedir}" outputproperty="gecko.source.status"
+                                      resultproperty="gecko.source.statusCode" failonerror="false" failifexecutionfails="false">
+                                    <arg line="status --porcelain --untracked-files=normal"/>
+                                </exec>
+                                <property name="gecko.source.revision" value=""/>
+                                <condition property="gecko.source.dirty" value="false" else="true">
+                                    <and>
+                                        <equals arg1="${gecko.source.revisionStatus}" arg2="0"/>
+                                        <equals arg1="${gecko.source.statusCode}" arg2="0"/>
+                                        <equals arg1="${gecko.source.status}" arg2=""/>
+                                    </and>
+                                </condition>
+                                <checksum algorithm="SHA-256" totalproperty="gecko.source.snapshot"
+                                          todir="${project.build.directory}/gecko-source-checksums">
+                                    <fileset dir="${project.basedir}">
+                                        <include name="pom.xml"/>
+                                        <include name="src/main/**"/>
+                                    </fileset>
+                                </checksum>
+                                <mkdir dir="${project.build.outputDirectory}/META-INF"/>
+                                <echo file="${project.build.outputDirectory}/META-INF/gecko-build.properties"
+                                      encoding="UTF-8">revision=${gecko.source.revision}
+dirty=${gecko.source.dirty}
+sourceSnapshotSha256=${gecko.source.snapshot}
+</echo>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -103,13 +159,328 @@
                         <configuration>
                             <rules>
                                 <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.control.DelayHistory</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.98</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.signal.TimedSignal</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.90</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.signal.FourierGUIless</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit>
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.30</minimum>
+                                            <minimum>0.55</minimum>
                                         </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.50</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <!-- Preparation contracts cover configuration, ownership, and readiness. -->
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes><include>gecko.core.preparation</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes><include>gecko.core.control.calculators</include></includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.95</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes>
+                                        <include>gecko.core.control.calculators.SparseMatrixCalculator</include>
+                                        <include>gecko.core.control.calculators.SmallSignalCalculator</include>
+                                        <include>gecko.core.control.calculators.DelayCalculator</include>
+                                        <include>gecko.core.control.calculators.PmsmControlCalculator</include>
+                                        <include>gecko.core.control.calculators.PmsmModulatorCalculator</include>
+                                        <include>gecko.core.control.calculators.ThyristorControlCalculator*</include>
+                                        <include>gecko.core.control.calculators.ABCDQCalculator</include>
+                                        <include>gecko.core.control.calculators.DQABCDCalculator</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.95</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.85</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <!-- Saved circuit topology must stay covered through parser and solver contracts. -->
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.io.CircuitFileParser</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.80</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.circuit.netlist.CoordinateTopologyResolver</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.90</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <!-- Magnetic contracts cover registry validation, winding stamps and solver histories. -->
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes>
+                                        <include>gecko.core.circuit.netlist.MutualCouplingRegistry</include>
+                                        <include>gecko.core.circuit.netlist.MutualCouplingRegistry$Coupling</include>
+                                        <include>gecko.core.circuit.matrix.CoupledInductorStamper</include>
+                                    </includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.90</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.solver.MatrixSolver</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.84</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.70</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes><include>gecko.core.circuit.netlist</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.90</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.circuit.netlist.NetlistBuilder</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes>
+                                        <include>gecko.core.circuit.netlist.NodeIndexer</include>
+                                        <include>gecko.core.circuit.netlist.LabelResolver</include>
+                                        <include>gecko.core.circuit.netlist.CircuitNetlist</include>
+                                    </includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes><include>gecko.core.circuit.matrix</include></includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.70</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes>
+                                        <include>gecko.core.circuit.matrix.ThyristorStamper</include>
+                                        <include>gecko.core.circuit.matrix.IGBTStamper</include>
+                                        <include>gecko.core.circuit.matrix.MOSFETStamper</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes>
+                                        <include>gecko.core.control.calculators.PICalculator</include>
+                                        <include>gecko.core.control.calculators.IntegratorCalculation</include>
+                                        <include>gecko.core.control.calculators.PT1Calculator</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.95</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes>
+                                        <include>gecko.core.control.calculators.SignalCalculatorImport</include>
+                                        <include>gecko.core.control.calculators.PDCalculator</include>
+                                        <include>gecko.core.control.calculators.PT2Calculator</include>
+                                        <include>gecko.core.control.calculators.CounterCalculatable</include>
+                                        <include>gecko.core.control.calculators.SampleHoldCalculator</include>
+                                        <include>gecko.core.control.calculators.HysteresisCalculator*</include>
+                                        <include>gecko.core.control.calculators.LimitCalculator*</include>
+                                        <include>gecko.core.control.calculators.*MultiInput*</include>
+                                        <include>gecko.core.control.calculators.AndTwoPortCalculator</include>
+                                        <include>gecko.core.control.calculators.OrCalculator*</include>
+                                        <include>gecko.core.control.calculators.XORCalculator</include>
+                                        <include>gecko.core.control.calculators.NotCalculator</include>
+                                        <include>gecko.core.control.calculators.Subtraction*</include>
+                                        <include>gecko.core.control.calculators.MUXControlCalculatable</include>
+                                        <include>gecko.core.control.calculators.TimeCalculator</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.95</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.90</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.control.calculators.SignalCalculatorExternalWrapper</include></includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.75</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.85</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.solver.InitialConditionSolver</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.98</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.92</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.ElectricalTimeStep</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.90</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.HeadlessSimulationEngine</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.DomainCoupler</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.98</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.ControlRuntime</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <!-- Guard dependency ordering and buffered-delay scheduling. -->
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.ControlCalculatorFactory*</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.85</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.simulation.ControlNetlist</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <includes><include>gecko.core.control.calculators.DelayCalculator</include></includes>
+                                    <limits>
+                                        <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>0.98</minimum></limit>
+                                        <limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.95</minimum></limit>
                                     </limits>
                                 </rule>
                             </rules>
@@ -153,11 +524,65 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
+                <configuration>
+                    <!-- Default: run unit + integration, skip application tests -->
+                    <excludedGroups>${gecko.excludedGroups}</excludedGroups>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
+        <!-- Activated by -Dgroups=benchmark: keeps the benchmark tag selectable while application stays excluded. -->
+        <profile>
+            <id>benchmark</id>
+            <activation>
+                <property>
+                    <name>groups</name>
+                    <value>benchmark</value>
+                </property>
+            </activation>
+            <properties>
+                <gecko.excludedGroups>application</gecko.excludedGroups>
+                <gecko.allTestsExcluded></gecko.allTestsExcluded>
+            </properties>
+        </profile>
+
+        <!-- Profile: application tests only (needs golden traces) -->
+        <profile>
+            <id>application</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.4</version>
+                        <configuration>
+                            <groups>application</groups>
+                            <excludedGroups combine.self="override"/>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Profile: all tests including application -->
+        <profile>
+            <id>all-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.4</version>
+                        <configuration>
+                            <excludedGroups combine.self="override">${gecko.allTestsExcluded}</excludedGroups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <!-- Profile for GraalVM native image compilation -->
         <profile>
             <id>native</id>

@@ -106,6 +106,13 @@ public final class MOSFET extends AbstractSwitch implements HiddenSubCircuitable
         kOff.setValueWithoutUndo(15e-6);
     }
 
+    @Override
+    protected void onAcComponentInstalled(gecko.core.ac.AcComponent component) {
+        if (component.law() instanceof gecko.core.ac.AcComponent.Mosfet && XIN.size() == 1) {
+            XIN.add(new gecko.geckocircuits.circuit.TerminalRelativePosition(this, -2, 0));
+        }
+    }
+
     public Diode getAntiParallelDiode() {
         return _antiParallelDiode;
     }

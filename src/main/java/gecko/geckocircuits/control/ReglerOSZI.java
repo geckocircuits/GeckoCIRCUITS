@@ -398,7 +398,7 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
         }
 
         final TokenMap windowSettingsMap = tokenMap.getBlockTokenMap("<ScopeWindowSettings>");
-        if (settingsMap != null) {
+        if (windowSettingsMap != null) {
             _scopeFrame.importIndividualCONTROL(windowSettingsMap);
         }
 
@@ -406,6 +406,9 @@ public final class ReglerOSZI extends RegelBlock implements VariableTerminalNumb
 
         if (scopeMap != null) {
             importScopeSettings(scopeMap);
+        } else if (settingsMap == null) {
+            // A circuit import can supply scope terminals without saved diagrams.
+            createInitialDiagram();
         }
 
     }

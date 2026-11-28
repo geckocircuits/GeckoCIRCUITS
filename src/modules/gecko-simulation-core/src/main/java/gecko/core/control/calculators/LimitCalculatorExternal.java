@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class LimitCalculatorExternal extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class LimitCalculatorExternal extends AbstractControlCalculatable implements StatelessCalculation {
 
     private static final int NUMBER_INPUTS = 3;
 

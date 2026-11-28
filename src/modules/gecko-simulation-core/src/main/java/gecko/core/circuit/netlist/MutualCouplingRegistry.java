@@ -22,7 +22,7 @@ import java.util.*;
  * <p>Mutual inductance in circuit simulation:
  * <ul>
  *   <li>Two coupled inductors share magnetic flux</li>
- *   <li>Coupling coefficient k ranges from 0 (no coupling) to 1 (perfect coupling)</li>
+ *   <li>Coupling coefficient k ranges from -1 to 1, with sign specifying winding polarity</li>
  *   <li>Mutual inductance M = k * sqrt(L1 * L2)</li>
  *   <li>Affects the matrix stamping for inductor currents</li>
  * </ul>
@@ -56,19 +56,29 @@ public class MutualCouplingRegistry {
          *
          * @param inductor1Index index of first inductor
          * @param inductor2Index index of second inductor
-         * @param couplingCoefficient k value (0 to 1)
+         * @param couplingCoefficient signed k value (-1 to 1)
          * @param inductance1 L1 value in Henries
          * @param inductance2 L2 value in Henries
          */
         public Coupling(int inductor1Index, int inductor2Index,
                        double couplingCoefficient,
                        double inductance1, double inductance2) {
+            if (inductor1Index < 0 || inductor2Index < 0 || inductor1Index == inductor2Index) {
+                throw new IllegalArgumentException("Coupling requires two distinct non-negative inductor indices");
+            }
+            if (!Double.isFinite(couplingCoefficient) || Math.abs(couplingCoefficient) > 1) {
+                throw new IllegalArgumentException("Coupling coefficient must be finite and within [-1, 1]");
+            }
+            if (!Double.isFinite(inductance1) || !Double.isFinite(inductance2)
+                    || inductance1 <= 0 || inductance2 <= 0) {
+                throw new IllegalArgumentException("Inductance values must be finite and positive");
+            }
             this.inductor1Index = inductor1Index;
             this.inductor2Index = inductor2Index;
             this.couplingCoefficient = couplingCoefficient;
             this.inductance1 = inductance1;
             this.inductance2 = inductance2;
-            this.mutualInductance = couplingCoefficient * Math.sqrt(inductance1 * inductance2);
+            this.mutualInductance = couplingCoefficient * (Math.sqrt(inductance1) * Math.sqrt(inductance2));
         }
 
         public int getInductor1Index() { return inductor1Index; }
@@ -147,7 +157,7 @@ public class MutualCouplingRegistry {
      *
      * @param inductor1Index index of first inductor in netlist
      * @param inductor2Index index of second inductor in netlist
-     * @param couplingCoefficient k value (typically 0 to 1)
+     * @param couplingCoefficient signed k value (-1 to 1)
      * @param inductance1 L1 value in Henries
      * @param inductance2 L2 value in Henries
      * @return the created Coupling object
@@ -156,19 +166,6 @@ public class MutualCouplingRegistry {
     public Coupling registerCoupling(int inductor1Index, int inductor2Index,
                                      double couplingCoefficient,
                                      double inductance1, double inductance2) {
-        if (inductor1Index == inductor2Index) {
-            throw new IllegalArgumentException("Cannot couple an inductor with itself");
-        }
-        if (inductor1Index < 0 || inductor2Index < 0) {
-            throw new IllegalArgumentException("Inductor indices must be non-negative");
-        }
-        if (Double.isNaN(couplingCoefficient) || Double.isInfinite(couplingCoefficient)) {
-            throw new IllegalArgumentException("Invalid coupling coefficient: " + couplingCoefficient);
-        }
-        if (inductance1 <= 0 || inductance2 <= 0) {
-            throw new IllegalArgumentException("Inductance values must be positive");
-        }
-
         Coupling coupling = new Coupling(inductor1Index, inductor2Index,
                                          couplingCoefficient, inductance1, inductance2);
 
@@ -229,7 +226,7 @@ public class MutualCouplingRegistry {
         List<Coupling> inductorCouplings = inductorToCouplings.get(inductor1Index);
         if (inductorCouplings != null) {
             for (Coupling c : inductorCouplings) {
-                if (c.involves(inductor2Index)) {
+                if (c.getPartner(inductor1Index) == inductor2Index) {
                     return c.getMutualInductance();
                 }
             }
@@ -248,7 +245,7 @@ public class MutualCouplingRegistry {
         List<Coupling> inductorCouplings = inductorToCouplings.get(inductor1Index);
         if (inductorCouplings != null) {
             for (Coupling c : inductorCouplings) {
-                if (c.involves(inductor2Index)) {
+                if (c.getPartner(inductor1Index) == inductor2Index) {
                     return c.getCouplingCoefficient();
                 }
             }
@@ -267,7 +264,7 @@ public class MutualCouplingRegistry {
         List<Coupling> inductorCouplings = inductorToCouplings.get(inductor1Index);
         if (inductorCouplings != null) {
             for (Coupling c : inductorCouplings) {
-                if (c.involves(inductor2Index)) {
+                if (c.getPartner(inductor1Index) == inductor2Index) {
                     return true;
                 }
             }
@@ -322,7 +319,7 @@ public class MutualCouplingRegistry {
     public boolean removeCoupling(int inductor1Index, int inductor2Index) {
         Coupling toRemove = null;
         for (Coupling c : couplings) {
-            if (c.involves(inductor1Index) && c.involves(inductor2Index)) {
+            if (c.involves(inductor1Index) && c.getPartner(inductor1Index) == inductor2Index) {
                 toRemove = c;
                 break;
             }
@@ -372,13 +369,18 @@ public class MutualCouplingRegistry {
      * @return triple: [zuLKOP2gehoerigeM_spgQnr, zuLKOP2gehoerigeM_kWerte]
      */
     public double[][][] buildCouplingArrays(int[] voltageSourceNumbers) {
-        int maxIndex = 0;
-        for (int idx : coupledInductors) {
-            maxIndex = Math.max(maxIndex, idx);
+        if (voltageSourceNumbers == null) {
+            throw new IllegalArgumentException("Voltage source mapping cannot be null");
         }
-
-        double[][] spgQnr = new double[maxIndex + 1][];
-        double[][] kWerte = new double[maxIndex + 1][];
+        Set<Integer> usedSources = new HashSet<>();
+        for (int index : coupledInductors) {
+            if (index >= voltageSourceNumbers.length || voltageSourceNumbers[index] <= 0
+                    || !usedSources.add(voltageSourceNumbers[index])) {
+                throw new IllegalArgumentException("Coupled inductors require distinct positive auxiliary source numbers");
+            }
+        }
+        double[][] spgQnr = new double[voltageSourceNumbers.length][];
+        double[][] kWerte = new double[voltageSourceNumbers.length][];
 
         for (int inductorIdx : coupledInductors) {
             List<Coupling> inductorCouplings = inductorToCouplings.get(inductorIdx);

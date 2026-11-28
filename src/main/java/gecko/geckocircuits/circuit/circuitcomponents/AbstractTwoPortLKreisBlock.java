@@ -13,12 +13,11 @@
  */
 package gecko.geckocircuits.circuit.circuitcomponents;
 
+import gecko.core.io.SpicePorts;
 import gecko.geckocircuits.circuit.TerminalTwoPortComponent;
 import java.awt.Graphics2D;
 
 public abstract class AbstractTwoPortLKreisBlock extends AbstractCircuitBlockInterface {
-    private static final int TWO_PORT_DIST = 2;
-
     public AbstractTwoPortLKreisBlock() {
         createTwoPortTerminals();
     }
@@ -29,8 +28,9 @@ public abstract class AbstractTwoPortLKreisBlock extends AbstractCircuitBlockInt
     }
 
     private void createTwoPortTerminals() {
-        XIN.add(new TerminalTwoPortComponent(this, -TWO_PORT_DIST));
-        final TerminalTwoPortComponent outTerminal = new TerminalTwoPortComponent(this, TWO_PORT_DIST);
+        var geometry = SpicePorts.RES.ports();
+        XIN.add(new TerminalTwoPortComponent(this, geometry.getFirst().nativeLocalPoint().y()));
+        final TerminalTwoPortComponent outTerminal = new TerminalTwoPortComponent(this, geometry.getLast().nativeLocalPoint().y());
         outTerminal.setIsFlowSymbolTerminal(true);
         YOUT.add(outTerminal);
 

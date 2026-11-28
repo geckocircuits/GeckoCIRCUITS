@@ -14,6 +14,7 @@
 package gecko.core.circuit.netlist;
 
 import gecko.core.circuit.circuitcomponents.CircuitTypCore;
+import gecko.core.circuit.waveform.PiecewiseLinearWaveform;
 import java.util.*;
 
 /**
@@ -48,13 +49,48 @@ import java.util.*;
  * @since v2.18.0 Phase 3 - Netlist migration to core
  */
 public class CircuitNetlist implements INetList {
+    private boolean wireReference;
+    private int[] numericalNodeOrder = new int[0];
+
+    /** @return a detached mapping from public node indexes to the desktop numerical order */
+    public int[] getNumericalNodeOrder() { return numericalNodeOrder.clone(); }
+
+    /** Retains a detached permutation for numerical execution. Public node indexes remain unchanged. */
+    public void setNumericalNodeOrder(int[] order) {
+        if (order.length != nodeCount + 1) throw new IllegalArgumentException("Numerical node count does not match.");
+        boolean[] seen = new boolean[order.length];
+        for (int value : order) {
+            if (value < 0 || value >= order.length || seen[value]) throw new IllegalArgumentException("Invalid numerical node order.");
+            seen[value] = true;
+        }
+        numericalNodeOrder = order.clone();
+    }
+
+    /** Sets the numerical reference convention for this run-owned netlist. */
+    public void setWireReference(boolean value) { wireReference = value; }
+
+    @Override
+    public boolean usesWireReference() { return wireReference; }
 
     // Basic circuit topology
     private CircuitTypCore[] componentTypes;
+    private Map<Integer, Integer> mosfetGateNodes = Map.of();
+
+    void setMosfetGateNodes(Map<Integer, Integer> gateNodes) {
+        mosfetGateNodes = Map.copyOf(gateNodes);
+    }
+
+    /** @return the electrical gate node of a selected native MOSFET, or -1. */
+    public int getMosfetGateNode(int element) {
+        return mosfetGateNodes.getOrDefault(element, -1);
+    }
+
     private int[] nodeX;          // X terminal node indices
     private int[] nodeY;          // Y terminal node indices
     private int[] voltageSourceNumbers;  // Voltage source numbering for extended MNA
     private double[][] parameters;       // Component parameters
+    private int[] controlElementIndices = new int[0];
+    private PiecewiseLinearWaveform[] pwlWaveforms = new PiecewiseLinearWaveform[0];
 
     // Netlist metrics
     private int nodeCount;              // Maximum node index (nodes 0 to nodeCount)
@@ -67,6 +103,10 @@ public class CircuitNetlist implements INetList {
     // Current simulation state
     private double simulationTime;
 
+    // Component name → element index mapping (for AMP probe / gate coupling)
+    private Map<String, Integer> componentNameToIndex = Collections.emptyMap();
+    private Map<Integer, Integer> hierarchyGroupToNode = Map.of();
+
     // Result storage (Task 3.6)
     private double[] lastNodeVoltages = new double[0];
     private double[] lastComponentCurrents = new double[0];
@@ -78,6 +118,36 @@ public class CircuitNetlist implements INetList {
     public CircuitNetlist() {
         this.couplingRegistry = new MutualCouplingRegistry();
         this.simulationTime = 0.0;
+    }
+
+    /**
+     * Returns an independent copy of topology, parameters, source controls, couplings, names, results, and time.
+     * The caller can mutate the copy without changing this netlist.
+     * Capture this copy while the simulation owns the electrical step.
+     *
+     * @return the detached numerical state
+     */
+    public CircuitNetlist detachedSnapshot() {
+        CircuitNetlist copy = new CircuitNetlist();
+        if (componentTypes != null) {
+            copy.initNetlist(componentTypes, nodeX, nodeY, voltageSourceNumbers, parameters,
+                    nodeCount, voltageSourceCount, elementCount);
+        }
+        copy.wireReference = wireReference;
+        copy.numericalNodeOrder = numericalNodeOrder.clone();
+        copy.controlElementIndices = controlElementIndices.clone();
+        copy.pwlWaveforms = pwlWaveforms.clone();
+        copy.componentNameToIndex = Collections.unmodifiableMap(new LinkedHashMap<>(componentNameToIndex));
+        copy.hierarchyGroupToNode = hierarchyGroupToNode;
+        copy.simulationTime = simulationTime;
+        copy.lastNodeVoltages = lastNodeVoltages.clone();
+        copy.lastComponentCurrents = lastComponentCurrents.clone();
+        for (MutualCouplingRegistry.Coupling coupling : couplingRegistry.getAllCouplings()) {
+            copy.couplingRegistry.registerCoupling(coupling.getInductor1Index(), coupling.getInductor2Index(),
+                    coupling.getCouplingCoefficient(), coupling.getInductance1(), coupling.getInductance2());
+        }
+        copy.mosfetGateNodes = mosfetGateNodes;
+        return copy;
     }
 
     /**
@@ -150,9 +220,53 @@ public class CircuitNetlist implements INetList {
         this.nodeCount = maxNodeIndex;
         this.voltageSourceCount = maxVoltageSourceIndex;
         this.elementCount = elementCount;
+        controlElementIndices = new int[elementCount];
+        pwlWaveforms = new PiecewiseLinearWaveform[elementCount];
+        Arrays.fill(controlElementIndices, -1);
 
-        // Clear any previous couplings when reinitializing
+        // A new circuit must not inherit results, probe mappings or simulation history.
+        wireReference = false;
+        numericalNodeOrder = new int[0];
         couplingRegistry.clear();
+        simulationTime = 0.0;
+        componentNameToIndex = Collections.emptyMap();
+        lastNodeVoltages = new double[0];
+        lastComponentCurrents = new double[0];
+    }
+
+    public void setPwlWaveform(int elementIndex, PiecewiseLinearWaveform waveform) {
+        pwlWaveforms[Objects.checkIndex(elementIndex, elementCount)] = Objects.requireNonNull(waveform);
+    }
+
+    @Override
+    public PiecewiseLinearWaveform getPwlWaveform(int elementIndex) {
+        PiecewiseLinearWaveform waveform = pwlWaveforms[Objects.checkIndex(elementIndex, elementCount)];
+        if (waveform == null) {
+            return INetList.super.getPwlWaveform(elementIndex);
+        }
+        return waveform;
+    }
+
+    /** Assigns a controlling element in this run's netlist. */
+    public void setControlElementIndex(int sourceIndex, int targetIndex) {
+        Objects.checkIndex(sourceIndex, elementCount);
+        Objects.checkIndex(targetIndex, elementCount);
+        CircuitTypCore source = componentTypes[sourceIndex];
+        if (!source.isSource() && source != CircuitTypCore.REL_MMF && source != CircuitTypCore.TH_TEMP) {
+            throw new IllegalArgumentException("The controlled element must be a source");
+        }
+        int mode = (int) parameters[sourceIndex][0];
+        boolean branchRequired = mode == 3 || mode == 396 || mode == 4 || mode == 397
+                || mode == 6 || mode == 398;
+        if (branchRequired && voltageSourceNumbers[targetIndex] <= 0) {
+            throw new IllegalArgumentException("The controlling element must have a branch-current equation");
+        }
+        controlElementIndices[sourceIndex] = targetIndex;
+    }
+
+    @Override
+    public int getControlElementIndex(int sourceIndex) {
+        return controlElementIndices[Objects.checkIndex(sourceIndex, elementCount)];
     }
 
     /**
@@ -256,7 +370,7 @@ public class CircuitNetlist implements INetList {
      * Registers a magnetic coupling between two inductors.
      *
      * <p>This is extracted from NetListLK.definiere_magnetischeKopplungen_im_LK().
-     * The coupling is defined by a coupling coefficient k (0 to 1) and the inductance
+     * The coupling is defined by a coupling signed coefficient k (-1 to 1) and the inductance
      * values of both coupled inductors. The mutual inductance is calculated as:
      * M = k * sqrt(L1 * L2)
      *
@@ -265,7 +379,7 @@ public class CircuitNetlist implements INetList {
      *
      * @param inductor1Index element index of first inductor in netlist
      * @param inductor2Index element index of second inductor in netlist
-     * @param couplingCoefficient k value (typically 0 to 1, where 1 = perfect coupling)
+     * @param couplingCoefficient signed k value (-1 to 1, where absolute value 1 = perfect coupling)
      * @param inductance1 inductance value of first inductor (Henries)
      * @param inductance2 inductance value of second inductor (Henries)
      *
@@ -289,6 +403,19 @@ public class CircuitNetlist implements INetList {
         if (inductor2Index < 0 || inductor2Index >= elementCount) {
             throw new IndexOutOfBoundsException(
                 String.format("Inductor2 index %d out of range [0, %d)", inductor2Index, elementCount));
+        }
+
+        if (getType(inductor1Index) != CircuitTypCore.LK_LKOP2
+                || getType(inductor2Index) != CircuitTypCore.LK_LKOP2
+                || voltageSourceNumbers[inductor1Index] <= 0
+                || voltageSourceNumbers[inductor2Index] <= 0
+                || voltageSourceNumbers[inductor1Index] > voltageSourceCount
+                || voltageSourceNumbers[inductor2Index] > voltageSourceCount
+                || voltageSourceNumbers[inductor1Index] == voltageSourceNumbers[inductor2Index]) {
+            throw new IllegalArgumentException("Magnetic coupling requires two auxiliary-current LK_LKOP2 windings");
+        }
+        if (parameters[inductor1Index][0] != inductance1 || parameters[inductor2Index][0] != inductance2) {
+            throw new IllegalArgumentException("Coupling inductance must match the winding parameters");
         }
 
         // Delegate to registry
@@ -556,6 +683,7 @@ public class CircuitNetlist implements INetList {
             return false;
         }
 
+        Set<Integer> usedSourceNumbers = new HashSet<>();
         for (int i = 0; i < elementCount; i++) {
             if (componentTypes[i] == null) {
                 return false;
@@ -566,8 +694,16 @@ public class CircuitNetlist implements INetList {
             if (nodeY[i] < 0 || nodeY[i] > nodeCount) {
                 return false;
             }
-            if (parameters[i] == null) {
+            if (parameters[i] == null || parameters[i].length == 0) {
                 return false;
+            }
+            CircuitTypCore type = componentTypes[i];
+            if (type == CircuitTypCore.LK_U || type == CircuitTypCore.LK_LKOP2
+                    || type == CircuitTypCore.TH_TEMP || type == CircuitTypCore.REL_MMF) {
+                int source = voltageSourceNumbers[i];
+                if (source < 1 || source > voltageSourceCount || !usedSourceNumbers.add(source)) {
+                    return false;
+                }
             }
         }
 
@@ -575,10 +711,61 @@ public class CircuitNetlist implements INetList {
     }
 
     /**
+     * Sets the component name-to-element-index mapping.
+     * Built by {@code NetlistBuilder} from {@code CircuitModel.ComponentData.getName()}.
+     *
+     * @param nameToIndex map from component name (e.g. "L.1", "R.1") to element index
+     */
+    public void setComponentNameToIndex(Map<String, Integer> nameToIndex) {
+        if (nameToIndex != null) {
+            for (Map.Entry<String, Integer> entry : nameToIndex.entrySet()) {
+                if (entry.getKey() == null || entry.getKey().isEmpty() || entry.getValue() == null
+                        || entry.getValue() < 0 || entry.getValue() >= elementCount) {
+                    throw new IllegalArgumentException("Invalid component mapping for '" + entry.getKey() + "'");
+                }
+            }
+        }
+        this.componentNameToIndex = nameToIndex != null
+                ? Collections.unmodifiableMap(new LinkedHashMap<>(nameToIndex))
+                : Collections.emptyMap();
+    }
+
+    void setHierarchyGroupNodes(Map<Integer, Integer> nodes) {
+        hierarchyGroupToNode = Map.copyOf(nodes);
+    }
+
+    /** Returns the solver node for a hierarchical electrical terminal group or null if it has no row. */
+    public Integer getHierarchyGroupNode(gecko.core.io.CircuitTopology.Group group) {
+        return group == null ? null : hierarchyGroupToNode.get(group.id());
+    }
+
+    /**
+     * Looks up the element index for a component by name.
+     *
+     * @param name component name (e.g. "L.1", "C.1", "S.1")
+     * @return element index, or -1 if not found
+     */
+    public int getElementIndexByName(String name) {
+        Integer idx = componentNameToIndex.get(name);
+        return idx != null ? idx : -1;
+    }
+
+    /**
+     * Returns the component name-to-index map.
+     *
+     * @return unmodifiable map
+     */
+    public Map<String, Integer> getComponentNameToIndex() {
+        return componentNameToIndex;
+    }
+
+    /**
      * Clears all netlist data.
      * After calling this, you must call initNetlist() again to repopulate.
      */
     public void clear() {
+        wireReference = false;
+        numericalNodeOrder = new int[0];
         componentTypes = null;
         nodeX = null;
         nodeY = null;
@@ -591,6 +778,7 @@ public class CircuitNetlist implements INetList {
         simulationTime = 0.0;
         lastNodeVoltages = new double[0];
         lastComponentCurrents = new double[0];
+        componentNameToIndex = Collections.emptyMap();
     }
 
     @Override

@@ -22,7 +22,7 @@ After completing this example, you will be able to:
 
 ## Prerequisites
 
-- Complete [Buck Converter Tutorial](../tutorials/2xx_dcdc_converters/201_buck_converter/index.md)
+- Complete [Buck Converter Tutorial](../../../tutorials/dcdc/buck-converter.md)
 - Understanding of transformer operation
 - Familiarity with [Flyback Converter](../flyback_converter/index.md) for comparison
 
@@ -283,7 +283,7 @@ Vout = Vin × D / n = 48 × 0.4 / 4 = 4.8V
 
 - [Flyback Converter](../flyback_converter/index.md) - Alternative isolated topology
 - [Buck Converter](../buck_converter/index.md) - Non-isolated equivalent
-- [Full Bridge](../full_bridge/index.md) - Higher power isolated
+- [Dual Active Bridge](../../power-supplies/dab.md) - Higher power isolated
 
 ## References
 

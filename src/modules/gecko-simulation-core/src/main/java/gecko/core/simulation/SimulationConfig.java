@@ -15,6 +15,10 @@ package gecko.core.simulation;
 
 import gecko.core.allg.SolverSettingsCore;
 import gecko.core.allg.SolverType;
+import gecko.core.allg.SparseSolverSettings;
+import gecko.core.io.CircuitModel;
+import gecko.core.preparation.SolverFeatures;
+import gecko.core.preparation.SolverOverrides;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +31,9 @@ import java.util.Map;
 public final class SimulationConfig {
 
     private final SolverSettingsCore solverSettings;
+    private final boolean solverTypeExplicit;
+    private final boolean stepWidthExplicit;
+    private final boolean durationExplicit;
     private final String circuitFilePath;
     private final Map<String, Double> parameterOverrides;
     private final boolean enableDataLogging;
@@ -34,6 +41,9 @@ public final class SimulationConfig {
 
     private SimulationConfig(Builder builder) {
         this.solverSettings = builder.solverSettings.copy();
+        this.solverTypeExplicit = builder.solverTypeExplicit;
+        this.stepWidthExplicit = builder.stepWidthExplicit;
+        this.durationExplicit = builder.durationExplicit;
         this.circuitFilePath = builder.circuitFilePath;
         this.parameterOverrides = Collections.unmodifiableMap(new HashMap<>(builder.parameterOverrides));
         this.enableDataLogging = builder.enableDataLogging;
@@ -47,6 +57,33 @@ public final class SimulationConfig {
      */
     public SolverSettingsCore getSolverSettings() {
         return solverSettings.copy();
+    }
+
+    /** Returns only settings that the caller explicitly supplies. */
+    SolverOverrides explicitSolverOverrides() {
+        return new SolverOverrides(solverTypeExplicit ? solverSettings.getSolverType() : null,
+                stepWidthExplicit ? solverSettings.getStepWidth() : null,
+                durationExplicit ? solverSettings.getSimulationDuration() : null,
+                new SolverFeatures(solverSettings.getControlSamplePeriod(), solverSettings.isZeroCrossing(),
+                        solverSettings.isDcOperatingPoint(), solverSettings.getPeriodicSteadyState(),
+                        solverSettings.getAdaptiveStep(), solverSettings.getSparseSolver(),
+                        solverSettings.getControlSubsystemPeriods()));
+    }
+    /** Uses file defaults only for settings the caller did not supply. */
+    SolverSettingsCore resolveSolverSettings(CircuitModel model) {
+        SolverSettingsCore resolved = solverSettings.copy();
+        if (model != null) {
+            if (!solverTypeExplicit) {
+                resolved.setSolverType(model.getSolverType());
+            }
+            if (!stepWidthExplicit) {
+                resolved.setStepWidth(model.getTimeStep());
+            }
+            if (!durationExplicit) {
+                resolved.setSimulationDuration(model.getSimulationDuration());
+            }
+        }
+        return resolved;
     }
 
     /**
@@ -100,6 +137,9 @@ public final class SimulationConfig {
      */
     public static class Builder {
         private SolverSettingsCore solverSettings = new SolverSettingsCore();
+        private boolean solverTypeExplicit;
+        private boolean stepWidthExplicit;
+        private boolean durationExplicit;
         private String circuitFilePath;
         private Map<String, Double> parameterOverrides = new HashMap<>();
         private boolean enableDataLogging = true;
@@ -119,6 +159,9 @@ public final class SimulationConfig {
                 throw new IllegalArgumentException("solverSettings cannot be null");
             }
             this.solverSettings = solverSettings.copy();
+            solverTypeExplicit = true;
+            stepWidthExplicit = true;
+            durationExplicit = true;
             return this;
         }
 
@@ -130,6 +173,7 @@ public final class SimulationConfig {
          */
         public Builder solverType(SolverType solverType) {
             this.solverSettings.setSolverType(solverType);
+            solverTypeExplicit = true;
             return this;
         }
 
@@ -141,6 +185,99 @@ public final class SimulationConfig {
          */
         public Builder stepWidth(double dt) {
             this.solverSettings.setStepWidth(dt);
+            stepWidthExplicit = true;
+            return this;
+        }
+
+        /**
+         * Sets the CONTROL sample period. Zero, the default, runs CONTROL every step.
+         * A positive period runs CONTROL at the first step at or after each multiple of it
+         * and holds its outputs between samples.
+         *
+         * @param period sample period in seconds, finite and not negative
+         * @return this builder
+         */
+        public Builder controlSamplePeriod(double period) {
+            this.solverSettings.withControlSamplePeriod(period);
+            return this;
+        }
+
+        /**
+         * Gives one CONTROL subsystem its own sample period. The name is a sheet path: occurrence instances and
+         * saved sheet names joined by "/", compared without regard to case. Blocks outside every named subsystem
+         * keep the global period. A later call with the same name replaces the period.
+         *
+         * @param sheetPath the subsystem sheet path
+         * @param period sample period in seconds, finite and not negative
+         * @return this builder
+         */
+        public Builder controlSubsystemPeriod(String sheetPath, double period) {
+            var periods = new java.util.TreeMap<>(this.solverSettings.getControlSubsystemPeriods());
+            periods.put(java.util.Objects.requireNonNull(sheetPath, "A sheet path is required."), period);
+            this.solverSettings.withControlSubsystemPeriods(periods);
+            return this;
+        }
+
+        /**
+         * Locates diode, thyristor and IGBT switching inside each electrical step. Off by default.
+         * CONTROL and recordings stay on the fixed grid. Gear-Shichman is rejected when this is on.
+         *
+         * @param enabled true to split steps at located switching times
+         * @return this builder
+         */
+        public Builder zeroCrossing(boolean enabled) {
+            this.solverSettings.withZeroCrossing(enabled);
+            return this;
+        }
+
+        /**
+         * Starts the first electrical step from the circuit's DC operating point instead of the configured
+         * initial states. Off by default. The circuit must have a unique DC solution, or the run fails to start.
+         *
+         * @param enabled true to solve and seed the DC operating point
+         * @return this builder
+         */
+        public Builder dcOperatingPoint(boolean enabled) {
+            this.solverSettings.withDcOperatingPoint(enabled);
+            return this;
+        }
+
+        /**
+         * Searches for the periodic steady state before the main phase. Off (null) by default.
+         * The search runs period by period from the DC operating point and records nothing.
+         * The main phase then runs for the simulation duration from the converged state.
+         * The period must be a whole number of steps, so a carrier that clamps per step needs its simulated period.
+         *
+         * @param settings the period, tolerance and period limit, or null for off
+         * @return this builder
+         */
+        public Builder periodicSteadyState(gecko.core.allg.PeriodicSteadyStateSettings settings) {
+            this.solverSettings.withPeriodicSteadyState(settings);
+            return this;
+        }
+
+        /**
+         * Adapts the electrical sub-step between the fixed grid points. Off (null) by default.
+         * CONTROL, recordings and the grid stay unchanged, and location of diode switching turns on.
+         *
+         * @param settings the tolerance and step clamps, or null for off
+         * @return this builder
+         */
+        public Builder adaptiveStep(gecko.core.allg.AdaptiveStepSettings settings) {
+            this.solverSettings.withAdaptiveStep(settings);
+            return this;
+        }
+
+        /**
+         * Chooses the sparse LU for the electrical system. Off (null) by default, which keeps the dense LU and
+         * bit-identical results. Automatic mode uses the dense LU below {@code thresholdNodes} circuit nodes
+         * (ground excluded) and the sparse LU at or above it. The dense and sparse modes force one solver.
+         *
+         * @param settings the mode and threshold, or null for the dense default
+         * @return this builder
+         */
+        public Builder sparseSolver(SparseSolverSettings settings) {
+            this.solverSettings.withSparseSolver(settings);
             return this;
         }
 
@@ -152,6 +289,7 @@ public final class SimulationConfig {
          */
         public Builder simulationDuration(double duration) {
             this.solverSettings.setSimulationDuration(duration);
+            durationExplicit = true;
             return this;
         }
 

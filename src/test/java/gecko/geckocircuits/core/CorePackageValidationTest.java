@@ -81,6 +81,7 @@ class CorePackageValidationTest {
 
     // Circuit main package GUI classes (explicitly documented)
     private static final Set<String> CIRCUIT_GUI_CLASSES = Set.of(
+        "AcEditorDialogs.java",  // Desktop settings and component dialogs
         "AbstractBlockInterface.java",
         "AbstractCircuitSheetComponent.java",
         "AbstractTerminal.java",

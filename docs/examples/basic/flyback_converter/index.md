@@ -23,7 +23,7 @@ After completing this example, you will be able to:
 ## Prerequisites
 
 - Basic understanding of DC-DC converter operation
-- Familiarity with [Buck-Boost Converter](../tutorials/2xx_dcdc_converters/203_buck_boost/index.md)
+- Familiarity with [Buck-Boost Converter](../../../tutorials/dcdc/buck-boost.md)
 - Understanding of transformer/coupled inductor behavior
 
 ## Circuit Description
@@ -265,7 +265,7 @@ For Iout=2.5A, D=0.4, fs=100kHz, C=470μF:
 
 - [Buck Converter](../buck_converter/index.md) - Non-isolated step-down
 - [Forward Converter](../forward_converter/index.md) - Alternative isolated topology
-- [Full Bridge](../full_bridge/index.md) - Higher power isolated
+- [Dual Active Bridge](../../power-supplies/dab.md) - Higher power isolated
 
 ## References
 

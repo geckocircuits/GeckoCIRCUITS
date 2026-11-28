@@ -15,6 +15,10 @@ package gecko.core.circuit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -52,6 +56,32 @@ class TokenMapTest {
         String[] ascii = {"token1 value", "token2 123"};
         TokenMap map = new TokenMap(ascii, true);
         assertNotNull(map);
+    }
+
+    @Test
+    void missingBooleanTokenReturnsDefaultWithoutLoggingAnError() {
+        Logger logger = Logger.getLogger(TokenMap.class.getName());
+        AtomicInteger warnings = new AtomicInteger();
+        Handler handler = new Handler() {
+            @Override public void publish(LogRecord record) {
+                if (record.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()) {
+                    warnings.incrementAndGet();
+                }
+            }
+
+            @Override public void flush() { }
+
+            @Override public void close() { }
+        };
+        logger.addHandler(handler);
+        try {
+            TokenMap map = new TokenMap(new String[]{"other true"});
+            assertTrue(map.readDataLine("enabled", true));
+            assertFalse(map.readDataLine("enabled", false));
+            assertEquals(0, warnings.get(), "An absent optional token must not be logged as a parse error");
+        } finally {
+            logger.removeHandler(handler);
+        }
     }
 
     @Test

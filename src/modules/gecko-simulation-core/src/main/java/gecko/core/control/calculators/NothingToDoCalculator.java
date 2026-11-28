@@ -13,6 +13,8 @@
  */
 package gecko.core.control.calculators;
 
+import gecko.core.control.StatelessCalculation;
+
 import gecko.core.control.NotCalculateableMarker;
 
 /**
@@ -27,7 +29,7 @@ import gecko.core.control.NotCalculateableMarker;
  *
  * @author GeckoCIRCUITS Team
  */
-public class NothingToDoCalculator extends AbstractControlCalculatable implements NotCalculateableMarker {
+public class NothingToDoCalculator extends AbstractControlCalculatable implements NotCalculateableMarker, StatelessCalculation {
 
     /**
      * Creates a no-operation calculator with the specified number of inputs and outputs.

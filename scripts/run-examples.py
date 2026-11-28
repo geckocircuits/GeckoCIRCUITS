@@ -13,6 +13,7 @@ GeckoCIRCUITS installation is working correctly.
 import subprocess
 import sys
 import time
+import zipfile
 from pathlib import Path
 
 
@@ -28,20 +29,33 @@ EXAMPLE_CIRCUITS = [
 
 
 def main():
-    project_root = Path(__file__).parent.parent
+    project_root = Path(__file__).resolve().parent.parent
     jar_path = project_root / "target" / "gecko-1.0-jar-with-dependencies.jar"
     resources_dir = project_root / "resources"
 
     if not jar_path.exists():
         print("JAR not found. Building...")
-        result = subprocess.run(
+        commands = [
+            ["mvn", "-f", "pom-reactor.xml", "-pl", "gecko:gecko", "-am",
+             "install", "-DskipTests", "--no-transfer-progress"],
             ["mvn", "package", "assembly:single", "-DskipTests", "--no-transfer-progress"],
-            cwd=project_root, capture_output=True, text=True
-        )
-        if result.returncode != 0:
-            print(f"Build failed:\n{result.stderr[-500:]}")
-            sys.exit(1)
+        ]
+        for command in commands:
+            result = subprocess.run(command, cwd=project_root, capture_output=True, text=True)
+            if result.returncode != 0:
+                diagnostic = result.stdout + "\n" + result.stderr
+                print(f"Build failed:\n{diagnostic[-2000:]}")
+                sys.exit(1)
         print("Build complete.\n")
+
+    try:
+        with zipfile.ZipFile(jar_path) as archive:
+            archive.getinfo("gecko/GeckoSim.class")
+            archive.getinfo("gecko/systemtests/CircuitValidator.class")
+    except (OSError, zipfile.BadZipFile, KeyError) as error:
+        print(f"Invalid application JAR: {error}")
+        print("Build the reactor, then run mvn package assembly:single.")
+        sys.exit(1)
 
     print("GeckoCIRCUITS Installation Check")
     print("=" * 50)
@@ -50,14 +64,13 @@ def main():
 
     passed = 0
     failed = 0
-    skipped = 0
 
     for name, rel_path in EXAMPLE_CIRCUITS:
         circuit = resources_dir / rel_path
 
         if not circuit.exists():
-            print(f"  SKIP  {name} (file not found)")
-            skipped += 1
+            print(f"  FAIL  {name} (file not found: {circuit})")
+            failed += 1
             continue
 
         start = time.time()
@@ -80,9 +93,9 @@ def main():
                 passed += 1
             else:
                 print(f"  FAIL  {name} ({duration:.1f}s)")
-                # Show first line of error
-                err = result.stderr.strip().split("\n")[0] if result.stderr else "Unknown error"
-                print(f"        {err}")
+                # Include diagnostics from either output stream.
+                err = result.stderr.strip() or result.stdout.strip() or "Unknown error"
+                print(f"        {err[-1200:]}")
                 failed += 1
 
         except subprocess.TimeoutExpired:
@@ -93,12 +106,10 @@ def main():
             failed += 1
 
     print(f"\n{'=' * 50}")
-    print(f"Results: {passed} passed, {failed} failed, {skipped} skipped")
+    print(f"Results: {passed} passed, {failed} failed")
 
-    if failed == 0 and skipped == 0:
+    if failed == 0:
         print("Installation verified successfully!")
-    elif failed == 0:
-        print("All available circuits passed.")
     else:
         print("Some circuits failed. Check your Java version and display settings.")
 

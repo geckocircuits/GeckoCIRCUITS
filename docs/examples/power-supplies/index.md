@@ -12,8 +12,8 @@ Complete power supply designs for various applications.
 |---------|-------------|------------|--------|
 | [Isolated DC-DC](isolated_dcdc/) | Flyback, Forward, Half-bridge | Intermediate | Placeholder |
 | [PFC Converters](pfc_converters/) | Single and bridgeless PFC | Intermediate | Placeholder |
-| [LLC Resonant](llc_resonant/) | High-efficiency resonant | Advanced | Placeholder |
-| [DAB Converter](dab_converter/) | Dual Active Bridge, bidirectional | Advanced | Placeholder |
+| [LLC Resonant](llc.md) | High-efficiency resonant | Advanced | Placeholder |
+| [DAB Converter](dab_converter/index.md) | Dual Active Bridge, bidirectional | Advanced | Placeholder |
 
 ## Quick Reference
 
@@ -75,4 +75,4 @@ Complete power supply designs for various applications.
 
 - [Flyback Converter](../basic/flyback_converter/index.md)
 - [Forward Converter](../basic/forward_converter/index.md)
-- [302 - PFC Basics](../tutorials/3xx_acdc_rectifiers/302_pfc_basics/index.md)
+- [302 - PFC Basics](../../tutorials/acdc/pfc-basics.md)

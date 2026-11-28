@@ -23,6 +23,7 @@
 
    <properties>
      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+     <argLine></argLine>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
 
@@ -267,6 +268,27 @@
     </pluginManagement>
     <plugins>
       <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludedGroups>regression | headless-engine</excludedGroups>
+        </configuration>
+        <executions>
+          <execution>
+            <id>headless-engine</id>
+            <phase>test</phase>
+            <goals><goal>test</goal></goals>
+            <configuration>
+              <includes><include>**/HeadlessEngineTest.java</include></includes>
+              <groups>headless-engine</groups>
+              <excludedGroups combine.self="override"/>
+              <argLine>@{argLine} -Djava.awt.headless=true</argLine>
+              <forkCount>1</forkCount>
+              <reuseForks>false</reuseForks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.11</version>
@@ -292,6 +314,13 @@
             </goals>
             <configuration>
               <rules>
+                <rule>
+                  <element>CLASS</element>
+                  <includes><include>gecko.geckocircuits.control.calculators.DelayCalculator</include></includes>
+                  <limits>
+                    <limit><counter>INSTRUCTION</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit>
+                  </limits>
+                </rule>
                 <!-- Core packages must maintain 60%+ instruction coverage -->
                 <rule>
                   <element>PACKAGE</element>
@@ -355,6 +384,24 @@
 
   <!-- Distribution profiles -->
   <profiles>
+    <profile>
+      <id>desktop-jacoco-audit</id>
+      <activation>
+        <property><name>gecko.desktop.jacocoFile</name></property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <destFile>${gecko.desktop.jacocoFile}</destFile>
+              <dataFile>${gecko.desktop.jacocoFile}</dataFile>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!-- Regression test profile: runs ONLY regression-tagged tests -->
     <!-- Usage: mvn test -Pregression -->
     <profile>
@@ -363,6 +410,12 @@
         <plugins>
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>headless-engine</id>
+                <configuration><skip>true</skip></configuration>
+              </execution>
+            </executions>
             <configuration>
               <groups>regression</groups>
               <excludedGroups combine.self="override"/>

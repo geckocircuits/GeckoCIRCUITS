@@ -13,6 +13,8 @@
  */
 package gecko.core.circuit.matrix;
 
+import gecko.core.allg.SolverType;
+
 /**
  * Matrix stamper implementation for IGBT (Insulated Gate Bipolar Transistor) components.
  *
@@ -133,16 +135,16 @@ public class IGBTStamper implements IStatefulStamper {
     }
 
     @Override
-    public void stampMatrixA(double[][] a, int nodeX, int nodeY, int nodeZ,
-                             double[] parameter, double dt) {
+    public void stampMatrixA(MatrixCoefficients a, int nodeX, int nodeY, int nodeZ,
+                             double[] parameter, double dt, SolverType solverType) {
         double resistance = getCurrentResistance(parameter);
         double admittance = 1.0 / resistance;
 
         // Stamp standard two-terminal admittance pattern
-        a[nodeX][nodeX] += admittance;
-        a[nodeY][nodeY] += admittance;
-        a[nodeX][nodeY] -= admittance;
-        a[nodeY][nodeX] -= admittance;
+        a.add(nodeX, nodeX, admittance);
+        a.add(nodeY, nodeY, admittance);
+        a.add(nodeX, nodeY, -admittance);
+        a.add(nodeY, nodeX, -admittance);
     }
 
     @Override
@@ -151,7 +153,7 @@ public class IGBTStamper implements IStatefulStamper {
                              double[] previousValues) {
         // When ON (low resistance), compensate for forward voltage drop
         double resistance = getCurrentResistance(parameter);
-        if (resistance < ON_STATE_THRESHOLD) {
+        if (isConducting(parameter, resistance)) {
             double uf = getUForward(parameter);
             if (uf > 0) {
                 double admittance = 1.0 / resistance;
@@ -171,7 +173,7 @@ public class IGBTStamper implements IStatefulStamper {
         double uf = getUForward(parameter);
         double vDiff = nodeVoltageX - nodeVoltageY;
 
-        if (isOn) {
+        if (isConducting(parameter, resistance) && uf > 0) {
             // Current through conducting IGBT: I = (V - Uf) / rOn
             return (vDiff - uf) / resistance;
         } else {
@@ -182,9 +184,7 @@ public class IGBTStamper implements IStatefulStamper {
 
     @Override
     public double getAdmittanceWeight(double parameterValue, double dt) {
-        double resistance = isOn ? rOn : rOff;
-        resistance = Math.max(resistance, MIN_RESISTANCE);
-        return 1.0 / resistance;
+        return 1.0 / Math.max(parameterValue, MIN_RESISTANCE);
     }
 
     @Override
@@ -298,6 +298,15 @@ public class IGBTStamper implements IStatefulStamper {
     @Override
     public double getCurrentResistance() {
         return isOn ? rOn : rOff;
+    }
+
+    /** Selects conduction using the same state source as matrix stamping. */
+    private boolean isConducting(double[] parameter, double resistance) {
+        if (parameter == null || parameter.length <= PARAM_R_CURRENT) {
+            return isOn;
+        }
+        // An explicit operating resistance takes precedence over this instance's state.
+        return resistance < ON_STATE_THRESHOLD;
     }
 
     /**

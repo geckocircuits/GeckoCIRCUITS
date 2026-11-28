@@ -242,8 +242,8 @@ grid on;
 ## Related Tutorials
 
 - [104 - Running Simulations](../104_running_simulations/index.md) - Basic simulation setup
-- [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/index.md) - Test circuit
-- [702 - MATLAB Integration](../../7xx_scripting_automation/702_matlab_integration/index.md) - Data export/analysis
+- [201 - Buck Converter](../../tutorials/dcdc/buck-converter.md) - Test circuit
+- [702 - MATLAB Integration](../../tutorials/scripting/matlab.md) - Data export/analysis
 
 ## References
 

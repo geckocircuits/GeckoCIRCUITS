@@ -13,7 +13,10 @@
  */
 package gecko.core.control.calculators;
 
-public final class PICalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart {
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
+public final class PICalculator extends AbstractControlCalculatable implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private double _r0;
     private double _a1;
@@ -30,6 +33,8 @@ public final class PICalculator extends AbstractControlCalculatable implements I
     public void initializeAtSimulationStart(final double deltaT) {
         y1alt = 0;
         xalt = 0;
+        y11 = 0;
+        _outputSignal[0][0] = 0;
     }
 
     @Override
@@ -46,5 +51,12 @@ public final class PICalculator extends AbstractControlCalculatable implements I
 
     public void setR0(final double r0) {
         _r0 = r0;
+    }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(y1alt);
+        sink.value(xalt);
+        sink.value(y11);
     }
 }

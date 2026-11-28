@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class HysteresisCalculatorInternal extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class HysteresisCalculatorInternal extends AbstractControlCalculatable implements InitializableAtSimulationStart, StatelessCalculation {
 
     private double _hValue;
 
@@ -21,6 +23,10 @@ public final class HysteresisCalculatorInternal extends AbstractControlCalculata
         super(1, 1);
         setHValue(hValue);
     }
+
+    /** Clears the held output without changing the configured threshold. */
+    @Override
+    public void initializeAtSimulationStart(double deltaT) { _outputSignal[0][0] = 0; }
 
     @Override
     public void berechneYOUT(final double deltaT) {

@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class OrCalculatorMultipleInputs extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class OrCalculatorMultipleInputs extends AbstractControlCalculatable implements StatelessCalculation {
 
     public OrCalculatorMultipleInputs(final int noInputs) {
         super(noInputs, 1);

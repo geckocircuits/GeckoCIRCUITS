@@ -24,7 +24,11 @@ import javax.swing.JFrame;
 
 public class DialogFeedback extends javax.swing.JDialog {
 
-    private static final String BUGZILLA_URL = "www.bugs.gecko-simulations.org";
+    static final String ISSUES_URL = "https://github.com/tinix84/GeckoCIRCUITS/issues/new/choose";
+
+    static String labelHtml() {
+        return "<html><a href=\"" + ISSUES_URL + "\">" + ISSUES_URL + "</a></html>";
+    }
 
     public DialogFeedback(final JFrame parentFrame) {
         super(parentFrame, true);
@@ -37,6 +41,18 @@ public class DialogFeedback extends javax.swing.JDialog {
         }
         this.setTitle("Gecko-Simulations Bug-Reporting / Feedback");
         initComponents();
+        jLabelURL.setText(labelHtml());
+        javax.swing.GroupLayout layout = (javax.swing.GroupLayout) getContentPane().getLayout();
+        layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addComponent(jLabel5)
+                .addComponent(jLabelURL)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonClose, javax.swing.GroupLayout.PREFERRED_SIZE, 135,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonLaunch, javax.swing.GroupLayout.PREFERRED_SIZE, 148,
+                                javax.swing.GroupLayout.PREFERRED_SIZE)));
+        pack();
         this.setVisible(true);
     }
 
@@ -127,11 +143,11 @@ public class DialogFeedback extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonCloseActionPerformed
 
     private void jButtonLaunchActionPerformed(java.awt.event.ActionEvent evt) {//NOPMD//GEN-FIRST:event_jButtonLaunchActionPerformed
-        LaunchBrowser.launch(BUGZILLA_URL);
+        LaunchBrowser.launch(ISSUES_URL);
     }//GEN-LAST:event_jButtonLaunchActionPerformed
 
     private void jLabelURLMouseClicked(java.awt.event.MouseEvent evt) {//NOPMD//GEN-FIRST:event_jLabelURLMouseClicked
-        LaunchBrowser.launch(BUGZILLA_URL);
+        LaunchBrowser.launch(ISSUES_URL);
     }//GEN-LAST:event_jLabelURLMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

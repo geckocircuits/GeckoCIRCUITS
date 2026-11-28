@@ -12,6 +12,9 @@ import java.util.Map;
 
 /**
  * Request to submit a batch of simulations with parameter variations.
+ * Stored sources supply omitted settings independently.
+ * Path Batches default to a duration of 0.02 seconds and a time step of 1e-6 seconds.
+ * An omitted or null solver setting inherits the captured solver.
  *
  * Supports:
  * - Explicit list of parameter sets (each map is one simulation)
@@ -21,12 +24,13 @@ import java.util.Map;
 @Schema(description = "Batch simulation request with parameter variations")
 public class BatchSimulationRequest {
 
-    @NotBlank
     @Schema(description = "Circuit file path (.ipes)", example = "circuit.ipes")
     private String circuitFile;
 
+    private String circuitId;
+
     @NotNull @Min(0) @Max(100)
-    @Schema(description = "Max concurrent simulations", example = "4", defaultValue = "4")
+    @Schema(description = "Maximum concurrent simulations per batch; zero uses the default of four", example = "4", defaultValue = "4")
     private Integer maxConcurrent = 4;
 
     // One of three variation modes:
@@ -44,6 +48,19 @@ public class BatchSimulationRequest {
     @Schema(description = "Simulation settings applied to all runs")
     private SimulationSettings simulationSettings;
 
+    /**
+     * Returns the explicit registry source selection.
+     *
+     * @return the exact registry ID, or null when the legacy source field is selected.
+     */
+    public String getCircuitId() { return circuitId; }
+    /**
+     * Selects an explicit registry ID for validation during admission.
+     * Select this field or circuitFile, but not both.
+     *
+     * @param circuitId the exact live registry ID, or null to omit this selection.
+     */
+    public void setCircuitId(String circuitId) { this.circuitId = circuitId; }
     public String getCircuitFile() { return circuitFile; }
     public void setCircuitFile(String circuitFile) { this.circuitFile = circuitFile; }
     public Integer getMaxConcurrent() { return maxConcurrent; }

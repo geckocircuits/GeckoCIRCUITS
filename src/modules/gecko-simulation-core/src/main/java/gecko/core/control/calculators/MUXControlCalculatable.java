@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class MUXControlCalculatable extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class MUXControlCalculatable extends AbstractControlCalculatable implements StatelessCalculation {
 
     public MUXControlCalculatable(final int noInputs) {
         super(noInputs, 1);

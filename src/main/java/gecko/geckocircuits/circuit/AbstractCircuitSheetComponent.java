@@ -99,6 +99,11 @@ public abstract class AbstractCircuitSheetComponent {
         _identifier.createNewIdentifier();
     }
 
+    private gecko.core.io.CircuitHierarchy.Member hierarchyMember;
+
+    public final gecko.core.io.CircuitHierarchy.Member getHierarchyMember() { return hierarchyMember; }
+    final void setHierarchyMember(gecko.core.io.CircuitHierarchy.Member member) { hierarchyMember = member; }
+
     public void deleteComponent() {
         if (this instanceof GeckoFileable) {
             List<GeckoFile> filesList = ((GeckoFileable)this).getFiles();
@@ -153,6 +158,10 @@ public abstract class AbstractCircuitSheetComponent {
 
     void importASCII(final TokenMap tokenMap) {
         _identifier.importASCII(tokenMap);
+        String memberToken = gecko.core.io.HierarchyMetadataCodec.MEMBER;
+        if (tokenMap.containsToken(memberToken)) {
+            hierarchyMember = gecko.core.io.HierarchyMetadataCodec.decodeMember(tokenMap.readDataLine(memberToken, ""));
+        }
         boolean oldEnabled = true;
 
         if (tokenMap.containsToken("parentSheetIdentifier")) {
@@ -178,6 +187,8 @@ public abstract class AbstractCircuitSheetComponent {
     }
 
     public void exportASCII(final StringBuffer ascii) {
+        if (hierarchyMember != null) ascii.append('\n').append(gecko.core.io.HierarchyMetadataCodec.MEMBER).append(' ')
+                .append(gecko.core.io.HierarchyMetadataCodec.encode(hierarchyMember));
         ProjectData.appendAsString(ascii.append("\nenabledShorted"), _isEnabled.getValue().ordinal());
 
         if (getParentCircuitSheet() instanceof SubCircuitSheet) {

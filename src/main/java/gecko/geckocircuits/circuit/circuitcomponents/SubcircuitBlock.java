@@ -31,6 +31,8 @@ import gecko.geckocircuits.circuit.TerminalInterface;
 import gecko.geckocircuits.circuit.TerminalSubCircuitBlock;
 import gecko.geckocircuits.circuit.TerminalToWrap;
 import gecko.core.circuit.TokenMap;
+import gecko.core.io.CircuitHierarchy;
+import gecko.core.io.HierarchyMetadataCodec;
 import gecko.geckocircuits.control.DialogLabelEingeben;
 import gecko.geckocircuits.control.Point;
 import gecko.geckocircuits.control.ReglerTERMINAL;
@@ -59,6 +61,11 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     private static final int DEFAULT_SHEET_WIDTH = 50;
     private static final int DEFAULT_SHEET_HEIGHT = 40;
     public final SubCircuitSheet _myCircuitSheet = new SubCircuitSheet(SchematicEditor2.Singleton, this);
+    private final gecko.modelviewcontrol.ModelMVC<java.util.Optional<CircuitHierarchy.Occurrence>> hierarchyCall =
+            new gecko.modelviewcontrol.ModelMVC<>(java.util.Optional.empty(), "ASC occurrence");
+
+    public CircuitHierarchy.Occurrence getHierarchyCall() { return hierarchyCall.getValue().orElse(null); }
+    public void setHierarchyCall(CircuitHierarchy.Occurrence call) { hierarchyCall.setValue(java.util.Optional.of(call)); }
 
     final UserParameter<Integer> _blockSizeX = UserParameter.Builder.
             <Integer>start("blockSizeX", DEFAULT_BLOCK_WIDTH).
@@ -96,6 +103,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
             @Override
             public void actionPerformed(final ActionEvent event) {
                 for (SubCircuitTerminable terminal : _myTerminals) {
+                    if (terminal instanceof AbstractCircuitTerminal imported && imported.importedBlockOffset() != null) continue;
                     if (terminal.getTerminalLocation() == EnumTerminalLocation.RIGHT) {
                         final TerminalSubCircuitBlock term = terminal.getBlockTerminal();
                         term.setRelativePosition(_blockSizeX.getValue(), term.getRelativeY());
@@ -108,6 +116,7 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
             @Override
             public void actionPerformed(final ActionEvent event) {
                 for (SubCircuitTerminable terminal : _myTerminals) {
+                    if (terminal instanceof AbstractCircuitTerminal imported && imported.importedBlockOffset() != null) continue;
                     if (terminal.getTerminalLocation() == EnumTerminalLocation.BOTTOM) {
                         final TerminalSubCircuitBlock term = terminal.getBlockTerminal();
                         term.setRelativePosition(term.getRelativeX(), _blockSizeY.getValue());
@@ -207,6 +216,11 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
 
     public void recalculateTerminalPositions() {
         for (SubCircuitTerminable term : _myTerminals) {
+            if (term instanceof AbstractCircuitTerminal imported && imported.importedBlockOffset() != null) {
+                var point = imported.importedBlockOffset();
+                term.getBlockTerminal().setRelativePosition(point.x(), point.y());
+                continue;
+            }
             switch (term.getTerminalLocation()) {
                 case UP:
                     int pos = (int) (_blockSizeX.getValue() * 1.0 * term.getSheetPosition().x / _sheetSizeX.getValue());
@@ -417,6 +431,10 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
     @Override
     protected void importIndividual(TokenMap tokenMap) {
         super.importIndividual(tokenMap);
+        if (tokenMap.containsToken(HierarchyMetadataCodec.OCCURRENCE)) {
+            hierarchyCall.setValueWithoutUndo(java.util.Optional.of(
+                    HierarchyMetadataCodec.decodeOccurrence(tokenMap.readDataLine(HierarchyMetadataCodec.OCCURRENCE, ""))));
+        }
 
         if(tokenMap.containsToken("sheetSizeX")) {
             _sheetSizeX.setValueWithoutUndo(tokenMap.readDataLine("sheetSizeX", _sheetSizeX.getValue()));
@@ -427,4 +445,11 @@ public final class SubcircuitBlock extends AbstractSpecialBlock {
 
     }
 
+    @Override
+    protected void exportAsciiIndividual(StringBuffer ascii) {
+        super.exportAsciiIndividual(ascii);
+        var call = getHierarchyCall();
+        if (call != null) ascii.append('\n').append(HierarchyMetadataCodec.OCCURRENCE).append(' ')
+                .append(HierarchyMetadataCodec.encode(call));
+    }
 }

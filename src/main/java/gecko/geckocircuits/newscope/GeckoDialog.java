@@ -95,11 +95,14 @@ public class GeckoDialog extends JDialog {
 
     public void setGeckoIconImage() {
         try {
-            URL picsUrl = GlobalFilePathes.PFAD_PICS_URL;
-            this.setIconImage(new ImageIcon(picsUrl.toURI().resolve("gecko.gif").toURL()).getImage());
-        } catch (java.net.URISyntaxException | java.net.MalformedURLException e) {
+            this.setIconImage(new ImageIcon(iconUrl(GlobalFilePathes.PFAD_PICS_URL)).getImage());
+        } catch (java.net.MalformedURLException e) {
             // ignored: icon loading is optional
         }
+    }
+
+    static URL iconUrl(final URL base) throws java.net.MalformedURLException {
+        return new URL(base, "gecko.gif");
     }
 
 }

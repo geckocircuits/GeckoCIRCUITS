@@ -26,7 +26,7 @@ By the end of this tutorial, you will:
 
 ## Prerequisites
 
-- Complete [Tutorial 103: PWM Basics](../103_pwm_basics/index.md)
+- Complete [Tutorial 103: PWM Basics](../pwm-basics.md)
 - Basic understanding of digital logic
 - Familiarity with control block diagram modeling
 
@@ -262,9 +262,9 @@ Allow transition only IF time_in_state > T_minimum
 
 ## Related Tutorials
 
-- [103 - PWM Basics](../103_pwm_basics/index.md) - PWM control
-- [704 - Java Blocks](../../7xx_scripting_automation/704_java_blocks/index.md) - Code-based implementation
-- [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/index.md) - Test circuit
+- [103 - PWM Basics](../pwm-basics.md) - PWM control
+- [704 - Java Blocks](../../tutorials/scripting/java-blocks.md) - Code-based implementation
+- [201 - Buck Converter](../../tutorials/dcdc/buck-converter.md) - Test circuit
 
 ## References
 

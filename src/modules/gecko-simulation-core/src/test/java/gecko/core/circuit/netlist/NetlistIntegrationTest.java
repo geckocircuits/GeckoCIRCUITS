@@ -166,15 +166,21 @@ public class NetlistIntegrationTest {
         model.addCircuitComponent(new CircuitModel.ComponentData(2, "L1"));
         model.addCircuitComponent(new CircuitModel.ComponentData(3, "C1"));
         // 3 circuit components total
+        for (int index = 0; index < 3; index++) {
+            CircuitModel.ComponentData component = model.getCircuitComponents().get(index);
+            component.setTerminalXLabels(new String[]{"node" + (index + 1)});
+            component.setTerminalYLabels(new String[]{index == 2 ? "0" : "node" + (index + 2)});
+            component.setParameter("param0", index == 0 ? 100.0 : 0.001);
+        }
 
         // Act - Convert to netlist
         CircuitNetlist netlist = NetlistBuilder.buildFromCircuitModel(model);
 
-        // Assert - Netlist should be created with estimated dimensions
+        // Assert - Saved terminal labels define the exact topology
         assertNotNull(netlist, "Netlist from CircuitModel should not be null");
         assertEquals(3, netlist.getElementCount(), "Element count should match component count");
-        assertTrue(netlist.getNodeMax() >= 0, "Node count should be non-negative");
-        assertTrue(netlist.getVoltageSourceMax() >= 0, "Voltage source count should be non-negative");
+        assertEquals(3, netlist.getNodeMax(), "Three labelled nodes plus ground");
+        assertEquals(0, netlist.getVoltageSourceMax(), "Passive components need no source unknowns");
     }
 
     // ========== Test: MatrixSolver History Shifting with Netlist ==========

@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 @SuppressFBWarnings(value = {"EI_EXPOSE_REP2", "EI_EXPOSE_REP"}, justification = "Simulation access stores main window reference for GUI interaction; returns file list for external access")
@@ -91,6 +92,7 @@ public final class SimulationAccess implements GeckoFileable {
     }
 
     public void initializeSimulation() {
+        requireScriptSteppingOffEventThread();
         try {
             mainWindow._simRunner.initSim();
         } catch (Exception ex) {
@@ -99,6 +101,7 @@ public final class SimulationAccess implements GeckoFileable {
     }
 
     public void initializeSimulation(double dt, double endTime) {
+        requireScriptSteppingOffEventThread();
         try {
             mainWindow._simRunner.initSim(dt, endTime);
         } catch (Exception ex) {
@@ -107,11 +110,19 @@ public final class SimulationAccess implements GeckoFileable {
     }
 
     public void simulateOneStep() throws Exception {
-        mainWindow._simRunner.simKern.simulateOneStep();
+        requireScriptSteppingOffEventThread();
+        mainWindow._simRunner.simulateScriptOneStep();
     }
 
     public void simulateSpecifiedTime(double time) throws Exception {
-        mainWindow._simRunner.simKern.simulateTime(time);
+        requireScriptSteppingOffEventThread();
+        mainWindow._simRunner.simulateScriptTime(time);
+    }
+
+    private static void requireScriptSteppingOffEventThread() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            throw new IllegalStateException("Script simulation stepping must run outside the Swing event thread");
+        }
     }
 
     public void endSimulation() {
@@ -422,7 +433,7 @@ public final class SimulationAccess implements GeckoFileable {
     }
 
     public double getSimulationTime() {
-        return GeckoSim._win._simRunner.simKern.getZeitAktuell();
+        return GeckoSim._win._simRunner.getCurrentTime();
     }
 
     @Override

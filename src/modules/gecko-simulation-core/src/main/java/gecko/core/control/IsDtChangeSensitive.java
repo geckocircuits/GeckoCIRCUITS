@@ -36,4 +36,19 @@ public interface IsDtChangeSensitive {
      * @param dt the new time step in seconds
      */
     void initWithNewDt(double dt);
+
+    /**
+     * Prepares a time-step update without changing calculator state.
+     * The returned action must commit once without allocation or failure.
+     * Legacy callbacks remain available through {@link #initWithNewDt(double)}.
+     *
+     * @param dt the finite, positive step in seconds
+     * @return a single-use commit action
+     * @throws IllegalArgumentException if the selected step or configuration is invalid
+     * @throws UnsupportedOperationException if this calculator cannot stage an update
+     */
+    default Runnable prepareTimeStepChange(double dt) {
+        throw new UnsupportedOperationException(
+                "The CONTROL calculator cannot stage a time-step change: " + getClass().getName());
+    }
 }

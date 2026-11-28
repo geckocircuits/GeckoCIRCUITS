@@ -57,6 +57,9 @@ public class NodeIndexer {
      * @param elementCount number of circuit elements
      */
     public NodeIndexer(int elementCount) {
+        if (elementCount < 0) {
+            throw new IllegalArgumentException("Element count must be non-negative");
+        }
         this.elementCount = elementCount;
         this.nodeX = new int[elementCount];
         this.nodeY = new int[elementCount];
@@ -102,11 +105,15 @@ public class NodeIndexer {
             throw new IllegalArgumentException("Node indices must be non-negative");
         }
 
+        int previousMaximum = Math.max(nodeX[elementIndex], nodeY[elementIndex]);
         nodeX[elementIndex] = xNode;
         nodeY[elementIndex] = yNode;
 
-        // Update knotenMAX
-        knotenMAX = Math.max(knotenMAX, Math.max(xNode, yNode));
+        if (previousMaximum == knotenMAX && Math.max(xNode, yNode) < knotenMAX) {
+            recalculateMaxNode();
+        } else {
+            knotenMAX = Math.max(knotenMAX, Math.max(xNode, yNode));
+        }
     }
 
     /**

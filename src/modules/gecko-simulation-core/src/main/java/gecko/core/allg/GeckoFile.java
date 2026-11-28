@@ -47,10 +47,7 @@ public final class GeckoFile {
      * this file is associated with
      */
     private String _relativePath;
-    /**
-     * the file separator on the OS used to add this file to the model; used for
-     * checking whether path stored in file differs from current OS
-     */
+    /** The separator used in the stored paths. */
     private String _separator;
     /**
      * byte array which contains the file contents if they have been read from
@@ -66,6 +63,8 @@ public final class GeckoFile {
      * model blocks which use this file
      */
     private final Set<Long> _usageList = new LinkedHashSet<Long>();
+    private boolean _numericOwnerIds = true;
+    private boolean _explicitInternalStorage = true;
     private final String _extension;
     private static final int HASH_CONST_BOUND = 10164;
     private static final Random RANDOM = new Random();
@@ -110,6 +109,13 @@ public final class GeckoFile {
      */
     public GeckoFile(File fileName, final String modelFileName, final byte[] contents) throws FileNotFoundException {
         this(fileName, modelFileName, contents, null);
+    }
+
+    public static GeckoFile createEmbeddedPwl(File fileName, String modelFileName, byte[] contents)
+            throws FileNotFoundException {
+        var file = new GeckoFile(fileName, modelFileName, contents);
+        file._sourceOwnedPwl = true;
+        return file;
     }
 
     /**
@@ -201,22 +207,74 @@ public final class GeckoFile {
      * @throws FileNotFoundException
      */
     public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, ExternalStorageConverter converter) throws FileNotFoundException {
+        this(tokenMap, allComponents, GlobalFilePathes.DATNAM, converter);
+    }
+
+    /** Reconstructs a resource relative to the circuit file that contains its saved data. */
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, final String modelFileName,
+                     ExternalStorageConverter converter) throws FileNotFoundException {
+        this(tokenMap, allComponents, modelFileName, converter, false);
+    }
+
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, final String modelFileName,
+                     ExternalStorageConverter converter, boolean pwlResource) throws FileNotFoundException {
+        this(tokenMap, allComponents, modelFileName, converter,
+                pwlResource ? gecko.core.io.SavedPwlResources.embedded(tokenMap.getLines()) : null);
+    }
+
+    private boolean _sourceOwnedPwl;
+
+    public GeckoFile(final TokenMap tokenMap, final List<?> allComponents, final String modelFileName,
+                     ExternalStorageConverter converter, gecko.core.io.SavedPwlResources.Embedded pwl)
+            throws FileNotFoundException {
+        _explicitInternalStorage = tokenMap.containsToken("isExternal")
+                && tokenMap.getLineString("isExternal", "").strip().matches("isExternal\\s+0")
+                && java.util.Arrays.stream(tokenMap.getLines()).map(String::stripLeading)
+                        .filter(row -> row.matches("isExternal(?:\\s.*)?")).count() == 1;
         this._converter = converter != null ? converter : new DefaultExternalStorageConverter();
-        _separator = tokenMap.readDataLine("fileSep", File.separator);
-        _hash = tokenMap.readDataLine("hashValue", -1);
+        final String savedSeparator = tokenMap.readDataLine("fileSep", File.separator);
+        _separator = File.separator;
+        _hash = pwl == null ? tokenMap.readDataLine("hashValue", -1L) : pwl.resourceId();
 
 
-        setStorageStrategy(StorageType.fromOrdinal(tokenMap.readDataLine(
-                "isExternal", StorageType.EXTERNAL.ordinal())));
+        setStorageStrategy(pwl == null ? StorageType.fromOrdinal(tokenMap.readDataLine(
+                "isExternal", StorageType.EXTERNAL.ordinal())) : StorageType.INTERNAL);
 
-        _absolutePath = tokenMap.readDataLine("absPath", _absolutePath);
-        _relativePath = tokenMap.readDataLine("relPath", _relativePath);
+        _absolutePath = tokenMap.readDataLine("absPath", _absolutePath).replace(savedSeparator, _separator);
+        _relativePath = tokenMap.readDataLine("relPath", _relativePath).replace(savedSeparator, _separator);
 
-        for (String name : tokenMap.readDataLine("usageList[]", new String[0])) {
+        if (pwl != null) {
+            _explicitInternalStorage = true;
+            _sourceOwnedPwl = true;
+            _numericOwnerIds = true;
+            _usageList.add(pwl.ownerId());
+            _fileContents = pwl.bytes().clone();
+            _extension = ".pwl";
+            _file = new File(_absolutePath);
+            return;
+        }
+
+        String[] savedOwners = new String[0];
+        int numericOwnerLines = 0;
+        for (String row : tokenMap.getLines()) {
+            if (row.stripLeading().matches("usageList\\[\\](?:\\s.*)?")) {
+                numericOwnerLines++;
+            }
+        }
+        _numericOwnerIds = numericOwnerLines == 1
+                && tokenMap.getLineString("usageList[]", "").strip().matches("usageList\\[\\]\\s+/?-?[0-9]+");
+        if (tokenMap.containsToken("usageList[]")) {
+            savedOwners = tokenMap.readDataLine("usageList[]", savedOwners);
+        } else {
+            TokenMap ownerBlock = tokenMap.getBlockTokenMap("<usageList>");
+            if (ownerBlock != null) savedOwners = ownerBlock.getLines();
+        }
+        for (String name : savedOwners) {
             try {
-                long identifier = Long.parseLong(name);
-                _usageList.add(identifier);
+                long identifier = Long.parseLong(name.strip());
+                _numericOwnerIds &= _usageList.add(identifier);
             } catch (NumberFormatException ex) { // this is due to a version change from 1.61 to 1.62
+                _numericOwnerIds = false;
                 for (Object comp : allComponents) {
                     if (comp instanceof ComponentIdentifiable) {
                         ComponentIdentifiable block = (ComponentIdentifiable) comp;
@@ -230,54 +288,31 @@ public final class GeckoFile {
         }
 
         if (_storageStrategy.getStorageType() == StorageType.INTERNAL) {
-            _fileContents = tokenMap.readDataLine("fileContents[]", _fileContents);
+            String contentsKey = tokenMap.containsToken("fileContents[]") ? "fileContents[]" : "fileContents";
+            _fileContents = tokenMap.readDataLine(contentsKey, _fileContents);
         }
 
         _extension = _absolutePath.substring(_absolutePath.lastIndexOf('.'));
 
-        //check if we are in a different OS then the one in which the files were added to the model
-        //Windows file names use backslashes - giving them "as is" to the replaceAll function causes an exception becuase regex uses backslashes as an escape character
-        //therefore we must double the backslash - \\ - i.e. change from "\\" to "\\\\"
-        String separatorSequenceToReplace;
-        if (_separator.equals("\\")) {
-            separatorSequenceToReplace = "\\\\";
+        final File modelFile = modelFileName == null ? null : new File(modelFileName).getAbsoluteFile();
+        final File modelDirectory = modelFile == null ? null : modelFile.getParentFile();
+        final File relativeFile = modelDirectory == null ? null : new File(modelDirectory, _relativePath);
+        if (relativeFile != null && relativeFile.exists()) {
+            _file = relativeFile;
+            if (_storageStrategy.getStorageType() == StorageType.EXTERNAL) {
+                _absolutePath = relativeFile.toPath().toAbsolutePath().normalize().toString();
+            }
         } else {
-            separatorSequenceToReplace = _separator;
-        }
-        //we must do the same with the File.separator
-        //forward slashes (UNIX filenames) should not be a problem
-        String separatorSequenceToInsert;
-        if (File.separator.equals("\\")) {
-            separatorSequenceToInsert = "\\\\";
-        } else {
-            separatorSequenceToInsert = File.separator;
-        }
-        final String absPathToUse = _absolutePath.replaceAll(separatorSequenceToReplace, separatorSequenceToInsert);
-        final String relPathToUse = _relativePath.replaceAll(separatorSequenceToReplace, separatorSequenceToInsert);
-        final int lastSeparatorIndex = GlobalFilePathes.DATNAM.lastIndexOf(File.separator);
-        //now first try the relative path
-        if(lastSeparatorIndex >=0) {
-            _file = new File(GlobalFilePathes.DATNAM.substring(0, lastSeparatorIndex) + File.separator + relPathToUse);
-        } else {
-            _file = new File("fileNotFound");
-        }
-
-
-        //if cannot find file, use the absolute path
-        if (!_file.exists()) {
-            _file = new File(absPathToUse);
-            if (_file.exists()) {
-                //file exists, recompute relative path
-                _relativePath = getRelativePath(GlobalFilePathes.DATNAM, absPathToUse);
-                //to keep things consistent (perhaps we changed file separator), set the stored _absolutePath field to the used absolute path
-                _absolutePath = absPathToUse;
+            _file = new File(_absolutePath);
+            if (_file.exists() && modelDirectory != null) {
+                _relativePath = getRelativePath(_file.getAbsolutePath(), modelFile.getPath());
             }
         }
 
         //if the file still does not exist, throw an exception if the file is specified as external
         if (!_file.exists() && _storageStrategy.getStorageType() == StorageType.EXTERNAL) {
             throw new FileNotFoundException("Error: Specified external file with relative path: "
-                    + relPathToUse + "\n and absolute path:" + absPathToUse + "\n NOT FOUND!");
+                    + _relativePath + "\n and absolute path:" + _absolutePath + "\n NOT FOUND!");
         }
     }
 
@@ -408,6 +443,10 @@ public final class GeckoFile {
         return _hash;
     }
 
+    public boolean hasExplicitInternalStorage() {
+        return _explicitInternalStorage && getStorageType() == StorageType.INTERNAL;
+    }
+
     /**
      * function which sets a particular model block as a user of this file
      * CAREFUL - probably should be called along with removeUser when any block
@@ -417,6 +456,15 @@ public final class GeckoFile {
      */
     public void setUser(final long uniqueObjectIdentifier) {
         _usageList.add(uniqueObjectIdentifier);
+    }
+
+    /** Returns the saved identifiers of the components that use this file. */
+    public List<Long> getOwnerIds() {
+        return List.copyOf(_usageList);
+    }
+
+    public boolean isSoleNumericOwner(final long ownerId) {
+        return _numericOwnerIds && _usageList.size() == 1 && _usageList.contains(ownerId);
     }
 
     /**
@@ -445,25 +493,35 @@ public final class GeckoFile {
      * @param ascii
      */
     public void exportASCII(final StringBuffer ascii) {
+        exportASCII(ascii, null);
+    }
+
+    public void exportASCII(final StringBuffer ascii, String targetModelPath) {
         ascii.append("\n<GeckoFile>");
         //----------------------------------------
         SerializationUtils.appendAsString(ascii.append("\nhashValue"), _hash);
         SerializationUtils.appendAsString(ascii.append("\nabsPath"), _absolutePath);
-        SerializationUtils.appendAsString(ascii.append("\nrelPath"), _relativePath);
+        String path = targetModelPath == null ? _relativePath : getRelativePath(_absolutePath, targetModelPath);
+        SerializationUtils.appendAsString(ascii.append("\nrelPath"), path);
         SerializationUtils.appendAsString(ascii.append("\nfileSep"), _separator);
         SerializationUtils.appendAsString(ascii.append("\nisExternal"), _storageStrategy.getStorageType().ordinal());
-        SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
-
-        ascii.append("\n<usageList>");
-        for (Long userID : _usageList) {
-            ascii.append('\n');
-            ascii.append(userID);
-            //System.out.println("user: " + user);
+        if (_sourceOwnedPwl) {
+            ascii.append("\nusageList[] ");
+            for (Long userID : _usageList) {
+                ascii.append('/').append(userID);
+            }
+        } else {
+            SerializationUtils.appendAsString(ascii.append("\nusageList"), _usageList.toArray(new Long[0]));
+            ascii.append("\n<usageList>");
+            for (Long userID : _usageList) {
+                ascii.append('\n');
+                ascii.append(userID);
+            }
+            ascii.append("\n<\\usageList>");
         }
-        ascii.append("\n<\\usageList>");
 
         if (_storageStrategy.getStorageType() == StorageType.INTERNAL) {
-            SerializationUtils.appendAsString(ascii.append("\nfileContents"), _fileContents);
+            SerializationUtils.appendAsString(ascii.append("\nfileContents[]"), _fileContents);
         }
 
         ascii.append("\n<\\GeckoFile>");

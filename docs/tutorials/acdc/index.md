@@ -8,9 +8,9 @@ AC to DC power conversion and power factor correction.
 
 | Tutorial | Title | Difficulty |
 |----------|-------|------------|
-| [301](301_diode_rectifier/) | Diode Rectifier | 2/3 |
-| [302](302_pfc_basics/) | PFC Basics | 2/3 |
-| [303](303_vienna_rectifier/) | Vienna Rectifier | 3/3 |
+| [301](diode-rectifier.md) | Diode Rectifier | 2/3 |
+| [302](pfc-basics.md) | PFC Basics | 2/3 |
+| [303](vienna-rectifier.md) | Vienna Rectifier | 3/3 |
 
 ## Learning Objectives
 

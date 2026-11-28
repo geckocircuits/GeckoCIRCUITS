@@ -302,8 +302,8 @@ In this tutorial, you learned:
 ## Next Steps
 
 Continue your learning with:
-- **Tutorial:** [201 - Buck Converter](../../2xx_dcdc_converters/201_buck_converter/index.md) - Apply PWM to real converter
-- **Example:** [Basic Topologies](../examples/basic_topologies/index.md) - Complete converter examples
+- **Tutorial:** [201 - Buck Converter](../../tutorials/dcdc/buck-converter.md) - Apply PWM to real converter
+- **Example:** [Basic Topologies](../../examples/basic/index.md) - Complete converter examples
 
 ---
 *Tutorial Version: 1.0*

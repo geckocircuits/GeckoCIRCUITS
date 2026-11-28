@@ -1,16 +1,14 @@
 package gecko.rest.model.analysis;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 /**
  * Request for signal analysis on raw data or a stored simulation signal.
  *
  * <p>Either supply raw {@code data} with {@code sampleRate}, or reference a stored
- * simulation via {@code simulationId} + {@code signalName} with a time range.</p>
+ * simulation via {@code simulationId} + {@code signalName} with optional time bounds.</p>
+ * <p>Stored signals use their recorded timestamps. A supplied sample rate does not replace that clock.</p>
  */
 @Schema(description = "Signal analysis request")
 public class SignalAnalysisRequest {
@@ -19,7 +17,7 @@ public class SignalAnalysisRequest {
     @Size(min = 2, max = 1_000_000)
     private double[] data;
 
-    @Schema(description = "Sample rate in Hz (required when data is provided)", example = "1000000.0")
+    @Schema(description = "Sample rate in Hz (required for raw data, ignored for stored signals)", example = "1000000.0")
     private Double sampleRate;
 
     @Schema(description = "Simulation ID for server-side signal lookup", example = "550e8400-e29b-41d4-a716-446655440000")
@@ -28,10 +26,10 @@ public class SignalAnalysisRequest {
     @Schema(description = "Signal name for server-side lookup", example = "V_out")
     private String signalName;
 
-    @Schema(description = "Analysis start time in seconds (for server-side signals)", example = "0.0")
+    @Schema(description = "Stored-signal window start in seconds (defaults to the first recorded timestamp)", example = "0.0")
     private Double startTime;
 
-    @Schema(description = "Analysis end time in seconds (for server-side signals)", example = "0.02")
+    @Schema(description = "Stored-signal window end in seconds (defaults to the last recorded timestamp)", example = "0.02")
     private Double endTime;
 
     // getters/setters

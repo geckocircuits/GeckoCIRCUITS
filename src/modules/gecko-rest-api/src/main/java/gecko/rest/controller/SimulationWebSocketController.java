@@ -30,6 +30,7 @@ public class SimulationWebSocketController {
         this.webSocketProgressService = webSocketProgressService;
     }
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'USER', 'READONLY')")
     @GetMapping("/{simulationId}/ws-info")
     @Operation(summary = "Get WebSocket subscription info",
                description = "Returns the STOMP topic destination to subscribe to for real-time updates")

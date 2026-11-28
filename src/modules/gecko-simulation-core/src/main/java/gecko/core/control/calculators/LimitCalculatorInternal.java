@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class LimitCalculatorInternal extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class LimitCalculatorInternal extends AbstractControlCalculatable implements StatelessCalculation {
 
     private double _lowerLimit;
     private double _upperLimit;

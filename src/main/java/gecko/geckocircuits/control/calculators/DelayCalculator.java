@@ -14,84 +14,40 @@
 package gecko.geckocircuits.control.calculators;
 
 import gecko.geckocircuits.control.IsDtChangeSensitive;
+import gecko.core.control.DelayHistory;
 
+/** Adapts shared delay history to this runtime's signal arrays and lifecycle interfaces. */
 public final class DelayCalculator extends AbstractSingleInputSingleOutputCalculator
         implements InitializableAtSimulationStart, IsDtChangeSensitive {
+    private final DelayHistory history;
 
-    private double _originalDt;
-    private double[] _youtVerzoegert = null;
-    private int _zeigerYOUT = -1;
-    private boolean _speicherLeer;
-
-    /*
-     * the delay time value can only be changed at simulation start or at stop->continue.
-     * This is the reason for this helper "init" variable!
+    /**
+     * Creates a calculator with a deferred initial delay.
+     *
+     * @param delayTime the finite, nonnegative delay in seconds.
+     * @throws IllegalArgumentException if the delay is invalid.
      */
-    private double _initDelayTime;
-    private double _delayTime;
-
-    public DelayCalculator(final double delayTime) {
-        super();
-        setDelayTime(delayTime);
-    }
+    public DelayCalculator(final double delayTime) { history = new DelayHistory(delayTime); }
 
     @Override
-    public void initWithNewDt(final double deltaT) {
-        _delayTime = _initDelayTime;
-        double[] youtVerzoegertNew = new double[(int) (_delayTime / deltaT)];
-        final double ratio = deltaT / _originalDt;
-        final int newStartIndex = Math.min(Math.max(0, (int) (_zeigerYOUT / ratio)), youtVerzoegertNew.length - 1);
-
-        for (int i = 0; i < youtVerzoegertNew.length; i++) {
-            try {
-                youtVerzoegertNew[i] = _youtVerzoegert[(int) (ratio * i)];
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        _zeigerYOUT = newStartIndex;
-        _youtVerzoegert = youtVerzoegertNew;
-    }
+    public void initWithNewDt(final double deltaT) { history.changeTimeStep(deltaT); }
 
     @Override
     public void initializeAtSimulationStart(final double deltaT) {
-        _delayTime = _initDelayTime;
-        _originalDt = deltaT;
-        _speicherLeer = true;
-        _youtVerzoegert = new double[(int) (_delayTime / deltaT)];
-        _zeigerYOUT = 0;
-
+        history.restart(deltaT);
+        _outputSignal[0][0] = 0;
     }
 
     @Override
     public void berechneYOUT(final double deltaT) {
-        if (_speicherLeer) {  // Speicher initial auffuellen
-            if (deltaT > _delayTime) { // minimal delay, just feed the input signal to the output!
-                _outputSignal[0][0] = _inputSignal[0][0];
-                return;
-            }
-            _outputSignal[0][0] = 0;
-            _youtVerzoegert[_zeigerYOUT] = _inputSignal[0][0];
-            _zeigerYOUT++;
-            if (_zeigerYOUT == _youtVerzoegert.length) {
-                _speicherLeer = false;
-                _zeigerYOUT = 0;
-            }
-
-        } else {
-            _outputSignal[0][0] = _youtVerzoegert[_zeigerYOUT];
-            _youtVerzoegert[_zeigerYOUT] = _inputSignal[0][0];  // laufendes Nachfuellen des Speichers
-            _zeigerYOUT++;
-            _zeigerYOUT %= _youtVerzoegert.length; // Zeiger laeuft 'im Kreis', damit wird verhindert, dass die
-            // Daten im Speicher bei jedem Zeitschritt geshiftet werden muessen
-        }
+        _outputSignal[0][0] = history.step(_inputSignal[0][0], deltaT);
     }
 
-    public void setDelayTime(final double delayTime) {
-        if (delayTime < 0) {
-            throw new IllegalArgumentException("Error: Delay time must be positive!");
-        }
-        _initDelayTime = delayTime;
-    }
+    /**
+     * Defers a delay change until the next restart or time-step callback.
+     *
+     * @param delayTime the finite, nonnegative delay in seconds.
+     * @throws IllegalArgumentException if the delay is invalid.
+     */
+    public void setDelayTime(final double delayTime) { history.setDelayTime(delayTime); }
 }

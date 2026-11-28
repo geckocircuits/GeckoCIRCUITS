@@ -13,7 +13,10 @@
  */
 package gecko.core.control.calculators;
 
-public final class PT2Calculator extends AbstractPTCalculator {
+import gecko.core.control.PeriodicStateSource;
+import gecko.core.control.StateSink;
+
+public final class PT2Calculator extends AbstractPTCalculator implements InitializableAtSimulationStart, PeriodicStateSource {
 
     private double _yalt = 0;
     private double _yaltalt = 0;
@@ -23,21 +26,45 @@ public final class PT2Calculator extends AbstractPTCalculator {
     public PT2Calculator(final double timeConstant, final double a1Val) {
         super(timeConstant, a1Val);        
     }
+
+    /** Restores the initial history and output without changing configured coefficients. */
+    @Override
+    public void initializeAtSimulationStart(double deltaT) {
+        _yalt = 0;
+        _yaltalt = 0;
+        _xalt = 0;
+        _outputSignal[0][0] = 0;
+    }
     
 
     @Override
     public void berechneYOUT(final double deltaT) {
+        publishPreviousInputOutput(deltaT);
+        captureCurrentInput();
+    }
+
+    /** Publishes the output from the previous settled input and stored history. */
+    public void publishPreviousInputOutput(final double deltaT) {
         //        if (t==0) { xalt=0;  yalt=0;  yaltalt=0;  zalt=0; }  // re-init
         //
         //double yout= yalt*((4*T/dt*T/dt-1)/(4*T/dt*T/dt+1)) +a1/(1+4*T/dt*T/dt)*(xIN[0]+xalt) +zalt;
         //double z= -zalt +2*T/dt*(yout-yalt);
         final double dt_dt_T_T = deltaT * deltaT / (_TVal * _TVal);
         final double yout = _yalt * (2 - dt_dt_T_T) - _yaltalt + _a1Val * dt_dt_T_T * _xalt;
-        _xalt = _inputSignal[0][0];
         _yaltalt = _yalt;
         _yalt = yout;
         //zalt= z;
         _outputSignal[0][0] = yout;
 
+    }
+
+    /** Captures the settled input after the combinational blocks finish. */
+    public void captureCurrentInput() { _xalt = _inputSignal[0][0]; }
+
+    @Override
+    public void exportState(final StateSink sink) {
+        sink.value(_yalt);
+        sink.value(_yaltalt);
+        sink.value(_xalt);
     }
 }

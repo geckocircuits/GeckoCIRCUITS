@@ -13,11 +13,18 @@
  */
 package gecko.core.control.calculators;
 
-public final class SignalCalculatorRandom extends AbstractSignalCalculator {
+public final class SignalCalculatorRandom extends AbstractSignalCalculator implements InitializableAtSimulationStart {
     private double _randomVal = 0;  // Startwert fuer Random Walk
     
     public SignalCalculatorRandom() {
         super(0);
+    }
+
+    /** Clears the accumulated random walk for a new run. */
+    @Override
+    public void initializeAtSimulationStart(double deltaT) {
+        _randomVal = 0;
+        _outputSignal[0][0] = 0;
     }
 
     @Override

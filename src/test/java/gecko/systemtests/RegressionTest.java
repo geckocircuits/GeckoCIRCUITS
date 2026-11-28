@@ -15,6 +15,7 @@ package gecko.systemtests;
 
 import gecko.GeckoExternal;
 import gecko.GeckoSim;
+import gecko.geckocircuits.allg.MainWindow;
 import gecko.systemtests.GoldenReferenceHelper.GoldenEntry;
 
 import org.junit.jupiter.api.*;
@@ -59,6 +60,8 @@ public class RegressionTest {
     private static final int POLL_INTERVAL_MS = 200;
 
     private Path tempDir;
+    private double previousDuration;
+    private double previousDt;
 
     @BeforeAll
     void initGeckoSim() throws Exception {
@@ -66,6 +69,14 @@ public class RegressionTest {
         GeckoSim.main(new String[]{});
         // Wait for full initialization
         Thread.sleep(2000);
+        previousDuration = MainWindow._solverSettings._tDURATION.getValue();
+        previousDt = MainWindow._solverSettings.dt.getValue();
+    }
+
+    @AfterAll
+    void restoreSolverSettings() {
+        MainWindow._solverSettings._tDURATION.setValueWithoutUndo(previousDuration);
+        MainWindow._solverSettings.dt.setValueWithoutUndo(previousDt);
     }
 
     @BeforeEach
@@ -117,16 +128,18 @@ public class RegressionTest {
             "thyristor_Jakopovic"
         };
 
-        for (String circuit : knownCircuits) {
-            // Only include circuits that have both .ipes and .golden.csv
-            if (RegressionTest.class.getResource(IPES_RESOURCE_DIR + circuit + ".ipes") != null
-                    && RegressionTest.class.getResource(GOLDEN_RESOURCE_DIR + circuit + ".golden.csv") != null) {
-                circuits.add(circuit);
+        String selection = System.getProperty("gecko.regression.circuits");
+        List<String> requested = selection == null ? Arrays.asList(knownCircuits)
+                : Arrays.stream(selection.split(",", -1)).map(String::trim).toList();
+        for (String circuit : requested) {
+            if (!Arrays.asList(knownCircuits).contains(circuit) || circuits.contains(circuit)) {
+                throw new IllegalArgumentException("Unknown or repeated regression circuit: " + circuit);
             }
-        }
-
-        if (circuits.isEmpty()) {
-            fail("No regression test circuits found. Ensure .ipes and .golden.csv files are in test resources.");
+            if (RegressionTest.class.getResource(IPES_RESOURCE_DIR + circuit + ".ipes") == null
+                    || RegressionTest.class.getResource(GOLDEN_RESOURCE_DIR + circuit + ".golden.csv") == null) {
+                throw new IllegalArgumentException("Missing regression resources for circuit: " + circuit);
+            }
+            circuits.add(circuit);
         }
 
         return circuits.stream();
@@ -152,10 +165,14 @@ public class RegressionTest {
         double[] simParams = GoldenReferenceHelper.readSimulationParams(goldenCsv);
         assertNotNull(simParams, "Golden CSV missing tEnd/dt metadata for " + circuitName);
         double tEnd = simParams[0];
+        double dt = simParams[1];
+        assertTrue(dt > 0, "Golden CSV must include a positive dt for " + circuitName);
 
         // Open and run simulation
         GeckoExternal.openFile(ipesFile.toAbsolutePath().toString());
         Thread.sleep(500);
+        MainWindow._solverSettings._tDURATION.setValueWithoutUndo(tEnd);
+        MainWindow._solverSettings.dt.setValueWithoutUndo(dt);
 
         GeckoExternal.runSimulation();
 

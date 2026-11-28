@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,9 +42,15 @@ class CircuitSimulationE2ETest {
     @Autowired
     private SimulationService simulationService;
 
+    @TempDir
+    Path temporaryDirectory;
+
+    private String circuitFile;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         simulationService.clearAll();
+        circuitFile = ExistingSimulationFixtures.rc(temporaryDirectory);
     }
 
     @Nested
@@ -52,11 +60,11 @@ class CircuitSimulationE2ETest {
         @Test
         @DisplayName("RC circuit charging simulation accepts parameters")
         void rcCircuitChargingSimulation() throws Exception {
-            SimulationRequest request = new SimulationRequest("rc_charging.ipes", 0.01, 1e-6);
+            SimulationRequest request = new SimulationRequest(circuitFile, 0.01, 1e-6);
             request.setParameters(Map.of(
-                "R1", 1000.0,    // 1kΩ resistor
-                "C1", 1e-6,     // 1µF capacitor
-                "Vs", 10.0      // 10V source
+                "R1.resistance", 1000.0,    // 1kΩ resistor
+                "C1.capacitance", 1e-6,     // 1µF capacitor
+                "Vs.dcValue", 10.0      // 10V source
             ));
 
             MvcResult result = mockMvc.perform(post("/api/v1/simulations")
@@ -75,8 +83,8 @@ class CircuitSimulationE2ETest {
         @DisplayName("RC circuit with different time constants")
         void rcCircuitDifferentTimeConstants() throws Exception {
             // Small time constant (fast response)
-            SimulationRequest fastRC = new SimulationRequest("rc.ipes", 0.001, 1e-7);
-            fastRC.setParameters(Map.of("R", 100.0, "C", 1e-9));
+            SimulationRequest fastRC = new SimulationRequest(circuitFile, 0.001, 1e-7);
+            fastRC.setParameters(Map.of("R1.resistance", 100.0, "C1.capacitance", 1e-9));
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -84,8 +92,8 @@ class CircuitSimulationE2ETest {
                     .andExpect(status().isCreated());
 
             // Large time constant (slow response)
-            SimulationRequest slowRC = new SimulationRequest("rc.ipes", 1.0, 1e-4);
-            slowRC.setParameters(Map.of("R", 10000.0, "C", 1e-3));
+            SimulationRequest slowRC = new SimulationRequest(circuitFile, 1.0, 1e-4);
+            slowRC.setParameters(Map.of("R1.resistance", 10000.0, "C1.capacitance", 1e-3));
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -102,7 +110,7 @@ class CircuitSimulationE2ETest {
         @DisplayName("Can cancel running simulation")
         void cancelRunningSimulation() throws Exception {
             // Submit long simulation
-            SimulationRequest request = new SimulationRequest("complex.ipes", 10.0, 1e-6);
+            SimulationRequest request = new SimulationRequest(circuitFile, 10.0, 1e-6);
 
             MvcResult submitResult = mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -142,7 +150,7 @@ class CircuitSimulationE2ETest {
         @Test
         @DisplayName("Progress endpoint returns valid data")
         void progressEndpointWorks() throws Exception {
-            SimulationRequest request = new SimulationRequest("test.ipes", 0.1, 1e-6);
+            SimulationRequest request = new SimulationRequest(circuitFile, 0.1, 1e-6);
 
             MvcResult submitResult = mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +184,7 @@ class CircuitSimulationE2ETest {
         void submitMultipleSimulations() throws Exception {
             for (int i = 0; i < 3; i++) {
                 SimulationRequest request = new SimulationRequest(
-                        "circuit" + i + ".ipes", 0.001, 1e-6);
+                        circuitFile, 0.001, 1e-6);
 
                 mockMvc.perform(post("/api/v1/simulations")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -198,18 +206,18 @@ class CircuitSimulationE2ETest {
         @Test
         @DisplayName("Invalid time step rejected")
         void invalidTimeStepRejected() throws Exception {
-            String invalidRequest = "{\"circuitFile\":\"test.ipes\",\"simulationTime\":0.01,\"timeStep\":-1e-6}";
+            SimulationRequest invalidRequest = new SimulationRequest(circuitFile, 0.01, -1e-6);
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(invalidRequest))
+                            .content(objectMapper.writeValueAsString(invalidRequest)))
                     .andExpect(status().isBadRequest());
         }
 
         @Test
         @DisplayName("Zero simulation time rejected")
         void zeroSimulationTimeRejected() throws Exception {
-            SimulationRequest request = new SimulationRequest("test.ipes", 0.0, 1e-6);
+            SimulationRequest request = new SimulationRequest(circuitFile, 0.0, 1e-6);
 
             mockMvc.perform(post("/api/v1/simulations")
                             .contentType(MediaType.APPLICATION_JSON)

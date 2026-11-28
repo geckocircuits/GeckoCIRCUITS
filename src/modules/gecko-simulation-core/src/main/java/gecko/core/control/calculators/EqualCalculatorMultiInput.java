@@ -13,7 +13,9 @@
  */
 package gecko.core.control.calculators;
 
-public final class EqualCalculatorMultiInput extends AbstractControlCalculatable {
+import gecko.core.control.StatelessCalculation;
+
+public final class EqualCalculatorMultiInput extends AbstractControlCalculatable implements StatelessCalculation {
 
     public EqualCalculatorMultiInput(final int intputSize) {
         super(intputSize, 1);

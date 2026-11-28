@@ -3,6 +3,10 @@ package gecko.rest.controller;
 import gecko.rest.model.BatchSimulationRequest;
 import gecko.rest.model.BatchSimulationResponse;
 import gecko.rest.service.SimulationService;
+import gecko.rest.service.CircuitPreparationException;
+import gecko.core.preparation.Diagnostic;
+import gecko.core.preparation.ReadinessReport;
+import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -130,25 +134,31 @@ class BatchSimulationControllerTest {
     // --- Test 4: missing circuitFile returns 400 ---
 
     @Test
-    void submitBatch_missingCircuitFile_returnsBadRequest() throws Exception {
+    void submitBatch_serviceRejectsMissingCircuitSource_returnsBadRequest() throws Exception {
         BatchSimulationRequest request = buildRequestWithParameterSets(null, 2);
+        when(simulationService.submitBatch(any(BatchSimulationRequest.class)))
+                .thenThrow(invalidSource());
 
         mockMvc.perform(post("/api/v1/simulations/batch")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.diagnostics[0].code").value("INVALID_SOURCE"));
     }
 
     // --- Test 5: blank circuitFile returns 400 ---
 
     @Test
-    void submitBatch_blankCircuitFile_returnsBadRequest() throws Exception {
+    void submitBatch_serviceRejectsBlankCircuitSource_returnsBadRequest() throws Exception {
         BatchSimulationRequest request = buildRequestWithParameterSets("   ", 2);
+        when(simulationService.submitBatch(any(BatchSimulationRequest.class)))
+                .thenThrow(invalidSource());
 
         mockMvc.perform(post("/api/v1/simulations/batch")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.diagnostics[0].code").value("INVALID_SOURCE"));
     }
 
     // --- Test 6: response contains batchId, totalSimulations, simulationIds ---
@@ -335,4 +345,11 @@ class BatchSimulationControllerTest {
         request.setLogSweep(sweep);
         return request;
     }
+    private static CircuitPreparationException invalidSource() {
+        return new CircuitPreparationException(HttpStatus.BAD_REQUEST,
+                new ReadinessReport(ReadinessReport.Outcome.INVALID, List.of(new Diagnostic(
+                        "INVALID_SOURCE", Diagnostic.Category.CONFIGURATION, Diagnostic.Severity.ERROR,
+                        "Select exactly one circuit source.", null, null, null, null))));
+    }
+
 }

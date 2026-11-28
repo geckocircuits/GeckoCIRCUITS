@@ -11,9 +11,9 @@ DC to AC power conversion circuits for motor drives, grid-tied systems, and HVDC
 | Example | Description | Difficulty | Status |
 |---------|-------------|------------|--------|
 | [Single-Phase](single_phase/) | H-bridge inverter, PWM | Intermediate | Placeholder |
-| [Three-Phase VSI](three_phase_vsi/) | Voltage source inverter | Intermediate | Placeholder |
-| [Multilevel NPC](multilevel_npc/) | 3-level neutral-point-clamped | Advanced | Placeholder |
-| [MMC Converter](mmc_converter/) | Modular multilevel converter | Advanced | Placeholder |
+| [Three-Phase VSI](../../tutorials/dcac/three-phase.md) | Voltage source inverter | Intermediate | Placeholder |
+| [Multilevel NPC](../../tutorials/dcac/npc-inverter.md) | 3-level neutral-point-clamped | Advanced | Placeholder |
+| [MMC Converter](mmc_converter/index.md) | Modular multilevel converter | Advanced | Placeholder |
 
 ## Quick Reference
 
@@ -103,7 +103,7 @@ N = Vdc / (2 × V_SM)
 
 ## Related Tutorials
 
-- [401 - Single-Phase Inverter](../tutorials/4xx_dcac_inverters/401_single_phase_inverter/index.md)
-- [402 - Three-Phase Inverter](../tutorials/4xx_dcac_inverters/402_three_phase_inverter/index.md)
-- [403 - NPC Inverter](../tutorials/4xx_dcac_inverters/403_npc_inverter/index.md)
+- [401 - Single-Phase Inverter](../../tutorials/dcac/single-phase.md)
+- [402 - Three-Phase Inverter](../../tutorials/dcac/three-phase.md)
+- [403 - NPC Inverter](../../tutorials/dcac/npc-inverter.md)
 - [Motor Drives](../motor-drives/index.md)

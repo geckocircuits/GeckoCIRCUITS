@@ -8,8 +8,8 @@ Complex topologies and optimization techniques.
 
 | Tutorial | Title | Difficulty |
 |----------|-------|------------|
-| [801](801_matrix_converters/) | Matrix Converters | 3/3 |
-| [802](802_motor_drives_pmsm/) | Motor Drives (PMSM) | 3/3 |
+| [801](index.md#801-matrix-converters) | Matrix Converters | 3/3 |
+| [802](../../examples/motor-drives/pmsm-foc.md) | Motor Drives (PMSM) | 3/3 |
 | [803](803_optimization/) | Optimization | 3/3 |
 | [804](804_thyristor_control/) | Thyristor Control | 3/3 |
 

@@ -114,6 +114,17 @@ public final class DialogLabelEingeben extends JDialog {
             public void actionPerformed(final ActionEvent actionEvent) {
 
                 if (_connector != null) {
+                    try {
+                        if (_connector.setSharedProperties(_textField.getText(),
+                                jCheckBoxEnabled.isSelected() ? Enabled.ENABLED : Enabled.DISABLED)) {
+                            dispose();
+                            return;
+                        }
+                    } catch (IllegalArgumentException error) {
+                        javax.swing.JOptionPane.showMessageDialog(DialogLabelEingeben.this, error.getMessage(),
+                                "ASC edit", javax.swing.JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     if (jCheckBoxEnabled.isSelected()) {
                         _connector._isEnabled.setValue(Enabled.ENABLED);
                     } else {

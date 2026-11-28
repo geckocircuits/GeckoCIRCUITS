@@ -1,0 +1,119 @@
+Plecs {
+  Name "Continuous conduction buck"
+  Version "4.3"
+  StartTime "0"
+  StopTime "0.008"
+  MaxStep "2e-7"
+  Schematic {
+    Component {
+      Type DCVoltageSource
+      Name "Supply"
+      Position [70, 124]
+      Direction down
+      Flipped on
+      Parameter { Variable "V" Value "30" }
+    }
+    Component {
+      Type Switch
+      Name "Main"
+      Position [137, 75]
+      Direction left
+      Flipped off
+      Parameter { Variable "s_init" Value "0" }
+    }
+    Component {
+      Type PulseGenerator
+      Name "PWM"
+      Position [65, 36]
+      Direction right
+      Flipped off
+      Parameter { Variable "Hi" Value "-2.5" }
+      Parameter { Variable "Lo" Value "0" }
+      Parameter { Variable "f" Value "20000" }
+      Parameter { Variable "DutyCycle" Value "0.37" }
+      Parameter { Variable "Delay" Value "0" }
+      Parameter { Variable "DataType" Value "10" }
+    }
+    Component {
+      Type Diode
+      Name "Catch"
+      Position [201, 124]
+      Direction down
+      Flipped off
+      Parameter { Variable "Vf" Value "0" }
+      Parameter { Variable "Ron" Value "0" }
+      Parameter { Variable "thermal" Value "" }
+      Parameter { Variable "T_init" Value "0" }
+    }
+    Component {
+      Type Inductor
+      Name "Choke"
+      Position [258, 75]
+      Direction left
+      Flipped off
+      Parameter { Variable "L" Value "270e-6" }
+      Parameter { Variable "i_init" Value "0" }
+    }
+    Component {
+      Type Capacitor
+      Name "Output"
+      Position [322, 124]
+      Direction down
+      Flipped on
+      Parameter { Variable "C" Value "33e-6" }
+      Parameter { Variable "v_init" Value "0" }
+    }
+    Component {
+      Type Resistor
+      Name "Load"
+      Position [381, 124]
+      Direction up
+      Flipped off
+      Parameter { Variable "R" Value "4.7" }
+    }
+    Connection {
+      Type Signal
+      SrcComponent "PWM"
+      SrcTerminal 1
+      Points [137, 36]
+      DstComponent "Main"
+      DstTerminal 3
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Supply"
+      SrcTerminal 1
+      Points [70, 75]
+      DstComponent "Main"
+      DstTerminal 1
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Main"
+      SrcTerminal 2
+      Points [201, 75]
+      Branch { DstComponent "Choke" DstTerminal 1 }
+      Branch { DstComponent "Catch" DstTerminal 2 }
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Choke"
+      SrcTerminal 2
+      Points [322, 75]
+      Branch { DstComponent "Output" DstTerminal 1 }
+      Branch { Points [381, 75] DstComponent "Load" DstTerminal 1 }
+    }
+    Connection {
+      Type Wire
+      SrcComponent "Supply"
+      SrcTerminal 2
+      Points [70, 167; 201, 167]
+      Branch { DstComponent "Catch" DstTerminal 1 }
+      Branch {
+        Points [322, 167]
+        Branch { DstComponent "Output" DstTerminal 2 }
+        Branch { Points [381, 167] DstComponent "Load" DstTerminal 2 }
+      }
+    }
+  }
+}

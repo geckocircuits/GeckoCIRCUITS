@@ -47,13 +47,21 @@ public final class DataContainerGlobal extends AbstractDataContainer implements 
      * @param xDataName name for the time axis
      */
     public void init(final int rows, final int columns, final String[] signalNames, final String xDataName) {
-        DataContainerSimple data = DataContainerSimple.fabricConstantDtTimeSeries(rows, columns);
+        initializeStorage(DataContainerSimple.fabricConstantDtTimeSeries(rows, columns), signalNames, xDataName);
+    }
+
+    /** Initializes storage that retains each recorded timestamp across time-step changes. */
+    public void initArrayTimeSeries(final int rows, final int columns, final String[] signalNames, final String xDataName) {
+        initializeStorage(DataContainerSimple.fabricArrayTimeSeries(rows, columns), signalNames, xDataName);
+    }
+
+    private void initializeStorage(DataContainerSimple data, String[] signalNames, String xDataName) {
         _signalNames = signalNames;
         _xDataName = xDataName;
 
         // Set signal names
         if (signalNames != null) {
-            for (int i = 0; i < Math.min(rows, signalNames.length); i++) {
+            for (int i = 0; i < Math.min(data.getRowLength(), signalNames.length); i++) {
                 data.setSignalName(signalNames[i], i);
             }
         }
