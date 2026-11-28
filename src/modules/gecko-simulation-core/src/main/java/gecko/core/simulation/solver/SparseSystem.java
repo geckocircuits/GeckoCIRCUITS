@@ -178,6 +178,10 @@ final class SparseSystem implements MatrixCoefficients {
         }
     }
 
+    void accumulateAbsoluteProduct(double[] solution, double[] result) {
+        for (int slot = 0; slot < count; slot++) result[rows[slot]] += Math.abs(values[slot] * solution[cols[slot]]);
+    }
+
     /** @return a new dense copy of the coefficients */
     double[][] toDense() {
         double[][] dense = new double[order][order];

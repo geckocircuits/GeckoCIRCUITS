@@ -950,6 +950,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
                             + AC_VALUE_FORMAT.formatENG(model.forwardVoltage(), 4) + " V");
                 }
                 case AcComponent.Mosfet law -> _textInfo.addParameter(law.modelName() + (law.pChannel() ? " (PMOS)" : " (NMOS)"));
+                case AcComponent.Behavioural law -> _textInfo.addParameter((law.current() ? "I = " : "V = ") + law.expression());
                 case AcComponent.Bipolar law -> _textInfo.addParameter(law.modelName() + " (AC bipolar)");
                 case AcComponent.ExponentialDiode law -> _textInfo.addParameter(law.modelName() + (law.transientLaw() ? " (exponential transient)" : " (exponential AC)"));
                 case AcComponent.Transconductance law -> {

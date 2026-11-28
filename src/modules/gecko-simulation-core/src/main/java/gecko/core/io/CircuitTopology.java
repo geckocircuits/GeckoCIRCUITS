@@ -516,6 +516,23 @@ public final class CircuitTopology {
         return id == null ? null : groups.get(id);
     }
 
+    /**
+     * Finds the group a SPICE node name selects on one sheet. SPICE names ignore case; an exact label wins.
+     * @return the group, or null when no label or several differently cased labels match
+     */
+    public Group spiceLabelGroup(String domain, long sheet, String label) {
+        Group exact = labelGroup(domain, sheet, label);
+        if (exact != null) return exact;
+        Integer match = null;
+        for (var entry : labelGroups.entrySet()) {
+            Alias alias = entry.getKey();
+            if (!alias.domain().equals(domain) || alias.sheet() != sheet || !alias.label().equalsIgnoreCase(label.trim())) continue;
+            if (match != null && !match.equals(entry.getValue())) return null;
+            match = entry.getValue();
+        }
+        return match == null ? null : groups.get(match);
+    }
+
     /** @return terminal groups in saved wire order, before unwired terminal groups */
     public List<Group> connectionGroupOrder() {
         return connectionGroupOrder.stream().map(groups::get).filter(java.util.Objects::nonNull).toList();

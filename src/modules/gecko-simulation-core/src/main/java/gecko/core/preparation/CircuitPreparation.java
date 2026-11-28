@@ -144,7 +144,8 @@ public final class CircuitPreparation {
             if (component.getAcComponent() == null) continue;
             var law = component.getAcComponent().law();
             boolean exponentialDiode = law instanceof gecko.core.ac.AcComponent.ExponentialDiode diode && diode.transientLaw();
-            if (!exponentialDiode && !(law instanceof gecko.core.ac.AcComponent.Mosfet)) continue;
+            if (!exponentialDiode && !(law instanceof gecko.core.ac.AcComponent.Mosfet)
+                    && !(law instanceof gecko.core.ac.AcComponent.Behavioural)) continue;
             if (execution.getHierarchy() != null || execution.isTransientUic() || settings.features().dcOperatingPoint()
                     || settings.features().periodicSteadyState() != null || execution.getSolverType() == SolverType.SOLVER_GS) {
                 diagnostics.add(invalidSetting("solver", "Use backward Euler or trapezoidal integration on a flat circuit "
@@ -155,6 +156,7 @@ public final class CircuitPreparation {
             try {
                 if (law instanceof gecko.core.ac.AcComponent.ExponentialDiode diode) diode.validate(execution.rootParameterMap());
                 if (law instanceof gecko.core.ac.AcComponent.Mosfet transistor) transistor.evaluate(execution.rootParameterMap());
+                if (law instanceof gecko.core.ac.AcComponent.Behavioural source) source.compile(execution.rootParameterMap());
             } catch (IllegalArgumentException error) {
                 diagnostics.add(invalidSetting(component.getName(), error.getMessage()));
                 rejected = true;

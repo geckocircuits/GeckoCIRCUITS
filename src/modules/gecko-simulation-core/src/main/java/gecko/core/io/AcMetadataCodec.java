@@ -82,6 +82,8 @@ public final class AcMetadataCodec {
             }
             case AcComponent.Transconductance law -> fields.addAll(List.of("VCCS_V1", law.expression()));
             case AcComponent.Controlled law -> fields.addAll(List.of(law.laplace() ? "LAPLACE" : "GAIN", law.expression()));
+            case AcComponent.Behavioural law -> fields.addAll(List.of("BEHAVIOURAL_V1", law.current() ? "I" : "V",
+                    law.expression()));
         }
         fields.addAll(component.aliases());
         return encode(fields);
@@ -93,6 +95,7 @@ public final class AcMetadataCodec {
         int aliasIndex = switch (fields[3]) {
             case "VOLTAGE", "BIPOLAR_V1" -> 8;
             case "CURRENT" -> 7;
+            case "BEHAVIOURAL_V1" -> 6;
             case "MOSFET_TRANSIENT_V1" -> 9;
             case "IDEAL_DIODE_V1", "EXPONENTIAL_DIODE_V1", "EXPONENTIAL_DIODE_TRANSIENT_V1" -> 9;
             case "EXPONENTIAL_DIODE_V2" -> 12;
@@ -136,6 +139,10 @@ public final class AcMetadataCodec {
                 yield new AcComponent.Mosfet(fields[4], fields[5].equals("PMOS"), fields[6], fields[7], decodeLawParameters(fields[8]));
             }
             case "VCCS_V1" -> new AcComponent.Transconductance(fields[4]);
+            case "BEHAVIOURAL_V1" -> {
+                require(fields[4].equals("V") || fields[4].equals("I"));
+                yield new AcComponent.Behavioural(fields[5], fields[4].equals("I"));
+            }
             case "GAIN", "LAPLACE" -> new AcComponent.Controlled(fields[4], fields[3].equals("LAPLACE"));
             default -> throw new IllegalArgumentException("Unsupported IPES component law: " + fields[3]);
         };
@@ -220,6 +227,7 @@ public final class AcMetadataCodec {
             }
             case AcComponent.ExponentialDiode law -> { }
             case AcComponent.Mosfet law -> { }
+            case AcComponent.Behavioural law -> { }
             case AcComponent.Bipolar law -> values[slot] = law.pnp() ? 0 : 1;
             case AcComponent.Passive law -> values[slot] = SpiceValue.requirePositivePassive(
                     SpiceValue.evaluate(law.expression(), parameters), component.instance());
@@ -257,6 +265,7 @@ public final class AcMetadataCodec {
             case AcComponent.ExponentialDiode diode -> -1;
             case AcComponent.Bipolar transistor -> 6;
             case AcComponent.Mosfet transistor -> -1;
+            case AcComponent.Behavioural behavioural -> -1;
             case AcComponent.Voltage voltage -> 1;
             case AcComponent.Current current -> 1;
             case AcComponent.Controlled controlled -> controlled.laplace() ? -1 : 0;

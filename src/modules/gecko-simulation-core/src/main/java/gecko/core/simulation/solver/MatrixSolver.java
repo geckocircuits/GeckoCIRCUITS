@@ -175,6 +175,20 @@ public class MatrixSolver {
         return result;
     }
 
+    /** Per row, the sum of the absolute terms of A*x and of |b|: the scale at which rounding limits the residual. */
+    public double[] residualScale(double[] solution) {
+        double[] result = new double[matrixSize];
+        for (int row = 0; row < matrixSize; row++) result[row] = Math.abs(bVector[row]);
+        if (sparse != null) {
+            sparse.accumulateAbsoluteProduct(solution, result);
+        } else {
+            for (int row = 0; row < matrixSize; row++) {
+                for (int column = 0; column < matrixSize; column++) result[row] += Math.abs(a[row][column] * solution[column]);
+            }
+        }
+        return result;
+    }
+
     /**
      * Adds a value to one system-matrix coefficient on either backend. It does not mark the matrix changed;
      * call {@link #setMatrixChanged()} afterwards, as for a direct array patch.

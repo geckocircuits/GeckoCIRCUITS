@@ -21,12 +21,14 @@ public final class Main {
         boolean exponentialDiodes = false;
         boolean bipolarTransistors = false;
         boolean levelOneMosfets = false;
+        boolean behaviouralSources = false;
         int length = args.length;
         while (length > 2) {
             String flag = args[length - 1];
             if (flag.equals("--exponential-diodes")) exponentialDiodes = true;
             else if (flag.equals("--bipolar-transistors")) bipolarTransistors = true;
             else if (flag.equals("--level-one-mosfets")) levelOneMosfets = true;
+            else if (flag.equals("--behavioural-sources")) behaviouralSources = true;
             else break;
             length--;
         }
@@ -36,7 +38,7 @@ public final class Main {
         if (args.length != 2 && !ascOptions) {
             errors.println("Usage: gecko.core.io.importer.Main <input.cir|input.asc|input.plecs> <output.ipes>"
                     + " [--symbols <stock-symbol-directory> [--source-root <source-directory>]... [--profile <id>]"
-                    + " [--model-cards <file>]] [--exponential-diodes] [--bipolar-transistors] [--level-one-mosfets]");
+                    + " [--model-cards <file>]] [--exponential-diodes] [--bipolar-transistors] [--level-one-mosfets] [--behavioural-sources]");
             return 1;
         }
         try {
@@ -76,13 +78,16 @@ public final class Main {
                 }
                 var importer = modelCards == null ? new LtspiceImporter(exponentialDiodes)
                         : new LtspiceImporter(exponentialDiodes, modelCards);
+                if (behaviouralSources) importer.withBehaviouralSources();
                 model = args.length == 2 ? importer.convert(input)
                         : importer.convert(input, Path.of(args[3]), sourceRoots, origin);
             } else {
                 String source = Files.readString(input, StandardCharsets.UTF_8);
+                var spice = new SpiceImporter(exponentialDiodes, bipolarTransistors, levelOneMosfets);
+                if (behaviouralSources) spice.withBehaviouralSources();
                 model = lowerName.endsWith(".plecs")
                         ? new PlecsImporter().convert(source, inputName)
-                        : new SpiceImporter(exponentialDiodes, bipolarTransistors, levelOneMosfets).convert(source, inputName);
+                        : spice.convert(source, inputName);
             }
             if (bipolarTransistors && model.getAcSettings() == null) {
                 throw new IllegalArgumentException("Use the bipolar transistor option with SPICE AC input.");

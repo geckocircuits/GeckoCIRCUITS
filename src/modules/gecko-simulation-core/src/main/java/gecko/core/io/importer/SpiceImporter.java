@@ -33,6 +33,13 @@ public final class SpiceImporter {
     private final boolean exponentialAcDiodes;
     private final boolean bipolarAcTransistors;
     private final boolean levelOneMosfets;
+    private boolean behaviouralSources;
+
+    /** Selects the opt-in behavioural source law for B elements (ADR-0033). Without it B elements stay unsupported. */
+    public SpiceImporter withBehaviouralSources() {
+        behaviouralSources = true;
+        return this;
+    }
 
     public SpiceImporter() {
         this(false);
@@ -176,6 +183,7 @@ public final class SpiceImporter {
         }
         nodes.putIfAbsent("0", "0");
         var names = new HashSet<String>();
+        var behavioural = new ArrayList<ComponentData>();
         for (var line : lines) {
             String text = line.text();
             String directive = keyword(text);
@@ -193,7 +201,11 @@ public final class SpiceImporter {
             try {
                 String name = fields[0];
                 if (name.contains("/") || !names.add(name.toLowerCase(Locale.ROOT))) throw new IllegalArgumentException("Require a unique component name without slashes.");
-                SpicePorts descriptor = placement == null ? SpicePorts.find(Character.toUpperCase(name.charAt(0)))
+                String behaviour = behaviouralSources && Character.toUpperCase(name.charAt(0)) == 'B' && fields.length == 4
+                        && fields[3].strip().matches("(?is)^[vi]\\s*=.+") ? fields[3].strip() : null;
+                SpicePorts descriptor = behaviour != null && placement == null
+                        ? (Character.toUpperCase(behaviour.charAt(0)) == 'I' ? SpicePorts.CURRENT : SpicePorts.VOLTAGE)
+                        : placement == null ? SpicePorts.find(Character.toUpperCase(name.charAt(0)))
                         : SpicePorts.find("LK", placement.getType());
                 if (descriptor == SpicePorts.G && !ac) {
                     issue(model, line, "UNSUPPORTED_ELEMENT", name, "Use AC analysis for the voltage-controlled current source.");
@@ -219,7 +231,12 @@ public final class SpiceImporter {
                 List<String> aliases = List.of(positive, negative);
                 AcComponent.Law law = null;
                 var scalarBindings = new HashMap<Integer, String>();
-                switch (kind) {
+                if (behaviour != null) {
+                    source(data, "0", model, parameters);
+                    String expression = behaviour.substring(behaviour.indexOf('=') + 1).strip();
+                    law = new AcComponent.Behavioural(expression, kind == 'I');
+                    behavioural.add(data);
+                } else switch (kind) {
                     case 'R', 'L', 'C' -> {
                         String[] args = arguments(fields[3]);
                         double v = SpiceValue.requirePositivePassive(value(args[0], parameters), name);
@@ -371,14 +388,24 @@ public final class SpiceImporter {
                 }
                 model.addCircuitComponent(data);
                 if (placement == null) {
-                    if (law instanceof AcComponent.Mosfet || ac && law != null) acTerminalWires(model, data, descriptor, aliases);
-                    else terminalWires(model, data);
+                    if (law instanceof AcComponent.Mosfet || law instanceof AcComponent.Behavioural || ac && law != null) {
+                        acTerminalWires(model, data, descriptor, aliases);
+                    } else {
+                        terminalWires(model, data);
+                    }
                 }
             } catch (IllegalArgumentException | IndexOutOfBoundsException error) {
                 model.getControlComponents().subList(controlCount, model.getControlComponents().size()).clear();
                 model.getResources().keySet().retainAll(resourceIds);
                 issue(model, line, "MALFORMED_ELEMENT", fields[0], error.getMessage());
             }
+        }
+        // Probes may name a node that a later line introduces, so they take the imported node labels last.
+        for (var data : behavioural) {
+            var owned = data.getAcComponent();
+            var law = (AcComponent.Behavioural) owned.law();
+            data.setAcComponent(new AcComponent(owned.instance(), owned.spiceOrders(), owned.aliases(), owned.mirrored(),
+                    new AcComponent.Behavioural(probeLabels(law.expression(), nodes), law.current())));
         }
         if (uicDirective != null && lines.stream().filter(line -> keyword(line.text()).equals(".tran")).count() != 1) {
             issue(model, uicDirective, "MULTIPLE_ANALYSES", ".tran", "UIC requires one transient analysis.");
@@ -849,6 +876,19 @@ public final class SpiceImporter {
         }
         return valid && text.substring(end).matches("[\\s,]*");
     }
+    private static final Pattern VOLTAGE_PROBE = Pattern.compile("(?i)(?<![A-Za-z0-9_])v\\s*\\(([^()]*)\\)");
+
+    /** Renames the nodes of each v() probe to their imported labels. A name the netlist does not know stays as written. */
+    static String probeLabels(String expression, Map<String, String> nodes) {
+        return VOLTAGE_PROBE.matcher(expression).replaceAll(match -> {
+            var names = new ArrayList<String>();
+            for (String name : match.group(1).split(",", -1)) {
+                names.add(nodes.getOrDefault(name.strip().toLowerCase(Locale.ROOT), name.strip()));
+            }
+            return java.util.regex.Matcher.quoteReplacement("V(" + String.join(",", names) + ")");
+        });
+    }
+
     private static String node(Map<String, String> nodes, String name) {
         return nodes.computeIfAbsent(name.toLowerCase(Locale.ROOT), key -> "N" + nodes.size());
     }

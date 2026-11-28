@@ -79,7 +79,7 @@ def import_case(ctx, source, model):
 
     author = ctx['author']
     failure = attempt('--source-root', str(author), '--source-root', str(author / 'Tof'),
-                      '--source-root', str(author / 'Tof' / 'Subcircuits'), '--profile', PROFILE)
+                      '--source-root', str(author / 'Tof' / 'Subcircuits'), '--profile', PROFILE, '--behavioural-sources')
     if failure is None:
         return []
     # The opt-in exponential diode exists only on the flat, unselected route (importer Main rejects it otherwise).

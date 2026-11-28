@@ -25,7 +25,18 @@ public record AcComponent(String instance, List<Integer> spiceOrders, List<Strin
         return law instanceof Controlled || law instanceof Transconductance ? List.of(1, 2, 3, 4) : List.of(1, 2);
     }
 
-    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode, Bipolar, Mosfet { }
+    public sealed interface Law permits Passive, Inductance, Voltage, Current, Controlled, Transconductance, IdealDiode, ExponentialDiode, Bipolar, Mosfet, Behavioural { }
+
+    /** An opt-in LTspice behavioural source: {@code V = expression} or, when {@code current}, {@code I = expression} (ADR-0033). */
+    public record Behavioural(String expression, boolean current) implements Law {
+        public Behavioural {
+            if (expression.isBlank()) throw new IllegalArgumentException("Enter a behavioural source expression.");
+        }
+
+        public SpiceValue.Behaviour compile(Map<String, String> parameters) {
+            return SpiceValue.behaviour(expression, parameters);
+        }
+    }
 
     public record Passive(String expression) implements Law { }
     public record Inductance(String expression, Resistance resistance, AcInputOrigin origin) implements Law {

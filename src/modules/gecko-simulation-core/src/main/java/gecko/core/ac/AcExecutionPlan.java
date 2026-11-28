@@ -123,6 +123,87 @@ public final class AcExecutionPlan {
         }
     }
 
+    /** A behavioural source before its probes resolve, which needs every branch current row. */
+    private record PendingSource(int branch, SpiceValue.Behaviour law, long sheet, List<String> path) {
+        BehaviouralDevice resolve(List<Branch> branches, CircuitTopology topology, Map<Integer, Node> groupNodes) {
+            var probes = law.probes();
+            String name = branches.get(branch).instance;
+            int[] plus = new int[probes.size()], minus = new int[probes.size()];
+            for (int k = 0; k < plus.length; k++) {
+                var probe = probes.get(k);
+                plus[k] = probe.current() ? currentRow(branches, name, probe.first()) : row(topology, groupNodes, name, probe.first());
+                minus[k] = probe.second() == null ? -1 : row(topology, groupNodes, name, probe.second());
+            }
+            return new BehaviouralDevice(branch, law, plus, minus);
+        }
+
+        private int row(CircuitTopology topology, Map<Integer, Node> groupNodes, String name, String label) {
+            if (label.equals("0") || label.equalsIgnoreCase("gnd")) return -1;
+            var group = topology.spiceLabelGroup("LK", sheet, label);
+            Node node = group == null ? null : groupNodes.get(group.id());
+            if (node == null) throw new IllegalArgumentException("The behavioural source " + name + " references the unknown node " + label + ".");
+            return node.row;
+        }
+
+        private int currentRow(List<Branch> branches, String name, String source) {
+            String instance = path.isEmpty() ? source : String.join(":", path) + ":" + source;
+            for (var candidate : branches) {
+                if (candidate.instance.equalsIgnoreCase(instance) && candidate.currentRow >= 0) return candidate.currentRow;
+            }
+            throw new IllegalArgumentException("The behavioural source " + name + " reads the current of " + instance
+                    + ", which has no branch current.");
+        }
+    }
+
+    /** A behavioural source (ADR-0033). Probe k reads row {@code plus[k]} minus row {@code minus[k]}; -1 is ground. */
+    private record BehaviouralDevice(int branch, SpiceValue.Behaviour law, int[] plus, int[] minus) {
+        SpiceValue.Behaviour.Point at(Complex[] bias) {
+            double[] values = new double[plus.length];
+            for (int k = 0; k < values.length; k++) values[k] = AcExecutionPlan.at(bias, plus[k]).real() - AcExecutionPlan.at(bias, minus[k]).real();
+            return law.at(values);
+        }
+
+        /** Stamps the tangent at the bias: the gradient and the constant of {@code f(u) ~ J u + c}. */
+        void stampBias(Complex[][] matrix, Complex[] rhs, Branch source, Complex[] bias) {
+            var point = at(bias);
+            stampSlopes(matrix, source, plus, minus, point.gradient());
+            double constant = point.value();
+            for (int k = 0; k < plus.length; k++) {
+                constant -= point.gradient()[k] * (AcExecutionPlan.at(bias, plus[k]).real() - AcExecutionPlan.at(bias, minus[k]).real());
+            }
+            if (source.currentRow >= 0) rhs[source.currentRow] = rhs[source.currentRow].add(new Complex(constant, 0));
+            else stampCurrent(rhs, source.positive, source.negative, new Complex(constant, 0));
+        }
+    }
+
+    private static void stampSlopes(Complex[][] matrix, Branch source, int[] plus, int[] minus, double[] slopes) {
+        for (int k = 0; k < slopes.length; k++) {
+            for (int side = 0; side < 2; side++) {
+                int column = side == 0 ? plus[k] : minus[k];
+                var slope = new Complex(side == 0 ? slopes[k] : -slopes[k], 0);
+                if (source.currentRow >= 0) {
+                    add(matrix, source.currentRow, column, slope.scale(-1));
+                } else {
+                    add(matrix, source.positive, column, slope);
+                    add(matrix, source.negative, column, slope.scale(-1));
+                }
+            }
+        }
+    }
+
+    /** A behavioural source linearised at the DC operating point: real controlled-source coefficients. */
+    private record LinearBehavioural(BehaviouralDevice device, Branch source, double[] slopes) {
+        void stamp(Complex[][] matrix) { stampSlopes(matrix, source, device.plus, device.minus, slopes); }
+
+        Complex current(Complex[] x) {
+            Complex value = Complex.ZERO;
+            for (int k = 0; k < slopes.length; k++) {
+                value = value.add(at(x, device.plus[k]).subtract(at(x, device.minus[k])).scale(slopes[k]));
+            }
+            return value;
+        }
+    }
+
     public record DiodeOperatingPoint(String instance, boolean forward, double voltageV,
                                       double currentA, double conductanceS) { }
 
@@ -131,6 +212,7 @@ public final class AcExecutionPlan {
     private final List<Branch> branches;
     private final int size;
     private final List<LinearBipolar> bipolarStamps;
+    private final List<LinearBehavioural> behaviouralStamps;
     private final AcHierarchyTraces traceBindings;
     private final boolean hierarchical;
     private final List<DiodeOperatingPoint> diodeOperatingPoints;
@@ -170,6 +252,7 @@ public final class AcExecutionPlan {
         var exponentialDiodes = new LinkedHashMap<Integer, ShockleyDiode>();
         var inductors = new HashSet<Integer>();
         var bipolars = new ArrayList<BipolarDevice>();
+        var pendingSources = new ArrayList<PendingSource>();
         boolean frequencyDependentGain = false;
         int nextCurrent = voltageRows;
         for (var component : model.getCircuitComponents()) {
@@ -279,6 +362,12 @@ public final class AcExecutionPlan {
                             -1, null, 0, null, Complex.ZERO, 0));
                 }
                 case AcComponent.Mosfet law -> throw wrongLaw(owned);
+                case AcComponent.Behavioural law -> {
+                    if (type != (law.current() ? SpicePorts.CURRENT : SpicePorts.VOLTAGE)) throw wrongLaw(owned);
+                    pendingSources.add(new PendingSource(prepared.size(), law.compile(parameters), sheet, path));
+                    prepared.add(new Branch(instance, ports[0], ports[1], -1, -1, law.current() ? -1 : nextCurrent++,
+                            null, 0, null, Complex.ZERO, 0));
+                }
                 case AcComponent.Bipolar law -> {
                     if (type != SpicePorts.BJT || model.getAcProvenance() != null
                             && model.getAcProvenance().origin().tested()) throw wrongLaw(owned);
@@ -311,26 +400,42 @@ public final class AcExecutionPlan {
         }
         if (hierarchical) traceBindings.resolve();
         if (prepared.isEmpty() && bipolars.isEmpty()) throw new IllegalArgumentException("Add an AC circuit component.");
-        if ((!diodes.isEmpty() || !exponentialDiodes.isEmpty() || !bipolars.isEmpty())
+        var sources = new ArrayList<BehaviouralDevice>();
+        for (var pending : pendingSources) sources.add(pending.resolve(prepared, topology, groupNodes));
+        if ((!diodes.isEmpty() || !exponentialDiodes.isEmpty() || !bipolars.isEmpty() || !sources.isEmpty())
                 && (!inductors.isEmpty() || frequencyDependentGain)) {
             throw new IllegalArgumentException("Nonlinear DC bias requires static gains and nonzero inductor series resistance.");
         }
         if (!exponentialDiodes.isEmpty() && !diodes.isEmpty()) {
             throw new IllegalArgumentException("Use one diode law in an AC bias solve.");
         }
+        if (!sources.isEmpty() && !diodes.isEmpty()) {
+            throw new IllegalArgumentException("Use exponential diodes with AC behavioural sources.");
+        }
+        Complex[] bias = null;
         if (bipolars.isEmpty()) {
             bipolarStamps = List.of();
-            diodeOperatingPoints = exponentialDiodes.isEmpty()
-                    ? (diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent))
-                    : linearizeExponentialDiodes(prepared, exponentialDiodes, nextCurrent);
+            if (sources.isEmpty()) {
+                diodeOperatingPoints = exponentialDiodes.isEmpty()
+                        ? (diodes.isEmpty() ? List.of() : linearizeDiodes(prepared, diodes, nextCurrent))
+                        : commitDiodeBias(prepared, exponentialDiodes,
+                                solveExponentialBias(prepared, exponentialDiodes, sources, nextCurrent));
+            } else {
+                bias = solveExponentialBias(prepared, exponentialDiodes, sources, nextCurrent);
+                diodeOperatingPoints = commitDiodeBias(prepared, exponentialDiodes, bias);
+            }
         } else {
             if (!diodes.isEmpty()) throw new IllegalArgumentException("Use exponential diodes with AC bipolar transistors.");
-            Complex[] bias = solveBipolarBias(prepared, exponentialDiodes, bipolars, nextCurrent);
-            bipolarStamps = bipolars.stream().map(device -> new LinearBipolar(device, device.at(bias))).toList();
+            Complex[] solved = solveBipolarBias(prepared, exponentialDiodes, bipolars, sources, nextCurrent);
+            bias = solved;
+            bipolarStamps = bipolars.stream().map(device -> new LinearBipolar(device, device.at(solved))).toList();
             diodeOperatingPoints = commitDiodeBias(prepared, exponentialDiodes, bias);
         }
+        var linearSources = new ArrayList<LinearBehavioural>();
+        for (var source : sources) linearSources.add(new LinearBehavioural(source, prepared.get(source.branch), source.at(bias).gradient()));
+        behaviouralStamps = List.copyOf(linearSources);
         // A feedback VCCS can constrain a node without a galvanic path. Use matrix rank for this circuit.
-        if (bipolars.isEmpty() && prepared.stream().noneMatch(branch -> branch.currentRow < 0 && branch.gain != null)) {
+        if (bipolars.isEmpty() && sources.isEmpty() && prepared.stream().noneMatch(branch -> branch.currentRow < 0 && branch.gain != null)) {
             validateGroundPaths(groupNodes.values().stream().toList(), prepared, voltageRows);
         }
         nodes = List.copyOf(groupNodes.values());
@@ -435,12 +540,13 @@ public final class AcExecutionPlan {
         }
     }
 
-    private static List<DiodeOperatingPoint> linearizeExponentialDiodes(List<Branch> branches,
-            Map<Integer, ShockleyDiode> diodes, int size) {
+    /** Newton bias of exponential diodes and behavioural sources (ADR-0033). */
+    private static Complex[] solveExponentialBias(List<Branch> branches, Map<Integer, ShockleyDiode> diodes,
+            List<BehaviouralDevice> sources, int size) {
         Complex[] bias = new Complex[size];
         Arrays.fill(bias, Complex.ZERO);
         BiasEquations fixed = linearBiasEquations(branches, diodes, size);
-        BiasEquations equations = exponentialBiasEquations(branches, diodes, fixed, bias);
+        BiasEquations equations = exponentialBiasEquations(branches, diodes, sources, fixed, bias);
         double error = equations.residualAt(bias, fixed.rhs);
         for (int iteration = 0; iteration <= 50; iteration++) {
             Complex[] next = solve(equations.matrix, equations.rhs);
@@ -451,8 +557,15 @@ public final class AcExecutionPlan {
                 double correction = Math.abs(branchVoltage(next, branch) - voltage);
                 diodeVoltagesConverged &= correction <= 1e-10 + 1e-9 * Math.abs(voltage);
             }
+            for (var source : sources) {
+                for (int k = 0; k < source.plus.length; k++) {
+                    double value = at(bias, source.plus[k]).real() - at(bias, source.minus[k]).real();
+                    double correction = Math.abs(at(next, source.plus[k]).real() - at(next, source.minus[k]).real() - value);
+                    diodeVoltagesConverged &= correction <= 1e-10 + 1e-9 * Math.abs(value);
+                }
+            }
             if (error <= 1e-12 && diodeVoltagesConverged) {
-                return commitDiodeBias(branches, diodes, bias);
+                return bias;
             }
             if (iteration == 50) break;
             double scale = 1;
@@ -464,12 +577,13 @@ public final class AcExecutionPlan {
                 }
                 BiasEquations trialEquations;
                 try {
-                    trialEquations = exponentialBiasEquations(branches, diodes, fixed, trial);
+                    trialEquations = exponentialBiasEquations(branches, diodes, sources, fixed, trial);
                 } catch (IllegalArgumentException outOfRange) {
                     continue;
                 }
                 double trialError = trialEquations.residualAt(trial, fixed.rhs);
-                if (trialError < error) {
+                // A comparison that changes its result is a jump, not a descent direction: take the full step.
+                if (trialError < error || half == 0 && !sameBranches(sources, bias, trial)) {
                     bias = trial;
                     equations = trialEquations;
                     error = trialError;
@@ -477,13 +591,28 @@ public final class AcExecutionPlan {
                     break;
                 }
             }
-            if (!accepted) throw new IllegalArgumentException("The exponential diode DC bias cannot reduce its residual.");
+            if (!accepted) throw new IllegalArgumentException("The " + biasName(sources) + " DC bias cannot reduce its residual.");
         }
-        throw new IllegalArgumentException("The exponential diode DC bias did not converge.");
+        throw new IllegalArgumentException("The " + biasName(sources) + " DC bias did not converge.");
+    }
+
+    private static String biasName(List<BehaviouralDevice> sources) {
+        return sources.isEmpty() ? "exponential diode" : "nonlinear";
+    }
+
+    private static boolean sameBranches(List<BehaviouralDevice> sources, Complex[] bias, Complex[] trial) {
+        for (var source : sources) {
+            try {
+                if (source.at(bias).branches() != source.at(trial).branches()) return false;
+            } catch (IllegalArgumentException outOfRange) {
+                return true;
+            }
+        }
+        return true;
     }
 
     private static Complex[] solveBipolarBias(List<Branch> branches, Map<Integer, ShockleyDiode> diodes,
-            List<BipolarDevice> bipolars, int size) {
+            List<BipolarDevice> bipolars, List<BehaviouralDevice> sources, int size) {
         double[] weights = new double[size];
         Arrays.fill(weights, 1e3);
         for (var branch : branches) {
@@ -493,7 +622,7 @@ public final class AcExecutionPlan {
             var fixed = linearBiasEquations(branches, diodes, size, fraction);
             bipolars.forEach(device -> device.stampSeries(fixed.matrix));
             return bias -> {
-                var equations = exponentialBiasEquations(branches, diodes, fixed, bias);
+                var equations = exponentialBiasEquations(branches, diodes, sources, fixed, bias);
                 bipolars.forEach(device -> device.stampBias(equations.matrix, equations.rhs, bias));
                 return new BipolarBias.Equations(equations.matrix, equations.rhs);
             };
@@ -538,7 +667,7 @@ public final class AcExecutionPlan {
     }
 
     private static BiasEquations exponentialBiasEquations(List<Branch> branches, Map<Integer, ShockleyDiode> diodes,
-            BiasEquations fixed, Complex[] bias) {
+            List<BehaviouralDevice> sources, BiasEquations fixed, Complex[] bias) {
         var matrix = new Complex[fixed.matrix.length][];
         for (int row = 0; row < matrix.length; row++) matrix[row] = fixed.matrix[row].clone();
         var rhs = fixed.rhs.clone();
@@ -551,6 +680,7 @@ public final class AcExecutionPlan {
             stamp(matrix, rhs, branch.withConductance(conductance), Complex.ZERO, 0);
             stampCurrent(rhs, branch.positive, branch.negative, new Complex(offset, 0));
         }
+        for (var source : sources) source.stampBias(matrix, rhs, branches.get(source.branch), bias);
         return new BiasEquations(matrix, rhs);
     }
 
@@ -688,6 +818,7 @@ public final class AcExecutionPlan {
                 Arrays.fill(rhs, Complex.ZERO);
                 for (var branch : branches) stamp(matrix, rhs, branch, s, frequency);
                 for (var bipolar : bipolarStamps) bipolar.stamp(matrix, s);
+                for (var source : behaviouralStamps) source.stamp(matrix);
                 Complex[] x = solve(matrix, rhs);
                 double eta = residual(matrix, rhs, x);
                 if (eta > 1e-12) throw new IllegalArgumentException("The AC backward residual exceeds 1e-12.");
@@ -695,7 +826,8 @@ public final class AcExecutionPlan {
                 for (int i = 0; i < nodes.size(); i++) voltage.get(i).add(at(x, nodes.get(i).row));
                 for (int i = 0; i < branches.size(); i++) {
                     var branch = branches.get(i);
-                    Complex value = branchCurrent(x, s, branch);
+                    Complex value = behaviouralCurrent(i, x);
+                    if (value == null) value = branchCurrent(x, s, branch);
                     checkFinite(value);
                     current.get(i).add(value);
                 }
@@ -734,6 +866,14 @@ public final class AcExecutionPlan {
         }
         return new AcResult(Arrays.stream(frequencies).boxed().toList(), voltages, currents, residuals, size,
                 hierarchical ? traceBindings.result(current, terminalCurrent, frequencies.length) : null);
+    }
+
+    /** @return the small-signal current of a behavioural current source, or null for any other branch */
+    private Complex behaviouralCurrent(int branch, Complex[] x) {
+        for (var source : behaviouralStamps) {
+            if (source.device.branch == branch && source.source.currentRow < 0) return source.current(x);
+        }
+        return null;
     }
 
     private static void checkCancellation() {

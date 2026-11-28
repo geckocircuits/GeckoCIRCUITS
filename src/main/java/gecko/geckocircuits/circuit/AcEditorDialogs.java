@@ -162,6 +162,11 @@ public final class AcEditorDialogs {
                 fields.add(new JLabel(law.modelName()));
                 updatedLaw = () -> law;
             }
+            case AcComponent.Behavioural law -> {
+                fields.add(new JLabel(law.current() ? "Imported behavioural current" : "Imported behavioural voltage"));
+                fields.add(new JLabel(law.expression()));
+                updatedLaw = () -> law;
+            }
             case AcComponent.Bipolar law -> {
                 fields.add(new JLabel("Imported AC bipolar transistor"));
                 fields.add(new JLabel(law.modelName()));

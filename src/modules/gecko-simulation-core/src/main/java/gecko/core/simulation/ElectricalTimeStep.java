@@ -1183,7 +1183,6 @@ final class ElectricalTimeStep {
 
     private record NumericalNetlist(CircuitNetlist source, int[] order, TransientSemiconductors nonlinearDevices)
             implements INetList {
-        private static final double[] NONLINEAR_PLACEHOLDER = {1e12, 0, 1e-6, 1e12, 0, 0, 0, 0, 0, 0, 0, 0, 1};
         @Override public boolean usesWireReference() { return order.length != 0; }
         @Override public int getNodeMax() { return source.getNodeMax(); }
         @Override public int getVoltageSourceMax() { return source.getVoltageSourceMax(); }
@@ -1193,7 +1192,8 @@ final class ElectricalTimeStep {
         @Override public int getNodeY(int index) { return ordered(source.getNodeY(index)); }
         private int ordered(int index) { return order.length == 0 ? index : order[index]; }
         @Override public double[] getParameter(int index) {
-            return nonlinearDevices != null && nonlinearDevices.includes(index) ? NONLINEAR_PLACEHOLDER : source.getParameter(index);
+            double[] placeholder = nonlinearDevices == null ? null : nonlinearDevices.placeholder(index);
+            return placeholder != null ? placeholder : source.getParameter(index);
         }
         @Override public int getVoltageSourceNumber(int index) { return source.getVoltageSourceNumber(index); }
         @Override public double getSimulationTime() { return source.getSimulationTime(); }

@@ -378,6 +378,7 @@ final class HierarchyEditCoordinator {
             case AcComponent.IdealDiode diode -> diode.evaluate(scope);
             case AcComponent.ExponentialDiode diode -> diode.validate(scope);
             case AcComponent.Mosfet transistor -> transistor.evaluate(scope);
+            case AcComponent.Behavioural behavioural -> behavioural.compile(scope);
             case AcComponent.Bipolar transistor -> transistor.validate(scope);
             case AcComponent.Transconductance lawG -> SpiceValue.evaluate(lawG.expression(), scope);
             case AcComponent.Controlled controlled -> {

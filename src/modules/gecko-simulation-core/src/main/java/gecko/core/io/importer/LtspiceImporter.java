@@ -43,6 +43,14 @@ public final class LtspiceImporter {
     private final SpiceImporter spiceImporter;
     private final List<Line> modelCards;
     private final String modelCardDigest;
+    private boolean behaviouralSources;
+
+    /** Selects the opt-in behavioural source law for the stock bv and bi symbols (ADR-0033). */
+    public LtspiceImporter withBehaviouralSources() {
+        behaviouralSources = true;
+        spiceImporter.withBehaviouralSources();
+        return this;
+    }
 
     public LtspiceImporter() {
         this(false);
@@ -729,6 +737,9 @@ public final class LtspiceImporter {
         if (modelCardDigest != null && (symbol.kind().equalsIgnoreCase("npn") || symbol.kind().equalsIgnoreCase("pnp"))) {
             return SpicePorts.BJT;
         }
+        // The stock bv and bi symbols have the pins of the voltage and current symbols.
+        if (behaviouralSources && symbol.kind().equalsIgnoreCase("bv")) return SpicePorts.VOLTAGE;
+        if (behaviouralSources && symbol.kind().equalsIgnoreCase("bi")) return SpicePorts.CURRENT;
         var type = SpicePorts.valueOf(symbol.kind().toUpperCase(Locale.ROOT));
         if (type == SpicePorts.BJT) throw new IllegalArgumentException("Select a stock NPN or PNP symbol.");
         return type;
@@ -803,8 +814,20 @@ public final class LtspiceImporter {
             var spellings = new LinkedHashMap<String, String>();
             var uses = new LinkedHashMap<String, List<CircuitHierarchy.ScalarUse>>();
             for (var device : placed) {
-                if (!List.of(SpicePorts.RES, SpicePorts.CAP, SpicePorts.VOLTAGE).contains(device.type())) continue;
                 var symbol = device.symbol();
+                if (symbol.kind().equalsIgnoreCase("bv") || symbol.kind().equalsIgnoreCase("bi")) {
+                    // A behavioural law reads its parameters inside the expression (#204).
+                    var reference = SCALAR_VALUE.matcher(symbol.attributes().getOrDefault("value", ""));
+                    while (reference.find()) {
+                        String key = reference.group(1).toLowerCase(Locale.ROOT);
+                        if (key.equals("pi")) continue;
+                        spellings.putIfAbsent(key, reference.group(1));
+                        uses.computeIfAbsent(key, ignored -> new ArrayList<>()).add(new CircuitHierarchy.ScalarUse(
+                                source, symbol.name(), "Value", symbol.attributeLines().get("value")));
+                    }
+                    continue;
+                }
+                if (!List.of(SpicePorts.RES, SpicePorts.CAP, SpicePorts.VOLTAGE).contains(device.type())) continue;
                 String raw = symbol.attributes().getOrDefault("value", "").strip();
                 var match = SCALAR_VALUE.matcher(raw);
                 if (!match.matches() || !value(symbol).equals(raw)) continue;
